@@ -1,0 +1,24 @@
+DKD10:[DMIL.WRK.HMC.EXAMPLES]
+
+
+
+PODEV1::PORT> godmil hmc
+Password: hmc
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD10:[DMIL.][WRK.HMC]  <------------------------default path neste caso o path absoluto
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
+PODEV1::DMIL> dir
+
+Directory GXPROJ:[WRK.HMC]  <--------------------path relativo
+
+##para obter o path absoluto do relativo fazer: sh log "alias do path relativo"
+PODEV1::DMIL> sh log GXPROJ
+   "GXPROJ" = "DKD10:[DMIL.]" (LNM$GROUP_000501) <--- aqui mostra que o GXPROJ corresponde ao disco DKD10 e ha pasta DMIL trocando este valor no
+###path relativo GXPROJ:[WRK.HMC] passa a ser DKD10:[DMIL.WRK.HMC] que é o path absoluto pois têm o disco como origem
+###por isso com o comando: set def DKD10:[DMIL.WRK.HMC] vai logo ter a esta pasta basta meter este path no WinSCP

@@ -1,0 +1,667 @@
+First go the working directory in this case:
+    > GOSCML
+Confirm that´s in the directory:
+    > SH DEF (SHOW DEFAULT)
+Run the Alias (if not wrong shows the list of process with its corresponding Pid for each process):
+    > SHSCML
+Command to shut down/stop all process:
+PODEV1::SCML> KILSYS                                                                                                                                                                            
+                                                                                                                                                                                                
+***       You have attempted to run KILSYS          ***                                                                                                                                         
+***       This program will bring down the system   ***                                                                                                                                         
+***       If you do not intend for this to happen,  ***                                                                                                                                         
+***       you may abort now without any damage.     ***                                                                                                                                         
+                                                                                                                                                                                                
+Do you want to continue [Y/N] Y    
+Repeat some times the step SHSCML to the list of processes and again the KILSYS to kill any process still remaining
+
+Return to the Main Directory:
+    > GOSCML
+    > SH DEF (to confirm that's in the TSK 'task' directory)
+    > SET DEF WORK (go to the work directory)
+    > DIR (see the list of files)
+
+Relembrar que de 4 pastas (do qual duas pastas são mesmo todos os ficheiros) são removidos alguns senão
+todos os ficheiros
+
+In the directory WORK remove all files by:
+    > DELETE *.*
+    > DELETE *.*;*
+    > DIR
+
+Go to the DRAW folder and also remove all files 
+    > SET DEF DRAW
+    > DIR 
+    > DELETE *.*;* 
+    > DIR
+
+
+Go to the VALX directory and some files that are excluded the ones with the followinfg extensions and files (*.DIR,OPS.FIL,TCC.FIL,TCF.FIL,TCF.OLD,VLC.FIL,VLF.FIL,VLF.OLD)
+    > SET DEF VALX
+    here will see the files that aren't in the excluded list
+    > DIR /EXCLUDE=(*.DIR,OPS.FIL,TCC.FIL,TCF.FIL,TCF.OLD,VLC.FIL,VLF.FIL,VLF.OLD) 
+    > DIR *.DIR 
+    now the commend to delete all files except the ones in the exclude list
+    > DELETE/EXCLUDE=(*.DIR,OPS.FIL,TCC.FIL,TCF.FIL,TCF.OLD,VLC.FIL,VLF.FIL,VLF.OLD) *.*;*
+
+Go to main folder TASK (como se fose o desktop por assim dizer) usando o alias GXTSK (é um script salvo erro com o path absoluto para a pasta TASK)
+    > SET DEF GXTSK
+    confirmar a pasta e path
+    > SH DEF
+        GXPROJ:[TSK]
+    > DIR *.*;* /exclude=(*.dir,MX_SERVER.FIL,ASF.FIL,STNDEF.FIL,X2X*.FIL,*.exe,*.esh,X2X*,*.bin,*.id,GTECH$DEBUG.OLD,AMB-VAP.COM,*.zip,PLACARD.DAT,MARIO_*.DAT,MARIO.DAT,dmq.ini,UPDPAS
+8_ASF*.REP)     
+    Now removes all those files
+    > DELETE *.*;* /exclude=(*.dir,MX_SERVER.FIL,ASF.FIL,STNDEF.FIL,X2X*.FIL,*.exe,*.esh,X2X*,*.bin,*.id,GTECH$DEBUG.OLD,AMB-VAP.COM,*.zip,PLACARD.DAT,MARIO_*.DAT,MARIO.DAT,dmq.ini,UPD
+PAS8_ASF*.REP) 
+    um exerto do resultado:
+        ...
+        %DELETE-I-FILDEL, GXPROJ:[TSK]WORKBACKUP.OLD;2 deleted (18 blocks)                                                                                                                              
+        %DELETE-I-TOTAL, 515 files deleted (6754788 blocks)
+
+Confirm that's in the TSK folder
+    > DIR                                                                                                                                                                               
+        Directory GXPROJ:[TSK] 
+
+Show only the files with extension ESH (mémorias certo?) 
+    > DIR *.ESH
+
+        Directory GXPROJ:[TSK]                                                                                                                                                                          
+                                                                                                                                                                                                
+        GXAGTCOM.ESH;1                 108287  27-JUN-2017 18:34:33.51                                                                                                                                  
+        GXAPPCOM.ESH;1                 124237  27-JUN-2017 18:34:33.79                                                                                                                                  
+        GXAPUCOM.ESH;1                    797  27-JUN-2017 18:34:34.14                                                                                                                                  
+        GXCHKCOM.ESH;1                 200271  27-JUN-2017 18:34:34.16                                                                                                                                  
+        GXCPLCOM.ESH;1                   3148  27-JUN-2017 18:34:34.86                                                                                                                                  
+        GXCRSCOM.ESH;1                    385  27-JUN-2017 18:34:35.10                                                                                                                                  
+        GXCTLCOM.ESH;1                     17  27-JUN-2017 18:34:35.12                                                                                                                                  
+        GXCTMCOM.ESH;1                  16367  27-JUN-2017 18:34:35.13                                                                                                                                  
+        GXEURCOM.ESH;1                     20  27-JUN-2017 18:34:35.19                                                                                                                                  
+        GXGUICOM.ESH;1                   5296  27-JUN-2017 18:34:35.20                                                                                                                                  
+        GXGVTPHN.ESH;1                     16  27-JUN-2017 18:34:35.22                                                                                                                                  
+        GXLANCOM.ESH;1                   2716  27-JUN-2017 18:34:35.24                                                                                                                                  
+        GXLTOPOL.ESH;1                  78735  27-JUN-2017 18:34:35.27                                                                                                                                  
+        GXMSCCOM.ESH;1                    106  27-JUN-2017 18:34:35.47                                                                                                                                  
+        GXNETCOM.ESH;1                    900  27-JUN-2017 18:34:35.49                                                                                                                                  
+        GXPOLCOM.ESH;1                   3212  27-JUN-2017 18:34:35.50                                                                                                                                  
+        GXPOOLLTO.ESH;1                  9882  27-JUN-2017 18:34:35.52                                                                                                                                  
+        GXPRZCOM.ESH;1                    252  27-JUN-2017 18:34:35.56                                                                                                                                  
+        GXREQCOM.ESH;1                   1630  27-JUN-2017 18:34:35.60                                                                                                                                  
+        GXRESCOM.ESH;1                    139  27-JUN-2017 18:34:35.62                                                                                                                                  
+        GXRWFCOM.ESH;1                     23  27-JUN-2017 18:34:35.64                                                                                                                                  
+        GXSIMCOM.ESH;1                    199  27-JUN-2017 18:34:35.66                                                                                                                                  
+        GXSLOCOM1.ESH;1                   877  27-JUN-2017 18:34:35.68                                                                                                                                  
+        GXSTACOM.ESH;1                     77  27-JUN-2017 18:34:35.70                                                                                                                                  
+        GXSTOPCOM.ESH;1                   175  27-JUN-2017 18:34:35.71                                                                                                                                  
+        GXTSPCOM.ESH;1                  33295  27-JUN-2017 18:34:35.73                                                                                                                                  
+        GXWINCOM.ESH;1                    294  27-JUN-2017 18:34:35.83                                                                                                                                  
+        GXX2FCOM.ESH;1                     63  27-JUN-2017 18:34:35.85                                                                                                                                  
+        GXX2NETCOM.ESH;1                  700  27-JUN-2017 18:34:35.89                                                                                                                                  
+        GXX2NETDEF.ESH;1                  334  27-JUN-2017 18:34:35.92                                                                                                                                  
+        GXX2XCOM.ESH;1                  31651  27-JUN-2017 18:34:35.93                                                                                                                                  
+        GXX2XPOST.ESH;1                   116  27-JUN-2017 18:34:36.03
+
+Now see a alias of a script 
+    > SH SYM REMCOM
+        REMCOM == "@GXCOM:REMCOM.COM"
+Now run that script (run multiple times untill it removes all the images that as to remove without the errors in deleting) also confirm that visio is not running, if it is will block some of this images/memoria pois usa umas tantas
+    > REMCOM
+        REMOVING SHARED IMAGES                                                                                                                                                                          
+        REMOVING DKD5:[SCML.][SHR]SCMLAGTCOM.ESH                                                                                                                                                        
+        %DELETE-W-FILNOTDEL, error deleting DKD5:[SCML.][SHR]SCMLAGTCOM.ESH;1 
+
+    > REMCOM    
+    > REMCOM
+    > REMCOM                                                                                                                                                                        
+
+Now go to the SHR folder (shared)
+    > DIR DKD5:[SCML.SHR]
+        Directory DKD5:[SCML.SHR] 
+    > DIR
+        Directory GXPROJ:[TSK]  
+
+In the main folder search for the all sub directories where can see the important folders and also backups
+    > DIR *.DIR
+        ...
+        BACKUP_X2X_20200408.DIR;1           3   8-APR-2020 13:17:29.01
+        ...
+        DRAW.DIR;1                          1  19-AUG-2011 10:59:34.95 
+        ...
+        IGS.DIR;1                           1  26-MAR-2014 16:17:05.09                                                                                                                                  
+        PRIM.DIR;1                          1  19-AUG-2011 10:59:45.38                                                                                                                                  
+        ROG.DIR;1                           3  16-MAY-2012 11:27:18.81                                                                                                                                  
+        VALX.DIR;1                          1  19-AUG-2011 10:59:07.93                                                                                                                                  
+        WORK.DIR;1                          1  19-AUG-2011 10:59:16.90   
+
+    > DIR [.BACKUP_X2X_20200408]
+        Directory GXPROJ:[TSK.BACKUP_X2X_20200408] 
+
+See the file where is the list of the agents stores (basicamente a lista de vendedores)
+    > DIR ASF.FIL;2
+
+Create now our backup the time of that moment
+    > CREATE /DIR [.BACKUP_X2X_20200703] -----------> .BACKUP_X2X_YYYYMMDD
+    > DIR *.DIR
+    Comando para copiar o ficheiro ASF.FIL para a pasta/directoria BACKUP_X2X_20200703
+    > COPY /LOG ASF.FIL [.BACKUP_X2X_20200703] 
+    > COPY /LOG STNDEF.FIL [.BACKUP_X2X_20200703]
+    > COPY /LOG X2X*.FIL [.BACKUP_X2X_20200703]
+    > COPY /LOG MX_SERVER.FIL [.BACKUP_X2X_20200703]
+    > COPY /LOG DMQ.INI [.BACKUP_X2X_20200703]
+
+    > DIR [.BACKUP_X2X_20200703]    ---------------------> confirmar que têm os ficheiros necessarios o backup                                                                                                                                                    
+                                                                                                                                                                                                
+        Directory GXPROJ:[TSK.BACKUP_X2X_20200703]                                                                                                                                                      
+                                                                                                                                                                                                        
+        ASF.FIL;2                     1314918  24-JUN-2011 15:03:22.78                                                                                                                                  
+        DMQ.INI;15                          1  24-MAR-2020 01:15:22.40                                                                                                                                  
+        MX_SERVER.FIL;13                    1  20-SEP-2018 16:07:05.39                                                                                                                                  
+        STNDEF.FIL;5                        4  16-JAN-2013 01:09:25.70                                                                                                                                  
+        X2XBLD.FIL;3                    12312  27-JUN-2011 15:57:23.50                                                                                                                                  
+        X2XBRO.FIL;6                      630  10-FEB-2008 01:30:16.15                                                                                                                                  
+        X2XCHK.FIL;6                      630  10-FEB-2008 01:30:16.34                                                                                                                                  
+        X2XDB.FIL;6                        50  10-FEB-2008 01:30:16.46                                                                                                                                  
+        X2XGBL.FIL;6                      630  10-FEB-2008 01:30:16.50                                                                                                                                  
+        X2XGRP.FIL;3                    12312  27-JUN-2011 15:57:25.19                                                                                                                                  
+        X2XLOG.FIL;6                    10080  10-FEB-2008 01:30:17.19                                                                                                                                  
+        X2XLPC.FIL;6                     3150  10-FEB-2008 01:30:19.39                                                                                                                                  
+        X2XNPC.FIL;6                     3150  10-FEB-2008 01:30:20.33                                                                                                                                  
+        X2XRCD.FIL;6                      630  10-FEB-2008 01:30:21.23                                                                                                                                  
+        X2XRCL.FIL;6                      630  10-FEB-2008 01:30:21.42                                                                                                                                  
+        X2XRELOAD.FIL;5                 10080  29-SEP-2001 00:02:18.64                                                                                                                                  
+        X2XRWAIT01.FIL;6                  630  10-FEB-2008 01:30:24.48                                                                                                                                  
+        X2XRWAIT02.FIL;6                  630  10-FEB-2008 01:30:24.59                                                                                                                                  
+        X2XRWAIT07.FIL;5                  630  10-FEB-2008 01:30:24.81                                                                                                                                  
+        X2XRWAIT08.FIL;5                  630  10-FEB-2008 01:30:25.00                                                                                                                                  
+        X2XRWAIT09.FIL;5                  630  10-FEB-2008 01:30:25.21                                                                                                                                  
+        X2XRWAIT10.FIL;5                  630  10-FEB-2008 01:30:25.34                                                                                                                                  
+        X2XRWAIT11.FIL;4                  630  24-DEC-2001 14:35:04.91                                                                                                                                  
+        X2XSCL.FIL;5                      630  29-SEP-2001 00:02:22.59                                                                                                                                  
+        X2XSPC.FIL;3                    49212  21-OCT-2011 15:40:28.93                                                                                                                                  
+        X2XSPCL.FIL;5                    5040  29-SEP-2001 00:02:30.64                                                                                                                                  
+        X2XSTN.FIL;3                    12312  27-JUN-2011 15:57:18.13                                                                                                                                  
+        X2XTER.FIL;3                    12312  27-JUN-2011 15:57:15.87                                                                                                                                  
+        X2XTRACE.FIL;5                   2520  29-SEP-2001 00:02:36.29                                                                                                                                  
+        X2XTTN.FIL;5                      630  29-SEP-2001 00:02:37.14 
+
+    > SH DEF                                                                                                                                                                            
+        GXPROJ:[TSK]
+
+Now remove the files that are to be replaced by the tape and that were backuped before
+    /* 
+        Similarly, you might want to
+        display the names of files as they are deleted. To do this, specify the /LOG
+        qualifier with the DELETE command. 
+    */
+    > DELETE ASF.FIL;* /LOG
+    > DELETE STNDEF.FIL;* /LOG
+    > DELETE X2X*.FIL;* /LOG
+
+    > DIR MX_SERVER.FIL
+        Directory GXPROJ:[TSK]  
+    > TYPE MX_SERVER.FIL
+        [CONTROL]                                                                                                                                                                                       
+            PRIM_NOTIFY_MODE = 0                                                                                                                                                                        
+            START_MODE = AUTO                                                                                                                                                                           
+            DEF_RPC_REQUEST_TIMEOUT=60                                                                                                                                                                  
+            MAX_ES_REQUESTS = 100                                                                                                                                                                       
+                                                                                                                                                                                                        
+        [TNI_CONFIG]                                                                                                                                                                                    
+            LISTENING_PORT = 53380                                                                                                                                                                      
+            LOCAL_DOMAIN_NAME = PODEV1-POS                                                                                                                                                              
+                                                                                                                                                                                                        
+        [CLUSTERED_APP]                                                                                                                                                                                 
+            APP_NAME = ESCONNECT                                                                                                                                                                        
+            OLTP_UNSO_ROUTING = ALL_CLIENTS                                                                                                                                                             
+            AUTHENTICATION_REQUIRED = FALSE                                                                                                                                                             
+            REMOTE_DOMAIN_NAME = POESC7-POS
+
+    > DELETE MX_SERVER.FIL;13 
+
+Now start the new instalation from the tape (aqui comessa a instalação da tape em si) que é um script
+    > SH SYM MENUBACKUP
+        MENUBACKUP == "@GXCOM:MENU-BACKUP"     
+
+    > MENUBACKUP                                                                                                                                                                        
+                                                                                                                                                                                                    
+        Por Favor digite um Opcao abaixo ....                                                                                                                                                          
+                                                                                                                                                                                                        
+                                1 - Fazer Backup para Disco SAVDSK                                                                                                                                      
+                                2 - Fazer Backup para Fita                                                                                                                                              
+                                3 - Recuperar da Fita                                                                                                                                                   
+                                4 - Recuperar do Disco SAVDSK                                                                                                                                           
+                                5 - Trocar/Ver Configuracao Arquivos do Backup                                                                                                                          
+                                6 - Fazer Backup da Imagem do disco de Sistema                                                                                                                          
+                                E - Sair   
+
+        Digite Opcao do Backup : 3  
+        Esta opcao ira recuperar arquivos de Fita.
+
+        QUAL UNIDADE DE FITA VOCE QUER USAR : MAG2
+
+    > SH DEF
+    > DIR ---> ver que há mais ficheiros Total of 857 files, 6340291 blocks. 
+    > DIR ---> ver que há mais ficheiros Total of 857 files, 6340291 blocks.
+
+    > DIR WORK
+    > DIR DRAW
+    > DIR VALX
+
+    > SH SYS -----------> list of process
+
+    > DIR ---> ver que há mais ficheiros 
+    > SH SYS
+    > DIR DRAW
+    > SH PROCESS TAPTODSK /CONTINUE  ------------------------> confirmar que o processo de copias da tap para o disco já acabou???
+        %SYSTEM-W-NONEXPR, nonexistent process
+
+    > R CLRFIL --------------------> script para 
+        18:05:51 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.                                                                                                                               
+        18:05:51 CONSOLE  ENTER FILE NAME >PRIM:MTMF01.FIL                                                                                                                                              
+        18:06:13 CONSOLE  Clearing       100007  VAX sectors in PRIM:MTMF01.FIL                                                                                                                         
+        18:06:14 CONSOLE  INITIALIZATION COMPLETE FOR PRIM:MTMF01.FIL                                                                                                                                   
+        18:06:14 CONSOLE  STOP0001  ****  SUCCESS 
+
+Run script INSCOM  
+
+    > SH SYM INSCOM
+        INSCOM == "@GXCOM:INSCOM.COM"
+    > INSCOM
+        INSTALLING SHARED IMAGES 
+        ...
+
+    > DIR SHR
+    > DIR GXSHR
+    > SH LOG GXTSK
+    > SH LOG GXPROJ
+    > DIR GXPROJ
+    > DIR DKD5:[000000.SCML]
+        Directory DKD5:[000000.SCML] 
+
+        COM.DIR;1                          13  29-JUN-2011 12:51:12.37                                                                                                                                  
+        DMQ.DIR;1                           1  29-JUN-2011 12:51:12.42                                                                                                                                  
+        HLP.DIR;1                           7  29-JUN-2011 12:51:12.42                                                                                                                                  
+        LOG.DIR;1                          12  29-JUN-2011 12:51:12.42                                                                                                                                  
+        SHR.DIR;1                           4  29-JUN-2011 12:51:12.42                                                                                                                                  
+        TSK.DIR;1                          98  29-JUN-2011 12:51:12.42                                                                                                                                  
+        USR.DIR;1                           1  29-JUN-2011 12:51:12.43                                                                                                                                  
+        UTL.DIR;1                          10  29-JUN-2011 12:51:12.44     
+
+
+    > SH DEF                                                                                                                                                                            
+        GXPROJ:[TSK] 
+Important alls run the RUNTST since this for teste envirenment the RUNSYS is for the production Environment one of the diferences
+is that in the tickets show cleary that its for testes purposes only
+    > SH SYM RUNSYS
+        RUNSYS == "@GXCOM:RUNSYS.COM"
+    > SH SYM RUNTST
+        RUNTST == "@GXCOM:RUNTST.COM"
+
+as explained run the script RUNTST
+    > RUNTST        
+                                                                                                                                                                                                    
+                                                                                                                                                                                                        
+        Portugal ES Evolution System Startup, Test Version                                                                                                                                              
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+        Starting ELOG process SCMLELOG                                                                                                                                                                  
+        Starting EWATCH process ewatch_FTA141:                                                                                                                                                          
+        18:25:32 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.                                                                                                                               
+        18:25:34 CONSOLE                                                                                                                                                                                
+        18:25:34 CONSOLE                                                                                                                                                                                
+        18:25:34 CONSOLE  You have attempted to run RESET.                                                                                                                                              
+        18:25:34 CONSOLE  This program will perform start-of-day functions.                                                                                                                             
+        18:25:34 CONSOLE  If you do not intend for this to happen,                                                                                                                                      
+        18:25:34 CONSOLE  you may abort now without any damage.                                                                                                                                         
+        18:25:34 CONSOLE                                                                                                                                                                                
+        18:25:34 CONSOLE                                                                                                                                                                                
+        18:25:34 CONSOLE  Are you sure you want RESET [Y/N]?  >N                                                                                                                                        
+        18:34:12 CONSOLE  STOP0003  ****  OPERATOR ABORT                                                                                                                                                
+        18:34:12 MONGOLS  Copyright 2011 GTECH Corp. All rights reserved.                                                                                                                               
+        PODEV1::SCML>                                                                                                                                                                                   
+                    18:34:12 MONGOLS  Cannot open MONGOLS.FIL - using default values.                                                                                                                 
+        18:34:12 MONGOLS  WILL MONITOR ALL PROCCESSES                                                                                                                                                   
+        18:34:12 MONGOLS  MONITOR FREQUENCY IS 100          MILLISECONDS PER PROC                                                                                                                       
+        18:34:12 MONGOLS  DEFAULT LIMITS PERCENT IS 20                                                                                                                                                  
+        PODEV1::SCML>                                                                                                                                                                                   
+        PODEV1::SCML>                                                                                                                                                                                   
+        PODEV1::SCML>                                                                                                                                                                                   
+        PODEV1::SCML> 
+
+    > shscml  ---------> List of process (mostra a lista de processos com o PID)
+
+as the name says its to kill the system
+    > kilsys                                                                                                                                                                            
+                                                                                                                                                                                                
+    ***       You have attempted to run KILSYS          ***                                                                                                                                         
+    ***       This program will bring down the system   ***                                                                                                                                         
+    ***       If you do not intend for this to happen,  ***                                                                                                                                         
+    ***       you may abort now without any damage.     ***                                                                                                                                         
+                                                                                                                                                                                                    
+    Do you want to continue [Y/N] y       
+
+    > kilsys                                                                                                                                                                            
+                                                                                                                                                                                                    
+    ***       You have attempted to run KILSYS          ***                                                                                                                                         
+    ***       This program will bring down the system   ***                                                                                                                                         
+    ***       If you do not intend for this to happen,  ***                                                                                                                                         
+    ***       you may abort now without any damage.     ***                                                                                                                                         
+                                                                                                                                                                                                    
+    Do you want to continue [Y/N] y 
+
+    > shscml (agora não deve retornar nenhum processo pois foram todos desligados com o kilsys)
+    > dir asf.fil, stndef.fil, x2x*.fil, mx_server.fil
+
+                                                                                                                                                                                                        
+        Directory GXPROJ:[TSK]                                                                                                                                                                          
+                                                                                                                                                                                                        
+        ASF.FIL;6                     1314918   4-AUG-2015 01:34:53.77                                                                                                                                  
+        STNDEF.FIL;4                        4  16-JAN-2013 01:09:25.70                                                                                                                                  
+        X2XBLD.FIL;6                    12312   4-AUG-2015 01:35:34.18                                                                                                                                  
+        X2XBRO.FIL;6                      630   4-AUG-2015 01:35:34.20                                                                                                                                  
+        X2XCHK.FIL;6                      630   4-AUG-2015 01:35:34.21                                                                                                                                  
+        X2XDB.FIL;6                        50   4-AUG-2015 01:35:34.21                                                                                                                                  
+        X2XGBL.FIL;6                      630   4-AUG-2015 01:35:34.22                                                                                                                                  
+        X2XGRP.FIL;6                    12312   4-AUG-2015 01:35:34.22                                                                                                                                  
+        X2XLOG.FIL;6                    10003   4-AUG-2015 01:35:34.24                                                                                                                                  
+        X2XLPC.FIL;6                     3150   4-AUG-2015 01:35:34.26                                                                                                                                  
+        X2XNPC.FIL;6                     3150   4-AUG-2015 01:35:34.27                                                                                                                                  
+        X2XRCD.FIL;6                      201   4-AUG-2015 01:35:34.28                                                                                                                                  
+        X2XRCL.FIL;6                      201   4-AUG-2015 01:35:34.28                                                                                                                                  
+        X2XRELOAD.FIL;6                 10080   4-AUG-2015 01:35:34.28                                                                                                                                  
+        X2XRWAIT01.FIL;6                  630   4-AUG-2015 01:35:34.31                                                                                                                                  
+        X2XRWAIT02.FIL;6                  630   4-AUG-2015 01:35:34.31                                                                                                                                  
+        X2XRWAIT07.FIL;6                  144   4-AUG-2015 01:35:34.31                                                                                                                                  
+        X2XRWAIT08.FIL;6                  144   4-AUG-2015 01:35:34.31                                                                                                                                  
+        X2XRWAIT09.FIL;6                  144   4-AUG-2015 01:35:34.32                                                                                                                                  
+        X2XRWAIT10.FIL;6                  144   4-AUG-2015 01:35:34.32                                                                                                                                  
+        X2XRWAIT11.FIL;6                  144   4-AUG-2015 01:35:34.32                                                                                                                                  
+        X2XSCL.FIL;6                      201   4-AUG-2015 01:35:34.32                                                                                                                                  
+        X2XSPC.FIL;6                    49212   4-AUG-2015 01:35:34.32                                                                                                                                  
+        X2XSPCL.FIL;6                    5040   4-AUG-2015 01:35:34.43                                                                                                                                  
+        X2XSTN.FIL;6                    12312   4-AUG-2015 01:35:34.45                                                                                                                                  
+        X2XTER.FIL;6                    12312   4-AUG-2015 01:35:34.48                                                                                                                                  
+        X2XTRACE.FIL;6                   2520   4-AUG-2015 01:35:34.51                                                                                                                                  
+        X2XTTN.FIL;6                      630   4-AUG-2015 01:35:34.51                                                                                                                                  
+        MX_SERVER.FIL;12                    1  14-APR-2019 04:35:34.76  
+
+    > type MX_SERVER.FIL;12                                                                                                                                                             
+        [CONTROL]                                                                                                                                                                                       
+            PRIM_NOTIFY_MODE = 0                                                                                                                                                                        
+            START_MODE = AUTO                                                                                                                                                                           
+            DEF_RPC_REQUEST_TIMEOUT=60                                                                                                                                                                  
+            MAX_ES_REQUESTS = 100                                                                                                                                                                       
+                                                                                                                                                                                                        
+        [TNI_CONFIG]                                                                                                                                                                                    
+            LISTENING_PORT = 51780                                                                                                                                                                      
+            LOCAL_DOMAIN_NAME = POSYSB-ES                                                                                                                                                               
+                                                                                                                                                                                                        
+        [CLUSTERED_APP]                                                                                                                                                                                 
+            APP_NAME = ESCONNECT                                                                                                                                                                        
+            OLTP_UNSO_ROUTING = ALL_CLIENTS                                                                                                                                                             
+            AUTHENTICATION_REQUIRED = FALSE                                                                                                                                                             
+            REMOTE_DOMAIN_NAME = POESC1-POS                                                                                                                                                             
+            REMOTE_DOMAIN_NAME = POESC2-POS                                                                                                                                                             
+            REMOTE_DOMAIN_NAME = POESC3-POS 
+
+    > dir *.dir /since                                                                                                                                                                                           
+        Directory GXPROJ:[TSK]                                                                                                                                                                          
+                                                                                                                                                                                                        
+        BACKUP_X2X_20200703.DIR;1  3   3-JUL-2020 17:38:33.64       
+
+    > dir [.BACKUP_X2X_20200703]  
+                                                                                                                                                                                                        
+        Directory GXPROJ:[TSK.BACKUP_X2X_20200703]                                                                                                                                                      
+                                                                                                                                                                                                        
+        ASF.FIL;2                     1314918  24-JUN-2011 15:03:22.78                                                                                                                                  
+        DMQ.INI;15                          1  24-MAR-2020 01:15:22.40                                                                                                                                  
+        MX_SERVER.FIL;13                    1  20-SEP-2018 16:07:05.39                                                                                                                                  
+        STNDEF.FIL;5                        4  16-JAN-2013 01:09:25.70                                                                                                                                  
+        X2XBLD.FIL;3                    12312  27-JUN-2011 15:57:23.50                                                                                                                                  
+        X2XBRO.FIL;6                      630  10-FEB-2008 01:30:16.15                                                                                                                                  
+        X2XCHK.FIL;6                      630  10-FEB-2008 01:30:16.34                                                                                                                                  
+        X2XDB.FIL;6                        50  10-FEB-2008 01:30:16.46                                                                                                                                  
+        X2XGBL.FIL;6                      630  10-FEB-2008 01:30:16.50                                                                                                                                  
+        X2XGRP.FIL;3                    12312  27-JUN-2011 15:57:25.19                                                                                                                                  
+        X2XLOG.FIL;6                    10080  10-FEB-2008 01:30:17.19                                                                                                                                  
+        X2XLPC.FIL;6                     3150  10-FEB-2008 01:30:19.39                                                                                                                                  
+        X2XNPC.FIL;6                     3150  10-FEB-2008 01:30:20.33                                                                                                                                  
+        X2XRCD.FIL;6                      630  10-FEB-2008 01:30:21.23                                                                                                                                  
+        X2XRCL.FIL;6                      630  10-FEB-2008 01:30:21.42                                                                                                                                  
+        X2XRELOAD.FIL;5                 10080  29-SEP-2001 00:02:18.64                                                                                                                                  
+        X2XRWAIT01.FIL;6                  630  10-FEB-2008 01:30:24.48                                                                                                                                  
+        X2XRWAIT02.FIL;6                  630  10-FEB-2008 01:30:24.59                                                                                                                                  
+        X2XRWAIT07.FIL;5                  630  10-FEB-2008 01:30:24.81                                                                                                                                  
+        X2XRWAIT08.FIL;5                  630  10-FEB-2008 01:30:25.00                                                                                                                                  
+        X2XRWAIT09.FIL;5                  630  10-FEB-2008 01:30:25.21                                                                                                                                  
+        X2XRWAIT10.FIL;5                  630  10-FEB-2008 01:30:25.34                                                                                                                                  
+        X2XRWAIT11.FIL;4                  630  24-DEC-2001 14:35:04.91                                                                                                                                  
+        X2XSCL.FIL;5                      630  29-SEP-2001 00:02:22.59                                                                                                                                  
+        X2XSPC.FIL;3                    49212  21-OCT-2011 15:40:28.93                                                                                                                                  
+        X2XSPCL.FIL;5                    5040  29-SEP-2001 00:02:30.64                                                                                                                                  
+        X2XSTN.FIL;3                    12312  27-JUN-2011 15:57:18.13                                                                                                                                  
+        X2XTER.FIL;3                    12312  27-JUN-2011 15:57:15.87                                                                                                                                  
+        X2XTRACE.FIL;5                   2520  29-SEP-2001 00:02:36.29                                                                                                                                  
+        X2XTTN.FIL;5                      630  29-SEP-2001 00:02:37.14     
+
+        Total of 30 files, 1456274 blocks.
+
+    > dir asf.fil, stndef.fil, x2x*.fil, mx_server.fil
+
+    > sh def                                                                                                                                                                            
+        GXPROJ:[TSK]
+
+    > delete ASF.FIL;*
+    > delete STNDEF.FIL;* 
+    > delete X2X*.FIL;*
+    > delete MX_SERVER.FIL;*
+    > dir asf.fil, stndef.fil, x2x*.fil, mx_server.fil
+    > dir [.BACKUP_X2X_20200703]
+    > COPY /LOG [.BACKUP_X2X_20200703]*.*;* *  ---------> copia desta pasta para directoria corrente que neste caso é a TSK
+
+    > delete MX_SERVER.FIL;*
+    > delete X2X*.FIL;*
+    > delete STNDEF.FIL;* 
+    > delete ASF.FIL;*   -------> terminais ( agents sales file )
+    > dir asf.fil, stndef.fil, x2x*.fil, mx_server.fil 
+    > DIR DMQ.INI
+    > COPY /LOG [.BACKUP_X2X_20200703]*.*;* *.*;0 ---> mete o nome do ficheiro final igual há da copia mas com a ultima versão pois acaba em ;0
+    > COPY /LOG [.BACKUP_X2X_20200703]*.*;* *.*;1 ---> se já existir uma versão 1 sobrepoem senão cria o ficheiro como versão 1
+
+    > TYPE DMQ.INI;1                                                                                                                                                                    
+        [Default Server]                                                                                                                                                                                
+        TransportType=TCP/IP                                                                                                                                                                            
+        Hostname=JUNO                                                                                                                                                                                   
+        Endpoint=5000                                                                                                                                                                                   
+        ReconnectMsgInterval=0                                                                                                                                                                          
+        ReconnectTimerInterval=0                                                                                                                                                                        
+                                                                                                                                                                                                        
+        [Failover]                                                                                                                                                                                      
+        EnableAutomaticFailover=0                                                                                                                                                                       
+        TransportType=TCP/IP                                                                                                                                                                            
+        Hostname=ORACLE                                                                                                                                                                                 
+        Endpoint=5000                                                                                                                                                                                   
+                                                                                                                                                                                                        
+        [Logging]                                                                                                                                                                                       
+        ErrorEvents=1                                                                                                                                                                                   
+        SentMessages=2                                                                                                                                                                                  
+        ReceivedMessages=2                                                                                                                                                                              
+                                                                                                                                                                                                        
+        [MRS]                                                                                                                                                                                           
+        Enabled=0                                                                                                                                                                                       
+                                                                                                                                                                                                        
+        JournalPath=[]                                                                                                                                                                                  
+        JournalFileSize=49150                                                                                                                                                                           
+        JournalCycle=0                                                                                                                                                                                  
+        JournalSizeFixed=0                                                                                                                                                                              
+        PreAllocate=1                                                                                                                                                                                   
+        JournalBlockSize=0                                                                                                                                                                              
+                                                                                                                                                                                                        
+        [Trace]                                                                                                                                                                                         
+        PamsTrace=1                                                                                                                                                                                     
+        DmqclTrace=1 
+
+    > RENAME DMQ.INI;1 DMQ_2.INI;1 -------> mudar o nome do ficheiro
+    > COPY /LOG [.BACKUP_X2X_20200703]*.*;* *.*;1
+    > DIR DMQ.INI
+    > DMQ.INI;1 
+    > DELETE DMQ.INI;1 
+    > delete MX_SERVER.FIL;* 
+    > delete ASF.FIL;*
+    > delete STNDEF.FIL;*
+    > delete X2X*.FIL;*
+    > dir asf.fil, stndef.fil, x2x*.fil, mx_server.fil
+    > COPY /LOG [.BACKUP_X2X_20200703]*.*;* *.*;1
+    ...delete again files
+    > COPY /LOG [.BACKUP_X2X_20200703]*.*;* *.*;0
+    > dir asf.fil, stndef.fil, x2x*.fil, mx_server.fil
+    > dir asf.fil, stndef.fil, x2x*.fil, mx_server.fil, DMQ.INI 
+    > DELETE DMQ.INI;17
+    > R CLRFIL
+
+    > REMCOM                                                                                                                                                                            
+        REMOVING SHARED IMAGES  
+        ...
+    > REMCOM                                                                                                                                                                            
+        REMOVING SHARED IMAGES 
+        ...
+    > REMCOM                                                                                                                                                                            
+        REMOVING SHARED IMAGES 
+        ...
+    > REMCOM                                                                                                                                                                            
+        REMOVING SHARED IMAGES 
+        REMOVING DKD5:[SCML.][SHR]SCMLAGTCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLAPPCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLCHKCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLCPLCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLCTLCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLCTMCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLLANCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLLTOPOL.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLMSCCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLNETCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLPOLCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLPOOLLTO.ESH                                                                                                                                                       
+        REMOVING DKD5:[SCML.][SHR]SCMLPRZCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLREQCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLRESCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLRWFCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLSIMCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLSLOCOM1.ESH                                                                                                                                                       
+        REMOVING DKD5:[SCML.][SHR]SCMLSTACOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLTSPCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLWINCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLX2FCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLX2NETCOM.ESH                                                                                                                                                      
+        REMOVING DKD5:[SCML.][SHR]SCMLX2NETDEF.ESH                                                                                                                                                      
+        REMOVING DKD5:[SCML.][SHR]SCMLX2XCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLX2XPOST.ESH                                                                                                                                                       
+        REMOVING DKD5:[SCML.][SHR]SCMLCRSCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLGVTPHN.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLAPUCOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLSTOPCOM.ESH                                                                                                                                                       
+        REMOVING DKD5:[SCML.][SHR]SCMLGUICOM.ESH                                                                                                                                                        
+        REMOVING DKD5:[SCML.][SHR]SCMLEURCOM.ESH                   
+
+    > INSCOM
+        INSTALLING SHARED IMAGES  
+
+        INSTALLING GXCTLCOM AS DKD5:[SCML.][SHR]SCMLCTLCOM.ESH                                                                                                                                          
+        PORTUGAL ES EVOLUTION SYSTEM STARTUP                                                                                                                                                         
+        PORTUGAL ES EVOLUTION SYSTEM STARTUP                                                                                                                                                         
+                    PODEV1                                                                                                                                                                           
+                    PODEV1                                                                                                                                                                           
+                    03.07.2020                                                                                                                                                                         
+                    03.07.2020                                                                                                                                                                         
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                    1. CDC                       7004 (  Fr 03.07.2020 )                                                                                                                              
+                    2. Restart from checkpoint     No                                                                                                                                                 
+                    3. Backup tape logging         No                                                                                                                                                 
+                    4. Backup disk logging         No                                                                                                                                                 
+                    5. Connect to IPS              No                                                                                                                                                 
+                    6. GVT end time          22:00:00                                                                                                                                                 
+                    7. Connect to EuroMilhoes      No                                                                                                                                                 
+                    8. Connect to IGS              No                                                                                                                                                 
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                        The system is in *** TEST *** mode                                                                                                                                             
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+        19:07:35 CONSOLE  Enter option [C - bring up the system] >C   
+
+        19:07:41 CONSOLE   Games active today                                                                                                                                                           
+        19:07:41 CONSOLE                                                                                                                                                                                
+        19:07:41 CONSOLE   TOTOBOLA NORMAL  - Draw - 0995                                                                                                                                               
+        19:07:41 CONSOLE   TOTOLOTO SABADO  - Draw - 0486                                                                                                                                               
+        19:07:41 CONSOLE   TOTOLOTO QUARTA  - Draw - 0487                                                                                                                                               
+        19:07:41 CONSOLE   TOTOBOLA EXTRA 1 - Draw - 0266                                                                                                                                               
+        19:07:41 CONSOLE                                                                                                                                                                                
+        19:07:41 CONSOLE  Are these correct? (Y/N)  >Y 
+
+        19:08:26 CONSOLE  System configuration                                                                                                                                                          
+        19:08:26 CONSOLE  ===========================                                                                                                                                                   
+        19:08:26 CONSOLE  System A is POSYSD                                                                                                                                                            
+        19:08:26 CONSOLE  System B is PODEV1                                                                                                                                                            
+        19:08:26 CONSOLE  ===========================   
+        19:08:26 CONSOLE  This is system B ( PODEV1 ) 
+        19:08:26 CONSOLE  Which system is the PRIMARY system ( A,  B  ?) >B 
+        19:12:11 CONSOLE  Is system  A being brought up?                     >N  
+        19:12:28 CONSOLE   Systems assignments:                                                                                                                                                         
+        19:12:28 CONSOLE             This is system B. System B is PRIMARY  system                                                                                                                      
+        19:12:28 CONSOLE   Game brought up in SIMPLEX -  only 1 system configured 
+        9:12:28 CONSOLE  Is this correct  [Y/N] ? >Y 
+
+    > SHSCML
+    > R X2GAMSTART ---------> é para iniciar os serviços???
+    > R TMIR
+        19:26:29 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.                                                                                                                               
+                                                                                                                                                                                                        
+        <<<<< TMIR Transaction Master File Inquiry   V01 >>>>>
+        .....
+        
+    19:27:19 CONSOLE  Enter first  offset (A=all)            >A
+    > W132
+    > TYPE MARIO.DAT --------------> report?  
+
+
+    
+
+
+-----------------------------------------GENERAL COMMANDS AND INFORMATION-----------------------------------------------------------------------------
+
+RUN STOPSYS - parar em produção
+RUN STOPTST - para em testes (não existe)
+
+RUN TST
+
+---------------------------------------------------------------------
+totoloto de 4feira
+totoloto de sabado
+
+totobola normal as vendas comessam no domingo e acabam no sabado
+totobola extra (existe só de vez enquanto)
+
+sortei de euromilhoes quarta feira (No Millennium)
+sortei de euromilhoes sexta feira (No Millennium)
+
+TYPE nome do ficheiros
+
+SUBRUN
+
+Ficheiro TMF -> PRIM:MTMF01.FIL registo de logs/transacção (emcompactada informação) do Millennium
+TMEREF
+
+FILE:DAF.FIL <-> Ficheiro de configuração do Millennium
+FILE:ASF.FIL -> ficheiro de configuração dos terminais
+
+VLF.FIL -> onde se encontram as apostas com premios
+
+VLC
+
+sair do visio -> LOGOUT
+
+
+pode se usar uma pesquisa/filtro por ficheiro com o nome opcional de alguns caracteres
+    por exemplo encontraria vision.exe se exsitir o ficheiro na directoria onde a pesquisa foi efectuada
+    > DIR V%%ION.EXE

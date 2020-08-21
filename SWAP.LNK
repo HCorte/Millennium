@@ -1,0 +1,4 @@
+$ LINK 'P1' -
+/EXE=SWAP.EXE -
+OBJLIB:SWAP,-
+ISWAP

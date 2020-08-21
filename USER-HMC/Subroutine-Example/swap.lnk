@@ -1,0 +1,4 @@
+$ LINK -
+/EXE=SWAP.EXE -
+SWAP.OBJ -
+ISWAP.OBJ

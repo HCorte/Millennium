@@ -1,0 +1,251 @@
+
+Ver a listagem de ficheiros e directorias na directoria corrente:
+	$DIR /SIZE /OWNER /DATE /PROTECTION <------- basta o DIR o resto são flags optcionais
+
+Fazer pesquisa de um ficheiro no sistema:
+	DIR filename.extension
+
+Ir para uma directoria:
+	A directory specification has the following format:
+
+	[directory.subdirectory] 
+	To add one or more levels of subdirectories, add a period and another subdirectory name for each subdirectory (up to seven levels). (Subdirectories are specified by concatenating the subdirectory name to the name of the directory one level above it.)
+
+	[directory.subdirectory.subdirectory] 
+	A directory or subdirectory name can contain up to 39 alphanumeric characters. Any characters valid for file names are also valid for directory names. Enclose the directory name in either square brackets ([ ]) or angle brackets (< >).
+
+Criar uma directoria:
+	5.3.4 Examples
+	In the following example, the directory [JONES.LICENSES] is created:
+	$ CREATE/DIRECTORY [JONES.LICENSES]
+	In the following example, the current default directory is [JONES], and the subdirectory [JONES.LICENSES] is created:
+	$ CREATE/DIRECTORY [.LICENSES]
+	abreviated
+	$ CREATE/DIR [.LICENSES]
+
+
+Apagar uma directoria:
+	5.3.8 Example
+	The following example shows how to delete the subdirectory [JONES.LICENSES]:
+
+	$ SET DEFAULT [JONES.LICENSES]
+	$ DIRECTORY
+	%DIRECT-W-NOFILES, no files found
+	$ SET DEFAULT [JONES]
+	$ SET SECURITY/PROTECTION=OWNER:D LICENSES.DIR
+	$ DELETE LICENSES.DIR;1
+Apagar todos o ficheiros/extensões e versões
+	$ delete helloworld.*;*
+
+Criar um Ficheiro
+		$CREATE filespec
+		escrever o que se quiser para o ficheiro
+		quando acabar primir ctrl+Z
+		
+Ver o conteudo de um ficheiro
+	$TYPE nomeDoFicheiro.ext
+
+Compilar um ficheiro fortran para obj e depois para exe (neste caso definiou-se test)
+1. 	$FORTRAN /F77 filename.f ---> filename.obj (http://h30266.www3.hpe.com/odl/axplp/progtool/for9590v82/forti64um_001.html#ch_compile)
+2.	$LINK/EXECUTABLE=TEST FILENAME.obj (http://h30266.www3.hpe.com/odl/axplp/progtool/for9590v82/forti64um_011.html#ch_linkrun)
+
+Compilar no ambiente da SantaCasa Podev1 com o alias (dfor)
+	$gomill -> username: hmc pass: hmc
+	$dfor nomedoficheiro.f
+	
+Linkar no ambiente da SantaCasa Podev1 com o alias (dlnk) 
+	$dfor nomedoficheiro.obj
+	
+Ver o codigo/ficheiro de um alias
+	$sh log "aliasname"
+
+Ver a versão de fortran é:
+	$FORTRAN /VERSION
+
+Correr um exe in openvms é:
+	$RUN FILENAME.EXE 
+	ou abreviado
+	$R FILENAME.EXE
+	
+Mudar um ficheiro para outra directoria é RENAME
+RENAME FILENAME.F [.FOLDERTOMOVETO](http://h30266.www3.hpe.com/odl/vax/opsys/vmsos73/vmsos73/9996/9996pro_044.html)
+rename [.com]helloworld.* [.fortran77]
+
+Mostrar a directoria corrente:
+	$ SHOW DEFAULT
+	$ SHOW DEF
+
+MOSTRAR DADOS:
+	$ SHOW LOG
+
+MAIN COMMANDS FOR MILLENIUM:
+	GOSCML
+	RUN visio-> pass DONUTS
+	to exist pass is EXIT
+	
+	Lista de Menus que são os proprios comandos
+	Menu1
+	Menu2
+	Menu3
+	Menu4 <- aqui encontram-se a lista dos principais scripts de monitorisação IGS,EUR etc
+	ter em conta que as letras em maisculas são obrigatorias no comando as minusculas são opçionais só
+	no caso do euromillhoes está em EURMILL tudo em maisculas mas é uma versão antiga dai deveria ser agora EURmill
+	
+	
+------------------------------------------------------------
+subir uma directoria
+set def [-]
+
+
+De referir que os ficheiros de linkagem são os de extensão .lnk (ver o comigs.lnk)
+
+Session no godmil no podev1 com utilizador hmc:
+	$godmil hmc
+	$enter password: hmc
+	
+Como fazer debug os passos para compilar e linkar:
+	http://h30266.www3.hpe.com/odl/axplp/progtool/for9590v82/forti64um_012.html#ch_debug
+	
+$ FORTRAN/DEBUG/NOOPTIMIZE INVENTORY
+$ LINK/DEBUG INVENTORY
+
+sendo o inventory o ficheiro neste caso
+	http://www0.mi.infn.it/~calcolo/OpenVMS/ssb71/4538/4538p003.htm
+	
+como andar uma linha só usar step
+	DBG> STEP
+correr tudo ou até chamar o main caso não tenha sido o main o primeiro a correr
+	DBG> GO
+	
+----->Ver o valor de uma variavel no momento
+	DBG> EXAMINE N
+Sair do debugg mode
+	DBG> EXIT
+	
+ou can also use the SHOW CALLS command to identify the currently active routine calls on the call stack
+Use the SHOW CALLS command when you are unsure where execution is paused during a debugging session (for example, after a Ctrl/C interruption).
+
+The following example shows a typical use of the SET BREAK command basicaly how to add a breakpoint:
+
+DBG> SET BREAK COUNT
+DBG> GO
+   .
+   .
+   .
+break at routine PROG2\COUNT 
+     54:  procedure COUNT(X,Y:INTEGER);
+DBG>
+In the example, the SET BREAK command sets a breakpoint on routine COUNT (at the beginning of the routine's code)
+
+When using the SET BREAK command, you can specify program locations using various kinds of address expressions (for example, line numbers, routine names, memory addresses, byte offsets). With high-level languages, you typically use routine names, labels, or line numbers, possibly with path names to ensure uniqueness.	
+
+The breakpoint causes the debugger to suspend execution at the beginning of
+line 41.
+
+DBG> SET BREAK %LINE 41
+
+You can also use the SET BREAK command with a qualifier, but no parameter, to break on every line, or on every CALL instruction, and so on. For example:
+
+DBG> SET BREAK/LINE
+DBG> SET BREAK/CALL
+
+In the following example, a watchpoint is set on the nonstatic variable Y in routine ROUT3. After the tracepoint is triggered, the WPTTRACE message indicates that the nonstatic watchpoint is set, and the watchpoint is triggered when the value of Y changes. For example:
+
+DBG> SET TRACE/NOSOURCE ROUT3 DO (SET WATCH Y)
+DBG> GO
+
+por exemplo
+	DBG> SET TRACE/NOSOURCE ISWAP DO (SET WATCH M)
+	DBG> GO
+
+!!!!!!!!!!!!!!!!IMPORTANTE!!!!!!!!!!!!!!!!!!!!!!!
+defenir um break point numa subroutine noutro/mesmo ficheiro na linha 7 neste caso
+	DBG> set break iswap\%line 7
+	
+FORTRAN/'bnds'/NOOPT/NODIAG/EXT/LIST'plat''q' 'fil'
+/NOOPT
+	The /OPTIMIZE qualifier requests that the compiler produce optimized code.
+	The qualifier has the following form:
+	/OPTIMIZE= { LEVEL= n | INLINE= { NONE | MANUAL | SIZE | SPEED | ALL } | NOINLINE | LOOPS |
+	PIPELINE | TUNE= { GENERIC | HOST | EV4 | EV5 | EV56 | PCA56 | EV6 | EV67 } | UNROLL= n }[, …]
+	The default is /OPTIMIZE, which is equivalent to /OPTIMIZE=LEVEL=4. Use /NOOPTIMIZE or /
+	OPTIMIZE=LEVEL=0 for a debugging session to ensure that the debugger has sufficient information to locate
+	errors in the source program.
+	In most cases, using /OPTIMIZE will make the program execute faster. As a side effect of getting the fastest
+	execution speeds, using /OPTIMIZE can produce larger object modules and longer compile times than /
+	NOOPTIMIZE.	
+/NODIAG
+	The /DIAGNOSTICS qualifier creates a file containing compiler messages and diagnostic information.
+	The qualifier has the following form:
+	/DIAGNOSTICS[=file-spec]
+	The default is /NODIAGNOSTICS.
+	If you omit the file specification, the diagnostics file has the name of your source file and a file type of DIA.	
+/EXT/	
+	Specify /EXTEND_SOURCE to request that the compiler increase the length of VSI Fortran statement fields to
+	column 132 for fixed-form source files, instead of column 72 (the default). It is ignored for free-form source files.
+	You can also specify this qualifier by using the OPTIONS statement. The default in either case is /
+	NOEXTEND_SOURCE.
+	To request warning messages for truncated fixed-form source lines, specify /
+	WARNINGS=TRUNCATED_SOURCE.
+/LIST
+	The /LIST qualifier requests a source listing file. You can request additional listing information using the /
+	MACHINE_CODE and /SHOW qualifiers.
+	The qualifier has the following form:
+	/LIST[=file-spec]
+	You can include a file specification for the listing file. If you omit the file specification, the listing file has the
+	name of the first source file and a file type of LIS.
+	
+Criar um COMMAND PROCEDURE (como se fosse um bash file in unix)
+	CREATE procedurename.com
+
+correr o command procedur:
+	@procedurename
+
+Editar um ficheiro e salvar a alteração
+	$EDIT/EDT filename.extension
+	carregar ctrl+Z 
+	modo de comando: *exit
+	
+Copiar um ficheiro numa pasta para outra pasta (neste caso na subpasta fortran77 para a subpasta com da corrente directoria)
+	$ copy/log [.fortran77]helloworld.f [.com]
+	
+Aumentar o tamanho default do ecra da linha de comandos/terminal
+	$ SET TERMINAL/PAGE:35/WIDTH:110
+	
+f$locate(",DEBUG,",",''P1'") 
+
+How to create a symbol that is absolute path to a folder: http://h30266.www3.hpe.com/odl/axpos/opsys/vmsos84/6489/6489pro_030.html
+$  WORK :== SET DEFAULT DISK1:[JONES.WORK]
+$  WORK
+$  SHOW DEFAULT
+   DISK1:[JONES.WORK]
+   
+A symbol is a name that represents a numeric, character, or logical value (such as true or false). When you use a symbol in a DCL command line, DCL replaces the symbol with its value before executing the command.
+12.2.2 Symbol Abbreviation
+Use the asterisk (*) to create a symbol that can be abbreviated. Generally, you can use abbreviated symbol definitions in any situation that allows a symbol to be used
+
+The following example creates the local symbol PRINT, which can be abbreviated as PR, PRI, or PRIN:
+
+$ PR*INT = "PRINT/CONFIRM/QUEUE=AKI$LN03/NOTIFY/RESTART"
+To execute the DCL command PRINT with the specified qualifiers, you can enter the symbol or any of its abbreviations.
+
+The follow example creates a logical name to the folder COMMAND
+
+In the following example, the following command creates the logical name WORKFILE and equates it the equivalence string DISK2:[WALSH.REPORTS]WORK_SUMMARY.DAT:
+$ DEFINE WORKFILE DISK2:[WALSH.REPORTS]WORK_SUMMARY.DAT
+
+13.4.23 Using Different Logical Name Tables
+By default, the DEFINE and DEASSIGN commands place names in, and delete names from, your process table. However, you can request a different table with the /TABLE qualifier. For example:
+
+$ DEFINE/TABLE=LNM$SYSTEM REVIEWERS DISK3:[PUBLIC]REVIEWERS.DIS
+This command creates the logical name REVIEWERS in the system table.
+
+define scripts DSA3:[DECUSERVE_USER.HCORTE.COM] -> creating a logical name (scripts) thats the path to the COM folder
+hello :== @scripts:o2 -> creating a symbol (hello) to run command procedure named o2.com using 
+hello helloworld -> calling to symbol and passing one parameter P1 thats the name of the source file for the procedure defined in the symbol
+
+The second COPY command in this example copies files from the [SMITH.MONKEY] directory to the [PAINTER.MONKEY] directory.
+$ COPY [SMITH]CATS.DIR [SMITH]DOGS.DIR
+
+Changing the Screen Height and Width
+DBG> SET TERMINAL/PAGE:35/WIDTH:110
