@@ -1,4 +1,4 @@
-**In here are some basic examples and explanations**
+## In here are some basic examples and explanations
 
 When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
 
