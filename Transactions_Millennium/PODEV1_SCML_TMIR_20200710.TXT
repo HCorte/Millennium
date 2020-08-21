@@ -1,0 +1,1638 @@
+login as: console
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+console@podev1's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Friday, 10-JUL-2020 12:59:49.46
+    Last non-interactive login on Thursday, 9-JUL-2020 18:54:43.05
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+PODEV1::PORT> goscml
+%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
+%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
+%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
+PODEV1::SCML> r tmir
+13:22:24 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+
+<<<<< TMIR Transaction Master File Inquiry   V01 >>>>>
+
+13:22:24 CONSOLE  Enter file device (Disk, Tape)         >d
+13:22:24 CONSOLE  Enter file type (Tmf, Carryover, Draw) >t                         d
+13:22:28 CONSOLE  Enter file name (VOLN:FILNAME)         >prim:mtmf01.fil			DRAW:LOTQ6988FIL
+13:22:35 CONSOLE  Enter report file name:                >mario						Henrique
+13:22:39 CONSOLE  Enter terminal number (A=all)          >a
+13:22:41 CONSOLE  Exclude EM transactions (Y/N)          >n
+13:22:46 CONSOLE  Exclude IGS transactions (Y/N)         >n
+13:22:54 CONSOLE  Enter starting serial number (A=all/E=EuroMil/P=Placard)   >a
+13:23:06 CONSOLE  Enter starting time (A=all)            >a
+13:23:30 CONSOLE  Enter report option (Detail,Summary)   >d
+13:23:50 CONSOLE  Scramble serial numbers (Y/N)          >y
+***   OFFSETS   *****   VALUES   **************************************
+* Trx Status(1)...: Good(1)/Void(2)/CashExchg(4)/Cash(5)/Reject(6)    *
+* Trx Error(2)....: Noer(0)/Invl(1)/Synt(2)/Supr(3)/NotOn(4)/Sdor(5)  *
+*                   Sdrw(6)/Rety(15)/Vinq(16)/Grev(18)/Bcrs(33)       *
+* Trx Type(9).....: Wag(1)/Can(2)/Ican(3)/Val(4)/Ret(5)/Spe(7)/Crs(9) *
+*                   Eur(11)/Igs(12)                                   *
+* Game Num(10)....: TotobolaNormal(1)/Totoloto(2)/TotobolaExtra2(3)   *
+*                   Loto2(4)/Joker(5)/TotolotoSab(6)/TotolotoQua(7)   *
+*                   Classica(8)/Popular(9)/TotobolaExtra1(10)         *
+* Game Type(11)...: Loto(1)/Sports(2)/Joker(4)/Results(15)/Pas(16)    *
+*                   Eur(17)/Odds(18)/Raffle(19)                       *
+* Spe Func(25)....: Son(1)/Soff(2)/SalRep(5)/GamRep(6)/Reprint(7)     *
+*                   CtrlReq(19)/BilRep(51)                            *
+* Eur TrxType(25).: Wag(1)/Can(2)/Val(4)                              *
+* Eur WagChan(45).: Retlr(1)/Web(2)/SMS(3)/PortalMed(4)/Mob(5)        *
+* Igs TrxType(25).: Wag(0)/Can(1)/Val(2)/Pay(3)/Rep(4)                *
+***********************************************************************
+13:23:57 CONSOLE  Enter first  offset (A=all)            >a
+PODEV1::SCML> dir mario.dat;0
+
+Directory GXPROJ:[TSK]
+
+MARIO.DAT;39                      182  10-JUL-2020 13:22:39.75
+
+Total of 1 file, 182 blocks.
+PODEV1::SCML> type mario.dat;0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE     1
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF
+    FILE NAME -----------> prim:mtmf01.fil
+    TAPE DRIVE ---------->
+    TERMINAL NUMBER -----> ALL
+    EXCLUDE EM TRX ------> NO
+    EXCLUDE IGS TRX -----> NO
+    EUROMIL EXT SER # --->
+    PLACARD EXT SER # --->
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL
+    SERIAL NUMBERS ------> EXTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 :
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE     1
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  13246450 20:11:27     0   0  7005    0             0    2 SUPWAG   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  11018224 20:11:29     0   0  7005    0             0    2 SUPCAN   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD   9838574 20:11:34     0   0  7005    0             0    2 SUPVAL   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  15998956 20:14:52     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11CBC
+  GOOD  NOER   CMD  13770730 20:20:04     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11DF4
+  GOOD  NOER   CMD  11542504 20:25:17     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11F2D
+  GOOD  NOER   CMD  10362854 20:30:07     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       0 NEW>       1
+  GOOD  NOER   CMD  16523236 20:30:29     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12065
+  GOOD  NOER   CMD  14295010 20:35:41     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1219D
+  GOOD  NOER   CMD  12066784 20:40:53     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   122D5
+  GOOD  NOER   CMD  12128273 20:46:05     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1240D
+  GOOD  NOER   CMD  14356499 20:49:37     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  16584725 20:51:17     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12545
+  GOOD  NOER   CMD  10424343 20:56:29     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1267D
+  GOOD  NOER   CMD  11603993 21:01:42     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   127B6
+  GOOD  NOER   CMD  13832219 21:06:54     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   128EE
+  GOOD  NOER   CMD  16060445 21:09:07     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD   9900063 21:12:06     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12A26
+  GOOD  NOER   CMD  11079681 21:17:18     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12B5E
+  GOOD  NOER   CMD  13307907 21:22:30     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12C96
+  GOOD  NOER   CMD  15536133 21:27:42     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12DCE
+  GOOD  NOER   CMD   9375751 21:28:37     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  10555401 21:32:55     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12F07
+  GOOD  NOER   CMD  12783627 21:38:07     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1303F
+  GOOD  NOER   CMD  15011853 21:43:19     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13177
+  GOOD  NOER   CMD   8851471 21:48:07     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  10031153 21:48:31     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   132AF
+  GOOD  NOER   CMD  16453683 21:53:43     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   133E7
+  GOOD  NOER   CMD  14487605 21:58:55     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1351F
+  GOOD  NOER   CMD  12521527 22:04:07     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13657
+  GOOD  NOER   CMD   9506873 22:07:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  15929403 22:09:20     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13790
+  GOOD  NOER   CMD  13963325 22:14:32     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   138C8
+  GOOD  NOER   CMD  11997247 22:19:44     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13A00
+  GOOD  NOER   CMD   8982561 22:24:56     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13B38
+  GOOD  NOER   CMD  15405091 22:27:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  13439013 22:30:08     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13C70
+  GOOD  NOER   CMD  11472935 22:35:20     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13DA8
+  GOOD  NOER   CMD   8458281 22:40:33     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13EE1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE     2
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  14880811 22:45:45     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14019
+  GOOD  NOER   CMD  12914733 22:46:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  10948655 22:50:57     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14151
+  GOOD  NOER   CMD  16322641 22:56:09     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14289
+  GOOD  NOER   CMD  10162259 23:01:21     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   143C1
+  GOOD  NOER   CMD  12390485 23:06:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  14618711 23:06:33     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   144F9
+  GOOD  NOER   CMD  15798361 23:11:45     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14631
+  GOOD  NOER   CMD   9637979 23:16:58     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1476A
+  GOOD  NOER   CMD  11866205 23:22:10     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   148A2
+  GOOD  NOER   CMD  14094431 23:25:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  15274049 23:27:22     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   149DA
+  GOOD  NOER   CMD   9113667 23:32:34     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14B12
+  GOOD  NOER   CMD  11341893 23:37:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14C4A
+  GOOD  NOER   CMD  13570119 23:42:58     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14D82
+  GOOD  NOER   CMD  14749769 23:45:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD   8589387 23:48:10     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14EBA
+  GOOD  NOER   CMD  10817613 23:53:23     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14FF3
+  GOOD  NOER   CMD  13045839 23:58:35     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1512B
+  GOOD  NOER   CMD  14225521 00:03:47     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>      E3
+  GOOD  NOER   CMD  12259443 00:04:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  10293365 00:08:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     21B
+  GOOD  NOER   CMD  16715895 00:14:11     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     353
+  GOOD  NOER   CMD  13701241 00:19:23     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     48B
+  GOOD  NOER   CMD  12718202 00:24:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  14946428 00:24:35     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     5C3
+  GOOD  NOER   CMD   8786046 00:29:48     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     6FC
+  GOOD  NOER   CMD  12062816 00:35:00     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     834
+  GOOD  NOER   CMD  14291042 00:40:12     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     96C
+  GOOD  NOER   CMD  16519268 00:43:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  10358886 00:45:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     AA4
+  GOOD  NOER   CMD  11538536 00:50:36     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     BDC
+  GOOD  NOER   CMD  13766762 00:55:48     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     D14
+  GOOD  NOER   CMD  15994988 01:01:00     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     E4C
+  GOOD  NOER   CMD   9834606 01:03:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  13111440 01:06:13     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     F85
+  GOOD  NOER   CMD  11145362 01:11:25     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    10BD
+  GOOD  NOER   CMD   9179284 01:16:37     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    11F5
+  GOOD  NOER   CMD  15601814 01:21:49     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    132D
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE     3
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  12587160 01:22:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  10621082 01:27:01     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1465
+  GOOD  NOER   CMD   8655004 01:32:13     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    159D
+  GOOD  NOER   CMD  15077534 01:37:25     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    16D5
+  GOOD  NOER   CMD  14160000 01:42:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  12193922 01:42:38     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    180D
+  GOOD  NOER   CMD  10227844 01:47:50     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1946
+  GOOD  NOER   CMD  16650374 01:53:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1A7E
+  GOOD  NOER   CMD  13635720 01:58:14     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1BB6
+  GOOD  NOER   CMD  11669642 02:01:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD   9703564 02:03:26     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1CEE
+  GOOD  NOER   CMD  16126094 02:08:38     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1E26
+  GOOD  NOER   CMD  15208624 02:13:50     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1F5E
+  GOOD  NOER   CMD   9048242 02:19:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2096
+  GOOD  NOER   CMD  11276468 02:21:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  13504694 02:24:15     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    21CF
+  GOOD  NOER   CMD  14684344 02:29:27     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2307
+  GOOD  NOER   CMD   8523962 02:34:39     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    243F
+  GOOD  NOER   CMD  10752188 02:39:51     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2577
+  GOOD  NOER   CMD  12980414 02:40:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  16257184 02:45:03     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    26AF
+  GOOD  NOER   CMD  10096802 02:50:15     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    27E7
+  GOOD  NOER   CMD  12325028 02:55:27     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    291F
+  GOOD  NOER   CMD  14553254 03:00:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  15732904 03:00:40     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2A58
+  GOOD  NOER   CMD   9572522 03:05:52     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2B90
+  GOOD  NOER   CMD  11800748 03:11:04     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2CC8
+  GOOD  NOER   CMD  14028974 03:16:16     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2E00
+  GOOD  NOER   CMD   8917200 03:19:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  15339730 03:21:28     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2F38
+  GOOD  NOER   CMD  13373652 03:26:40     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3070
+  GOOD  NOER   CMD  11407574 03:31:52     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    31A8
+  GOOD  NOER   CMD   8392920 03:37:05     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    32E1
+  GOOD  NOER   CMD  14815450 03:39:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  12849372 03:42:17     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3419
+  GOOD  NOER   CMD  10883294 03:47:29     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3551
+  GOOD  NOER   CMD   9965760 03:52:41     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3689
+  GOOD  NOER   CMD  16388290 03:57:53     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    37C1
+  GOOD  NOER   CMD  14422212 03:58:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE     4
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  12456134 04:03:05     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    38F9
+  GOOD  NOER   CMD   9441480 04:08:17     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3A31
+  GOOD  NOER   CMD  15864010 04:13:30     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3B69
+  GOOD  NOER   CMD  13897932 04:18:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  11931854 04:18:42     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3CA2
+  GOOD  NOER   CMD  11014384 04:23:54     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3DDA
+  GOOD  NOER   CMD  13242610 04:29:06     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3F12
+  GOOD  NOER   CMD  15470836 04:34:18     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    404A
+  GOOD  NOER   CMD   9310454 04:37:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  16716023 04:39:30     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4182
+  GOOD  NOER   CMD  13701369 04:44:42     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    42BA
+  GOOD  NOER   CMD  11735291 04:49:54     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    43F2
+  GOOD  NOER   CMD   9769213 04:55:07     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    452B
+  GOOD  NOER   CMD  16191743 04:57:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  13177057 05:00:19     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4663
+  GOOD  NOER   CMD  11210979 05:05:31     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    479B
+  GOOD  NOER   CMD   9244901 05:10:43     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    48D3
+  GOOD  NOER   CMD  15667431 05:15:55     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4A0B
+  GOOD  NOER   CMD  12652777 05:16:38     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  10686699 05:21:07     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4B43
+  GOOD  NOER   CMD   8720621 05:26:19     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4C7B
+  GOOD  NOER   CMD  15143151 05:31:32     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4DB4
+  GOOD  NOER   CMD  13111568 05:36:08     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  11145490 05:36:44     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4EEC
+  GOOD  NOER   CMD   9179412 05:41:56     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5024
+  GOOD  NOER   CMD  15601942 05:47:08     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    515C
+  GOOD  NOER   CMD  12587288 05:52:20     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5294
+  GOOD  NOER   CMD  10621210 05:55:39     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD   8655132 05:57:32     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    53CC
+  GOOD  NOER   CMD  15077662 06:02:44     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5504
+  GOOD  NOER   CMD  14160128 06:07:57     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    563D
+  GOOD  NOER   CMD  12194050 06:13:09     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5775
+  GOOD  NOER   CMD  10227972 06:15:09     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  16650502 06:18:21     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    58AD
+  GOOD  NOER   CMD  13635848 06:23:33     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    59E5
+  GOOD  NOER   CMD  11669770 06:28:45     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5B1D
+  GOOD  NOER   CMD   9703692 06:33:57     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5C55
+  GOOD  NOER   CMD  16126222 06:34:39     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  15208752 06:39:09     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5D8D
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE     5
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD   9048370 06:44:21     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5EC5
+  GOOD  NOER   CMD  11276596 06:49:34     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5FFE
+  GOOD  NOER   CMD  13504822 06:54:09     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  14684472 06:54:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6136
+  GOOD  NOER   CMD   8524090 06:59:58     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    626E
+  GOOD  NOER   CMD  10752316 07:05:10     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    63A6
+  GOOD  NOER   CMD  12980542 07:10:22     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    64DE
+  GOOD  NOER   CMD  16257312 07:13:39     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  10096930 07:15:34     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6616
+  GOOD  NOER   CMD  12325156 07:20:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    674E
+  GOOD  NOER   CMD  14553382 07:25:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6887
+  GOOD  NOER   CMD  15733032 07:31:11     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    69BF
+  GOOD  NOER   CMD   9572650 07:33:09     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  11800876 07:36:23     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6AF7
+  GOOD  NOER   CMD  14029102 07:41:35     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6C2F
+  GOOD  NOER   CMD   8917328 07:46:47     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6D67
+  GOOD  NOER   CMD  15339858 07:51:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6E9F
+  GOOD  NOER   CMD  13373780 07:52:39     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  11407702 07:57:11     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6FD7
+  GOOD  NOER   CMD   8393048 08:02:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7110
+  GOOD  NOER   CMD  14815578 08:07:36     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7248
+  GOOD  NOER   CMD  12849500 08:12:09     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  10883422 08:12:48     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7380
+  GOOD  NOER   CMD   9965888 08:18:00     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    74B8
+  GOOD  NOER   CMD  16388418 08:23:12     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    75F0
+  GOOD  NOER   CMD  14422340 08:28:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7728
+  GOOD  NOER   CMD  12456262 08:31:39     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD   9441608 08:33:36     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7860
+  GOOD  NOER   CMD  15864138 08:38:49     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7999
+  GOOD  NOER   CMD  13898060 08:44:01     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7AD1
+  GOOD  NOER   CMD  11931982 08:49:13     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7C09
+  GOOD  NOER   CMD  11014512 08:51:09     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  13242738 08:54:25     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7D41
+  GOOD  NOER   CMD  10293621 08:59:37     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7E79
+  GOOD  NOER   CMD  16716151 09:04:49     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7FB1
+  GOOD  NOER   CMD  13701497 09:10:01     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    80E9
+  GOOD  NOER   CMD  11735419 09:10:39     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD   9769341 09:15:14     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8221
+  GOOD  NOER   CMD  16191871 09:20:26     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    835A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE     6
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  13177185 09:25:38     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8492
+  GOOD  NOER   CMD  11211107 09:30:09     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD   9245029 09:30:50     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    85CA
+  GOOD  NOER   CMD  15667559 09:36:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8702
+  GOOD  NOER   CMD  12652905 09:41:14     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    883A
+  GOOD  NOER   CMD  10686827 09:46:27     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8973
+  GOOD  NOER   CMD   8720749 09:49:46     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  15143279 09:51:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8AB2
+  GOOD  NOER   CMD  12128657 09:56:58     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8BEA
+  GOOD  NOER   CMD  14356883 10:02:10     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8D22
+  GOOD  NOER   CMD  16585109 10:07:22     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8E5A
+  GOOD  NOER   CMD  10424727 10:09:16     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  11604377 10:12:34     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8F92
+  GOOD  NOER   CMD  13832603 10:17:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    90CA
+  GOOD  NOER   CMD  16060829 10:22:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9203
+  GOOD  NOER   CMD   9900447 10:28:11     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    933B
+  GOOD  NOER   CMD  11080065 10:28:46     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  13308291 10:33:23     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9473
+  GOOD  NOER   CMD  15536517 10:38:35     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    95AB
+  GOOD  NOER   CMD   9376135 10:43:47     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    96E3
+  GOOD  NOER   CMD  10555785 10:48:16     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  12784011 10:48:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    981B
+  GOOD  NOER   CMD  15012237 10:54:11     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9953
+  GOOD  NOER   CMD   8851855 10:59:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9A8C
+  GOOD  NOER   CMD  10031537 11:04:36     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9BC4
+  GOOD  NOER   CMD  16454067 11:07:46     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  14487989 11:09:48     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9CFC
+  GOOD  NOER   CMD  12521911 11:15:00     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9E34
+  GOOD  NOER   CMD   9507257 11:20:12     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9F6C
+  GOOD  NOER   CMD  15929787 11:25:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A0A4
+  GOOD  NOER   CMD  13963709 11:27:16     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  11997631 11:30:36     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A1DC
+  GOOD  NOER   CMD   8982945 11:35:49     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A315
+  GOOD  NOER   CMD  15405475 11:41:01     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A44D
+  GOOD  NOER   CMD  13439397 11:46:13     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A585
+  GOOD  NOER   CMD  11473319 11:46:46     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD   8458665 11:51:25     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A6BD
+  GOOD  NOER   CMD  14881195 11:56:37     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A7F5
+  GOOD  NOER   CMD  12915117 12:01:49     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A92D
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE     7
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  10949039 12:06:16     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  16323025 12:07:01     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AA65
+  GOOD  NOER   CMD  10162643 12:12:14     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AB9D
+  GOOD  NOER   CMD  12390869 12:17:26     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    ACD6
+  GOOD  NOER   CMD  14619095 12:22:38     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AE0E
+  GOOD  NOER   CMD  15798745 12:25:46     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD   9638363 12:27:50     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AF46
+  GOOD  NOER   CMD  11866589 12:33:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B07E
+  GOOD  NOER   CMD  14094815 12:38:14     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B1B6
+  GOOD  NOER   CMD  15274433 12:43:26     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B2EE
+  GOOD  NOER   CMD   9114051 12:45:16     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  11342277 12:48:38     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B426
+  GOOD  NOER   CMD  13570503 12:53:51     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B55F
+  GOOD  NOER   CMD  14750153 12:59:03     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B697
+  GOOD  NOER   CMD   8589771 13:04:15     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B7CF
+  GOOD  NOER   CMD  10817997 13:04:46     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  13046223 13:09:27     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B907
+  GOOD  NOER   CMD  14225905 13:14:39     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BA3F
+  GOOD  NOER   CMD  11014640 13:19:51     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BB77
+  GOOD  NOER   CMD  13242866 13:24:16     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  15471092 13:25:03     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BCAF
+  GOOD  NOER   CMD   9310710 13:30:16     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BDE8
+  GOOD  NOER   CMD  10490360 13:35:28     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BF20
+  GOOD  NOER   CMD  12718586 13:40:40     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C058
+  GOOD  NOER   CMD  14946812 13:43:46     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD   8786430 13:45:52     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C190
+  GOOD  NOER   CMD  12063200 13:51:04     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C2C8
+  GOOD  NOER   CMD  14291426 13:56:16     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C400
+  GOOD  NOER   CMD  16519652 14:01:28     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C538
+  GOOD  NOER   CMD  10359270 14:03:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  11538920 14:06:40     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C670
+  GOOD  NOER   CMD  13767146 14:11:53     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C7A9
+  GOOD  NOER   CMD  15995372 14:17:05     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C8E1
+  GOOD  NOER   CMD   9834990 14:22:17     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CA19
+  GOOD  NOER   CMD  14357011 14:22:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  12128785 14:27:29     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CB51
+  GOOD  NOER   CMD  10424855 14:32:41     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CC89
+  GOOD  NOER   CMD  16585237 14:37:53     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CDC1
+  GOOD  NOER   CMD  13832731 14:42:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE     8
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  11604505 14:43:05     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CEF9
+  GOOD  NOER   CMD   9900575 14:48:18     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D032
+  GOOD  NOER   CMD  16060957 14:53:30     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D16A
+  GOOD  NOER   CMD  13308419 14:58:42     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D2A2
+  GOOD  NOER   CMD  11080193 15:01:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD   9376263 15:03:54     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D3DA
+  GOOD  NOER   SPE  15536645 15:08:07  1763   8  7005    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00009
+  GOOD  NOER   SPE  12784139 15:08:10  1763   9  7005    1 Sports      1    2 CNTL OLD>FFFFE605 NEW>       0 AGT> 03-00009
+  GOOD  NOER   SPE  10555913 15:08:10  1763   A  7005    6 Lotto       3    2 CNTL OLD>FFFFE701 NEW>       E AGT> 03-00009
+  GOOD  NOER   SPE   8851983 15:08:10  1763   B  7005    7 Lotto       4    2 CNTL OLD>FFFFE801 NEW>       E AGT> 03-00009
+  GOOD  NOER   SPE  15012365 15:08:10  1763   C  7005   10 Sports      3    2 CNTL OLD>     B04 NEW>       E AGT> 03-00009
+  GOOD  NOER   CMD  16454195 15:09:06     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D512
+  GOOD  NOER   CMD  10031665 15:14:18     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D64A
+  GOOD  NOER   CMD  12522039 15:19:30     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D782
+  GOOD  NOER   CMD  14488117 15:21:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  15929915 15:24:43     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D8BB
+  GOOD  NOER   CMD   9507385 15:29:55     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D9F3
+  GOOD  NOER   CMD  11997759 15:35:07     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DB2B
+  GOOD  NOER   CMD  13963837 15:40:19     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DC63
+  GOOD  NOER   CMD  15405603 15:40:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD   8983073 15:45:31     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DD9B
+  GOOD  NOER   CMD  11473447 15:50:43     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DED3
+  GOOD  NOER   CMD  13439525 15:55:55     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E00B
+  GOOD  NOER   CMD  14881323 16:00:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD   8458793 16:01:08     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E144
+  GOOD  NOER   CMD  10949167 16:06:20     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E27C
+  GOOD  NOER   CMD  12915245 16:11:32     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E3B4
+  GOOD  NOER   CMD  10162771 16:16:44     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E4EC
+  GOOD  NOER   CMD  16323153 16:19:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  14619223 16:21:56     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E624
+  GOOD  NOER   CMD  12390997 16:27:08     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E75C
+  GOOD  NOER   CMD   9638491 16:32:20     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E894
+  GOOD  NOER   CMD  15798873 16:37:32     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E9CC
+  GOOD  NOER   CMD  14094943 16:39:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  11866717 16:42:45     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EB05
+  GOOD  NOER   CMD   9114179 16:47:57     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EC3D
+  GOOD  NOER   CMD  15274561 16:53:09     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    ED75
+  GOOD  NOER   CMD  13570631 16:58:21     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EEAD
+  GOOD  NOER   CMD  11342405 16:58:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE     9
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD   8589899 17:03:33     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EFE5
+  GOOD  NOER   CMD  14750281 17:08:45     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F11D
+  GOOD  NOER   CMD  13046351 17:13:57     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F255
+  GOOD  NOER   CMD  13898316 17:18:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  13242994 17:19:10     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F38E
+  GOOD  NOER   CMD  11014768 17:24:22     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F4C6
+  GOOD  NOER   CMD   9310838 17:29:34     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F5FE
+  GOOD  NOER   CMD  15471220 17:34:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F736
+  GOOD  NOER   CMD  12718714 17:37:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  10490488 17:39:58     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F86E
+  GOOD  NOER   CMD   8786558 17:45:10     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F9A6
+  GOOD  NOER   CMD  14946940 17:50:22     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FADE
+  GOOD  NOER   CMD  14291554 17:55:35     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FC17
+  GOOD  NOER   CMD  12063328 17:57:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  10359398 18:00:47     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FD4F
+  GOOD  NOER   CMD  16519780 18:05:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FE87
+  GOOD  NOER   CMD  13767274 18:11:11     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FFBF
+  GOOD  NOER   CMD  11539048 18:16:23     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   100F7
+  GOOD  NOER   CMD   9835118 18:16:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  15995500 18:21:35     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1022F
+  GOOD  NOER   CMD  11145874 18:26:47     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10367
+  GOOD  NOER   CMD  13111952 18:32:00     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1049F
+  GOOD  NOER   CMD  15602326 18:36:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD   9179796 18:37:12     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   105D8
+  GOOD  NOER   CMD  10621594 18:42:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10710
+  GOOD  NOER   CMD  12587672 18:47:36     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10848
+  GOOD  NOER   CMD  15078046 18:52:48     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10980
+  GOOD  NOER   CMD   8655516 18:55:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  12194434 18:58:00     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10AB8
+  GOOD  NOER   CMD  14160512 19:03:12     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10BF0
+  GOOD  NOER   CMD  16650886 19:08:25     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10D29
+  GOOD  NOER   CMD  10228356 19:13:37     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10E61
+  GOOD  NOER   CMD  11670154 19:15:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  13636232 19:18:49     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10F99
+  GOOD  NOER   CMD  16126606 19:24:01     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   110D1
+  GOOD  NOER   CMD   9704076 19:29:13     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11209
+  GOOD  NOER   CMD   9048754 19:34:25     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11341
+  GOOD  NOER   CMD  15209136 19:34:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  13505206 19:39:37     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11479
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE    10
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  11276980 19:44:50     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   115B2
+  GOOD  NOER   CMD   8524474 19:50:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   116EA
+  GOOD  NOER   CMD  14684856 19:54:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  12980926 19:55:14     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11822
+  GOOD  NOER   CMD  10752700 20:00:26     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1195A
+  GOOD  NOER   CMD  10097314 20:05:38     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11A92
+  GOOD  NOER   CMD  16257696 20:10:50     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11BCA
+  GOOD  NOER   CMD  14553766 20:13:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  12325540 20:16:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11D02
+  GOOD  NOER   CMD   9573034 20:21:15     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11E3B
+  GOOD  NOER   CMD  15733416 20:26:27     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11F73
+  GOOD  NOER   CMD  14029486 20:31:39     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   120AB
+  GOOD  NOER   CMD  11801260 20:33:17     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  15340242 20:36:51     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   121E3
+  GOOD  NOER   CMD   8917712 20:42:03     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1231B
+  GOOD  NOER   CMD  11408086 20:47:15     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12453
+  GOOD  NOER   CMD  13374164 20:52:28     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1258C
+  GOOD  NOER   CMD  14815962 20:52:47     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD   8393432 20:57:40     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   126C4
+  GOOD  NOER   CMD  10883806 21:02:52     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   127FC
+  GOOD  NOER   CMD  12849884 21:08:04     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12934
+  GOOD  NOER   CMD  16388802 21:12:18     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD   9966272 21:13:16     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12A6C
+  GOOD  NOER   CMD  12456646 21:18:28     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12BA4
+  GOOD  NOER   CMD  14422724 21:23:40     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12CDC
+  GOOD  NOER   CMD  15864522 21:28:53     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12E15
+  GOOD  NOER   CMD   9441992 21:31:48     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  14750409 21:34:05     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12F4D
+  GOOD  NOER   CMD  13046479 21:39:17     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13085
+  GOOD  NOER   CMD  10818253 21:44:29     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   131BD
+  GOOD  NOER   CMD  12260083 21:49:41     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   132F5
+  GOOD  NOER   CMD  14226161 21:51:18     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  16716535 21:54:53     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1342D
+  GOOD  NOER   CMD  10294005 22:00:06     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13565
+  GOOD  NOER   CMD  11735803 22:05:18     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1369E
+  GOOD  NOER   CMD  13701881 22:10:30     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   137D6
+  GOOD  NOER   CMD  16192255 22:10:48     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD   9769725 22:15:42     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1390E
+  GOOD  NOER   CMD  11211491 22:20:54     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13A46
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE    11
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  13177569 22:26:06     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13B7E
+  GOOD  NOER   CMD  15667943 22:30:18     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD   9245413 22:31:18     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13CB6
+  GOOD  NOER   CMD  10687211 22:36:30     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13DEE
+  GOOD  NOER   CMD  12653289 22:41:43     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13F27
+  GOOD  NOER   CMD  15143663 22:46:55     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1405F
+  GOOD  NOER   CMD   8721133 22:49:48     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  11146002 22:52:07     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14197
+  GOOD  NOER   CMD  13112080 22:57:19     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   142CF
+  GOOD  NOER   CMD  15602454 23:02:31     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14407
+  GOOD  NOER   CMD   9179924 23:07:43     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1453F
+  GOOD  NOER   CMD  10621722 23:09:18     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  12587800 23:12:55     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14677
+  GOOD  NOER   CMD  15078174 23:18:08     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   147B0
+  GOOD  NOER   CMD   8655644 23:23:20     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   148E8
+  GOOD  NOER   CMD  12194562 23:28:32     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14A20
+  GOOD  NOER   CMD  14160640 23:28:48     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  16651014 23:33:44     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14B58
+  GOOD  NOER   CMD  10228484 23:38:56     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14C90
+  GOOD  NOER   CMD  11670282 23:44:08     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14DC8
+  GOOD  NOER   CMD  13636360 23:48:18     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  16126734 23:49:21     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14F01
+  GOOD  NOER   CMD   9704204 23:54:33     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   15039
+  GOOD  NOER   CMD   9048882 23:59:45     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   15171
+  GOOD  NOER   CMD  15209264 00:04:57     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     129
+  GOOD  NOER   CMD  13505334 00:07:48     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  11277108 00:10:09     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     261
+  GOOD  NOER   CMD   8524602 00:15:21     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     399
+  GOOD  NOER   CMD  14684984 00:20:33     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     4D1
+  GOOD  NOER   CMD  12981054 00:25:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     60A
+  GOOD  NOER   CMD  10752828 00:27:18     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  10097442 00:30:58     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     742
+  GOOD  NOER   CMD  16257824 00:36:10     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     87A
+  GOOD  NOER   CMD  14553894 00:41:22     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     9B2
+  GOOD  NOER   CMD  12325668 00:46:34     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     AEA
+  GOOD  NOER   CMD   9573162 00:46:48     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  15733544 00:51:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     C22
+  GOOD  NOER   CMD  14029614 00:56:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     D5B
+  GOOD  NOER   CMD  11801388 01:02:11     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     E93
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE    12
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  15340370 01:06:18     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD   8917840 01:07:23     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     FCB
+  GOOD  NOER   CMD  11408214 01:12:35     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1103
+  REJT  SDOR   EUR  13374292 01:16:38  1763   D  7005    0 EuroMil     1    3  APOSTA             N                AGT> 03-00009
+         EM Sales Channel                Retailer
+         EM Draw Indicator               Tuesday
+         EM Draw Duration                1
+         EM Quick Pick                   AUTO
+         EM Bet Marks                    5 + 2
+         EM Board 1 of 1                 08 27 39 44 49 + 01 07
+         MsgQ Reference #                0
+         Bet Creation Time in Euromil    00:00:00
+         EM Bet External Serial #        686-00000000-***
+         EM Draw #                       000/2000 to 000/2000
+
+  GOOD  NOER   CMD  15799129 01:17:47     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    123B
+  GOOD  NOER   CMD  14095199 01:22:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1373
+  GOOD  NOER   CMD  11866973 01:25:48     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD   9114435 01:28:12     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    14AB
+  GOOD  NOER   CMD  15274817 01:33:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    15E4
+  GOOD  NOER   CMD  13570887 01:38:36     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    171C
+  GOOD  NOER   CMD  11342661 01:43:48     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1854
+  GOOD  NOER   CMD   8590155 01:45:19     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  14750537 01:49:00     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    198C
+  GOOD  NOER   CMD  13046607 01:54:12     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1AC4
+  GOOD  NOER   CMD  10818381 01:59:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1BFC
+  GOOD  NOER   CMD  12260211 02:04:37     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1D35
+  GOOD  NOER   CMD  14226289 02:04:49     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  16716663 02:09:49     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1E6D
+  GOOD  NOER   CMD  10294133 02:15:01     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1FA5
+  GOOD  NOER   CMD  11735931 02:20:13     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    20DD
+  GOOD  NOER   CMD  13702009 02:24:19     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  16192383 02:25:25     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2215
+  GOOD  NOER   CMD   9769853 02:30:37     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    234D
+  GOOD  NOER   CMD  11211619 02:35:49     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2485
+  GOOD  NOER   CMD  13177697 02:41:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    25BE
+  GOOD  NOER   CMD  15668071 02:43:49     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD   9245541 02:46:14     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    26F6
+  GOOD  NOER   CMD  10687339 02:51:26     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    282E
+  GOOD  NOER   CMD  12653417 02:56:38     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2966
+  GOOD  NOER   CMD  15143791 03:01:50     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2A9E
+  GOOD  NOER   CMD   8721261 03:03:19     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  14357395 03:07:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2BD6
+  GOOD  NOER   CMD  12129169 03:12:15     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2D0F
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE    13
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  10425239 03:17:27     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2E47
+  GOOD  NOER   CMD  16585621 03:22:39     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2F7F
+  GOOD  NOER   CMD  13833115 03:22:49     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  11604889 03:27:51     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    30B7
+  GOOD  NOER   CMD   9900959 03:33:03     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    31EF
+  GOOD  NOER   CMD  16061341 03:38:15     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3327
+  GOOD  NOER   CMD  13308803 03:42:19     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  11080577 03:43:28     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    345F
+  GOOD  NOER   CMD   9376647 03:48:40     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3598
+  GOOD  NOER   CMD  15537029 03:53:52     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    36D0
+  GOOD  NOER   CMD  12784523 03:59:04     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3808
+  GOOD  NOER   CMD  10556297 04:01:49     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD   8852367 04:04:16     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3940
+  GOOD  NOER   CMD  15012749 04:09:28     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3A78
+  GOOD  NOER   CMD  16454579 04:14:41     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3BB0
+  GOOD  NOER   CMD  10032049 04:19:53     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3CE9
+  GOOD  NOER   CMD  12522423 04:21:19     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  14488501 04:25:05     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3E21
+  GOOD  NOER   CMD  15930299 04:30:17     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3F59
+  GOOD  NOER   CMD   9507769 04:35:29     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4091
+  GOOD  NOER   CMD  11998143 04:40:41     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    41C9
+  GOOD  NOER   CMD  13964221 04:40:49     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  15405987 04:45:53     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4301
+  GOOD  NOER   CMD   8983457 04:51:06     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    443A
+  GOOD  NOER   CMD  11473831 04:56:18     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4572
+  GOOD  NOER   CMD  13439909 05:00:20     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  14881707 05:01:30     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    46AA
+  GOOD  NOER   CMD   8459177 05:06:42     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    47E2
+  GOOD  NOER   CMD  10949551 05:11:54     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    491A
+  GOOD  NOER   CMD  12915629 05:17:06     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4A52
+  GOOD  NOER   CMD  10163155 05:19:50     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  16323537 05:22:18     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4B8A
+  GOOD  NOER   CMD  14619607 05:27:31     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4CC3
+  GOOD  NOER   CMD  12391381 05:32:43     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4DFB
+  GOOD  NOER   CMD   9638875 05:37:55     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4F33
+  GOOD  NOER   CMD  15799257 05:39:20     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  14095327 05:43:07     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    506B
+  GOOD  NOER   CMD  11867101 05:48:19     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    51A3
+  GOOD  NOER   CMD   9114563 05:53:31     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    52DB
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE    14
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  15274945 05:58:44     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5414
+  GOOD  NOER   CMD  13571015 05:58:50     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  12456902 06:03:56     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    554C
+  GOOD  NOER   CMD  14422980 06:09:08     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5684
+  GOOD  NOER   CMD  15864778 06:14:20     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    57BC
+  GOOD  NOER   CMD   9442248 06:18:20     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  11932622 06:19:32     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    58F4
+  GOOD  NOER   CMD  13898700 06:24:44     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5A2C
+  GOOD  NOER   CMD  13243378 06:29:57     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5B64
+  GOOD  NOER   CMD  11015152 06:35:09     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5C9D
+  GOOD  NOER   CMD   9311222 06:37:50     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  15471604 06:40:21     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5DD5
+  GOOD  NOER   CMD  12719098 06:45:33     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5F0D
+  GOOD  NOER   CMD  10490872 06:50:45     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6045
+  GOOD  NOER   CMD   8786942 06:55:57     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    617D
+  GOOD  NOER   CMD  14947324 06:57:20     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  14291938 07:01:09     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    62B5
+  GOOD  NOER   CMD  12063712 07:06:22     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    63EE
+  GOOD  NOER   CMD  10359782 07:11:34     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6526
+  GOOD  NOER   CMD  16520164 07:16:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    665E
+  GOOD  NOER   CMD  13767658 07:16:50     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  11539432 07:21:58     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6796
+  GOOD  NOER   CMD   9835502 07:27:10     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    68CE
+  GOOD  NOER   CMD  15995884 07:32:22     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6A06
+  GOOD  NOER   CMD  16585749 07:36:20     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  10425367 07:37:35     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6B3F
+  GOOD  NOER   CMD  12129297 07:42:47     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6C77
+  GOOD  NOER   CMD  14357523 07:47:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6DAF
+  GOOD  NOER   CMD  16061469 07:53:11     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6EE7
+  GOOD  NOER   CMD   9901087 07:55:50     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  11605017 07:58:23     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    701F
+  GOOD  NOER   CMD  13833243 08:03:35     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7157
+  GOOD  NOER   CMD  15537157 08:08:47     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    728F
+  GOOD  NOER   CMD   9376775 08:14:00     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    73C8
+  GOOD  NOER   CMD  11080705 08:15:20     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  13308931 08:19:12     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7500
+  GOOD  NOER   CMD  15012877 08:24:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7638
+  GOOD  NOER   CMD   8852495 08:29:36     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7770
+  GOOD  NOER   CMD  10556425 08:34:48     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    78A8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE    15
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  12784651 08:34:51     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  14488629 08:40:00     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    79E0
+  GOOD  NOER   CMD  12522551 08:45:13     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7B19
+  GOOD  NOER   CMD  10032177 08:50:25     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7C51
+  GOOD  NOER   CMD  16454707 08:54:21     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  13964349 08:55:37     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7D89
+  GOOD  NOER   CMD  11998271 09:00:49     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7EC1
+  GOOD  NOER   CMD   9507897 09:06:01     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7FF9
+  GOOD  NOER   CMD  15930427 09:11:13     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8131
+  GOOD  NOER   CMD  13440037 09:13:51     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  11473959 09:16:25     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8269
+  GOOD  NOER   CMD   8983585 09:21:38     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    83A2
+  GOOD  NOER   CMD  15406115 09:26:50     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    84DA
+  GOOD  NOER   CMD  12915757 09:32:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8612
+  GOOD  NOER   CMD  10949679 09:33:21     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD   8459305 09:37:14     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    874A
+  GOOD  NOER   CMD  14881835 09:42:33     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8889
+  GOOD  NOER   CMD  12391509 09:47:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    89C2
+  GOOD  NOER   CMD  14619735 09:52:58     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8AFA
+  GOOD  NOER   CMD  16323665 09:52:58     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  10163283 09:58:10     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8C32
+  GOOD  NOER   CMD  11867229 10:03:22     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8D6A
+  GOOD  NOER   CMD  14095455 10:08:34     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8EA2
+  GOOD  NOER   CMD  15799385 10:12:28     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD   9639003 10:13:46     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8FDA
+  GOOD  NOER   CMD  11342917 10:18:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9113
+  GOOD  NOER   CMD  12457030 10:24:11     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    924B
+  GOOD  NOER   CMD   9966656 10:29:23     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9383
+  GOOD  NOER   CMD  16389186 10:31:58     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  13898828 10:34:35     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    94BB
+  GOOD  NOER   CMD  11932750 10:39:47     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    95F3
+  GOOD  NOER   CMD   9442376 10:44:59     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    972B
+  GOOD  NOER   CMD  15864906 10:50:12     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9863
+  GOOD  NOER   CMD  15471732 10:51:28     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD   9311350 10:55:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    999C
+  GOOD  NOER   CMD  11015280 11:00:36     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9AD4
+  GOOD  NOER   CMD  13243506 11:05:48     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9C0C
+  GOOD  NOER   CMD  14947452 11:10:59     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD   8787070 11:11:00     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9D44
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                13:24:27 PAGE    16
+ 10.07.2020                               T R A N S A C T I O N   F I L E   R E P O R T                         04.07.2020 CDC 7005
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  10491000 11:16:12     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9E7C
+  GOOD  NOER   CMD  12719226 11:21:24     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9FB4
+  GOOD  NOER   CMD  16520292 11:26:37     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A0ED
+  GOOD  NOER   CMD  10359910 11:30:29     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  12063840 11:31:49     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A225
+  GOOD  NOER   CMD  14292066 11:37:01     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A35D
+  GOOD  NOER   CMD  15996012 11:42:13     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A495
+  GOOD  NOER   CMD   9835630 11:47:25     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A5CD
+  GOOD  NOER   CMD  11539560 11:49:59     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  13767786 11:52:37     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A705
+  GOOD  NOER   CMD   9180308 11:57:50     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A83E
+  GOOD  NOER   CMD  15602838 12:03:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A976
+  GOOD  NOER   CMD  13112464 12:08:14     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AAAE
+  GOOD  NOER   CMD  11146386 12:09:29     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD   8656028 12:13:26     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    ABE6
+  GOOD  NOER   CMD  15078558 12:18:38     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AD1E
+  GOOD  NOER   CMD  12588184 12:23:50     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AE56
+  GOOD  NOER   CMD  10622106 12:28:59     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  10228868 12:29:02     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AF8E
+  GOOD  NOER   CMD  16651398 12:34:15     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B0C7
+  GOOD  NOER   CMD  14161024 12:39:27     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B1FF
+  GOOD  NOER   CMD  12194946 12:44:39     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B337
+  GOOD  NOER   CMD   9704588 12:48:29     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  16127118 12:49:51     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B46F
+  GOOD  NOER   CMD  13636744 12:55:03     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B5A7
+  GOOD  NOER   CMD  11670666 13:00:15     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B6DF
+  GOOD  NOER   CMD  11277492 13:05:28     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B818
+  GOOD  NOER   CMD  13505718 13:07:59     0   0  7005    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  15209648 13:10:40     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B950
+  GOOD  NOER   CMD   9049266 13:15:52     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BA88
+  GOOD  NOER   CMD  10753212 13:21:04     0   0  7005    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BBC0
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales                0                0.00            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       0                0.00            0.00            0.00            0.00            0.00
+
+Total Instant Message Transactions
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        0
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          0
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions          0
+
+Total Passive Returns and Validations
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0
+Total IGS Transactions          0
+PODEV1::SCML>

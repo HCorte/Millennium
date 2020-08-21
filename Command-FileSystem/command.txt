@@ -1,0 +1,2 @@
+comando que retorna o file system da directoria corrente: df .
+comando que retorna todos os file system (listagem): df

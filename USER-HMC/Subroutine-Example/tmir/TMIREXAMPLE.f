@@ -1,0 +1,6 @@
+      PROGRAM TMIREXAMPLE
+      IMPLICIT NONE
+
+      CALL COPYRITE
+
+      END

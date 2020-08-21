@@ -1,0 +1,30 @@
+    > GOSCML
+    > DIR DRAW
+    > SET DEF DRAW
+
+    Na pasta DRAW é onde TMF cria os ficheiros (extensão FIL) das Transcation do tipo de aposta
+    para ler os dados usar o comando r tmir para gerar um relatorio para se ler os dados da transaction
+
+    o Nome da pasta de Draw é de fazer draw de uma aposta
+
+    O numero de serie (serial)
+    Data - Serial - Codigo
+    0000-14880811-000
+
+    Serial_Number -> é o serial 
+    Origin_Serial_Number ---> é o serial numbero da transaction do ticket comprado
+
+    Serial Sequencial-----> Transaction Olimpo/Hades YYMMDD-TransactionType-Scrambled/notScrambled-Code(3 digits/check digits)
+    data juliana (numero de dias apartir de um de janeiro deste ano)
+
+    Original Number?? -> do sistema de origem (euromilhoes,millennium)
+    
+    Millennium:
+        serial number internal ---> algoritmo ----> serial number external
+
+    LN
+    Galope
+
+    Sistema Central é o Millennium certo?
+
+    transactions Olimpo (não ficam os gets, só inserts e updates)
