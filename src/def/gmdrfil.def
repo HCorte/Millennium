@@ -1,0 +1,91 @@
+C GMDRFIL.DEF
+C
+C V01 01-JAN-2017 SCML INITIAL RELEASE
+C
+C STRUCTURE FOR GENERATING THE DRAW INTERFACE FILE FOR THE FOLLOWING
+C GAMES:
+C        1. TOTOLOTO QUARTA
+C        2. TOTOLOTO SABADO
+C        3  TOTOBOLA NORMAL
+C        4  TOTOBOLA EXTRA 1
+C        5. JOKER
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Copyright 2017 SCML. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4 DRMAXDIV
+        PARAMETER (DRMAXDIV = MAX(MAX(LTGDIV,SPGDIV),KIGDIV))                   !GET MAXIMUM PRIZE DIVISIONS BETWEEN LOTTO, SPORTS AND JOKER
+C
+        STRUCTURE /STCGMDRFIL/
+C         GENERAL DATA
+          INTEGER*4    DRFLUN                                                   !LUN FOR DRAW INTERFACE FILE
+          INTEGER*4    GNUM                                                     !GAME NUMBER
+          INTEGER*4    GTYP                                                     !GAME TYPE
+          INTEGER*4    GIND                                                     !GAME INDEX
+          INTEGER*4    GDIV                                                     !TOTAL PRIZE DIVISIONS
+          CHARACTER*32 DRFNAM                                                   !DRAW INTERFACE FILE NAME
+C         HEADER DATA
+          INTEGER*4    DRCCC                                                    !DRAW NUMBER
+          INTEGER*4    DRYEAR                                                   !DRAW YEAR
+          
+          INTEGER*4    TOTTCKT                                                  !TOTAL DRAW VALID TICKETS
+          INTEGER*8    TOTSALE                                                  !TOTAL DRAW SALES AMOUNT
+          REAL*8       TOTPOOL                                                  !TOTAL DRAW NET PRIZE AMOUNT FOR DISTRIBUTION
+          INTEGER*4    PYTPERC                                                  !PAYOUT PERCENTAGE
+          INTEGER*4    PREVJKT                                                  !PREVIOUS JACKPOT AMOUNT
+C         BODY DATA
+          INTEGER*4    DIVNUMB(DRMAXDIV)                                        !NUMBER OF EACH PRIZE DIVISION
+          INTEGER*4    DIVPERC(DRMAXDIV)                                        !ASSIGNED PERCENTAGE OF EACH PRIZE DIVISION
+          INTEGER*8    DIVPOOL(DRMAXDIV)                                        !TOTAL POOL VALUE OF EACH PRIZE DIVISION
+C         TRAILER DATA
+          CHARACTER*8  CRFDAT                                                   !FILE CREATION DATE
+C
+          INTEGER*4    ALIGN                                                    !ALIGNMENT, FREE FOR USE
+        ENDSTRUCTURE
+C
+C GAME DRAW FILE RECORD TYPES
+C
+       CHARACTER*2 RTYP_HDR /'01'/
+       CHARACTER*2 RTYP_BDY /'02'/
+       CHARACTER*2 RTYP_TRL /'09'/
+C
+C LOTTO GAME DEFINITIONS
+C
+       INTEGER*4 LTSAT
+       PARAMETER (LTSAT = 3)                                                    !TOTOLOTO SABADO GAME INDEX
+C
+       INTEGER*4 LTWED
+       PARAMETER (LTWED = 4)                                                    !TOTOLOTO QUARTA GAME INDEX
+C
+       CHARACTER*1  LTFILPREF                                                   !LOTTO FILE PREFIX
+       PARAMETER (LTFILPREF = 'L')
+C
+       CHARACTER*7  LTDRWDESC                                                   !LOTTO DRAW DESCRIPTION
+       PARAMETER (LTDRWDESC = 'sorteio')
+C
+C SPORTS GAME DEFINITIONS
+C
+       INTEGER*4 SPTBN
+       PARAMETER (SPTBN = 1)                                                    !TOTOBOLA NORMAL GAME INDEX
+C
+       INTEGER*4 SPTBE
+       PARAMETER (SPTBE = 3)                                                    !TOTOBOLA EXTRA 1 GAME INDEX
+C
+       CHARACTER*1  SPFILPREF                                                   !SPORTS FILE PREFIX
+       PARAMETER (SPFILPREF = 'S')
+C
+       CHARACTER*8  SPDRWDESC                                                   !SPORTS DRAW DESCRIPTION
+       PARAMETER (SPDRWDESC = 'concurso')
+C
+C KICKER GAME DEFINITIONS
+C
+       INTEGER*4 JOK1
+       PARAMETER (JOK1 = 1)                                                     !JOKER GAME INDEX
+C
+       CHARACTER*1  KIFILPREF                                                   !KICKER FILE PREFIX
+       PARAMETER (KIFILPREF = 'J')
+C
+       CHARACTER*7 KIDRWDESC                                                    !KICKER DRAW DESCRIPTION
+       PARAMETER (KIDRWDESC = 'sorteio')
+C

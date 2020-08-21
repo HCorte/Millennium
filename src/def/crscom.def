@@ -1,0 +1,262 @@
+C CRSCOM.DEF
+C
+C V07 12-JUN-2000 OXK TCCNSWRT removed (not used)
+C V06 17 Apr 1996 HXK Release of Finland for X.25, Telephone Betting, 
+C			Instant Pass Thru Phase 1
+C V05 04 Oct 1994 MCM INCREASED THE MAXIMUM BUFFER LENGTH FROM 128 TO 192
+C V04 03 Jan 1994 SYSTEM Applying PVCS header for automatic revision history
+C V03 21 Dec 1993 SYSTEM Initial revision.
+C V02 08-APR-1992 JPJ ADDED TCP_IP_CNT
+C V01 18-NOV-1991 KWP INITIAL RELEASE FOR VAX
+C
+C This common contains all the queues and parameters necessary
+C for the communication between CRSPRO, TCPASST, and the game.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C	TCP Parameter declarations
+C
+	INTEGER*4  TCDATSIZ, TCHEDSIZ, TCBUFSIZ
+	PARAMETER (TCDATSIZ=187)		!Size of data
+	PARAMETER (TCHEDSIZ=5)			!Size of header
+	PARAMETER (TCBUFSIZ=TCDATSIZ+TCHEDSIZ)	!Size of buffer
+C
+	INTEGER*4  TCBUFMAX
+	PARAMETER (TCBUFMAX=200)          !Maximum # Of Buffers
+C
+	INTEGER*4  TCMAXREC
+	PARAMETER (TCMAXREC=1)            !MAX # OF RECS IN BUF
+C
+	INTEGER*4  TCMINRLEN, TCMAXRLEN
+	PARAMETER (TCMINRLEN=3)		  !Min good length in Buffer from Strat
+	PARAMETER (TCMAXRLEN=192)	  !Max good length in Buffer from Strat
+C
+	INTEGER*4 TCMAXREADS, TCMAXWRITES
+	PARAMETER (TCMAXREADS=3)	  !MAX # of outstanding reads
+	PARAMETER (TCMAXWRITES=5)	  !MAX # of outstanding writes
+C
+	INTEGER*4  TCREADY, TCINPROG
+	PARAMETER (TCREADY=0)
+	PARAMETER (TCINPROG=1)
+C
+	INTEGER*4  TCCONN, TCCONINP, TCDISINP, TCDISCON
+	PARAMETER (TCCONN=0)
+	PARAMETER (TCCONINP=1)
+	PARAMETER (TCDISINP=2)
+	PARAMETER (TCDISCON=3)
+C
+	INTEGER*4  TCACTV, TCPASS
+	PARAMETER (TCACTV=0)		!ACTIVE CONNECTION
+	PARAMETER (TCPASS=1)		!PASSIVE CONNECTION
+C
+	INTEGER*4  TCOKAY, TCNOT
+	PARAMETER (TCOKAY=0)		!ALLOW CONNECTIONS
+	PARAMETER (TCNOT=1)		!DON'T ALLOW CONNECTIONS
+C
+C	TCP Data Declarations
+C
+	INTEGER*4 TCP_READSOUT(TCMAXREADS)	!Outstanding read flag
+	INTEGER*4 TCP_WRITESOUT(TCMAXWRITES)	!Outstanding write flag
+	INTEGER*4 TCP_READTBUF(TCMAXREADS)
+	INTEGER*4 TCP_WRITETBUF(TCMAXWRITES)
+	INTEGER*4 TCP_CONNSTS			!Connect Status
+	INTEGER*4 TCP_CONTYPE			!Connection type( act, pas)
+	INTEGER*4 TCP_CONNOVR			!Connection Override Flag
+	INTEGER*4 TCP_CONWAIT			!Time to wait for connection
+	INTEGER*4 TCP_DISWAIT			!Time to wait for conn after dis
+	INTEGER*4 TCP_REDIGNORE			!Ignore all read buffs if non 0
+C
+	INTEGER*4 TCP_CHANNEL1
+	INTEGER*4 TCP_CHANNEL2
+C
+	INTEGER*4 TCP_DEBUG		!display debug info to console if non 0
+C
+	INTEGER*4 TCP_READS		!# of good reads
+	INTEGER*4 TCP_READERRS		!# of bad reads
+	INTEGER*4 TCP_READLERR		!last read error
+	INTEGER*4 TCP_WRITES		!# of good writes
+	INTEGER*4 TCP_WRITEERRS		!# of bad writes
+	INTEGER*4 TCP_WRITENOCS		!# of writes rejected because no conn
+	INTEGER*4 TCP_WRITELERR		!last write error
+	INTEGER*4 TCP_CONNECTS		!# of good connections
+	INTEGER*4 TCP_CONNERRS		!# of bad connections
+	INTEGER*4 TCP_CONNLERR		!last connection error
+	INTEGER*4 TCP_DISCONNS		!# of good disconnects
+	INTEGER*4 TCP_DISCERRS		!# of bad disconnects
+	INTEGER*4 TCP_DISCLERR		!last disconnect error
+C
+C
+	STRUCTURE /TC_IOSSTRUCT/
+          INTEGER*2 STAT                          !VMS STATUS
+          INTEGER*2 XSIZE                         !TRANSFER SIZE
+          INTEGER*4 PARM                          !PARAMETER/BUFFER ADDRESS
+        END STRUCTURE
+C
+ 	RECORD /TC_IOSSTRUCT/ TCP_WRITE_IOSB(TCMAXWRITES),
+     *			      TCP_READ_IOSB(TCMAXREADS),
+     *			      TCP_CONN_IOSB
+C
+C
+	INTEGER*4       REQTRY            !# times requeue to SNDRCV if
+	PARAMETER       (REQTRY=3)        !not enough buf on FREQUE.
+C
+C
+C The following describes the layout of the header of TCBUF
+C
+C	note: The header is not actually sent.
+C
+C
+	INTEGER*4  TCBUFNUM              !TC BUFFER NUMBER
+	PARAMETER (TCBUFNUM=1)
+C
+	INTEGER*4  TCBUFLEN              !LENGTH OF MESSAGE
+	PARAMETER (TCBUFLEN=2)           !VARIABLE LENGTH ALLOWED
+C
+	INTEGER*4  TCSTSCNT
+	PARAMETER (TCSTSCNT=3)           !MULTIPLE STATUS BLOCK COUNTER
+C
+	INTEGER*4  TCBUFSTS
+	PARAMETER (TCBUFSTS=4)		!BUFFER STATUS
+	  INTEGER*4  TCBLNWRT, TCGODWRT, TCBADWRT
+	  INTEGER*4  TCGODRED, TCBADRED, TCNOCWRT, TCDISRED, TCDISWRT
+C
+	  PARAMETER (TCGODWRT=-101)	!GOOD NO ERROR
+	  PARAMETER (TCBADWRT=-102)	!ERROR ON WRITE
+	  PARAMETER (TCDISWRT=-103)	!ERROR ON WRITE, DISCONNECT
+	  PARAMETER (TCNOCWRT=-104)	!NO CONN, REJECT WRITE
+	  PARAMETER (TCBLNWRT=-105)	!REJECTED BECAUSE OF BAD LENGTH
+C
+	  PARAMETER (TCGODRED=-201)	!GOOD NO ERROR
+	  PARAMETER (TCBADRED=-202)	!ERROR ON READ
+	  PARAMETER (TCDISRED=-203)	!ERROR ON READ, DISCONNECT
+C
+	INTEGER*4  TCBUFERR
+	PARAMETER (TCBUFERR=5)		 !BUFFER ERROR( QIO ERROR)
+C
+	INTEGER*4  TCBUFBEG              !START POSITION OF I/O
+	PARAMETER (TCBUFBEG=6)
+C
+	INTEGER*4  B_TCBUFBEG		 !BYTE START POSITION OF I/O
+	PARAMETER  (B_TCBUFBEG=TCBUFBEG*4-3)
+C
+	INTEGER*4  MSGLEN                !MAXIMUM Message Length in bytes
+	PARAMETER (MSGLEN=(TCDATSIZ*4))
+C
+C
+	INTEGER*4  FREQUE(TCBUFMAX+QHEDSZ)   !QUEUE OF FREE BUFFERS
+	INTEGER*4  SNDQUE(TCBUFMAX+QHEDSZ)   !QUEUE OF BUFFERS TO SEND
+	INTEGER*4  RCVQUE(TCBUFMAX+QHEDSZ)   !QUEUE OF BUFFERS RECEIVED
+C
+	INTEGER*4    TCBUF(TCBUFSIZ,TCBUFMAX)
+	BYTE         B_TCBUF(TCBUFSIZ*4,TCBUFMAX)
+	EQUIVALENCE (B_TCBUF(1,1), TCBUF(1,1))
+C
+C
+C
+C TIMERLIST is a doubly linked list of transactions for which
+C we are waiting for a response.  There is one entry per potential
+C sequence number used.
+C
+	INTEGER*4  TIMERTOP          !POINT TO TOP OF LIST (-1=EMPTY)
+	INTEGER*4  TIMERBOT          !POINT TO BOTTOM OF LIST
+	INTEGER*4  TIMERLIST(4,NUMPRO+2)
+C
+	  INTEGER*4  TIMERNXT
+	  PARAMETER (TIMERNXT=1)          !POINTER TO NEXT LINKED ENTRY
+	  INTEGER*4  TIMERPRV
+	  PARAMETER (TIMERPRV=2)          !POINTER TO PREV LINKED ENTRY
+	  INTEGER*4  TIMERBEG
+	  PARAMETER (TIMERBEG=3)          !TIME STAMP WHEN BEGUN
+	  INTEGER*4  TIMERSER
+	  PARAMETER (TIMERSER=4)          !CROSS REF# FOR DOUBLE CHECK
+C
+C
+C
+C
+C	The following variables are used by CRSPRO( RCV routine) to keep
+C	track of STRATUS messages that were split by TCP/IP. The READOFF
+C	variable keeps track of what byte the current message ended with.
+C	The READLEN variable keeps track of remaining bytes left for current
+C	message.
+C
+C	ie. Stratus sends 2 messages with length of 30 each.
+C	    Gtech receives 47 byte message and 13 byte message.
+C	    After receiving the 1st message, BUFFOFF will be 17( 47-30)
+C	    and BUFFLEN will be 13( 30-BUFFOFF).
+C
+C
+	INTEGER*4 TCP_BUFFOFF		!offset in current buffer
+	INTEGER*4 TCP_BUFFLEN		!length in bytes
+	INTEGER*4 TCP_NUMBUF            !# of Buffers Formatted
+	INTEGER*4 TCP_NUMREC            !# of Actual Records Formatted
+	INTEGER*4 CRSWAIT		!# of ms to wait in CRSCOM
+C
+C
+C PARAMETER TO BE USED FOR ACCESSING THE ACTUAL BYSNC
+C COMMUNICATIONS TASK VIA THE TCPQUEUE ROUTINE
+C
+	INTEGER*4   BEGASST
+	PARAMETER  (BEGASST =  01)	!START TSPIASST
+	INTEGER*4   SNDASST
+	PARAMETER  (SNDASST =  02)	!TELL TSPIASST TO SEND
+	INTEGER*4   ENDASST
+	PARAMETER  (ENDASST =  03)	!STOP TSPIASST
+	INTEGER*4   ACONASST
+	PARAMETER  (ACONASST = 04)	!TELL TSPIASST TO DO A ACTIVE CONNECT
+	INTEGER*4   PCONASST
+	PARAMETER  (PCONASST = 05)	!TELL TSPIASST TO DO A PASSIVE CONNECT
+	INTEGER*4   DISASST
+	PARAMETER  (DISASST =  06)	!TELL TSPIASST TO DISCONNECT
+C
+C
+	INTEGER*4   TCMAXTIMTRAPS
+	PARAMETER  (TCMAXTIMTRAPS=5)
+C
+	INTEGER*4   TCP_TIMEINMS(TCMAXTIMTRAPS)
+	INTEGER*4   TCP_TIMEDELY(2,TCMAXTIMTRAPS)
+	INTEGER*4   TCP_TIMEINPR(TCMAXTIMTRAPS)
+C
+	INTEGER*4   TCP_REMADR
+	BYTE	    TCP_B_REMADR(4)
+	EQUIVALENCE (TCP_REMADR, TCP_B_REMADR(1))
+C
+	INTEGER*4   TCP_REMPRT
+	INTEGER*4   TCP_LOCPRT
+	INTEGER*4   TCP_IP_CNT
+C
+C
+	COMMON /CRSCOM/	  TCP_READSOUT,  TCP_WRITESOUT, TCP_READTBUF,
+     *			  TCP_WRITETBUF, TCP_CONNSTS,   TCP_CONTYPE,
+     *			  TCP_CONNOVR,   TCP_CONWAIT,   TCP_DISWAIT,
+     *			  TCP_REDIGNORE, TCP_CHANNEL1,  TCP_CHANNEL2,  
+     *			  TCP_DEBUG,     TCP_BUFFOFF,   TCP_BUFFLEN,
+     *			  TCP_READS,     TCP_READERRS,  TCP_READLERR, 
+     *			  TCP_WRITES,    TCP_WRITEERRS, TCP_WRITENOCS, 
+     *			  TCP_WRITELERR,
+     *			  TCP_CONNECTS,  TCP_CONNERRS,  TCP_CONNLERR,
+     *			  TCP_DISCONNS,  TCP_DISCERRS,  TCP_DISCLERR,
+     *			  TCP_WRITE_IOSB,TCP_READ_IOSB, TCP_CONN_IOSB,
+     *			  FREQUE, SNDQUE, RCVQUE, TCBUF,
+     *			  TIMERTOP, TIMERBOT, TIMERLIST, TCP_NUMBUF,
+     *			  TCP_NUMREC, CRSWAIT, TCP_TIMEINMS,
+     *			  TCP_TIMEDELY,  TCP_TIMEINPR,  TCP_REMADR,
+     *			  TCP_REMPRT, TCP_LOCPRT, TCP_IP_CNT
+C
+        INTEGER*4        FRST_CRSCOM(2)
+        EQUIVALENCE     (FRST_CRSCOM, TCP_READSOUT)
+        INTEGER*4        LAST_CRSCOM
+        EQUIVALENCE     (LAST_CRSCOM, TCP_IP_CNT)
+C
+	VOLATILE /CRSCOM/ 
+C

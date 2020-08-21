@@ -1,0 +1,47 @@
+COPY
+-
+               -- Kermit-CO Command Summary --
+-
+-   Command                    Explanation
+-
+-EXIT/QUIT      - End Kermit session
+-
+-HELP           - Display Command Summary
+-
+-RECEIVE n      - Prepare Kermit to receive file(s). For TEXT or BINARY
+-                 files, n = record size; for CONTIG files, n = sectors
+-
+-SEND FILENAME  - Send the contents of FILENAME to remote Kermit
+-
+-SEND @FILENAME - Treat FILENAME as directory, send files listed
+-
+-STATUS         - Display current option settings
+-
+-SERVER         - Initiate Server mode  (Currently N/A)
+-
+-
+-
+-
+-SET     {Option}       {New Value}
+-
+-   DEBUG ON/OFF - Start/stop recording of Packets to Kermit.LOG
+-
+-   DELAY n      - Specify 'n' second wait before first packet sent
+-
+-   FCHEK ON/OFF - If ON, incoming file names are made unique
+-
+-   FILE TEXT/BIN/CONTIG - Mode of incoming/outgoing files
+-
+-   MYQUOTE n    - Control character quoting prefix (Default = # (35))
+-
+-   NPADS n      - Request remote Kermit prefix packet with 'n' nulls
+-
+-   8BIT ON/OFF  - If ON, 8-bit prefixing is done (Use with Even parity)
+-
+-   PACKET n     - Size, in bytes, of Kermit packet (30 < n < 95)
+-
+-   PARITY       - Line parity: EVEN/ODD = ASCII I/O, NONE = IMAGE I/O
+-
+-   SEOR CRLF/CR/LF/NONE - End-of-Record delimiter used for SEND
+-
+-   SOH n        - 'Start of packet' ASCII code (Default = 01)

@@ -1,0 +1,19 @@
+$! GXSRC:SIMCOM.LSH
+$! 
+$! $Log:   GXAFXT:[GOLS]SIMCOM.LSV  $
+$! 
+$!    Rev 1.0   17 Apr 1996 15:06:12   HXK
+$! Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+$! 
+$!    Rev 1.1   14 Apr 1994 13:41:28   SYSTEM
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Apr 1994 9:57:30   SYSTEM
+$! Initial revision.
+$! 
+$ LINK 'P1' -
+/EXE=TSKLIB:GXSIMCOM.ESH/SHAREABLE -
+OBJLIB:SIMCOM,-
+SYS$INPUT:/OPTION
+SYMBOL_VECTOR=(SIMCOM=PSECT)
+PSECT_ATTR=SIMCOM,SHR,WRT

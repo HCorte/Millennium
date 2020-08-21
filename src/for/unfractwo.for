@@ -1,0 +1,120 @@
+C
+C Subroutine to process Unfraction requests.
+C
+C V03 29-MAR-1999 UXN & WS FIX FOR WRITE TO APULOG TIMING HAZARD
+C V02 29-JAN-1999 UXN Partially rewritten from UNFRAC.FOR
+C V01 03-AUG-1993 GXA Initial revision (UNFRAC.FOR)
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE UNFRACTWO(TRABUF,BUF,TASK)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:CHKSUMCM.DEF'
+	INCLUDE 'INCLIB:FRAC.DEF'
+C
+C
+	INTEGER*4 BUF
+C
+	INTEGER*4 LOGREC(LMUREC)		!Transaction Log Record
+	INTEGER*4 WAGBUF(TRALEN)		!Original Wager Trans Record.
+	INTEGER*4 FRAWAG(TRALEN,10)             !Fractioned Wagers Trans Record.
+	INTEGER*4 SER				!Serial #
+	INTEGER*4 NUMTKT			!Number of Fractioned Tickets
+	INTEGER*4 ST				!Subroutine Return Status.
+	INTEGER*4 TASK				!Current Task
+	INTEGER*4 I				!Loop Variable
+C
+	BYTE	  I1TEMP(4)			!Temp Variable.
+	INTEGER*2 I2TEMP(2)			!Temp Variable.
+	INTEGER*4 I4TEMP			!Temp Variable.
+C
+	EQUIVALENCE(I4TEMP,I2TEMP,I1TEMP)
+C
+	CALL LOGTRA(TRABUF,PRO(FRA_WRKTAB,BUF))
+	SER = TRABUF(TSDT1)
+C
+C FIRST CHECK FOR RETRY
+C
+	IF(TRABUF(TSTAT).EQ.REJT.AND.TRABUF(TERR).EQ.RETY) GOTO 100
+C
+C READ WAGER FROM LOG FILE AND CONVERT TO INTERNAL FORMAT
+C
+	CALL RLOG(SER,LOGREC,TASK,ST)
+CV3
+	IF (ST.NE.0) THEN
+	    CALL WAIT_APUQUE
+	    CALL RLOG(SER,LOGREC,TASK,ST)
+	ENDIF
+CEV3
+	IF(ST.NE.0) GOTO 100
+	CALL LOGTRA(WAGBUF,LOGREC)
+C
+C UNFRACTION ALL ACCOSIATED TICKETS
+C
+	NUMTKT = TRABUF(TSDT4)
+	DO I = 1,NUMTKT 
+C
+	   CALL RLOG(TRABUF(TSDT5+I-1),LOGREC,TASK,ST)
+CV3
+	   IF (ST.NE.0) THEN
+	      CALL WAIT_APUQUE
+	      CALL RLOG(TRABUF(TSDT5+I-1),LOGREC,TASK,ST)
+	   ENDIF
+CEV3
+	   IF(ST.NE.0) GOTO 100
+	   CALL LOGTRA(FRAWAG(1,I),LOGREC)
+	   IF(FRAWAG(TSTAT,I).NE.GOOD.OR.FRAWAG(TTYP,I).NE.TWAG.OR.
+     *        FRAWAG(TWFFLG,I).EQ.0) GOTO 100
+	   FRAWAG(TSTAT,I) = REJT
+	   FRAWAG(TERR,I)  = NFRA
+	END DO
+C
+C REWRITE FRACTIOND WAGER AND MARK ALL FRACTIONS AS UNFRACTIONED
+C
+	WAGBUF(TSTAT) = GOOD 
+	WAGBUF(TWCSER)= TRABUF(TSER)
+	CALL TRALOG(WAGBUF,LOGREC)
+	CALL WLOG(WAGBUF(TSER),LOGREC,TASK)
+
+	DO I = 1,NUMTKT
+	   CALL TRALOG(FRAWAG(1,I),LOGREC)
+	   CALL WLOG(FRAWAG(TSER,I),LOGREC,TASK)
+	END DO
+C
+	TRABUF(TERR) = NOER
+	TRABUF(TSUBERR) = NOER
+	TRABUF(TSTAT)= GOOD
+C
+C BUILD OUTPUT MESSAGE
+C
+100	CONTINUE
+	CALL UPDMIS(TRABUF)
+	HPRO(TRCODE,BUF) = TYPREG
+	CALL TRALOG(TRABUF,LOGREC)
+	CALL WLOG(TRABUF(TSER),LOGREC,TASK)
+	CALL OUTUNF(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+	END

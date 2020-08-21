@@ -1,0 +1,84 @@
+C
+C LOCTABLE.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]LOCTABLE.DEV                                 $
+C  $Date::   17 Apr 1996 13:52:30                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V03 27-MAY-03 UXN IF D_REQ AND STATUS OPEN, SET NEXT STATUS TO BE CLOSED
+C                   INSTEAD OF DIS_PEN
+C V02 07-JAN-92 DAS MADE CHANGES TO REFLECT THOSE MADE IN SWEDEN
+C V01 04-JUN-89 MBK LOCAL INIT TABLES (WILL BE COPIED TO THE COMMON)
+C
+C
+C TRANSITION TABLE
+C
+C         CLOSED   FIND_PEND  CON_PENG   OPEN      IDLE     DIS_PENG
+C            1         2         3         4         5         6
+C----------!--------------------------------------------------------!
+C C_REQ  1 ! 2         2         3         4         5         6    !LOC SAP
+C C_IND  2 ! 4         4         4         4         4         1    !REM SAP
+C C_CONF 3 ! 1         1         4         4         4         1    !REM SAP
+C D_REQ  4 ! 1         1         1         1         6         6    !LOC SAP
+C D_IND  5 ! 1         1         1         1         1         1    !REM SAP
+C D_CONF 6 ! 1         1         1         1         1         1    !REM SAP
+C F_IND  7 ! 1         2         3         1         1         1    !REM DLL
+C F_CONF 8 ! 1         3         3         4         4         1    !REM DLL
+C TOUT   9 ! 1         1         1         5         1         1    !LOC DLL
+C DTA_I 10 ! 1         2         3         4         4         6    !REM SAP
+C TICK  11 ! 1         2         3         4         5         6    !LOC DLL
+C CLEAR 12 ! 1         1         1         1         1         1    !REM SAP
+C P_IND 13 ! 1         2         3         4         4         6    !REM DLL
+C P_CONF14 ! 1         2         3         4         4         6    !REM DLL
+C DTA_RE15 ! 1         2         3         4         5         6    !LOC SAP
+C DTA_OV16 ! 1         1         1         1         1         1    !REM SAP
+C----------!--------------------------------------------------------!
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 LOCSTATES(MAXEVENT,MAXSTATE)
+	INTEGER*4 LOCERRFLG(MAXERROR)
+C
+	DATA LOCSTATES/ 2, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,!ROW=EVENTS
+     *	                2, 4, 1, 1, 1, 1, 2, 3, 1, 2, 2, 1,2,2,2,2,!COL=OLDSTATES
+     *	                3, 4, 4, 1, 1, 1, 3, 3, 1, 3, 3, 1,3,3,3,3,!ENTRY=NXTSTAT
+ 
+     *	                4, 4, 4, 1, 1, 1, 1, 4, 5, 4, 4, 1,4,4,4,1,
+     *	                5, 4, 4, 6, 1, 1, 1, 4, 1, 4, 5, 1,4,4,5,1,
+     *	                6, 1, 1, 6, 1, 1, 1, 1, 1, 6, 6, 1,6,6,6,6/
+ 
+C
+	DATA LOCERRFLG/LANERRYES,         !NO ERROR
+     *	               LANERRYES,
+     *	               LANERRYES,         !OVERRUN
+     *	               LANERRYES,
+     *	               LANERRYES,         !EXCESSIVE COLLISIONS
+     *	               LANERRYES,
+     *	               LANERRYES,
+     *	               LANERRYES,
+     *	               LANERRYES,         !CRC,ALIGN
+     *	               LANERRYES/         !OTHER
+ 
+ 
+ 
+ 

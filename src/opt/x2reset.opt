@@ -1,0 +1,97 @@
+!
+! *** LINK OPTION FILE X2RESET ***
+!
+!*************************** START X2X PVCS HEADER ****************************
+!
+! $Logfile::   GXAFXT:[GOLS]X2RESET.OPV                                  $
+! $Date::   17 Apr 1996 16:31:12                                         $
+! $Revision::   1.0                                                      $
+! $Author::   HXK                                                        $
+!
+!**************************** END X2X PVCS HEADER *****************************
+!
+! *** Source - x2reset.opt ***
+!
+! V02 27-FEB-96 wsm Added OPENQFILE, RND64, X2CNVDRP, X2SWPVSN for Finland.
+!
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+! This item is the property of GTECH Corporation, Providence, Rhode
+! Island, and contains confidential and trade secret information. It
+! may not be transferred from the custody or control of GTECH except
+! as authorized in writing by an officer of GTECH. Neither this item
+! nor the information it contains may be used, transferred,
+! reproduced, published, or disclosed, in whole or in part, and
+! directly or indirectly, except as expressly authorized by an
+! officer of GTECH, pursuant to written agreement.
+!
+! Copyright 1994 GTECH Corporation. All rights reserved.
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!
+OBJLIB:X2INIT,-
+X2ASCCDC,-
+X2XCLR,-
+X2LODGBL,-
+X2LODGRP,-
+X2LODLPC,-
+X2LODNPC,-
+X2LODSCL,-
+X2LODSTN,-
+X2LODTER,-
+X2LODBRO,-
+X2LODDEF,-
+X2LODNET,-
+X2QSHFT,-
+X2FILNAM,-
+X2CHKDATE,-
+VALIDTER,-
+X2STNRES,-
+X2STNCHK,-
+CMDX2X,-
+X2FLDNUM,-
+GETSYS,-
+X2GETSAP,-
+X2ASSGRP,-
+X2CHKMOD,-
+X2CHKSUM,-
+X2DIALPT,-
+X2LODTTN,-
+X2FILSEC,-
+X2STNOAS,-
+X2STPRAS,-
+BLDTAB,-
+CLOSLOD,-
+CLOSX2X,-
+CMBOFF,-
+CMDXBRO,-
+CMDXGBL,-
+CMDXGRP,-
+CMDXLPC,-
+CMDXNPC,-
+CMDXSCL,-
+CMDXSTN,-
+CMDXTER,-
+CMDXTTN,-
+DEFRAN2,-
+DEF_PORTDIST,-
+EVDSPRAS,-
+NT_FLUSH,-
+OPENLOD,-
+OPENQFILE,-
+OPENX2X,-
+RANNUMB,-
+READLOD,-
+READX2X,-
+WRITX2X,-
+WRITLOD,-
+X2CHKEXT,-
+X2CNVDRP,-
+X2SETPRO,-
+X2STRSUM,-
+X2MAP_CONN_TYPE,-
+X2SETPOST,-
+X2SWPVSN,-
+RAN2,-
+RND64,-
+INV64,-
+LAN_START,-
+READ_DUMRNG

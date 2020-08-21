@@ -1,0 +1,22 @@
+    TWD.HLP             GTECH Distributed Network
+                    Pitka Sales Watchdog Snapshot Help       Page 1 of 1
+ 
+    The TWD snapshot contains sales information  for the Pitka game.  The 
+    snapshot displays liability combinations played today.
+
+    The information displayed includes:
+ 
+
+    liability     - liability limit for the Pitka game
+    limit
+    combination   - combinations played already ranked in popularity
+    amount bet    - ticket price
+    liability     - predicted payout amount for given combination
+    state         - n/a
+    date          - n/a
+    time          - n/a
+
+
+
+
+

@@ -1,0 +1,509 @@
+C
+C SUBROUTINE LINTER
+C
+C LINTER.FOR
+C
+C V15 12-OCT-2010 MAC ePASSIVE INVOICE
+C V14 01-JAN-2010 FJG ePASSIVE
+C V13 07-DEC-1999 OXK GTC -snapshot added.
+C V12 21-SEP-1999 UXN Input of a combination XX-XX-XX added.
+C V11 07-FEB-1996 RXK Input of agent number availabled for Miscalleneous 
+C                     snapshot 
+C V10 31-JAN-1996 RXK Menu number added to some hardcoded key numbers (PTL,HELP)
+C V09 29-JAN-1996 RXK Different fixes connectedd to introduction of 4th menu
+C V08 17-JAN-1996 HXK Fix for X commands
+C V07 12-DEC-1995 PXB changed for new menu page in vision
+C V07 26-SEP-1993 GXA Changed date entry order to be DD-MM-YY.
+C V06 13-JUN-1993 HXK added AGTINF.DEF
+C V05 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V04 04-AUG-1992 WLM ADDED CALL PARAMETERS (BAMT & VAMT) TO ALLOW ENTERING 
+C		      AMOUNTS IN BETUNITS OR VALUNITS
+C V03 24-OCT-1991 GCAN  ADDED 3'd MENUE AND EXPANDED KEYLST TO 120 KEYWORDS.
+C                     KEEP LAST AGENT # IF IN AGENT RELATED SNAP FOR EASY
+C                    CHANGE BETWEAN DIFFERENT AGENT SNAPS BUT SAME AGENT.
+C V02 24-NOV-1989 MRM CLEANUP AND ADD X2X PROCESSING
+C V01 01-FEB-1989 XXX INITIAL RELEASE FOR SWEDEN
+C
+C Line interrepter for VISION commands.
+C
+C NOTE: For any X2X network snapshots information is
+C       returned via X2VIS common, instead of passing
+C       data by subroutine call.
+C
+C Calling sequence:
+C
+C     CALL LINTER(KEYLST,KEY,IND,NUM,DAT,BAMT,VAMT,ERR,OFF1,CMB)
+C
+C Input parameters:
+C
+C     KEYLST      Real*8(168)     List of Vision function keys
+C     KEY         Int*4           Key relative to KEYLST
+C     OFF1        Int*4           Beginning search index
+C
+C Output parameters:
+C
+C     KEY         Int*4           Input key relative to KEYLST
+C     IND         Int*4           Input Index information
+C     NUM         Int*4           Input Numeric information
+C     CMB         Int*4           Input combination XX-XX-XX
+C     DAT         Int*4           Input CDC date
+C     BAMT	  Int*4		  Input Amount in BETUNITs
+C     VAMT	  Int*4		  Input Amount in VALUNITs
+C     ERR         Int*4           Error code (see below)
+C                                 -1 = input error
+C                                 -5 = invalid serial
+C                                 -6 = invalid agent
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE LINTER(KEYLST,KEY,IND,NUM,DAT,BAMT,VAMT,ERR,OFF1,CMB,TXT,PAG)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:VISCOM.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:X2XPRM.DEF'
+	INCLUDE 'INCLIB:X2VIS.DEF'
+C
+	INTEGER*4   K, I, CERR, INPVER, SER, CDC, INC, X, NUM1
+	INTEGER*4   J, INUM, N, L, X2KEY, ACTKEY, KEYNUM, Q, IPAG
+	INTEGER*4   INKEY, OFF2, OFF1, ERR, DAT, NUM, IND, KEY
+	INTEGER*4   NUMSAV, BAMT, VAMT,CMB(3),TXT,PAG
+	INTEGER*4   I4TXT
+	CHARACTER   CHTXT(4)
+C
+	INTEGER*2   DATES(12)               !Date buffer
+	INTEGER*2   SDAT(12)                !Date buffer
+	REAL*8      KEYLST(168)             !List of valid keys
+	CHARACTER   NXT,FRST,SEC,FB         !Individual char values
+	LOGICAL     FKEY                    !Function key (from keylist)
+	LOGICAL     SFLAG                   !Slash flag (date input)
+	LOGICAL     AINP                    !Agent number input
+	LOGICAL     IFLAG                   !Index flag
+	LOGICAL     AFLAG                   !Amount flag
+	LOGICAL     X2FLAG                  !X2X values
+	LOGICAL     CMBFLAG                 !combination XX-XX-XX
+	LOGICAL     ISTXT                   !string for subsnapshots	
+	LOGICAL     ISPAG                   !is page
+	INTEGER*4   CMBIND,HALF
+	INTEGER*4   I4TEMP
+	INTEGER*2   I2TEMP(2)
+	EQUIVALENCE (I4TEMP,I2TEMP)
+	EQUIVALENCE (I4TXT,CHTXT)
+C
+C INITIALIZE VARIABLES.
+C
+	ERR=0
+	FKEY=.FALSE.
+	X2FLAG=.FALSE.
+	OFF2=0
+	INKEY=KEY
+C
+C FIND BEGINING OF NEXT STRING
+C
+15	OFF1=OFF2
+20	OFF1=OFF1+1
+	IF(OFF1.GT.LQ) RETURN             !NOTHING LEFT
+	IF(LINE(OFF1).EQ.' ') GOTO 20     !IGNORE SPACES
+	IF(LINE(OFF1).EQ.'-') GOTO 20     !IGNORE DASH
+	IF(LINE(OFF1).EQ.',') GOTO 20     !IGNORE COMMAS
+C
+C INITIALIZE TYPE FLAGS.
+C
+	SFLAG  =.FALSE.
+	AINP   =.FALSE.
+	IFLAG  =.FALSE.
+	AFLAG  =.FALSE.
+	CMBFLAG = .FALSE.
+	ISTXT = .FALSE.
+	ISPAG = .FALSE.
+C
+C IF MENU OPTION 2 AND KEYS ARE DEFINED THEN DEFAULT TO
+C AGENT NUMBER INPUT.
+C
+	IF(MOPT.EQ.1.AND.
+     *    (KEY.EQ.11.OR.KEY.EQ.12.OR.KEY.EQ.13)) AINP=.TRUE.
+	IF(MOPT.EQ.2.AND.
+     *	  (KEY.EQ.11.OR.KEY.EQ.15)) AINP=.TRUE.
+	IF(MOPT.EQ.4.AND.KEY.EQ.29) AINP=.TRUE.     !V15
+C
+C SEARCH NEXT INPUT OR END OF LINE (SET FLAGS WHEN ENCOUNTERED).
+C
+	OFF2=OFF1
+30	CONTINUE
+	IF(LINE(OFF2).EQ.'/') SFLAG=.TRUE.
+	IF(LINE(OFF2).EQ.'#') AINP=.FALSE.
+	IF(LINE(OFF2).EQ.'!') IFLAG=.TRUE.
+	IF(LINE(OFF2).EQ.'$') AFLAG=.TRUE.
+	IF(LINE(OFF2).EQ.'X') X2FLAG=.TRUE.
+	IF(LINE(OFF2).EQ.'?') CMBFLAG=.TRUE.
+	IF(LINE(OFF2).EQ.'\') ISTXT=.TRUE.	
+	IF(LINE(OFF2).EQ.'+') ISPAG=.TRUE.	
+	IF(OFF2.EQ.LQ) GOTO 40              !END OF LINE
+	NXT=LINE(OFF2+1)
+	IF(NXT.EQ.' ') GOTO 40
+	IF(NXT.EQ.',') GOTO 40
+	OFF2=OFF2+1
+	GOTO 30
+C
+C DECODE THE STRING
+C
+40	Q=OFF2-OFF1+1
+	IF(Q.GT.20) GOTO 100
+	FRST=LINE(OFF1)
+	SEC=LINE(OFF1+1)
+	IF(.NOT.X2FLAG) THEN
+	  IF(SFLAG)  GOTO 80                  !INPUT MUST BE A DATE
+	  IF(CMBFLAG) GOTO 99		      !combination
+	  IF(ISTXT) GOTO 69                   !string
+	  IF(Q.EQ.1) GOTO 50                  !ONE CHAR STRING
+	  IF(Q.EQ.2) GOTO 60                  !TWO CHAR STRING
+	ENDIF
+	IF(FKEY) GOTO 70                      !ALREADY HAVE A KEYWORD
+C
+C GET KEY FROM THE KEY LIST. (NOTE: X2 KEYS AND FIELDS WILL FALL
+C THROUGH THIS SECTION).
+C
+	CALL GETKEY(KEYLST,LIN24,Q,KEYNUM,OFF1,168)
+	ACTKEY=KEYNUM
+	IF(KEYNUM.EQ.0) GOTO 70                 !NO MATCHING KEY (NUMERIC ???)
+	IF(KEYNUM.GT.6) MOPT=1                  !MENU ONE
+	IF(KEYNUM.GT.42.AND.KEYNUM.LE.84) THEN
+	  MOPT=2                                !MENU TWO
+	  KEYNUM=KEYNUM-42                      !CORRECT KEY OFFSET
+	ELSEIF(KEYNUM.GT.84.AND.KEYNUM.LE.126) THEN  
+	  MOPT=3                                     !MENU THREE
+	  KEYNUM=KEYNUM-84                           !CORRECT KEY OFFSET
+	ELSEIF(KEYNUM.GT.126) THEN  
+	  MOPT=4                                     !MENU Four
+	  KEYNUM=KEYNUM-126                          !CORRECT KEY OFFSET
+	ENDIF
+C
+C VALID FUNCTION KEY HAS BEEN INPUT, NOW CHECK FOR
+C INPUT DATA.
+C
+	FKEY=.TRUE.
+	KEY =KEYNUM
+	NUMSAV=NUM
+	NUM =-1000
+	IND =-1000
+	DAT =-1000
+	BAMT=-1000
+	VAMT=-1000
+C
+C SAVE AGENT NUMBER IF IN AN AGENT RELATED SNAPSHOT FOR EASY CHANGE TO NEW
+C SNAPSHOT BUT SAME AGENT.
+C
+	IF(MOPT.EQ.1.AND.(KEY.EQ.11.OR.KEY.EQ.12.OR.KEY.EQ.13).OR.
+     *     MOPT.EQ.2.AND.(KEY.EQ.11.OR.KEY.EQ.15))
+     *	   NUM=NUMSAV
+	IF(KEY.EQ.1) NUM=NUMSAV
+C
+C CHECK IF A VALID X2 SNAPSHOT, AND IF SO, SET THE FLAG.
+C
+	X2FLAG=.FALSE.
+        IF(ACTKEY.GT.120) GOTO 15
+	IF(X2SCRN(X2SCRN_KEYLST,ACTKEY).NE.0) X2FLAG=.TRUE.
+	GOTO 15
+C
+C ONE CHARACTER STRING
+C
+50	CONTINUE
+	IF(FRST.EQ.'N'.OR.FRST.EQ.'n') THEN     !NEXT COMMAND
+	  NUM=NUM+1                             !INCREMENT BY ONE
+	  GOTO 15
+	ENDIF
+	IF(FRST.EQ.'L'.OR.FRST.EQ.'l') THEN     !LAST COMMAND
+	  NUM=NUM-1                             !DECREMENT BY ONE
+	  GOTO 15
+	ENDIF
+	GOTO 70                                 !NUMERIC INPUT
+C
+C TWO CHARACTER STRING
+C
+60	CONTINUE
+	IF((FRST.EQ.'N' .OR. FRST.EQ.'n').AND.  !NEXT AGENT
+     *	   (SEC .EQ.'A' .OR. SEC .EQ.'a')) THEN
+	  AINP=.TRUE.
+	  NUM=LSTAGT+1
+	  GOTO 75
+	ENDIF
+C
+	IF((FRST.EQ.'L'.OR.FRST.EQ.'l').AND.    !LAST AGENT
+     *	    (SEC.EQ.'A'.OR.SEC.EQ.'a')) THEN
+	  AINP=.TRUE.
+	  NUM=LSTAGT-1
+	  GOTO 75
+	ENDIF
+C
+C DATE INPUT.
+C
+	IF(SEC .NE.'D'.AND.SEC .NE.'d') GOTO 70
+	IF(FRST.EQ.'N'.OR. FRST.EQ.'n') THEN        !NEXT DATE
+	  DAT=DAT+1
+	  GOTO 15
+	ENDIF
+	IF(FRST.EQ.'L'.OR. FRST.EQ.'l') THEN        !LAST DATE
+	  DAT=DAT-1
+	  GOTO 15
+	ENDIF
+	IF(FRST.EQ.'C'.OR. FRST.EQ.'c') THEN        !CURRENT DATE
+	  DAT=DAYCDC
+	  GOTO 15
+	ENDIF
+	GOTO 70
+C
+C NOT A KEYLIST FUNCTION KEY - IF X2FLAG SET THEN
+C MUST BE AN X2X SNAPSHOT FUNCTION.
+C
+70	CONTINUE
+	IF(X2FLAG) THEN
+	  IF(KEY.EQ.0) KEY=INKEY
+          IF(MOPT.EQ.3.AND.KEY.EQ.16) GOTO 71      !if PTL
+	  X2KEY=KEY-2
+	  IF(MOPT.EQ.2) X2KEY=X2KEY+40
+	  IF(MOPT.EQ.3) X2KEY=X2KEY+80
+	  CALL X2LINTER(X2KEY,OFF1,ERR)
+        RETURN
+	ENDIF
+C*V04* CHANGES START
+C IF INPUT IS AN AMOUNT CONVERT TO INTEGER COUNT OF BET- & VALUNITS
+C
+	IF(AFLAG) THEN
+	  OFF1=OFF1+1
+	  ERR=IMONY(LIN24,OFF1,20,BETUNIT)
+	  IF(ERR.LT.0) RETURN
+	  BAMT=ERR			    !AMOUNT IN BETUNITS
+	  ERR=IMONY(LIN24,OFF1,20,VALUNIT)
+	  IF(ERR.LT.0) RETURN
+	  VAMT=ERR			    !AMOUNT IN VALUNITS
+	  GOTO 15
+	ENDIF
+C
+C*V04* CHANGES END
+C
+C INPUT MUST BE NUMERIC.
+C
+71      CONTINUE
+	L=0
+	N=0
+	INUM=0
+        IPAG=0
+	FB=FRST
+C
+C SKIP OVER ANY CHARACTERS TO OBTAIN NUMERIC PORTION.
+C
+	IF((FB.EQ.'A'.OR.FB.EQ.'B'.OR.FB.EQ.'#'.OR.FB.EQ.'@'.OR.
+     *	    FB.EQ.'!'.OR.FB.EQ.'a'.OR.FB.EQ.'b'.OR.FB.EQ.'+').AND.
+     *      .NOT.(MOPT.EQ.1.AND.KEY.EQ.14))
+     *	  OFF1=OFF1+1
+C
+	DO 72 J=OFF1,OFF2
+C
+C SERIAL NUMBER INPUT.
+C
+	  IF(LINE(J).EQ.'-'.AND.FB.EQ.'@') THEN
+	    NUM1=N
+	    N=0
+	    NUM=0
+	    GOTO 72
+	  ENDIF
+	  IF(LINE(J).EQ.'-') GOTO 72        !SKIP '-'
+	  IF(LINE(J).LT.'0') GOTO 100       !INVALID INPUT
+	  IF(LINE(J).GT.'9') GOTO 100       !INVALID INPUT
+	  CALL ASCBIN(LIN24,J,1,X,ERR)      !CONVERT TO BINARY
+	  IF(IFLAG) THEN
+	    INUM=10*INUM+X                  !SET INDEX
+	  ELSE
+	    IF(ISPAG) THEN
+	      IPAG=10*IPAG+X                  !SET PAGE
+	    ELSE
+	      N=10*N+X                        !SET NUMERIC	      
+	    ENDIF
+	  ENDIF
+C
+C CHECK LENGTH TO ENSURE THAT IT IS NOT TOO LARGE.
+C
+	  L=L+1
+	  IF(L.GT.14) GOTO 100
+72	CONTINUE
+C
+C IF INDEX SET VALUE AND CHECK FOR MORE INPUT.
+C
+	IF(IFLAG) THEN
+	  IND=INUM
+	  GOTO 15
+	ENDIF
+C	
+	IF(ISPAG) THEN
+	  PAG=IPAG
+	  GOTO 15
+	ENDIF	
+C
+C INCREMENT OR DECREMENT BY INPUT COUNT.
+C
+	IF(FB.NE.'A'.AND.FB.NE.'B'.AND.FB.NE.'a'.AND.FB.NE.'b') GOTO 74
+	INC=N
+	IF(FB.EQ.'B'.OR.FB.EQ.'b') INC=-N
+	N=NUM+INC
+74	NUM=N
+C
+C IF SCRAMBLED SERIAL NUMBER ENTERED THEN UNSCRAMBLE
+C
+	IF(FB.EQ.'@') THEN
+	  CDC=DAYCDC
+	  IF(MOPT.EQ.2.AND.
+     *	    (KEY.EQ.13.OR.KEY.EQ.16)) CDC=DAT
+	  IF((MOPT.EQ.4).AND.(KEY.EQ.35)) CDC=DAT   ! for GTC -snapshot
+	  CERR=INPVER(CDC,NUM1,SER,NUM)
+	  NUM=SER
+	  IF(CERR.NE.0) THEN
+	    ERR=-5
+	    RETURN
+	  ENDIF
+	ENDIF
+C
+C IF AGENT NUMBER INPUT THEN SEARCH FOR
+C AGENT NUMBER IN AGENT COMMON.
+C
+75	CONTINUE
+	IF(AINP) THEN
+	  DO 76 I=1,NUMAGT
+	    IF(NUM.EQ.AGTTAB(AGTNUM,I)) THEN
+	      NUM=I
+	      GOTO 15
+	    ENDIF
+76	  CONTINUE
+	  ERR=-6
+	  RETURN
+	ENDIF
+	GOTO 15
+C
+C DATE INPUT - SET DATE TO CURRENT DAY IF NOT SPECIFIED
+C
+80	CONTINUE
+	DO 81 I=1,12
+	  DATES(I)=0
+	  SDAT(I)=0
+81	CONTINUE
+	K=1
+	L=0
+	IF (LINE(OFF1).EQ.'/') THEN     !CDC DATE INPUT
+	  K=4
+	  OFF1=OFF1+1
+	ENDIF
+C
+	DO 90 I=OFF1,OFF2
+	  IF(LINE(I).EQ.'/') GOTO 85        !SKIP /
+	  IF(LINE(I).LT.'0') GOTO 100       !INVALID INPUT
+	  IF(LINE(I).GT.'9') GOTO 100       !INVALID INPUT
+	  CALL ASCBIN(LIN24,I,1,X,ERR)      !CONVERT DATA
+	  DATES(K)=DATES(K)*10+X            !STORE INTO ARRAY
+	  GOTO 90
+C
+85	  CONTINUE
+	  L=L+1                             !INCREMENT INDICES
+	  K=K+1
+90	CONTINUE
+C
+C BRANCH BASED ON INPUT DATE TYPE.
+C
+	GOTO (100,95,96,97) K
+	GOTO 100                            !RETURN WITH ERROR
+C
+C JULIAN DATE.
+C
+95	CONTINUE
+	SDAT(VYEAR)=DATES(2)
+	SDAT(VJUL)=DATES(1)
+	IF(SDAT(VJUL).GT.500) SDAT(VJUL)=SDAT(VJUL)-500
+	CALL JDATE(SDAT)
+	GOTO 98
+C
+C FULL DATE.
+C
+96	CONTINUE
+	SDAT(VMON)=DATES(2)
+	SDAT(VDAY)=DATES(1)
+	SDAT(VYEAR)=DATES(3)
+	CALL BDATE(SDAT)
+	GOTO 98
+C
+C CDC DATE.
+C
+97	CONTINUE
+	IF (L.NE.0) GOTO 100        !MORE THEN 1 SLASH
+	SDAT(VCDC)=DATES(4)
+C
+C STORE CDC DATE FROM DATE ARRAY INTO RETURN VALUE.
+C
+98	CONTINUE
+	DAT=SDAT(VCDC)
+	GOTO 15
+C
+C Combination
+C
+99      CONTINUE
+	CMBIND = 1
+	HALF   = 1
+	CMB(1) = 0
+	CMB(2) = 0
+	CMB(3) = 0
+	I4TEMP = 0
+	DO  101 I=OFF1+1,OFF2
+	  IF(LINE(I).EQ.'-') THEN
+	     CMBIND = CMBIND + 1
+	     HALF   = 1
+	     I4TEMP = 0
+	     GOTO 101
+          ENDIF
+	  IF(LINE(I).EQ.':') THEN
+	     HALF = 2
+	     GOTO 101
+	  ENDIF
+	  IF(CMBIND.GT.3) GOTO 100 ! INVALID INPUT
+	  IF(LINE(I).LT.'0') GOTO 100                     !INVALID INPUT
+	  IF(LINE(I).GT.'9') GOTO 100                     !INVALID INPUT
+	  I2TEMP(HALF) = I2TEMP(HALF)*10 + ICHAR(LINE(I))-ICHAR('0')
+	  CMB(CMBIND) = I4TEMP
+101	CONTINUE
+C
+        GOTO 15
+C
+C String
+C
+69	CONTINUE
+	DO  691 I=1,4
+	  CHTXT(I)=LINE(OFF1+I)
+691     CONTINUE	 
+        TXT=I4TXT
+	GOTO 15        
+C
+C INVALID INPUT
+C
+100	CONTINUE
+	ERR=-1
+	RETURN
+C
+	END

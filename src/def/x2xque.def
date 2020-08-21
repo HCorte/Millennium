@@ -1,0 +1,43 @@
+C
+C X2XQUE.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XQUE.DEV                                   $
+C  $Date::   17 Apr 1996 16:44:14                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C     X2X SUBSYSTEM QUEUE
+C     TRANSACTIONS FROM THIS QUEUE ARE SENT OVER TRANSPORT
+C     TO OTHER SAPS
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 X2X_OUTPUT(NUMPRO+QHEDSZ)      !X2X OUTPUT QUEUE
+C
+	INTEGER*4 X2QCSB
+	PARAMETER (X2QCSB=1)
+	INTEGER*4 X2QBLK(2048,X2QCSB)
+	EQUIVALENCE (X2QBLK,X2X_OUTPUT)
+C
+	COMMON /X2XQCM/ X2X_OUTPUT

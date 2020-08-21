@@ -1,0 +1,69 @@
+C  GXSRC:RECTEB.DEF
+C
+C V01 18-MAY-1999 UXN INITIAL RELEASE.
+C
+C TELEBETTING SALES FILE LAYOUT
+C
+C OTEBCDC                           CURRENT CDC DATE                1
+C OTEBTYP(AGAMLEN,OMAXGAM)           DAILY ACTIVITY BY GAME        440
+C OTEBFRE	                   FREE SPACE                     71
+C
+C                                  TOTAL                         512
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 OMAXGAM
+	PARAMETER (OMAXGAM=45)
+C
+C RECORD OFFSET PARAMETERS
+C
+	INTEGER*4 OTEBCDC_OFF
+	INTEGER*4 OTEBTYP_OFF
+	INTEGER*4 OTEBFRE_OFF
+
+	PARAMETER (OTEBCDC_OFF = 1)			     !1
+	PARAMETER (OTEBTYP_OFF = OTEBCDC_OFF + 1)		     !2
+	PARAMETER (OTEBFRE_OFF = OTEBTYP_OFF + AGAMLEN*OMAXGAM) !442
+C
+C CALCULATE FREE SPACE BASED ON MACHINE DEPENDENT SECTOR SIZES.
+C SHOULD ALLWAYS ADD UP TO A EVEN SECTOR SIZE BYTES (VAX 512).
+C NOTE! IN CALCULATIONS, FRE_OFF-2 IS DONE TO TAKE CARE OF WHEN THE DATA SIZE
+C       ENDS ON A EVEN SECTOR SIZE.
+C 
+        INTEGER*4 OTEBLEN
+        PARAMETER(OTEBLEN = OTEBFRE_OFF-1)
+C
+        INTEGER*4 IOTEBSEC
+        PARAMETER(IOTEBSEC = OTEBLEN/128 + 1)
+C
+        INTEGER*4 OTEBSEC
+        PARAMETER(OTEBSEC = IOTEBSEC*2)
+C
+        INTEGER*4 OTEBFRESIZ
+        PARAMETER(OTEBFRESIZ = OTEBSEC*64 - OTEBLEN)
+C
+        INTEGER*4 OTEBREC(OTEBSEC*64)
+C
+	INTEGER*4 OTEBCDC
+	INTEGER*4 OTEBTYP(AGAMLEN,OMAXGAM)
+        INTEGER*4 OTEBFRE(OTEBFRESIZ)
+C
+C
+	EQUIVALENCE (OTEBCDC,OTEBREC(OTEBCDC_OFF))
+	EQUIVALENCE (OTEBTYP(1,1),OTEBREC(OTEBTYP_OFF))
+        EQUIVALENCE (OTEBFRE,OTEBREC(OTEBFRE_OFF))
+C
+C END RECOTEB.DEF
+C

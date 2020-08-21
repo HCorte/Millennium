@@ -1,0 +1,26 @@
+$! GXSRC:BNGTOPC.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]BNGTOPC.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:34:42   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.2   12 Jan 1995 11:21:30   PXB
+$!
+$!    Rev 1.1   09 Dec 1994 13:42:36   JXP
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    09 Dec 1994 13:42:08   JXP
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:BNGTOPC.EXE -
+OBJLIB:BNGTOPC,-
+FTP_OPEN,-
+BINGO_CHECKSUM,-
+GETLUN,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXRESCOM.ESH/SHAREABLE

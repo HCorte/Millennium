@@ -1,0 +1,66 @@
+$! GXSRC:X2XREL.LNK
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]X2XREL.LNV                                   $
+$! $Date::   14 Jul 1996 21:03:06                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! X2X Upgrade: 26-FEB-96 wsm Replaced GXMSGCOM.ESH w/ GXCTMCOM.ESH for Finland.
+$! V01 15-MAY-93 MCM RELEASED FOR GEORGIA (IRFSS #10132)
+$!
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$!
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! This item is the property of GTECH Corporation, Providence, Rhode
+$! Island, and contains confidential and trade secret information. It
+$! may not be transferred from the custody or control of GTECH except
+$! as authorized in writing by an officer of GTECH. Neither this item
+$! nor the information it contains may be used, transferred,
+$! reproduced, published, or disclosed, in whole or in part, and
+$! directly or indirectly, except as expressly authorized by an
+$! officer of GTECH, pursuant to written agreement.
+$!
+$! Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:X2XREL.EXE -
+OBJLIB:X2XREL,-
+QUECNT,-
+X2ADDPRO,-
+X2CLRSVC,-
+X2RCMD,-
+X2RDELAK,-
+X2RDELER,-
+X2RELMSG,-
+X2RGETBF,-
+X2RHALT,-
+X2RKICK,-
+X2RKICK1,-
+X2RPOLLCHK,-
+X2RQUE,-
+X2RRELTM,-
+X2RSTNMS,-
+X2RSTNST,-
+X2RSTNTM,-
+X2RTOSTN,-
+X2RTOTER,-
+X2STNRES,-
+X2RADDBF,-
+X2RASNPR,-
+X2R_START_STATION,-
+VALIDTER,-
+OPS1,-
+PRTOUT,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXX2XCOM.ESH/SHAREABLE, -
+TSKLIB:GXAPPCOM.ESH/SHAREABLE, -
+TSKLIB:GXCPLCOM.ESH/SHAREABLE, -
+TSKLIB:GXCTMCOM.ESH/SHAREABLE

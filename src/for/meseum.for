@@ -1,0 +1,211 @@
+C
+C SUBROUTINE MESEUM
+C
+C MESEUM.FOR
+C
+C V04 31-MAR-2016 SCML M16 PROJECT
+C V03 20-MAY-2014 SCML Placard Project
+C V02 14-OCT-2013 SCML Adding new flags to vision
+C V01 XX-XXX-XXXX XXXX Creation
+C
+C
+C SUBROUTINE TO FORMAT EUROMILLIONS MESSAGES FOR ERRLOG
+C
+C MESSAGE #   MESSAGE FORMAT
+C ---------   ----------------------------------------------------------
+C   1         CONNECTED TO MESSAGEQ OF EURO MILHOES
+C   2         NO CONNECTION TO MESSAGEQ OF EURO MILHOES
+C   3         <TIME OUT MESSAGE> BUF:{BUFFER NUMBER},TER:{TERMINAL NUMBER},MSG T/S: 0x{MESSAGE TYPE/SUBTYPE},XRF:{MESSAGE QUEUE SEQUENCE NUMBER}
+C   4         <ERROR WHILE PUT INTO QUEUE OF MESSAGEQ> STATUS:{STATUS NUMBER}
+C   5         PASSWORD ERROR WHILE TRYING TO CHANGE EM TIMEOUT
+C   6         PASSWORD ERROR WHILE TRYING TO CHANGE EM FIN TIMEOUT
+C  99         DEBUG MESSAGE
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Copyright 2016 SCML Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE MESEUM(MNUM,DBUF,MBUF,ALARM)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+C       
+        INTEGER*4     DBUF(*), K, MNUM
+        CHARACTER*140 MBUF
+        LOGICAL       ALARM
+C
+        GOTO (1,2,3,4,5,6) MNUM
+        GOTO 99
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+1       CONTINUE
+        WRITE (MBUF,901)
+901     FORMAT('CONNECTED TO MESSAGEQ OF EURO MILHOES')
+        RETURN
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+2       CONTINUE
+        WRITE (MBUF,902)
+902     FORMAT('NO CONNECTION TO MESSAGEQ OF EURO MILHOES')
+        RETURN
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+3       CONTINUE
+        WRITE (MBUF,903) DBUF(1), DBUF(2), DBUF(3), DBUF(4)
+903     FORMAT('<TIME OUT MESSAGE> BUF:',I0,                                    !BUFFER NUMBER
+     *         ',TER:',I0,                                                      !TERMINAL NUMBER
+     *         ',MSG T/S: 0x',Z0,                                               !MESSAGE TYPE/SUBTYPE
+     *         ',ISER:',I0)                                                     !INTERNAL SERIAL NUMBER
+        ALARM=.TRUE.
+        RETURN
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+4       CONTINUE
+        WRITE (MBUF,904) DBUF(1)
+904     FORMAT('<ERROR WHILE PUT INTO QUEUE OF MESSAGEQ> STATUS: ',I10)
+        ALARM=.TRUE.
+        RETURN
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+5       CONTINUE
+        WRITE (MBUF,905) 'VISION PASSWORD ERROR WHILE TRYING TO ' //
+     *                   'CHANGE EM TIMEOUT'
+905     FORMAT(A)
+        ALARM=.TRUE.
+        RETURN
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+6       CONTINUE
+        WRITE (MBUF,906) 'VISION PASSWORD ERROR WHILE TRYING TO '//
+     *                   'CHANGE EM FIN TIMEOUT'
+906     FORMAT(A)
+        ALARM=.TRUE.
+        RETURN
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C INVALID MESSAGE NUMBER
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+99      CONTINUE
+        IF(MNUM.NE.99) THEN
+          ALARM=.TRUE.
+          WRITE(MBUF,999) MNUM
+999       FORMAT('INVALID GENERAL MESSAGE NUMBER> ',I4,'    ')
+        ELSE
+          WRITE(MBUF,998) DBUF(1), DBUF(2), DBUF(2)
+998       FORMAT('DEBUG: ',I4,' - ',I10,'[',Z8,']')
+        ENDIF
+        RETURN
+C
+        END
+C
+C END MESEUM.FOR
+C
+CV04  C----+------------------------------------------------------------------
+CV04  C V02| Adding new flags to vision
+CV04  C----+------------------------------------------------------------------
+CV04  C        GOTO (1,2,3,4,5,6,7,8,9,10) MNUM
+CV04          IF(MNUM .EQ.  1)  GOTO 1
+CV04          IF(MNUM .EQ.  2)  GOTO 2
+CV04          IF(MNUM .EQ.  3)  GOTO 3
+CV04          IF(MNUM .EQ.  4)  GOTO 4
+CV04          IF(MNUM .EQ.  5)  GOTO 5
+CV04          IF(MNUM .EQ.  6)  GOTO 6
+CV04          IF(MNUM .EQ.  7)  GOTO 7
+CV04          IF(MNUM .EQ.  8)  GOTO 8
+CV04          IF(MNUM .EQ.  9)  GOTO 9
+CV04          IF(MNUM .EQ. 10)  GOTO 10
+CV04          IF(MNUM .EQ. 11)  GOTO 11
+CV04          IF(MNUM .EQ. 12)  GOTO 12
+CV04          IF(MNUM .EQ. 13)  GOTO 13
+CV04          IF(MNUM .EQ. 90)  GOTO 90
+CV04  C----+------------------------------------------------------------------
+CV04  C V02| Adding new flags to vision
+CV04  C----+------------------------------------------------------------------
+CV04          GOTO 99
+CV04  1       CONTINUE
+CV04          WRITE (MBUF,901) 
+CV04  901     FORMAT('CONNECTED TO MESSAGEQ OF EURO MILHOES')
+CV04          RETURN
+CV04  2       CONTINUE
+CV04          WRITE (MBUF,902) 
+CV04  902     FORMAT('NO CONNECTION TO MESSAGEQ OF EURO MILHOES')
+CV04          RETURN
+CV04  3       CONTINUE
+CV04          WRITE (MBUF,903) DBUF(1)
+CV04  903     FORMAT('<TIME OUT MESSAGE> BUF:',I)
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  4       CONTINUE
+CV04          WRITE (MBUF,904) DBUF(1)
+CV04  904     FORMAT('<ERROR WHILE PUT INTO QUEUE OF MESSAGEQ> STATUS: ',I10)
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  5       CONTINUE
+CV04          WRITE (MBUF,905) YN(P(EUMILF)+1)
+CV04  905     FORMAT('VISION (EUMILF): Connect to Euro Mil -> ',A3)
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  6       CONTINUE
+CV04          WRITE (MBUF,906) YN(P(EUSPWAG)+1)
+CV04  906     FORMAT('VISION (EUSPWAG): Suppress Euro Mil Wager -> ',A3)
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  7       CONTINUE
+CV04          WRITE (MBUF,907) YN(P(EUSPCAN)+1)
+CV04  907     FORMAT('VISION (EUSPCAN): Suppress Euro Mil Cancel -> ',A3)
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  8       CONTINUE
+CV04          WRITE (MBUF,908) YN(P(EUSPVAL)+1)
+CV04  908     FORMAT('VISION (EUSPVAL): Suppress Euro Mil Validations -> ',A3)
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  9       CONTINUE
+CV04          WRITE (MBUF,909) 
+CV04  909     FORMAT('VISION PASSWORD ERROR WHILE TRYING TO CHANGE EM TIMEOUT')
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  10      CONTINUE
+CV04          WRITE (MBUF,910) P(EUTIMOUT)
+CV04  910     FORMAT('VISION (EUTIMOUT): Time to Timeout messages in ss -> ',I4)
+CV04          RETURN
+CV04  
+CV04  C----+------------------------------------------------------------------
+CV04  C V02| Adding new flags to vision
+CV04  C----+------------------------------------------------------------------
+CV04  11      CONTINUE
+CV04          WRITE (MBUF,911) YN(P(EUSPREP)+1)
+CV04  911     FORMAT('VISION (EUSPREP): Suppress Euro Mil Reports -> ',A3)
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  C
+CV04  C V03 - Start
+CV04  C
+CV04  12      CONTINUE
+CV04          WRITE (MBUF,912) P(EUFINTO)
+CV04  912     FORMAT('VISION (EUFINTO): Time to Timeout Fin Reports in ss -> ',I4)
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  13      CONTINUE
+CV04          WRITE (MBUF,913) 
+CV04  913     FORMAT('VISION PASSWORD ERROR WHILE TRYING TO CHANGE EM FIN TIMEOUT')
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  C
+CV04  C V03 - End
+CV04  C
+CV04  90      CONTINUE
+CV04          WRITE (MBUF,990) YN(P(SPBLRP)+1)
+CV04  990     FORMAT('VISION (SPBLRP): Suppress Billing Reports -> ',A3)
+CV04          ALARM=.TRUE.
+CV04          RETURN
+CV04  C----+------------------------------------------------------------------
+CV04  C V02| Adding new flags to vision
+CV04  C----+------------------------------------------------------------------
+CV04  C
+CV04  C INVALID MESSAGE NUMBER
+CV04  C
+CV04  99      CONTINUE
+CV04          ALARM=.TRUE.
+CV04          WRITE (MBUF,999) MNUM
+CV04  999     FORMAT('INVALID GENERAL MESSAGE NUMBER> ',I4,'    ')
+CV04          RETURN
+CV04          END

@@ -1,0 +1,22 @@
+    BL2.HLP                GTECH Distributed Network
+                           Bingolotto Snapshot Help               Page 1 of 1
+ 
+    The BL2 snapshot contains draw information for the Fullhouse game.  It     
+    defaults to show the current draw but other draws can be displayed:
+    The information displayed includes:
+ 
+    game name     - Fullhouse 1
+    draw          - draw number
+    pools are     - pool status for the current draw (open, closed)
+    div           - division won for numbers picked
+    pool          - amount divided between each tier
+    shares won    - count and amount of winners for each division
+    fraction paid - count and amount for validations on a fraction 
+                    basis. Results are shown only for previous draws. 
+    sales         - current daily, advance, off-line and previous sales 
+                    for the displayed draw.
+    total         - total shares and fractions paid for displayed draw
+    phase 1       - count of numbers picked in frist drawing phase
+    phase 2       - count of numbers picked in second drawing phase
+    worst hits    - number of tickets with lease count of winning numbers
+    winning numbers winning numbers for the displayed draw.

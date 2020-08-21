@@ -1,0 +1,41 @@
+C
+C FUNCTION DISTIM
+C $Log:   GXAFXT:[GOLS]DISTIM.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:54:58   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:05:52   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_inpmod.for **
+C
+C
+C SUBROUTINE TO CONVERT TIME FOR DISPLAY
+C
+C
+	DOUBLE PRECISION FUNCTION DISTIM(NUM)
+	IMPLICIT NONE
+C
+	CHARACTER*8 C_TIME
+	REAL*8	    R_TIME
+	INTEGER*4   SEC, NUM, HR, MIN
+	EQUIVALENCE (C_TIME, R_TIME)
+C
+	SEC=NUM
+	IF(SEC.GT.'40000000'X) SEC=SEC-'40000000'X
+C***	SEC = IAND(SEC,'7FFFFFFF'X)
+	HR=SEC/3600
+	SEC=SEC-(HR*3600)
+	MIN=SEC/60
+	SEC=SEC-(MIN*60)
+	IF(HR.GT.99) HR=99
+	WRITE (C_TIME,900) HR,MIN,SEC
+900	FORMAT(I2.2,':',I2.2,':',I2.2)
+C
+	DISTIM=R_TIME
+C
+	RETURN
+	END

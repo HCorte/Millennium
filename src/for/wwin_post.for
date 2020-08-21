@@ -1,0 +1,70 @@
+C
+C SUBROUTINE WWIN_POST
+C  
+C 
+C V06 03-JUL-2000 UXN LATEFLG ADDED. 
+C V05 01-FEB-2000 UXN TNFRAC ADDED.
+C V04 27-APR-1999 RXK STOPSYS optimization (CARYSCAN is now an array).
+C V03 03-FEB-1994 HXK ACCUMULATE NUMBER OF BETS, NOT COUPONS.
+C V02 30-JAN-1994 HXK CHANGE TABLE USED FOR SALES REPORT FROM WPO TO WPA.
+C V01 03-JAN-1994 HXK ADDED COUNTER FOR SALES.
+C  
+C
+C SUBROUTINE TO POST WINSEL SALES DATA
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE WWIN_POST(TRABUF)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:WINCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INTEGER*4 GIND, ROW, AMT, I
+	LOGICAL*4 LATEFLG
+C
+C
+	IF(TRABUF(TTYP).NE.TWAG) RETURN
+	IF(CARYSCAN(TWIT).AND.TRABUF(TSTAT).EQ.EXCH) GOTO 100
+	IF(TRABUF(TSTAT).NE.GOOD) RETURN
+C
+C
+100	CONTINUE
+	GIND=TRABUF(TGAMIND)
+	IF(TRABUF(TWBEG).GT.LWIDRW(GIND)) RETURN
+	IF(TRABUF(TWEND).LT.LWIDRW(GIND)) RETURN
+	AMT = TRABUF(TWAMT)
+	IF(TRABUF(TFAMTFLG).EQ.1) AMT=AMT/TRABUF(TNFRAC)
+	LWISAL(GIND)=LWISAL(GIND)+AMT
+	DO 110 I=0,TRABUF(TWNBET)-1
+	ROW=TRABUF(TWWROW+I*TWWBLEN)
+	AMT=TRABUF(TWWAMT+I*TWWBLEN)
+	IF(TRABUF(TFAMTFLG).EQ.1) AMT=AMT/TRABUF(TNFRAC)
+	LATEFLG = LWILAT(LATCDC,GIND).GT.0 .AND.
+     *            (LWILAT(LATCDC,GIND).LT.TRABUF(TCDC).OR.
+     *             (LWILAT(LATCDC,GIND).EQ.TRABUF(TCDC).AND.
+     *              LWILAT(LATTIM,GIND).LT.TRABUF(TTIM)))
+	IF(.NOT.LATEFLG) LWISBR(ROW,GIND)=LWISBR(ROW,GIND)+AMT
+110	CONTINUE
+
+        LWIWPA(1,PRWON,GIND) = LWIWPA(1,PRWON,GIND) + TRABUF(TWNBET)
+	AMT = TRABUF(TWAMT)
+	IF(TRABUF(TFAMTFLG).EQ.1) AMT=AMT/TRABUF(TNFRAC)
+        LWIWPA(2,PRWON,GIND) = LWIWPA(2,PRWON,GIND) + AMT
+
+	END

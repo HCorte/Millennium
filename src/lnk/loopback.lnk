@@ -1,0 +1,29 @@
+$! LOOPBACK.LNK
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]LOOPBACK.LNV                                 $
+$! $Date::   14 Jul 1996 20:46:14                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$!
+LINK'P1' -
+/EXE=TSKLIB:LOOPBACK.EXE -
+OBJLIB:LOOPBACK,-
+X2ADDPRO,-
+X2XUNS,-
+X2RSTART,-
+X2RADDBF,-
+TRNTRACE,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE, -
+TSKLIB:GXREQCOM.ESH/SHAREABLE, -
+TSKLIB:GXCPLCOM.ESH/SHAREABLE, -
+TSKLIB:GXAGTCOM.ESH/SHAREABLE, -
+TSKLIB:GXX2XCOM.ESH/SHAREABLE

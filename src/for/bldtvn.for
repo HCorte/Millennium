@@ -1,0 +1,78 @@
+C
+C SUBROUTINE BLDTVN
+C $Log:   GXAFXT:[GOLS]BLDTVN.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:19:48   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 15:44:46   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - unspro.for **
+C
+C
+C
+C
+C BLDTVN
+C
+C V01 27-JAN-92 GCAN INITIAL RELEASE FOR THE NETHERLANDS
+C
+C SUBROUTINE TO SEND TV-NEWS MESSAGE TO THE TV CONTROLLER.
+C (MESSAGE IS STORED IN MSGCOM).
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE BLDTVN(OUTLEN,MESNUM,MESTAB)
+C
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMDLL.DEF'
+C
+        BYTE        MESTAB(*)                   !Output Table
+C
+        INTEGER*2   OUTLEN                      !Message Length (incl. Control).
+C
+        INTEGER*4   MESNUM                      !Message Number (Not used)
+	INTEGER*4   TIMBUF(3)			!Time Buffer (HH:MM:SS)
+	INTEGER*4   IND				!Index inot MESTAB.
+C
+C SET / CLEAR VARIABLES
+C
+        MESNUM = 0
+	IND = 1
+C
+C SET CONTROL/SEQUENCE AND TYPE SUBTYPE
+C
+	MESTAB(IND+0) = '20'X
+	MESTAB(IND+1) = '64'X
+	IND = IND + 2
+C
+C SAVE SPACE FOR CHECKSUM
+C
+	IND = IND + 2
+C
+C GET TIME FOR MESSAGE
+C
+	CALL ICLOCK(0,TIMBUF)
+	MESTAB(IND+0) = TIMBUF(1)
+	MESTAB(IND+1) = TIMBUF(2)
+	MESTAB(IND+2) = TIMBUF(3)
+	IND = IND + 3
+C
+C PUT CLASS AND SUBCLASS INTO MESSAGE
+C
+	MESTAB(IND+0) = 0		    !English.
+	MESTAB(IND+1) = 1		    !TV News Msg.
+	IND = IND + 2
+C
+	MESNUM = TVNEWS
+	OUTLEN = IND - 1
+C
+	RETURN
+	END

@@ -1,0 +1,22 @@
+    MIS.HLP                GTECH Distributed Network
+                          Miscellaneous Snapshot Help         Page 1 of 1
+ 
+    The MIS snapshot contains information on sales of miscellaneous items
+    for each agent. 
+
+    The information displayed includes:
+ 
+    name          - agent's name
+    address       - address of premises
+    agtnum        - agent number
+    terminal      - terminal number
+    clerk id      - clerk id number
+    instant names - instant games available for sales and validation
+    sale          - value of sales for each instant game 
+    cash          - value of validations for each instant game
+    misc          - sales for each miscellaneous item
+    petty cash    - amount of petty cash
+    
+
+
+

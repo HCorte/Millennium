@@ -1,0 +1,225 @@
+C
+C SUBROUTINE X2MNTNCE
+C
+C $Log:   GXAFXT:[GOLS]X2MNTNCE.FOV  $
+C  
+C     Rev 1.4   14 Jul 1996 19:41:26   HXK
+C  Restoring rev 1.0
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2MNTNCE.FOV                                 $
+C  $Date::   14 Jul 1996 19:41:26                                         $
+C  $Revision::   1.4                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2rcvbuf.for;1 **
+C
+C V04 30-NOV-95 DAS FIXED VALUE OF _SUBNETWORK                           
+C V03  9-JUN-94 WS  SUBNETWORK TYPE ADDED - Integrate UK changes into 
+C		    X2X Baseline
+C V02  8-MAR-94 JWE Use port type to get network type...
+C
+C     X2MNTNCE(BUFFER,SAP)     ;ANALYZE MAINTENANCE MESSAGE
+C
+C     IN:
+C     BUFFER   - WITH MAINTENANCE MESSAGE
+C     SAP      - SAP IT CAME FROM
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2MNTNCE(BUFFER,SAP)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+	INCLUDE 'INCLIB:X2TDBH.DEF'
+C
+	INTEGER*4 X2_PORT_STATE_TAB(0:7)
+	INTEGER*4 PORT_NO, OFFSET, NETWORK_PORT, LOCAL_PORT, PORT_STATE
+	INTEGER*4 WORKING_PORTS, TOTAL_CAPACITY
+	INTEGER*4 MSG_TYPE, PORT, PORT_OFFSET, NR_OF_PORTS, LINK_TYPE
+	INTEGER*4 LINK_CNT, FE_TYPE, SAP
+	INTEGER*4 TEMP, I
+        INTEGER*4   FIRST_PORT_TYPE
+        INTEGER*4   PORT_TYPE
+	INTEGER*4 SUBNETWORK				!V03
+	BYTE      BTEMP(4)
+	EQUIVALENCE (TEMP,BTEMP)
+C
+	DATA X2_PORT_STATE_TAB/0,X2XPS_IDLE,0,X2XPS_ON_LINE,0,
+     *	     X2XPS_DOWN,0,X2XPS_ON_LINE/
+C
+	BYTE      BUFFER(0:*)     !ELIMINATE ILBYTE AND ISBYTE
+C
+        IF(IAND(X2X_DEBUG,X2X_DEBUG_SUBS).NE.0) THEN
+          TYPE *,' ENTERING X2MNTNCE - BUFFER:'
+          TYPE 9010,(BUFFER(I),I=0,100)
+9010      FORMAT(25(1X,Z2)/)
+        ENDIF
+C
+	FE_TYPE = ZEXT (BUFFER(X2TDBHM_FE_TYPE-1))
+	IF (FE_TYPE.NE.X2TDBHM_FE_TYPE_GTX.AND.
+     *	    FE_TYPE.NE.X2TDBHM_FE_TYPE_JUPITER_DAUGHTE  .AND.
+     *	    FE_TYPE.NE.X2TDBHM_FE_TYPE_STRATUS .AND.
+     *	    FE_TYPE.NE.X2TDBHM_FE_TYPE_JUPITER .AND.
+     *	    FE_TYPE.NE.X2TDBH_FE_TYPE_DIAL_UP  .AND.
+     *      FE_TYPE.NE.X2TDBH_FE_TYPE_GTX386) GOTO 9000
+	X2XE_FE_TYPE(SAP)=FE_TYPE
+	LINK_CNT = ZEXT (BUFFER(X2TDBHM_LINK_CNT-1))
+	LINK_TYPE = ZEXT (BUFFER(X2TDBHM_LINK_TYPE-1))
+	IF (LINK_TYPE.NE.X2TDBHM_LINK_TYPE_802_3) GOTO 9000
+	NR_OF_PORTS = ZEXT (BUFFER(X2TDBHM_MAXPORTS-1))
+	IF (NR_OF_PORTS.GT.X2X_SAP_PORTS) NR_OF_PORTS=X2X_SAP_PORTS
+	PORT_OFFSET = ZEXT (BUFFER(X2TDBHM_STAT_OFFSET-1))
+	MSG_TYPE = ZEXT (BUFFER(X2TDBHM_MSG_TYPE-1))
+
+C	START OF V03 CHANGE BLOCK
+	SUBNETWORK=ZEXT (BUFFER(X2TDBHM_SUBNETWORK-1))
+	X2XE_SUBNETWORK(SAP)=SUBNETWORK
+C	END OF V03 CHANGE BLOCK
+
+	CALL MOV2TOI4(TOTAL_CAPACITY,BUFFER,X2TDBHM_TOTAL_CAPACITY-1)
+	WORKING_PORTS=0            !CALCULATE # OF WORKING PORTS
+C
+        IF(IAND(X2X_DEBUG,X2X_DEBUG_SUBS).NE.0) THEN
+          TYPE *,'MSG_TYPE : ',MSG_TYPE
+          TYPE *,'#PORTS   : ',NR_OF_PORTS
+          TYPE *,'CAPACITY : ',TOTAL_CAPACITY
+        ENDIF
+
+C     GET PORTS STATUSES
+C
+	IF(MSG_TYPE.LT.0.OR.MSG_TYPE.GT.X2X_MAX_MAINTENANCE_TYPE)
+     *	                                         GOTO 9000
+        X2XE_REQ_MAINTENANCE(MSG_TYPE,SAP)=
+     *    X2XE_REQ_MAINTENANCE(MSG_TYPE,SAP)+1
+	IF (MSG_TYPE.EQ.X2TDBHM_MSG_TYPE_0) THEN !IF TYPE 0 MESSAGE
+           FIRST_PORT_TYPE = 0
+	   DO 10, PORT=1,NR_OF_PORTS
+	      CALL NMOV4TOI4(TEMP,BUFFER,PORT_OFFSET)
+              PORT_TYPE = IAND(TEMP, '0000000F'X)
+	      PORT_STATE = ZEXT (BTEMP(1))
+	      PORT_STATE=PORT_STATE/32
+	      PORT_STATE=X2_PORT_STATE_TAB(PORT_STATE)
+	      IF (PORT_STATE.EQ.X2XPS_ON_LINE .OR.
+     *	       PORT_STATE.EQ.X2XPS_IDLE)         THEN
+	         WORKING_PORTS=WORKING_PORTS+1
+                 IF(FIRST_PORT_TYPE .EQ. 0)
+	1           FIRST_PORT_TYPE = PORT_TYPE
+                IF(FIRST_PORT_TYPE .NE. PORT_TYPE)THEN
+                    CALL OPS('Multiple port types on one front end',
+	1               FIRST_PORT_TYPE, PORT_TYPE)
+                ENDIF
+	      ENDIF
+C
+C        UPDATE SAP PORT AREA
+C
+	      X2XE_LOCAL_PORT_STATE(PORT,SAP)=PORT_STATE
+C
+C        UPDATE LOCAL PORT AREA
+C
+	      LOCAL_PORT=X2XE_LOCAL_PORT(PORT,SAP)
+	      IF (LOCAL_PORT.NE.0) THEN
+	         X2XPL_STATE(LOCAL_PORT)=PORT_STATE
+C
+C              PHYSICAL NETWORK PORT
+C
+	         NETWORK_PORT=X2XPL_LOCAL_TO_NETWORK(LOCAL_PORT)
+	         IF (NETWORK_PORT.NE.0)
+     *	                      X2XPN_STATE(NETWORK_PORT)=PORT_STATE
+	      ENDIF
+C
+	      PORT_OFFSET=PORT_OFFSET+4
+10	   CONTINUE
+           X2XE_NETWORK_TYPE(SAP) = FIRST_PORT_TYPE
+	ELSE
+	   DO 40, PORT=1,NR_OF_PORTS
+C
+C        THIS CODE SHOULD GO THROUGH TRANSFORMATIONS, ALL
+C        THESE X2XE_..._MAINTENANCE SHOULD BE INTEGER*4ED BY
+C        NETWORK PORTS, (SAVE MEMORY AND ADQUATE FOR ANY TYPE
+C        OF CONNECTION (SWITCH E.T.C.)
+C
+	      DO 30, OFFSET=1,4          !MOVE 4 FULLWORDS
+C
+	      CALL NMOV4TOI4(
+     *	       X2XE_LOCAL_PORT_MAINTENANCE(OFFSET,MSG_TYPE,PORT,SAP),
+     *	                   BUFFER,PORT_OFFSET)
+C
+C        UPDATE LOCAL PORT STATUS
+C
+	      IF (OFFSET.EQ.1) THEN
+	         CALL NMOV4TOI4(TEMP,BUFFER,PORT_OFFSET)
+	         PORT_NO = ZEXT (BTEMP(1))
+	         PORT_STATE = ZEXT(BTEMP(2))
+C
+                 IF(IAND(X2X_DEBUG,X2X_DEBUG_SUBS).NE.0) THEN
+                    TYPE *,'PORT_NO    :',PORT_NO
+                    TYPE *,'PORT STATE :',PORT_STATE
+                 ENDIF
+C
+	         IF (PORT_NO.GT.0 .AND. PORT_NO.LE.X2X_SAP_PORTS) THEN
+	            PORT_STATE=PORT_STATE/32
+	            PORT_STATE=X2_PORT_STATE_TAB(PORT_STATE)
+	            IF (PORT_STATE.EQ.X2XPS_ON_LINE .OR.
+     *	             PORT_STATE.EQ.X2XPS_IDLE)         THEN
+	               WORKING_PORTS=WORKING_PORTS+1
+	            ENDIF
+C
+C        UPDATE SAP PORT AREA
+C
+	            X2XE_LOCAL_PORT_STATE(PORT_NO,SAP)=PORT_STATE
+C
+C              UPDATE LOCAL PORT AREA
+	            LOCAL_PORT=X2XE_LOCAL_PORT(PORT_NO,SAP)
+	            IF (LOCAL_PORT.NE.0) THEN
+	               X2XPL_STATE(LOCAL_PORT)=PORT_STATE
+C
+C                    PHYSICAL NETWORK PORT
+C
+	               NETWORK_PORT=X2XPL_LOCAL_TO_NETWORK(LOCAL_PORT)
+	               IF (NETWORK_PORT.NE.0)
+     *	                      X2XPN_STATE(NETWORK_PORT)=PORT_STATE
+	            ENDIF
+	         ENDIF
+	      ENDIF
+	      PORT_OFFSET=PORT_OFFSET+4
+30	      CONTINUE
+40	   CONTINUE
+	ENDIF
+C
+	IF (TOTAL_CAPACITY.NE.0) THEN
+	   X2XE_MAX_CAPACITY(SAP)=TOTAL_CAPACITY
+	ELSE
+	   X2XE_MAX_CAPACITY(SAP)=WORKING_PORTS       !!!!!!!!!
+	ENDIF
+C
+C
+C
+C     CALCULATE TRANSPORT DELAY
+C
+	X2XE_DELAY(SAP)=X2X_LOOP_TIME-X2XE_MAINTENANCE_START(SAP)
+C
+9000	CONTINUE
+	RETURN
+	END

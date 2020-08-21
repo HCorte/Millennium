@@ -1,0 +1,22 @@
+    TAT.HLP               GTECH Distributed Network
+                       Pitka Today's Sales Snapshot Help      Page 1 of 1
+ 
+    This snapshot displays Pitka sales ranked from the highest liability
+    wager.  Details of each ticket is shown with the agent number, played 
+    combination, amount bet, odds for the ticket and amount that would be 
+    paid should the ticket be the winner.  
+   
+    The information displayed includes:
+ 
+    agent         - agent number
+    combination   - combination played on ticket
+    amount bet    - ticket price
+    odds          - applicable odds
+    liability     - predicted payout amount for given combination 
+    num of agents - number of agents exceeding given sales amount for Pitka
+    total amount  - total amount bet for Pitka today
+    bet today
+    
+
+
+

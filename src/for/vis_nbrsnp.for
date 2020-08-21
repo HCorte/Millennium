@@ -1,0 +1,402 @@
+C
+C SUBROUTINE NBRSNP
+C $Log:   GXAFXT:[GOLS]NBRSNP.FOV  $
+C  
+C V05 17-APR-1996 HXK Release of Finland for X.25, Telephone Betting,
+C                     Instant Pass Thru Phase 1
+C V04 13-JUN-1993 HXK added AGTINF.DEF, PRMAGT.DEF
+C V03 21-JAN-1993 DAB Initial Release Based on Netherlands Bible, 12/92,
+C                     and Comm 1/93 update DEC Baseline
+C V02 08-MAR-1991 JPJ INITIAL RELEASE FOR MARYLAND
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C NBRSNP.FOR
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE NBRSNP(NUM,GIND,CLINE)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+        INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:VISCOM.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:NBRCOM.DEF'
+	INCLUDE 'INCLIB:DNBREC.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+C
+	INTEGER*4 AMTPOL(7),AMTWON(7),CNTPOL(7)
+	INTEGER*4 AMTPAY(7),AMTPRZ(7,2),CNTWON(7)
+	INTEGER*4 CNTPAY(7),N3IND(NUMPL3),N4IND(NUMPL4)
+	INTEGER*4 P3N(7),P4N(7),CBUF(CDLEN), DOLVAL
+	INTEGER*4 ATOT(3),NTOT(3),FDB(7),CLINE(20),DIG(4)
+	INTEGER*4 LIN, POFF, IND, I, K, ST, POS, VALDOL
+	INTEGER*4 GNUM, DRAW, GIND, NUM, KEYNUM, VALUE, NTYP, N
+C
+	INTEGER*2 DDAT1(LDATE_LEN)
+	CHARACTER*4 WINNUM(MAXBDR)
+	REAL*8 PER1,PER2,RATE
+	REAL*8 APOL(2),KEYS(3)
+	DATA APOL/'  open  ',' closed '/
+	DATA N3IND/1,2,3,4,5,5,6,6,7,7/
+	DATA N4IND/1,2,3,4,5,5,5,5,6,6,6,6,7,7,7,7/
+	DATA P3N/'F2ST','B2ST','S2ST','3STR','3BOX','3S/B','3CMB'/
+	DATA P4N/'F2ST','B2ST','M2ST','4STR','4BOX','4S/B','4CMB'/
+	DATA KEYS/'LIM2ST  ','LIMSTR  ','LIMBOX  '/
+C
+C
+	DRAW=NUM
+	IF(GIND.LT.1.OR.GIND.GT.MAXIND) THEN
+	  WRITE(CLIN23,3000)
+	  RETURN
+	ENDIF
+C
+C
+	GNUM=GTNTAB(TNBR,GIND)
+	IF(GNUM.LT.1) THEN
+	  WRITE(CLIN23,3010) GIND
+	  RETURN
+	ENDIF
+	IF(DRAW.LT.1) DRAW=DAYDRW(GNUM)
+C
+C GET NBRSNP INPUT
+C
+        VALUE=0
+        POS=1
+        CALL KEY(CLINE,KEYS,3,POS,KEYNUM)
+        IF(POS.GT.40) GOTO 40                      !NO INPUT
+        IF(KEYNUM.EQ.0)GOTO 410
+	CALL NUMB(CLINE,POS,VALUE)
+	IF(VALUE.LT.0) GOTO 400
+	GOTO (10, 20, 30) KEYNUM
+	GOTO 410
+C
+C CHANGE LIABILITY LIMIT (2 DIGIT)
+C
+10	CONTINUE
+	IF(VALUE.GT.99999999) GOTO 400
+	CBUF(1)=3
+	CBUF(2)=DOLVAL(VALUE)
+	CBUF(3)=TCNBR
+	CBUF(8)=GIND
+	CBUF(9)=LIM2ST
+	CALL VISCMD(CBUF,ST)
+	GOTO 40
+C
+C CHANGE LIABILITY LIMIT (STRAIGHT)
+C
+20	CONTINUE
+	IF(VALUE.GT.99999999) GOTO 400
+	CBUF(1)=4
+	CBUF(2)=DOLVAL(VALUE)
+	CBUF(3)=TCNBR
+	CBUF(8)=GIND
+	CBUF(9)=LIMSTR
+	CALL VISCMD(CBUF,ST)
+	GOTO 40
+C
+C CHANGE LIABILITY LIMIT (BOX)
+C
+30	CONTINUE
+	IF(VALUE.GT.99999999) GOTO 400
+	CBUF(1)=5
+	CBUF(2)=DOLVAL(VALUE)
+	CBUF(3)=TCNBR
+	CBUF(8)=GIND
+	CBUF(9)=LIMBOX
+	CALL VISCMD(CBUF,ST)
+	GOTO 40
+C
+C GET DATA FROM COMMON OR DISK
+C
+40	CONTINUE
+        IF(DRAW.EQ.0) DRAW=DAYHDR(GNUM)
+	IF(DRAW.EQ.DAYDRW(GNUM)) THEN
+	  CALL GAMLOG(TNBR,GIND,DNBREC,NBRSTS)
+	  GOTO 100
+	ENDIF
+C
+C
+	SMODE=.TRUE.
+	CALL OPENW(1,GFNAMES(1,GNUM),4,0,0,ST)
+	CALL IOINIT(FDB,1,DNBSEC*256)
+	IF(ST.NE.0) THEN
+	  WRITE(CLIN23,3020) (GFNAMES(K,GNUM),K=1,5),ST
+	  CALL USRCLOS1(     1)
+	  RETURN
+	ENDIF
+	CALL READW(FDB,DRAW,DNBREC,ST)
+	IF(ST.NE.0) THEN
+	  WRITE(CLIN23,3030) (GFNAMES(K,GNUM),K=1,5),ST,DRAW
+	  CALL USRCLOS1(     1)
+	  RETURN
+	ENDIF
+	CALL USRCLOS1(     1)
+C
+C
+100	CONTINUE
+C
+C
+	CALL FASTSET(0,CNTWON,7)
+	CALL FASTSET(0,CNTPAY,7)
+	CALL FASTSET(0,CNTPOL,7)
+	CALL FASTSET(0,AMTPOL,7)
+	CALL FASTSET(0,AMTWON,7)
+	CALL FASTSET(0,AMTPAY,7)
+	CALL FASTSET(0,AMTPRZ,7)
+	CALL FASTSET(0,ATOT,3)
+	CALL FASTSET(0,NTOT,3)
+	PER1=0.0
+	PER2=0.0
+	DO 50 I=1,DNBPOL
+	  IND=N4IND(I)
+	  IF(DNBTYP.EQ.NB3TYP) IND=N3IND(I)
+	  CNTPOL(IND)=CNTPOL(IND)+DNBSAL(TRACNT,I)
+	  CNTWON(IND)=CNTWON(IND)+DNBWON(TRACNT,I,1)+DNBWON(TRACNT,I,2)
+	  CNTPAY(IND)=CNTPAY(IND)+DNBPAD(TRACNT,I,1)+DNBPAD(TRACNT,I,2)
+	  AMTPOL(IND)=AMTPOL(IND)+DNBSAL(DOLAMT,I)
+	  AMTWON(IND)=AMTWON(IND)+DNBWON(DOLAMT,I,1)+DNBWON(DOLAMT,I,2)
+	  AMTPAY(IND)=AMTPAY(IND)+DNBPAD(DOLAMT,I,1)+DNBPAD(DOLAMT,I,2)
+	  ATOT(1)=ATOT(1)+DNBSAL(DOLAMT,I)
+	  NTOT(1)=NTOT(1)+DNBSAL(TRACNT,I)
+	  ATOT(2)=ATOT(2)+DNBWON(DOLAMT,I,1)+DNBWON(DOLAMT,I,2)
+	  NTOT(2)=NTOT(2)+DNBWON(TRACNT,I,1)+DNBWON(TRACNT,I,2)
+	  ATOT(3)=ATOT(3)+DNBPAD(DOLAMT,I,1)+DNBPAD(DOLAMT,I,2)
+	  NTOT(3)=NTOT(3)+DNBPAD(TRACNT,I,1)+DNBPAD(TRACNT,I,2)
+50	CONTINUE
+C
+C
+        IF(DNBSTS.LT.GAMDON) GOTO 200
+        IF(DNBTYP.EQ.NB3TYP) THEN
+          NTYP=TNB3B6
+          N=DNBWIN(TNB3ST,1)
+          DO 60 I=1,3
+          DIG(I)=MOD(N,10)
+          N=N/10
+60       CONTINUE
+          CALL BOXTYP(DIG,NTYP,NB3TYP)
+	  AMTPRZ(1,1)=DNBPRZ(1,1)
+	  AMTPRZ(2,1)=DNBPRZ(2,1)
+	  AMTPRZ(3,1)=DNBPRZ(3,1)
+          AMTPRZ(4,1)=DNBPRZ(TNB3ST,1)
+	  IF(NTYP.NE.0) THEN
+            AMTPRZ(5,1)=DNBPRZ(NTYP,1)
+            AMTPRZ(6,1)=DNBPRZ(NTYP+2,1)
+	  ELSE
+            AMTPRZ(5,1)=0
+            AMTPRZ(6,1)=0
+	  ENDIF
+	  AMTPRZ(7,1)=DNBPRZ(TNB3W3,1)
+	  IF(DNBBDR.NE.0) THEN
+            NTYP=TNB3B6
+            N=DNBWIN(TNB3ST,2)
+            DO 70 I=1,3
+            DIG(I)=MOD(N,10)
+            N=N/10
+70          CONTINUE
+            CALL BOXTYP(DIG,NTYP,NB3TYP)
+	    AMTPRZ(1,2)=DNBPRZ(1,2)
+	    AMTPRZ(2,2)=DNBPRZ(2,2)
+	    AMTPRZ(3,2)=DNBPRZ(3,2)
+            AMTPRZ(4,2)=DNBPRZ(TNB3ST,2)
+	    IF(NTYP.NE.0) THEN
+              AMTPRZ(5,2)=DNBPRZ(NTYP,2)
+              AMTPRZ(6,2)=DNBPRZ(NTYP+2,2)
+	    ELSE
+              AMTPRZ(5,2)=0
+              AMTPRZ(6,2)=0
+	    ENDIF
+	    AMTPRZ(7,2)=DNBPRZ(TNB3W3,2)
+	  ENDIF
+        ELSE
+          NTYP=TNB4B24
+          N=DNBWIN(TNB4ST,1)
+          DO 80 I=1,4
+          DIG(I)=MOD(N,10)
+          N=N/10
+80        CONTINUE
+          CALL BOXTYP(DIG,NTYP,NB4TYP)
+          AMTPRZ(1,1)=DNBPRZ(1,1)
+          AMTPRZ(2,1)=DNBPRZ(2,1)
+          AMTPRZ(3,1)=DNBPRZ(3,1)
+          AMTPRZ(4,1)=DNBPRZ(TNB4ST,1)
+	  IF(NTYP.NE.0) THEN
+            AMTPRZ(5,1)=DNBPRZ(NTYP,1)
+            AMTPRZ(6,1)=DNBPRZ(NTYP+4,1)
+	  ELSE
+            AMTPRZ(5,1)=0
+            AMTPRZ(6,1)=0
+	  ENDIF
+          AMTPRZ(7,1)=DNBPRZ(TNB4W4,1)
+	  IF(DNBBDR.NE.0) THEN
+            NTYP=TNB4B24
+            N=DNBWIN(TNB4ST,2)
+            DO 90 I=1,4
+            DIG(I)=MOD(N,10)
+            N=N/10
+90          CONTINUE
+            CALL BOXTYP(DIG,NTYP,NB4TYP)
+            AMTPRZ(1,2)=DNBPRZ(1,2)
+            AMTPRZ(2,2)=DNBPRZ(2,2)
+            AMTPRZ(3,2)=DNBPRZ(3,2)
+            AMTPRZ(4,2)=DNBPRZ(TNB4ST,2)
+	    IF(NTYP.NE.0) THEN
+              AMTPRZ(5,2)=DNBPRZ(NTYP,2)
+              AMTPRZ(6,2)=DNBPRZ(NTYP+4,2)
+	    ELSE
+              AMTPRZ(5,2)=0
+              AMTPRZ(6,2)=0
+	    ENDIF	       
+            AMTPRZ(7,2)=DNBPRZ(TNB4W4,2)
+	  ENDIF
+        ENDIF
+C
+        PER1=0.0
+        PER2=0.0
+        RATE=0.0
+	IF(ATOT(1).NE.0) PER1=(REAL(ATOT(2))*100.)/REAL(ATOT(1))
+	IF(ATOT(2).NE.0) PER2=(REAL(ATOT(3))*100.)/REAL(ATOT(2))
+	IF(NTOT(2).NE.0) RATE=(REAL(NTOT(3))*100.)/REAL(NTOT(2))
+C
+200     CONTINUE
+C
+	DDAT1(5)=DNBDAT(1)
+	CALL LCDATE(DDAT1)
+C
+C ENCODE GAME SNAPSHOT
+C
+	POFF=1
+	DO 210 K=1,MAXBDR
+	   WRITE(WINNUM(K),8000)
+210     CONTINUE
+8000	FORMAT('    ')
+	IF(DNBSTS.GE.GAMBFD) POFF=2
+	IF(DNBSTS.GE.GAMENV) THEN
+	  DO 8050 K=1,DNBBDR+1
+	     IF(DNBTYP.EQ.NB3TYP) WRITE(WINNUM(K),8100) DNBWIN(TNB3ST,K)
+	     IF(DNBTYP.EQ.NB4TYP) WRITE(WINNUM(K),8200) DNBWIN(TNB4ST,K)
+8050	  CONTINUE
+8100	  FORMAT(I4.3)
+8200	  FORMAT(I4.4)
+	ENDIF
+	WRITE(CLIN1,901) GIND,(GLNAMES(K,GNUM),K=1,4),DRAW
+	WRITE(CLIN3,903) KEYS(1),VALDOL(DNBLIM(LIM2ST)),
+     *			 KEYS(2),VALDOL(DNBLIM(LIMSTR)),
+     *		         KEYS(3),VALDOL(DNBLIM(LIMBOX)),APOL(POFF)
+	WRITE(CLIN4,904)
+	IF(DNBBDR.NE.0) THEN
+	  WRITE(CLIN5,905)
+	ELSE
+	  WRITE(CLIN5,9051)
+	ENDIF
+	LIN=7
+	DO 300 I=1,7
+	IF(DNBTYP.EQ.NB3TYP) THEN
+	  IF(DNBBDR.NE.0) THEN
+	    WRITE(XNEW(  LIN),906) P3N(I),CNTPOL(I),
+     *                           CMONY(AMTPOL(I),11,BETUNIT),
+     *	                         CNTWON(I),CMONY(AMTWON(I),10,BETUNIT),
+     *	                         CNTPAY(I),CMONY(AMTPAY(I),10,BETUNIT),
+     *	                         CMONY(AMTPRZ(I,1),9,BETUNIT),
+     *	                         CMONY(AMTPRZ(I,2),9,BETUNIT)
+	  ELSE
+            WRITE(XNEW(  LIN),9061)P3N(I),CNTPOL(I),
+     *                           CMONY(AMTPOL(I),11,BETUNIT),
+     *                           CNTWON(I),CMONY(AMTWON(I),10,BETUNIT),
+     *                           CNTPAY(I),CMONY(AMTPAY(I),10,BETUNIT),
+     *                           CMONY(AMTPRZ(I,1),9,BETUNIT)
+	  ENDIF
+	ELSE
+	  IF(DNBBDR.NE.0) THEN
+	    WRITE(XNEW(  LIN),906) P4N(I),CNTPOL(I),
+     *                           CMONY(AMTPOL(I),11,BETUNIT),
+     *	                         CNTWON(I),CMONY(AMTWON(I),10,BETUNIT),
+     *	                         CNTPAY(I),CMONY(AMTPAY(I),10,BETUNIT),
+     *	                         CMONY(AMTPRZ(I,1),9,BETUNIT),
+     *	                         CMONY(AMTPRZ(I,2),9,BETUNIT)
+	  ELSE
+            WRITE(XNEW(  LIN),9061)P4N(I),CNTPOL(I),
+     *                           CMONY(AMTPOL(I),11,BETUNIT),
+     *                           CNTWON(I),CMONY(AMTWON(I),10,BETUNIT),
+     *                           CNTPAY(I),CMONY(AMTPAY(I),10,BETUNIT),
+     *                           CMONY(AMTPRZ(I,1),9,BETUNIT)
+	  ENDIF
+	ENDIF
+	LIN=LIN+1
+300	CONTINUE
+	LIN=LIN+1
+	WRITE(XNEW(  LIN),907) NTOT(1),CMONY(ATOT(1),11,BETUNIT),
+     *	                  NTOT(2),CMONY(ATOT(2),10,BETUNIT),
+     *	                  NTOT(3),CMONY(ATOT(3),10,BETUNIT)
+	LIN=LIN+2
+	IF(DNBBDR.NE.0) THEN
+           WRITE(XNEW(  LIN),908) (K-1,WINNUM(K),K=2,DNBBDR+1)
+	ELSE
+	   WRITE(XNEW(  LIN),923)
+	ENDIF
+	WRITE(CLIN20,920)
+	WRITE(CLIN21,921)
+	WRITE(CLIN22,922) WINNUM(1),NTOT(2),CMONY(ATOT(2),11,BETUNIT),
+     *	                  PER1,NTOT(3),CMONY(ATOT(3),11,BETUNIT),
+     *	                  PER2,RATE
+	RETURN
+C
+C VALUE ERROR
+C
+ 
+400     CONTINUE
+        WRITE(CLIN23,801)
+801     FORMAT('Value error')
+        RETURN
+C
+C INPUT ERROR
+C
+410	CONTINUE
+        WRITE(CLIN23,800)
+800     FORMAT('Input error')
+        RETURN
+C
+C FORMAT STATEMENTS
+C
+901	FORMAT('Numbers ',I1,2X,4A4,' Draw ',I4)
+903	FORMAT(1X,'*',A8,I9,1X,'*',A8,I9,1X,'*',A8,I9,1X,'Pools are ',A8)
+904   FORMAT(8(' '),4('-'),'S A L E S',4('-'),1X,6('-'),'W O N',5('-'),
+     *	 1X,5('-'),'P A I D',4('-'),3X'---P R I Z E----')
+905   FORMAT('Type',4X,'Number',5X,'Amount',2(1X,'Number    Amount'),
+     *	        3X,'Regular',4X,'Bonus')
+9051  FORMAT('Type',4X,'Number',5X,'Amount',2(1X,'Number    Amount'),
+     *          13X,'Amount')
+906	FORMAT(A4,2X,I8,A11,2(I7,A10),1X,A9,A9)
+9061    FORMAT(A4,2X,I8,A11,2(I7,A10),10X,A9)
+907	FORMAT('Total ',I8,A11,2(I7,A10),5X,F7.2)
+908	FORMAT(<DNBBDR>('Bonus #',I1,2X,A4,1X))
+920	FORMAT('Winning     ----- L I A B I L I T Y -----  ',
+     *	       '------- P A Y O F F S ------- Rate of')
+921	FORMAT('Numbers',5X,2('Winners',5X,'Amount',4X,'Percent',2X),
+     *	      'Claims')
+922	FORMAT(1X,A4,8X,I6,A11,F11.2,3X,
+     *	       I6,A11,F11.2,F7.2)
+923     FORMAT(80(' '))
+C
+3000	FORMAT('Enter !numbers game index ')
+3010	FORMAT('Numbers ',I1,' game not active')
+3020	FORMAT(5A4,' open error ',I4)
+3030	FORMAT(5A4,' read error ',I4,' record > ',I4)
+	END

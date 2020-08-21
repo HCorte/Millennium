@@ -1,0 +1,176 @@
+C OS32ER.DEF
+C $Log:   GXAFXT:[GOLS]NRM_OS32ER.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:14:36   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:48:40   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C  B01  07-SEP-88  MRM  Initial Release
+C
+C     This DEF file contains descriptions of all O/S 32 file
+C     errors.  This DEF is utilized by the OS32ER.FTN subroutine
+C     to display standard error messages.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   OS32TOP
+	PARAMETER  (OS32TOP = 90)
+C
+	INTEGER*2   OSXREF(OS32TOP)             !Cross reference
+	CHARACTER   OSDESC(OS32TOP)*35          !Format buffer
+C
+C
+C     EOF errors.
+C
+	INTEGER*4   OSCNTI
+	DATA    (OSDESC(OSCNTI),OSXREF(OSCNTI),OSCNTI=1,3)
+     -	 /'EOF detected on internal file      ',-3,
+     -	  'Soft internal EOF detected         ',-2,
+     -	  'Hardware EOF detected              ',-1 /
+C
+C
+C     I/O common errors.
+C
+	DATA    (OSDESC(OSCNTI),OSXREF(OSCNTI),OSCNTI=4,8)
+     -	 /'Unable to assign default unit      ',1,
+     -	  'Unit number illegal                ',2,
+     -	  'Unable to obtain enough storage    ',3,
+     -	  'Exceeded RTL scratch area          ',4,
+     -	  'Rec # not > 0 for direct access    ',5 /
+C
+C
+C     SVC 1 errors.
+C
+	DATA    (OSDESC(OSCNTI),OSXREF(OSCNTI),OSCNTI=9,16)
+     -	 /'Unit unassigned                    ',25,
+     -	  'Parity or recoverable error        ',26,
+     -	  'Unrecoverable error                ',27,
+     -	  'End of medium                      ',28,
+     -	  'Device unavailable                 ',29,
+     -	  'Illegal function                   ',30,
+     -	  'Direct access reads EOF record     ',31,
+     -	  'Direct access reads beyond EOF     ',32 /
+C
+C
+C     SVC 7 errors.
+C
+	DATA    (OSDESC(OSCNTI),OSXREF(OSCNTI),OSCNTI=17,26)
+     -	 /'Illegal function code on SVC 7     ',50,
+     -	  'Illegal logical unit               ',51,
+     -	  'Specified volume not mounted       ',52,
+     -	  'Attempt allocate on existing file  ',53,
+     -	  'Assign to non-existant file        ',54,
+     -	  'Insufficient space for allocate    ',55,
+     -	  'Read and write keys do not match   ',56,
+     -	  'Attempt allocate when disk ERW     ',57,
+     -	  'Access priviledges not granted     ',58,
+     -	  'Incompatible access privileges     ',59 /
+C
+	DATA    (OSDESC(OSCNTI),OSXREF(OSCNTI),OSCNTI=27,36)
+     -	 /'File not assigned ERW              ',60,
+     -	  'Attempt to delete open file        ',61,
+     -	  'Exceed allocated space on assign   ',62,
+     -	  'Attempt to assign assigned LU      ',63,
+     -	  'Logical unit not assigned          ',64,
+     -	  'Volume not direct access           ',65,
+     -	  'File descriptor format bad         ',66,
+     -	  'Device non-existant or busy        ',67,
+     -	  'Allocate/delete system/group file  ',68,
+     -	  'SVC7 error                         ',69 /
+C
+C
+C     Auxiliary I/O errors.
+C
+	DATA    (OSDESC(OSCNTI),OSXREF(OSCNTI),OSCNTI=37,54)
+     -	 /'No match found in aux I/O list     ',300,
+     -	  'Value for specifier > max value    ',301,
+     -	  'Invalid specifier code type        ',302,
+     -	  'Len not present with char address  ',303,
+     -	  'Mnemonic string invalid            ',304,
+     -	  'No unit specifer present           ',305,
+     -	  'File specifier not present         ',306,
+     -	  'Blank specifier only for format    ',307,
+     -	  'File specifer not present          ',308,
+     -	  'Attempt to create a name scratch   ',309,
+     -	  'DIRECT/COUNTBY/RECL not specified  ',310,
+     -	  'COUNTBY=sect and file not contig   ',311,
+     -	  'Type specifier incompatible        ',312,
+     -	  'Size specifier not present         ',313,
+     -	  'STATUS=new for existing file       ',314,
+     -	  'STATUS=old for nonexisting file    ',315,
+     -	  'Attempt to allocate a device       ',316,
+     -	  'Attempt to change file form on LU  ',317 /
+C
+	DATA    (OSDESC(OSCNTI),OSXREF(OSCNTI),OSCNTI=55,65)
+     -	 /'Attempt to change blocksize on LU  ',318,
+     -	  'Attempt to change record length    ',319,
+     -	  'Attempt to change file type        ',320,
+     -	  'LU not assigned on reprotect       ',321,
+     -	  'LU not assigned on rename          ',322,
+     -	  'Size > current contig file size    ',323,
+     -	  'Formatted recl > current recl      ',324,
+     -	  'Read/write keys must be specified  ',325,
+     -	  'Direct access not supported        ',326,
+     -	  'Unformatted specified - no binary  ',327,
+     -	  'Unformatted blocksize > file recl  ',328 /
+C
+	DATA    (OSDESC(OSCNTI),OSXREF(OSCNTI),OSCNTI=66,75)
+     -	 /'STATUS=keep and file is scratch    ',329,
+     -	  'Unit or file specifer not present  ',330,
+     -	  'No LU available to assign file     ',331,
+     -	  'LU busy and unusable               ',332,
+     -	  'Backspace count not positive       ',333,
+     -	  'RECL not positive                  ',334,
+     -	  'Blksize not positive or too small  ',335,
+     -	  'Size not positive                  ',336,
+     -	  'ISIZE not positive                 ',337,
+     -	  'Attempt change COUNTBY on used LU  ',338 /
+C
+C
+C     Pack File Descriptor errors.
+C
+	DATA    (OSDESC(OSCNTI),OSXREF(OSCNTI),OSCNTI=76,76)
+     -	 /'Invalid file/pack specifier        ',349 /
+C
+C
+C     Hash file errors.
+C
+	DATA    (OSDESC(OSCNTI),OSXREF(OSCNTI),OSCNTI=77,88)
+     -	 /'Invalid hash logical unit          ',-128,
+     -	  'Invalid hash request               ',-129,
+     -	  'Invalid hash open                  ',-130,
+     -	  'Invalid serial number              ',-131,
+     -	  'Invalid hash mode                  ',-132,
+     -	  'Invalid hash data                  ',-133,
+     -	  'End of file detected               ',-134,
+     -	  'Record not found                   ',-135,
+     -	  'File is full <> record not moved   ',-136,
+     -	  'Record updated since last read     ',-137,
+     -	  'Cannot get a buffer                ',-138,
+     -	  'Other unknown error                ',-139 /
+C
+C
+C     Unknown error condition.
+C
+	DATA    OSDESC(OS32TOP),OSXREF(OS32TOP)
+     -	 /'Unknown error code.                ',350 /
+ 
+ 

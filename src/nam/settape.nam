@@ -1,0 +1,26 @@
+! SETTAPE.NAM
+!
+! File describing tape backup considerations for the application. It consists 
+! of three parts: Last Update Time, Backup Type and Detailed Tape description.
+!
+! Last Update Time
+!
+TIME:  3-MAY-1999 10:53:36.59
+!
+! Backup Type
+!
+!Backup	Device	Max	No.of	Backup	Notify	Last	Last	  Last update
+!type	type	Count	tapes	freq.	user	tape	file	date	   hour
+!
+A       TF85    1       2       7       OXK     2       1       1999-11-20 9 
+D       TF85    10      1       1       OXK     1       1       1999-11-20 14
+!
+!
+! Detailed Tape
+!
+!Tape	File	User	    Backup
+!label	count	code	date	   hour
+!
+A1DFIN  1       OXK     1999-11-20 13 A
+A2DFIN  1       OXK     1999-11-20 9  A
+D1DFIN  1       OXK     1999-11-20 14 A

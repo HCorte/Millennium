@@ -1,0 +1,323 @@
+C
+C SUBROUTINE SYNC
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]SYNC.FOV                                     $
+C  $Date::   17 Apr 1996 15:23:58                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C  
+C *** Pre-Baseline Source - net_netsub.for ***
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Purpose:
+C	READ LOGGER ON MASTER.
+C
+C Calling Sequence:
+C	CALL SYNC(NODE, XFER, WAY)
+C
+C Input:
+C	NODE	- NODE DATA IS BEING SENT TO.
+C	WAY	- NETWORK WAY WE ARE ON.
+C
+C Output:
+C	XMIT	- !0 IF NOTHING SENT.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+C
+	SUBROUTINE SYNC(NODE, XMIT, WAY)
+C
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+C
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DCNEVN.DEF'
+	INCLUDE 'INCLIB:DESNET.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:QUECOM.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+C
+	INCLUDE '($SYSSRVNAM)'
+C
+C LOCAL DECLARATIONS
+C
+	INTEGER*4	BUF,
+     *			CHECK_BUF,
+     *			FREEZNODE	/0/,		! NODE FREEZING GAME.
+     *			FREEZTIM,
+     *			LOCALFREEZ	/0/,
+     *			NODE,
+     *			RECOVERLOG,
+     *			RLGSER         /0/,       ! wasn't initialized.
+     *			SRN,
+     *			ST,
+     *			TEMP,
+     *			TIMES,
+     *			UNFREEZ(NETSYS, NUMWAY),
+     *			WAY,
+     *			XMIT
+C
+	INTEGER*2	ERROR_LENGTH,
+     *			HTEMP(2)
+C
+	CHARACTER*256	ERROR_TEXT
+C
+	EQUIVALENCE	(TEMP, HTEMP)
+C
+C COMMON AREA DECLARATIONS
+C
+	COMMON /TEST_CHECK/ CHECK_BUF
+	COMMON /UNFRZ/      UNFREEZ
+C
+C EXTERNAL DECLARATIONS
+C
+	INTEGER*4	QUECNT
+	EXTERNAL	QUECNT				! FUNCTION.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	XMIT = -1
+C
+C IF SYSTEM IN THE LAST STAGE OF RECOVERY AND
+C IS NOT NODE IN THE LAST STAGE - RETURN
+C
+	IF (NETCMDFRZ .GE. 900 .AND.
+     *      (FREEZNODE .NE. NODE .OR. WAY .NE. RECOVWAY)) GOTO 9999
+C
+	IF (NETCMDFRZ .LT. 900) FREEZNODE = 0
+C
+	IF (UNFREEZ(NODE, WAY) .GT. NETTIMER) GOTO 9999	! SYS SHD NOT BE FROZEN.
+C
+C ON MASTER SYSTEM FREEZE THE GAME IF CLOSE TO THE END OF RECOVERY.
+C
+C ON SECONDARY SYSTEM START QUEUING TO EXEC QUEUE AND
+C DO NOT DEQUEUE FROM FINISH QUEUE. THOSE FLAGS HAVE TO BE SET BY NETLOG!!!
+C
+	IF (NODEID .EQ. NETMASTER(WAY)) THEN		! ON MASTER SYSTEM.
+	  IF (MOD(NETSER(NODE, WAY), SYSOFF) + TOFREEZ .GE. NXTSER .AND.
+     *        P(CMDFRZ) .LE. 1)  THEN
+C
+10	    CONTINUE
+	    IF (P(CMDFRZ) .EQ. 1) THEN
+	      CALL XWAIT(20, 1, ST)			! WAIT 20 MSEC.
+	      GOTO 10
+	    ENDIF
+C
+C FLUSH SECOND PHASE TRANSACTIONS.
+C
+	    P(NETFLU) = FLURQ1
+C
+20	    CONTINUE
+	    IF (P(NETFLU) .NE. FLUSHED) THEN
+	      CALL XWAIT(10, 1, ST)			! WAIT 10 MSEC.
+	      GOTO 20
+	    ENDIF
+C
+C WAIT TILL NOTHING ON EXEC QUEUE
+C
+	    TIMES = 0
+100	    CONTINUE
+	    TEMP = QUECNT(NETEXEC(1, WAY))		! SO DATA TO OTHER
+C							! SYSTEMS TRANSFERRED.
+	    IF (TEMP .NE. 0) THEN
+	      TIMES = TIMES + 1
+	      IF (TIMES .GT. 75) THEN
+		P(CMDFRZ) = 0
+		P(NETFLU) = 0
+		UNFREEZ(NODE, WAY) = NETTIMER + 5000	! NO FREEZE FOR 5 SECS.
+		GOTO 9999
+	      ENDIF
+	      CALL XWAIT(20, 1, ST)			! WAIT 20 MSEC.
+	      GOTO 100
+	    ENDIF
+C
+	    P(CMDFRZ) = 999
+	    NETCMDFRZ = 999
+	    FREEZNODE = NODE
+	    RECOVWAY  = WAY
+	    FREEZTIM  = NETTIMER			! GET TIME FROZEN.
+	    P(NETFLU) = NOFLU				! DISREGARD P(NETFLU).
+	    CALL NOTIFY1(NODE, NOTSER, NETSER(NODE, WAY), WAY)	! FINAL PHASE.
+	  ENDIF
+C
+C IF SYSTEM TOO LONG FROZEN AND THIS IS MASTER SYSTEM, UNFREEZE IT.
+C
+	  IF (NETTIMER - FREEZTIM .GT. MAXFREEZ .AND.
+     *        NETRECOV(NODE, WAY) .NE. RECDONE .AND.
+     *        NODEID .EQ. NETMASTER(WAY) .AND.
+     *        P(CMDFRZ) .EQ. 999) THEN
+	    UNFREEZ(NODE,WAY)=NETTIMER+TOUNFREEZ
+	    P(CMDFRZ)=0
+	    NETCMDFRZ=0
+C
+C RELEASE OUTSTANDING RECOVERY BUFFERS.
+C
+110	    CONTINUE
+	    CALL RTL(BUF, RECOVQUE, ST)
+	    IF (ST .NE. 2) THEN
+	      CHECK_BUF = 801
+	      CALL FREEBUF(BUF)
+	      GOTO 110
+	    ENDIF
+	    GOTO 9999
+	  ENDIF
+	ENDIF
+C
+	SRN = NXTSER
+	IF (NETATR(WAY) .NE. INP) SRN = RLGSER
+C
+	IF (NODEID .NE. NETMASTER(WAY) .AND.
+     *      MOD(NETSER(NODE, WAY), SYSOFF) + TOFREEZ .GE. SRN .AND.
+     *      NETCMDFRZ .LT. 900) THEN
+	  FREEZNODE = NODE
+	  FREEZTIM  = NETTIMER				! GET TIME FROZEN.
+	  CALL NOTIFY1(NODE, NOTSER, NETSER(NODE, WAY), WAY)	! FINAL PHASE.
+C
+C HIDE ALL BUFFERS (SO MASTER SYSTEM WILL NOT SEND ANY).
+C
+120	  CONTINUE
+	  CALL GRABBUF(BUF, WAY, ST)
+	  IF (ST .NE. 2) THEN
+	    CALL ABL(BUF, RECOVQUE, ST)
+	    GOTO 120
+	  ENDIF
+C
+	  NETCMDFRZ = 1001				! NETLOG BEG LAST PHASE.
+	  RECOVWAY  = WAY				! WAY LAST STAGE OF
+C							! RECOVERY IS FOR.
+	  ST = SYS$SETEF(%VAL(NET_EVENT))
+	  IF (.NOT. ST) THEN				! COUNDN'T WAKE NETLOG.
+	    CALL SYS$GETMSG(%VAL(ST), ERROR_LENGTH, ERROR_TEXT,,)
+	    CALL OPS(CHAR(7) // ERROR_TEXT // CHAR(7), ST, 4)
+	  ENDIF
+C
+	  LOCALFREEZ = -1
+	  GOTO 9999
+	ENDIF
+C
+	IF (NETTIMER - FREEZTIM .GT. MAXFREEZ .AND.
+     *      NETRECOV(NODE, WAY) .NE. RECDONE .AND.
+     *      NODEID .NE. NETMASTER(WAY) .AND.
+     *      NETCMDFRZ .GE. 999) THEN
+	  UNFREEZ(NODE, WAY) = NETTIMER + TOUNFREEZ
+	  NETCMDFRZ = 0
+C
+C RELEASE OUTSTANDING RECOVERY BUFFERS.
+C
+130	  CONTINUE
+	  CALL RTL(BUF, RECOVQUE, ST)
+	  IF (ST .NE. 2) THEN
+	    CHECK_BUF = 802
+	    CALL FREEBUF(BUF)
+	    GOTO 130
+	  ENDIF
+C
+	  LOCALFREEZ = 0
+C
+C FLUSH EXEC QUEUE.
+C
+	  ST = SYS$SETEF(%VAL(NET_EVENT))
+	  IF (.NOT. ST) THEN				! COUNDN'T WAKE NETLOG.
+	    CALL SYS$GETMSG(%VAL(ST), ERROR_LENGTH, ERROR_TEXT,,)
+	    CALL OPS(CHAR(7) // ERROR_TEXT // CHAR(7), ST, 5)
+	  ENDIF
+	  GOTO 9999
+	ENDIF
+C
+	IF (NODEID .NE. NETMASTER(WAY) .AND.
+     *      NETCMDFRZ .NE. 0 .AND.
+     *      FREEZQUEU .EQ. 0) GOTO 9999
+C
+C IF FINISH QUEUE NOT FROZEN YET AT THE END OF RECOVERY, RETURN
+C (FOR SECONDARY NODES).
+C
+	IF (LOCALFREEZ .NE. 0 .AND. FREEZQUEU .EQ. 0) GOTO 9999
+C
+C WAIT UNTIL NOTHING IN INPUT QUEUE.
+C
+	IF (LOCALFREEZ .NE. 0) THEN			! 1st TIME AFTER FREEZE.
+	  LOCALFREEZ = 0
+200	  CONTINUE
+	  RECOVERLOG = 0				! RECOVERING !(LOG WAY).
+	  TEMP = QUECNT(INQUE(1))
+	  IF (NETATR(WAY) .EQ. RLG) THEN		! FRZ ON MID OF LOG WAY?
+	    TEMP = QUECNT(REMFINISH(1))			! FRZ INCOM ON REMFINISH
+	    REMWAIT    = -1
+	    RECOVERLOG = -1				! RECOVERING LOG WAY.
+	  ENDIF
+C
+	  IF (TEMP .NE. 0) THEN				! ANYTHING IN QUEUE ?
+	    CALL XWAIT(20, 1, ST)			! WAIT 20 MSEC.
+	    GOTO 200
+	  ENDIF
+C
+C FLUSH SECOND PHASE TRANSACTIONS IN INPUT QUEUE (ON INP WAY).
+C ON LOG WAY WAIT TILL REMPRO ASLEEP.
+C
+	  IF (RECOVERLOG .NE. 0) THEN
+300	    CONTINUE
+	    IF (REMWAIT .NE. 0) THEN
+	      CALL XWAIT(20, 1, ST)			! WAIT 20 MSEC.
+	      GOTO 300
+	    ENDIF
+	  ELSE
+	    P(NETFLU) = FLURQ1
+C
+400	    CONTINUE
+	    IF (P(NETFLU) .NE. FLUSHED) THEN
+	      CALL XWAIT(10, 1, ST)			! WAIT 10 MSEC.
+	      GOTO 400
+	    ENDIF
+C
+	    P(CMDFRZ) = 0
+	    P(NETFLU) = 0
+	  ENDIF
+	ENDIF
+C
+	CALL GRABRECOVERY(BUF, NODE, WAY, ST)
+C
+	IF (ST .EQ. 2) GOTO 9999
+C
+	IF (WAY .EQ. WAYINP) THEN
+	  CALL FILSRV(BUF, NODE)
+	ELSE
+	  CALL FILREM(BUF, NODE, WAY, NTM)
+	ENDIF
+C
+	NETBUF(PDEST,  BUF) = NODE
+	NETBUF(FDEST,  BUF) = NODE
+	NETBUF(NEXT,   BUF) = NETLEN - 1
+	NETBUF(PSER,   BUF) = NETSER(NODE, WAY)
+	NETBUF(BUFTYP, BUF) = NETATR(WAY)
+	NETBUF(WAYNR,  BUF) = WAY
+C
+	CALL SNDNET(BUF, WAY)				! SEND IT TO SECONDARY.
+C
+	XMIT = 0
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C RETURN & END.
+C
+9999	CONTINUE
+C
+	RETURN
+	END

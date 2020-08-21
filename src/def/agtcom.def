@@ -1,0 +1,88 @@
+C AGTCOM.DEF
+C $Log:   GXAFXT:[GOLS]AGTCOM.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:08:54   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.2   24 Apr 1995 17:33:08   HXK
+C  Merge of V5 development with 10th March 1995 bible
+C  
+C     Rev 1.2   18 Feb 1995 20:01:58   HXK
+C  Changes for V5 game
+C  
+C     Rev 1.1   03 Jun 1993 18:14:30   GXA
+C  Released for Finland Dec Conversion / Oddset.
+C  
+C     Rev 1.0   21 Jan 1993 18:40:26   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V03 07-MAR-01 EPH INCLUDE SAP AGENT NUMBER (AGTSAP)
+C V02 07-OCT-91 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C THE FOLLOWING IS BASED ON 25 GAMES, 4096 AGENTS
+C
+C AGTGAM(AGAMLEN,MAXGAM,NUMAGT)          !STANDARD SALES DATA   1433600
+C AGTTAB(AINDLEN,NUMAGT)                 !GAME INDEPENDENT DATA  122880
+C AGTSPE(ASPELEN,MAXGAM,NUMAGT)		 !SPECIAL SALES DATA	 614400
+C AGTMIS(AMISLEN,NUMTOT,NUMAGT)		 !MISCELANIOUS SALES     278528
+C AGTCAR(NUMAGT)                         !AGENT CARTEL TABLE
+C AGT_LOOKUP_TER(NUMAGT)                 ;AGENT LOOKUP TER TABLE  30000
+C AGT_LOOKUP_AGT(NUMAGT)                 ;AGENT LOOKUP AGT TABLE  30000
+C AGT_LOOKUP_CNT                         ;AGENT LOOKUP COUNT          1
+C AGTSAP(NUMAGT)                         ;AGENT SAP NUMBER 
+C AGTFRE	                         ;FREE SPACE                
+C TOTAL AGTCOM MEMORY                                           2449408
+C TOTAL CHKPNT BLOCKS						   1196
+C
+C
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1995 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	COMMON/AGTCOM/ AGTGAM(AGAMLEN,MAXGAM,NUMAGT),
+     *	               AGTTAB(AINDLEN,NUMAGT),
+     *                 AGTSPE(ASPELEN,MAXGAM,NUMAGT),
+     *	               AGTMIS(AMISLEN,NUMTOT,NUMAGT),
+     *                 AGTCAR(NUMAGT),
+     *                 AGT_LOOKUP_TER(NUMAGT),
+     *                 AGT_LOOKUP_AGT(NUMAGT),
+     *                 AGT_LOOKUP_CNT,
+     *                 AGTSAP(NUMAGT)                
+C
+C
+	INTEGER*4 AGTGAM,AGTTAB,AGTSPE,AGTMIS,AGTCAR
+	INTEGER*4 AGT_LOOKUP_TER, AGT_LOOKUP_AGT, AGT_LOOKUP_CNT
+	INTEGER*4 AGTSAP
+	INTEGER*2 AGTHTB(AINDLEN*2,NUMAGT)
+        BYTE      AGTBTB(AINDLEN*4,NUMAGT)
+	INTEGER*4 AGTBLK(2048,AGTCSB)
+C
+C EQUIVALENCE FOR CHECKPOINT AND HALFWORD TABLE
+C
+	EQUIVALENCE (AGTGAM,AGTBLK)
+        EQUIVALENCE (AGTTAB,AGTHTB,AGTBTB)
+C
+C
+	INTEGER*4	 FRST_AGTCOM(2)
+	EQUIVALENCE	(FRST_AGTCOM, AGTGAM)
+	INTEGER*4	 LAST_AGTCOM
+	EQUIVALENCE	(LAST_AGTCOM, AGTBLK(2048,AGTCSB))
+C
+	VOLATILE /AGTCOM/
+C
+C END AGTCOM.DEF
+C

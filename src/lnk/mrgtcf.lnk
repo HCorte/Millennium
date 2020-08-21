@@ -1,0 +1,20 @@
+$! GXSRC:MRGTCF.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]MRGTCF.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:47:20   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:22:56   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:44:30   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:MRGTCF.EXE -
+OBJLIB:MRGTCF,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

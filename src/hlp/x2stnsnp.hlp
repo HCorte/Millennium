@@ -1,0 +1,198 @@
+ X2STNSNP.HLP            GTECH Distributed Network
+                           Station Snapshot Help                Page 1 of 9
+ 
+    This snapshot will list information on a specified Station configured
+    in the X2X network. Changeable parameters are indicated by an asterisk (*).
+    To change the value of any of these parameters at the command line
+    enter the parameter indicator followed by the value to be assigned.
+ 
+    Station      - Station number identifier.
+    Address      - Station network address.
+    Last serial  - Last gaming serial number processed.
+    Type         - Station communication type: X.21, X.25.
+   *State        - Changes the station state.
+                   Parameter indicator: STATE
+                   Valid entry values : 0=inactive 1=idle 3=initialized
+                                        4=disabled
+   *Debug flag:  - Changes station debugging flag. (development purposes)
+                   Parameter indicator: DEBug
+                   Valid entry values : 0=invalid 1=no print
+                   2=partial print 3=all print
+ 
+ 
+ X2STNSNP.HLP            GTECH Distributed Network
+                           Station Snapshot Help                Page 2 of 9
+ 
+   *Del Ack      - Enables/disables delivery acknowlegement
+                   of station messages.
+                   Parameter indicator: DELack
+                   Valid entry values : 0=enable 1=disable
+   *Error Report - Enables/disables Front End reporting of
+                   station message which were not sent due
+                   to an error.
+                   Parameter indicator: ERRrep
+                   Valid entry values : 0=enable 1=disable
+    Group        - Logical grouping of station corresponding to some
+                   physical value (ie location,postal code).
+    PVC Channel  - Permanent virtual circuit channel (future use).
+    PVC Port     - Permanent virtual circuit port (future use).
+ 
+ 
+ 
+ 
+ 
+ 
+ X2STNSNP.HLP            GTECH Distributed Network
+                           Station Snapshot Help                Page 3 of 9
+ 
+   *Stn disc     -  Changes the station default disconnection mode.
+                    Parameter indicator: STNDis
+                    Valid entry values : 0=Def Mode 7=Unc Disc 8=Time*1
+                    9=Time*2 10=Time*3  11=Time*4  12=Time*5  13=Time*6
+                   14=Time*7 15=Rem Cnct
+   *FE disc      - Changes the Front End default disconnect mode.
+                   Parameter indicator: FEDis
+                   Valid entry values : 0=response 1=outcall 2=unc out
+                                        3=fast select        4=conn acc
+   *Net stats    - Station to send Network delay statistics.
+                   Parameter indicator: NETstat
+                   Valid entry values : 0=yes(send stats) 1=no(don't send)
+   *Auto poll upd- Station to send statistics when term polling status changed
+                   Parameter indicator: AUTOstat
+                   Valid entry values : 0=yes(send stats) 1=no(don't send)
+   *Dial enable  - Station will receive a station configuration which
+                   will allow station access to telephone dialup.
+ 
+ 
+ X2STNSNP.HLP            GTECH Distributed Network
+                           Station Snapshot Help                Page 4 of 9
+ 
+    Second portion of this screen displays information on the station class
+    specified in the configuration of the station.
+ 
+    Incall timer   - max time (secs) an incoming call can remain open
+    Outcall timer  - max time  (secs) a station call can remain open
+    Response timer - max time (secs) to wait for a response to a request
+    Trans timer    - max time (secs) connection held open waiting for response
+    Stats time     - interval (secs) for station to send statistic reports
+    Master Ena     - control station operation (yes=normal,no=do not poll)
+    Retry cnt      - max number of Response timer expirations between messages
+ 
+    Third portion of the snapshot displays information on Station Statistics.
+ 
+    Last stats   - index into PTLSNP for last statistics message received.
+    Activity cnt - incremented for all protocol activity.
+    Time active  - last time station sent messages to the backend.
+    Last SAP     - last Front End used to send/receive messages.
+ 
+ 
+ X2STNSNP.HLP            GTECH Distributed Network
+                           Station Snapshot Help                Page 5 of 9
+ 
+    Last index   - index into PTLSNP for last protocol messages.
+    Last index   - last time a protocol message was written for PTLSNP.
+    Ack count    - number of acknowledgement messages received.
+    Error count  - Number of error reporting messages received.
+    Connect id   - Connection identification number. See CONSNP.
+    Reset count  - Number of times station was reset (hard or soft).
+    Last err     - code identifying error received from last error report.
+    Config id    - Station configuration checksum.
+ 
+    Bottom portion of the snapshot displays the ports configured on
+    the Station.
+ 
+    Port         - Port identification number.
+    Terms        - Number of terminals configured for this port.
+    #Act         - Number of active terminals.
+ 
+ 
+ 
+ 
+ X2STNSNP.HLP            GTECH Distributed Network
+                           Station Snapshot Help                Page 6 of 9
+ 
+    Additional commands:
+ 
+        TERstate  - changes the status of a defined terminal.
+                    NOTE: the terminal number must be set
+                    before executing this command. This is
+                    accomplished by entering XTER xxxx where xxxx
+                    is the terminal number.
+                         0=undefined   1=defined      3=slowpoll
+                         4=disabled
+        PRTSTATS  - sends a port polling status request to the station.
+        SOFTres   - sends a soft reset command to the station
+        HARdres   - sends a hard reset command to the station
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ X2STNSNP.HLP            GTECH Distributed Network
+                           Station Snapshot Help                Page 7 of 9
+ 
+  X.21 (Datex) Delivery Error Codes:
+ 
+  03    - Call queued (TX only)
+  20,21 - Receiver Busy
+  41    - Access barred (closed user group)
+  42    - Receiver's number has changed
+  43    - Not obtainable (different user class)
+  44    - Out of order
+  45    - Receiver controlled, but not ready to receive
+  46    - Number not ready to receive
+  47    - DCE power off
+  48    - Invalid facility request (eg. direct call missing)
+  49    - Network fault in local loop
+  52    - Incompatible user class (line speed)
+  61    - Network congestion
+ 
+ 
+ 
+ 
+ X2STNSNP.HLP            GTECH Distributed Network
+                           Station Snapshot Help                Page 8 of 9
+ 
+  X.21 GTX (Front end PC) Delivery Error Codes:
+ 
+  A0    - DCE or the network did not answer within 3 seconds to Timecutter's
+          call request, or did not accept disconnect request.  Probable
+          cause: a loose cable or fault in DCE or in the DATEX network.
+  A1    - DATEX connection was not set up in due time.  Probable cause:
+          a loose cable or fault in the DATEX network.
+  A5    - Timecutter master time-out; no recognized traffic performing
+          an upline help.
+  A6    - Frequent retransmissions.  Probable cause: bad line quality.
+  B0    - Retry count overload.  No connection was made
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ X2STNSNP.HLP            GTECH Distributed Network
+                           Station Snapshot Help                Page 9 of 9
+ 
+ X.25 Stratus Front End Delivery Error codes:
+ 
+  01     - No available virtual circuit on which to send message.
+  02     - Front end congestion - gpad in-socket blocked.
+  03     - Invalid connection id in message sent by host.
+  04     - Terminal connection does not exist and connect control
+           flags indicate response mode.
+  05     - Call to terminal failed - timed out.
+  06     - Call to terminal failed - cleared by remote DTE.
+  07     - Network congestion - X25 in-socket blocked.
+  08     - Unable to clear terminal connection.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

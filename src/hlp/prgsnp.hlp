@@ -1,0 +1,44 @@
+    PRG.HLP                GTECH Distributed Network
+                          Ravi Prognosis Snapshot Help         Page 1 of 2
+ 
+    The PRG snapshot contains possible winner prognosis information for the 
+    Ravi V65 and V5 games.  Each race is shown separately.  To see all the
+    races one by one, type the race number.
+
+    The information displayed includes:
+ 
+    Game Name  - Ravi 65 or Ravi V5
+    draw       - draw number
+    race       - race number
+    status     - status of each race (not in, in)
+    SCInterv   - interval in minutes Ravi popularity list is updated
+    VSCreen    - interval in minutes Ravi screening is performed 
+    NEXtrace   - current race number
+    popular    - horses displayed in popularity order
+    scratches  - an X indicates horses that have been scratched from a race
+    horse      - horse number
+    count      - wager count bet on the horse
+    
+    
+    PRG.HLP                GTECH Distributed Network
+                          Ravi Prognosis Snapshot Help         Page 2 of 2
+
+
+
+    popular    - popularity count in weigh units
+    count
+    %          - percentage of bets played on a horse  
+    race       - outcome of the race
+    results
+    tot        - total amount and count played for the race
+
+
+
+
+
+
+
+
+
+
+

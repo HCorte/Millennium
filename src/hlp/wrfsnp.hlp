@@ -1,0 +1,22 @@
+    WRF.HLP                GTECH Distributed Network
+                          Win Reserve Fund Snapshot Help       Page 1 of 1
+ 
+    The WRF snapshot contains information on the winners reserve fund
+
+    The information displayed includes:
+
+    game          - game name
+    status        - status of draw (open, closed)
+    draw          - the draw number
+    round         - information of the week number
+    *OFFline      - purged uncashed winners from offline sales
+    *MINimum      - minimum amount guaranteed in the highest division
+    *MOVn         - amount moved in each division
+
+
+
+
+
+
+
+

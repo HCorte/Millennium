@@ -1,0 +1,418 @@
+C ODDINF.DEF
+C
+C V11 22-MAR-2000 OXK SPT_SHR_ID added
+C V10 02-FEB-2000 OXK SPT_ROW_PRICE & SPT_EVENT_NAME added (Vakio changes)
+C V09 24-MAY-1999 UXN Super Triple added. Layout changes for other games.
+C V08 14-JAN-1997 UXN Super Score and Todays Triple added.
+C V07 24-NOV-1997 UXN NEW RECORD LAYOUT FOR PITKA...
+C V06 25-JAN-1996 HXK Removed VETUID for Couple game
+C V05 28-NOV-1995 HXK Batch of changes for Double/Couple release
+C V04 02-SEP-1994 HXK Merge of May,June RFSS batch 
+C V03 07-AUG-1994 HXK TOUCHED
+C V02 07-AUG-1994 HXK INLINE NOW 190 INSTEAD OF 128
+C V01 26-JUN-1994 HXK Initial revision.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+        STRUCTURE /ODDINF/
+	UNION
+	MAP
+	   CHARACTER*250 INLINE
+	ENDMAP
+	MAP				! File header record
+	   CHARACTER*1	HDR_TYPE	! Record type = 0
+	   CHARACTER*4	HDR_GAME	! game code
+	   CHARACTER*9	HDR_DATE	! file write date
+	   CHARACTER*7	HDR_TIME	! file write time
+	   CHARACTER*5	HDR_YEAR	! year 
+	   CHARACTER*4	HDR_WEEK	! week
+	END MAP
+	MAP				! Events header record
+	   CHARACTER*1	EVHDR_TYPE	! Record type
+	   CHARACTER*4	EVHDR_GAME	! game code 
+	   CHARACTER*4	EVHDR_ID	! Veikkaus ID 
+	   CHARACTER*4	EVHDR_DRAW	! Draw number
+	   CHARACTER*4	EVHDR_GIND	! Game index 
+	   CHARACTER*9	EVHDR_SDATE	! Draw start date
+	   CHARACTER*9	EVHDR_EDATE	! Draw end date
+	   CHARACTER*4	EVHDR_MATCHES	! Number of matches in event
+	END MAP
+	MAP				! TAIL
+	   CHARACTER*1	TAIL_TYPE	! Record type = 9
+	   CHARACTER*4	TAIL_GAME	! Game code
+	   CHARACTER*4	TAIL_NUM1	! Number of matches
+	   CHARACTER*4	TAIL_NUM2	! (not used)
+	   CHARACTER*4	TAIL_NUM3	! (not used)
+	END MAP
+	MAP				! Match record
+	   CHARACTER*1	TSL_TYPE2	! Record type = 3
+	   CHARACTER*4	TSL_GAMCODE2	! game code	
+	   CHARACTER*4	TSL_MATCH_NO	! match number (1..40)
+	   CHARACTER*4	TSL_ID2		! Veikkaus ID (not used)
+	   CHARACTER*4	TSL_DRAW_NO2	! Draw number (not used)
+	   CHARACTER*4	TSL_GIND2	! Game index  (not used)
+	   CHARACTER*9	TSL_START_DATE	! Game start date (not used)
+	   CHARACTER*9	TSL_MATCH_DATE	! Game end date
+	   CHARACTER*5	TSL_CLOS_TIME	! Game closing time
+	   CHARACTER*9	TSL_RESULT_DATE	! Draw date
+	   CHARACTER*4  TSL_SPORT_CODE	! Sport code 1=football,2=hockey,...
+	   CHARACTER*4	TSL_NR_MATCHES	! (not used)
+	   CHARACTER*1	TSL_FILLER1	! filler1
+	   CHARACTER*4	TSL_TV		! TV channel
+	   CHARACTER*4  TSL_MATCH_TYPE	! Match type	
+	   CHARACTER*6	TSL_ODDS1	! 100*fixed odds for home win
+	   CHARACTER*6	TSL_ODDSX	! 100*fixed odds for tie
+	   CHARACTER*6	TSL_ODDS2	! 100*fixed odds for away win
+	   CHARACTER*1  TSL_FILLER2	! filler2
+	   CHARACTER	TSL_HOME_NAME(30)! Home team name
+	   CHARACTER*1	TSL_FILLER3	! filler3
+	   CHARACTER	TSL_AWAY_NAME(30)! Away team name
+	END MAP
+	MAP
+	   CHARACTER*1	SCR_TYPE	! Record type = 3
+	   CHARACTER*4	SCR_GAME	! Game code = 2
+	   CHARACTER*4	SCR_MATCH_NO	! Match number 
+           CHARACTER*4  SCR_VETU_ID	! Veikkaus ID
+	   CHARACTER*4	SCR_DRAW_NO	! Draw number
+	   CHARACTER*4  SCR_GAME_IND	! Game index
+	   CHARACTER*9	SCR_SDATE	! Game start date	
+	   CHARACTER*9	SCR_EDATE	! End date
+	   CHARACTER*5	SCR_CLOS_TIME	! Closing time
+	   CHARACTER*9	SCR_RESULT_DATE	! Draw date
+	   CHARACTER*4  SCR_SPORT_CODE	! Sport code
+	   CHARACTER*4	SCR_NUM_MATCHES ! (not used)
+	   CHARACTER*1	SCR_FILLER	! filler
+	   CHARACTER*4	SCR_TV		! TV-channel
+	   CHARACTER*6  SCR_MIN_STAKE   ! minimum stake
+	   CHARACTER*1	SCR_FILLER2	! filler2
+	   CHARACTER	SCR_HOME_NAME(30)! Home team name	
+	   CHARACTER*1	SCR_FILLER3	! filler3
+	   CHARACTER	SCR_AWAY_NAME(30)! Away team name
+	END MAP
+	MAP				! VOITTAJA event record
+	   CHARACTER*1	WIT_TYPE	! Record type = 2
+	   CHARACTER*4	WIT_GAMCODE	! Game code = 3
+	   CHARACTER*4	WIT_EVENT_NO	! Event number
+           CHARACTER*4  WIT_VETU_ID	! VEIKKAUD ID
+	   CHARACTER*4	WIT_DRAW_NO	! Draw number
+	   CHARACTER*4	WIT_GAME_IND	! Game index
+	   CHARACTER*9	WIT_SDATE	! Start date
+	   CHARACTER*9	WIT_EDATE	! End date
+	   CHARACTER*5	WIT_CLOS_TIME	! Closing time
+	   CHARACTER*9	WIT_DRAW_DATE	! Draw date
+	   CHARACTER*4	WIT_SPORT	! Sport code
+	   CHARACTER*4	WIT_COUNT	! Number of competitors
+	   CHARACTER*1	WIT_FILLER	! filler 
+	   CHARACTER*4	WIT_TV		! TV-channel
+	   CHARACTER*6  WIT_MIN_STAKE   ! minimum stake
+	   CHARACTER*1	WIT_FILLER2	! filler2 
+	   CHARACTER	WIT_TICKTEXT(30)! Event name
+	   CHARACTER*1	WIT_FILLER3	! filler3 
+	   CHARACTER	WIT_TEXTLN1(30)	! Description line 1
+	   CHARACTER*1	WIT_FILLER4	! filler4 
+	   CHARACTER	WIT_TEXTLN2(30) ! Description line 2
+ 	   CHARACTER*1	WIT_FILLER5	! filler5 
+	   CHARACTER	WIT_TEXTLN3(30)	! Description line 3
+	END MAP
+	MAP				! Voittaja competitor record
+	   CHARACTER*1	WIT_TYPE2	! Record type = 4
+	   CHARACTER*4	WIT_GAME	! Game code = 3
+	   CHARACTER*4	WIT_EVNO	! Event number
+	   CHARACTER*4	WIT_COMPETITION	! (not used = always 1)
+	   CHARACTER*4	WIT_ROW_NO	! Competitor number
+	   CHARACTER*1	WIT_FILLER6	! filler6
+	   CHARACTER	WIT_ROW_NAME(30)! Competitor name
+	END MAP
+	MAP				! Super Double event record
+	   CHARACTER*1	DBL_TYPE	! Record type = 2
+	   CHARACTER*4	DBL_GAMCODE	! Game code = 4
+	   CHARACTER*4	DBL_EVENT_NO	! Event number
+           CHARACTER*4  DBL_VETU_ID	! VEIKKAUD ID
+	   CHARACTER*4	DBL_DRAW_NO	! Draw number
+	   CHARACTER*4	DBL_GAME_IND	! Game index
+	   CHARACTER*9	DBL_SDATE	! Start date
+	   CHARACTER*9	DBL_EDATE	! End date
+	   CHARACTER*5	DBL_CLOS_TIME	! Closing time
+	   CHARACTER*9	DBL_DRAW_DATE	! Draw date
+	   CHARACTER*4	DBL_SPORT	! Sport code
+	   CHARACTER*4	DBL_COUNT	! Number of competitors
+	   CHARACTER*1	DBL_FILLER	! filler 
+	   CHARACTER*4	DBL_TV		! TV-channel
+	   CHARACTER*6  DBL_MIN_STAKE   ! minimum stake
+	   CHARACTER*4	DBL_PART_CLS	! Partially closed combination 18/17
+	   CHARACTER*1	DBL_FILLER2	! filler2 
+	   CHARACTER	DBL_TICKTEXT(30)! Event name
+	   CHARACTER*1	DBL_FILLER3	! filler3 
+	   CHARACTER	DBL_TEXTLN1(30)	! Description line 1
+	   CHARACTER*1	DBL_FILLER4	! filler4 
+	   CHARACTER	DBL_TEXTLN2(30) ! Description line 2
+ 	   CHARACTER*1	DBL_FILLER5	! filler5 
+	   CHARACTER	DBL_TEXTLN3(30)	! Description line 3
+	END MAP
+	MAP				! Super Double competitor record
+	   CHARACTER*1	DBL_TYPE2	! Record type = 4
+	   CHARACTER*4	DBL_GAME	! Game code = 4
+	   CHARACTER*4	DBL_EVNO	! Event number
+	   CHARACTER*4	DBL_COMPETITION	! (not used = always 1)
+	   CHARACTER*4	DBL_ROW_NO	! Competitor number
+	   CHARACTER*1	DBL_FILLER6	! filler6
+	   CHARACTER	DBL_ROW_NAME(30)! Competitor name
+	END MAP
+	MAP				! Super Triple event record
+	   CHARACTER*1	STR_TYPE	! Record type = 2
+	   CHARACTER*4	STR_GAMCODE	! Game code = 4
+	   CHARACTER*4	STR_EVENT_NO	! Event number
+           CHARACTER*4  STR_VETU_ID	! VEIKKAUD ID
+	   CHARACTER*4	STR_DRAW_NO	! Draw number
+	   CHARACTER*4	STR_GAME_IND	! Game index
+	   CHARACTER*9	STR_SDATE	! Start date
+	   CHARACTER*9	STR_EDATE	! End date
+	   CHARACTER*5	STR_CLOS_TIME	! Closing time
+	   CHARACTER*9	STR_DRAW_DATE	! Draw date
+	   CHARACTER*4	STR_SPORT	! Sport code
+	   CHARACTER*4	STR_COUNT	! Number of competitors
+	   CHARACTER*1	STR_FILLER	! filler 
+	   CHARACTER*4	STR_TV		! TV-channel
+	   CHARACTER*6  STR_MIN_STAKE   ! minimum stake
+	   CHARACTER*4	STR_PART_CLS	! Partially closed combination 18/17
+	   CHARACTER*1	STR_FILLER2	! filler2 
+	   CHARACTER	STR_TICKTEXT(30)! Event name
+	   CHARACTER*1	STR_FILLER3	! filler3 
+	   CHARACTER	STR_TEXTLN1(30)	! Description line 1
+	   CHARACTER*1	STR_FILLER4	! filler4 
+	   CHARACTER	STR_TEXTLN2(30) ! Description line 2
+ 	   CHARACTER*1	STR_FILLER5	! filler5 
+	   CHARACTER	STR_TEXTLN3(30)	! Description line 3
+	END MAP
+	MAP				! Super Triple competitor record
+	   CHARACTER*1	STR_TYPE2	! Record type = 4
+	   CHARACTER*4	STR_GAME	! Game code = 4
+	   CHARACTER*4	STR_EVNO	! Event number
+	   CHARACTER*4	STR_COMPETITION	! (not used = always 1)
+	   CHARACTER*4	STR_ROW_NO	! Competitor number
+	   CHARACTER*1	STR_FILLER6	! filler6
+	   CHARACTER	STR_ROW_NAME(30)! Competitor name
+	END MAP
+	MAP				! Todays Couple event header
+	   CHARACTER*1	CPL_TYPE	! Record type = 2
+	   CHARACTER*4	CPL_GAMCODE	! Game code = 5
+	   CHARACTER*4	CPL_EVENT_NO	! Event number
+           CHARACTER*4  CPL_VETU_ID	! VEIKKAUS ID
+	   CHARACTER*4	CPL_DRAW_NO	! Draw number
+	   CHARACTER*4	CPL_GAME_IND	! Game index
+	   CHARACTER*9	CPL_SDATE	! Start date
+	   CHARACTER*9	CPL_EDATE	! End date
+	   CHARACTER*5	CPL_CLOS_TIME	! Closing time
+	   CHARACTER*9	CPL_DRAW_DATE	! Draw date
+	   CHARACTER*4	CPL_SPORT	! Sport code
+	   CHARACTER*4	CPL_COUNT	! Number of competitors
+	   CHARACTER*1	CPL_FILLER	! filler 
+	   CHARACTER*4	CPL_TV		! TV-channel
+	   CHARACTER*6  CPL_MIN_STAKE   ! minimum stake
+	   CHARACTER*1  CPL_FILLER1	! filler
+	   CHARACTER	CPL_MASTER_NAME(30) ! (not used)
+	END MAP
+	MAP				! Todays Couple match header record
+	   CHARACTER*1	CPL_EV_TYPE	! Record type = 3
+	   CHARACTER*4	CPL_EV_GAME	! Game code = 5
+	   CHARACTER*4	CPL_EV_EVENT	! Event number (1 or 2)
+           CHARACTER*4  CPL_EV_VETU_ID	! VEIKKAUS ID (not used)
+	   CHARACTER*4	CPL_EV_DRAW_NO	! Draw number (not used)
+	   CHARACTER*4	CPL_EV_GAME_IND	! Game index  (not used)
+	   CHARACTER*9	CPL_EV_SDATE	! Start date  (not used)
+	   CHARACTER*9	CPL_EV_EDATE	! End date
+	   CHARACTER*5	CPL_EV_CLOS_TIME! Closing time
+	   CHARACTER*9	CPL_EV_DRAW_DATE! Draw date   (not used)
+	   CHARACTER*4	CPL_EV_SPORT	! Sport code  (not used)
+	   CHARACTER*4	CPL_EV_COUNT	! Number of competitors
+	   CHARACTER*1	CPL_EV_FILLER	! filler 
+	   CHARACTER*4	CPL_EV_TV	! TV-channel
+	   CHARACTER*1	CPL_EV_FILLER2	! filler2 
+	   CHARACTER	CPL_EV_TICKTEXT(30)! Event name
+	   CHARACTER*1	CPL_EV_FILLER3	! filler3 
+	   CHARACTER	CPL_EV_TEXTLN1(30)! Description line 1
+	   CHARACTER*1	CPL_EV_FILLER4	! filler4 
+	   CHARACTER	CPL_EV_TEXTLN2(30) ! Description line 2
+ 	   CHARACTER*1	CPL_EV_FILLER5	! filler5 
+	   CHARACTER	CPL_EV_TEXTLN3(30)! Description line 3
+	END MAP
+	MAP				! Todays Couple competitor record
+	   CHARACTER*1	CPL_TYPE2	! Record type = 4
+	   CHARACTER*4	CPL_GAME	! Game code = 5
+	   CHARACTER*4	CPL_EVNO	! Event number
+	   CHARACTER*4	CPL_COMPETITION	! 1 or 2
+	   CHARACTER*4	CPL_ROW_NO	! Competitor number
+	   CHARACTER*1	CPL_FILLER6	! filler6
+	   CHARACTER	CPL_ROW_NAME(30)! Competitor name
+	END MAP
+	MAP					! Todays Triple event header
+	   CHARACTER*1	TRP_TYPE		! record type = 1
+	   CHARACTER*4	TRP_GAMECOD		! game code = 7
+	   CHARACTER*4	TRP_EVENT_NO		! event number
+	   CHARACTER*4	TRP_ID			! VEIKKAUS id 
+	   CHARACTER*4	TRP_DRAW_NO		! draw number
+	   CHARACTER*4	TRP_GAME_IND		! game index
+	   CHARACTER*9	TRP_SDATE		! start date
+	   CHARACTER*9	TRP_EDATE		! end date
+	   CHARACTER*5	TRP_CLOS_TIME		! game closing time
+	   CHARACTER*9	TRP_DRAW_DATE		! draw date
+	   CHARACTER*4	TRP_SPORT		! sport code
+	   CHARACTER*4	TRP_CONTEST_CNT		! number of contests
+	   CHARACTER*1	TRP_FIL1		! filler	
+	   CHARACTER*4	TRP_TV			! TV channel
+	   CHARACTER*6	TRP_MIN_STAKE		! min. stake (in pennies)
+	   CHARACTER*1	TRP_FIL2		! filler
+	   CHARACTER	TRP_MASTER_NAME(30)	! event master name
+	END MAP
+	MAP					! Match header record
+	   CHARACTER*1	TRP_TYPE2		! record type
+	   CHARACTER*4	TRP_GAME		! game code
+	   CHARACTER*4	TRP_CONTEST		! contest number (1 to 3)
+           CHARACTER*4  TRP_EVENT_ID2		! event number (VEIKKAUS id)
+	   CHARACTER*4	TRP_DRAW		! draw number
+	   CHARACTER*4	TRP_GIND		! game index
+	   CHARACTER*9	TRP_EVENT_SDATE		! event start date
+	   CHARACTER*9	TRP_EVENT_EDATE		! event end date
+	   CHARACTER*5	TRP_EVENT_STIME		! event start time
+	   CHARACTER*9	TRP_EVENT_DDATE		! event draw date
+	   CHARACTER*4	TRP_SPORT2		! sport code
+	   CHARACTER*4	TRP_COMPETITORS		! number of competitors (..16)
+	   CHARACTER*1	TRP_FIL3		! filler
+	   CHARACTER*4	TRP_TV2			! TV channel
+	   CHARACTER*1	TRP_FIL4		! filler	
+	   CHARACTER	TRP_CONTEST_NAME(30)	! contest name
+	   CHARACTER*1	TRP_FIL5		! filler
+	   CHARACTER	TRP_DESC1(30)		! description line 1
+	   CHARACTER*1	TRP_FIL6		! filler	
+	   CHARACTER	TRP_DESC2(30)		! description line 2
+	   CHARACTER*1	TRP_FIL7		! filler
+	   CHARACTER	TRP_DESC3(30)		! description line 3
+	END MAP
+	MAP					! Competitor record
+	   CHARACTER*1	TRP_TYPE3		! record type = 3
+	   CHARACTER*4	TRP_GAME2		! game code = 7
+	   CHARACTER*4	TRP_ID3			! event number (VEIKKAUS id)	
+           CHARACTER*4  TRP_CONTEST_NR		! contest number (1..3)
+	   CHARACTER*4	TRP_COMPETITOR_NO	! competitor number
+	   CHARACTER*1	TRP_FIL8		! filler 
+	   CHARACTER	TRP_PLAYER_NAME(30)	! competitor name
+	END MAP
+	MAP					! Super Score 
+	   CHARACTER*1	SSC_TYPE		! record type = 1
+	   CHARACTER*4	SSC_GAMECOD		! game code = 6
+	   CHARACTER*4	SSC_EVENT_NR		! event number
+	   CHARACTER*4	SSC_ID			! Veikkaus id
+	   CHARACTER*4	SSC_DRAW_NO		! draw number
+	   CHARACTER*4	SSC_GAME_IND		! game index
+	   CHARACTER*9	SSC_SDATE		! game opening date
+	   CHARACTER*9	SSC_EDATE		! game end date
+	   CHARACTER*5	SSC_CLOSE_TIME		! game closing time
+	   CHARACTER*9	SSC_DRAW_DATE		! draw date
+	   CHARACTER*4	SSC_SPORT_CODE		! sport code (not used)
+	   CHARACTER*4	SSC_SET_CNT		! number of sets
+	   CHARACTER*1	SSC_FIL1		! filler
+	   CHARACTER*4	SSC_TV			! TV channel
+	   CHARACTER*6	SSC_MIN_STAKE		! min. stake in pennies.
+	   CHARACTER*1	SSC_FIL2		! filler
+	   CHARACTER	SSC_MASTER_NAME(30)	! event master name
+	   CHARACTER*1	SSC_FIL3		! filler
+	   CHARACTER	SSC_DESC1(30)		! description line 1
+	   CHARACTER*1	SSC_FIL4		! filler
+	   CHARACTER	SSC_DESC2(30)		! description line 2
+	   CHARACTER*1	SSC_FIL5		! filler
+	   CHARACTER	SSC_DESC3(30)		! description line 3
+	END MAP
+	MAP					! set records inf.
+	   CHARACTER*1	SSC_TYPE2		! record type = 3
+	   CHARACTER*4	SSC_GAME		! game code = 6	
+	   CHARACTER*4	SSC_SET_NR		! set or contest number
+	   CHARACTER*4	SSC_EVENT_ID2		! event number (VEIKKAUS id)
+	   CHARACTER*4	SSC_DRAW		! draw number (not used)
+	   CHARACTER*4	SSC_GIND		! game index (not used)
+	   CHARACTER*9	SSC_MATCH_SDATE		! open date
+	   CHARACTER*9	SSC_MATCH_EDATE		! close date
+	   CHARACTER*5	SSC_MATCH_STIME		! start time
+	   CHARACTER*9	SSC_MATCH_DDATE		! draw date
+	   CHARACTER*4	SSC_SPORT2		! Sport code 
+	   CHARACTER*4	SSC_NUM_SETS		! Number of sets or contests
+	   CHARACTER*1	SSC_FIL6		! filler
+	   CHARACTER*4	SSC_TV2			! TV channel
+	   CHARACTER*1	SSC_FIL7		! filler
+	   CHARACTER	SSC_SET_NAME(30)	! set name
+	END MAP
+	MAP					! Vakio event record
+	   CHARACTER*1	SPT_TYPE		! record type = 3
+	   CHARACTER*4	SPT_GAMECOD		! game code  = 102
+	   CHARACTER*4	SPT_MATCH		! match number
+	   CHARACTER*4	SPT_ID			! Veikkaus ID
+	   CHARACTER*4	SPT_DRAW_NO		! Draw number
+	   CHARACTER*4	SPT_GAME_IND		! Game index
+	   CHARACTER*9	SPT_SDATE		! start date
+	   CHARACTER*9	SPT_EDATE		! end date
+	   CHARACTER*5  SPT_CLOS_TIME		! closing time
+	   CHARACTER*9	SPT_DRAW_DATE		! draw date
+	   CHARACTER*4	SPT_SPORT_CODE		! sport code
+	   CHARACTER*4	SPT_MATCHES_CNT		! number of matches
+	   CHARACTER*1	SPT_FILLER		! filler
+	   CHARACTER*4	SPT_TV			! TV channel
+	   CHARACTER*6  SPT_ROW_PRICE		! row price in pennies
+	   CHARACTER*4  SPT_SHR_ID		! share parameter id (*vakdiv)
+	   CHARACTER*1	SPT_FILLER2		! filler
+	   CHARACTER	SPT_EVENT_NAME(30)	! event name	
+	END MAP
+	MAP					! Competitor record.
+	   CHARACTER*1	SPT_TYPE2		! record type
+	   CHARACTER*4	SPT_GAME		! game code
+	   CHARACTER*4	SPT_ROW			! match number (1..13)
+	   CHARACTER*4	SPT_TEAM		! Team (1=home,2=away)
+	   CHARACTER*4	SPT_NUM			! Competitor number (not used)
+	   CHARACTER*1	SPT_FILLER3		! filler
+	   CHARACTER	SPT_NAME(30)		! Team name (max 10 characters)
+	   CHARACTER*1  SPT_FILLER4		! filler	
+	   CHARACTER    SPT_FULL_NAME(30)       ! full team name
+	   CHARACTER*1  SPT_FILLER5		! filler
+	   CHARACTER*4  SPT_TV2			! TV channel
+	END MAP
+	END UNION
+	END STRUCTURE
+
+        RECORD /ODDINF/ INF
+	COMMON /INF/ INF
+C
+C This is the translation table for scandinavian characters.
+C
+	CHARACTER*12	TRANSLATE_TABLE /'[\]^[[\\]]^^'/
+	COMMON/TRANSLATE_TABLE/ TRANSLATE_TABLE
+	CHARACTER*12	MATCH_TABLE     /'{|}~ƒ‰÷ˆ≈Â‹¸'/
+	COMMON/MATCH_TABLE/ MATCH_TABLE
+C
+C Format statements
+C
+        CHARACTER*(*)   I4FMT, I2FMT,I6FMT
+        PARAMETER       (I6FMT='(I6)')
+        PARAMETER       (I4FMT='(I4)')
+        PARAMETER       (I2FMT='(I2)')
+	INTEGER*4	M251
+	PARAMETER	(M251=251)
+C
+C Checksum variables.
+C
+	INTEGER*4	BYTTAB(1200)
+	COMMON/BYTTAB/ BYTTAB
+	INTEGER*4	BUFIDX
+	COMMON/BUFIDX/ BUFIDX
+C
+	INTEGER*4	FILEPACK
+	PARAMETER	(FILEPACK='FILE')

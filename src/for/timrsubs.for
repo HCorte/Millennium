@@ -1,0 +1,277 @@
+C  GXSRC:TIMRSUBS.FOR
+C  
+C  $Log:   GXAFXT:[GOLS]TIMRSUBS.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:34:14   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   03 Jan 1994 23:15:24   SYSTEM
+C  Applying PVCS header for automatic revision history
+C  
+C     Rev 1.0    21 Dec 1993 18:39:58   SYSTEM
+C  Initial revision.
+C
+C
+C
+C V01 19-NOV-91 KWP INITIAL RELEASE FOR VAX
+C
+C This is a set of subroutines to handle timer checking for buffers
+C in a doubly linked list.  These routines are called by CRSPRO.
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C**********************************************
+C
+C     ADDTIMER - ADD BUFFER TO TIMER QUEUE
+C
+C     CALL ADDTIMER(XRFNUM,BUF)
+C
+C INPUT:
+C
+C   XRFNUM: REFERENCE # TO STORE IN TABLE (CROSS REFERENCE #)
+C      BUF: PROCOM BUFFER #
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE ADDTIMER(XRFNUM,BUF)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMPRO.DEF'
+	INCLUDE 'INCLIB:CRSCOM.DEF'
+C
+	INTEGER*4 XRFNUM
+	INTEGER*4 BUF
+	INTEGER*4 OLDBOT
+C
+C
+	IF (TIMERTOP.EQ.-1) THEN
+	   TIMERTOP=BUF
+	   TIMERBOT=BUF
+	   TIMERLIST(TIMERNXT,BUF)=-1
+	   TIMERLIST(TIMERPRV,BUF)=-1
+	ELSE
+	   OLDBOT=TIMERBOT
+	   TIMERLIST(TIMERNXT,OLDBOT)=BUF
+	   TIMERLIST(TIMERPRV,BUF)=OLDBOT
+	   TIMERLIST(TIMERNXT,BUF)=-1
+	   TIMERBOT=BUF
+	ENDIF
+C
+	TIMERLIST(TIMERBEG,BUF)=P(ACTTIM)       !CURRENT TIME
+	TIMERLIST(TIMERSER,BUF)=XRFNUM          !SERIAL #
+C
+	RETURN
+	END
+C
+C
+C**********************************************
+C
+C REMTIMER
+C
+C CALL REMTIMER(XRFNUM,BUF,STATUS)
+C
+C INPUT:
+C   XRFNUM:  SERIAL # WHICH SHOULD BE PRESENT
+C   BUF      PROCOM BUFFER TO REMOVE
+C
+C OUTPUT:
+C   STATUS:  REMOVE STATUS (-1=NOT ON QUEUE, -2=SERIAL NOT MATCH)
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE REMTIMER(XRFNUM,BUF,STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMPRO.DEF'
+	INCLUDE 'INCLIB:CRSCOM.DEF'
+C
+	INTEGER*4 XRFNUM
+	INTEGER*4 BUF
+	INTEGER*4 NXT
+	INTEGER*4 PRV
+	INTEGER*4 STATUS
+C
+C CHECK FOR AN INVALID BUFFER NUMBER.
+C
+	STATUS=0
+	IF(BUF.LT.1 .OR. BUF.GT.NUMPRO) THEN
+	  STATUS=-3
+	  GOTO 9000
+	ENDIF
+C
+C If the buffer # is no longer linked in the list, then return
+C with error code -1.
+C
+	IF(TIMERLIST(TIMERNXT,BUF).EQ.0 .OR.
+     *	   TIMERLIST(TIMERPRV,BUF).EQ.0) THEN
+	  STATUS=-1
+	  GOTO 9000
+	ENDIF
+C
+C If serial # doesn't match, return with error code -2
+C
+	IF(TIMERLIST(TIMERSER,BUF).NE.XRFNUM) THEN
+	  STATUS=-2
+	  GOTO 9000
+	ENDIF
+C
+C Otherwise, remove from linked list.
+C
+	NXT=TIMERLIST(TIMERNXT,BUF)
+	PRV=TIMERLIST(TIMERPRV,BUF)
+C
+	IF(PRV.NE.-1)THEN
+	  TIMERLIST(TIMERNXT,PRV)=NXT
+	ELSE
+	  TIMERTOP=NXT
+	ENDIF
+C
+	IF(NXT.NE.-1)THEN
+	  TIMERLIST(TIMERPRV,NXT)=PRV
+	ELSE
+	  TIMERBOT=PRV
+	ENDIF
+C
+	TIMERLIST(TIMERNXT,BUF)=0
+	TIMERLIST(TIMERPRV,BUF)=0
+C
+	GOTO 9000
+C
+9000	CONTINUE
+	RETURN
+	END
+C
+C**********************************************
+C
+C CHKTIMER
+C
+C CALL CHKTIMER(XRFNUM,BUF)
+C
+C INPUT:
+C   NONE
+C
+C OUTPUT:
+C   XRFNUM: INTERNAL SRL # OF TIMED OUT XACTION
+C   BUF: PROCOM BUFFER NUMBER TO CHECK FOR TIMEOUT
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE CHKTIMER(XRFNUM,BUF)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMPRO.DEF'
+	INCLUDE 'INCLIB:CRSCOM.DEF'
+C
+	INTEGER*4 XRFNUM
+	INTEGER*4 BUF
+	INTEGER*4 PASTIM
+C
+	IF(TIMERTOP.EQ.-1) THEN
+	  BUF = 0                             !NOTHING IN LIST
+	  GOTO 9000
+	ENDIF
+C
+	PASTIM=P(ACTTIM)-P(MAXINSTIM)         !TIME TO CHECK FOR
+C
+C Note that this is a FIFO queue.  If the first one on the list
+C has not timed out, it is safe to assume that none of the others
+C has timed out either.
+C
+	BUF=TIMERTOP
+	IF(TIMERLIST(TIMERBEG,BUF).GE.PASTIM)THEN
+	  BUF = 0
+	ELSE
+	  XRFNUM = TIMERLIST(TIMERSER,BUF)
+C
+	  TIMERTOP=TIMERLIST(TIMERNXT,BUF)
+	  IF(TIMERTOP.EQ.-1)THEN
+	    TIMERBOT = -1
+	  ELSE
+	    TIMERLIST(TIMERPRV,TIMERTOP)=-1
+	  ENDIF
+	  TIMERLIST(TIMERNXT,BUF)=0
+	  TIMERLIST(TIMERPRV,BUF)=0
+	ENDIF
+C
+9000	CONTINUE
+	RETURN
+	END
+C
+C**********************************************
+C
+C VERIFY TIMER
+C
+C THIS ROUTINE WILL CHECK TO DETERMINE IF A BUFFER
+C STILL EXISTS ON THE TIMER QUEUES.
+C
+C CALL VERTIMER(BUF,STATUS)
+C
+C INPUT:
+C   BUF   Int*4   Procom buffer number
+C
+C OUTPUT:
+C   STATUS Int*4  0 - Buffer exists
+C                -1 - Nothing on queue
+C                -2 - Buffer not on timer list.
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE VERTIMER(BUF,STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:PRMPRO.DEF'
+	INCLUDE 'INCLIB:CRSCOM.DEF'
+C
+	INTEGER*4 STATUS
+	INTEGER*4 BUF
+C
+C IF NOTHING OF QUEUE, SET STATUS AND RETURN.
+C
+	STATUS=0
+	IF(TIMERTOP.EQ.-1) THEN
+	  STATUS=-1
+	  GOTO 9000
+	ENDIF
+C
+C IF THE BUFFER IS NO LONGER IN THE LINKED LIST, RETURN WITH
+C AN ERROR CODE OF -2
+C
+	IF(TIMERLIST(TIMERNXT,BUF).EQ.0 .OR.
+     *	   TIMERLIST(TIMERPRV,BUF).EQ.0) THEN
+	  STATUS=-2
+	ENDIF
+C
+9000	CONTINUE
+	RETURN
+	END

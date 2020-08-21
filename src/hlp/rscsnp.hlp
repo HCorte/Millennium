@@ -1,0 +1,44 @@
+    RSC.HLP                 GTECH Distributed Network
+                           Tulos Results Snapshot Help          Page 1 of 2
+ 
+    The RSC snapshot contains odds information on all possible outcomes 
+    for defined event.
+    
+    The information displayed includes:
+ 
+    game          - Tulos game index (1-6)
+    event         - Tulos draw number
+    closing time  - actual closing time for displayed draw   
+    week          - week number
+    signature     - place for customer signature
+    names         - competitors names
+    changing odds - Tulos game index
+    home win      - the odds on number of goals scored by each team in the
+                    event that the home team wins. Rest field includes all
+                    the combinations that are not shown.
+    away win      - the odds on number of goals scored by each team in the
+                    event that the away team wins. Rest field includes all
+                    the combinations that are not shown.
+
+    RSC.HLP                 GTECH Distributed Network
+                           Tulos Results Snapshot Help          Page 2 of 2
+
+    tie           - the odds on number of goals scored by each team in the
+                    event that the outcome of the game is a tie between  
+                    both teams.  Rest field includes all
+                    the combinations that are not shown.
+
+    results       - Tulos game index
+    event         - competitors names
+    final results - outcome of the event
+    odds          - odds used for the payouts calculation
+    total sales   - total sales for the event
+    number of     - winners count
+    winners
+
+
+
+
+
+
+

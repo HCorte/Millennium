@@ -1,0 +1,166 @@
+C GUIDOWRIT.FOR
+C
+C V02 13-NOV-2000 UXN GUI prefix added.
+C V01 16-JUN-1993 MP  INITIAL RELEASE FOR VAX (Produced From TCPASST).
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C		This routine starts a write (using QIO) if there is a
+C		connection, a buffer on the GUI_TO_LINK_QUES and the number 
+C		of outstanding writes has not exceeded the maximum.
+C		Once the write is completed the program traps to the
+C		GUITCPPWRIOCOMP routine. If there is no connection then the 
+C		routine removes all buffers on the GUI_TO_LINK_QUE 
+C		and add them to the GUI_TO_LINK_FRE_QUE.
+C
+C INPUT:
+C	CONN - connection number
+C OUTPUT:
+C	none
+C RESULTS:
+C	QIO write is posted on established connections that have data
+C	to be written.
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GUITCPPDOWRIT(CONN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:GUIMCOM.DEF'
+	INCLUDE 'INCLIB:GUILCOM.DEF'
+C
+        INCLUDE '($IODEF)'
+        INCLUDE '($SSDEF)'
+        INCLUDE '($SYSSRVNAM)'
+C
+	INTEGER*4 CONN		! IF EQ 0 - ALL CONNECTIONS
+	INTEGER*4 WIO	        !WRITE IOSB COUNTER
+	INTEGER*4 BUF_CUR	!SEND GUI_BUF #
+	INTEGER*4 IERR		!RTL/ABL ERROR STATUS
+	INTEGER*4 STATUS	!STATUS RETURNED FROM QIO
+	INTEGER*4 IFUNC	        !FUNCTION CODE
+	INTEGER*4 CONN_INX, CONN_FST, CONN_LST	!FIRST AND LAST CONNECTIONS
+C
+	EXTERNAL  GUITCPPWRIOCOMP
+C
+	INTEGER*4   BLANK
+	DATA	    BLANK/'    '/
+C
+	IF(GUI_DBG_UNIT.NE.0) THEN
+	  TYPE *,IAM(),'GUILDOWRIT: entered with CONN=', CONN
+	ENDIF
+C
+	IF(CONN.EQ.0) THEN
+	    CONN_FST=1
+	    CONN_LST=GUI_MAX_CONN
+	ELSE
+	    CONN_FST=CONN
+	    CONN_LST=CONN
+	ENDIF
+C
+	DO 1000 CONN_INX=CONN_FST, CONN_LST
+C
+	 IF(GUI_CONN_STS(CONN_INX).NE.GUI_CONN_STS_CONNECTED) THEN
+100	  CONTINUE
+	  CALL RTL(BUF_CUR,GUI_TO_LINK_QUES(1,CONN_INX),IERR)
+	  IF(IERR.EQ.2) GOTO 1000	    !NO BUFFERS TO SEND
+C
+	  CALL GUIMGR_CHECK_BUF(BUF_CUR,'GUILDOWRIT')
+C
+	  IF(GUI_DBG_UNIT.NE.0) THEN
+	    TYPE *,IAM(),
+     *	      'GUILDOWRIT: GUI_NOCWRT BUF_CUR,CONN=',
+     *         BUF_CUR,CONN_INX
+	  ENDIF
+C
+	  GUI_WRITENOCS(CONN_INX) = GUI_WRITENOCS(CONN_INX) + 1
+	  GUI_LINK_BUF(GUI_BUF_IO_STS_OFF, BUF_CUR) = GUI_NOCWRT
+	  GUI_LINK_BUF(GUI_BUF_ERR_OFF, BUF_CUR) = 0
+	  CALL ABL (BUF_CUR,GUI_FROM_LINK_QUES(1,CONN_INX),IERR)
+	  GOTO 100
+	 ENDIF
+C
+	 DO 200 WIO=0,GUI_MAX_WRITES-1
+	  IF(GUI_WRITE_OUT(WIO,CONN_INX).EQ.GUI_INPROG) GOTO 200
+C
+C	    TAKE A BUFFER OFF OF THE SEND QUEUE
+C
+	  CALL RTL(BUF_CUR,GUI_TO_LINK_QUES(1,CONN_INX),IERR)
+	  IF(IERR.EQ.2) GOTO 1000	    !NO BUFFERS TO SEND
+C
+	  CALL GUIMGR_CHECK_BUF(BUF_CUR,'GUILDOWRIT')
+C
+C	  OKAY SEND A BUFFER
+C
+C	  VERIFY LENGTH TO SEND IS VALID
+C
+	  IF(GUI_LINK_BUF(GUI_BUF_LEN_OFF,BUF_CUR)
+     *				      .LT.GUI_MIN_MSG_LEN
+     *   .OR.GUI_LINK_BUF(GUI_BUF_LEN_OFF,BUF_CUR)
+     *				      .GT.GUI_MAX_MSG_LEN) THEN
+	    CALL FASTSET(BLANK,GUI_MES_BUF,33)
+	    WRITE(GUI_MES_CBUF,9000) IAM(), CONN_INX, BUF_CUR, 
+     *		  GUI_LINK_BUF(GUI_BUF_LEN_OFF,BUF_CUR)
+9000	FORMAT(A,'GUILDOWRIT: CONN ',I4,' GUI_LINK Buffer ',I4,
+     *		    '  Length(?) ',I)
+	    CALL WRITEBRK(GUI_MES_CBUF)
+	    GUI_WRITENOCS(CONN_INX) = GUI_WRITENOCS(CONN_INX) + 1
+	    GUI_LINK_BUF(GUI_BUF_IO_STS_OFF,BUF_CUR) = GUI_BADWRT
+	    GUI_LINK_BUF(GUI_BUF_ERR_OFF,BUF_CUR) = 0
+	    CALL ABL(BUF_CUR,GUI_FROM_LINK_QUES(1,CONN_INX),IERR)
+	    GOTO 200
+	  ENDIF
+C
+	  IF(GUI_DBG_UNIT.NE.0) THEN
+	    TYPE *,IAM(),'GUILDOWRIT: sending to CONN_INX=', CONN_INX
+	  ENDIF
+C
+	  GUI_WRITE_OUT(WIO,CONN_INX) = GUI_INPROG
+	  GUI_WRITE_BUF(WIO,CONN_INX) = BUF_CUR
+	  GUI_LINK_BUF(GUI_BUF_IO_INX_OFF,BUF_CUR) = 
+     *	      (CONN_INX-1)*GUI_MAX_WRITES+WIO
+C
+	  IFUNC=IO$_WRITEVBLK
+	  STATUS=SYS$QIO(,
+     *		%VAL(GUI_CONN_CHAN(CONN_INX)),
+     *          %VAL(IFUNC),
+     *          %REF(GUI_WRITE_IOSB(WIO,CONN_INX)),
+     *		GUITCPPWRIOCOMP,
+     *		GUI_LINK_BUF(GUI_BUF_IO_INX_OFF,BUF_CUR),
+     *          %REF(GUI_LINK_BUF(GUI_BUF_DAT_OFF,BUF_CUR)),
+     *          %VAL(GUI_LINK_BUF(GUI_BUF_LEN_OFF,BUF_CUR)),
+     *          ,,,)
+C
+	  IF(.NOT.STATUS) THEN
+	    CALL FASTSET(BLANK,GUI_MES_BUF,33)
+	    WRITE(GUI_MES_CBUF,9100) IAM(),CONN_INX, BUF_CUR,STATUS
+9100	FORMAT(A,'GUILDOWRIT: Conn ',I4,' Buf ',I4,
+     *		    '  Status ',I)
+	    CALL WRITEBRK(GUI_MES_CBUF)
+	    GUI_WRITEERRS(CONN_INX) = GUI_WRITEERRS(CONN_INX) + 1
+	    GUI_WRITELERR(CONN_INX) = STATUS
+	    GUI_WRITE_OUT(WIO,CONN_INX) = GUI_READY 
+	    GUI_LINK_BUF(GUI_BUF_IO_STS_OFF,BUF_CUR) = GUI_BADWRT
+	    GUI_LINK_BUF(GUI_BUF_ERR_OFF,BUF_CUR) = STATUS
+	    CALL ABL(BUF_CUR,GUI_FROM_LINK_QUES(1,CONN_INX),IERR)
+	  ENDIF
+200	CONTINUE
+C
+1000	CONTINUE
+	RETURN
+C
+	END

@@ -1,0 +1,490 @@
+C
+C PROGRAM TMFDMP
+C $Log:   GXAFXT:[GOLS]TMFDMP.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:34:34   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.3   02 Sep 1994 18:14:56   HXK
+C  Merge of May,June RFSS batch 
+C  
+C     Rev 1.3   03 May 1994 16:04:36   JXP
+C  SPOOL ZERO COPIES
+C  
+C     Rev 1.2   13 Sep 1993 13:19:02   HXN
+C  Temporarly disable check on serial # and block #, due to conversion.
+C  
+C     Rev 1.1   07 Sep 1993 22:23:38   GXA
+C  Commented out Optical Disk Option. (Finland does not have this yet....).
+C  
+C     Rev 1.0   21 Jan 1993 17:51:32   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - tmfdmp.for **
+C
+C TMFDMP.FOR
+C
+C V03 28-FEB-92 GCAN CHANGED TO WORK WITH A OPTICAL DISK.
+C V02 19-MAY-91 TKO  Analyze the TMF as we are dumping it
+C V01 01-AUG-90 XXX  RELEASED FOR VAX
+C
+C
+C PROGRAM TO DUMP TMF TO TAPE.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM TMFDMP
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+C
+	INTEGER*4 TPHDRLEN
+	PARAMETER (TPHDRLEN=80)	
+	INTEGER*4 DFDB(7)
+	INTEGER*4 TFDB(7), TFDB2(7)
+	INTEGER*4 IOBUF(DBLOCK)
+	INTEGER*4 HDRBUF(LHDR,LBLK+3)
+	INTEGER*4 HBUF(TPHDRLEN)
+	INTEGER*4 I, OFF, INDEX, BLOCK, SER, NO2, TAPE2, EXT
+	INTEGER*4 TOTWARN, TOTFATL, ERRFLG
+	INTEGER*4 TAPE, EOFCNT, ST, K
+	INTEGER*4 WRTCNT
+C
+	CHARACTER    BELL/Z07/
+	CHARACTER*2  ANS
+	INTEGER*4    ANSLEN
+	INTEGER*4    YNFLG
+C
+	CHARACTER*20 TPNAME/'MAGX:'/
+	CHARACTER*20 TPNAM2/'MAGX:'/
+C
+	INTEGER*4   PAGE
+	INTEGER*4   EMPTYBLK, EMPTYOFF, EMPTYCNT
+	INTEGER*4   TEMPBLK,  TEMPOFF,  TEMPSER
+	INTEGER*4   RTYP, LASTRTYP, BEGOFF, ENDOFF
+	LOGICAL	    ENDBLK
+	LOGICAL	    OPTICAL/.FALSE./
+	INTEGER*4   THSSER
+C
+	INTEGER*4   NOCONSIG
+	EXTERNAL    NOCONSIG
+C
+C
+	CALL COPYRITE
+C
+C Inhibit output conversion errors
+C
+	CALL LIB$ESTABLISH ( NOCONSIG )
+C
+C
+C OPEN TMF FILE
+C
+	CALL OPENW(1,SFNAMES(1,PTMF),4,0,0,ST)
+	IF(ST.NE.0) CALL FILERR(SFNAMES(1,PTMF),1,ST,0)
+	CALL IOINIT(DFDB,1,DBLOCK*4)
+C
+C
+C LOAD TAPE
+C
+	CALL PRMNUM('Enter tape 1 drive number ',TAPE,1,4,EXT)
+	IF(EXT.LT.0) CALL GSTOP(GEXIT_OPABORT)
+	TPNAME(4:4) = CHAR(TAPE+48)
+C
+C***	CALL PRMYESNO('Is this a OPTICAL Disk ? ',YNFLG)
+C***	IF(YNFLG.EQ.1) THEN
+C***	   OPTICAL = .TRUE.
+C***	   NO2 = -1
+C***	   GOTO 9
+C***	ENDIF
+C
+	OPTICAL = .FALSE.
+C
+	CALL PRMNUM('Enter tape 2 drive number [E-no tape 2 ] ',
+     *	              TAPE2,1,4,NO2)
+	TPNAM2(4:4) = CHAR(TAPE2+48)
+C
+9	CONTINUE
+	CALL PRMTEXT(BELL//'Mount tapes and enter GO ', ANS, ANSLEN)
+	IF(ANS.EQ.'E ')CALL GSTOP(GEXIT_OPABORT)
+	IF(ANS.NE.'GO')GOTO 9
+C
+10	CONTINUE
+	CALL TAPOPEN(TFDB,TPNAME,ST)
+	CALL TAPINT(TFDB,8,DBLOCK*4)
+	IF(ST.NE.0) THEN
+	  TYPE *,IAM(),'Cannot open 1st tape ',TPNAME,', error = ',ST
+	  CALL PRMYESNO('Do you want to try again [Y/N] ',YNFLG)
+	  IF(YNFLG.NE.1) CALL GSTOP(GEXIT_OPABORT)
+	  GOTO 10
+	ENDIF
+C
+C LOAD SECOND TAPE
+C
+15	CONTINUE
+	IF(NO2.EQ.0) THEN
+	  CALL TAPOPEN(TFDB2,TPNAM2,ST)
+	  CALL TAPINT(TFDB2,9,DBLOCK*4)
+	  IF(ST.NE.0) THEN
+	    TYPE *,IAM(),'Cannot open 2nd tape ',TPNAM2,', error = ',ST
+	    CALL PRMYESNO('Do you want to try again [Y/N] ',YNFLG)
+	    IF(YNFLG.NE.1) CALL GSTOP(GEXIT_OPABORT)
+	    GOTO 15
+	  ENDIF
+	ENDIF
+C
+C DUMP TO OPTICAL DEVICE.
+C
+	IF(OPTICAL) THEN
+	   CALL XREWIND(TFDB,ST)
+	   CALL TAPINT(TFDB,8,TPHDRLEN)	     !Set to Tape Header Length.
+	   CALL FEOT(TFDB,ST)
+	   CALL RTAPEW(TFDB,HBUF,ST)	     !Read Standard Header.
+	   IF(ST.NE.'88'X.AND.ST.NE.0) THEN
+	      CALL BELLS(2)
+	      TYPE*,IAM(),'Read Error / Optical Disk not Initialized ',ST
+	      CALL GSTOP(GEXIT_FATAL)
+	   ENDIF
+C
+	   CALL FEOT(TFDB,ST)
+	   CALL RTAPEW(TFDB,HBUF,ST)	     !Read Standard Header.
+	   IF(ST.NE.'88'X.AND.ST.NE.0) THEN
+	      CALL BELLS(2)
+	      TYPE*,IAM(),'Read Error / Optical Disk not Initialized ',ST
+	      CALL GSTOP(GEXIT_FATAL)
+	   ENDIF
+C
+	   CALL TAPINT(TFDB,8,DBLOCK*4)	     !Re-init to TM Size.
+
+C
+C READ DISK TO DETERMINE WHERE IT ENDS.
+C
+17	   CONTINUE
+	   CALL RTAPEW(TFDB,HDRBUF,ST)	    
+	   IF(ST.EQ.500) GOTO 20	     !END OF OPTICAL DISK REACHED.
+C
+C IF PREVIOUS FILE FOUND CHECK CDC DATE AND SKIP TO NEXT.
+C
+	   IF(HDRBUF(3,1).EQ.1.AND.HDRBUF(1,2).LT.DAYCDC) THEN    
+	      CALL FEOT(TFDB,ST)
+	      IF(ST.EQ.500) GOTO 20	     !END OF OPTICAL DISK REACHED.
+	      GOTO 17
+C
+C SAME DAY AS CURRENTLY PROCESSED WAS FOUND, PERMIT OVERWRITING.
+C
+	   ELSEIF(HDRBUF(3,1).EQ.1.AND.HDRBUF(1,2).EQ.DAYCDC) THEN 
+	      TYPE*,IAM(),'Current CDC : ',DAYCDC,	      !OVERWRITE DAY?
+     *		         ' CDC found on Tape : ',HDRBUF(1,2)
+	      CALL PRMYESNO('Do you want to overwrite [Y/N] ',YNFLG)
+C
+C MAKE SURE ANSWER IS CORRECT,
+C IF NO OVERWRITING OF DAY IS ASKED FOR STOP PROCESS.
+C
+	      IF(YNFLG.EQ.1) THEN
+		 CALL BELLS(2)
+		 TYPE*,IAM(),'CDC Day : ',DAYCDC,
+     *			     ' is being overvritten on optical disk.'
+		 CALL PRMYESNO(
+     *		 'Are you sure you want to OVERWRITE day? [Y/N] ',YNFLG)
+	      ENDIF
+C
+	      IF(YNFLG.NE.1) THEN
+		 CALL CLOSEFIL(DFDB)
+		 CALL TAPCLOS(TFDB,ST)
+		 CALL GSTOP(GEXIT_OPABORT)
+	      ENDIF
+C
+C INCORECT HEADER INFORMATION FOUND
+C
+	   ELSEIF(HDRBUF(3,1).EQ.1.AND.HDRBUF(1,2).GT.9999) THEN
+	      TYPE*,IAM(),'Record found, but no date identification ',
+     *			  'in the header CDC : ',HDRBUF(1,2)
+	      CALL GPAUSE
+	      GOTO 17
+	   ELSE
+	      CALL FEOT(TFDB,ST)
+	      IF(ST.EQ.500) GOTO 20
+	      GOTO 17
+	   ENDIF
+	ENDIF
+C
+C BUILD AND WRITE HEADER RECORDS TO TAPE
+C
+20	CONTINUE
+C
+	CALL TAPHDR(IOBUF,1)
+	CALL WTAPEW(TFDB,IOBUF,ST)
+	IF(NO2.EQ.0) CALL WTAPEW(TFDB2,IOBUF,ST)
+C
+C Open report file
+C
+	CALL ROPEN('TMFDMP.REP',6,ST)
+	PAGE = 0
+	CALL TITLE('ANALYSIS OF TMF','TMFDMP',1,6,PAGE,DAYCDC)
+C
+C DUMP FILE TO TAPE(S)
+C
+	WRTCNT  =0
+	TOTWARN =0
+	TOTFATL =0
+	EMPTYBLK=0
+	EMPTYOFF=0
+	EMPTYCNT=0
+	EOFCNT  =0
+	SER=1
+	THSSER=0
+1000	CONTINUE
+	CALL GETBI(SER,BLOCK,INDEX,OFF)
+	CALL READW(DFDB,BLOCK,IOBUF,ST)
+	IF(ST.NE.0) CALL FILERR(SFNAMES(1,PTMF),2,ST,BLOCK)
+C
+C Assume we are at end of file only when we have read as many null blocks
+C as LOGGER is capable of keeping in memory (i.e., NUMLOG)
+C
+	DO 1100 I=1,DBLOCK
+	  IF(IOBUF(I).NE.0) THEN
+	    EOFCNT = 0
+	    GOTO 1200
+	  ENDIF
+1100	CONTINUE
+	EOFCNT = EOFCNT+1
+	IF(EOFCNT.LT.NUMLOG   ) GOTO 3000	!SKIP THE ANALYSIS
+	GOTO 9000				!END OF TMF
+C
+C
+C *******    ANALYZE THE BLOCK FOR ERRORS *******
+C
+C
+1200	CONTINUE
+C
+C Block header should contain block number or 0
+C
+	IF(IOBUF(2).NE.BLOCK .AND. IOBUF(2).NE.0)THEN
+	  WRITE(6,1201)BLOCK,IOBUF(2)
+1201	  FORMAT(X,'BLK ',I8,' BAD BLOCK #=',I12)
+	  TOTWARN=TOTWARN+1
+	ENDIF
+C
+	LASTRTYP=0
+	BEGOFF=LHDR+1
+	ENDOFF=DBLOCK
+C
+	OFF=BEGOFF-LREC
+2000	CONTINUE
+	OFF=OFF+LREC
+	IF(OFF.GT.ENDOFF)GOTO 3000	    !WRITE TO TAPE
+C
+	IF ( OFF.LT.DBLOCK-(2*LREC) ) THEN
+	  ENDBLK=.FALSE.
+	ELSE
+	  ENDBLK=.TRUE.
+	ENDIF
+C
+C
+	IF(.NOT.ENDBLK)THEN
+	  THSSER=THSSER+1
+	ENDIF
+C
+C
+	RTYP = ISHFT (IOBUF(OFF+LREC-1),-24)
+	RTYP = IAND  (RTYP,'0F'X)
+C
+	ERRFLG=0
+	IF(RTYP.EQ.0)THEN                    !IF 0, SHD BE EMPTY
+	  DO 2010 K=0,LREC-1
+	    IF(IOBUF(OFF+K).NE.0)ERRFLG=1
+2010	  CONTINUE
+	  IF (.NOT.ENDBLK) THEN
+	    EMPTYCNT=EMPTYCNT+1
+	    IF(EMPTYBLK.EQ.0)THEN
+	      EMPTYBLK=BLOCK
+	      EMPTYOFF=OFF
+	    ENDIF
+	    GOTO 2000
+	  ENDIF
+C
+	ELSE IF (RTYP.EQ.LREG) THEN
+	  IF(ENDBLK)ERRFLG=2
+	  IF(LASTRTYP.EQ.LTWO)ERRFLG=3
+C
+	ELSE IF (RTYP.EQ.LONE) THEN
+	  IF(ENDBLK)ERRFLG=4
+	  IF(LASTRTYP.EQ.LONE .OR.
+     *       LASTRTYP.EQ.LTWO)ERRFLG=5
+C
+	ELSE IF(RTYP.EQ.LTWO)THEN
+	  IF(LASTRTYP.NE.LONE)ERRFLG=6
+C
+	ELSE IF(RTYP.EQ.LEND)THEN
+	  IF(LASTRTYP.NE.LONE .AND. LASTRTYP.NE.LTWO)ERRFLG=7
+C
+	ELSE
+	  ERRFLG=8
+	ENDIF
+C
+	IF(ERRFLG.NE.0)THEN
+	  WRITE(6,2002)BLOCK,OFF,RTYP,LASTRTYP,ERRFLG
+2002	  FORMAT(X,'BLK ',I8,'/',I4,' BAD RTYP=',I2,' LAST=',I2,
+     *	           ' ERRFLG=',I2)
+	  TOTFATL=TOTFATL+1
+	  LASTRTYP=0
+	  GOTO 2000
+	ENDIF
+C
+	LASTRTYP = RTYP
+	IF(RTYP.NE.LREG .AND. RTYP.NE.LONE)GOTO 2000
+C
+	IF(EMPTYCNT.NE.0)THEN
+C
+C display approximate serial number
+C
+	  TEMPBLK=EMPTYBLK-1	    !determine the block
+	  TEMPBLK=TEMPBLK*LBLK	    !125 words in block
+	  TEMPOFF=(EMPTYOFF-1)/LREC !from word offset determine record
+	  TEMPSER=TEMPBLK+TEMPOFF   !serial in question
+C
+	  WRITE(6,2003)EMPTYCNT,EMPTYBLK,EMPTYOFF,TEMPSER
+2003	  FORMAT(X,I8,' EMPTY RECORDS STARTING AT BLK ',I8,'/',I4,
+     *	  ' Start with srl # ',I12)
+	  WRITE(6,20031)BLOCK,OFF,THSSER
+20031	  FORMAT(X,8X,' NEXT USED RECORD       AT BLK ',I8,'/',I4,
+     *    '            srl # ',I12)
+	  TOTWARN=TOTWARN+1
+	  EMPTYCNT=0
+	  EMPTYBLK=0
+	  EMPTYOFF=0
+	ENDIF
+C
+	TEMPSER = IAND(IOBUF(OFF),'3FFFFFFF'X)
+C***	IF(MOD(TEMPSER,SYSOFF).NE.THSSER)THEN
+C***	  WRITE(6,2004)BLOCK,OFF,TEMPSER,THSSER
+C***2004	  FORMAT(X,'BLK ',I8,'/',I4,' SRL # ',I12,' SHD BE ',I12)
+C***	  TOTFATL=TOTFATL+1
+C***	ENDIF
+	GOTO 2000
+C
+C
+C *******      END OF ANALYSIS SECTION    *******
+C
+C WRITE RECORD TO TAPE(S)
+C
+C
+3000	CONTINUE
+	IOBUF(2)=BLOCK
+	CALL WTAPEW(TFDB,IOBUF,ST)
+	IF(ST.NE.0) THEN
+	  IF(ST.EQ.144) THEN
+	    CALL BACK(TFDB,ST)
+	    CALL WEOT(TFDB,ST)
+	    CALL WEOT(TFDB,ST)
+	    CALL XREWIND(TFDB,ST)
+3100	    CONTINUE
+	    TYPE *,IAM(),BELL,BELL,'End of tape on ',TPNAME
+	    CALL PRMTEXT('Mount new tape and enter GO ',ANS, ANSLEN)
+	    IF(ANS.EQ.'E ')CALL GSTOP(GEXIT_OPABORT)
+	    IF(ANS.NE.'GO')GOTO 3100
+	    GOTO 3000
+	  ENDIF
+	  WRITE(5,904)IAM(), ST,BLOCK
+	  CALL BELLS(2)
+	  CALL PRMYESNO('Do you want to continue? ',YNFLG)
+	  IF(YNFLG.NE.1)THEN
+	    TYPE *,IAM(),' *** TMF TAPE DUMP ABORTED ****'
+	    CALL GSTOP(GEXIT_OPABORT)
+	  ENDIF
+	  GOTO 3000
+	ENDIF
+C
+3500	CONTINUE
+	IF(NO2.EQ.0) THEN
+	  CALL WTAPEW(TFDB2,IOBUF,ST)
+	  IF(ST.NE.0) THEN
+	    IF(ST.EQ.144) THEN
+	      CALL BACK(TFDB2,ST)
+	      CALL WEOT(TFDB2,ST)
+	      CALL WEOT(TFDB2,ST)
+	      CALL XREWIND(TFDB2,ST)
+3600	      CONTINUE
+	      TYPE *,IAM(),BELL,BELL,'End of tape on ',TPNAM2
+	      CALL PRMTEXT('Mount new tape and enter GO ',ANS, ANSLEN)
+	      IF(ANS.EQ.'E ')CALL GSTOP(GEXIT_OPABORT)
+	      IF(ANS.NE.'GO')GOTO 3600
+	      GOTO 3500
+	    ENDIF
+	    WRITE(5,904)IAM(), ST,BLOCK
+	    CALL BELLS(2)
+	    CALL PRMYESNO('Do you want to continue with '//TPNAM2,YNFLG)
+	    IF(YNFLG.EQ.3)THEN
+	      TYPE *,IAM(),' *** TMF TAPE DUMP ABORTED ****'
+	      CALL GSTOP(GEXIT_OPABORT)
+	    ENDIF
+	    IF(YNFLG.EQ.2)THEN
+	      NO2 = -1
+	    ENDIF
+	    GOTO 3500
+	  ENDIF
+	ENDIF
+C
+	WRTCNT = WRTCNT+1
+	SER=SER+LBLK
+	GOTO 1000
+C
+C
+9000	CONTINUE
+C
+C WRITE END OF TAPE MARK, CLOSE TM FILE
+C AND REWIND TAPE.
+C
+	CALL CLOSEFIL(DFDB)
+	CALL WEOT(TFDB,ST)
+	CALL XREWIND(TFDB,ST)
+	CALL TAPCLOS(TFDB,ST)
+	IF(NO2.EQ.0) THEN
+	  CALL WEOT(TFDB2,ST)
+	  CALL XREWIND(TFDB2,ST)
+	  CALL TAPCLOS(TFDB2,ST)
+	ENDIF
+C
+C Output totals to report and console
+C
+	WRITE(6,9001)WRTCNT,TOTWARN,TOTFATL
+9001	FORMAT(//,X,I8,' BLOCKS WRITTEN TO TAPE',/,
+     *            X,I8,' WARNINGS',/,
+     *            X,I8,' SEVERE ERRORS')
+	CLOSE(6)
+	CALL SPOOL('TMFDMP.REP',0,ST)
+C
+	IF(TOTFATL.NE.0)THEN
+	  TYPE *,IAM(),BELL,BELL,TOTFATL,' SEVERE ERRORS WERE FOUND'
+	  TYPE *,IAM(),BELL,BELL,'********** SEE REPORT **********'
+	ELSE IF(TOTWARN.NE.0)THEN
+	  TYPE *,IAM(),TOTWARN,' WARNINGS WERE FOUND'
+	ELSE
+	  TYPE *,IAM(),'NO ERRORS FOUND'
+	ENDIF
+C
+	TYPE *,IAM(),WRTCNT,' blocks written to tape'
+	CALL GSTOP(GEXIT_SUCCESS)
+C
+C
+904	FORMAT(1X,A,'Tape write error ',Z8,' record - ',I8)
+	END

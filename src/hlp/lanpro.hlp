@@ -1,0 +1,66 @@
+ LANPRO.HLP               GTECH Distributed Network
+                             LANPRO Operations               Page 1 of 3
+ 
+    This snapshot will list summary information on commands
+    recognized by LANPRO task.
+ 
+  Activate Lan <number> - Activates Lan interface through the Lan
+              refered to. The command changes only the status of the
+              Lan. The physical IO is not started or cancelled.
+              STOP and GO commands are responsible for that.
+              Activate command is mainly to be used to activate Lans
+              immediatelly after the startup or after the Lan has been
+              deactivated because a connection earlier established
+              through it has been dropped. LANPRO will accept a
+              connection through a deactivated Lan (if the station
+              is up).
+ 
+ Deactivate Lan <number> - Deactivates Lan by changing its status
+              to inactive. It can be only executed when no connections
+              are open through this particular Lan. The command does
+              not terminates the IO's if they are started and
+ 
+ LANPRO.HLP               GTECH Distributed Network
+                             LANPRO Operations               Page 2 of 3
+ 
+              deactivating the Lan alone will not prevent LANPRO
+              from accepting a connection through it (any traffic
+              from a remote SAP will turn the Lan status on) if the
+              station is up.
+ 
+ Go Lan <number> - If the Lan is active (see Activate command) LANPRO
+              will first terminate any outstanding IO's on logical
+              units associated with the Lan and then start them again.
+              Go command does not change the active/inactive status of
+              the Lan.
+ 
+ Stop Lan <number> - Will terminate outstanding IO's on logical units
+              associated with the Lan and then close them. The active/
+              inactive status of the Lan is not changed.
+ 
+ Activate STATIons - Will execute GO commands on all activated Lans
+              and set the station status to "up". Activate station
+              command has to be executed exactly once to start
+ 
+ LANPRO.HLP               GTECH Distributed Network
+                             LANPRO Operations               Page 3 of 3
+ 
+              LANPRO operation. Active/inactive status of all Lans
+              does not change.
+ 
+ Deactivate STATIon - Will execute Stop Lan comamnd on all activated
+              Lans and change the station status to "down".
+              Active/inactive status of all Lans does not change.
+ 
+ Help - Will display a summary of commands.
+ 
+ LANRUN n,m - CSS that will activate LANPRO with 1 or 2 lans.
+              Commands executed are Activate Lan and Activate
+              Station.
+ 
+ LANACT n,m - CSS that will activate Lans refered to. Default is
+              LANACT 1,2.
+ 
+ 
+ 
+ 

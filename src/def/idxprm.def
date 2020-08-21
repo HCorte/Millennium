@@ -1,0 +1,54 @@
+C IDXSUBS.DEF
+C
+C V01 05-JAN-01 ANG   INITIAL RELEASE FOR PORTUGAL
+C
+C Defines the area used by subroutine NRM_IDXSUBS.FOR
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4	 FDB_IDXLENGTH		!LENGTH OF FDB
+	PARAMETER	(FDB_IDXLENGTH =  7)
+C
+	INTEGER*4	 FDB_IDXLUN
+	PARAMETER	(FDB_IDXLUN    =  1)	!OFFSET OF LUN IN FDB
+	INTEGER*4	 FDB_IDXSTAT
+	PARAMETER	(FDB_IDXSTAT   =  2)	!STATUS OF LAST I/O
+C
+C	3,4 NOT USED
+C
+	INTEGER*4	 FDB_IDXIOLEN
+	PARAMETER	(FDB_IDXIOLEN  =  5)	!ACTUAL I/O LEN
+	INTEGER*4	 FDB_IDXBLKSZ
+	PARAMETER	(FDB_IDXBLKSZ  =  6)	!SIZE OF I/O IN BLOCKS
+	INTEGER*4	 FDB_IDXBYTSZ
+	PARAMETER	(FDB_IDXBYTSZ  =  7)	!SIZE OF I/O IN BYTES
+C
+C STATUS ERROR CODE
+C
+	INTEGER*4	 FIDX_NOERR		!NO ERROR
+	PARAMETER	(FIDX_NOERR    =  0)
+C
+	INTEGER*4	 FIDX_EOF		!END OF FILE
+	PARAMETER	(FIDX_EOF      = -1)
+C
+	INTEGER*4	 FIDX_FPE		!FUNCTION PARAMETER ERROR
+	PARAMETER	(FIDX_FPE      =  1)
+C
+	INTEGER*4	 FIDX_RNF		!RECORD NOT FOUND
+	PARAMETER	(FIDX_RNF      = 36)
+C
+	INTEGER*4	 FIDX_DUPK		!DUPLICATE KEY
+	PARAMETER	(FIDX_DUPK     = 50)

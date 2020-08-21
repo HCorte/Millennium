@@ -1,0 +1,102 @@
+C
+C MSGCOM.DEF
+C  
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]MSGCOM.DEV                                   $
+C  $Date::   17 Apr 1996 14:08:34                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C V02 24-jan-96 das added i4msgtab/expanded capability to have more than
+C                         32k of messages.
+C V01 15-MAY-93 MCM RELEASED FOR GEORGIA (IRFSS #10132)
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C
+C     MESSAGE COMMON /MSGCOM/ DEFINITIONS IN FORTRAN VII
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:PRMMES.DEF'
+C
+        INTEGER*2 SMFDLTAB(MAXLOADS,MAXDLLTAB,MAXAPP)   !LOAD DESCR - SMF
+        INTEGER*4 SMFDLNAM(2,MAXLOADS,MAXAPP)           !LOAD NAMES - SMF
+C
+C                 1 - LOAD NAME            (ASCII)
+C                 2 - APPLICATION REVISION (HEX)
+C
+C       OFFSETS FOR HALFWORD FIELDS
+C
+        INTEGER*4 I4MSGTAB(MSGSZH/2,MSGSIZ) 
+	INTEGER*2 MSGTAB(MSGSZH,MSGSIZ)
+C
+C       DEFINITION FOR TEXT OF MESSAGE
+C
+	CHARACTER*68 MSGCHR(MSGSIZ)
+C
+C
+        INTEGER*4  MSGBLKSIZ, MSGBLKNUM
+        PARAMETER (MSGBLKSIZ=1024)    !SIZE OF MESSAGE I/O BLOCK IN WORDS
+        PARAMETER (MSGBLKNUM=(MSGSIZ * MSGSZH / MSGBLKSIZ) / 2)
+C
+        INTEGER*4  MSGCSB
+        PARAMETER (MSGCSB=((MSGBLKSIZ*MSGBLKNUM +
+     *                     (4*2*MAXLOADS*MAXAPP+
+     *                     2*MAXLOADS*MAXDLLTAB*MAXAPP+4*4)/4)
+     *                     / 2048))
+C
+C                                     !# OF CHECKPOINT BLOCKS
+C
+	INTEGER*4 MSGBLK(MSGBLKSIZ,MSGBLKNUM)
+	EQUIVALENCE (MSGTAB,MSGCHR,MSGBLK,I4MSGTAB)
+C
+	COMMON /MSGCOM/ SMFDLTAB, SMFDLNAM, MSGTAB
+C
+C
+C     THE FOLLOWING CONVENTIONS SHOULD BE USED TO REFERENCE
+C     FIELDS IN THE MESSAGE COMMON, GIVEN A MESSAGE "MSGNBR".
+C
+C
+C     A HALFWORD FIELD ->      MSGTAB(FIELD,MSGNBR)
+C                              ** FIELD IS THE NAME OF A FIELD **
+C
+C     ENTIRE MESSAGE ->        LEN=MSGTAB(SEGLEN,MSGNBR)
+C                              MSGCHR(MSGNBR)(MSGFST:LEN)
+C
+C     TO FIND FIRST EMPTY RECORD:
+C                              MSGNBR=MSGTAB(FRELNK,MSGCTL)
+C     NEXT FREE RECORD ->      MSGNBR=MSGTAB(FRELNK,MSGNBR)
+C
+C     * IF MSGNBR IS NOT POSITIVE, NO MORE FREE RECORDS LEFT
+C
+C
+C
+C
+C
+C
+	INTEGER*4	 FRST_MSGCOM(2)
+	EQUIVALENCE	(FRST_MSGCOM, SMFDLTAB)
+	INTEGER*4	 LAST_MSGCOM
+	EQUIVALENCE	(LAST_MSGCOM, MSGTAB(MSGSZH-1,MSGSIZ))
+C
+	VOLATILE /MSGCOM/
+C

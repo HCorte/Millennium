@@ -1,0 +1,155 @@
+C  GXSRC:OISOF.FOR
+C  
+C  $Log:   GXAFXT:[GOLS]OISOF.FOV  $
+C  
+C     Rev 1.1   05 Dec 1996 20:34:42   HXK
+C  Updated for Finland IPS pre-release
+C  
+C     Rev 1.0   17 Apr 1996 14:18:04   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.2   08 Jun 1994 13:38:38   MCM
+C  CHANGED OPERATIONAL STATUS FROM A HALFWORD TO A BYTE
+C  
+C     Rev 1.1   03 Jan 1994 22:09:24   SYSTEM
+C  Applying PVCS header for automatic revision history
+C  
+C     Rev 1.0    21 Dec 1993 18:18:18   SYSTEM
+C  Initial revision.
+C
+C
+C
+C V04 10-FEB-92 JPJ ADDED (GVT)
+C V03 05-FEB-92 NJA ADDED (GVT REVBYT)
+C V02 04-FEB-92 NJA ADDED (2 BYTE CHECKSUM)
+C V01 13-NOV-91 JPJ RELEASED FOR VAX (INSTANTS)
+C
+C SUBROUTINE TO BUILD INSTANT SIGN OFF OUTPUT MESSAGES.
+C
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE OISOF(TRABUF,OUTTAB,OUTLEN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:CHKSUMCM.DEF'
+C
+        INTEGER*4 MYCHKSUM, CHKLEN, IND
+        INTEGER*4 ERRTYP, ERRCOD, TER
+	INTEGER*4 CHKDIG
+C
+	BYTE      OUTTAB(*)
+	INTEGER*2 OUTLEN
+C
+	INTEGER*4   I4TEMP
+	INTEGER*2   I2TEMP(2)
+	BYTE	    I1TEMP(4)
+	EQUIVALENCE (I4TEMP,I2TEMP,I1TEMP)
+C
+	DATA ERRTYP/Z90/
+C
+C CONTROL AND SEQUENCE NUMBER
+C
+	OUTTAB(1) = '20'X+TRABUF(TTRN)
+C
+C IF TRANSACTION STATUS IS NOT GOOD
+C BUILD ERROR MESSAGE.
+C
+        IF(TRABUF(TSTAT).NE.GOOD.AND.TRABUF(TERR).NE.BCRS) GOTO 8000
+C
+C TYPE AND SUBTYPE
+C
+	OUTTAB(2) = 'DA'X
+C
+C TIME
+C
+        IND=5
+        I4TEMP=TRABUF(TTIM)
+        OUTTAB(IND+0) = I1TEMP(3)
+        OUTTAB(IND+1) = I1TEMP(2)
+        OUTTAB(IND+2) = I1TEMP(1)
+        IND=IND+3
+C
+C JULIAN DATE
+C
+        I4TEMP=DAYJUL
+        OUTTAB(IND+0) = I1TEMP(2)
+        OUTTAB(IND+1) = I1TEMP(1)
+        IND=IND+2
+C
+C SERIAL NUMBER AND CHECK DIGITS
+C
+        CALL OUTGEN(TRABUF(TCDC),TRABUF(TSER),I4TEMP,CHKDIG)
+        OUTTAB(IND+0) = I1TEMP(3)
+        OUTTAB(IND+1) = I1TEMP(2)
+        OUTTAB(IND+2) = I1TEMP(1)
+        OUTTAB(IND+3) = CHKDIG
+        IND=IND+4
+C
+C INSTANT RESULT CODE ONE
+C
+CRXK        ERRCOD=8
+CRXK        IF(TRABUF(TIERR).EQ.90)    ERRCOD=8
+CRXK        IF(TRABUF(TIERR).EQ.91)    ERRCOD=8
+CRXK        IF(TRABUF(TIERR).EQ.100)   ERRCOD=9
+CRXK        IF(TRABUF(TIERR).EQ.101)   ERRCOD=9
+CRXK        IF(TRABUF(TIERR).EQ.102)   ERRCOD=9
+
+        IF(TRABUF(TIERR).EQ.INOER) ERRCOD=0
+        IF(TRABUF(TIERR).NE.INOER) ERRCOD=1
+        OUTTAB(IND+0) = ERRCOD
+        IND=IND+1
+C
+C INSTANT RESULT CODE TWO
+C
+        OUTTAB(IND+0) = 0
+        IF(TRABUF(TIERR).NE.INOER) OUTTAB(IND+0) = TRABUF(TIERR)
+        IND=IND+1
+
+        OUTLEN=IND-1
+        GOTO 9000
+C
+C IF TRANSACTION STATUS IS NOT GOOD
+C BUILD ERROR MESSAGE.
+C
+8000	CONTINUE
+        TRABUF(TSTAT)=REJT
+	OUTTAB(2) = ERRTYP
+	OUTTAB(5) = TRABUF(TERR)
+	OUTLEN=5
+C
+C CALCULATE CHECKSUM
+C
+9000	CONTINUE
+	TER=TRABUF(TTER)
+	AGTHTB(AOPSTS,TER)=SIGNOF
+	I4CCITT = TRABUF(TCHK)
+	OUTTAB(3) = I1CCITT(2)
+	OUTTAB(4) = I1CCITT(1)
+	CHKLEN=OUTLEN-1
+	CALL GETCCITT(OUTTAB,1,CHKLEN,MYCHKSUM)
+	I4CCITT = MYCHKSUM
+	OUTTAB(3) = I1CCITT(2)
+	OUTTAB(4) = I1CCITT(1)
+	RETURN
+	END

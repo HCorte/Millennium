@@ -1,0 +1,66 @@
+    VOI.HLP                GTECH Distributed Network
+                            Voittaja Snapshot Help             Page 1 of 3
+   
+    The VOI snapshot contains ODDS and sales information for each  
+    Voittaja event.
+    
+    The information displayed includes:
+ 
+    game index    - Voittaja game index (1-6)
+    dates         - current date and dates when sales are opened for 
+                    the event
+    event name    - voittaja event name   
+    event code    - voittaja draw number
+    game          - game status for the draw (open,closed)
+    row           - number of each row
+    name          - participants name associated with row number
+    odds          - odds on outcome predicted 
+    amount        - amount bet on each row 
+    sts           - status of each row
+    total pool    - total pool for the entire event
+    tax           - amount of tax due
+    round pool    - n/a
+
+    VOI.HLP                GTECH Distributed Network
+                            Voittaja Snapshot Help             Page 2 of 3
+    
+
+    net pool      - 70% of total sales.
+
+    Fields Shown Only When The Event Is Final.
+
+    results 1     - Outcome of the event.  Multiple winners are shown in 
+                    convention: Results 1, 2, 3, etc
+    row           - Winning row number 
+    winner        - Participant name associated with row number
+    amount bet    - Total amount bet on winning row
+    odds          - odds used for the payouts calculation
+    cancelled rows- cancelled rows numbers 
+    beginning     - date when the sales were opened
+    sales
+
+
+
+
+    VOI.HLP                GTECH Distributed Network
+                            Voittaja Snapshot Help             Page 3 of 3
+
+
+
+    ending sales  - date when the sales were closed
+    draw date     - winner selection date
+    total sales   - total sales for the event
+    total refund  - total refund for the event in the case of cancelled 
+                    rows.
+    net sales     - total sales less total refund
+    winners share - total pool value (70% of net sales)
+    winning amount  total amount for validations
+    rounding pot  - rounding amount created during calculating prizes
+    winning tax   - n/a
+    winners paid  - total amount validated
+    refunds paid  - total amount refunded
+    amount purged - total amount of validations or refunds that was not
+                    claimed in one year.
+
+
+

@@ -1,0 +1,271 @@
+C
+C SUBROUTINE BLDNBR
+C
+C V04 12-JUN-2000 UXN Cleaned up
+C V03 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V02 11-OCT-1991 MTK INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C SUBROUTINE TO DEFINE NUMBERS GAME PARAMETERS.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE BLDNBR(FILE,GNAME)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DNBREC.DEF'
+	INCLUDE 'INCLIB:TNAMES.DEF'
+C
+	INTEGER*4 FDB(7),YN(0:1),FILE(5)
+	INTEGER*4 GNAME(4),PRZTAB(NBGPOL),DISPLAY(7,NBGPOL)
+C
+	INTEGER*4 ST, DRAW, I, K, SPER, FIXED, IND
+	INTEGER*4 PRICE, TIME, MBET, MULTI, BETOPT, EXT, NTYP, NUMPOL
+	INTEGER*4 FLAG, BLANK, PAIR, BOX, WHEEL, COMBO
+	INTEGER*4 SLIMIT, BLIMIT, PLIMIT, MIND
+C
+	CHARACTER*28 CDISPLAY(NBGPOL)
+	CHARACTER*63 STRING4
+	EQUIVALENCE (DISPLAY,CDISPLAY)
+	DATA YN/'  No',' Yes'/
+	DATA BLANK/'    '/
+	DATA SPER/0/
+	DATA SLIMIT/0/, PLIMIT/0/, BLIMIT/0/
+C
+	CALL CLRSCR(5)
+	WRITE (STRING4,800) GNAME
+	CALL WIMG(5,STRING4)
+	CALL YESNO(FLAG)
+	IF(FLAG.NE.1) GOTO 1000
+C
+10	CONTINUE
+	CALL CLRSCR(5)
+	WRITE(5,918) GNAME
+	CALL FASTSET(BLANK,DISPLAY,175)
+C
+C
+	NUMPOL=10
+	CALL INPNUM('Enter game type [1=3 digit, 2=4 digit] ',NTYP,
+     *	            1,2,EXT)
+	IF(EXT.LT.0) GOTO 1000
+	IF(NTYP.EQ.NB4TYP) NUMPOL=16
+C
+C
+	BETOPT=0
+	CALL WIMG(5,'Is there pair wagering [Y/N] ')
+	CALL YESNO(FLAG)
+	IF(FLAG.EQ.1) BETOPT=BETOPT+PARACT
+C
+C
+	CALL WIMG(5,'Is there box wagering [Y/N] ')
+	CALL YESNO(FLAG)
+	IF(FLAG.EQ.1) BETOPT=BETOPT+BOXACT
+C
+C
+	CALL WIMG(5,'Is there combo wagering [Y/N] ')
+	CALL YESNO(FLAG)
+	IF(FLAG.EQ.1) BETOPT=BETOPT+CMBACT
+C
+C
+	CALL WIMG(5,'Is there wheel wagering [Y/N] ')
+	CALL YESNO(FLAG)
+	IF(FLAG.EQ.1) BETOPT=BETOPT+WHLACT
+C
+C
+        MULTI=0
+        CALL WIMG(5,'Is there multi-draw wagering [Y/N] ')
+        CALL YESNO(FLAG)
+        IF(FLAG.EQ.1) THEN
+          CALL INPNUM('Enter maximum number of draws ',MULTI,1,12,EXT)
+          IF(EXT.LT.0) GOTO 1000
+        ENDIF
+C
+C
+	CALL INPNUM('Enter maximum # of bets/tkt [1-10] ',MBET,1,10,EXT)
+	IF(EXT.LT.0) GOTO 1000
+C
+C
+	CALL INPTIM('Enter pool close time HH:MM:SS ',TIME,EXT)
+	IF(EXT.LT.0) GOTO 1000
+C
+C
+	CALL INPMONY('Enter base bet price ',PRICE,BETUNIT,EXT)
+	IF(EXT.LT.0) GOTO 1000
+C
+C
+	FIXED=0
+	CALL WIMG(5,'Is this a fixed payout game [Y/N] ')
+	CALL YESNO(FLAG)
+	IF(FLAG.EQ.1) FIXED=1
+C
+C
+	IF(FIXED.EQ.0) THEN
+	  CALL INPPER('Enter pool percentage of sales ',SPER,EXT)
+	  IF(EXT.LT.0) GOTO 1000
+	ELSE
+	  CALL INPMONY('Enter straight liability limit ',
+     *                  SLIMIT,VALUNIT,EXT)
+	  IF(EXT.LT.0) GOTO 1000
+	  IF(IAND(BETOPT,BOXACT).NE.0)
+     *      CALL INPMONY('Enter box      liability limit',
+     *      BLIMIT,VALUNIT,EXT)
+	  IF(EXT.LT.0) GOTO 1000
+	  IF(IAND(BETOPT,PARACT).NE.0)
+     *      CALL INPMONY('Enter pair     liability limit ',
+     *      PLIMIT,VALUNIT,EXT)
+	  IF(EXT.LT.0) GOTO 1000
+	  CALL BLD_GETPRZ(NTYP,BETOPT,PRZTAB,CDISPLAY)
+	ENDIF
+C
+C
+C
+C DISPLAY OPTIONS
+C
+	PAIR=0
+	BOX=0
+	WHEEL=0
+	COMBO=0
+	MIND=0
+	IF(IAND(BETOPT,PARACT).NE.0) PAIR=1
+	IF(IAND(BETOPT,CMBACT).NE.0) COMBO=1
+	IF(IAND(BETOPT,WHLACT).NE.0) WHEEL=1
+	IF(IAND(BETOPT,BOXACT).NE.0) BOX=1
+	IF(MULTI.NE.0) MIND=1
+C
+	CALL CLRSCR(5)
+	WRITE(5,901) NGTYPE(NTYP),(DISPLAY(K,1),K=1,7)
+	WRITE(5,902) YN(PAIR),(DISPLAY(K,2),K=1,7)
+	WRITE(5,903) YN(BOX),(DISPLAY(K,3),K=1,7)
+	WRITE(5,904) YN(COMBO),(DISPLAY(K,4),K=1,7)
+	WRITE(5,905) YN(WHEEL),(DISPLAY(K,5),K=1,7)
+	WRITE(5,906) YN(MIND),(DISPLAY(K,6),K=1,7)
+	WRITE(5,907) MBET,(DISPLAY(K,7),K=1,7)
+	WRITE(5,908) DISTIM(TIME),(DISPLAY(K,8),K=1,7)
+	WRITE(5,909) CMONY(PRICE,10,BETUNIT),(DISPLAY(K,9),K=1,7)
+	IND=10
+	IF(FIXED.NE.0) THEN
+	  WRITE(5,910) CMONY(SLIMIT,11,VALUNIT),(DISPLAY(K,IND),K=1,7)
+	  IND=IND+1
+	  IF(BOX.NE.0) THEN
+	    WRITE(5,911) CMONY(BLIMIT,11,VALUNIT),(DISPLAY(K,IND),K=1,7)
+	    IND=IND+1
+	  ENDIF
+	  IF(PAIR.NE.0) THEN
+	    WRITE(5,912) CMONY(PLIMIT,11,VALUNIT),(DISPLAY(K,IND),K=1,7)
+	    IND=IND+1
+	  ENDIF
+	ELSE
+	  WRITE(5,913) DISPER(SPER),(DISPLAY(K,IND),K=1,7)
+	  IND=IND+1
+	ENDIF
+	DO 20 I=IND,NUMPOL
+	WRITE(5,914) (DISPLAY(K,I),K=1,7)
+20	CONTINUE
+C
+C
+	TYPE*,'    '
+	CALL WIMG(5,'Are these values correct [Y/N] ')
+	CALL YESNO(FLAG)
+	IF(FLAG.NE.1) GOTO 10
+C
+C
+500	CONTINUE
+	CALL CLRSCR(5)
+	CALL INPNUM(
+     *	 'Enter first draw for this game description ',
+     *	 DRAW,1,10000,EXT)
+	IF(EXT.LT.0) GOTO 1000
+C
+C UPDATE NUMBERS GAME FILE
+C
+	WRITE(5,917) FILE
+	CALL OPENW(2,FILE,4,0,0,ST)
+	CALL IOINIT(FDB,2,DNBSEC*256)
+	IF(ST.NE.0) CALL FILERR(FILE,1,ST,0)
+C
+C
+510	CONTINUE
+	CALL READW(FDB,DRAW,DNBREC,ST)
+	IF(ST.EQ.144) THEN
+	  TYPE*,'Last draw initialized - ',DRAW-1
+	  CALL CLOSEFIL(FDB)
+	  CALL XWAIT(2,2,ST)
+	  RETURN
+	ENDIF
+	IF(ST.NE.0) CALL FILERR(FILE,2,ST,DRAW)
+C
+C
+	IF(DNBSTS.GT.GAMOPN) THEN
+	  TYPE*,'Game already closed for draw ',DRAW
+	  CALL GPAUSE
+	  CALL CLOSEFIL(FDB)
+	  GOTO 500
+	ENDIF
+C
+	DNBTIM=TIME
+	DNBTYP=NTYP
+	DNBOPT=BETOPT
+	DNBMLT=MULTI
+	DNBMAX=MBET
+	DNBPRC=PRICE
+	DNBPOL=NUMPOL
+	IF(FIXED.NE.0) THEN
+	  DNBLIM(LIMSTR)=SLIMIT
+	  DNBLIM(LIMBOX)=BLIMIT
+	  DNBLIM(LIM2ST)=PLIMIT
+	  CALL FASTMOV(PRZTAB,DNBPRZ,NUMPOL)
+	ELSE
+	  DNBPER=SPER
+	  CALL FASTSET(-1,DNBPRZ,NUMPOL)
+	ENDIF
+C
+C
+	CALL WRITEW(FDB,DRAW,DNBREC,ST)
+	IF(ST.EQ.144) THEN
+	  TYPE*,'Last draw initialized ',DRAW
+	  GOTO 1000
+	ENDIF
+	IF(ST.NE.0) CALL FILERR(FILE,3,ST,DRAW)
+	DRAW=DRAW+1
+	GOTO 510
+C
+C
+1000	CONTINUE
+	CALL CLRSCR(5)
+	RETURN
+C
+C
+800   FORMAT(' Are you sure you want to set ',4A4,' parameters (Y/N)')
+901	FORMAT(1X,'Game type........ ',3X,A7,5X,7A4)
+902	FORMAT(1X,'Pair wagering.... ',6X,A4,5X,7A4)
+903	FORMAT(1X,'Box wagering..... ',6X,A4,5X,7A4)
+904	FORMAT(1X,'Combo wagering... ',6X,A4,5X,7A4)
+905	FORMAT(1X,'Wheel wagering... ',6X,A4,5X,7A4)
+906	FORMAT(1X,'Multi-draw....... ',6X,A4,5X,7A4)
+907	FORMAT(1X,'Max bets/tkt..... ',I10,5X,7A4)
+908	FORMAT(1X,'Pool close time.. ',2X,A8,5X,7A4)
+909	FORMAT(1X,'Base bet price... ',A10,5X,7A4)
+910	FORMAT(1X,'Straight limit... ',A11,4X,7A4)
+911	FORMAT(1X,'Box limit........ ',A11,4X,7A4)
+912	FORMAT(1X,'Pair limit....... ',A11,4X,7A4)
+913	FORMAT(1X,'Pool percentage.. ',F10.2,5X,7A4)
+914	FORMAT(1X,'                  ',10X,5X,7A4)
+917	FORMAT(' Updating ',5A4,' with game parameters')
+918	FORMAT(1X,4A4,' game parameter entry')
+	END

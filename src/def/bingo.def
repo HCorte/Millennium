@@ -1,0 +1,36 @@
+C BINGO.DEF
+C
+C
+C       Rev 1.0         1994.06.16      HHe     Initial version
+C       Rev 2.0         1995.06.16      HHe     3 rows from a seed added
+C
+C
+C       ================================================================
+
+C        INTEGER*4       BINGO_COLUMNS, BINGO_ROWS
+C        INTEGER*4       BINGO_COL_NUMBERS, BINGO_NUMBERS
+C        INTEGER*4       BINGO_BOARDS
+C        LOGICAL         BINGO_UNI
+
+C        PARAMETER       ( BINGO_COLUMNS         =  5 )
+C        PARAMETER       ( BINGO_ROWS            =  5 )
+C        PARAMETER       ( BINGO_COL_NUMBERS     = 15 )
+C        PARAMETER       ( BINGO_NUMBERS         = 75 )
+C        PARAMETER       ( BINGO_BOARDS          = 3 )
+C        PARAMETER       ( BINGO_UNI             = .TRUE. )
+
+ 
+C        INTEGER*4       B_COL_ADDRS, B_SEED_DIV
+        INTEGER*4       B_COL_ADDRS
+        PARAMETER       ( B_COL_ADDRS   = 3003 )
+C        PARAMETER       ( B_SEED_DIV    = 4096 )
+
+        COMMON          / BINGO / B_TAB, B_PAR, B_NTAB
+C        INTEGER*4       B_TAB( BINGO_COL_NUMBERS, BINGO_COLUMNS )
+C        INTEGER*4       B_PAR( BINGO_COLUMNS ) / 43, 47, 53, 59, 61 /
+C        INTEGER*4       B_NTAB( 0:B_COL_ADDRS, BINGO_COL_NUMBERS )
+
+        INTEGER*4       B_TAB( BGONCL, BGOCOL )
+        INTEGER*4       B_PAR( BGOCOL ) / 43, 47, 53, 59, 61 /
+        INTEGER*4       B_NTAB( 0:B_COL_ADDRS, BGONCL )
+

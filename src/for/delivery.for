@@ -1,0 +1,594 @@
+C DELIVERY
+C
+C $Log::   GXAFIP:[GOLS]DELIVERY.FOV                                   $
+C  
+C     Rev 1.2   14 Feb 1997 19:49:32   WPW
+C  Changed the time stamp on LSR sign-on.
+C  
+C     Rev 1.1   11 Dec 1996 16:01:56   HXK
+C  Byte reversal problem with cecksum
+C  
+C     Rev 1.0   05 Dec 1996 20:44:18   HXK
+C  Initial revision.
+C  
+C     Rev 1.8   02 Feb 1995 11:57:50   JJOLY
+C  REMOVED INCORRECT SETTING OF IND
+C  
+C     Rev 1.7   27 Sep 1994 19:49:20   DJO
+C  Modified to properly decode the signon transactions.
+C  
+C     Rev 1.6   15 Sep 1994 10:35:38   DJO
+C  Modified to support Delivery/Order transactions.
+C  
+C     Rev 1.5   30 Jun 1994 17:42:12   MCM
+C  MODIFIED THE MESSAGE FORMATS TO INCLUDE THE GVT HEADER
+C  
+C     Rev 1.4   07 Jun 1994 16:21:16   MCM
+C  ADDED TIME AND SERIAL NUMBER TO SUPPLY ORDER AND DELIVERY
+C  
+C     Rev 1.3   10 May 1994 14:44:32   MCM
+C  MODIFIED FOR INTERNATIONAL DATE FORMAT
+C  
+C     Rev 1.2   20 Apr 1994 17:00:52   MCM
+C  MODIFIED TO SEND REPRESENTATIVE SIGNON TO THE GLITS SYSTEM
+C  
+C     Rev 1.1   25 Mar 1994 11:28:20   MCM
+C  CHANGED TO CONFORM TO THE UK MESSAGE FORMATS
+C  
+C     Rev 1.0   03 Jan 1994 15:23:04   JPJ
+C  Initial revision.
+C  
+C     Rev 1.3   08 Sep 1993 19:16:30   MP
+C  Added delivery status 'COMBINED' - password together with data (Z80)
+C  
+C     Rev 1.2   21 Aug 1993  8:43:12   MP
+C  Added quantities to the log record
+C  
+C     Rev 1.1   20 Aug 1993  8:01:10   MP
+C  Added second message to be written to GLITSMSG.FIL and console
+C  Fixed some bugs...
+C  
+C     Rev 1.0   18 Aug 1993 19:07:28   MP
+C  Initial revision.
+C  
+C
+C DESCRIPTION  :
+C    SUBROUTINE TO PROCESS AGENT DELIVERY TRANSACTIONS.
+C CALLING SEQNC:
+C    INPUT
+C         TRABUF       - INTERNAL TRANSACTION BUFFER
+C         MESTAB       - TERMINAL INPUT MESSAGE
+C         IN_OUT_LEN   - INPUT MESSAGE LENGTH
+C    OUTPUT
+C         MESTAB       - TERMINAL OUTPUT MESSAGE
+C         IN_OUT_LEN   - OUTPUT MESSAGE LENGTH
+C CAVEATES:
+C    1. Uses CSRPASS.FIL in running directory.
+C       The file should contain 5-digit CSR passwords as first characters of
+C       each line.
+C       If no file exists, the password is 2357.
+C    2. Uses GLITSMSG.FIL in running directory.
+C       The file may be empty or have messages from previous days.
+C       New messages are appended.
+C	If no file exists, logging is not done.
+C    3. CSRPASS.FIL AND GLITSMSG.FIL are opened and closed in the SPE_SERVICE
+C	routine. Local common GLITSMSG keeps file name, logical unit nr and
+C	GLITS_MSGS flag.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, West Greenwich, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C CONCURRENT PATCH HISTORY:
+C    V04 08/18/93 MP Created from SPE_SERVICE.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS/CHECK=NOOVERFLOW
+C
+	SUBROUTINE DELIVERY(TRABUF,MESTAB,IN_OUT_LEN)
+C
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+C
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:CHKSUMCM.DEF'
+C
+      	BYTE      MESTAB(*)
+      	INTEGER*2 IN_OUT_LEN
+C
+C DEFINE LOCAL VARIALBLES
+C
+        INTEGER*4  ITEM_MAX,CNT,DATA_LEN,OPTION
+        PARAMETER (ITEM_MAX=11)
+	INTEGER*4 TER, DELV_STAT, SERV_STAT, ERRCOD
+	INTEGER*4 IND, I, J, K, CHKDIG
+      	INTEGER*2 I2TEMP(2)
+	INTEGER*4 BIG4BUF(8)
+	BYTE	  BIG1BUF(32)
+	BYTE	  I1TEMP(4)
+	BYTE	  I1TEMP_1(4)
+	BYTE	  I1TEMP_2(4)
+	BYTE	  CBUF(16)
+	INTEGER*4 I4TEMP,I4TEMP_1,I4TEMP_2,TEMP, NUM_ITEMS
+        INTEGER*4 BUF(4)
+	EQUIVALENCE (TEMP,I1TEMP,I2TEMP,I4TEMP)
+	EQUIVALENCE (I4TEMP_1,I1TEMP_1)
+	EQUIVALENCE (I4TEMP_2,I1TEMP_2)
+	EQUIVALENCE (BUF,CBUF)
+	EQUIVALENCE (BIG4BUF,BIG1BUF)
+        INTEGER*4   TEMP1, TEMP2
+C
+	INTEGER*4 CHKLEN, OUTLEN, MYCHKSUM, OPTIONS
+C
+C
+D	TYPE '(1X,A,A, 12(1X,Z2.2))', IAM(),' Delivery TX: ', MESTAB
+C
+        TER=TRABUF(TTER)
+        TRABUF(TFIL)=LATE
+
+C
+C GET SEQUENCE NUMBER
+C
+        TEMP = ZEXT(MESTAB(1))
+        TRABUF(TTRN)=IAND(TEMP,15)
+C
+C GET CHECKSUM
+C
+        TEMP1 = ZEXT(MESTAB(3))
+        TEMP2 = ZEXT(MESTAB(4))
+        TRABUF(TCHK) = ISHFT(TEMP1,8) + TEMP2
+C
+C GET STATISTICS
+C
+        TRABUF(TTSTCS)=ZEXT(MESTAB(5))
+C
+C GET OPTION FLAGS
+C
+        TEMP1 = ZEXT(MESTAB(6))
+        TEMP2 = ZEXT(MESTAB(7))
+        OPTIONS = ISHFT(TEMP1,8) + TEMP2
+        IND=8
+C
+C CHECK FOR NODE NUMBER (NOT USED)
+C
+        IF(IAND(OPTIONS,'0001'X).NE.0) THEN
+           IND=IND+4
+        ENDIF
+C
+C CHECK FOR RETAILER NUMBER (NOT USED)
+C
+        IF(IAND(OPTIONS,'0002'X).NE.0) THEN
+           IND=IND+4
+        ENDIF
+C
+C CHECK FOR PASSWORD (NOT USED)
+C
+        IF(IAND(OPTIONS,'0004'X).NE.0) THEN
+           IND=IND+2
+        ENDIF
+C
+C CHECK FOR ORIGINATOR   (NOT USED)
+C
+        IF(IAND(OPTIONS,'0008'X).NE.0) THEN
+           IND=IND+2
+        ENDIF
+C
+C CHECK FOR LOCATION NUMBER (NOT USED)
+C
+        IF(IAND(OPTIONS,'0010'X).NE.0) THEN
+           IND=IND+4
+        ENDIF
+C
+C CHECK FOR USER ID (NOT USED)
+C
+        IF(IAND(OPTIONS,'0020'X).NE.0) THEN
+           IND=IND+4
+        ENDIF
+C
+C CHECK FOR OPERATOR ID (NOT USED)
+C
+        IF(IAND(OPTIONS,'0040'X).NE.0) THEN
+           IND=IND+1
+        ENDIF
+C
+C CHECK FOR PAYMENT TYPE (NOT USED HERE)
+C
+        IF(IAND(OPTIONS,'0080'X).NE.0) THEN
+           IND=IND+2
+        ENDIF
+C
+C CHECK FOR VALIDATION MODE (NOT USED HERE)
+C
+        IF(IAND(OPTIONS,'0100'X).NE.0) THEN
+           IND=IND+2
+        ENDIF
+C
+C CHECK FOR BANK (NOT USED HERE)
+C
+        IF(IAND(OPTIONS,'0200'X).NE.0) THEN
+           IND=IND+8
+        ENDIF
+C
+C GET STATUS
+C
+   	DELV_STAT=ZEXT(MESTAB(IND+0))
+      	TRABUF(TSNEW)=DELV_STAT                  !STATUS
+        IND=IND+1
+C
+      	IF(DELV_STAT.EQ.0) GOTO 1000		 !Representative signon
+   	IF(DELV_STAT.EQ.1) GOTO 2000		 !Supply order
+   	IF(DELV_STAT.EQ.2) GOTO 3000		 !Supply delivery
+   	IF(DELV_STAT.EQ.3) GOTO 4000		 !Supply return
+   	IF(DELV_STAT.EQ.4) GOTO 5000		 !Supply service
+C
+C code error
+C
+	TRABUF(TSTAT)=REJT
+	TRABUF(TERR) =SYNT			! Soft error
+	GOTO 7000
+C
+C PROCESS REPRESENTATIVE SIGNON
+C
+1000  	CONTINUE
+C
+C GET AGENT NUMBER
+C
+        TEMP = 0
+	I1TEMP(1) = MESTAB(IND+0)
+	I1TEMP(2) = MESTAB(IND+1)
+	I1TEMP(3) = MESTAB(IND+2)
+	I1TEMP(4) = MESTAB(IND+3)        
+        TRABUF(TSDT1)=TEMP
+        IND=IND+4
+C
+C       GET REPRESENTATIVE NUMBER
+C
+        TEMP = 0
+	I1TEMP(1) = MESTAB(IND+0)
+	I1TEMP(2) = MESTAB(IND+1)
+	I1TEMP(3) = MESTAB(IND+2)
+	I1TEMP(4) = MESTAB(IND+3)        
+        TRABUF(TSDT2)=TEMP
+        IND=IND+4
+C
+C       GET CSR pass
+C
+        TEMP = 0
+	I1TEMP(1) = MESTAB(IND+0)
+	I1TEMP(2) = MESTAB(IND+1)
+	TRABUF(TSDT3) = TEMP
+     	IND=IND+2
+C
+C       GET REPRESENTATIVE CLASS
+C
+      	TRABUF(TSDT4)=ZEXT(MESTAB(IND+0))
+        IND=IND+1
+C
+C UPDATE THE AGENT COMMONS WITH THE FMRAUDIT STUFF
+C
+	TRABUF(TSDT5)=AGTTAB(AGTFMRSCR,TRABUF(TTER))
+	AGTHTB(AGTFMR,TER)=TRABUF(TCDC)
+	AGTTAB(AGTFMRSCR,TER)=TRABUF(TSER)
+C
+C       VERIFY PASSWORD - NOT YET IMPLEMENTED IN UK
+C
+CCC	DO 1400 I=1, GLITS_CSR_MAX_PASS
+CCC	  IF(GLITS_CSR_PASS_TAB(I).EQ.TEMP) GOTO 1600
+CCC1400	\CONTINUE
+C
+C       Not found - reject
+C
+CCC	TRABUF(TSTAT)=REJT
+CCC	TRABUF(TERR)=INVL
+CCC	GOTO 7000
+C
+CCC1600  	CONTINUE
+	GOTO 7000
+C
+C       SUPPLY ORDER
+C
+2000    CONTINUE
+C
+C       GET NUMBER OF ITEMS
+C
+      	TRABUF(TSDT1)=ZEXT(MESTAB(IND+0))
+        NUM_ITEMS=TRABUF(TSDT1)
+        IND=IND+1
+C
+C       CHECK THE NUM_ITEMS FOR RANGE
+C
+        IF(NUM_ITEMS.GT.6.OR.NUM_ITEMS.LT.1) THEN
+	  TRABUF(TSTAT)=REJT
+	  TRABUF(TERR)=INVL
+          GOTO 7000
+        ENDIF
+C
+C GET INSTANT PRODUCT CODE (ITEM ID NUMBER)
+C
+        DO 2010 I=0,NUM_ITEMS-1
+C
+           TEMP1 = ZEXT(MESTAB(IND+0))
+           TEMP2 = ZEXT(MESTAB(IND+1))
+C           TRABUF(TSCDE1+I*ISLEN) = ISHFT(TEMP1,8)+TEMP2
+           IND=IND+2
+C
+           IND=IND+2	   	  !SKIP THE QUANTITY (IT'S ALWAYS 1)
+C
+C GET ORDERED GAME NUMBER
+C
+           TEMP1 = ZEXT(MESTAB(IND+0))
+           TEMP2 = ZEXT(MESTAB(IND+1))
+C           TRABUF(TSGAM1+I*ISLEN) = ISHFT(TEMP1,8) + TEMP2
+           IND=IND+2
+C
+2010    CONTINUE
+C
+        GOTO 7000
+C
+C       SUPPLY DELIVERY
+C
+3000    CONTINUE
+C
+C       GET REPRESENTATIVE NUMBER
+C
+        TEMP = 0
+	I1TEMP(1) = MESTAB(IND+0)
+	I1TEMP(2) = MESTAB(IND+1)
+	I1TEMP(3) = MESTAB(IND+2)
+	I1TEMP(4) = MESTAB(IND+3)        
+        TRABUF(TSOLD)=TEMP
+	IND=IND+4
+C
+C 	SKIP REPRESENTATIVE PASS NUMBER
+C
+	IND=IND+2
+C
+C       GET NUMBER OF ITEMS
+C
+      	NUM_ITEMS=ZEXT(MESTAB(IND+0))
+        IND=IND+1
+	IF(NUM_ITEMS.LT.1.OR.NUM_ITEMS.GT.6) THEN   !CHECK BOUNDS
+	  TRABUF(TSTAT)=REJT
+	  TRABUF(TERR)=INVL
+	  GOTO 7000
+	ENDIF
+C
+C       GET OPTION FLAG
+C
+      	OPTION=ZEXT(MESTAB(IND+0))
+        IND=IND+1
+	IF(OPTION.NE.1.AND.OPTION.NE.2) THEN  !CHECK BOUNDS
+	  TRABUF(TSTAT)=REJT
+	  TRABUF(TERR)=INVL
+	  GOTO 7000
+	ENDIF
+C
+C       LOOP THROUGH AND GET THE ITEM DETAIL INFORMATION
+C
+	IF(OPTION.EQ.1) THEN       !CHECK OPTION TYPE
+          K=0
+          J=0
+	  I1TEMP(1)=DELV_STAT
+	  I1TEMP(2)=OPTION
+	  I1TEMP(3)=NUM_ITEMS
+	  I1TEMP(4)=0
+	  TRABUF(TSNEW)=I4TEMP
+          I4TEMP_1=0
+          I4TEMP_2=0
+          DO 3010,I=1,NUM_ITEMS
+            K=K+1
+            I1TEMP_1(K) = MESTAB(IND+0)
+            I1TEMP_2(K) = MESTAB(IND+2)
+            IF(K.EQ.4) THEN
+             K=0
+             TRABUF(TSDT3+J)=I4TEMP_1
+             TRABUF(TSDT5+J)=I4TEMP_2
+             J=J+1
+             I4TEMP_1=0
+             I4TEMP_2=0
+            ENDIF
+            IND=IND+4
+3010      CONTINUE
+          TRABUF(TSDT3+J)=I4TEMP_1
+          TRABUF(TSDT5+J)=I4TEMP_2	   
+	ELSE
+	  DATA_LEN=ZEXT(MESTAB(IND+0))
+	  IND=IND+1
+	  IF(DATA_LEN.LT.1.OR.DATA_LEN.GT.9) THEN	!CHECK BOUNDS
+	    TRABUF(TSTAT)=REJT
+	    TRABUF(TERR)=INVL
+	    GOTO 7000
+	  ENDIF
+	  I1TEMP(1)=DELV_STAT
+	  I1TEMP(2)=OPTION
+	  I1TEMP(3)=NUM_ITEMS
+	  I1TEMP(4)=DATA_LEN
+	  TRABUF(TSNEW)=I4TEMP
+	  IF(NUM_ITEMS.GT.3) THEN	!MAX OF 3 ITEMS FOR TICKET STOCK MSGS
+	    TRABUF(TSTAT)=REJT
+	    TRABUF(TERR)=INVL
+	    GOTO 7000
+	  ENDIF
+	  J=0
+	  DO 3040 I=1,NUM_ITEMS*DATA_LEN
+	    BIG1BUF(I)=MESTAB(IND+I-1)
+3040	  CONTINUE
+	  IND=IND+NUM_ITEMS*DATA_LEN
+	  CNT=0
+	  DO 3050 I=TSDT1,TSDT7
+	    CNT=CNT+1
+	    TRABUF(I)=BIG4BUF(CNT)
+3050      CONTINUE
+	ENDIF	  
+C
+        GOTO 7000
+C
+C       SUPPLY RETURN
+C
+4000    CONTINUE
+C
+C       GET REPRESENTATIVE NUMBER
+C
+        TEMP = 0
+	I1TEMP(1) = MESTAB(IND+0)
+	I1TEMP(2) = MESTAB(IND+1)
+	I1TEMP(3) = MESTAB(IND+2)
+	I1TEMP(4) = MESTAB(IND+3)        
+        TRABUF(TSDT2)=TEMP
+        IND=IND+4
+C
+C       GET REPRESENTATIVE PASS CODE
+C
+	TEMP = 0
+	I1TEMP(1) = MESTAB(IND+0)
+	I1TEMP(2) = MESTAB(IND+1)
+	TRABUF(TSDT3) = TEMP
+        IND=IND+2
+C
+C       GET NUMBER OF ITEMS
+C
+      	TRABUF(TSDT4)=ZEXT(MESTAB(IND+0))
+        NUM_ITEMS=TRABUF(TSDT4)
+        IND=IND+1
+C
+C       GET OPTION FLAG
+C
+      	TRABUF(TSDT5)=ZEXT(MESTAB(IND+0))
+        IND=IND+1
+        GOTO 7000
+C
+C       SERVICE
+C
+5000    CONTINUE
+C
+C       GET REPRESENTATIVE NUMBER
+C
+        TEMP = 0
+	I1TEMP(1) = MESTAB(IND+0)
+	I1TEMP(2) = MESTAB(IND+1)
+	I1TEMP(3) = MESTAB(IND+2)
+	I1TEMP(4) = MESTAB(IND+3)        
+        TRABUF(TSDT2)=TEMP
+        IND=IND+4
+C
+C       GET REPRESENTATIVE PASS CODE
+C
+	TEMP = 0
+	I1TEMP(1) = MESTAB(IND+0)
+	I1TEMP(2) = MESTAB(IND+1)
+	TRABUF(TSDT3) = TEMP
+        IND=IND+2
+C
+C       GET SERVICE STATUS
+C
+      	SERV_STAT=ZEXT(MESTAB(IND+0))
+      	TRABUF(TSDT4)=SERV_STAT
+        IND=IND+1
+C
+C       GET SERVICE CODE
+C
+      	TRABUF(TSDT5)=ZEXT(MESTAB(IND+0))
+        IND=IND+1
+        GOTO 7000
+C
+C       Build simple response to terminal
+C
+7000	CONTINUE
+C
+C       TYPE AND SUBTYPE
+C
+        MESTAB(2) = 'C3'X
+C
+C       TIME
+C
+        IND=5
+        TEMP=TRABUF(TTIM)
+        MESTAB(IND+0) = I1TEMP(3)
+        MESTAB(IND+1) = I1TEMP(2)
+        MESTAB(IND+2) = I1TEMP(1)
+        IND=IND+3
+C
+C       JULIAN DATE
+C
+        TEMP=DAYJUL
+        MESTAB(IND+0) = I1TEMP(1)
+        MESTAB(IND+1) = I1TEMP(2)
+        IND=IND+2
+C
+C       SERIAL NUMBER AND CHECK DIGITS
+C
+        CALL OUTGEN(TRABUF(TCDC),TRABUF(TSER),TEMP,CHKDIG)
+        MESTAB(IND+0) = I1TEMP(1)
+        MESTAB(IND+1) = I1TEMP(2)
+        MESTAB(IND+2) = I1TEMP(3)
+        MESTAB(IND+3) = CHKDIG
+        IND=IND+4
+C
+C       INSTANT RESULT CODE ONE
+C
+        MESTAB(IND+0) = TRABUF(TERR)
+        IND=IND+1
+C
+C       INSTANT RESULT CODE TWO
+C
+        ERRCOD=0
+        IF(TRABUF(TERR).NE.NOER) THEN
+          ERRCOD = INVL
+        ELSE
+          ERRCOD = NUM_ITEMS
+        ENDIF
+        MESTAB(IND+0) = ERRCOD
+        IND=IND+1
+C
+C       PATH THROUGH ID
+C
+	MESTAB(IND)=DELV_STAT
+	IND = IND + 1
+C
+C       SET SERVICE STATUS
+C
+        IF(DELV_STAT.EQ.4) THEN
+	  MESTAB(IND)=SERV_STAT
+	  IND = IND + 1
+        ENDIF
+C
+C       CALCULATE CHECKSUM
+C
+	IN_OUT_LEN=IND-1
+	OUTLEN=IND-1
+	I4CCITT=TRABUF(TCHK)
+	MESTAB(3)=I1CCITT(2)
+	MESTAB(4)=I1CCITT(1)
+	CHKLEN=OUTLEN-1
+	CALL GETCCITT(MESTAB,1,CHKLEN,MYCHKSUM)
+	I4CCITT=MYCHKSUM
+	MESTAB(3)=I1CCITT(2)
+	MESTAB(4)=I1CCITT(1)
+C
+10000	CONTINUE
+C
+      	RETURN
+C
+C       FORMAT AREA
+C
+9210    FORMAT(A,' TER:',I,' Date:',I2.2,'/',I2.2,'/',I2.2,
+     *		' Time:',I2.2,':',I2.2,':',I2.2,' Delv:',A)
+9212   	FORMAT(A18,11(I5,' ',I3,' '))
+9220	FORMAT(1X, A)
+9230	FORMAT(A, A)
+      	END

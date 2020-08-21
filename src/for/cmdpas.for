@@ -1,0 +1,703 @@
+C CMDPAS.FOR
+C
+C V03 01-JAN-10 FJG sPassive
+C V02 15.MAR-10 RXK COMMAND 9 ADDED TO RELEASE EXPIRED RESERVATIONS
+C V01 15-DEC-00 CS  INITIAL RELEASE FOR PORTUGAL
+C
+C SUBROUTINE TO PROCESS PASSIVE LOTTERY COMMANDS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1992 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE CMDPAS(TRABUF,MESS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PASCOM.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+	INCLUDE 'INCLIB:STANDARD.DEF'
+        INCLUDE 'INCLIB:STOPCOM.DEF'
+
+	INTEGER*4 MESS(EDLEN)
+
+	! LOCAL VARIABLES
+	INTEGER*4 FDB(7),  DIV , CMDNUM, EMINUM
+	INTEGER*4 GIND, GNUM  , UNIT,   ST, NBR
+	INTEGER*4 EMIOFF,INDEMI
+        INTEGER*4 RTIME,N,D,T
+        INTEGER*4 TOTRES
+C
+C
+C FUNCTION
+C
+	INTEGER*4 PAS_ROUND_VALUE
+C
+C
+	LOGICAL*4 ON_MEMORY
+C
+C GET COMMAND NUMBER
+C
+	CMDNUM=TRABUF(TCMNUM)
+C
+C PROCESS COMMAND ACCORDING TO ITS NUMBER
+C
+	GOTO (10,20,30,40,50,60,70,80,90,100,110,120,130) CMDNUM
+C
+C INVALID COMMAND NUMBER
+C
+	GOTO 1000
+C
+C CHANGE STATUS
+C
+10	CONTINUE
+
+	GIND   = TRABUF(TCMDT1)
+	EMINUM = TRABUF(TCMDT2)
+C
+C GET DATA FROM COMMON OR DISK 
+C
+	ON_MEMORY = .FALSE.
+	DO INDEMI = 1, PAGEMI
+	    IF(EMINUM .EQ. PASEMIS(INDEMI,GIND)) THEN
+		ON_MEMORY = .TRUE.
+		EMIOFF = INDEMI
+	    ENDIF
+	ENDDO
+
+	IF (ON_MEMORY) THEN
+
+	  TRABUF(TCMOLD)      = PASSTS(EMIOFF,GIND)
+	  PASSTS(EMIOFF,GIND) = TRABUF(TCMNEW)
+
+	  IF(TRABUF(TCMNEW).EQ.GAMBFD) THEN
+	    PASCTM(EMIOFF,GIND) = TRABUF(TTIM)
+	    CALL BSET(PASTIM(EMIOFF,GIND),1)
+	  ENDIF
+          
+	  ! CHECK IF GSALES LOADERS SHOULD BE RUN, IF YES, SET GSALES_AUTO
+          IF(TRABUF(TCMNEW) .EQ. GFINAL) THEN
+  	    GNUM = GTNTAB(TPAS, GIND)
+            GSALES_AUTO(GNUM) = EMINUM
+            PASOPNVAL = 1
+            PASSUBSTS(EMIOFF,GIND) = pdrwval
+          ENDIF
+
+	ELSE
+
+	  ! GET AN AVAILABLE LUN
+	  CALL FIND_AVAILABLE_LUN(UNIT, ST)
+	  IF(ST.NE.0) THEN
+	    MESS(2)  = TECMD
+	    MESS(3)  = 33
+	    MESS(6)  = GIND
+	    MESS(10) = HANDLE_ERROR
+	    RETURN
+	  ENDIF
+
+	  ! OPEN GAME FILE
+	  GNUM = GTNTAB(TPAS, GIND)
+	  CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+
+	  IF(ST.NE.0) THEN
+	    MESS(2)  = TECMD
+	    MESS(3)  = 33
+	    MESS(6)  = GIND
+	    MESS(10) = OPEN_ERROR
+	    RETURN
+	  ENDIF
+	  
+	  ! READ GAME FILE
+	  CALL IOINIT(FDB,UNIT,DPASEC*256)
+	  CALL READW(FDB,(EMINUM - PAS_DRW_OFFSET),DPAREC,ST)
+	  IF(ST.NE.0) THEN
+	    MESS(2)   = TECMD
+	    MESS(3)   = 33
+	    MESS(6)   = GIND
+	    MESS(10)  = READ_ERROR
+	    CALL CLOSEFIL(FDB)
+	    RETURN
+	  ENDIF
+
+	  ! SET GAME NUMBER STATUS
+	  TRABUF(TCMOLD) = DPASTS
+	  DPASTS         = TRABUF(TCMNEW)
+
+	  ! CHECK IF GSALES LOADERS SHOULD BE RUN, IF YES, SET GSALES_AUTO
+          IF(TRABUF(TCMNEW) .EQ. GFINAL) THEN
+  	    GNUM = GTNTAB(TPAS, GIND)
+            GSALES_AUTO(GNUM) = EMINUM
+          ENDIF
+
+	  IF(TRABUF(TCMNEW).EQ.GAMBFD) THEN
+	    DPACTM = TRABUF(TTIM)
+	    CALL BSET(DPATIM,1)
+	  ENDIF
+
+	  ! WRITE NEW RECORD
+	  CALL WRITEW(FDB,(EMINUM - PAS_DRW_OFFSET), DPAREC, ST)
+	  IF(ST.NE.0) THEN
+	    MESS(2)   = TECMD
+	    MESS(3)   = 33
+	    MESS(6)   = GIND
+	    MESS(10)  = WRITE_ERROR
+	    CALL CLOSEFIL(FDB)
+	    RETURN
+	  ENDIF
+
+	  CALL CLOSEFIL(FDB)
+
+	ENDIF				! TEST IF IT IS A POSTPONED EMISSION
+
+	MESS(2)  = TECMD
+	MESS(3)  = 3
+	MESS(6)  = GIND
+	MESS(9)  = TRABUF(TCMOLD)
+	MESS(10) = TRABUF(TCMNEW)
+	RETURN
+C
+C CHANGE END EMISSION DATE
+C
+20	CONTINUE
+	GIND = TRABUF(TCMDT1)
+
+	TRABUF(TCMOLD)      = PASESD(CURDRW,GIND)
+	PASESD(CURDRW,GIND) = TRABUF(TCMNEW)
+
+	MESS(2)  = TECMD
+	MESS(3)  = 3
+	MESS(6)  = GIND
+	MESS(9)  = TRABUF(TCMOLD)
+	MESS(10) = TRABUF(TCMNEW)
+	RETURN
+C
+C CHANGE CLOSE TIME
+C
+30	CONTINUE
+	GIND = TRABUF(TCMDT1)
+
+	TRABUF(TCMOLD)      = PASTIM(CURDRW,GIND)
+	PASTIM(CURDRW,GIND) = TRABUF(TCMNEW)
+
+	MESS(2)  = TECMD
+	MESS(3)  = 3
+	MESS(6)  = GIND
+	MESS(9)  = TRABUF(TCMOLD)
+	MESS(10) = TRABUF(TCMNEW)
+	RETURN
+C
+C SET WINNING NUMBERS
+C
+40	CONTINUE
+
+	NBR	 = TRABUF(TCMDT1)	! WINNER #
+	GIND	 = TRABUF(TCMDT2)	! GAME INDEX #
+	DIV      = TRABUF(TCMDT3)	! DIVISION #
+	EMINUM	 = TRABUF(TCMDT4)	! EMISSION #
+C
+C GET DATA FROM COMMON OR DISK 
+C
+	ON_MEMORY = .FALSE.
+	DO INDEMI = 1, PAGEMI
+	    IF(EMINUM .EQ. PASEMIS(INDEMI,GIND)) THEN
+		ON_MEMORY = .TRUE.
+		EMIOFF = INDEMI
+	    ENDIF
+	ENDDO
+
+	IF (ON_MEMORY) THEN
+
+	  TRABUF(TCMOLD)              = PASWIN(NBR,DIV,EMIOFF,GIND)
+	  PASWIN(NBR,DIV,EMIOFF,GIND) = TRABUF(TCMNEW)
+
+	ELSE
+
+	  ! GET AN AVAILABLE LUN
+	  CALL FIND_AVAILABLE_LUN(UNIT, ST)
+	  IF(ST.NE.0) THEN
+	    MESS(2)  = TECMD
+	    MESS(3)  = 33
+	    MESS(6)  = GIND
+	    MESS(10) = HANDLE_ERROR
+	    RETURN
+	  ENDIF
+
+	  ! OPEN GAME FILE
+	  GNUM = GTNTAB(TPAS, GIND)
+	  CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+
+	  IF(ST.NE.0) THEN
+	    MESS(2)  = TECMD
+	    MESS(3)  = 33
+	    MESS(6)  = GIND
+	    MESS(10) = OPEN_ERROR
+	    RETURN
+	  ENDIF
+	  
+	  ! READ GAME FILE
+	  CALL IOINIT(FDB,UNIT,DPASEC*256)
+	  CALL READW(FDB,(EMINUM - PAS_DRW_OFFSET),DPAREC,ST)
+	  IF(ST.NE.0) THEN
+	    MESS(2)  = TECMD
+	    MESS(3)  = 33
+	    MESS(6)  = GIND
+	    MESS(10) = READ_ERROR
+	    CALL CLOSEFIL(FDB)
+	    RETURN
+	  ENDIF
+
+	  ! SET DIVISION WINNING NUMBER
+	  TRABUF(TCMOLD)  = DPAWIN(NBR,DIV)
+	  DPAWIN(NBR,DIV) = TRABUF(TCMNEW)
+
+	  ! WRITE NEW RECORD
+	  CALL WRITEW(FDB,(EMINUM - PAS_DRW_OFFSET), DPAREC, ST)
+	  IF(ST.NE.0) THEN
+	    MESS(2)  = TECMD
+	    MESS(3)  = 33
+	    MESS(6)  = GIND
+	    MESS(10) = WRITE_ERROR
+	    CALL CLOSEFIL(FDB)
+	    RETURN
+	  ENDIF
+
+	  CALL CLOSEFIL(FDB)
+
+	ENDIF				! TEST IF IT IS A POSTPONED EMISSION
+
+	MESS(2)  = TECMD
+	MESS(3)  = 3
+	MESS(6)  = GIND
+	MESS(9)  = TRABUF(TCMOLD)
+	MESS(10) = TRABUF(TCMNEW)
+	RETURN
+C
+C SET WINNING SERIE
+C
+50	CONTINUE
+	GIND   = TRABUF(TCMDT1)
+	EMINUM = TRABUF(TCMDT2)
+C
+C GET DATA FROM COMMON OR DISK 
+C
+        ON_MEMORY = .FALSE.
+        DO INDEMI = 1, PAGEMI
+            IF(EMINUM .EQ. PASEMIS(INDEMI,GIND)) THEN
+                ON_MEMORY = .TRUE.
+                EMIOFF = INDEMI
+            ENDIF
+        ENDDO
+
+        IF (ON_MEMORY) THEN
+
+          TRABUF(TCMOLD)       = PASWSER(EMIOFF,GIND)
+          PASWSER(EMIOFF,GIND) = TRABUF(TCMNEW)
+
+        ELSE
+
+          ! GET AN AVAILABLE LUN
+          CALL FIND_AVAILABLE_LUN(UNIT, ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = HANDLE_ERROR
+            RETURN
+          ENDIF
+
+          ! OPEN GAME FILE
+          GNUM = GTNTAB(TPAS, GIND)
+          CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = OPEN_ERROR
+            RETURN
+          ENDIF
+          
+          ! READ GAME FILE
+          CALL IOINIT(FDB,UNIT,DPASEC*256)
+          CALL READW(FDB,(EMINUM - PAS_DRW_OFFSET),DPAREC,ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = READ_ERROR
+            CALL CLOSEFIL(FDB)
+            RETURN
+          ENDIF
+
+          ! SET DIVISION WINNING NUMBER
+          TRABUF(TCMOLD)  = DPAWSER
+          DPAWSER         = TRABUF(TCMNEW)
+
+          ! WRITE NEW RECORD
+          CALL WRITEW(FDB,(EMINUM - PAS_DRW_OFFSET), DPAREC, ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = WRITE_ERROR
+            CALL CLOSEFIL(FDB)
+            RETURN
+          ENDIF
+
+          CALL CLOSEFIL(FDB)
+
+        ENDIF                           ! TEST IF IT IS A POSTPONED EMISSION
+
+	MESS(2)  = TECMD
+	MESS(3)  = 3
+	MESS(6)  = GIND
+	MESS(9)  = TRABUF(TCMOLD)
+	MESS(10) = TRABUF(TCMNEW)
+
+	RETURN
+C
+C CHANGE PURGE DATE
+C
+60	CONTINUE
+	GIND   = TRABUF(TCMDT1)
+	EMINUM = TRABUF(TCMDT2)
+C
+C GET DATA FROM COMMON OR DISK 
+C
+	ON_MEMORY = .FALSE.
+	DO INDEMI = 1, PAGEMI
+	    IF(EMINUM .EQ. PASEMIS(INDEMI,GIND)) THEN
+		ON_MEMORY = .TRUE.
+		EMIOFF = INDEMI
+	    ENDIF
+	ENDDO
+
+	IF (ON_MEMORY) THEN
+
+	  TRABUF(TCMOLD)         = PASPRGCDC(EMIOFF,GIND)
+	  PASPRGCDC(EMIOFF,GIND) = TRABUF(TCMNEW)
+
+	ELSE
+
+	  ! GET AN AVAILABLE LUN
+	  CALL FIND_AVAILABLE_LUN(UNIT, ST)
+	  IF(ST.NE.0) THEN
+	    MESS(2)   = TECMD
+	    MESS(3)   = 33
+	    MESS(6)   = GIND
+	    MESS(10)  = HANDLE_ERROR
+	    RETURN
+	  ENDIF
+
+	  ! OPEN GAME FILE
+	  GNUM = GTNTAB(TPAS, GIND)
+	  CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+
+	  IF(ST.NE.0) THEN
+	    MESS(2)   = TECMD
+	    MESS(3)   = 33
+	    MESS(6)   = GIND
+	    MESS(10)  = OPEN_ERROR
+	    RETURN
+	  ENDIF
+	  
+	  ! READ GAME FILE
+	  CALL IOINIT(FDB,UNIT,DPASEC*256)
+	  CALL READW(FDB,(EMINUM - PAS_DRW_OFFSET),DPAREC,ST)
+	  IF(ST.NE.0) THEN
+	    MESS(2)   = TECMD
+	    MESS(3)   = 33
+	    MESS(6)   = GIND
+	    MESS(10)  = READ_ERROR
+	    CALL CLOSEFIL(FDB)
+	    RETURN
+	  ENDIF
+
+	  ! SET DIVISION WINNING NUMBER
+	  TRABUF(TCMOLD) = DPAPRGCDC
+	  DPAPRGCDC      = TRABUF(TCMNEW)
+
+	  ! WRITE NEW RECORD
+	  CALL WRITEW(FDB,(EMINUM - PAS_DRW_OFFSET), DPAREC, ST)
+	  IF(ST.NE.0) THEN
+	    MESS(2)   = TECMD
+	    MESS(3)   = 33
+	    MESS(6)   = GIND
+	    MESS(10)  = WRITE_ERROR
+	    CALL CLOSEFIL(FDB)
+	    RETURN
+	  ENDIF
+
+	  CALL CLOSEFIL(FDB)
+
+	ENDIF				! TEST IF IT IS A POSTPONED EMISSION
+
+	MESS(2)   = TECMD
+	MESS(3)   = 3
+	MESS(6)   = GIND
+	MESS(9)   = TRABUF(TCMOLD)
+	MESS(10)  = TRABUF(TCMNEW)
+	RETURN
+C
+C SET PRIZE VALUE IF ESPECIAL
+C
+70	CONTINUE
+        GIND   = TRABUF(TCMDT1)
+        EMINUM = TRABUF(TCMDT2)
+C
+C GET DATA FROM COMMON OR DISK 
+C
+        ON_MEMORY = .FALSE.
+        DO INDEMI = 1, PAGEMI
+            IF(EMINUM .EQ. PASEMIS(INDEMI,GIND)) THEN
+                ON_MEMORY = .TRUE.
+                EMIOFF = INDEMI
+            ENDIF
+        ENDDO
+
+        IF (ON_MEMORY) THEN
+
+          TRABUF(TCMOLD)        = PAS_ROUND_VALUE(PASSHV(1,EMIOFF,GIND))
+C**       PASSHV(1,EMIOFF,GIND) = TRABUF(TCMNEW) + PASSHV(1,EMIOFF,GIND)
+          PASSHV(1,EMIOFF,GIND) = PASEXSHV(1,EMIOFF,GIND) + PASSHV(1,EMIOFF,GIND)
+
+	  PASEXSHV(1,EMIOFF,GIND) = 0
+	  PASEXSHR(1,EMIOFF,GIND) = 0
+        ELSE
+
+          ! GET AN AVAILABLE LUN
+          CALL FIND_AVAILABLE_LUN(UNIT, ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = HANDLE_ERROR
+            RETURN
+          ENDIF
+
+          ! OPEN GAME FILE
+          GNUM = GTNTAB(TPAS, GIND)
+          CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = OPEN_ERROR
+            RETURN
+          ENDIF
+          
+          ! READ GAME FILE
+          CALL IOINIT(FDB,UNIT,DPASEC*256)
+          CALL READW(FDB,(EMINUM - PAS_DRW_OFFSET),DPAREC,ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = READ_ERROR
+            CALL CLOSEFIL(FDB)
+            RETURN
+          ENDIF
+
+          ! SET PRIZE VALUE 
+          TRABUF(TCMOLD)  = PAS_ROUND_VALUE(DPASHV(1))
+          DPASHV(1)       = DPAEXSHV(1) + DPASHV(1)
+
+	  DPAEXSHV(1) = 0
+	  DPAEXSHR(1) = 0
+
+          ! WRITE NEW RECORD
+          CALL WRITEW(FDB,(EMINUM - PAS_DRW_OFFSET), DPAREC, ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = WRITE_ERROR
+            CALL CLOSEFIL(FDB)
+            RETURN
+          ENDIF
+
+          CALL CLOSEFIL(FDB)
+
+        ENDIF                           ! TEST IF IT IS A POSTPONED EMISSION
+
+	MESS(2)  = TECMD
+	MESS(3)  = 3
+	MESS(6)  = GIND
+	MESS(9)  = TRABUF(TCMOLD)
+	MESS(10) = TRABUF(TCMNEW)
+
+
+	RETURN
+C
+C UPDATE TOPAYAMT (TOTAL OF PRIZES (UNCSH+VPRPAY))
+C
+80	CONTINUE
+        GIND   = TRABUF(TCMDT1)
+        EMINUM = TRABUF(TCMDT2)
+C
+C GET DATA FROM COMMON OR DISK 
+C
+        ON_MEMORY = .FALSE.
+        DO INDEMI = 1, PAGEMI
+            IF(EMINUM .EQ. PASEMIS(INDEMI,GIND)) THEN
+                ON_MEMORY = .TRUE.
+                EMIOFF = INDEMI
+            ENDIF
+        ENDDO
+
+        IF (ON_MEMORY) THEN
+
+          TRABUF(TCMOLD)           = PASTOPAYAMT(EMIOFF,GIND)
+	  PASTOPAYAMT(EMIOFF,GIND) = TRABUF(TCMNEW)
+
+        ELSE
+
+          ! GET AN AVAILABLE LUN
+          CALL FIND_AVAILABLE_LUN(UNIT, ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = HANDLE_ERROR
+            RETURN
+          ENDIF
+
+          ! OPEN GAME FILE
+          GNUM = GTNTAB(TPAS, GIND)
+          CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = OPEN_ERROR
+            RETURN
+          ENDIF
+          
+          ! READ GAME FILE
+          CALL IOINIT(FDB,UNIT,DPASEC*256)
+          CALL READW(FDB,(EMINUM - PAS_DRW_OFFSET),DPAREC,ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = READ_ERROR
+            CALL CLOSEFIL(FDB)
+            RETURN
+          ENDIF
+
+          ! SET AMT FOR PRIZES THAT CAN BE PAID
+          TRABUF(TCMOLD) = DPATOPAYAMT
+          DPATOPAYAMT    = TRABUF(TCMNEW)
+
+          ! WRITE NEW RECORD
+          CALL WRITEW(FDB,(EMINUM - PAS_DRW_OFFSET), DPAREC, ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = WRITE_ERROR
+            CALL CLOSEFIL(FDB)
+            RETURN
+          ENDIF
+
+          CALL CLOSEFIL(FDB)
+
+        ENDIF                           ! TEST IF IT IS A POSTPONED EMISSION
+
+	MESS(2)  = TECMD
+	MESS(3)  = 3
+	MESS(6)  = GIND
+	MESS(9)  = TRABUF(TCMOLD)
+	MESS(10) = TRABUF(TCMNEW)
+
+	RETURN
+C
+C RELEASE EXPIRED RESERVATIONS
+C
+90	CONTINUE
+        RTIME = TRABUF(TCMNEW)
+        
+        TOTRES = 0
+        IF(P(PMAXRTM).GT.0) THEN        
+           T = P(PMAXRTM)
+           DO D=1,PMAXSAL
+              DO N=1,PMAXNUMCLA
+                 IF(PASNUMCLA(N,D).RESTIM.GT.0) THEN 
+                    IF(RTIME - PASNUMCLA(N,D).RESTIM .GT. T) THEN
+                       PASNUMCLA(N,D).RESTER = 0
+                       PASNUMCLA(N,D).RESTIM = 0
+                       TOTRES = TOTRES + 1
+                    ENDIF 
+                 ENDIF 
+              ENDDO
+              DO N=1,PMAXNUMPOP
+                 IF(PASNUMPOP(N,D).RESTIM .GT.0) THEN 
+                    IF(RTIME - PASNUMPOP(N,D).RESTIM .GT. T) THEN
+                       PASNUMPOP(N,D).RESTER = 0
+                       PASNUMPOP(N,D).RESTIM = 0
+                       TOTRES = TOTRES + 1
+                    ENDIF
+                 ENDIF 
+              ENDDO
+           ENDDO
+        ENDIF
+
+        TRABUF(TCMOLD) = TOTRES        
+	MESS(2)  = 0   !no messages
+
+	RETURN
+C
+C FREE FREE FREE 
+C
+100	CONTINUE
+	RETURN
+
+C
+C FREE FREE
+C
+110	CONTINUE
+	RETURN
+C
+C FREE FREE
+C
+120	CONTINUE
+	RETURN
+C
+C FREE FREE FREE
+C
+130	CONTINUE
+	RETURN
+C
+C PUT NEXT PASSIVE COMMAND HERE
+C
+140	CONTINUE
+	RETURN
+C
+C INVALID COMMAND NUMBER
+C
+1000	CONTINUE
+	TRABUF(TSTAT) = REJT
+	TRABUF(TERR)  = INVL
+	MESS(2)       = TECMD
+	MESS(3)       = 1
+	MESS(4)       = TRABUF(TCMTYP)
+	MESS(5)       = TRABUF(TCMNUM)
+	RETURN
+	END

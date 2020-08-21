@@ -1,0 +1,24 @@
+$! GXSRC:CHECKLIST.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]CHECKLIST.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:36:22   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 12:48:02   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:37:12   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=GXUTL:CHECKLIST.EXE -
+OBJLIB:CHECKLIST,-
+SCANLIST,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE,-
+TSKLIB:GXSIMCOM.ESH/SHAREABLE,-
+TSKLIB:GXX2XCOM.ESH/SHAREABLE

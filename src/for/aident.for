@@ -1,0 +1,214 @@
+C
+C SUBROUTINE AIDENT
+C
+C V05 15-MAR-2011 GPW  NUMAGT=12288
+C V04 06-FEB-2001 ANG  CHANGE TO BE COMPLYANT WITH SCML (PORTUGAL)
+C V03 22-SEP-2000 UXN  ONLINE AGENT UPDATE.
+C V02 10-JUN-1993 HXN  Move HASF.DEF, which contains AGTINF.DEF, 
+C                      before RECAGT.DEF.
+C V01 01-MAR-1993 EBD  DAS update 3/1/93
+C                      Changing format of ASF file
+C AIDENT - AGENT ID UPDATE SUBROUTINE FOR HASF.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE AIDENT(FDB,MODE)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'
+	INCLUDE 'INCLIB:HASF.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:RECAGT.DEF'
+	INCLUDE 'INCLIB:X2XPRM.DEF'
+C
+	INTEGER*4 FDB(7), DROP, COM_TYP, ANUM, J, K, IND2, IND1, I, END
+	INTEGER*4 BEG, RST, ST, EXT, AGT, MODE
+	CHARACTER*68 LINE, I50LINE
+	CHARACTER CLINE(68),INLINE(68),CZERO
+	CHARACTER C2DROP*2
+	EQUIVALENCE(CLINE,LINE)
+	EQUIVALENCE(I50LINE,INLINE)
+	LOGICAL*4 USE_LOOKUP
+	COMMON/HASF/ LOOKUP(NUMAGT),ASFREC,SCFREC,USE_LOOKUP
+	INTEGER*4 LOOKUP
+	DATA CZERO/Z0/
+	LOGICAL*4 ONLINE,UPDATE
+	INTEGER*4 TER,LEN
+	INTEGER*4 ITEM_CNT, OFF
+	BYTE      OUTMSG(ALENGTH*2)
+C
+C GET AGENT NUMBER
+C
+10	CONTINUE
+C
+	IF(USE_LOOKUP) THEN
+	   CALL INPNUM('Enter agent number (E - Exit) ',
+     *	               AGT,1,9999999,EXT)
+	   IF(EXT.LT.0) RETURN
+	   DO I=1,NUMAGT
+	      IF(AGT.EQ.LOOKUP(I)) THEN
+	         TER = I
+		 GOTO 11
+	      ENDIF
+	   ENDDO
+           TYPE*,IAM(),'Agent ',AGT,' does not exist!'
+	   GOTO 10
+	ELSE
+	   CALL INPNUM('Enter terminal number (E - Exit) ',
+     *	               TER,1,NUMAGT,EXT)
+	   IF(EXT.LT.0) RETURN
+	ENDIF
+C
+11 	CONTINUE
+	UPDATE = .FALSE.
+	ITEM_CNT = 0
+	OFF = 2                        ! OUTMSG(1) KEEPS # OF ITEMS
+	ONLINE = DAYSTS.EQ.DSOPEN
+C
+C READ AGENTS RECORD
+C
+	CALL CLRSCR(6)
+	RST=0
+	CALL READW(FDB,TER,ASFREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL CLRSCR(6)
+	  CALL FILERR(SCFSFN(1,ASF),2,ST,TER)
+	  GOTO 10
+	ENDIF
+C
+	IF(RST.NE.0) THEN
+	  CALL CLRSCR(6)
+	  WRITE(6,907) TER
+	  CALL XWAIT(2,2,ST)
+	  GOTO 10
+	ENDIF
+C
+C
+	WRITE(6,900) TER
+	WRITE(6,902)
+C
+C LOOP FOR ALL ID FIELDS
+C
+	   BEG=MODE*29+1
+	   END=BEG+28
+C
+	DO 100 I=BEG,END
+	  IND1=FLDBEG(I)
+	  IND2=FLDEND(I)
+	  IF(IND1.LE.0) GOTO 100
+	  WRITE(LINE,903)
+	  WRITE (I50LINE,903)
+	  WRITE(LINE,904) FLDNAM(I),(ASFBYT(K),K=IND1,IND2)
+	  DO 20 J=1,40
+	    IF(CLINE(J).EQ.CZERO) CLINE(J)=' '
+20	  CONTINUE
+	  CALL WIMG(6,LINE)
+	  READ(5,905) I50LINE
+	  IF(INLINE(1).EQ.' ') GOTO 100
+	  IF(INLINE(1).EQ.'+') THEN
+	    DO 30 J=IND1,IND2
+	      ASFBYT(J)=' '
+30	    CONTINUE
+	  ELSE
+	    K=1
+	    DO 40 J=IND1,IND2
+	      ASFBYT(J)=INLINE(K)
+	      K=K+1
+40	    CONTINUE
+	  ENDIF
+C
+	  UPDATE = .TRUE.
+C
+C If game is ON-LINE queue changes to SPESRV
+C
+	  IF(ONLINE) THEN
+	     ITEM_CNT = ITEM_CNT + 1
+	     LEN = FLDEND(I)-FLDBEG(I)+1
+	     OUTMSG(OFF) = I
+	     OFF = OFF + 1
+	     OUTMSG(OFF) = LEN
+	     OFF = OFF + 1	  
+	     CALL MOVBYT(ASFINF,FLDBEG(I), OUTMSG,OFF, LEN)
+	     OFF = OFF + LEN
+	  ENDIF
+C
+100	CONTINUE
+C
+C IF ID INFORMATION HAS BEEN UPDATED THEN REPLACE
+C AGENT NUMBER IN THE LOOKUP TABLE
+C
+	IF(MODE.EQ.0) THEN
+	  ANUM=0
+	  CALL ASCBIN(ASFINF,IDBEG(1),LAGNO,ANUM,ST)
+	  LOOKUP(TER)=ANUM
+	  IF(ST.NE.0) THEN
+	    CALL CLRSCR(6)
+	    WRITE(6,908) (ASFBYT(K),K=IDBEG(1),IDEND(1))
+	    CALL XWAIT(2,2,ST)
+	    CALL CLRSCR(6)
+	  ENDIF
+	ENDIF
+C
+C IF X.21 OR X.25 TERMINAL, ENSURE THAT THE DROP
+C DOES NOT EXCEED THE MAXIMUM RANGE.
+C
+        CALL ASCBIN(ASFINF,SSCLS,LSCLS,COM_TYP,ST)
+	IF(MODE.EQ.5 .AND. COM_TYP.NE.0) THEN
+    	  C2DROP=ASFBYT(SDROP)//ASFBYT(SDROP+1)
+          IF(C2DROP(1:1).EQ.'^') THEN
+            DROP=30+ICHAR(C2DROP(1:1))-63
+          ELSE IF(C2DROP(1:1).EQ.'%') THEN
+            DROP=94+ICHAR(C2DROP(1:1))-63
+          ELSE
+            DROP=ICHAR(C2DROP(1:1))-63
+          ENDIF
+	  IF(DROP.LE.0 .OR. DROP.GT.X2X_MAXTERMS) THEN
+	    WRITE(6,909) ASFBYT(SDROP),ASFBYT(SDROP+1),
+     *                   CHAR(7)
+	    CALL XWAIT(2,2,ST)
+	  ENDIF
+	ENDIF
+C
+C
+	IF(UPDATE.AND.ONLINE) THEN
+	     OUTMSG(1) = ITEM_CNT
+	     CALL QUEAGTINF(TER, OUTMSG, ST)
+	     IF(ST.NE.0) THEN
+	        TYPE*,IAM(),'Invalid status >', ST,' from QUEAGTINF()'
+		TYPE*,IAM(),'Data not updated...'
+		CALL XWAIT(2,2,ST)
+                GOTO 10
+	     ENDIF
+        ENDIF
+	IF(UPDATE.AND..NOT.ONLINE) THEN
+	   CALL WRITEW(FDB,TER,ASFREC,ST)
+	   IF(ST.NE.0) CALL FILERR(SCFSFN(1,ASF),3,ST,TER)
+	ENDIF
+	GOTO 10
+C
+C
+900	FORMAT(' Update for terminal - ',I5)
+902	FORMAT(' Hit + to clear fields',//)
+903	FORMAT(40(' '))
+904	FORMAT(A8,'<',55A1,T65)
+905	FORMAT(A50)
+907	FORMAT('   Terminal ',I5,' record locked, try again ')
+908	FORMAT(' Invalid agent number ',6A1,' lookup entry cleared  ')
+909	FORMAT(' Invalid drop address ',2A,' for X2X network ',A)
+	END

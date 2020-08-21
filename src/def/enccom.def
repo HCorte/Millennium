@@ -1,0 +1,51 @@
+C ENCCOM.DEF
+C
+C V03 13-MAR-2003 GPW DESENCR TAKEN FROM UK
+C V02 24-APR-2001 UXN SOFT DES ENCRYPTION added.
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C     ENCCOM.DEF
+C
+C     ENCRYPTION COMMON FOR DES SUBSYSTEM
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4 ENC_TYPE_ENCRYPT,ENC_TYPE_DECRYPT ! ENCRYPTION
+*                                       !OR DECRYPTION OPERATION
+        PARAMETER (ENC_TYPE_ENCRYPT=1)
+        PARAMETER (ENC_TYPE_DECRYPT=2)
+        INTEGER*4 ENCRYPTION_ON         !ENCRYPTION ON IN PROCOM BUF
+        PARAMETER (ENCRYPTION_ON='00000008'X)
+        INTEGER*4 ENCLEN_MIN            !MINIMUM LENGTH OF ENCRYPTED DATA
+           PARAMETER(ENCLEN_MIN=10)
+
+        BYTE DES_KEY_SCHEDULE(8,16,NUMAGT)      ! V02
+
+        INTEGER*4 KEYTAB(2,NUMAGT)              !TABLE WITH ASCII KEYS
+
+        INTEGER*4 SOFT_ENCQUE(NUMPRO+QHEDSZ)       !QUEUE FOR SOFT ENCRYPT
+C
+        INTEGER*4 ENCCOM_LAST                   ! V02
+
+        COMMON /ENCTAB/ KEYTAB,SOFT_ENCQUE,DES_KEY_SCHEDULE,
+     *         ENCCOM_LAST      ! KEEP THIS LAST
+C
+        INTEGER*4        FRST_ENCCOM(2)
+        EQUIVALENCE     (FRST_ENCCOM, KEYTAB)
+        INTEGER*4        LAST_ENCCOM
+        EQUIVALENCE     (LAST_ENCCOM, ENCCOM_LAST)
+C
+        VOLATILE /ENCTAB/
+C

@@ -1,0 +1,77 @@
+C STROCOM.DEF
+C 
+C V01 13-MAY-1999 UXN Initial release. 
+C
+C SUPER TRIPLE POOLS COMMON
+C
+C
+C     STROLAMT(NUMSTR)		               6   ;LOWEST COMBINATION AMOUNT
+C     STROFEL (NUMSTR)		               6   ;LINK TO FIRST COMBINATION
+C     STROLEL (NUMSTR)		               6   ;LINK TO LAST COMBINATION
+C     STROTNUM(NUMSTR)		               6   ;NUMBER OF ENTRIES IN TOP ARRAY
+C     STRODDS (2,STRGPOL,NUMSTR)		   69984   ;MAIN ODDS ARRAY
+C     STROFRE(1672)			    1672   ;FREE SPACE
+C					---------
+C				TOTAL      71680 I*4 = 35 * 2048 I*4
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C MAIN POOLS ARRAY PARAMETERS
+C
+	INTEGER*4 STRGPOL,STRGAMT,STRGLNK
+
+	PARAMETER (STRGPOL=MAXSTRRW*MAXSTRRW*MAXSTRRW)  !MAX NO.OF COMBINATIONS
+	PARAMETER (STRGLNK=1)		!LINKS OF COMBINATION
+	PARAMETER (STRGAMT=2)		!AMOUNT OF COMBINATION
+C
+	COMMON /STROCOM/
+     *		STROLAMT(NUMSTR),
+     *		STROFEL(NUMSTR),
+     *		STROLEL(NUMSTR),
+     *		STROTNUM(NUMSTR),
+     *		STRODDS(2,STRGPOL,NUMSTR),
+     *		STROFRE(1672)
+C
+	INTEGER*4 STROLAMT		!LOWEST COMBINATION AMOUNT
+	INTEGER*4 STROFEL		!LINK TO FIRST COMBINATION
+	INTEGER*4 STROLEL		!LINK TO LAST COMBINATION
+	INTEGER*4 STROTNUM		!NO. OF DIFFERENT COMBINATIONS PLAYED
+	INTEGER*4 STRODDS		!COMBINATION ODDS ARRAY
+C
+	INTEGER*4 STROFRE
+
+C  EQUIVALENCES AND OFFSETS FOR MAIN ODDS TABLE
+
+        INTEGER*2 STRGPEL, STRGNEL
+	PARAMETER(STRGPEL=1)		!LINK TO PREVIOUS ENTRY
+	PARAMETER(STRGNEL=2)		!LINK TO NEXT ENTRY
+
+        INTEGER*2   STRODDS2(4,STRGPOL,NUMSTR)
+        EQUIVALENCE (STRODDS,STRODDS2)
+C
+C EQUIVALENCE FOR CHECKPOINT
+C
+	INTEGER*4 STROBLK,STROCSB
+	PARAMETER(STROCSB = 35)
+	DIMENSION STROBLK(2048,STROCSB)
+	EQUIVALENCE(STROBLK(1,1),STROLAMT)
+C
+	VOLATILE /STROCOM/
+C
+        INTEGER*4        FRST_STROCOM(2)
+        EQUIVALENCE     (FRST_STROCOM, STROBLK(1,1))
+        INTEGER*4        LAST_STROCOM
+        EQUIVALENCE     (LAST_STROCOM, STROBLK(2048,STROCSB))
+

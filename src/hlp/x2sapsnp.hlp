@@ -1,0 +1,132 @@
+ X2SAPSNP.HLP             GTECH Distributed Network
+                       Services Access Points Snapshot       Page 1 of 6
+ 
+    This snapshot will list detail information on a specific Service
+    Access Point (Front End) configured in the X2X Distributed
+    Network.  This information consists of the following:
+ 
+    SAP #         - Service Access Point identification number.
+    Front end id  - Front End identification number.
+    Capacity      - Number of available network connections.
+    Seq recv      - Number of transport blocks received.
+    Seq xmit      - Number of transport blocks transmited.
+    Seq errs      - Number of transport blocks sent out of order.
+    SAP blk cnt   - Total number of transport blocks sent.
+    Format Time   - Last time (msecs from midnight) a block was formatted
+    Active Status - Status of Front End: not up, online, or idle.
+    Def status    - Default status.
+    Last active   - Last time traffic was received at backend for this SAP.
+    Output buf    - Current output buffer index. Will be -1 if no buffer.
+ 
+ 
+ 
+ X2SAPSNP.HLP             GTECH Distributed Network
+                       Services Access Points Snapshot       Page 2 of 6
+ 
+    Last buf indx - Highest index into current transport buffer.
+    Buf rec cnt   - Number of records in the transport buffer.
+    Meassages sent- Total number of messages sent to the Front End.
+    Sent to STN   - Total number of messages sent to a station through this SAP
+    Last serial   - Last gaming transaction serial number.
+ 
+    The local port definition area of the snapshot illustrates: the
+    connection of network ports to local ports, the local port state,
+    the the state of the ports on the Front End.
+ 
+    Selection options available:
+ 
+    XSAP - Use to view a specific SAP. At command line enter: XSAP #
+           Where # is the number of SAP to be viewed.
+ 
+ 
+ 
+ 
+ 
+ X2SAPSNP.HLP             GTECH Distributed Network
+                       Services Access Points Snapshot       Page 3 of 6
+ 
+    XNET - Use to view a specific network port. Top portion of screen
+           will display information on the corresponding SAP to the
+           network port specified. Bottom portion will display selected
+           network port. At command line enter: XNET #
+           Where # is the number of the network port to be viewed.
+ 
+    XLOC - Use to view a sepcific location port. Top portion of screen
+           will display information on the corresponding SAP to the
+           local port specified. Bottom portion will display selected
+           local port. At command line enter: XLOC #
+           Where # is the number of the local port to be viewed.
+ 
+    XMNT - Use to view a specific type of maintenance message. There
+           are four types of maintenance messages 0 to 3. For each
+           type different informations are displayed. At command line
+           enter XMNT # where # is the type of the message to display.
+ 
+ 
+ 
+ X2SAPSNP.HLP             GTECH Distributed Network
+                       Services Access Points Snapshot       Page 4 of 6
+ 
+    XIDX - Use to view a specific set of ports for maintenance type
+           message 1, 2 or 3. Data concerning the ten ports beginning
+           from XIDX port number will be displayed. At command line
+           enter XIDX # where # is the number of local port to start
+           with.
+ 
+     For XMNT = 0 above explained information is displayed.
+ 
+     For XMNT = 1 following data are displayed for each port:
+     FE Prt - line number
+     FE State - line status (idle, onlin, down)
+     #  SVC Connect - number of currently connected virtual circuits
+     # of Disconnect - number of disconnections (previously connected)
+     Data Packet Received - total number of data packets received
+     Data Packet Sent - total number of data packets sent
+     # SVC Available - number of not used logical circuits
+     # Err - total number of errors of all kinds
+     % Line Used - line utilization; % of time at least one VC is active
+ 
+ X2SAPSNP.HLP             GTECH Distributed Network
+                       Services Access Points Snapshot       Page 5 of 6
+ 
+ 
+     For XMNT = 2 following data are displayed for each port:
+     FE Prt - line number
+     FE State - line status (idle, onlin, down)
+     # CRC Errors - number of CRC errors (checksum)
+     # RNR Received - number of RNR (received not ready) received
+     # RNR Sent - number of RNR (received not ready) sent
+     Code 00 Disconn - number of disconnections ( DTE originated)
+     Code 05 Disconn - number of disconnections (network congestion)
+     Code 09 Disconn - number of disconnections (out of order)
+     Code Other Disconn - number of disconnections of other types
+ 
+     For XMNT = 3 following data are displayed for each port:
+     FE Prt - line number
+     FE State - line status (idle, onlin, down)
+     Max SVC Connect - running maximum of VC connected
+     SAMB/DISC Sent - SAMB/DISC sent
+     SAMB/DISC Received - SAMB/DISC received
+ 
+ X2SAPSNP.HLP             GTECH Distributed Network
+                       Services Access Points Snapshot       Page 6 of 6
+ 
+     Bandwth Used - bandwidth utilization
+     Responce Time - responce time in msec
+     Active Time - total time active in sec
+     Time Available - total time available
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

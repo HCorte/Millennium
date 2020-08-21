@@ -1,0 +1,45 @@
+C
+C SUBROUTINE WRITEW
+C $Log:   GXAFXT:[GOLS]WRITEW.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 16:04:36   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:08:54   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_diskio.for **
+C
+C
+C
+C
+C *** WRITEW       <<<WRITE and wait for completion>>>
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE WRITEW(FDB, BLOCK, BUFFER, STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE	    'INCLIB:SYSPARAM.DEF'
+	INCLUDE	    'INCLIB:SYSEXTRN.DEF'
+	INCLUDE	    'INCLIB:DISKIO.DEF'
+C
+	INTEGER*4   FDB(FDB_LENGTH)
+	INTEGER*4   BLOCK
+	INTEGER*4   BUFFER(*)
+	INTEGER*4   STATUS
+C
+	INTEGER*4   FOR$RAB
+	INTEGER*4   LUN
+	INTEGER*4   BEGBLK
+C
+C
+C
+	LUN   = FDB(FDB_LUN)
+	BEGBLK= (BLOCK-1)*FDB(FDB_BLKSZ) + 2
+C
+	CALL WRITEXX(%VAL(FOR$RAB(LUN)), FDB, BEGBLK, BUFFER, STATUS)
+C
+	RETURN
+	END

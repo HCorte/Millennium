@@ -1,0 +1,752 @@
+C
+C BNKSUBS.FOR                                                                    
+C
+C V18 09-OCT-2012 FRP Read civil year from the OP bank record
+C V17 31-MAR-2010 FRP Taken from INTERFACES_IO.FOR
+C V16 29-NOV-2010 FRP Lotto2 Changes
+C                 FJG Compilation error
+C V15 27-APR-2010 FRP ePassive
+C V14 06-APR-2009 FRP Modify for EM Joker
+C v13 21-NOV-2002 TRG FIX LINHA_DISTIBUICAO TO CORRECT OFFSET
+C V12 25-OCT-2002 TRG CONVERT 2->4 DIGITS YEAR IN AGTMIL
+C V11 11-MAY-2001 EPH INCLUDE READING OF LINHA_DISTRIBUICAO / CENTRAL_RECEPCAO / STATUS_TRANSPORTE FROM AGTMIL
+C V10 28-MAY-2001 EPH INCLUDE READING OF TIPCENREC FIELD IN OFFWAGFIN DETAIL RECORD
+C V09 27-MAY-2001 EPH READS ODJ USING SCML CONVENTION (IF GAME NUMBER GT 5 THEN IT IS ADDED OF 1)
+C V08 27-MAY-2001 EPH GENERATES ODJ USING SCML CONVENTION (IF GAME NUMBER GT 5 THEN IT IS SUBTRACTED FROM 1)
+C V07 27-MAY-2001 EPH USE ONLY 10 DIGTS OF THE RIGTH FOR THE ACCOUNT IN OCR LINE (WITHOUT DV)
+C V06 17-MAY-2001 EPH CHANGE OPEN_BNK TO FIXED SIZE FILE (80 BYTES)
+C V05 03-MAY-2001 EPH INCLUDED WORSAP FILE ROUTINES
+C V04 27-APR-2001 ANG INCLUDED OFFWAG AND OFFWAGFIN ROUTINES
+C V03 28-MAR-2001 EPH INCLUDE ODJ FILE MANIPULATING ROUTINES
+C V02 16-FEB-2001 EPH INCLUDE X2XADDRESS
+C V01 31-JAN-2001 EPH INITIAL VERSION FOR SCML
+C                                                                               
+C ROUTINES FOR OPENING, READING AND WRITING FROM/TO BANK INTERFACE FILES
+C                                                                               
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++            
+C This item is the property of GTECH Corporation, W.Greenwich, Rhode            
+C Island, and contains confidential and trade secret information. It            
+C may not be transferred from the custody or control of GTECH except            
+C as authorized in writing by an officer of GTECH. Neither this item            
+C nor the information it contains may be used, transferred,                     
+C reproduced, published, or disclosed, in whole or in part, and                 
+C directly or indirectly, except as expressly authorized by an                  
+C officer of GTECH, pursuant to written agreement.                              
+C                                                                               
+C Copyright 1993 GTECH Corporation. All rights reserved.                        
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++            
+C                                                                               
+C 	**************************************************
+     	SUBROUTINE OPEN_BNK (BANK, ORIGEN, ODJPS2, ST)
+C	**************************************************
+   	IMPLICIT NONE                
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF' 
+        INCLUDE 'INCLIB:BANK_REC.DEF'
+        INCLUDE 'INCLIB:INTERFACES_REC.DEF'
+
+	INTEGER*4    BANK       ! OPEN FILE FOR BANK (tttbbbbo.ASC, where bbbb = BANK/ o=ORIGEN / t=TIPO)
+		                ! BANK EQUALS TO "9999" MEANS ALL BANKS
+	CHARACTER*1  ORIGEN     ! 'E'=ENVIO (FROM SCML) / 'R'=RECEPCAO (FROM BANK)
+	CHARACTER*3  ODJPS2     ! 'ODJ' = PAYMENT ORDERS/ 'PS2' = INVOICE
+	INTEGER*4    ST
+
+	INTEGER*4    INDBK
+	INTEGER*4    BANKINTAB
+	CHARACTER*20 BANKFILE
+	INTEGER*4    SZ
+	INTEGER*4    OPENED_FILES
+	LOGICAL      OPENALL
+	CHARACTER*3  NEW_OLD
+
+	OPENED_FILES = 0
+	ST = 0
+
+	IF (BANK.EQ.0 .OR. (ORIGEN.NE.'E'.AND.ORIGEN.NE.'R')) THEN
+           ST = -10
+	   BNK_REC.ERRSTR = 'BANK or ORIGEN is invalid for BANK_OPEN'
+           RETURN
+        ENDIF
+	IF (ODJPS2.NE.'ODJ' .AND. ODJPS2.NE.'PSD'.AND. ODJPS2.NE.'PSC'.AND. ODJPS2.NE.'PSP') THEN
+           ST = -20
+	   BNK_REC.ERRSTR = 'ODJPS2 invalid for BANK_OPEN'
+           RETURN
+        ENDIF
+
+	IF (BANK.EQ.9999) THEN
+	   OPENALL = .TRUE.
+        ELSE
+           OPENALL = .FALSE.
+        ENDIF
+
+	IF (ORIGEN.EQ.'E') THEN
+	   NEW_OLD = 'NEW'
+        ELSE
+	   NEW_OLD = 'OLD'
+	ENDIF
+
+	CALL LOAD_BANK_TABLE (ST)
+	IF (ST.NE.0) THEN
+	   ST = -30
+	   BNK_REC.ERRSTR = 'Could not LOAD_BANK_TABLE for BANK_OPEN'
+	   RETURN
+        ENDIF
+
+	DO 800 INDBK = 1,MAXBANKS	
+
+	   BANKINTAB = CTOI(BANK_TAB(INDBK).BANK,SZ)
+
+	   IF (BNKCTRL_REC(INDBK).BANK.EQ.0 .AND. BANKINTAB.NE.0) THEN    
+C
+C	      CORRESPONDING FILE IS NOT OPENED AND BANK IN TABLE IS NOT EQUAL ZERO (EXISTS)
+C
+	      IF ( OPENALL .OR. BANKINTAB.EQ.BANK ) THEN
+	         
+	         WRITE(BANKFILE, FMT='(A5,A3,I4.4,A1,A4)') 'FILE:', ODJPS2, BANKINTAB, ORIGEN, '.ASC'
+
+                 OPEN (UNIT            = TMP2_LUN+INDBK,
+     *                 FILE            = BANKFILE,
+     *                 STATUS          = NEW_OLD,
+C     *                 RECORDTYPE      ='FIXED', 
+C     *                 RECL            = 80,
+     *                 CARRIAGECONTROL = 'LIST',
+     *                 IOSTAT          = ST)
+	         IF (ST.NE.0) THEN
+                    IF (ORIGEN.EQ.'R') THEN
+                       ST = 0
+		       GOTO 800    !JUST GO ON (PROBABLY FILE DOES NOT EXIST)
+		    ENDIF
+	            BNK_REC.ERRSTR = 'Error during OPEN on BANK_OPEN for '//BANKFILE
+                    RETURN
+                 ENDIF
+	
+		 OPENED_FILES = OPENED_FILES + 1
+		
+		 BNKCTRL_REC(INDBK).BANK       = BANKINTAB
+		 BNKCTRL_REC(INDBK).FILETYPE   = ORIGEN
+                 IF (ODJPS2(1:2).EQ.'PS') THEN
+		    BNKCTRL_REC(INDBK).ODJPS2     = 'PS2'
+		 ELSE
+		    BNKCTRL_REC(INDBK).ODJPS2     = ODJPS2
+		 ENDIF
+	         BNKCTRL_REC(INDBK).RECTYPE    = '  '
+	         BNKCTRL_REC(INDBK).RECNUM     = 0
+	         BNKCTRL_REC(INDBK).ACUM_VALUE = 0
+
+	         IF (ORIGEN.EQ.'R') THEN
+		    BNK_REC.TOT_BANKR = BNK_REC.TOT_BANKR + 1
+		    BNK_REC.BANKR (BNK_REC.TOT_BANKR) = BANKINTAB
+		 ELSE
+		    BNK_REC.TOT_BANKE = BNK_REC.TOT_BANKE + 1
+		    BNK_REC.BANKE (BNK_REC.TOT_BANKE) = BANKINTAB
+		 ENDIF
+
+	         IF (.NOT.OPENALL) THEN
+C		    WANT TO OPEN JUST THIS ONE
+	            EXIT
+                 ENDIF
+
+	      ENDIF
+
+           ENDIF              
+
+800	CONTINUE      !MAXBANKS LOOP
+
+	IF (OPENED_FILES.EQ.0) THEN
+	   BNK_REC.ERRSTR = 'Did not open any file on BANK_OPEN'
+	   ST = -40
+	ENDIF
+
+	RETURN
+	END
+
+
+
+C 	**************************************************
+     	SUBROUTINE CLOSE_BNK (BANK, ST)
+C	**************************************************
+   	IMPLICIT NONE                
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF' 
+        INCLUDE 'INCLIB:BANK_REC.DEF'
+        INCLUDE 'INCLIB:INTERFACES_REC.DEF'
+
+	INTEGER*4 BANK     ! CLOSE FILE FOR BANK (ODJbbbbE.ASC, where bbbb = bank number)
+		           ! BANK EQUALS TO "9999" MEANS ALL BANKS
+
+	INTEGER*4    INDBK
+	INTEGER*4    ST
+	LOGICAL      CLOSEALL
+
+	ST = 0
+
+	IF (BANK.EQ.0) THEN
+           ST = -10
+	   BNK_REC.ERRSTR = 'BANK invalid for CLOSE_ODJ'
+           RETURN
+        ENDIF
+
+	IF (BANK.EQ.9999) THEN
+	   CLOSEALL = .TRUE.
+        ELSE
+           CLOSEALL = .FALSE.
+        ENDIF
+
+	DO INDBK = 1,MAXBANKS	
+
+	   IF ( (CLOSEALL .AND. BNKCTRL_REC(INDBK).BANK.NE.0) .OR. (BNKCTRL_REC(INDBK).BANK.EQ.BANK) ) THEN
+
+              CLOSE(TMP2_LUN+INDBK)
+
+	      IF (BNKCTRL_REC(INDBK).FILETYPE.EQ.'R') THEN
+                 CALL REMOVE_BANK(BNKCTRL_REC(INDBK).BANK, BNK_REC.BANKR, BNK_REC.TOT_BANKR)
+	      ELSE
+                 CALL REMOVE_BANK(BNKCTRL_REC(INDBK).BANK, BNK_REC.BANKE, BNK_REC.TOT_BANKE)
+	      ENDIF
+              
+              BNKCTRL_REC(INDBK).BANK       = 0
+	      BNKCTRL_REC(INDBK).FILETYPE   = ' '
+	      BNKCTRL_REC(INDBK).ODJPS2     = '   '
+	      BNKCTRL_REC(INDBK).RECTYPE    = '  '
+	      BNKCTRL_REC(INDBK).RECNUM     = 0
+	      BNKCTRL_REC(INDBK).ACUM_VALUE = 0
+
+	      IF (.NOT.CLOSEALL) THEN   !JUST ONE
+                 EXIT
+              ENDIF
+
+           ENDIF
+
+	ENDDO
+
+	RETURN
+	END
+
+
+
+C 	**********************************
+     	SUBROUTINE READ_BNK (BANK, ST)
+C	**********************************
+   	IMPLICIT NONE                
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF' 
+        INCLUDE 'INCLIB:CONCOM.DEF' 
+        INCLUDE 'INCLIB:BANK_REC.DEF'
+        INCLUDE 'INCLIB:INTERFACES_REC.DEF'
+
+	INTEGER*4     BANK       ! Must read from tttbbbbR.ASC file, where bbbb=BANK / ttt='PS2' OR 'ODJ'
+	INTEGER*4     ST
+
+	INTEGER*4     SZ
+	INTEGER*4     INDBK
+	INTEGER*4     POSBK
+	INTEGER*4     BANK_LUN
+	CHARACTER*80  ASCIIREC
+	CHARACTER*4   REFERENCIA
+	INTEGER*4     ACUM_VALUE
+	INTEGER*4     NUM_RECORDS
+C	CHARACTER*7   AGTAUX
+	INTEGER*4     THISWEEK	
+
+	ST = 0
+
+	CALL CLEAN_BNK_REC()
+
+	IF (BANK.EQ.0 .OR. BANK.EQ.9999) THEN
+           ST = -10
+	   BNK_REC.ERRSTR = 'BANK invalid (READ_BANK)'
+           RETURN
+        ENDIF
+C
+C	FIND OUT POSITION AND LUN FOR THE FILE (IN THE STRUCTURE)
+C
+	BANK_LUN = 0
+	POSBK    = 0
+	DO INDBK = 1,MAXBANKS	
+	   IF (BNKCTRL_REC(INDBK).BANK.EQ.BANK .AND. BNKCTRL_REC(INDBK).FILETYPE.EQ.'R') THEN
+	      BANK_LUN = TMP2_LUN+INDBK
+              POSBK = INDBK
+              EXIT
+           ENDIF
+	ENDDO   
+
+950     CONTINUE                   !READ NEXT RECORD
+
+	IF (BANK_LUN.GT.0) THEN
+	   READ (BANK_LUN,FMT='(A80)',END=900,IOSTAT=ST) ASCIIREC
+	   IF (ST.NE.0) THEN
+	      BNK_REC.ERRSTR = 'Error during read (READ_BANK)'
+              RETURN
+	   ENDIF
+        ELSE
+	   ST = -20
+	   BNK_REC.ERRSTR = 'File not found or was opened for WRITE (READ_BANK)'
+	   RETURN
+        ENDIF
+
+	REFERENCIA = ASCIIREC(1:4)
+
+	IF (BNKCTRL_REC(POSBK).ODJPS2 .EQ. 'ODJ') THEN	
+	   IF (REFERENCIA.NE.'ODJ1' .AND. REFERENCIA.NE.'ODJ2' .AND. REFERENCIA.NE.'ODJ9') THEN
+	      BNK_REC.ERRSTR = 'Invalid record type during READ of ODJ file = ' // REFERENCIA
+	      ST = -30
+	      RETURN
+	   ENDIF
+	ELSE
+	   IF (REFERENCIA.NE.'PS21' .AND. REFERENCIA.NE.'PS22' .AND. REFERENCIA.NE.'PS29') THEN
+	      BNK_REC.ERRSTR = 'Invalid record type during READ of PS2 file = ' // REFERENCIA
+	      ST = -40
+	      RETURN
+	   ENDIF
+	ENDIF
+C
+C	*** HEADER ***
+C
+	IF (REFERENCIA.EQ.'ODJ1' .OR. REFERENCIA.EQ.'PS21') THEN
+	   IF (BNKCTRL_REC(POSBK).RECTYPE.NE.'  ' .AND. BNKCTRL_REC(POSBK).RECTYPE.NE.'TL') THEN
+	      BNK_REC.ERRSTR = 'Header record in wrong position'
+	      ST = -50
+	      RETURN
+	   ENDIF
+	   BNKCTRL_REC(POSBK).RECTYPE = 'HD'
+           
+	   BNKCTRL_REC(POSBK).NIB_HD     = ASCIIREC(10:30)
+	   BNKCTRL_REC(POSBK).DATA_PROC = ASCIIREC(34:41)      !AAAAMMDD
+
+	   IF (BNKCTRL_REC(POSBK).ODJPS2 .EQ. 'ODJ') THEN
+	      BNKCTRL_REC(POSBK).DATA_PAYLIMIT = ASCIIREC(42:49)    !AAAAMMDD
+	   ELSE
+	      BNKCTRL_REC(POSBK).REF_ORDENANTE = ASCIIREC(42:61)    !CAMPO LIVRE
+	      WRITE(BNKCTRL_REC(POSBK).TIPO_OPERACAO_HD, FMT='(I2.2)') CTOI(ASCIIREC(5:6),SZ)
+	      WRITE(BNKCTRL_REC(POSBK).SITUACAO_CONTA_HD, FMT='(I2.2)') CTOI(ASCIIREC(7:8),SZ)
+	      WRITE(BNKCTRL_REC(POSBK).SITUACAO_REGISTRO_HD, FMT='(I1.1)') CTOI(ASCIIREC(9:9),SZ)
+	   ENDIF
+
+	   GOTO 950     !NEXT RECORD
+
+	ENDIF
+
+C
+C	*** DETAIL ***
+C
+	IF (REFERENCIA.EQ.'ODJ2' .OR. REFERENCIA.EQ.'PS22') THEN
+
+	   IF (BNKCTRL_REC(POSBK).RECTYPE.EQ.'  ' .OR. BNKCTRL_REC(POSBK).RECTYPE.EQ.'TL') THEN
+	      BNK_REC.ERRSTR = 'Missing Header (found DETAIL record)'
+	      ST = -60
+	      RETURN
+	   ENDIF
+	   BNKCTRL_REC(POSBK).RECTYPE = 'DT'
+	   BNKCTRL_REC(POSBK).RECNUM = BNKCTRL_REC(POSBK).RECNUM + 1
+
+	   BNK_REC.NIB_DT = ASCIIREC(10:30)
+
+	   BNK_REC.VALUE  = CTOI(ASCIIREC(31:43),SZ)
+	   IF (BNK_REC.VALUE.LE.0) THEN
+	      BNK_REC.ERRSTR = 'Invalid VALUE field in Record (Less or equal zero)'
+	      ST = -70
+	      RETURN
+           ENDIF
+	   BNKCTRL_REC(POSBK).ACUM_VALUE = BNKCTRL_REC(POSBK).ACUM_VALUE + BNK_REC.VALUE
+
+	   IF (BNKCTRL_REC(POSBK).ODJPS2 .EQ. 'ODJ') THEN
+
+	      BNK_REC.ORDEM         = CTOI(ASCIIREC(48:53),SZ)   !first 4 digits (44:47) are DDSS (DV/SEMANA) for OCR line
+	      BNK_REC.DV_OCR        = CTOI(ASCIIREC(44:45),SZ)
+	      BNK_REC.SEMANA_OCR    = CTOI(ASCIIREC(46:47),SZ)
+              BNK_REC.AGENTE = 0
+	      BNK_REC.BALCAO_TO_PAY = 0
+	      BNK_REC.BILHETE       = '           '
+   	      BNK_REC.SEMANA        = BNK_REC.SEMANA_OCR
+	      BNK_REC.TIPO_DOC      = CTOI(ASCIIREC(62:63),SZ)
+
+              BNK_REC.ANO           = CTOI(ASCIIREC(77:78),SZ) !Civil year (v18)
+	      BNK_REC.GAME          = CTOI(ASCIIREC(79:80),SZ)
+	      IF (BNK_REC.GAME.GE.9) BNK_REC.GAME = BNK_REC.GAME + 1     !SCML USES THIS SHIFT FOR GAME NUMBER
+
+	      IF (BNK_REC.ORDEM.LE.0) THEN
+	         BNK_REC.ERRSTR = 'Invalid ORDER = ' // ASCIIREC(48:53)
+	         ST = -80
+	         RETURN
+              ENDIF
+	      IF (BNK_REC.SEMANA_OCR.LE.0 .OR. BNK_REC.SEMANA_OCR.GT.53) THEN
+	         BNK_REC.ERRSTR = 'Invalid SEMANA OCR = ' // ASCIIREC(46:47)
+	         ST = -100
+	         RETURN
+              ENDIF
+	      IF (BNK_REC.TIPO_DOC.NE.72 .AND. BNK_REC.TIPO_DOC.NE.73) THEN
+	         BNK_REC.ERRSTR = 'Invalid TIPO_DOC = ' // ASCIIREC(62:63)
+	         ST = -100
+	         RETURN
+              ENDIF
+	      IF (BNK_REC.GAME.LE.0 .OR. BNK_REC.GAME.GT.MAXGAM) THEN
+	         BNK_REC.ERRSTR = 'Invalid GAME = ' // ASCIIREC(79:80) // ' (ADD 1 IF GE 9)'
+	         ST = -110
+	         RETURN
+              ENDIF
+
+	   ELSE
+
+	      BNK_REC.AGENTE	= CTOI(ASCIIREC(44:50),SZ)
+	      IF (BNK_REC.AGENTE.LE.0) THEN
+	         BNK_REC.ERRSTR = 'Invalid AGENT code field in Record (Less or equal zero)'
+	         ST = -120
+	         RETURN
+              ENDIF
+
+	      BNK_REC.GAME          = CTOI(ASCIIREC(51:53),SZ)
+	      IF (BNK_REC.GAME.LE.0) THEN
+	         BNK_REC.ERRSTR = 'Invalid GAME code field in Record (Less or equal zero)'
+	         ST = -130
+	         RETURN
+              ENDIF
+
+	      BNK_REC.TIPO_OPERACAO = CTOI(ASCIIREC(5:6),SZ)
+	      IF (BNK_REC.TIPO_OPERACAO.NE.12 .AND. BNK_REC.TIPO_OPERACAO.NE.64) THEN
+	         BNK_REC.ERRSTR = 'Invalid TIPO OPERACAO = ' // ASCIIREC(5:6)
+	         ST = -140
+	         RETURN
+              ENDIF
+
+	      BNK_REC.SITUACAO_CONTA = CTOI(ASCIIREC(7:8),SZ)
+	      IF (BNK_REC.SITUACAO_CONTA.LT.0 .OR. BNK_REC.SITUACAO_CONTA.GT.17) THEN
+	         BNK_REC.ERRSTR = 'Invalid SITUACAO CONTA = ' // ASCIIREC(7:8)
+	         ST = -150
+	         RETURN
+              ENDIF
+
+	      BNK_REC.SITUACAO_REGISTRO = CTOI(ASCIIREC(9:9),SZ)
+	      IF (BNK_REC.SITUACAO_REGISTRO.LT.0 .OR. BNK_REC.SITUACAO_REGISTRO.GT.3) THEN
+	         BNK_REC.ERRSTR = 'Invalid SITUACAO REGISTRO = ' // ASCIIREC(9:9)
+	         ST = -160
+	         RETURN
+              ENDIF
+
+	      BNK_REC.CODIGO_SAP = CTOI(ASCIIREC(54:59),SZ)
+	      IF (BNK_REC.CODIGO_SAP.LT.0) THEN
+	         BNK_REC.ERRSTR = 'Invalid CODIGO SAP = ' // ASCIIREC(54:59)
+	         ST = -170
+	         RETURN
+              ENDIF
+
+	      BNK_REC.REF_TRANSF = ASCIIREC(64:78)
+
+	   ENDIF  !ODJ/PS2
+C
+C	   UPDATE HEADER INFORMATION FROM INDIVIDUAL CONTROL AREA (HEADER WAS READ BEFORE)
+C
+	   BNK_REC.NIB_HD     = BNKCTRL_REC(POSBK).NIB_HD     
+	   BNK_REC.DATA_PROC  = BNKCTRL_REC(POSBK).DATA_PROC 
+	   IF (BNKCTRL_REC(POSBK).ODJPS2 .EQ. 'ODJ') THEN
+	      BNK_REC.DATA_PAYLIMIT = BNKCTRL_REC(POSBK).DATA_PAYLIMIT 
+	   ELSE
+	      BNK_REC.REF_ORDENANTE = BNKCTRL_REC(POSBK).REF_ORDENANTE
+	      BNK_REC.TIPO_OPERACAO_HD = BNKCTRL_REC(POSBK).TIPO_OPERACAO_HD
+	      BNK_REC.SITUACAO_CONTA_HD = BNKCTRL_REC(POSBK).SITUACAO_CONTA_HD
+	      BNK_REC.SITUACAO_REGISTRO_HD = BNKCTRL_REC(POSBK).SITUACAO_REGISTRO_HD
+	   ENDIF
+
+	ENDIF
+
+C
+C	*** TRAILLER ***
+C
+	IF (REFERENCIA.EQ.'ODJ9' .OR. REFERENCIA.EQ.'PS29') THEN
+	   IF (BNKCTRL_REC(POSBK).RECTYPE.EQ.'  ' .OR. BNKCTRL_REC(POSBK).RECTYPE.EQ.'TL') THEN
+	      BNK_REC.ERRSTR = 'Missing Header or TRAILLER in wrong position'
+	      ST = -180
+	      RETURN
+	   ENDIF
+	   BNKCTRL_REC(POSBK).RECTYPE = 'TL'
+
+	   NUM_RECORDS = CTOI(ASCIIREC(16:29),SZ)
+	   ACUM_VALUE  = CTOI(ASCIIREC(30:42),SZ)
+C 
+C SCML - DO NOT CHECK TOTAL AMOUNT IN TRAILLER - POLITCAL BANK PROBLEMS - 
+C
+C	   IF(BNKCTRL_REC(POSBK).RECNUM .NE. NUM_RECORDS .OR. BNKCTRL_REC(POSBK).ACUM_VALUE .NE. ACUM_VALUE) THEN
+	   IF(BNKCTRL_REC(POSBK).RECNUM .NE. NUM_RECORDS) THEN
+	      BNK_REC.ERRSTR = 'Values in TRAILLER do not match those found in DETAIL records'
+	      ST = -190
+	      BNKCTRL_REC(POSBK).RECNUM     = 0
+	      BNKCTRL_REC(POSBK).ACUM_VALUE = 0
+	      RETURN
+	   ENDIF
+
+	   BNKCTRL_REC(POSBK).RECNUM     = 0
+	   BNKCTRL_REC(POSBK).ACUM_VALUE = 0
+
+	   GOTO 950     !READ NEXT RECORD
+
+	ENDIF
+
+	RETURN
+	
+900     ST = 144   !End of file
+	IF (BNKCTRL_REC(POSBK).RECTYPE.NE.'TL') THEN
+	   BNK_REC.ERRSTR = 'Missing TRAILLER record'
+	   ST = -144
+	   RETURN
+	ENDIF
+
+	RETURN
+	END
+
+
+
+C 	*****************************************
+     	SUBROUTINE WRITE_BNK (BANK, RECTYPE, ST)
+C	*****************************************
+   	IMPLICIT NONE                
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF' 
+        INCLUDE 'INCLIB:BANK_REC.DEF'
+        INCLUDE 'INCLIB:INTERFACES_REC.DEF'
+
+	INTEGER*4     BANK       ! Must read from tttbbbbR.ASC file, where bbbb=BANK
+	CHARACTER*2   RECTYPE    ! 'HD'= HEADER / 'DT'=DETAIL / 'TL'=TRAILLER / 'BT'= DETAIL FOR BANK TRANSFER TO PLAYER
+	INTEGER*4     ST
+
+	INTEGER*4     INDBK
+	INTEGER*4     POSBK
+	INTEGER*4     BANK_LUN
+	CHARACTER*80  ASCIIREC
+	CHARACTER*130 OCR_LINE
+	INTEGER*4     DV
+
+	INTEGER*4     GAMSHIFT
+	CHARACTER*7   AGTAUX
+
+	WRITE(ASCIIREC,22)
+22	FORMAT(80('0')) 
+
+	ST = 0
+
+	IF (BANK.EQ.0 .OR. BANK.EQ.9999) THEN
+           ST = -10
+	   BNK_REC.ERRSTR = 'BANK invalid (WRITE_BANK)'
+           RETURN
+        ENDIF
+
+	IF (RECTYPE.NE.'HD'.AND. RECTYPE.NE.'DT' .AND. RECTYPE.NE.'TL' .AND. RECTYPE.NE.'BT') THEN
+           ST = -20
+	   BNK_REC.ERRSTR = 'RECTYPE invalid (WRITE_BANK)'
+           RETURN
+        ENDIF
+C
+C	FIND BANK IN THE LIST OF OPENED FILES AND GET LUN AND POSITION
+C
+	BANK_LUN = 0
+	DO INDBK = 1,MAXBANKS	
+	   IF (BNKCTRL_REC(INDBK).BANK.EQ.BANK .AND. BNKCTRL_REC(INDBK).FILETYPE.EQ.'E') THEN
+	      BANK_LUN = TMP2_LUN+INDBK
+	      POSBK = INDBK
+              EXIT
+           ENDIF
+	ENDDO   
+
+	IF (BANK_LUN.EQ.0) THEN
+	   ST = -30
+	   BNK_REC.ERRSTR = 'File not found or was opened for READ (WRITE_BANK)'
+	   RETURN
+        ENDIF
+
+C
+C	WRITE HEADER RECORD
+C	-------------------
+	IF (RECTYPE.EQ.'HD') THEN
+
+	   IF (BNKCTRL_REC(POSBK).RECTYPE.NE.'  ' .AND. BNKCTRL_REC(POSBK).RECTYPE.NE.'TL') THEN
+	      ST = -40
+	      BNK_REC.ERRSTR = 'HEADER CAN NOT BE WRITTEN HERE (WRITE_BANK)'
+	      RETURN
+           ENDIF
+	
+	   ASCIIREC(1:4)   = BNKCTRL_REC(POSBK).ODJPS2 // '1'
+	   ASCIIREC(10:30) = BNK_REC.NIB_HD(1:21)                !BBBBAAAACCCCCCCCCCCDV
+	   ASCIIREC(31:33) = 'EUR'
+	   ASCIIREC(34:41) = BNK_REC.DATA_PROC
+
+	   IF (BNKCTRL_REC(POSBK).ODJPS2.EQ.'ODJ') THEN
+	      ASCIIREC(42:49) = BNK_REC.DATA_PAYLIMIT
+	   ELSE
+	      ASCIIREC(42:61) = BNK_REC.REF_ORDENANTE
+              WRITE(ASCIIREC(5:6),FMT='(I2.2)') BNK_REC.TIPO_OPERACAO_HD
+              WRITE(ASCIIREC(7:8),FMT='(I2.2)') BNK_REC.SITUACAO_CONTA_HD
+              WRITE(ASCIIREC(9:9),FMT='(I1.1)') BNK_REC.SITUACAO_REGISTRO_HD
+	      BNKCTRL_REC(POSBK).TIPO_OPERACAO_HD     = BNK_REC.TIPO_OPERACAO_HD
+              BNKCTRL_REC(POSBK).SITUACAO_CONTA_HD    = BNK_REC.SITUACAO_CONTA_HD
+              BNKCTRL_REC(POSBK).SITUACAO_REGISTRO_HD = BNK_REC.SITUACAO_REGISTRO_HD
+	   ENDIF
+
+	   BNKCTRL_REC(POSBK).RECTYPE = RECTYPE
+
+	ENDIF
+
+C
+C	WRITE DETAIL RECORD
+C	-------------------
+	IF (RECTYPE.EQ.'DT' .OR. RECTYPE.EQ.'BT') THEN
+
+	   IF (BNKCTRL_REC(POSBK).RECTYPE.NE.'HD' .AND. BNKCTRL_REC(POSBK).RECTYPE.NE.'DT' .AND.
+     *         BNKCTRL_REC(POSBK).RECTYPE.NE.'BT') THEN
+	      ST = -50
+	      BNK_REC.ERRSTR = 'DETAIL RECORD CAN NOT BE WRITTEN HERE (WRITE_BANK)'
+	      RETURN
+           ENDIF
+	
+	   ASCIIREC(1:4) = BNKCTRL_REC(POSBK).ODJPS2 // '2'
+	   WRITE (ASCIIREC(31:43), FMT='(I13.13)') BNK_REC.VALUE
+	   ASCIIREC(10:30) = BNK_REC.NIB_DT(1:21)              !BBBBAAAACCCCCCCCCCCDV
+
+	   IF (BNKCTRL_REC(POSBK).ODJPS2.EQ.'ODJ') THEN
+C
+C             CALCULATE DV FOR OCR LINE
+C             -------------------------
+C
+C	      OCR LINE USES NIB WITH 10 POSITIONS (RIGHT) AND WITHOUT DV
+C
+	      IF (BNK_REC.GAME.LE.9) THEN       !SHIFT BECAUSE OF OLD SCML CONVENTIONS 
+	         GAMSHIFT = BNK_REC.GAME
+              ELSE
+	         GAMSHIFT = BNK_REC.GAME - 1
+              ENDIF
+	
+              WRITE (OCR_LINE, FMT='(A8,I1.1,A10,I2.2,I6.6,I2.2)') BNK_REC.NIB_DT(1:8), GAMSHIFT, BNK_REC.NIB_DT(10:19), 
+     *                                                             BNK_REC.SEMANA, BNK_REC.ORDEM, BNK_REC.TIPO_DOC 
+              CALL CALC_DV_OCR (OCR_LINE, DV)
+
+	      WRITE(ASCIIREC(44:53),FMT='(I2.2,I2.2,I6.6)') DV, BNK_REC.SEMANA, BNK_REC.ORDEM 
+              WRITE(AGTAUX,FMT='(I7.7)')               BNK_REC.AGENTE
+	      WRITE(ASCIIREC(54:61),FMT='(A8)')  AGTAUX(1:2)//'0'//AGTAUX(3:7)
+	      WRITE(ASCIIREC(62:63),FMT='(I2.2)')      BNK_REC.TIPO_DOC
+	      WRITE(ASCIIREC(64:67),FMT='(I4.4)')      BNK_REC.BALCAO_TO_PAY
+	      ASCIIREC(68:74)                        = BNK_REC.BILHETE(1:7)
+	      IF (BNK_REC.ANO.GT.99) THEN
+	         IF (BNK_REC.ANO.GT.2000) THEN
+      		    BNK_REC.ANO = BNK_REC.ANO - 2000
+		 ELSE
+		    BNK_REC.ANO = BNK_REC.ANO - 1900
+	         ENDIF
+              ENDIF
+	      WRITE(ASCIIREC(75:78),FMT='(I2.2,I2.2)') BNK_REC.SEMANA, BNK_REC.ANO
+	      WRITE(ASCIIREC(79:80),FMT='(I2.2)')      GAMSHIFT
+	   ELSE
+	      WRITE(ASCIIREC(5:6),FMT='(I2.2)')        BNK_REC.TIPO_OPERACAO
+	      WRITE(ASCIIREC(7:8),FMT='(I2.2)')        BNK_REC.SITUACAO_CONTA
+	      WRITE(ASCIIREC(9:9),FMT='(I1.1)')        BNK_REC.SITUACAO_REGISTRO
+	      IF(RECTYPE.EQ.'DT') THEN
+	        WRITE(ASCIIREC(44:50),FMT='(I7.7)')      BNK_REC.AGENTE
+	        WRITE(ASCIIREC(51:56),FMT='(I2.2,I4.4)') BNK_REC.SEMANA, BNK_REC.ANO
+	        WRITE(ASCIIREC(57:62),FMT='(I6.6)')      BNK_REC.CODIGO_SAP
+              ENDIF
+	      IF(RECTYPE.EQ.'BT') THEN
+	        WRITE(ASCIIREC(44:52),FMT='(I9.9)')      BNK_REC.AGENTE
+              ENDIF
+	      ASCIIREC(64:78)			     = BNK_REC.REF_TRANSF
+	   ENDIF
+
+	   BNKCTRL_REC(POSBK).RECTYPE    = RECTYPE
+	   BNKCTRL_REC(POSBK).RECNUM     = BNKCTRL_REC(POSBK).RECNUM  + 1
+	   BNKCTRL_REC(POSBK).ACUM_VALUE = BNKCTRL_REC(POSBK).ACUM_VALUE + BNK_REC.VALUE
+
+	ENDIF
+
+C
+C	WRITE TRAILLER RECORD
+C	---------------------
+	IF (RECTYPE.EQ.'TL') THEN
+
+	   IF (BNKCTRL_REC(POSBK).RECTYPE.NE.'HD' .AND. BNKCTRL_REC(POSBK).RECTYPE.NE.'DT' .AND.
+     *         BNKCTRL_REC(POSBK).RECTYPE.NE.'BT') THEN
+	      ST = -70
+	      BNK_REC.ERRSTR = 'TRAILLER RECORD CAN NOT BE WRITTEN HERE (WRITE_BANK)'
+	      RETURN
+           ENDIF
+
+	   ASCIIREC(1:4) = BNKCTRL_REC(POSBK).ODJPS2 // '9'
+	   WRITE (ASCIIREC(16:29), FMT='(I14.14)') BNKCTRL_REC(POSBK).RECNUM
+	   WRITE (ASCIIREC(30:42), FMT='(I13.13)') BNKCTRL_REC(POSBK).ACUM_VALUE
+
+	   IF (BNKCTRL_REC(POSBK).ODJPS2.NE.'ODJ') THEN
+	      WRITE(ASCIIREC(5:6),FMT='(I2.2)') BNKCTRL_REC(POSBK).TIPO_OPERACAO_HD
+              WRITE(ASCIIREC(7:8),FMT='(I2.2)') BNKCTRL_REC(POSBK).SITUACAO_CONTA_HD
+              WRITE(ASCIIREC(9:9),FMT='(I1.1)') BNKCTRL_REC(POSBK).SITUACAO_REGISTRO_HD
+	   ENDIF
+
+	   BNKCTRL_REC(POSBK).RECTYPE     = RECTYPE
+	   BNKCTRL_REC(POSBK).RECNUM      = 0
+	   BNKCTRL_REC(POSBK).ACUM_VALUE  = 0
+
+	ENDIF
+
+	WRITE (BANK_LUN,FMT='(A80)',IOSTAT=ST) ASCIIREC
+	IF (ST.NE.0) THEN
+	   BNK_REC.ERRSTR = 'Error during WRITE (WRITE_BANK)'
+           RETURN
+	ENDIF
+
+	CALL CLEAN_BNK_REC()
+
+	RETURN
+	
+	END
+
+
+
+C	**********************************************
+	SUBROUTINE REMOVE_BANK (BANK, BANKTB, TBSIZE)
+C	**********************************************
+	IMPLICIT NONE
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF' 
+
+	INTEGER*4 BANK
+	INTEGER*4 BANKTB(MAXBANKS)
+	INTEGER*4 TBSIZE
+
+	INTEGER*4 I, J
+
+	DO I = 1,TBSIZE
+	   IF (BANKTB(I).EQ.BANK) THEN
+	      DO J = I+1,TBSIZE
+	         BANKTB(J-1) = BANKTB(J)
+	      ENDDO
+              BANKTB(TBSIZE) = 0
+              TBSIZE = TBSIZE - 1
+	      EXIT
+	   ENDIF
+	ENDDO
+	
+	RETURN
+	END
+
+
+
+C	*************************************
+	SUBROUTINE CLEAN_BNK_REC()
+C	*************************************
+   	IMPLICIT NONE                
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF' 
+        INCLUDE 'INCLIB:BANK_REC.DEF'
+        INCLUDE 'INCLIB:INTERFACES_REC.DEF'
+
+	BNK_REC.VALUE  = 0	
+	BNK_REC.AGENTE = 0	
+	BNK_REC.GAME   = 0	
+	BNK_REC.NIB_DT = '000000000000000000000'	
+	BNK_REC.TIPO_OPERACAO = 0
+	BNK_REC.SITUACAO_CONTA = 0
+	BNK_REC.SITUACAO_REGISTRO = 0
+	BNK_REC.CODIGO_SAP = 0
+	BNK_REC.REF_TRANSF = '               '	
+
+	RETURN
+	END

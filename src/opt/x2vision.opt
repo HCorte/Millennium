@@ -1,0 +1,85 @@
+!
+! *** LINK OPTION FILE X2VISION ***
+!
+!*************************** START X2X PVCS HEADER ****************************
+!
+! $Logfile::   GXAFXT:[GOLS]X2VISION.OPV                                 $
+! $Date::   17 Apr 1996 16:40:28                                         $
+! $Revision::   1.0                                                      $
+! $Author::   HXK                                                        $
+!
+!**************************** END X2X PVCS HEADER *****************************
+!
+! *** Pre-Baseline Source - x2vision.opt ***
+!
+!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+! Copyright 1994 GTECH Corporation. All rights reserved.
+! This item is the property of GTECH Corporation, Providence, Rhode Island,
+! and contains confidential and trade secret information. It may not be
+! transferred from the custody or control of GTECH except as authorized in
+! writing by an officer of GTECH. Neither this item nor the information it
+! contains may be used, transferred, reproduced, published, or disclosed,
+! in whole or in part, and directly or indirectly, except as expressly
+! authorized by an officer of GTECH, pursuant to written agreement.
+!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!
+OBJLIB:ACTERM,-
+ATOH,-
+CHKVAL,-
+CLR_GTNSCR,-
+HTOA,-
+NET_DIFTIM,-
+NET_DUMP,-
+NHTOA,-
+QSHFT,-
+QUECNT,-
+VALIDTER,-
+X2BINVSN,-
+X2BINSRC,-
+X2BLDCMD,- 
+X2BLKREC,-
+X2CASE,-
+X2CNVDRP,-
+X2FRCLOSE,-
+X2FILNAM,- 
+X2FROPEN,-
+X2FREAD,-
+X2GETAPPNO,-
+X2GETCHR,-
+X2GETPER,-
+X2GTXDATA,-
+X2GTXMSG,-
+X2GTXSNP,-
+X2HISTD,- 
+X2LINTER,- 
+X2MNT1TRA,-
+X2NETPRT,- 
+X2QSHFT,-
+X2SHOW_TBL,-
+X2STNSRC,-
+X2VISADR,-
+X2VISAGT,-
+X2VISBAK,-
+X2VISBOT,-
+X2VISDRP,-
+X2VISFOR,-
+X2VISGRP,-
+X2VISGVT,-
+X2VISIDU,-
+X2VISIDX,-
+X2VISLOC,-
+X2VISMNT,-
+X2VISNET,-
+X2VISPRT,-
+X2VISREL,-
+X2VISSAP,-
+X2VISSRT,-
+X2VISSTN,-
+X2VISSUB,-
+X2VISTER,-
+X2VISTOP,-
+X2VISUP,-
+X2VISUPD,-
+X2XHLP,-
+X2XTOT,-
+XTOBUF

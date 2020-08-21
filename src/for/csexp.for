@@ -1,0 +1,61 @@
+C
+C SUBROUTINE CSEXP
+C $Log:   GXAFXT:[GOLS]CSEXP.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:44:54   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   21 Dec 1995  8:36:00   PXB
+C  Fixed bug in calculation of second event row
+C  
+C     Rev 1.0   23 Nov 1995 14:00:32   PXB
+C  Initial revision.
+C  
+C SUBROUTINE TO EXPAND TODAY'S COUPLE SYSTEM BETS
+C
+
+C=======OPTIONS /CHECK=NOOVERFLOW
+
+	SUBROUTINE CSEXP(TRABUF,BETS,COUNT)
+
+	IMPLICIT NONE
+
+C---- Include files used.
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+
+C---- Local variables.
+
+	INTEGER*4 BETS(2,100)
+	INTEGER*4 I, J, COUNT
+
+
+C------------------------- Start of Code -----------------------------
+
+	IF (TRABUF(TWSYST) .EQ. NOSYS) THEN
+	  COUNT = TRABUF(TWNBET)
+	  DO 10 I = 1,COUNT
+	    BETS(1,I) = TRABUF(TWCPROW1 + (I-1) * TWCPBLEN)
+	    BETS(2,I) = TRABUF(TWCPROW2 + (I-1) * TWCPBLEN) + MAXCPLRW/2
+10	  CONTINUE
+	  RETURN
+	END IF
+
+C---- Expand system bets
+
+	COUNT = 0
+	DO 100 I = 0,TRABUF(TWNBET)-1
+	  DO 100 J = 0,TRABUF(TWNBET)-1
+	    IF (TRABUF(TWCPROW1+I*TWCPBLEN) .EQ. 'FF'X) GOTO 100
+	    IF (TRABUF(TWCPROW2+J*TWCPBLEN) .EQ. 'FF'X) GOTO 100
+	    COUNT = COUNT+1
+	    BETS(1,COUNT) = TRABUF(TWCPROW1+I*TWCPBLEN)
+	    BETS(2,COUNT) = TRABUF(TWCPROW2+J*TWCPBLEN) + MAXCPLRW/2
+100	CONTINUE
+
+	RETURN
+
+	END

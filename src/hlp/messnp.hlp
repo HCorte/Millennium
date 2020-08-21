@@ -1,0 +1,22 @@
+    MES.HLP                GTECH Distributed Network
+                          Ticket Message Snapshot Help           Page 1 of 1
+ 
+    The ticket message snapshot displays what messages have been entered
+    for each individual game.
+
+    The information displayed includes:
+ 
+    game   - full name of each game which will print a ticket message        
+    number - game index  
+    1      - message as it appears on line 1 
+    2        message as it appears on line 2      
+    3        message as it appears on line 3
+             of the ticket.
+
+
+
+
+
+
+
+

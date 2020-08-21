@@ -1,0 +1,20 @@
+C LUCKY.DEF
+C
+C       Rew 1.0     94.06.20    HHe
+C       Initial version
+C
+C       The module generates LUCKY NUMBER from BINGO index
+C
+C
+
+
+        LOGICAL         LUCKY_RANDOM
+        INTEGER*4       LUCKY_EVEN_DIGITS, LUCKY_ODD_DIGITS
+
+        PARAMETER       ( LUCKY_RANDOM          = .TRUE. )
+        PARAMETER       ( LUCKY_EVEN_DIGITS     = 4 )
+        PARAMETER       ( LUCKY_ODD_DIGITS      = 3 )
+
+        COMMON          / LUCKY / L_CYCLE_SIZE, L_MAX_ODD, L_ODIGITS
+        INTEGER*4       L_CYCLE_SIZE, L_MAX_ODD, L_ODIGITS
+

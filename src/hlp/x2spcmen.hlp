@@ -1,0 +1,110 @@
+                          GTECH Distibuted Network
+                       Station Port Configuration Help           Page 1 of 5
+ 
+      A station port configuration record is one which informs the
+      station which drops to poll on each port.  This information
+      is cross referenced with the terminal configuration information,
+      allowing the station to determine all necessary parameters for
+      configuration.
+ 
+      This menu allows station port configuration functions to be performed,
+      including: adding, modifying, deleting, and listing station port
+      configurations.
+ 
+      Adding A Station Port Configuration Class
+      =========================================
+      To add a station port configuration to the Distributed Network,
+      enter "1" (for Add Station Port), and press return.  The program will
+      then prompt for the station number, and then the port number.
+      If the class already exists, an error message will be
+      displayed, and you will be prompted for station.
+ 
+ 
+                         GTECH Distibuted Network
+                       Station Port Configuration Help            Page 2 of 5
+ 
+      Adding a Station Port Configuration (cont'd)
+      ============================================
+      If the station port does not exist, the Add a Station Port screen
+      will be displayed, requiring the station port configuration to be input.
+      The program will display the valid data ranges for each field, and
+      if an invalid value is input, an error message will be displayed,
+      and you will be required to input the parameter again. NOTE: if
+      you enter "E" while adding, the menu will be displayed and the ADD
+      will not be performed!
+ 
+      Modifying a Station Port Configuration
+      ======================================
+      To modify a configuration, enter "2" (for Modify Station Configuration),
+      and press return.  The program will then prompt for the station number
+      and then the port number.  If the station port does not exist,
+      an error message will be displayed, and you will be prompted for
+      another station.  If the configuration exists, the Modify a Port
+ 
+ 
+                          GTECH Distibuted Network
+                       Station Port Configuration Help            Page 3 of 5
+ 
+      Configuration screen will be displayed, and the current configuration
+      of the station port will be output. To modify a parameter, choose
+      the number of the field that you wish to update,
+      (located on the immediate left of the displayed parameter),
+      and press return. The program will then display a prompt informing
+      of the valid data range of the field.  Enter the desired value and
+      press return.  If the input value does not fall within the range, or
+      does not match a specific input value, an error message will be
+      displayed, and you must re-enter the field value. Once a correct value
+      has been entered, the screen will refresh and the new parameter value
+      be displayed.  When all desired parameters have been modified,
+      enter "E" and the associated files will be updated, and the Menu will
+      be displayed.  NOTE: If you enter "E" when being prompted for a value,
+      you will return to the menu without updating the data files!
+ 
+ 
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                       Station Port Configuration Help            Page 4 of 5
+ 
+ 
+      Deleting a Station Class
+      ========================
+      This option will allow a station port config to be deleted.
+      Before performing this option, you should ensure that no stations
+      will be effected by deleting this configuration from the database.
+      To delete a configuration, enter "3" and press return.  Enter the
+      station and port number, and if it exists, the Delete a Station
+      Port Configuration screen will be displayed.
+      If the record does not exist, an error message will be displayed, and
+      you must re-enter the number.  Once the Delete Screen has been
+      displayed, look at the configuration information to ensure that this
+      is the correct class.  If you wish to delete it, enter "Y" and press
+      return, and a message will be displayed informing that the record
+      was deleted.  If you no not wish to delete the record, enter "N" and
+      the configuration will not be deleted.
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                       Station Port Configuration Help            Page 5 of 5
+ 
+ 
+      Listing Station Port Configurations
+      ===================================
+      This option will allow all station port configurations to be
+      displayed.  The user also has the ability to scroll forward or back,
+      to view the desired information.
+ 
+      For more information refer to Station Class Listing help.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

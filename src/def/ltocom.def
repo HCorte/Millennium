@@ -1,0 +1,214 @@
+C LTOCOM.DEF
+C  
+C V14 08-DEC-2010 HXK TOTOLOTO DRAW COUNTER (CCC)
+C V13 19-NOV-2010 MAC LUCKY NUMBER
+C                 FJG JACKPOT POST GAME
+C V12 11-MAY-2000 OXK *SPL added (for promotion etc)
+C V11 07-JUL-1999 PXO Changed LTOFAC to LTOPRP and LTOCUT to LTOPRN
+C V10 17-APR-1996 HXK Release of Finland for X.25, Telephone Betting,
+C                     Instant Pass Thru Phase 1
+C V09 27-AUG-1993 HXK put gind as last variable in ltowtb
+C V08 10-AUG-1993 GXA Added Ballance table by Draw.
+C V07 09-JUN-1993 GXA Adjusted Free Space.
+C V06 09-JUN-1993 GXA Released for Finland Dec Conversion / Oddset.
+C V05 14-MAY-1993 SXH Corrected equivalence of LTOFRE(316) -> LTOFRE(312)
+C V04 04-MAY-1993 SXH Added estimated Viking jackpot LTOEST 
+C V03 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V04 27-NOV-97 UXN FIX FOR TOTAL EXTRA WINNERS FIELD.
+C V03 17-NOV-97 UXN EXTRA DRAW PARAMETERS ADDED.
+C V02 07-OCT-91 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C LOTTO GAME COMMON
+C
+C     LTOSTS(NUMLTO)                        ;STATUS
+C     LTOCTM(NUMLTO)                        ;ACTUAL TIME WHEN CLOSED
+C     LTOTIM(NUMLTO)                        ;TIME WHEN GAME SHOULD CLOSE
+C     LTODRW(NUMLTO)                        ;DRAW NUMBER
+C     LTOBSD(NUMLTO)                        ;LOTTO BEGINNING DRAW DATE
+C     LTOESD(NUMLTO)                        ;LOTTO ENDING DRAW DATE
+C     LTOPUP(NUMLTO)                        ;LAST PURGE UPDATE
+C     LTOUPD(NUMLTO)                        ;LAST FILE UPDATE
+C     LTODAT(DATLEN,NUMLTO)                 ;DRAW DATES
+C     LTOADV(NUMADV,NUMLTO)                 ;ADVANCE DRAW DATES
+C     LTOSAL(LTGENT,NUMLTO)                 ;SALES DATA
+C     LTOSHV(LTGDIV,2,NUMLTO)               ;SHARE VALUES     (REGULAR,BONUS)
+C     LTOSHR(LTGDIV,2,NUMLTO)               ;SHARES           (REGULAR,BONUS)
+C     LTOPAD(LTGDIV,2,NUMLTO)               ;AMOUNT PAID      (REGULAR,BONUS)
+C     LTOPRG(LTGDIV,2,NUMLTO)               ;AMOUNT PURGED    (REGULAR,BONUS)
+C     LTOANU(LTGDIV,2,NUMLTO)               ;ANNUITY PRIZES   (REGULAR,BONUS)
+C     LTOMSR(LTGDIV,2,NUMLTO)               ;MAILSUB SHARES   (REGULAR,BONUS)
+C     LTOPOL(LTGDIV,NUMLTO)                 ;POOL CARRIED OVER
+C     LTOBRK(LTGDIV,NUMLTO)                 ;BREAKAGE AMOUNT
+C     LTOFRZ(LTGDIV,NUMLTO)                 ;DIVISION PAYOUT FROZEN FLAGS
+C     LTOWIN(LTGNBR,MAXBDR,NUMLTO)          ;WINNING NUMBERS
+C     LTOHLD(LTGNBR,MAXBDR,NUMLTO)          ;WINNING NUMBERS HOLD
+C     LTOBNM(LTGBON,MAXBDR,NUMLTO)          ;WINNING BONUS NUMBER(S)
+C     LTOBHL(LTGBON,MAXBDR,NUMLTO)          ;BONUS NUMBER(S) HOLD
+C     LTOPRP(NUMLTO)                        ;PERCENTAGE OF THE PROMISED AMOUNT
+C     LTOPRN(NUMLTO)                        ;NUM. OF WINNERS FOR PROMISED AMOUNT
+C     LTOTAX(NUMLTO)                        ;LOTTERY TAX
+C     LTORES(2,NUMLTO)                      ;RESERVE POOL
+C     LTOAPL(NUMLTO)                        ;ADDITIONAL POOL
+C     LTOMIN(NUMLTO)                        ;MINIMUM POOL
+C     LTOSER(NUMLTO)                        ;LAST SERIAL NUMBER
+C     LTOOPA(NUMLTO)                        ;OVER-RIDE POOL AMOUNT
+C     LTOPRC(NUMLTO)                        ;PRICE/BOARD
+C     LTOMAX(NUMLTO)                        ;HIGHEST # BET
+C     LTONUM(NUMLTO)                        ;# OF NUMBERS DRAWN
+C     LTOBFL(NUMLTO)                        ;BONUS NUMBER ENABLE FLAG
+C     LTOMLT(NUMLTO)                        ;MULTI-DRAW ENABLE FLAG
+C     LTODIV(NUMLTO)                        ;# OF DIVISIONS
+C     LTOWTB(LTGNBR,LTGBON+1,LTGBET,NUMLTO) ;WINNING DIVISIONS TABLE
+C     LTOPER(LTGDIV,NUMLTO)                 ;DIVISION PERCENTAGES
+C     LTOSPR(NUMLTO)                        ;SALES PERCENTAGE
+C     LTOTSR(LTGDIV,2,NUMLTO)               ;TOTAL SHARE COUNT (REGULAR,BONUS)
+C     LTOREV(NUMLTO)                        ;LOTTO REVISION NUMBER
+C     LTOBDR(NUMLTO)                        ;BONUS DRAW ENABLE FLAG
+C     LTOLST(NUMLTO)                        ;LAST DRAWS STATUS
+C     LTOLSV(LTGDIV,2,NUMLTO)               ;LAST DRAWS SHARE VALUES
+C     LTOADW(NUMLTO)                        ;ADVANCE WAGERING FLAG
+C     LTOLAN(LTGDIV,2,NUMLTO)               ;LAST DRAWS ANNUITY VALUES
+C     LTOBET(LTGBET,NUMLTO)                 ;ACTIVE BET TYPES
+C     LTOWED(2,NUMLTO)                      ;WEDNESDAY DRAW DATES
+C     LTOPAW(NUMLTO)			    ;PERCENTAGE APPLIED TO WINS
+C     LTOSTX(LTGDIV,2,NUMLTO)               ;SHARE TAX VALUE(REG,BONUS)
+C     LTOASH(LTGDIV,NUMLTO)                 ;ADDITIONAL POOL BY DIV
+C     LTOWRF(10,NUMLTO)                     ;WIN RESERVE FUND TABLE
+C     LTOEST(NUMLTO)                        ;ESTIMATED JACKPOT VIKING           
+C     LTOMDS(MAXMLTD_AVL,NUMLTO)            ;MULTI DRAW SELECTED TABLE
+C					     (52 BYTES / 4 = 13 WORDS)
+C     LTOBAL(MAXDRW,NUMLTO)		    ;BALANCE SALES INFO. BY DRAW
+C     LTOSPL(NUMLTO)		;SPECIAL POOL, ADDED TO TOTAL POOL -
+C                                     NOT TO DIV1 POOL AS OTHER POOL MONEY
+C     LTOLNM(MAXBDR,NUMLTO)                 ;WINNING LUCKY NUMBER      !V13...
+C     LTOLHL(MAXBDR,NUMLTO)                 ;LUCKY NUMBER HOLD
+C     LTOLNC(2,LTGDIV,NUMLTO)               ;LUCKY NUMBER DIVISION CONVERSION TABLE
+C     LTOLFL(NUMLTO)                        ;LUCKY NUMBER ENABLE FLAG
+C     LTOLDV(NUMLTO)                        ;Lucky number refund division number  !...V13
+C     LTOJPG(NUMLTO)                        ;JACKPOT POST GAME FLAG    !...V13 FJG
+C     LTOCCC(NUMLTO)                        !TOTOLOTO DRAW COUNTER     !V14
+C     LTOFRE	                ;FREE SPACE
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	COMMON /LTOCOM/
+     *	 LTOSTS(NUMLTO),
+     *	 LTOCTM(NUMLTO),
+     *	 LTOTIM(NUMLTO),
+     *	 LTODRW(NUMLTO),
+     *	 LTOBSD(NUMLTO),
+     *	 LTOESD(NUMLTO),
+     *	 LTOPUP(NUMLTO),
+     *	 LTOUPD(NUMLTO),
+     *	 LTODAT(DATLEN,NUMLTO),
+     *	 LTOADV(NUMADV,NUMLTO),
+     *	 LTOSAL(LTGENT,NUMLTO)
+	COMMON /LTOCOM/
+     *	 LTOSHV(LTGDIV,2,NUMLTO),
+     *	 LTOSHR(LTGDIV,2,NUMLTO),
+     *	 LTOPAD(LTGDIV,2,NUMLTO),
+     *	 LTOPRG(LTGDIV,2,NUMLTO),
+     *	 LTOANU(LTGDIV,2,NUMLTO),
+     *	 LTOMSR(LTGDIV,2,NUMLTO),
+     *   LTOPOL(LTGDIV,NUMLTO),
+     *   LTOBRK(LTGDIV,NUMLTO),
+     *	 LTOFRZ(LTGDIV,NUMLTO)
+	COMMON /LTOCOM/
+     *	 LTOWIN(LTGNBR,MAXBDR,NUMLTO),
+     *	 LTOHLD(LTGNBR,MAXBDR,NUMLTO),
+     *	 LTOBNM(LTGBON,MAXBDR,NUMLTO),
+     *	 LTOBHL(LTGBON,MAXBDR,NUMLTO),
+     *	 LTOPRP(NUMLTO),
+     *	 LTOPRN(NUMLTO),
+     *	 LTOTAX(NUMLTO),
+     *	 LTORES(2,NUMLTO),
+     *	 LTOAPL(NUMLTO),
+     *	 LTOMIN(NUMLTO)
+	COMMON /LTOCOM/
+     *	 LTOSER(NUMLTO),
+     *	 LTOOPA(NUMLTO),
+     *	 LTOPRC(NUMLTO),
+     *	 LTOMAX(NUMLTO),
+     *	 LTONUM(NUMLTO),
+     *	 LTOBFL(NUMLTO),
+     *	 LTOMLT(NUMLTO),
+     *	 LTODIV(NUMLTO),
+     *	 LTOWTB(LTGNBR,LTGBON+1,LTGBET,NUMLTO),
+     *	 LTOPER(LTGDIV,NUMLTO)
+	COMMON /LTOCOM/
+     *	 LTOSPR(NUMLTO),
+     *	 LTOTSR(LTGDIV,2,NUMLTO),
+     *	 LTOREV(NUMLTO),
+     *   LTOBDR(NUMLTO),
+     *   LTOLST(NUMLTO),
+     *   LTOLSV(LTGDIV,2,NUMLTO),
+     *   LTOADW(NUMLTO),
+     *   LTOLAN(LTGDIV,2,NUMLTO),
+     *   LTOBET(LTGBET,NUMLTO),
+     *   LTOWED(2,NUMLTO),
+     *   LTOPAW(NUMLTO),
+     *   LTOSTX(LTGDIV,2,NUMLTO),
+     *   LTOASH(LTGDIV,NUMLTO),
+     *   LTOWRF(10,NUMLTO),
+     *   LTOEST(NUMLTO),
+     *   LTOMDS(MAXMLTD_AVL,NUMLTO),
+     *   LTOBAL(MAXDRW,NUMLTO),
+     *   LTOSPL(NUMLTO),
+     *   LTOLNM(MAXBDR,NUMLTO),  !V13...
+     *   LTOLHL(MAXBDR,NUMLTO),
+     *   LTOLNC(2,LTGDIV,NUMLTO),
+     *   LTOLFL(NUMLTO),
+     *   LTOLDV(NUMLTO),
+     *   LTOJPG(NUMLTO),         !V13 FJG
+     *   LTOCCC(NUMLTO),         !V14 HXK
+     *	 LTOFRE(1836)            !...V14
+C
+	INTEGER*4 LTOSTS, LTOCTM, LTOTIM, LTODRW, LTOBSD, LTOESD
+	INTEGER*4 LTOPUP, LTOUPD, LTODAT, LTOADV, LTOSAL, LTOSHV
+	INTEGER*4 LTOSHR, LTOPOL, LTOPAD, LTOPRG, LTOANU, LTOBRK
+	INTEGER*4 LTOMSR, LTOFRZ, LTOWIN, LTOHLD, LTOBNM, LTOBHL
+	INTEGER*4 LTOPRP, LTOPRN, LTOTAX, LTORES, LTOAPL, LTOMIN
+	INTEGER*4 LTOSER, LTOOPA, LTOPRC, LTOMAX, LTONUM, LTOBFL
+	INTEGER*4 LTOMLT, LTODIV, LTOWTB, LTOPER, LTOSPR, LTOTSR
+	INTEGER*4 LTOREV, LTOBDR, LTOLST, LTOLSV, LTOADW, LTOFRE
+	INTEGER*4 LTOLAN, LTOBET, LTOWED, LTOPAW
+	INTEGER*4 LTOSTX, LTOASH, LTOWRF, LTOEST, LTOBAL
+	INTEGER*4 LTOSPL
+        INTEGER*4 LTOLNM, LTOLHL, LTOLFL, LTOLNC, LTOLDV   !V13
+        INTEGER*4 LTOJPG, LTOCCC                           !V13 FJG, V14 HXK
+C
+	BYTE	  LTOMDS
+C
+C EQUIVALENCE FOR CHECKPOINT
+C
+	INTEGER*4 LTOCSB
+	PARAMETER(LTOCSB=2)
+C
+	INTEGER*4 LTOBLK(2048,LTOCSB)
+	EQUIVALENCE(LTOBLK(1,1),LTOSTS(1))
+C
+C
+	INTEGER*4	 FRST_LTOCOM(2)
+	EQUIVALENCE	(FRST_LTOCOM, LTOSTS)
+	INTEGER*4	 LAST_LTOCOM
+	EQUIVALENCE	(LAST_LTOCOM, LTOFRE(1772))    !V14
+C
+	VOLATILE /LTOCOM/
+C

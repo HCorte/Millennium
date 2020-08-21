@@ -1,0 +1,198 @@
+C
+C X2PTLMES.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2PTLMES.DEV                                 $
+C  $Date::   17 Apr 1996 16:27:18                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V03 05-DEC-94 SCD Integrate UK changes into X2X Baseline - Fix 
+c		    typographical error
+C V02 16-FEB-94 JWE Add Broadcast server messages
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C
+C     X2PTLMES.DEF
+C     ------------
+C
+C     DESCRIPTION OF PTL MESSAGES
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	CHARACTER*40 X2X_PTLMES(0:256)
+	INTEGER*4 IXCNT1
+C
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=0,10) /
+     *	 ' status good ',
+     *	 ' cannot get a LAN buffer ',
+     *	 ' open SAP ',
+     *	 ' DLL command ',
+     *	 ' send now ',
+     *	 ' no more data ',
+     *	 ' undefined error ',' delivery ACK ',
+     *	 ' delivery ERROR ',
+     *	 ' FE alarm message ',
+     *	 ' FE command '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=11,20) /
+     *	 ' bad Front End Message ',
+     *	 ' invalid station address ',
+     *	 ' invalid front end command ',
+     *	 ' invalid front end message ',
+     *	 ' invalid station message ',
+     *	 ' invalid station length ',
+     *	 ' bad terminal number ',
+     *	 ' bad station number ',
+     *	 ' invalid station protocol ',
+     *	 ' invalid station command '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=21,30)/
+     *	 ' invalid station message type ',
+     * ' bad BCST station address ',                                    ! V02
+     * ' BCST configuration',                                           ! V02
+     *	 ' default configuration request ',
+     *	 ' configuration request',
+     *	 ' station stats report ',
+     *	 ' port configuration request ',
+     *	 ' connection validation request ',
+     *	 ' reset configuration request ',
+     *	 ' relay message '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=31,40)/
+     *	 ' relay configuration req. ',					! V03
+     *   ' not appl. above station  ',
+     *	 2*' undefined error ',' bad transport header',
+     *	 ' bad transport flags ',
+     *	 ' lost transport block ',
+     *	 ' invalid transport buffer ',
+     *	 ' invalid transport length ',
+     *	 ' invalid SAP '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=41,50)/
+     *	 ' invalid transport command ',
+     *	 3*' undefined error ',' connection dropped on trans return ',
+     *	 ' sync confirmation ',
+     *	 ' transport xoff ',
+     *	 ' transport xon ',
+     *	 ' reset command ',
+     *	 ' begin command '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=51,60)/
+     *	 ' maintenance command ',
+     *	 ' loopback command ',
+     *	 2*' undefined error ',' invalid processing buffer ',
+     *	 ' SAP busy, cannot accept new conn ',
+     *	 ' bad layer ID ',
+     *	 ' bad front end message type ',
+     *	 ' undefined error ',
+     *	 ' bad station address length '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=61,62)/
+     *	 ' bad station data unit ',
+     *	 ' bad message offset '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=63,79)/
+     *	 17*' undefined error '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=80,89)/
+     *	 ' soft station reset ',
+     *	 ' station statistics ',
+     *	 ' station connection ',
+     *	 ' FE statistics ',
+     *	 ' trace terminal input ',
+     *	 ' trace terminal output ',
+     *	 ' hard station reset',
+     *   ' last 5 call stats',
+     *   ' wake up station ',
+     *   ' disable station '/ 
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=90,128) /
+     *   ' invalid verification ',
+     *   ' valid verification # ',
+     * ' X.25 statistics ',                                      ! V02
+     * ' BCST statistics ',                                      ! V02
+     *	 35*' $$ not defined error '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=129,138) /
+     *	 ' $$ cannot get a LAN buffer ',
+     *	 ' $$ open SAP ',
+     *	 ' $$ DLL command ',
+     *	 ' $$ send now ',
+     *	 ' $$ no more data ',
+     *	 ' $$ undefined error ',' $$ delivery ACK ',
+     *	 ' $$ delivery ERROR ',
+     *	 ' $$ FE alarm message ',
+     *	 ' $$ FE command '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=139,148) /
+     *	 ' $$ bad Front End Message ',
+     *	 ' $$ invalid station address ',
+     *	 ' $$ invalid front end command ',
+     *	 ' $$ invalid front end message ',
+     *	 ' $$ invalid station message ',
+     *	 ' $$ invalid station length ',
+     *	 ' $$ bad terminal number ',
+     *	 ' $$ bad station number ',
+     *	 ' $$ invalid station protocol ',
+     *	 ' $$ invalid station command '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=149,158)/
+     *	 ' $$ invalid station message type ',
+     *	 2*' $$ undefined error ',
+     *	 ' $$ default configuration request ',
+     *	 ' $$ configuration request',
+     *	 ' $$ station stats report ',
+     *	 ' $$ port configuration request ',
+     *	 ' $$ connection validation request ',
+     *	 ' $$ reset configuration request ',
+     *	 ' $$ relay message '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=159,168)/
+     *	 ' $$ relay configuartion req. ',
+     *	 3*' $$ undefined error ',' $$ bad transport header',
+     *	 ' $$ bad transport flags ',
+     *	 ' $$ lost transport block ',
+     *	 ' $$ invalid transport buffer ',
+     *	 ' $$ invalid transport length ',
+     *	 ' $$ invalid SAP '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=169,178)/
+     *	 ' $$ invalid transport command ',
+     *	 3*' $$ undefined error ',' $$ conn dropped on trans return ',
+     *	 ' $$ sync confirmation ',
+     *	 ' $$ transport xoff ',
+     *	 ' $$ transport xon ',
+     *	 ' $$ reset command ',
+     *	 ' $$ begin command '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=179,188)/
+     *	 ' $$ maintenance command ',
+     *	 ' $$ loopback command ',
+     *	 2*' $$ undefined error ',' $$ invalid processing buffer ',
+     *	 ' $$ SAP busy, cannot accept new conn ',
+     *	 ' $$ bad layer ID ',
+     *	 ' $$ bad front end message type ',
+     *	 ' $$ undefined error ',
+     *	 ' $$ bad station address length '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=189,190)/
+     *	 ' $$ bad station data unit ',
+     *	 ' $$ bad message offset '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=191,207)/
+     *	 17*' $$ undefined error '/
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=208,215)/
+     *	 ' $$ soft station reset ',
+     *	 ' $$ station statistics ',
+     *	 ' $$ station connection ',
+     *	 ' $$ FE statistics ',
+     *	 ' $$ trace terminal input ',
+     *	 ' $$ trace terminal output ',
+     *	 ' $$ hard station reset',
+     *	 ' $$ last 5 call stats'/
+ 
+	DATA (X2X_PTLMES(IXCNT1),IXCNT1=216,256) /
+     *	   41*' $$ not defined error '/
+C

@@ -1,0 +1,78 @@
+C TROCOM.DEF
+C 
+C V02 11-MAY-1999 UXN TRIPLE changed to TRIO. TROCSB changed from 26 to 35.  
+C V01 xx-xxx-xxxx RXK Initial release. 
+C
+C TODAY'S TRIO POOLS COMMON
+C
+C
+C     TROLAMT(NUMTRP)		               6   ;LOWEST COMBINATION AMOUNT
+C     TROFEL (NUMTRP)		               6   ;LINK TO FIRST COMBINATION
+C     TROLEL (NUMTRP)		               6   ;LINK TO LAST COMBINATION
+C     TROTNUM(NUMTRP)		               6   ;NUMBER OF ENTRIES IN TOP ARRAY
+C     TRODDS (2,TRGPOL,NUMTRP)		   69984   ;MAIN ODDS ARRAY
+C     TROFRE(1672)			    1672   ;FREE SPACE
+C					---------
+C				TOTAL      71680 I*4 = 35 * 2048 I*4
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C MAIN POOLS ARRAY PARAMETERS
+C
+	INTEGER*4 TRGPOL,TRGAMT,TRGLNK
+
+	PARAMETER (TRGPOL=MAXTRPRW*MAXTRPRW*MAXTRPRW)  !MAX NO.OF COMBINATIONS
+	PARAMETER (TRGLNK=1)		!LINKS OF COMBINATION
+	PARAMETER (TRGAMT=2)		!AMOUNT OF COMBINATION
+C
+	COMMON /TROCOM/
+     *		TROLAMT(NUMTRP),
+     *		TROFEL(NUMTRP),
+     *		TROLEL(NUMTRP),
+     *		TROTNUM(NUMTRP),
+     *		TRODDS(2,TRGPOL,NUMTRP),
+     *		TROFRE(1672)
+C
+	INTEGER*4 TROLAMT		!LOWEST COMBINATION AMOUNT
+	INTEGER*4 TROFEL		!LINK TO FIRST COMBINATION
+	INTEGER*4 TROLEL		!LINK TO LAST COMBINATION
+	INTEGER*4 TROTNUM		!NO. OF DIFFERENT COMBINATIONS PLAYED
+	INTEGER*4 TRODDS		!COMBINATION ODDS ARRAY
+C
+	INTEGER*4 TROFRE
+
+C  EQUIVALENCES AND OFFSETS FOR MAIN ODDS TABLE
+
+        INTEGER*2 TRGPEL, TRGNEL
+	PARAMETER(TRGPEL=1)		!LINK TO PREVIOUS ENTRY
+	PARAMETER(TRGNEL=2)		!LINK TO NEXT ENTRY
+
+        INTEGER*2   TRODDS2(4,TRGPOL,NUMTRP)
+        EQUIVALENCE (TRODDS,TRODDS2)
+C
+C EQUIVALENCE FOR CHECKPOINT
+C
+	INTEGER*4 TROBLK,TROCSB
+	PARAMETER(TROCSB = 35)
+	DIMENSION TROBLK(2048,TROCSB)
+	EQUIVALENCE(TROBLK(1,1),TROLAMT)
+C
+	VOLATILE /TROCOM/
+C
+        INTEGER*4        FRST_TROCOM(2)
+        EQUIVALENCE     (FRST_TROCOM, TROBLK(1,1))
+        INTEGER*4        LAST_TROCOM
+        EQUIVALENCE     (LAST_TROCOM, TROBLK(2048,TROCSB))
+

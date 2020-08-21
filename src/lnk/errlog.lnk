@@ -1,0 +1,37 @@
+$! GXSRC:ERRLOG.LNK
+$!
+$! $Log:   GXAFIP:[GOLS]ERRLOG.LNV  $
+$! 
+$!    Rev 1.2   13 Jan 1997 20:02:06   GPK
+$! Rita's fixex for IPS
+$! 
+$!    Rev 1.1   14 Jul 1996 20:40:12   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 12:59:06   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:39:18   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:ERRLOG.EXE -
+OBJLIB:ERRLOG,-
+LOGMES,-
+MESCMD,-
+MESCOM,-
+MESGEN,-
+MESLGR,-
+MESNET,-
+MESSYS,-
+MESEUM,-
+X2FLDNAM,-
+ATOH,-
+HTOA,-
+MESIGS,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXNETCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE

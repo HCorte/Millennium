@@ -1,0 +1,159 @@
+C  GXSRC:DESCOM.DEF
+C  
+C  $Log:   GXAGBR:[GOLS]DESCOM.DEV  $
+C  
+C     Rev 1.2   11 Feb 1998 19:02:14   NXA
+C  Add ASTSTOP to common [RFC 2066]
+C  
+C     Rev 1.1   03 Jan 1994 23:59:58   SYSTEM
+C  Applying PVCS header for automatic revision history
+C  
+C     Rev 1.0    21 Dec 1993 19:14:16   SYSTEM
+C  Initial revision.
+C
+C
+C
+C V02 13-MAR-03 GPW DESENCR TAKEN FROM UK
+C V01 19-MAR-91 TKO  Initial release
+C
+C This defines the common area DESCOM which contains the control list
+C for the data cipher module.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+	INTEGER*4	 CTRLSIZ		!SIZE OF EACH ENTRY (LONGWORDS)
+	PARAMETER	(CTRLSIZ = 8)
+C
+	STRUCTURE /CTRL/
+	  UNION
+	    MAP
+	      BYTE	CTRL_FLAG		!SEMAPHORE
+	      BYTE	CTRL_STAT		!STATUS
+	      BYTE	CTRL_FUNC		!CRYPTO FUNCTION
+	      BYTE	CTRL_ENCDEC		!ENCRYPT/DECRYPT FLAG
+	      BYTE	CTRL_MODE		!MODULO 8 MODE TYPE
+	      BYTE	CTRL_NUSD		!- NOT USED -
+	      INTEGER*2	CTRL_SIZE		!SIZE (IN BYTES)
+	      INTEGER*4	CTRL_INOFF		!INPUT  OFFSET
+	      INTEGER*4	CTRL_OUTOFF		!OUTPUT	OFFSET
+	      INTEGER*4	CTRL_KEY1		!1ST HALF OF KEY
+	      INTEGER*4	CTRL_KEY2		!2ND HALF OF KEY
+	      INTEGER*4	CTRL_USER1		!USER LONGWORD 1
+	      INTEGER*4	CTRL_USER2		!USER LONGWORD 2
+	    END MAP
+	    MAP
+	      INTEGER*4 CTRL_ENT(CTRLSIZ)	!ACCESS BY FULLWORD
+	    END MAP
+	  END UNION
+	END STRUCTURE
+C
+C The following are values for the above
+C  
+	INTEGER*4	 CTRL_FLAG_K_INIT
+	PARAMETER	(CTRL_FLAG_K_INIT = 0)		! INITIALIZED
+	INTEGER*4	 CTRL_FLAG_K_DOIT
+	PARAMETER	(CTRL_FLAG_K_DOIT = 1)		! DO ENCRYPT/DECRYPT
+	INTEGER*4	 CTRL_FLAG_K_GOOD
+	PARAMETER	(CTRL_FLAG_K_GOOD = 2)		! DONE - SUCCESS
+	INTEGER*4	 CTRL_FLAG_K_REJT
+	PARAMETER	(CTRL_FLAG_K_REJT = '80'X)	! DONE - ERROR
+C
+	INTEGER*4	 CTRL_STAT_K_GOOD
+	PARAMETER	(CTRL_STAT_K_GOOD      = 1)
+	INTEGER*4	 CTRL_STAT_K_BADFUNC
+	PARAMETER	(CTRL_STAT_K_BADFUNC   = 2)
+	INTEGER*4	 CTRL_STAT_K_BADMODE
+	PARAMETER	(CTRL_STAT_K_BADMODE   = 3)
+	INTEGER*4	 CTRL_STAT_K_TOOBIG
+	PARAMETER	(CTRL_STAT_K_TOOBIG    = 4)
+	INTEGER*4	 CTRL_STAT_K_TOOSMALL
+	PARAMETER	(CTRL_STAT_K_TOOSMALL  = 5)
+	INTEGER*4	 CTRL_STAT_K_DMAREAD
+	PARAMETER	(CTRL_STAT_K_DMAREAD   = 6)
+	INTEGER*4	 CTRL_STAT_K_DMAWRITE
+	PARAMETER	(CTRL_STAT_K_DMAWRITE  = 7)
+	INTEGER*4	 CTRL_STAT_K_BADPARITY
+	PARAMETER	(CTRL_STAT_K_BADPARITY = 8)
+C
+	INTEGER*4	 CTRL_FUNC_K_NOOP
+	PARAMETER	(CTRL_FUNC_K_NOOP   = 0)	!MOVE POINTER
+	INTEGER*4	 CTRL_FUNC_K_STAT
+	PARAMETER	(CTRL_FUNC_K_STAT   = 1)	!GET STATISTICS
+	INTEGER*4	 CTRL_FUNC_K_DESECB
+	PARAMETER	(CTRL_FUNC_K_DESECB = 2)	!DES ELEC. CODE BOOK
+C
+	INTEGER*4	 CTRL_ENCDEC_K_ENC
+	PARAMETER	(CTRL_ENCDEC_K_ENC = 0)		!ENCRYPT
+	INTEGER*4	 CTRL_ENCDEC_K_DEC
+	PARAMETER	(CTRL_ENCDEC_K_DEC = 1)		!DECRYPT
+	INTEGER*4	 CTRL_ENCDEC_K_NOCLRSTAT
+	PARAMETER	(CTRL_ENCDEC_K_NOCLRSTAT = 0)	!DO NOT CLEAR STATS
+	INTEGER*4	 CTRL_ENCDEC_K_CLRSTAT
+	PARAMETER	(CTRL_ENCDEC_K_CLRSTAT = 1)	!CLEAR STATISTICS
+C
+	INTEGER*4	 CTRL_MODE_K_GTECH
+	PARAMETER	(CTRL_MODE_K_GTECH = 1)
+C
+C
+C MAX_CTRLCNT is the allocated size of CTRLBUF.  CTRLCNT is an actual
+C variable in the common area which controls the actual size of CTRLBUF.  It
+C is set by DESSTART to equal MAX_CTRLCNT.  The only reason I made CTRLCNT a
+C variable is so we can perform various tests by changing the value of CTRLCNT
+C without recompiling many programs.
+C
+	INTEGER*4	 MAX_CTRLCNT		!NUMBER OF ENTRIES
+	PARAMETER	(MAX_CTRLCNT = NUMPRO+1)
+C
+	INTEGER*4	 CTRLCNT
+C
+C
+C Define the structure
+C
+	RECORD	/CTRL/ CTRLBUF(MAX_CTRLCNT)
+C
+C Define the pointers into the structure
+C CTRLBUF is simply a list of structures which are accessed via PUTPOINTER and
+C GETPOINTER.  PUTPOINTER is the entry # (1-N) at which we will PUT the next
+C control entry.  GETPOINTER is the entry # at which we will GET the next
+C entry.  After initialization (DESSTART), both PUTPOINTER and GETPOINTER are
+C set to 1.  Whenever PUTPOINTER equals GETPOINTER, the list is assumed to be
+C empty.  Whenever PUTPOINTER+1 is equal to GETPOINTER, the list is assumed
+C to be full.  Thus, if you want to be sure to hold 100 entries, you must 
+C provide room for 101.
+C
+	INTEGER*4	PUTPOINTER	!WHERE TO PUT NEXT ENTRY
+	INTEGER*4	GETPOINTER	!WHERE TO GET NEXT ENTRY
+C
+C CTRLMSEC is the number of milliseconds between polls for the DES board
+C
+	INTEGER*4	CTRLMSEC
+C
+C ENCRYPTCNT is the total number of encryptions performed
+C DECRYPTCNT is the total number of decryptions performed
+C
+	INTEGER*4	ENCRYPTCNT
+	INTEGER*4	DECRYPTCNT
+C
+C ASTSTOP is the flag to switch off the AST if we need to restart the DES board
+C
+        LOGICAL*4       ASTSTOP
+C
+	COMMON	 /DESCOM/ CTRLBUF, PUTPOINTER, GETPOINTER,
+     *                             CTRLCNT,    CTRLMSEC,
+     *                             ENCRYPTCNT, DECRYPTCNT, ASTSTOP
+C
+ccccccc	VOLATILE /DESCOM/    !V02
+C
+C

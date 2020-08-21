@@ -1,0 +1,293 @@
+C  GXSRC:DISON.FOR
+C  
+C  $Log:   GXAFIP:[GOLS]DISON.FOV  $
+C  
+C     Rev 1.2   28 Jan 1997 19:50:44   HXK
+C  IPS LOTGEN release
+C  
+C     Rev 1.1   05 Dec 1996 20:32:58   HXK
+C  Updated for Finland IPS pre-release
+C  
+C     Rev 1.0   17 Apr 1996 12:54:20   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.7   26 Jan 1995 19:30:08   JJOLY
+C  UPDATED TO SET TERR TO TSEC ON SECURITY ERROR
+C  
+C     Rev 1.6   26 Jan 1995  5:29:40   JJOLY
+C  UPDATED TO CHECK AGENT NUMBER AFTER PASS NUMBER CHECK
+C  THIS WAS DONE BECAUSE OF DES
+C  
+C     Rev 1.6   26 Jan 1995 19:26:52   JJOLY
+C  UPDATED TO CHECK AGENT NUMBER AFTER PASS NUMBER THIS WAS
+C  DONE BECAUSE DES WILL NOT UNSCAMBLE AGENT NUMBER ON PASS NUMBER
+C  ERROR CORRECTLY
+C  
+C     Rev 1.5   30 Aug 1994 11:30:28   MCM
+C  CHANGED THE ERROR MESSAGE TO DISPLAY INSPRO
+C  
+C     Rev 1.4   21 Jun 1994 17:08:34   MCM
+C  ALLOW ANY OF THE 10 VALID PASSWORDS TO SIGNON
+C  
+C     Rev 1.3   20 Jun 1994 13:59:26   MCM
+C  INCREASED THE NUMBER OF PASSWORDS FROM 8 TO 10
+C  
+C     Rev 1.2   08 Jun 1994 13:27:48   MCM
+C  CHANGED OPERATIONAL STATUS FROM A HALFWORD TO A BYTE
+C  
+C     Rev 1.1   03 Jan 1994 20:14:52   SYSTEM
+C  Applying PVCS header for automatic revision history
+C  
+C     Rev 1.0    21 Dec 1993 17:38:04   SYSTEM
+C  Initial revision.
+C
+C
+C
+C V01 22-MAY-93 MCM RELEASED FOR GEORGIA
+C
+C V02 10-FEB-92 JPJ ADDED (GVT)
+C V01 13-NOV-91 JPJ RELEASED FOR VAX (INSTANTS)
+C
+C
+C SUBROUTINE TO DECODE INSTANT SIGN ON MESSAGE FROM TERMINAL
+C
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE DISON(TERMES,TRABUF,MESLEN)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:AGTCOM.DEF'
+        INCLUDE 'INCLIB:DESTRA.DEF'
+        INCLUDE 'INCLIB:TASKID.DEF'
+        INCLUDE 'INCLIB:CHKSUMCM.DEF'
+C
+        INTEGER*2 MESLEN
+        INTEGER*4 MESS(EDLEN)
+        BYTE      TERMES(*)
+C
+        INTEGER*4   TER, TEMP, TEMP1, TEMP2, TEMP3, TEMP4
+        INTEGER*4   CHKLEN, MYCHKSUM, ENCMES, ENCACT, SUBTYP
+        INTEGER*4   OPTIONS, ANUM, PNUM, IND, PASSOFFSET
+        INTEGER*4   SGNTAB(NUMAGT), I
+C
+C GET SEQUENCE NUMBER
+C
+        TEMP = ZEXT(TERMES(1))
+        TRABUF(TTRN)=IAND(TEMP,15)
+C
+C GET CHECKSUM
+C
+        TEMP1 = ZEXT(TERMES(3))
+        TEMP2 = ZEXT(TERMES(4))
+        TRABUF(TCHK) = ISHFT(TEMP1,8) + TEMP2
+C
+C GET STATISTICS
+C
+        TRABUF(TTSTCS)=ZEXT(TERMES(5))
+C
+C GET OPTION FLAGS
+C
+        TEMP1 = ZEXT(TERMES(7))  
+        TEMP2 = ZEXT(TERMES(6))
+        OPTIONS = ISHFT(TEMP1,8) + TEMP2
+        IND=8
+C
+C CHECK FOR NODE NUMBER (NOT USED)
+C
+        IF(IAND(OPTIONS,'0001'X).NE.0) THEN
+           IND=IND+4
+        ENDIF
+C
+C CHECK FOR RETAILER NUMBER (NOT USED)
+C
+        IF(IAND(OPTIONS,'0002'X).NE.0) THEN
+           IND=IND+4
+        ENDIF
+C
+C CHECK FOR PASSWORD (NOT USED)
+C
+        IF(IAND(OPTIONS,'0004'X).NE.0) THEN
+           IND=IND+2
+        ENDIF
+C
+C CHECK FOR ORIGINATOR   (NOT USED)
+C
+        IF(IAND(OPTIONS,'0008'X).NE.0) THEN
+           IND=IND+2
+        ENDIF
+C
+C CHECK FOR LOCATION NUMBER (NOT USED)
+C
+        IF(IAND(OPTIONS,'0010'X).NE.0) THEN
+           IND=IND+4
+        ENDIF
+C
+C CHECK FOR USER ID (NOT USED)
+C
+        IF(IAND(OPTIONS,'0020'X).NE.0) THEN
+           IND=IND+4
+        ENDIF
+C
+C CHECK FOR OPERATOR ID (NOT USED)
+C
+        IF(IAND(OPTIONS,'0040'X).NE.0) THEN
+           IND=IND+1
+        ENDIF
+C
+C CHECK FOR PAYMENT TYPE (NOT USED HERE)
+C
+        IF(IAND(OPTIONS,'0080'X).NE.0) THEN
+           IND=IND+2
+        ENDIF
+C
+C CHECK FOR VALIDATION MODE (NOT USED HERE)
+C
+        IF(IAND(OPTIONS,'0100'X).NE.0) THEN
+           IND=IND+2
+        ENDIF
+C
+C CHECK FOR BANK (NOT USED HERE)
+C
+        IF(IAND(OPTIONS,'0200'X).NE.0) THEN
+           IND=IND+8
+        ENDIF
+C
+C GET CLERK/AGENT NUMBER
+C
+        TEMP1 = ZEXT(TERMES(IND+3))  !c.... switched around
+        TEMP2 = ZEXT(TERMES(IND+2))  !c.... switched around
+        TEMP3 = ZEXT(TERMES(IND+1))  !c.... switched around
+        TEMP4 = ZEXT(TERMES(IND+0))  !c.... switched around
+        ANUM  = ISHFT(TEMP1,24)+ISHFT(TEMP2,16)+
+     *          ISHFT(TEMP3,8)+TEMP4
+        IND=IND+4
+C
+C GET AGENT PASS CODE
+C
+        TEMP1 = ZEXT(TERMES(IND+1))   !c.... switched ind's increments
+        TEMP2 = ZEXT(TERMES(IND+0))   !c....
+        PNUM  = ISHFT(TEMP1,8)+TEMP2
+        IND=IND+2
+C
+C IF MAIN PASSNUMBER IS SHUT OFF THEN DO NOT ALLOW ANY CLERK SIGNON
+C
+        TER=TRABUF(TTER)
+        IF(AGTTAB(APSNUM,TER).EQ.0) THEN
+          TRABUF(TSTAT)=REJT
+          TRABUF(TERR)=INVL
+          TRABUF(TIOLD)=AGTHTB(AOPSTS,TER)
+          TRABUF(TINEW)=SIGNOF
+          SGNTAB(TER)=0
+          GOTO 8000
+        ENDIF
+C
+C CHECK FOR CORRECT PASS NUMBER
+C
+        DO 50 I=0,7
+           IF(PNUM.EQ.AGTTAB(APSNUM+I,TER)) THEN
+             PASSOFFSET=I
+             GOTO 60
+           ENDIF
+50      CONTINUE
+C
+C UPDATE ERROR COUNT
+C
+        SGNTAB(TER)=SGNTAB(TER)+1
+        TRABUF(TSTAT)=REJT
+        TRABUF(TERR)=INVL
+        TRABUF(TIOLD)=AGTHTB(AOPSTS,TER)
+C
+C SEND MESSAGE TO ERRLOG OR SIGN OFF TERMINAL
+C
+        IF(SGNTAB(TER).GT.10) THEN
+          TRABUF(TERR)=TSEC
+          MESS(1)=INI
+          MESS(2)=TEGEN
+          MESS(3)=14
+          MESS(4)=TER
+          MESS(5) = TRABUF(TERR)
+          CALL QUEMES(MESS)
+          TRABUF(TINEW)=SERSOF
+        ELSE
+          TRABUF(TINEW)=SIGNOF
+        ENDIF
+        GOTO 8000
+C
+C SIGNON AGENT AND BUILD SIGNON MESSAGE
+C
+60      CONTINUE
+C
+C BAD AGENT NUMBER IS CHECKED HERE BECAUSE OF DES
+C
+        IF(ANUM.NE.AGTTAB(AGTNUM,TER)) THEN
+          TRABUF(TSTAT)=REJT
+          TRABUF(TERR)=INVL
+          TRABUF(TIOLD)=AGTHTB(AOPSTS,TER)
+          TRABUF(TINEW)=SIGNOF
+          SGNTAB(TER)=0
+          GOTO 8000
+        ENDIF
+C
+        SGNTAB(TER)=0
+        TRABUF(TISGN)=PASSOFFSET+1
+        AGTHTB(AOPSTS,TER)=SIGNON
+        AGTHTB(ASONCT,TER)=AGTHTB(ASONCT,TER)+1
+        AGTTAB(AGTSC2,TER)=0
+        AGTHTB(AGTPASOFF,TER)=PASSOFFSET+1
+        AGTTAB(AGTOCL,TER)=AGTTAB(AGTNCL,TER)
+        AGTTAB(AGTNCL,TER)=TRABUF(TISGN)
+        CALL ENCINI1(AGTTAB(APSNUM+PASSOFFSET,TER),TER)
+C
+C CHECK MESSAGE CHECKSUM
+C GVT SEEDS SIGN-ON CHECK SUM WITH ZERO
+C
+        IF(P(SUPSUM).EQ.0) THEN
+          IF(.NOT.BTEST(AGTTAB(AGTTYP,TRABUF(TTER)),AGTSUM)) THEN
+            I4CCITT=0
+            TERMES(3) = I1CCITT(2)
+            TERMES(4) = I1CCITT(1)
+            CHKLEN=MESLEN-1
+            CALL GETCCITT(TERMES,1,CHKLEN,MYCHKSUM)
+            IF(MYCHKSUM.NE.TRABUF(TCHK)) TRABUF(TERR)=CBAD
+          ENDIF
+        ENDIF
+C
+C CHECK FOR DES ERROR
+C
+        IF(P(DESACT).EQ.0) THEN
+          ENCMES = ZEXT(TERMES(1))
+          ENCMES = IAND(ENCMES,'08'X)
+          IF(P(DESFLG).EQ.0.AND.
+     *       BTEST(AGTTAB(AGTTYP,
+     *            TRABUF(TTER)),AGTDES)) THEN
+            ENCACT='08'X
+          ELSE
+            ENCACT=0
+          ENDIF
+          IF(ENCMES.NE.ENCACT) TRABUF(TERR) = DESMOD
+        ENDIF
+C
+C
+C
+8000    CONTINUE
+        IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
+        RETURN
+        END

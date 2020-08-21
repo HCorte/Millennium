@@ -1,0 +1,183 @@
+C SUBROUTINE LANSNP
+C
+C V05 15-JUN-2000 OXK CLEANUP W/ WARNINGS=ALL
+C V04 22-FEB-1996 WSM X2X Upgrade: Added PRMAGT.DEF, AGTINF.DEF for Finland.
+C V03 02-APR-1992 DAS ADDED MULTIPLE PAGES TO VIEW ALL POSSIBLE SAPS
+C V02 10-SEP-1991 JWE TO MANY SAPS, ONLY 16 AT A TIME CAN BE DISPLAYED
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE LANSNP(LAN,CMDLIN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:VISCOM.DEF'
+	INCLUDE 'INCLIB:LANCOM.DEF'
+C
+	INTEGER*4 SAP2, SAP1, SAPIND, PNT, I, LAN
+C
+	INTEGER*4 TIMEASCI
+        INTEGER*4 PAGE/1/, POS, KEYNUM
+        INTEGER*4 STARTSAP/1/
+        INTEGER*4 ENDSAP, MAXPAGES
+C
+        INTEGER*4 CMDLIN(20)                     
+        REAL*8    CMDOPT(2) /'NEXT    ','LAST    '/
+C   
+	CHARACTER*8 TEXT
+	CHARACTER*1 HEX_TAB(64) /64*' '/
+	CHARACTER*8 ALANST(0:2)
+C
+	DATA ALANST/'off-line','on-line ','quisced '/
+C
+C LAN IS NOT YET OPERATIONAL - NOTIFY USER AND RETURN
+C
+ 	IF(LANGO.NE.LANPROUP) THEN
+	   WRITE(CLIN23,990)
+	   RETURN
+	ENDIF
+C
+C DEFAULT LAN NUMBER TO 1 IF RANGE IS NOT VALID
+C TEST LANTIMER VALUE FOR POSSIBLE CONVERSION ERRORS
+C
+	IF(LAN.LE.0.OR.LAN.GT.MAXLAN) LAN = 1
+	IF(TIMEASCI(1,LANTIMER,TEXT).NE.0) GOTO 1000
+C
+C START OF SNAPSHOT CODE..............
+C
+        MAXPAGES = (MAXSAP+1)/16                    !CAN DISPLAY 16 SAPS/PAGE
+        IF(MOD((MAXSAP+1),16).NE.0)MAXPAGES=MAXPAGES+1
+C
+C TEST FOR ANY COMMAND LINE OPTIONS
+C
+        POS = 1
+        CALL KEY(CMDLIN,CMDOPT,2,POS,KEYNUM)
+        IF(KEYNUM.EQ.0) GO TO 100
+        GOTO (25,50),KEYNUM
+C
+C DETERMINE STARTING AND ENDING SAP NUMBERS 
+C
+C       NEXT PAGE
+C
+25      CONTINUE
+        PAGE=PAGE+1
+        IF(PAGE.GT.MAXPAGES) PAGE=MAXPAGES
+        GOTO 100
+C
+C       PREVIOUS/LAST PAGE
+C
+50      CONTINUE
+        PAGE=PAGE-1
+        IF(PAGE.LE.0) PAGE = 1
+        GOTO 100
+C        
+C       ANY OTHER COMMANDS GO HERE !!!!
+C
+100     CONTINUE
+	WRITE(CLIN1,901) LAN,TEXT                  !SNAPSHOT HEADER
+	CALL I4TOHEX(LANHOME(1,LAN),HEX_TAB(1),12) !HOST INFORMATION
+	WRITE(CLIN2,902)(CLANDEV(I,1,LAN),I=1,5),
+     *	                (CLANDEV(I,2,LAN),I=1,5),
+     *	                (HEX_TAB(I),I=1,12)
+	WRITE(CLIN3,999) PAGE,MAXPAGES     
+C
+C REMOTE ADDRESSES
+C
+        STARTSAP = ((PAGE-1)*8)+1
+        ENDSAP   = (STARTSAP + 8)
+        IF(ENDSAP.GT.MAXSAP) ENDSAP=MAXSAP/2
+C
+	PNT=4
+	IF(MAXSAP.GT.1) THEN
+	   DO 150 SAPIND=STARTSAP,ENDSAP
+      	      SAP1=SAPIND*2-2
+	      SAP2=SAPIND*2-1
+              WRITE(XNEW(PNT),900)
+              IF(SAP1.LT.MAXSAP) THEN
+                 CALL I4TOHEX(FLANADR(1,LAN,SAP1),HEX_TAB(1),12)
+                 CALL I4TOHEX(FLANADR(1,LAN,SAP2),HEX_TAB(13),12)
+	         WRITE(XNEW(PNT),903) SAP1,(HEX_TAB(I),I=1,12),
+     *                                SAP2,(HEX_TAB(I),I=13,24)
+              ELSEIF(SAP1.EQ.MAXSAP) THEN
+                 CALL I4TOHEX(FLANADR(1,LAN,SAP1),HEX_TAB(1),12)
+	         WRITE(XNEW(PNT),904) SAP1,(HEX_TAB(I),I=1,12)
+              ENDIF
+	      PNT=PNT+1
+	      IF(PNT.GT.11) GOTO 151	!SHOW ONLY 16 SAPS AT A TIME.
+150	   CONTINUE
+	ENDIF
+
+151	CONTINUE
+	IF(MOD(MAXSAP,2).NE.0.AND.PNT.LT.11) THEN
+	   SAP1=MAXSAP
+	   CALL I4TOHEX(FLANADR(1,LAN,SAP1),HEX_TAB(1),12)
+	   WRITE(XNEW(  PNT),904) SAP1,(HEX_TAB(I),I=1,12)
+	   PNT=PNT+1
+	ENDIF
+	WRITE(XNEW(  PNT),900)
+	PNT=PNT+1
+C
+C REMOTE STATUSES
+C
+	IF(MAXSAP.GT.1) THEN
+	   DO 200 SAPIND=STARTSAP,ENDSAP
+	      SAP1=SAPIND*2-2
+	      SAP2=SAPIND*2-1
+              WRITE(XNEW(PNT),900)
+              IF(SAP1.LT.MAXSAP) THEN
+	        WRITE(XNEW(PNT),911) SAP1,ALANST(LANSAPSTS(SAP1)),
+     *                               SAP2,ALANST(LANSAPSTS(SAP2))
+              ELSEIF(SAP1.EQ.MAXSAP)THEN
+	        WRITE(XNEW(PNT),912) SAP1,ALANST(LANSAPSTS(SAP1))
+              ENDIF
+	   PNT=PNT+1
+	   IF(PNT.GT.20)GOTO 201
+200	   CONTINUE
+	ENDIF
+C
+201	CONTINUE
+	IF(MOD(MAXSAP,2).NE.0.AND.PNT.LT.20) THEN
+	   SAP1=MAXSAP
+	   WRITE(XNEW(  PNT),912) SAP1,ALANST(LANSAPSTS(SAP1))
+	   PNT=PNT+1
+	ENDIF
+	RETURN
+C
+C INVALID LANTIMER VALUE ERROR
+C
+1000	CONTINUE
+	WRITE(CLIN23,1100) LANTIMER
+1100	FORMAT('Invalid timer value - ',I9)
+	RETURN
+C
+900	FORMAT(80(' '))
+901	FORMAT('LAN snapshot ',I2.2,' at ',A8)
+902	FORMAT('Write/Read device:  ',3X,5A1,1X,5A1,6X,
+     *	       'Home address.....:  ',3X,12A1)
+903	FORMAT('Remote address...:  ',I2,1X,12A1,
+     *          T40,'Remote address...:  ',I2,1X,12A1)
+904	FORMAT('Remote address...:  ',I2,1X,12A1)
+911	FORMAT('Remote status....:  ',I2,2X,A8,
+     *          T40,'Remote status....:  ',I2,2X,A8)
+912	FORMAT('Remote status....:  ',I2,2X,A8)
+990	FORMAT('Network not initialized yet ... please wait ')
+999     FORMAT(T60,'Page ',I4,' of ',I4)
+	END

@@ -1,0 +1,116 @@
+C RECAGTIV.DEF
+C
+C V01 02-SEP-2010 MAC RFSS0145 - ASFIV FILE
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2010 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C AGENT ACCOUNTING FILE RECORD DESCRIPTION
+C
+      INTEGER*4  ASFIVRT                         !Record Type
+      INTEGER*4  ASFIVWEEK                       !Week of Invoicing
+      INTEGER*4  ASFIVYEAR                       !Year of Invoicing
+      INTEGER*4  ASFIVAGT                        !Agent
+      INTEGER*4  ASFIV_F_SGN                     !Firm: Sign of Accounting
+      INTEGER*4  ASFIV_F_INVAMT                  !Firm: Invoice Amount
+      INTEGER*4  ASFIV_F_TRAMT                   !Firm: Transit Amount  
+      INTEGER*4  ASFIV_F_CNT_ON_SAL              !Firm: Counter of Online sales
+      INTEGER*4  ASFIV_F_AMT_ON_SAL              !Firm: Amount of Online sales
+      INTEGER*4  ASFIV_F_CNT_OF_SAL              !Firm: Counter of Offline sales
+      INTEGER*4  ASFIV_F_AMT_OF_SAL              !Firm: Amount of Offline sales
+      INTEGER*4  ASFIV_F_CNT_RET_D               !Firm: Counter of Returns
+      INTEGER*4  ASFIV_F_AMT_RET                 !Firm: Amount of Returns
+      INTEGER*4  ASFIV_F_ON_COM                  !Firm: Online Commission
+      INTEGER*4  ASFIV_F_OF_COM                  !Firm: Offline Commission
+      INTEGER*4  ASFIV_F_LST_BAL                 !Firm: Last week balance
+      INTEGER*4  ASFIV_F_PAID                    !Firm: Already paid
+      INTEGER*4  ASFIV_F_ACC_PAID                !Firm: Account of paid prizes
+      INTEGER*4  ASFIV_F_AMT_PAID                !Firm: Amount of paid prizes
+      INTEGER*4  ASFIV_F_AMT_DIF                 !Firm: Amount of differences
+      INTEGER*4  ASFIV_F_CNT_RET_A               !Firm: Counter of returns
+      INTEGER*4  ASFIV_F_CODE                    !Firm: Code of the Firm
+      INTEGER*4  ASFIV_S_SGN                     !Shop: Sign of Accounting
+      INTEGER*4  ASFIV_S_INVAMT                  !Shop: Invoice Amount
+      INTEGER*4  ASFIV_S_CNT_ON_SAL              !Shop: Counter of Online sales
+      INTEGER*4  ASFIV_S_AMT_ON_SAL              !Shop: Amount of Online sales
+      INTEGER*4  ASFIV_S_CNT_OF_SAL              !Shop: Counter of Offline sales
+      INTEGER*4  ASFIV_S_AMT_OF_SAL              !Shop: Amount of Offline sales
+      INTEGER*4  ASFIV_S_CNT_RET_D               !Shop: Counter of Returns
+      INTEGER*4  ASFIV_S_AMT_RET                 !Shop: Amount of Returns
+      INTEGER*4  ASFIV_S_ON_COM                  !Shop: Online Commission
+      INTEGER*4  ASFIV_S_OF_COM                  !Shop: Offline Commission
+      INTEGER*4  ASFIV_S_LST_BAL                 !Shop: Last week balan
+      INTEGER*4  ASFIV_S_PAID                    !Shop: Already paid
+      INTEGER*4  ASFIV_S_ACC_PAID                !Shop: Account of paid prizes
+      INTEGER*4  ASFIV_S_AMT_PAID                !Shop: Amount of paid prizes
+      INTEGER*4  ASFIV_S_AMT_DIF                 !Shop: Amount of differences
+      INTEGER*4  ASFIV_S_CNT_RET_A               !Shop: Counter of returns
+      INTEGER*4  ASFIV_S_CODE                    !Shop: Code of the Shop
+C
+      INTEGER*4  ASFIV_FREE(89)
+C
+C CALCULATE FREE SPACE BASED ON MACHINE DEPENDENT SECTOR SIZES.
+C SHOULD ALLWAYS ADD UP TO A EVEN SECTOR SIZE BYTES (VAX 512).
+C
+        INTEGER*4 ASFIVLEN , ASFIVSEC
+	PARAMETER (ASFIVLEN = 128)
+	PARAMETER (ASFIVSEC = ASFIVLEN / 64)
+C
+	INTEGER*4 ASFIVREC(ASFIVLEN)
+C
+        CHARACTER*1 CHR_F_SGN(4), CH_S_SGN(4)
+C
+	EQUIVALENCE (ASFIVREC( 1),ASFIVRT)
+	EQUIVALENCE (ASFIVREC( 2),ASFIVWEEK)
+	EQUIVALENCE (ASFIVREC( 3),ASFIVYEAR)
+	EQUIVALENCE (ASFIVREC( 4),ASFIVAGT)
+	EQUIVALENCE (ASFIVREC( 5),ASFIV_F_SGN,CHR_F_SGN)
+	EQUIVALENCE (ASFIVREC( 6),ASFIV_F_INVAMT)
+	EQUIVALENCE (ASFIVREC( 7),ASFIV_F_TRAMT)
+	EQUIVALENCE (ASFIVREC( 8),ASFIV_F_CNT_ON_SAL)
+	EQUIVALENCE (ASFIVREC( 9),ASFIV_F_AMT_ON_SAL)
+	EQUIVALENCE (ASFIVREC(10),ASFIV_F_CNT_OF_SAL)
+	EQUIVALENCE (ASFIVREC(11),ASFIV_F_AMT_OF_SAL)
+	EQUIVALENCE (ASFIVREC(12),ASFIV_F_CNT_RET_D)
+	EQUIVALENCE (ASFIVREC(13),ASFIV_F_AMT_RET)
+	EQUIVALENCE (ASFIVREC(14),ASFIV_F_ON_COM)
+	EQUIVALENCE (ASFIVREC(15),ASFIV_F_OF_COM)
+	EQUIVALENCE (ASFIVREC(16),ASFIV_F_LST_BAL)
+	EQUIVALENCE (ASFIVREC(17),ASFIV_F_PAID)
+	EQUIVALENCE (ASFIVREC(18),ASFIV_F_ACC_PAID)
+	EQUIVALENCE (ASFIVREC(19),ASFIV_F_AMT_PAID)
+	EQUIVALENCE (ASFIVREC(20),ASFIV_F_AMT_DIF)
+	EQUIVALENCE (ASFIVREC(21),ASFIV_F_CNT_RET_A)
+	EQUIVALENCE (ASFIVREC(22),ASFIV_F_CODE)
+	EQUIVALENCE (ASFIVREC(23),ASFIV_S_SGN,CH_S_SGN)
+	EQUIVALENCE (ASFIVREC(24),ASFIV_S_INVAMT)
+	EQUIVALENCE (ASFIVREC(25),ASFIV_S_CNT_ON_SAL)
+	EQUIVALENCE (ASFIVREC(26),ASFIV_S_AMT_ON_SAL)
+	EQUIVALENCE (ASFIVREC(27),ASFIV_S_CNT_OF_SAL)
+	EQUIVALENCE (ASFIVREC(28),ASFIV_S_AMT_OF_SAL)
+	EQUIVALENCE (ASFIVREC(29),ASFIV_S_CNT_RET_D)
+	EQUIVALENCE (ASFIVREC(30),ASFIV_S_AMT_RET)
+	EQUIVALENCE (ASFIVREC(31),ASFIV_S_ON_COM)
+	EQUIVALENCE (ASFIVREC(32),ASFIV_S_OF_COM)
+	EQUIVALENCE (ASFIVREC(33),ASFIV_S_LST_BAL)
+	EQUIVALENCE (ASFIVREC(34),ASFIV_S_PAID)
+	EQUIVALENCE (ASFIVREC(35),ASFIV_S_ACC_PAID)
+	EQUIVALENCE (ASFIVREC(36),ASFIV_S_AMT_PAID)
+	EQUIVALENCE (ASFIVREC(37),ASFIV_S_AMT_DIF)
+	EQUIVALENCE (ASFIVREC(38),ASFIV_S_CNT_RET_A)
+	EQUIVALENCE (ASFIVREC(39),ASFIV_S_CODE)
+C
+        EQUIVALENCE (ASFIVREC(40),ASFIV_FREE)
+C

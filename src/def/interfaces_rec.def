@@ -1,0 +1,455 @@
+C INTERFACES_REC.DEF
+C
+C V10 17-DEC-2015 FRP CR31 PIN for Owner and Clerk
+C V09 12-AUG-2011 RXK Dimension of LAST_OP_NUM fixed.
+C V08 29-NOV-2010 FRP Lotto2 Changes
+C V07 11-MAY-2001 EPH INCLUDED LINHA_DISTRIBUICAO / CENTRAL_RECEPCAO / STATUS_TRANSPORTE IN AGTMIL
+C V06 03-MAY-2001 EPH INCLUDED WORSAP
+C V05 27-APR-2001 ANG INCLUDED OFFWAG AND OFFWAGFIN RECORD
+C V04 13-MAR-2001 EPH INCLUDE OOFWAG_ANT RECORD
+C V03 16-FEB-2001 EPH INCLUDE X2X ADRRESS FIELD FOR AGTMIL
+C V02 07-FEB-2001 UXN ALIGNMENT WARNINGS DISABLED
+C V01 31-JAN-2001 EPH RELEASED FOR PORTUGAL
+C
+C CONTAINS STRUCS AND RECORDS FOR ALL INTERFACE FILES USED IN 
+C PORTUGAL 
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2001 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CDEC$ OPTIONS /WARNING=NOALIGNMENT
+
+C	****************************************************************************
+C	ORDENS DE PAGAMENTO DOS PREMIOS DA BANCA
+C	****************************************************************************
+C	APOSTAS MUTUAS -> MILLENIUM
+C	****************************************************************************
+C
+	STRUCTURE /OOFWAG_STRU/
+
+C	   >>> CONTROL INFO
+           
+	   CHARACTER*2  RECTYPE		! HD=HEADER / DT=DETAIL / TL=TRAILLER (LAST RECORD)
+           INTEGER*4	RECNUM		! NUMBER OF LAST RECORD READ
+	   INTEGER*4    DRAW(MAXGAM)    ! THE DRAW NUMBER IN THIS FILE (PER GAME)
+	   CHARACTER*70 ERRSTR          ! LAST ERROR MESSAGE
+	   INTEGER*4    LUN
+	   
+C          >>> HEADER
+
+	   INTEGER*4	DAY
+	   INTEGER*4	MONTH
+	   INTEGER*4	YEAR
+           CHARACTER*10	DATAHD                  
+
+C	   >>> DETAIL
+
+	   INTEGER*4	OFF_GAME
+           INTEGER*4	ON_GAME
+	   INTEGER*4	D_WEEK
+           INTEGER*4	D_YEAR
+           INTEGER*4	AGENT
+	   INTEGER*4	BILHETE
+	   INTEGER*4	WINS(6)
+	   INTEGER*4	JOKER_DIV
+
+C	   >>> TRAILLER
+
+	   INTEGER*4	NUM_RECORDS
+
+	END STRUCTURE
+
+	RECORD /OOFWAG_STRU/ OOFWAG_REC
+
+	COMMON /OOFWAG_COMMON/ OOFWAG_REC
+
+
+
+C	****************************************************************************
+C	ORDENS DE PAGAMENTO DOS PREMIOS DA BANCA (OLD ONE'S) - USED ONLY ONCE
+C	****************************************************************************
+C	APOSTAS MUTUAS -> MILLENIUM
+C	****************************************************************************
+C
+	STRUCTURE /OOFWAGANT_STRU/
+
+C	   >>> CONTROL INFO
+           
+	   CHARACTER*2  RECTYPE		! HD=HEADER / DT=DETAIL / TL=TRAILLER (LAST RECORD)
+           INTEGER*4	RECNUM		! NUMBER OF LAST RECORD READ
+	   CHARACTER*70 ERRSTR          ! LAST ERROR MESSAGE
+	   INTEGER*4    LUN
+	   INTEGER*4    LAST_OP_NUM(MAXGAM) ! FILLED WITH GREATEST OP NUMBER 
+                           !FOUND FROM INITIAL OP FILE FROM SCML (FOR EACH GAME)
+	   
+C          >>> HEADER
+
+	   INTEGER*4	DAY
+	   INTEGER*4	MONTH
+	   INTEGER*4	YEAR
+           CHARACTER*10	DATAHD                  
+
+C	   >>> DETAIL
+
+	   INTEGER*4	OFF_GAME
+           INTEGER*4	ON_GAME
+
+	   INTEGER*4	D_WEEK
+           INTEGER*4	D_YEAR
+
+	   INTEGER*4    NUM_OP
+           INTEGER*4	AGENT
+	   INTEGER*4	BILHETE
+
+           LOGICAL      RECLAMACAO
+
+	   INTEGER*4    BANCO
+	   INTEGER*4    BALCAO
+
+	   CHARACTER*8  DATA_PAGAMENTO   !(ZEROS IF NOT PAID - AAAAMMDD)
+
+	   INTEGER*4    GAME_VALUE
+           INTEGER*4    LOTO2_VALUE
+           INTEGER*4    JOKER_VALUE
+
+	   INTEGER*4	WINS_GAME(6)
+	   INTEGER*4    WINS_LOTO2(5)
+	   INTEGER*4	JOKER_DIV
+
+C	   >>> TRAILLER
+
+	   INTEGER*4	NUM_RECORDS
+
+	END STRUCTURE
+
+	RECORD /OOFWAGANT_STRU/ OOFWAGANT_REC
+
+	COMMON /OOFWAGANT_COMMON/ OOFWAGANT_REC
+
+
+
+C	****************************************************************************
+C	REGISTRO DE AGENTES
+C	****************************************************************************
+C	SISTEMA DE CADASTROS -> MILLENIUM
+C	****************************************************************************
+C
+	STRUCTURE /AGTMIL_STRU/
+
+C	   >>> CONTROL INFO
+           
+	   CHARACTER*2  RECTYPE		! HD=HEADER / DT=DETAIL / TL=TRAILLER (LAST RECORD)
+           INTEGER*4	RECNUM		! NUMBER OF LAST RECORD READ
+	   CHARACTER*70 ERRSTR          ! LAST ERROR MESSAGE
+	   INTEGER*4    LUN             ! LOGICAL UNIT FOR THE FILE
+	   
+C          >>> HEADER
+
+	   INTEGER*4	DAY
+	   INTEGER*4	MONTH
+	   INTEGER*4	YEAR
+           CHARACTER*10	DATAHD
+
+C	   >>> DETAIL
+
+	   INTEGER*4    AGENT
+           CHARACTER*1  OPER_TYPE           ! 1=INCLUSAO / 2=ALTERACAO / 5=EXCLUSAO DE COMM DATA
+	   CHARACTER*1  AGENT_TYPE          ! 1=ONLINE / 2=OFFLINE
+           CHARACTER*1  BANK                ! 'Y'=YES / 'N'= NO  (MAY VALIDATE PASSIVE FOR OTHER TERMINALS)
+           CHARACTER*1  PRIVILIGED          ! 'Y'=YES / 'N'=NO (MAY PAY BIG PRIZES FOR ANY GAME)
+	   CHARACTER*55 AGENT_NAME
+	   CHARACTER*55 MANAGER_NAME
+	   CHARACTER*45 STORE_NAME
+	   CHARACTER*6  BUSINESS_CODE       ! CODIGO DE ATIVIDADE
+	   CHARACTER*6  LOCATION_CODE       ! DDCCFF (DISTRITO/CONDADO/FREGUESIA)
+	   CHARACTER*45 ADDRESS
+	   CHARACTER*7  ZIP_CODE
+	   CHARACTER*30 ZIP_CODE_NAME
+	   CHARACTER*9  AGENT_PHONE
+	   CHARACTER*9  AGENT_FAX
+	   INTEGER*4    BUSINESS_TYPE       ! RAMO DE ATIVIDADE
+	   CHARACTER*9  MANAGER_PHONE
+
+C		MUTUAS
+
+	   CHARACTER*1  WAGER_STATUS        ! ' '=NAO VENDE / 'V'=VENDE
+           CHARACTER*6  WAGER_BSAD          ! WAGER BEGIN SALES DATE (DDMMAA)
+           CHARACTER*6  WAGER_BSUD          ! WAGER BEGIN SUPPRESSED DATE (DDMMAA)
+           CHARACTER*6  WAGER_ESUD          ! WAGER END SUPPRESSED DATE (DDMMAA)
+           CHARACTER*6  WAGER_ESAD          ! WAGER END SALES DATE (DDMMAA)
+	   CHARACTER*21 WAGER_ACCOUNT       ! BANK(4)/BRANCH(4)/ACCOUNT(11)/DV(2)	              	   
+	              	   
+C		PASSIVE
+
+	   CHARACTER*1  PASSIVE_STATUS      ! ' '=NAO VENDE / 'V'=VENDE
+           CHARACTER*6  PASSIVE_BSAD        ! PASSIVE BEGIN SALES DATE (DDMMAA)
+           CHARACTER*6  PASSIVE_BSUD        ! PASSIVE BEGIN SUPPRESSED DATE (DDMMAA)
+           CHARACTER*6  PASSIVE_ESUD        ! PASSIVE END SUPPRESSED DATE (DDMMAA)
+           CHARACTER*6  PASSIVE_ESAD        ! PASSIVE END SALES DATE (DDMMAA)
+	   CHARACTER*21 PASSIVE_ACCOUNT     ! BANK(4)/BRANCH(4)/ACCOUNT(11)/DV(2)	              	   
+
+	   INTEGER*4    SAP_NUMBER         
+	   CHARACTER*4  BANK_OP
+	   CHARACTER*4  BRANCH_OP
+	   INTEGER*4    AGENT_PASSWORD
+
+	   CHARACTER*9  X2XADDRESS          ! X2X ADDRESS (COMM DATA FROM PT TELECOM)  !V03
+
+	   INTEGER*4    LINHA_DISTRIBUICAO  ! USED FOR OFFLINE AGENT RECEIPT
+	   INTEGER*4    CENTRAL_RECEPCAO    ! "CENTRAL DE RECEPCAO" FOR THE AGENT
+	   INTEGER*4    STATUS_TRANSPORTE   ! 0) NO TRANSPORT / 1) <=25KM / 2) >25KM <=75KM / 3) >75KM
+	   INTEGER*4    MANAGER_PASSWORD
+
+C	   >>> TRAILLER
+
+	   INTEGER*4	NUM_RECORDS
+
+	END STRUCTURE
+
+	RECORD /AGTMIL_STRU/ AGTMIL_REC
+
+	COMMON /AGTMIL_COMMON/ AGTMIL_REC
+
+
+
+C	****************************************************************************
+C	REGISTRO DOS ARQUIVOS FORMATO ODJ(ORDENS) / PS2(INVOICE)
+C	****************************************************************************
+C	BANCA -> MILLENIUM (ODJR/PS2R) / MILENIUM -> BANCA (ODJE/PS2E)
+C	****************************************************************************
+
+C	=================================
+	STRUCTURE /BNKCTRL_STRU/
+C	=================================
+
+C	   >>> CONTROL INFO
+
+	   INTEGER*4    BANK
+	   CHARACTER*1  FILETYPE        ! 'R'=Recebido do banco(leitura) / 'E'=Enviado pela SCML(escrita)
+	   CHARACTER*3  ODJPS2	        ! Indicates ODJ / PS2 file
+           CHARACTER*2  RECTYPE		! HD=HEADER / DT=DETAIL / TL=TRAILLER (LAST RECORD)
+           INTEGER*4	RECNUM		! NUMBER OF LAST RECORD READ OR WRITEN
+	   INTEGER*4    ACUM_VALUE      ! VALUE ACCUMULATED UP TO THE MOMENT
+
+C          >>> HEADER
+
+           CHARACTER*8  DATA_PROC       ! AAAAMMDD
+           CHARACTER*21 NIB_HD          ! BBBBAAAACCCCCCCCCCCDD = BANCO/BALCAO/CONTA/DV
+	   CHARACTER*8  DATA_PAYLIMIT     ! AAAAMMDD	
+	   CHARACTER*20 REF_ORDENANTE
+	   INTEGER*4    TIPO_OPERACAO_HD
+	   INTEGER*4    SITUACAO_CONTA_HD
+	   INTEGER*4    SITUACAO_REGISTRO_HD
+           
+	END STRUCTURE
+
+C	=================================
+	STRUCTURE /BNK_STRU/
+C	=================================
+
+C	   >>> CONTROL INFO	
+   
+	   CHARACTER*70 ERRSTR			! LAST ERROR MESSAGE
+	   INTEGER*4	BANKR (MAXBANKS)	! LIST OF BANKS OPENED FOR READING
+	   INTEGER*4	BANKE (MAXBANKS)	! LIST OF BANKS OPENED FOR WRITING
+	   INTEGER*4	TOT_BANKR		! NUMBER OF BANK FILES OPENED FOR READING
+	   INTEGER*4	TOT_BANKE		! NUMBER OF BANK FILES OPENED FOR WRITING
+
+C          >>> HEADER
+
+C	   COMMON TO ODJ AND PS2 FORMAT
+C	   ----------------------------
+           CHARACTER*8  DATA_PROC         ! AAAAMMDD
+           CHARACTER*21 NIB_HD            ! BBBBAAAACCCCCCCCCCCDD = BANCO/BALCAO/CONTA/DV
+C
+C	   EXCLUSIVE TO ODJ FORMAT
+C	   -----------------------
+	   CHARACTER*8  DATA_PAYLIMIT     ! AAAAMMDD	
+C
+C	   EXCLUSIVE TO PS2 FORMAT
+C	   -----------------------
+	   CHARACTER*20 REF_ORDENANTE
+	   INTEGER*4    TIPO_OPERACAO_HD
+	   INTEGER*4    SITUACAO_CONTA_HD
+	   INTEGER*4    SITUACAO_REGISTRO_HD
+
+C	   >>> DETAIL
+C
+C	   COMMON TO ODJ AND PS2 FORMAT
+C	   ----------------------------
+	   INTEGER*4    VALUE
+	   INTEGER*4	AGENTE
+	   INTEGER*4	SEMANA         
+	   INTEGER*4	ANO         
+           CHARACTER*21 NIB_DT            ! BBBBAAAACCCCCCCCCCCDD = BANCO/BALCAO/CONTA/DV
+C
+C	   EXCLUSIVE TO PS2 FORMAT
+C	   -----------------------
+	   INTEGER*4	TIPO_OPERACAO     ! 12 (TRANSF. - CREDITO AOS AGENTES) / 64 (COBRANCA)
+	   INTEGER*4	SITUACAO_CONTA    ! 00 -> 17 (EXAMINAR TABELA)
+	   INTEGER*4	SITUACAO_REGISTRO ! 0 = GRUPO ISENTO DE ERROS
+					  ! 1 = ALGUNS REGISTROS MOVIMENTO FORAM REJEIT.
+					  ! 2 = GRUPO REJEIT. POR ERRO REGGITRO INICIO OU TOTAL
+					  ! 3 = GRUPO REJEITADO OPR ERRO NOS REGISTROS MOVIMENTO
+	   INTEGER*4	CODIGO_SAP	  
+	   CHARACTER*15 REF_TRANSF	  ! REFERENCIA TRANSFERENCIA (CAMPO LIVRE)
+C
+C	   EXCLUSIVE TO ODJ FORMAT
+C	   -----------------------
+	   INTEGER*4	ORDEM		
+	   INTEGER*4	TIPO_DOC	
+	   INTEGER*4	BALCAO_TO_PAY		  
+	   INTEGER*4	GAME	          ! 0+GAME (ODJ)
+	   CHARACTER*11 BILHETE
+	   INTEGER*4    SEMANA_OCR        !FILLED ONLY WHEN READING THE FILE (COMES IN ORDEM FIELD IN ODJ)
+	   INTEGER*4    DV_OCR            !             "		     (DDSSOOOOOO)
+
+	END STRUCTURE
+
+	RECORD /BNKCTRL_STRU/ BNKCTRL_REC(MAXBANKS)   !CONTROL INFO INDIVIDUAL TO EACH OPENED FILE
+	RECORD /BNK_STRU/     BNK_REC	              !WORK AREA FOR LAST READ/WRITE OPERATION ON AN ODJ/PS2 FILE
+
+	COMMON /BNK_COMMON/ BNKCTRL_REC, BNK_REC
+
+
+C       ****************************************************************************
+C       APOSTAS VENDIDAS POR CONCURSO (OFFWAG.ASC)
+C       ****************************************************************************
+C       APOSTAS MUTUAS -> MILLENIUM
+C       ****************************************************************************
+C
+
+        STRUCTURE /OFFWAG_STRU/
+
+C          >>> CONTROL INFO
+           
+           CHARACTER*3  RECTYPE         ! HD=HEADER / DT=DETAIL / TL=TRAILLER (LAST RECORD)
+           INTEGER*4    RECNUM          ! NUMBER OF LAST RECORD READ
+           CHARACTER*70 ERRSTR          ! LAST ERROR MESSAGE
+           INTEGER*4    LUN
+           
+C          >>> HEADER
+
+           INTEGER*4    DAY
+           INTEGER*4    MONTH
+           INTEGER*4    YEAR
+           CHARACTER*10 DATAHD                  
+
+C          >>> DETAIL
+
+           INTEGER*4    ON_GAME                !GAME NUMBER
+           INTEGER*4    B_PRICE                !BET BASE PRICE FOR THIS GAME
+           INTEGER*4    D_WEEK                 !WEEK
+           INTEGER*4    D_YEAR                 !YEAR
+           INTEGER*4    AGENT                  !OFFLINE AGENT NUMBER
+           INTEGER*4    TERM                   !TERMINAL NUMBER
+           INTEGER*4    WAG_CNT(2)             !TOTAL OF WAGERS (1 - ONE DRAW, 2 - FIVE DRAWS)
+           INTEGER*4    TKT_CNT(2)             !TOTAL OF TICKETS (1 - ONE DRAW, 2 - FIVE DRAWS)
+           INTEGER*4    MD_WAG_CNT             !TOTAL OF WAGERS (MULTI DRAW)
+           INTEGER*4    KIK_WAG_CNT(MAXGAM,2)  !TOTAL OF KIKER WAGERS PER GAME (1 - ONE DRAW, 2 - FIVE DRAWS)
+
+C          >>> TRAILLER
+
+           INTEGER*4    NUM_RECORDS
+
+        END STRUCTURE
+
+        RECORD /OFFWAG_STRU/ OFFWAG_REC
+
+        COMMON /OFFWAG_COMMON/ OFFWAG_REC
+
+C       ****************************************************************************
+C       PREMIOS PAGOS, TRANSPORTES E CENTRAIS DE RECEPCAO POR CONCURSO (OFFWAGFIN.ASC)
+C       ****************************************************************************
+C       APOSTAS MUTUAS -> MILLENIUM
+C       ****************************************************************************
+C
+
+        STRUCTURE /OFFWAGFIN_STRU/
+
+C          >>> CONTROL INFO
+           
+           CHARACTER*3  RECTYPE         ! HD=HEADER / DT=DETAIL / TL=TRAILLER (LAST RECORD)
+           INTEGER*4    RECNUM          ! NUMBER OF LAST RECORD READ
+           CHARACTER*70 ERRSTR          ! LAST ERROR MESSAGE
+           INTEGER*4    LUN
+           
+C          >>> HEADER
+
+           INTEGER*4    DAY
+           INTEGER*4    MONTH
+           INTEGER*4    YEAR
+           CHARACTER*10 DATAHD                  
+
+C          >>> DETAIL
+
+           INTEGER*4    D_WEEK
+           INTEGER*4    D_YEAR
+           INTEGER*4    AGENT                  !OFFLINE AGENT NUMBER
+           INTEGER*4    TERM                   !TERMINAL NUMBER
+           INTEGER*4    PRMPAG                 !PRIZE PAID AMOUNT
+           INTEGER*4    TRANSP                 !TRANSPORTES AMOUNT
+           INTEGER*4    CENREC                 !CENTRAL DE RECEPCAO AMOUNT
+           INTEGER*4    TIPCENREC              !CENTRAL DE RECEPCAO OPERATION (1=CREDIT/2=DEBIT)
+
+C          >>> TRAILLER
+
+           INTEGER*4    NUM_RECORDS
+
+        END STRUCTURE
+
+        RECORD /OFFWAGFIN_STRU/ OFFWAGFIN_REC
+
+        COMMON /OFFWAGFIN_COMMON/ OFFWAGFIN_REC
+	
+
+
+C       ****************************************************************************
+C       PAGAMENTO DE OPS PELOS BANCOS
+C       ****************************************************************************
+C       MILLENIUM -> SAP
+C       ****************************************************************************
+C
+        STRUCTURE /WORSAP_STRU/
+
+C          >>> CONTROL INFO
+           
+           CHARACTER*3  RECTYPE         ! HD=HEADER / DT=DETAIL / TL=TRAILLER (LAST RECORD)
+           INTEGER*4    RECNUM          ! NUMBER OF LAST RECORD READ
+           CHARACTER*70 ERRSTR          ! LAST ERROR MESSAGE
+           INTEGER*4    LUN
+           
+C          >>> HEADER
+
+           CHARACTER*8  DATA_GERACAO    ! AAAAMMDD
+
+C          >>> DETAIL
+
+           INTEGER*4    JOGO
+           CHARACTER*7  CONCURSO	! CCCAAAA
+	   INTEGER*4    VALOR
+	   INTEGER*4	BANCO
+	   INTEGER*4	OCORRENCIAS_PREMIOS
+
+C          >>> TRAILLER
+
+           INTEGER*4    NUM_RECORDS
+
+        END STRUCTURE
+
+        RECORD /WORSAP_STRU/ WORSAP_REC
+
+        COMMON /WORSAP_COMMON/ WORSAP_REC
+	
+
+CDEC$ END OPTIONS

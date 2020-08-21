@@ -1,0 +1,138 @@
+C SYSEXTRN.DEF
+C
+C V07 21-MAY-2014 SCML Adding support for IGS - Placard
+C V06 06-JUN-2014 FRP CMONYK8 added
+C V05 01-JAN-2010 FJG  ePassive
+C V04 24-JUL-2000 UXN  ISDETACHED() added.
+C V03 12-JUN-2000 UXN  ISODDSET, ISODDSET2, CALPER, DISPER, DISTIM,
+C                      ISSUBPROC added.
+C V02 14-MAY-1992 GCAN ADDED TSTBIT_BSTRNG DECLARATION.
+C V01 16-JUL-1990 XXX  RELEASED FOR VAX
+C
+C This contains various EXTERNAL definitions unique to a system type (e.g., VAX)
+C
+C The intrinsic function BTEST works only with single words - not with
+C arrays.  During translation, all calls to BTEST were changed to TSBIT so
+C that we can handle either case.  TSBIT (and NTSBIT) are declared here as
+C external functions for that reason.  Note that for speed purposes, you
+C should call BTEST if you are dealing with bits in a word.
+C
+C TSTBIT_BSTRNG works on BYTE arrays of size n, counting bits from
+C left to right.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	LOGICAL*1	TSBIT
+	EXTERNAL	TSBIT
+C
+	LOGICAL*1	NTSBIT
+	EXTERNAL	NTSBIT
+C----+------------------------------------------------------------------
+C V07| Adding support for IGS
+C----+------------------------------------------------------------------
+        LOGICAL*1       IGSGAMFLG
+        EXTERNAL        IGSGAMFLG
+C----+------------------------------------------------------------------
+C V07| Adding support for IGS
+C----+------------------------------------------------------------------
+C
+	LOGICAL*1	TSTBIT_BSTRNG
+	EXTERNAL	TSTBIT_BSTRNG
+C
+C LOKON is a user written function which returns a logical value
+C
+	LOGICAL*4	LOKON
+	EXTERNAL	LOKON
+C
+C ITOC is a function which converts an integer to a CHARACTER*12 string
+C
+	CHARACTER*12	ITOC
+	EXTERNAL	ITOC
+C
+C CTOI is the reverse of ITOC
+C
+	INTEGER*4	CTOI
+	EXTERNAL	CTOI
+C
+C IAM is a function which returns the string 'HH:MM:SS PROCNAME ' (18 char)
+C
+	CHARACTER*18	IAM
+	EXTERNAL	IAM
+C
+C CMONY, CSMONY, CMONYI8, CSMONYI8 are character functions that display
+C money amounts in the correct format.
+C
+	CHARACTER*32	CMONY
+	EXTERNAL	CMONY
+C
+	CHARACTER*32	CSMONY
+	EXTERNAL	CSMONY
+C
+	CHARACTER*32	CMONYI8
+	EXTERNAL	CMONYI8
+C
+	CHARACTER*32	CSMONYI8
+	EXTERNAL	CSMONYI8
+C
+	CHARACTER*32	CMONYK8
+	EXTERNAL	CMONYK8
+C
+C IMONY is the reverse of CMONY
+C
+	INTEGER*4	IMONY
+	EXTERNAL	IMONY
+C
+C ISODDSET returns TRUE if input is ODDSET game type (excluding PITKA), 
+C                  FALSE otherwise.
+C
+	LOGICAL*4       ISODDSET
+	EXTERNAL        ISODDSET
+C
+C ISODDSET2 returns TRUE if input is ODDSET game type (including PITKA), 
+C                   FALSE otherwise.
+C
+	LOGICAL*4       ISODDSET2
+	EXTERNAL        ISODDSET2
+C
+C SUBROUTINE TO CONVERT INTEGER TO REAL PERCENTAGE AMOUNT
+C
+        DOUBLE PRECISION CALPER
+	EXTERNAL         CALPER
+C
+C SUBROUTINE TO CONVERT INTEGER TO DISPLAY PERCENTAGE AMOUNT
+C
+        DOUBLE PRECISION DISPER
+	EXTERNAL         DISPER
+C
+C SUBROUTINE TO CONVERT TIME FOR DISPLAY
+C
+        DOUBLE PRECISION DISTIM
+	EXTERNAL         DISTIM
+C
+C ISSUBPROC returns TRUE  IF THE CALLING PROCESS IS SUBPROCESS,
+C                   FALSE OTHERWISE.
+C
+	LOGICAL*4        ISSUBPROC
+	EXTERNAL         ISSUBPROC
+C
+C ISDETACHED returns TRUE  IF THE CALLING PROCESS IS DETACHED PROCESS,
+C                   FALSE OTHERWISE.
+C
+	LOGICAL*4        ISDETACHED
+	EXTERNAL         ISDETACHED
+C
+C FILEXIST returns true if the file passed as argument exist
+C            
+        logical*4        filexist 
+        external         filexist

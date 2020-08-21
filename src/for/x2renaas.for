@@ -1,0 +1,181 @@
+C
+C SUBROUTINE X2RENAAS
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2RENAAS.FOV                                 $
+C  $Date::   17 Apr 1996 16:30:58                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2renaas.for;1 **
+C
+C X2RENAAS.FOR
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C This subroutine will create a not application above station
+C response message , used by night game
+C
+C Calling Sequence:
+C
+C     CALL X2RENAAS(TRABUF,MESS,ORGMESS,LEN)
+C
+C Input parameters:
+C
+C     TRABUF      Int*4(TRALEN)   Transaction buffer
+C     ORGMESS     Int*4(*)        Message from station
+C
+C Output parameters:
+C
+C     MESS        Int*4(*)        Message to be sent to station.
+C     MESLEN      Int*2           Length of output message (bytes)
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2RENAAS(TRABUF,MESS,ORGMESS,MESLEN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:X2FEMES.DEF'
+	INCLUDE 'INCLIB:X2STMES.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+C
+	INTEGER*2   MESLEN          !Output message length
+	INTEGER*4   ORGMESS(*)      !Station input message
+	INTEGER*4   MESS(*)         !Station output message
+	INTEGER*4   FEHDRLEN        !Lenght of FE header
+	INTEGER*4   TEMP            !Work variable
+	INTEGER*4   OFFMES          !Offset to station message
+	INTEGER*4   OUTBYT          !Byte offset for output message
+	INTEGER*4   LEN             !Entire FE+STN message length
+        INTEGER*4   FLAGS           !FE options
+        INTEGER*4   CONN_TYPE       !Connection Type
+        INTEGER*4   STN, CHKVAL, CLS, I, DATALEN
+C
+C DETERMINE THE STARTING OFFSET OF THE STATION
+C MESSAGE IN THE MESSAGE FROM X2XMGR.
+C
+	CALL ILBYTE(OFFMES,ORGMESS,X2PRO_OFFSET-1)
+	OFFMES=OFFMES-1
+	OUTBYT=0
+	TEMP=0
+	MESLEN=0
+	STN=TRABUF(TXSTN)
+C
+C CHECK FOR VALID STATION NUMBER.
+C
+	IF(CHKVAL(STN,1,X2X_STATIONS,' STATION NUMBER ').NE.0) THEN
+	  MESLEN=-1
+	  GOTO 8000
+	ENDIF
+C
+C CHECK TO ENSURE THE STATION CLASS EXISTS.
+C
+	CLS=X2XS_STNCLS(STN)
+	IF(CLS.LE.0) THEN
+	  CALL OPS('X2RENAAS:Class does not exist ',
+     *	            CLS,STN)
+	  MESLEN=-1
+	  GOTO 8000
+	ENDIF
+C
+C GET THE FE HEADER LENGTH
+C
+	CALL ILBYTE(FEHDRLEN,ORGMESS,X2FEMES_HEADLEN+OFFMES-1)
+C
+C COPY THE INPUT MESSAGE HEADER TO THE OUTPUT MESSAGE.
+C NOTE: THE TRANSPORT HEADER AND FE HEADER ARE COPIED
+C
+	DO 100 I=OFFMES+1,OFFMES+1+FEHDRLEN-1
+	  OUTBYT=OUTBYT+1
+	  CALL ILBYTE(TEMP,ORGMESS,I-1)
+	  CALL ISBYTE(TEMP,MESS,OUTBYT-1)
+100	CONTINUE
+C
+C CREATE THE OUTPUT FE MESSAGE. NOTE: ALL OUTPUT INFORMATION
+C (FE CONNECT ID, ADDRESS LEN, DESTINATION ADDRESS, ETC) ARE
+C CONTAINED IN THE ORGINAL INPUT MESSAGE AND HAVE BEEN COPIED
+C TO THE OUTPUT MESSAGE.  ONLY THE MESSAGE TYPE, FLAGS, AND
+C CONNECT/DISCONNECT CONTROL FIELDS ARE CHANGED.
+C
+	CALL ISBYTE(0,MESS,X2FEMES_HOST_ID-1)
+	CALL ISBYTE(X2FEMES_MESTYP_DOWN,MESS,X2FEMES_MESTYP-1)
+C
+C       THIS CODE USED TO SET FE FLAG OPTIONS/CONNECTION TYPE TO ZERO
+C       WE SHOULD AT A MINIMUM  SET THE VSP FLAG AND CONNECTION TYPE
+C
+C.....	CALL ISBYTE(0,MESS,X2FEMES_FLAGS-1)
+
+        IF (X2XS_VSP(STN).NE.0.OR.X2XS_EVSN(1,STN).NE.0
+     *      .OR.X2XS_EVSN(2,STN).NE.0)
+     *        FLAGS = IOR(FLAGS,X2FEMES_FLAGS_DVS)
+        CALL ILBYTE(CONN_TYPE,IX2XS_CONN_TYPE,STN-1)
+        IF(CONN_TYPE.GE.0.AND.CONN_TYPE.LE.X2FEMES_MAX_CONNTYPE)
+     *     FLAGS = FLAGS + X2FEMES_NET_TYPE_XREF(CONN_TYPE)
+	CALL ISBYTE(FLAGS,MESS,X2FEMES_FLAGS-1)
+C
+	CALL ISBYTE(X2FEMES_RESPONCE,MESS,X2FEMES_CONNCTL-1)
+C
+C FE MESSAGE COMPLETE, NOW BUILD A STATION MESSAGE TO
+C INFORM THE STATION TO DISCONNECT. NOTE: STATION NUMBER
+C AND CONFIGURATION NUMBER ARE CLEARED.
+C
+	CALL ISBYTE(X2STMES_PROTID_VAL,MESS,
+     *	            X2STMES_PROTID-1+FEHDRLEN)
+	CALL ISBYTE(X2STMES_DATATYPE_CMD_DOWN,MESS,
+     *	            X2STMES_DATATYPE-1+FEHDRLEN)
+	CALL ISBYTE(0,MESS,X2STMES_CONFCHK-1+FEHDRLEN)
+	CALL I4TOBUF2(STN,MESS,X2STMES_STATION_NO-1+FEHDRLEN)
+	CALL ISBYTE(X2STMES_NAAS,MESS,X2STMES_CODE+
+     *	            FEHDRLEN-1)
+	CALL ISBYTE(0,MESS,X2STMES_OPT_DATA-1+FEHDRLEN)
+	CALL ISBYTE(X2STMES_DIS_UNC,MESS,X2STMES_FLAGS-1+FEHDRLEN)
+C
+C BUILD THE NOT APPLICATION ABOVE STATION MESSAGE
+C
+	CALL ISBYTE(X2STMES_NAAS,MESS,X2STMES_NAAS_CMD+FEHDRLEN-1)
+	CALL I4TOBUF2(X2XC_NAAS_LENGTH(CLS),MESS,X2STMES_NAAS_LENGTH-1+
+     *	              FEHDRLEN)
+	DO 200 I=1,X2XC_NAAS_LENGTH(CLS)
+	   TEMP=ICHAR(X2XC_NAAS_TEXT(CLS,I))
+	   CALL ISBYTE(TEMP,MESS,X2STMES_NAAS_TEXT-2+I+FEHDRLEN)
+200	CONTINUE
+	DATALEN=X2XC_NAAS_LENGTH(CLS)+3
+C
+C SET THE STATION MESSAGE LENGTH
+C
+	CALL I4TOBUF2 (DATALEN,MESS,X2STMES_MESLEN-1+FEHDRLEN)
+C
+C SET THE OUTPUT MESLEN FOR THE ROUTINE
+C
+	LEN=FEHDRLEN+X2STMES_HDRLEN+DATALEN
+	CALL I4TOBUF2(LEN,MESS,X2FEMES_MESLEN-1)
+	MESLEN=LEN
+C
+C PROGRAM EXIT.
+C
+8000	CONTINUE
+	RETURN
+	END

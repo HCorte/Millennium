@@ -1,0 +1,195 @@
+C
+C $Log:   GXAFXT:[GOLS]HASF.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:31:08   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.4   24 Sep 1993 19:24:40   LMK
+C  ADDED RELAY GROUPS
+C  
+C     Rev 1.3   25 Aug 1993  0:23:58   HXK
+C  added rent entry
+C  
+C     Rev 1.2   14 Jul 1993 17:40:48   HXK
+C  ADDED CLERK PASS NUMBERS
+C  
+C     Rev 1.1   01 Mar 1993 12:01:42   EBD
+C  DAS update 3/1/93
+C  Changing format of ASF file
+C
+C HASF.DEF
+C
+C VO5 01-MAR-96 wsm  Renamed *RGRP to *XGRP to be consistent w/ x2x baseline. 
+C V04 08-FEB-92 DAS  REARRANGED COMMUNICATIONS VALUES.
+C V03 02-FEB-92 GCAN ADDED SERVICE ZONE, LANGUAGE CODE TO GTRACK
+C                    AND CHAIN CODE TO MARKETING.
+C V02 12-NOV-91 MTK  INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX  RELEASED FOR VAX
+C
+C
+C DEFINE AGENT INFORMATION FOR HASF PROGRAM.
+C
+	INCLUDE 'INCLIB:AGTINF.DEF'
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	DIMENSION FLDBEG(203),FLDEND(203)
+	DIMENSION IDBEG(29),IDEND(29)
+	DIMENSION HOTBEG(29),HOTEND(29)
+	DIMENSION BNKBEG(29),BNKEND(29)
+	DIMENSION MKTBEG(29),MKTEND(29)
+	DIMENSION GTKBEG(29),GTKEND(29)
+        DIMENSION COMBEG(29),COMEND(29)
+	DIMENSION DATBEG(29),DATEND(29)
+C
+	INTEGER*4 FLDBEG,FLDEND,IDBEG,IDEND
+	INTEGER*4 HOTBEG,HOTEND,BNKBEG,BNKEND
+	INTEGER*4 MKTBEG,MKTEND,GTKBEG,GTKEND
+        INTEGER*4 COMBEG,COMEND,DATBEG,DATEND
+C
+	
+C
+	REAL*8 FLDNAM(203),IDNAM(29),HOTNAM(29),BNKNAM(29),MKTNAM(29)
+	REAL*8 GTKNAM(29),COMNAM(29),DATNAM(29)
+C
+C
+	EQUIVALENCE (FLDBEG(1),IDBEG(1))
+	EQUIVALENCE (FLDBEG(30),BNKBEG(1))
+	EQUIVALENCE (FLDBEG(59),MKTBEG(1))
+	EQUIVALENCE (FLDBEG(88),HOTBEG(1))
+	EQUIVALENCE (FLDBEG(117),GTKBEG(1))
+        EQUIVALENCE (FLDBEG(146),COMBEG(1))
+	EQUIVALENCE (FLDBEG(175),DATBEG(1))
+C
+C
+	EQUIVALENCE (FLDEND(1),IDEND(1))
+	EQUIVALENCE (FLDEND(30),BNKEND(1))
+	EQUIVALENCE (FLDEND(59),MKTEND(1))
+	EQUIVALENCE (FLDEND(88),HOTEND(1))
+	EQUIVALENCE (FLDEND(117),GTKEND(1))
+        EQUIVALENCE (FLDEND(146),COMEND(1))
+	EQUIVALENCE (FLDEND(175),DATEND(1))
+C
+C
+	EQUIVALENCE (FLDNAM(1),IDNAM(1))
+	EQUIVALENCE (FLDNAM(30),BNKNAM(1))
+	EQUIVALENCE (FLDNAM(59),MKTNAM(1))
+	EQUIVALENCE (FLDNAM(88),HOTNAM(1))
+	EQUIVALENCE (FLDNAM(117),GTKNAM(1))
+        EQUIVALENCE (FLDNAM(146),COMNAM(1))
+	EQUIVALENCE (FLDNAM(175),DATNAM(1))
+C
+
+C
+	DATA IDNAM/'AGTNUM  ','STORE   ','CONTACT ',
+     *             'ADDRESS ','CITY    ','STATE   ','ZIPCODE ',
+     *	           'PHONE   ','PASS1   ','PASS2   ','PASS3   ',
+     *             'PASS4   ','PASS5   ','PASS6   ','PASS7   ',
+     *             'PASS8   ','PRISET  ','ENCKEY  ',
+     *	           'ENCFLG  ','TER TYPE','GAME PAR','REDMAX  ',
+     *	           'REDMIN  ','STRTDATE','END DATE','RENT    ',
+     *             'ZIP ADDR',2*0/
+C
+	DATA HOTNAM/'MAINT CO','INST DAY','INSP DAY','ACPT DAY',
+     *	            'ACPT TYP','BREAK   ','# TERMS ',
+     *	            'MON OPEN','TUE OPEN','WED OPEN','THU OPEN',
+     *	            'FRI OPEN','SAT OPEN','SUN OPEN','MON CLSE',
+     *	            'TUE CLSE','WED CLSE','THU CLSE','FRI CLSE',
+     *	            'SAT CLSE','SUN CLSE','CIRCUIT#','CKL     ',
+     *		     6*0/
+C
+C
+	DATA BNKNAM/'PAY TYPE','BNK DIST','BNK CODE','BNK ACCT',
+     *	            'WAGE NIB','PASS NIB','BNK OPS ','BRA OPS ',
+     *              'AGT SAP#',20*0/
+C
+C
+	DATA MKTNAM/'AGT TYPE','BUS CODE','RES RATE','SAL RANK',
+     *	            'CONTY CD','TERITORY','COMPTYPE','CARTEL  ',
+     *		    21*0/
+C
+C
+	DATA GTKNAM/'TER NUM ','ONLIN CD','TERM CDE',
+     *	            'TER STAT','AC OK   ','PHONE OK','SERIAL #',
+     *	            'CNTY NAM','DLTD DAT','OWN CITY','OWN STE ',
+     *	            'SERV ZON','LANG COD',16*0/
+C
+C
+        DATA COMNAM/'STN CLS ','STN/LINE','STN PORT','DROP ADR',
+     *             'GVTPHONE','X2X ADRS','REL GRP',22*0/
+C
+	DATA DATNAM/'PS BEGSU','PS ENDSU','PS BEGSA','PS ENDSA',
+     *              'WA BEGSU','WA ENDSU','WA BEGSA','WA ENDSA',
+     *              21*0/
+	DATA DATBEG/SPBSU,SPESU,SPBSA,SPESA,SWBSU,SWESU,SWBSA,SWESA,
+     *              21*0/
+        DATA DATEND/EPBSU,EPESU,EPBSA,EPESA,EWBSU,EWESU,EWBSA,EWESA,
+     *              21*0/
+C
+	DATA IDBEG/SAGNO,SNAME,SCONT,SSTRT,SCITY,SSTTE,
+     *             SZIPC,STELE,SPAS1,SPAS2,SPAS3,SPAS4,
+     *             SPAS5,SPAS6,SPAS7,SPAS8,SPRIO,SEKEY,SEFLG,
+     *             STTYP,SGAME,SARED,SARMN,SSDAT,SEDAT,SRENT,
+     *             SZIPA,2*0/
+C
+C
+	DATA IDEND/EAGNO,ENAME,ECONT,ESTRT,ECITY,ESTTE,
+     *             EZIPC,ETELE,EPAS1,EPAS2,EPAS3,EPAS4,
+     *             EPAS5,EPAS6,EPAS7,EPAS8,EPRIO,EEKEY,EEFLG,
+     *             ETTYP,EGAME,EARED,EARMN,ESDAT,EEDAT,ERENT,
+     *             EZIPA,2*0/
+C
+C
+	DATA HOTBEG/SMAIN,SINST,SINSP,SACPD,SACPT,SBRAK,
+     *	            SNOTR,SMONO,STUEO,SWEDO,STHUO,SFRIO,SSATO,
+     *	            SSUNO,SMONC,STUEC,SWEDC,STHUC,SFRIC,SSATC,
+     *	            SSUNC,SCIRC,SCKL,6*0/
+C
+C
+	DATA HOTEND/EMAIN,EINST,EINSP,EACPD,EACPT,EBRAK,
+     *	            ENOTR,EMONO,ETUEO,EWEDO,ETHUO,EFRIO,ESATO,
+     *	            ESUNO,EMONC,ETUEC,EWEDC,ETHUC,EFRIC,ESATC,
+     *	            ESUNC,ECIRC,ECKL,6*0/
+C
+C
+	DATA BNKBEG/SPAYT,SBDIS,SBCOD,SBACC,SWANB,SPANB,SBKOP,
+     *              SBROP,SSAPN,20*0/
+C
+C
+	DATA BNKEND/EPAYT,EBDIS,EBCOD,EBACC,EWANB,EPANB,EBKOP,
+     *              EBROP,ESAPN,20*0/
+C
+C
+	DATA MKTBEG/SATYP,SBUSC,SRESR,SRANK,SCCDE,STERR,SCMPT,
+     *	            SCHAN,21*0/
+C
+C
+	DATA MKTEND/EATYP,EBUSC,ERESR,ERANK,ECCDE,ETERR,ECMPT,
+     *	            ECHAN,21*0/
+C
+C
+	DATA GTKBEG/STERN,SONLN,STCDE,SSTAT,SACOK,STLOK,
+     *	            STSER,SCNTY,SDELD,SGCTY,SOSTE,SFZON,SLANG,
+     *		    16*0/
+C
+C
+	DATA GTKEND/ETERN,EONLN,ETCDE,ESTAT,EACOK,ETLOK,
+     *	            ETSER,ECNTY,EDELD,EGCTY,EOSTE,EFZON,ELANG,
+     *		    16*0/
+
+C
+C
+        DATA COMBEG/SSCLS,SXSTN,SXPRT,SDROP,SGPHN,SXADR,SXGRP,22*0/
+        DATA COMEND/ESCLS,EXSTN,EXPRT,EDROP,EGPHN,EXADR,EXGRP,22*0/

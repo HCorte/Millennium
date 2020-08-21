@@ -1,0 +1,17 @@
+$! GXSRC:MAKFIL.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]MAKFIL.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:46:52   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:21:10   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:44:06   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:EUROCONFIG.EXE -
+OBJLIB:EUROCONFIG,-
+STDLIB:NORMLIB/LIB

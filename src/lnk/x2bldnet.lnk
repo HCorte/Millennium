@@ -1,0 +1,56 @@
+$! X2BLDNET.LNK
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]X2BLDNET.LNV                                 $
+$! $Date::   14 Jul 1996 21:00:12                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! V03 16-DEC-94 GPR Integrate UK changes into X2X Baseline
+$! V02 18-NOV-91 RRB INCLUDE SPECIFIC EDIT CHECK MODULES FOR LOUISIANA
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$!
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! This item is the property of GTECH Corporation, Providence, Rhode
+$! Island, and contains confidential and trade secret information. It
+$! may not be transferred from the custody or control of GTECH except
+$! as authorized in writing by an officer of GTECH. Neither this item
+$! nor the information it contains may be used, transferred,
+$! reproduced, published, or disclosed, in whole or in part, and
+$! directly or indirectly, except as expressly authorized by an
+$! officer of GTECH, pursuant to written agreement.
+$!
+$! Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:X2BLDNET.EXE -
+OBJLIB:X2BLDNET,-
+READ_STNDEF,-
+X2NET_UPDSTN,-
+PORTCNT,-
+CLOSX2X,-
+OPENX2X,-
+WRITX2X,-
+X2CHKMOD,-
+X2CHKSPC,-
+X2CHKSTN,-
+X2CHKTER,-
+X2CLRMOD,-
+X2FILNAM,-
+X2FILSEC,-
+X2FNDSPC,-
+X2GETTER,-
+X2CNVDRP,-
+ATOH,-
+READX2X,-
+I4XSORT,-
+STDLIB:NORMLIB/LIB,-
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXX2XCOM.ESH/SHAREABLE

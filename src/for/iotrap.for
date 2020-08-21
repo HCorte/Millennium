@@ -1,0 +1,420 @@
+C
+C *** SUBROUTINE IOTRAP ***
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]IOTRAP.FOV                                   $
+C  $Date::   18 Dec 1996 12:00:20                                         $
+C  $Revision::   1.1                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C  
+C *** Pre-Baseline Source - netlog.for ***
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Purpose:
+C	I/O done trap.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+C
+	SUBROUTINE IOTRAP(PBLK)
+C
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+C
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DESNET.DEF'
+C
+        INCLUDE '($SSDEF)'
+C
+C PARAMETER DECLARATIONS
+C
+	INTEGER*4	NUMLSTID
+C
+	PARAMETER	(NUMLSTID = NETSYS * NUMWAY)
+C
+C LOCAL DECLARATIONS
+C
+	INTEGER*4	ACK_BUFFER,
+     *			BUF,
+     *			BUFNR,
+     *			BUFX,
+     *			CHECK_BUF,
+     *			COUNT,
+     *			DEST,
+     *			ERROR,
+     *			LENGTH,
+     *			LUN,
+     *			NODE,
+     *			OFF,
+     *			PBLK(7),			! PARAMETER BLOCK
+     *			LSTUSEID(NETSYS, NUMWAY) /NUMLSTID * -1/, ! LST RCVD UID
+     *			NODE_USEID(NETSYS)	/NETSYS * -1/,
+     *			RECOVERED,
+     *			ST,
+     *			TIMES,
+     *			TOMASTER,
+     *			TOSEND,
+     *			TRAPWAY,
+     *			TRCADR,
+     *			WAY
+C
+	LOGICAL*4	DUMMYBUF,			! DUMMY BUFFER ?
+     *			FILE,				! FILE XFER OR RESYNC ?
+     *			READFLAG			! TRAP FROM READ ?
+C
+C COMMON AREA DECLARATIONS
+C
+	COMMON	/RCVRYNODE/	RECOVERED
+	COMMON	/TEST_CHECK/	CHECK_BUF
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C IF LAST STAGE OF RECOVERY, TRY TO START NEXT I/O
+C
+	IF (NETCMDFRZ .GE. 1000) CALL QUETRAP(-4)
+C
+	ERROR    = IAND(PBLK(1), '0000FFFF'X)		! GET I/O STATUS
+	TRCADR   = PBLK(2)
+	LUN      = PBLK(4)
+	READFLAG = PBLK(5)
+	TRAPWAY  = PBLK(7)				! SAVE AS ORIGINAL WAY
+	WAY      = PBLK(7)				! GET WAY IT CAME FROM
+C
+	IF (LUN .LE. 0 .OR. LUN .GT. NETSYS) THEN
+	  CALL NOTIFY(TRCADR, NOTDATA, LUN, WAY)
+	  GOTO 9999
+	ENDIF
+C
+	BUF  = PBLK(3)					! BUFFER NUMBER
+	NODE = LUN					! NODE IT CAME FROM
+C
+	IF (WAY .LE. 0 .OR. WAY .GT. NUMWAY) THEN
+D	  CALL OPS(CHAR(7) // '*** IOTRAP - BAD WAY ***' // CHAR(7),
+D    *             WAY, 0)
+	  CHECK_BUF = 1001
+	  IF (BUF .NE. 0) CALL FREEBUF(BUF)
+	  GOTO 9999
+	ENDIF
+C
+	TOMASTER = 0
+	DEST     = NETBUF(PDEST,BUF)
+	IF (DEST .NE. 0) THEN
+	  IF (NETSTAT(DEST, WAY) .EQ. NSTASEC) TOMASTER = -1
+	ENDIF
+C
+	FILE = NETBUF(MODE, BUF) .EQ. FILMD .OR.
+     *         NETBUF(MODE, BUF) .EQ. CMDMD .AND.
+     *         NETBUF(HDRSIZ+1, BUF) .EQ. RESYNC .OR.
+     *         TOMASTER .NE. 0 .OR.
+     *         NETBUF(MODE, BUF) .EQ. ACKMD
+C
+	IF (NODE .LE. 0 .OR. NODE .GT. NETSYS) THEN
+	  CALL NOTIFY(TRCADR, NOTPATH, NODE, TRAPWAY)
+	  ST = '0000FFFD'X
+	  CALL NOTIFY1(LUN, NOTIO, ST,  TRAPWAY)
+	  CALL NOTIFY1(LUN, NOTIO, WAY, TRAPWAY)
+	  CHECK_BUF = 1002
+	  IF (BUF .NE. 0) CALL FREEBUF(BUF)
+	  GOTO 9999
+	ENDIF
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C READ PROCESSING
+C
+	IF (READFLAG) THEN
+C
+C TRY TO SEND ACK BACK TO MASTER.
+C IF WE CAN'T GET A BUFFER, WE'LL TRY AGAIN NEXT TIME.
+C
+	  IF (NETBUF(MODE, BUF) .EQ. TRNMD .AND.
+     *        NETBUF(PSER, BUF) .NE. 0) THEN
+	    CALL EXTRABUF(ACK_BUFFER, 1, ST)
+	    IF (ST .EQ. GLIST_STAT_GOOD .OR.
+     *          ST .EQ. GLIST_STAT_LASTONE) THEN
+	      NETBUF(PDEST,         ACK_BUFFER) = NODEMASTER(WAY)
+	      NETBUF(FDEST,         ACK_BUFFER) = NODEMASTER(WAY)
+	      NETBUF(MODE,          ACK_BUFFER) = ACKMD
+	      NETBUF(HDRSIZ+1,      ACK_BUFFER) = NETBUF(PSER, BUF)
+	      NETBUF(NETBUF_TIMOFF, ACK_BUFFER) =
+     *        NETBUF(NETBUF_TIMOFF, BUF)
+C
+	      CALL SNDNET(ACK_BUFFER, WAY)		! SEND ACK
+	      CALL QUETRAP(0)				! SEND NOW
+	    ENDIF
+	  ENDIF
+C
+C PROCESS ACK FROM BACKUP
+C
+	  IF (NETBUF(MODE, BUF) .EQ. ACKMD) THEN
+	    NETHSER(NODE, WAY) = NETBUF(HDRSIZ+1, BUF)
+	    IF (NODE .EQ. NETBACKUP(WAY)) 
+     *        P(PPISR3) = NETBUF(HDRSIZ+1, BUF)		! SET HIGH SRL # TO BE
+C							! RLSD BY LOGGER TO COM
+	    NET_LAST_ACK_TIME(NODE) = P(ACTTIM)
+	    IF (P(ACTTIM) .GT. NETBUF(NETBUF_TIMOFF, BUF)
+     *                       + NET_MAX_ACKTIM) THEN
+	      NET_TIMES_RESPONSE_LONG(NODE) =
+     *        NET_TIMES_RESPONSE_LONG(NODE) + 1
+	      IF(MOD(NET_TIMES_RESPONSE_LONG(NODE),10).EQ.1) THEN 
+  	        CALL OPS('*** IOTRAP - SYSTEM RESPONSE TIME LONG ***',
+     *                 NODE, P(ACTTIM) - NETBUF(NETBUF_TIMOFF, BUF))
+	        CALL OPS('*** IOTRAP - LAST RELEASED SERIAL # ***',
+     *                 NETBUF(HDRSIZ+1, BUF),
+     *                 NET_TIMES_RESPONSE_LONG(NODE))
+	      ENDIF
+	    ENDIF
+C
+	    CHECK_BUF = 1003
+	    CALL FREEBUF(BUF)
+	    GOTO 9999
+	  ENDIF
+C
+C IF NO ERROR ...
+C
+	  IF (ERROR .EQ. 0) THEN
+	    IF (NETSTAT(NODE, WAY) .EQ. NSTASEC .AND.
+     *          NETROUT(NODE, WAY) .EQ. ROUACT) THEN
+	      IF (NODE .NE. NODEMASTER(WAY))
+     *          CALL NOTIFY1(NODEMASTER(WAY), NOTNODE, NODE, WAY)
+	      NODEMASTER(WAY) = NODE
+	    ENDIF
+C
+C CHECK IF IT'S NOT RETRY OF BUFFER SEND ON OTHER SYSTEM THAT IS COMING AGAIN
+C
+	    IF (NETBUF(PDEST, BUF) .EQ. NODEID) THEN
+	      IF (NODE_USEID(NODE) .NE. -1 .AND.
+     *            NETBUF(USEID, BUF) .NE. NODE_USEID(NODE)) THEN
+D	        CALL OPS('*** IOTRAP - BUF OUT OF SEQUENCE - RCV ***',
+D    *                   NETBUF(USEID, BUF), NODE)
+D	        CALL OPS('*** IOTRAP - EXPECTED ***',
+D    *                   NODE_USEID(NODE), NETBUF(PSER, BUF))
+              ENDIF
+              NODE_USEID(NODE) = NETBUF(USEID, BUF) + 1
+	    ELSE
+	      IF (LSTUSEID(NODE, WAY) .EQ. NETBUF(USEID, BUF)) THEN
+D	        CALL OPS('*** IOTRAP - SAME BUFFER RECEIVED ***',
+D    *                   NETBUF(PSER, BUF), NODE)
+	        CHECK_BUF = 1004
+	        CALL FREEBUF(BUF)			! FREE BUFFER
+	        GOTO 9999
+	      ENDIF
+	      LSTUSEID(NODE, WAY) = NETBUF(USEID, BUF)	! UPDATE LAST USEID
+	    ENDIF
+C
+	    NETFROM(BUF)  = NETBUF(ACTFROM, BUF)
+	    NETIOCNT(BUF) = 1				! USAGE COUNT
+C
+C IF THAT MESSAGE IS FOR EVERYBODY,
+C SEND TO SECONDARY UNITS THAT ARE NOT IN RECOVERY MODE
+C
+	    IF (NETBUF(FDEST, BUF) .EQ. 0) THEN
+	      NETBUF(PDEST, BUF) = 0
+	      TOSEND = 0				! FLAG TO FORWARD BUFFER
+	      DO 100 OFF = 1, NETSYS
+	        IF (NETSTAT(OFF, WAY) .EQ. NSTAPRIM.AND.! ON PRIMARY LINK
+     *              NETBUF(BUFTYP, BUF) .NE. RTR .AND.	! NOT REMOTE TRANS
+     *              NETROUT(OFF, WAY) .EQ. ROUACT .AND.	! WHEN LINK ACTIVE
+     *              (NETMODE(OFF, WAY) .NE. FILMD .OR.	! AND NOT LAST STAGE
+     *               (NETCMDFRZ .GE. 900 .AND.		! OF RECOVERY
+     *                NETCMDFRZ .LE. 999) .OR.
+     *               (NETBUF(MODE, BUF) .NE. TRNMD))) THEN
+		  NETIOCNT(BUF) = 2			! MAKE AT LEAST 2 USERS
+		  TOSEND = -1				! MARK SHOULD SEND IT
+		ENDIF
+100	      CONTINUE
+C
+	      IF (TOSEND .NE. 0) THEN
+		CALL ABL(BUF, NETEXEC(1, WAY), ST)
+		CALL QUETRAP(-1)
+	      ENDIF
+	    ENDIF
+C          	         
+	    CALL ABL(BUF, NETFINISH, ST)		! SEND IT TO NETMGR
+C
+	    IF (NETTIM(NODE, WAY) .EQ. 0) THEN
+D	      CALL OPS('*** IOTRAP - SYSTEM INITIALIZED ***',
+D    *                 NODE, NETBUF(PSER, BUF))
+	      CALL NOTIFY(TRCADR, NOTSTART, NODE, WAY)
+	    ENDIF
+C
+	    NETTIM(NODE, WAY) = NETTIMER   		! LAST TIME GOOD I/O
+C
+	    IF (NETSTAT(NODE, WAY) .EQ. NSTAPRIM) THEN	! IF READ ON PRIMARY
+	      CALL QUETRAP(-1)				! TRY TO RESEND
+	    ENDIF
+C
+C ELSE ... READ ERROR PROCESSING
+C
+	  ELSE
+	    CHECK_BUF = 1005
+	    CALL FREEBUF(BUF)
+	    IF (NETROUT(NODE, WAY) .EQ. ROUACT) THEN
+D	      IF (ERROR .NE. SS$_LINKABORT) 
+D    *          CALL OPS(CHAR(7) // '*** IOTRAP - READ ERROR ***' //
+D    *                   CHAR(7), NODE, ERROR)
+	      NETERR(NODE, WAY) = NETERR(NODE, WAY) + 1	! # OF ERRORS
+	    ENDIF
+C
+	    CALL QUETRAP(-1)
+	  ENDIF
+C
+	  GOTO 9999
+	ENDIF
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C SEND PROCESSING
+C
+	DUMMYBUF = NETBUF(MODE, BUF) .EQ. DUMMD		! REMEMBER IF IT'S DUMMY
+C
+	IF (NETBUF(MODE, BUF) .EQ. ACKMD) THEN
+	  CHECK_BUF = 1006
+	  CALL FREEBUF(BUF)
+	  GOTO 9999
+	ENDIF
+C
+C IF NO ERROR ...
+C
+	IF (ERROR .EQ. 0) THEN
+	  IF (DUMMYBUF) NETDUMM(NODE, WAY) = 0
+C
+	  IF (NETTIM(NODE, WAY) .EQ. 0) THEN
+D	    CALL OPS('*** IOTRAP - SYSTEM INITIALIZED ***',
+D    *               NODE, NETBUF(PSER, BUF))
+	    CALL NOTIFY(TRCADR, NOTSTART, NODE, WAY)
+	  ENDIF
+C
+	  NETTIM(NODE, WAY) = NETTIMER			! LAST I/O TIME
+C
+	  IF (FILE) THEN
+	    IF (NETBUF(PSTATE, BUF) .EQ. FILNMR .AND.
+     *          NETCMDFRZ .EQ. 999) THEN
+	      RECOVERED = NODE
+	      RECOVWAY  = WAY
+	      IF (NODEID .EQ. NETMASTER(WAY)) P(CMDFRZ) = 998
+	      NETCMDFRZ = 998
+	    ENDIF
+	  ENDIF
+C
+	  CHECK_BUF = 1007
+	  CALL FREEBUF(BUF)
+	  CALL QUETRAP(-1)				! TRY TO SEND NEXT TRANS
+	  GOTO 9999
+	ENDIF
+C
+C WRITE ERROR PROCESSING
+C
+	IF (NETROUT(NODE, WAY) .NE. ROUACT) THEN	! IF TRAP ON INVL UNIT
+	  IF (DUMMYBUF) NETDUMM(NODE, WAY) = 0
+	  CHECK_BUF = 1008
+	  CALL FREEBUF(BUF)
+	  CALL QUETRAP(-1)
+	  GOTO 9999
+	ENDIF
+C
+	NETERR(NODE, WAY) = NETERR(NODE, WAY) + 1	! JUST FOR STATS
+C
+C THIS ENTRY IS FOR NONRECOVERABLE WRITE ERROR OR TIMEOUT
+C DECREMENT # OF OUTSTANDING I/O
+C
+	IF (DUMMYBUF) NETDUMM(NODE, WAY) = 0
+C
+	CALL TSTCHG2(BUF, 0, COUNT)
+	IF (COUNT .LE. 1) BUFNR = BUF
+C
+C IF MORE THAN 1 USER OF THIS BUFFER TRY TO SEND TO FINISH QUE
+C IN DIFFERENT BUFFER (SO WE CAN SET DESTINATION NODE AND ERROR
+C
+	IF (COUNT .GT. 1) THEN				! IS THIS LAST I/O
+	  TIMES = 0
+200	  CONTINUE
+	  CALL EXTRABUF(BUFNR, WAY, ST)
+	  IF (ST .EQ. 2) THEN
+	    TIMES = TIMES + 1
+	    CALL XWAIT(20, 1, ST)			! CAN CAUSE DEADLOCK,
+	    IF (TIMES .LT. 10) GOTO 200                 ! SO DON'T DO IT OFTEN
+C
+	    CALL NOTIFY1(LUN, NOTIO, ERROR, WAY)
+	    ERROR = '0000FFFE'X				! CANNOT GET EXTRA
+C							! BUFFER FOR NETMGR ...
+C							! SHOULD NOT HAPPEN
+	    CALL NOTIFY1(LUN, NOTIO, ERROR, WAY)
+	    CHECK_BUF = 1010
+	    CALL FREEBUF(BUF)
+	    CALL QUETRAP(-1)				! DEQUEUE NEXT
+	    GOTO 9999
+	  ENDIF
+C
+	  LENGTH = NETBUF(NEXT, BUF) - NCNLEN
+	  CALL FASTMOV(NETBUF(NCNLEN+1, BUF),
+     *                 NETBUF(NCNLEN+1, BUFNR), LENGTH)
+	  CHECK_BUF = 1011
+	  CALL FREEBUF(BUF)				! TRY TO RELEASE IT
+	ENDIF
+C
+	NETBUF(MODE, BUFNR)  = -NETBUF(MODE, BUFNR)	! SET ERROR MODE
+	NETIOCNT(BUFNR)      = 1			! ONLY 1 USER
+	NETBUF(PDEST, BUFNR) = NODE			! JUST FOR NETMGR
+C
+C IF TIMEOUT IN FILE MODE, RELEASE THE BUFFER
+C
+	IF (FILE .AND.	  
+     *      TOMASTER .EQ. 0 .AND.			! SENDING TO SECONDARY
+     *      ERROR .EQ. NET_TIMEOUT_ERROR) THEN
+	  CHECK_BUF = 1012
+	  CALL FREEBUF(BUFNR)
+	ELSE
+	  CALL ABL(BUFNR, NETFINISH, ST)
+	ENDIF
+C
+C IF SYSTEM IN THE LAST STAGE OF RECOVERY, 
+C ABORT RECOVERY IF ERROR FOR "RECOVERY" TRANSACTION.
+C THE WORST THAT WILL HAPPEN IS SYSTEM BELOW WILL NOT BE RESYNC'D CORRECTLY
+C
+	IF (NETCMDFRZ .GE. 999 .AND. RECOVWAY .EQ. WAY) THEN
+	  IF (FREEZQUEU .NE. 0) FREEZQUEU = 0
+	  NETCMDFRZ=0
+C
+300	  CONTINUE
+	  CALL RTL(BUFX, RECOVQUE, ST)			! RELEASE ALL BUFFERS
+	  IF (ST .NE. 2) THEN
+	    CHECK_BUF = 1013
+	    CALL FREEBUF(BUFX)
+	    GOTO 300
+	  ENDIF
+C
+	  IF (P(CMDFRZ) .EQ. 999) P(CMDFRZ) = 0
+	  CALL OPS('*** IOTRAP - RECOVERY MAY NOT FINISH PROPERLY ***',
+     *             NODE, ERROR)
+	  CALL OPS('*** IOTRAP - IT MAY TRY TO RECOVER AGAIN ***',
+     *             NODE, 0)
+	ENDIF
+C
+	CALL QUETRAP(-1)				! DEQUEUE REQ FROM EXEC
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C RETURN & END.
+C
+9999	CONTINUE
+C
+	RETURN
+	END

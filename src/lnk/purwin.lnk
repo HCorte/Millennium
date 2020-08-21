@@ -1,0 +1,23 @@
+$! GXSRC:PURWIN.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]PURWIN.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:49:42   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:32:36   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:46:10   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:PURWIN.EXE -
+OBJLIB:PURWIN,-
+PURGED_WITH_NO_OP,-
+ISORT5,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAGTCOM.ESH/SHAREABLE,-
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

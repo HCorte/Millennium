@@ -1,0 +1,183 @@
+C
+C PROGRAM TWINSEL
+C
+C
+C ** Source - twinsel.for **
+C
+C TWINSEL.FOR
+C
+C V06 14-DEC-1999 OXK MULTIWIN changes.
+C V05 27-APR-1999 RXK STOPSYS optimization (CARYSCAN is now an array).
+C V04 11-JAN-1999 GPW STOPSYS OPTIMIZATION
+C V03 11-JAN-1992 GCAN CNAGED ALL FILE NAMES TO CHARACTER FORMAT.
+C V02 07-OCT-1991 MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C
+C TOTO SELECT WINNER SELECTION PROGRAM.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM TWINSEL
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:WINCOM.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:VALFIL.DEF'
+        INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:DESLOG.DEF'
+	INCLUDE 'INCLIB:HSHCOM.DEF'
+        INCLUDE 'INCLIB:STOPCOM.DEF'                               !V04
+C
+	INTEGER*4 TUBSIZ
+	PARAMETER (TUBSIZ=I4BUCSIZ*7)
+C
+        INTEGER*4   NTSK
+        INTEGER*4   INDTSK                        !FUNCTION  !V04
+	BYTE	  I1TEMP(4)
+	INTEGER*4 TFDB(7),TMFBUF(8192),FILES(5,200)
+	INTEGER*4 GTYP, EOF, WIN, FILCNT, DUMMY, I, S
+	INTEGER*4 BLOCK, IND, ST, K, TYPE, LENGTH, TEMP
+        INTEGER*4 AWNTAB(2,NUMAGT)
+	CHARACTER CFILES(200)*20
+	EQUIVALENCE (TEMP,I1TEMP)
+	EQUIVALENCE (FILES,CFILES)
+        COMMON/BIGWIN/ AWNTAB
+
+	DATA EOF/0/,WIN/0/
+
+C
+	CALL COPYRITE
+C
+C
+C INITIALIZE WINNER SELECTION COMMON
+C
+        IF (.NOT.ISSUBPROC()) THEN
+            TYPE*,IAM(),
+     *            'This program can be run only from *WINTSK or MULTIWIN'
+            CALL GSTOP(GEXIT_FATAL)
+        ENDIF
+
+        IF(STOPMOD.EQ.WINMANUAL) THEN
+             CALL TWIN_WININT(CFILES,FILCNT)
+        ELSE
+             NTSK=INDTSK('TWINTSK ')
+             CALL STORFIL(NTSK,CFILES,DUMMY,FILCNT,2,0)
+        ENDIF
+C
+	IF(FILCNT.EQ.0) THEN
+	  TYPE*,IAM(),' Sorry, no Toto Select winner selection today'
+	  CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+	CALL TWIN_WINLOD(1,DUMMY)
+C
+C START DRAW FILE SCAN.
+C
+	CARYSCAN(TTSL)=.FALSE.
+	CALL FASTSET(0,V4BUF,VFLEN*4)
+	DO 3000 I=1,FILCNT
+	CALL TWIN_OPNDRW(FILES(1,I),PTMF)
+	CALL IOINIT(TFDB,PTMF,128*256)
+C
+C SCAN FILE
+C
+	WRITE(6,920) IAM(),(FILES(S,I),S=1,5)
+	BLOCK=0
+	EOF=0
+	IND=8192
+2030	CONTINUE
+	IF(IND.GE.8157) THEN
+	  BLOCK=BLOCK+1
+	  IND=1
+	  CALL READW(TFDB,BLOCK,TMFBUF,ST)
+	  IF(ST.NE.0) THEN
+	    WRITE(6,900) (FILES(K,I),K=1,5),ST,BLOCK
+	    CALL GPAUSE
+	  ENDIF
+	ENDIF
+	IF(EOF.GT.1000) GOTO 2090
+C
+C
+	IF(TMFBUF(IND).EQ.0) THEN
+	  EOF=EOF+1
+	  IND=IND+LREC
+	  GOTO 2030
+	ENDIF
+C
+C
+	EOF=0
+	TEMP = TMFBUF(IND+LREC-1)
+	TYPE = I1TEMP(4)
+	IF(TYPE.NE.LONE.AND.TYPE.NE.LREG) THEN
+	  TYPE*,iam(),' Bad record type > ',TYPE,' index > ',IND
+	  IND=IND+LREC
+	  GOTO 2030
+	ENDIF
+C
+C
+	LENGTH=LREC
+	IF(TYPE.EQ.LONE) THEN
+	  TEMP = TMFBUF(IND+LREC*2-1)
+	  TYPE = I1TEMP(4)
+	  IF(TYPE.EQ.LEND) LENGTH=LREC*2
+	  IF(TYPE.EQ.LTWO) LENGTH=LREC*3
+	ENDIF
+	CALL LOGTRA(TRABUF,TMFBUF(IND))
+	IND=IND+LENGTH
+	GTYP=TRABUF(TGAMTYP)
+	IF(GTYP.NE.TTSL) GOTO 2030
+C
+C CHECK IF WINNER
+C
+	CALL TWIN_POST(TRABUF)
+	CALL TCHKWIN(TRABUF,V4BUF,WIN)
+	IF(WIN.NE.0) THEN
+	  CALL TWIN_WINLOD(2,V4BUF)
+	  CALL FASTSET(0,V4BUF,VFLEN*4)
+	ENDIF
+	GOTO 2030
+2090	CONTINUE
+C
+C WINSEL COMPLETE, FLUSH BUFFERS TO DRAW FILES
+C
+3000	CONTINUE
+	TYPE*,IAM(),' Draw file scan complete'
+	CALL TWIN_WINLOD(4,DUMMY)
+	CALL TWIN_PSTGDF
+        TYPE*,IAM(),' Posting big winners to agent file'
+
+        IF(STOPMOD.EQ.WINMANUAL) THEN                           !V04
+            CALL PSTAWN(AWNTAB)
+            CALL GSTOP(GEXIT_SUCCESS)
+        ENDIF
+C
+C MULTIWINSEL
+C
+C WAIT FOR ASF FILE ACCESS
+c
+        CALL WAITLOCK(ASFBIT,ASFLOCK)                           !V04
+        CALL PSTAWN(AWNTAB)
+        CALL FREELOCK(ASFBIT,ASFLOCK)
+        CALL GSTOP(GEXIT_SUCCESS)
+C
+C
+900	FORMAT(1X,A,1X,5A4,' read error> ',I4,' block> ',I8)
+920	FORMAT(1X,A,'Scanning file ',5A4,' for winners ')
+	END

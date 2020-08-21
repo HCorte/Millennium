@@ -1,0 +1,40 @@
+C
+C V01 08-NOV-2000 UXN Initial release.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 VLFLUN,TCFLUN
+	PARAMETER(VLFLUN=16)
+	PARAMETER(TCFLUN=17)
+C
+	INTEGER*4 ASFFDB(7)              !AGENT SALES FILE
+	INTEGER*4 DAFFDB(7)              !DAILY ACTIVITY FILE
+	INTEGER*4 TMFFDB(7)		 !TMF FILE
+	INTEGER*4 X2STNFDB(7)            !X2X STN FILE
+	INTEGER*4 X2SCLFDB(7)            !X2X SCL FILE
+	INTEGER*4 X2TERFDB(7)            !X2X TER FILE
+	INTEGER*4 GAMFDB(7,MAXGAM)       !GAME FILES
+	CHARACTER*20 CGFNAMES(MAXGAM)
+	EQUIVALENCE(GFNAMES,CGFNAMES)
+C
+C FILE FDBS
+C
+	COMMON/GUIFIL/
+     *	   TMFFDB,
+     *	   ASFFDB,
+     *	   DAFFDB,
+     *	   X2STNFDB,
+     *	   X2SCLFDB,
+     *	   X2TERFDB,
+     *	   GAMFDB

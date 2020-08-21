@@ -1,0 +1,46 @@
+C V01 13-FEB-2001 ANG  INITIAL RELEASE FOR PORTUGAL
+C
+C RECORD LAYOUT FOR ORCPAS.ASC
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C PROJECT LOTARIA CLASSICA EM SERIES (PLCS)
+C ADD NEW FIELD ON FILE
+C
+
+CDEC$ OPTIONS /WARNING = NOALIGNMENT
+
+        STRUCTURE /ORCPASSTRUC/
+            INTEGER*4    LUN
+	    CHARACTER*10 DTHD
+            CHARACTER*2  RECTYP
+            INTEGER*4    GTYP
+            INTEGER*4    EMIS
+            INTEGER*4    SER
+            INTEGER*4    INDPAS
+            INTEGER*4    INDEMI
+            INTEGER*4    ST
+            
+            INTEGER*4   INITICK
+            INTEGER*4   FINTICK
+            LOGICAL*1   NEWLOT  ! (PLCS)
+        END STRUCTURE
+
+        RECORD /ORCPASSTRUC/ ORCPAS_REC
+
+	COMMON /ORCPASSCOM/ ORCPAS_REC
+
+CDEC$ END OPTIONS
+

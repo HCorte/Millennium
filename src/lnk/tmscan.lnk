@@ -1,0 +1,31 @@
+$! GXSRC:TMSCAN.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]TMSCAN.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:54:36   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:51:08   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:49:38   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:TMSCAN.EXE -
+OBJLIB:TMSCAN,-
+OFFLOG,-
+GUTSTAT,-
+GUTSW,-
+READTMF,-
+TMLODASF,-
+TMREPORT,-
+WHALE,-
+BIGFRSYS,-
+ISORTA,-
+GETLUN,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAGTCOM.ESH/SHAREABLE,-
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

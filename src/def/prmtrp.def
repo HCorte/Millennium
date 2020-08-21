@@ -1,0 +1,39 @@
+C  GXSRC:PRMTRP.DEF
+C
+C V02 10-MAY-1999 UXN TRIPLE CHANGED TO TRIO. MAXTRPRW CHANGED TO 18.
+C V01 23-DEC-1997 RXK Initial release.  
+C  
+C TODAYS TRIO GAME AND POOL PARAMETERS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	INTEGER*4 NUMTRP, MAXTRPRW, MAXTRPTI
+	PARAMETER(NUMTRP=6)             ! NUMBER OF SUPER DOUBLE GAMES
+	PARAMETER(MAXTRPRW=18)          ! MAX NUMBER OF COMPETITOR ROWS
+	PARAMETER(MAXTRPTI=24)	        ! MAX NUMBER OF TIES
+
+C NAME FILED LNGTH PARAMETERS
+
+	INTEGER*4 TRPENM_LEN, TRPDES_LEN , TRPNMS_LEN, TRPTVC_LEN
+	PARAMETER (TRPENM_LEN=28)	! EVENT NAME LENGTH IN BYTES
+	PARAMETER (TRPDES_LEN=3*28)     ! EVENT DESCRIPTION LENGTH IN BYTES
+	PARAMETER (TRPNMS_LEN=16)	! ROW NAME LENGTH IN BYTES
+        PARAMETER (TRPTVC_LEN= 4)       ! LENGTH IN BYTES OF TC-CHANEL NAME.
+
+
+	INTEGER*4 TRPTXMAX
+	PARAMETER(TRPTXMAX=5)           ! MAXIMUM TEXT MESSAGES
+
+	INTEGER*4 TRPMAXD		
+	PARAMETER(TRPMAXD=30)		! # OF ODDS TO DISPLAY (ON TERMINAL)

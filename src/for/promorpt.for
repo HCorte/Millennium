@@ -1,0 +1,102 @@
+C
+C V01 15-MAR-2000 UXN INITIAL RELEASE.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+	PROGRAM PROMORPT
+	IMPLICIT NONE
+	INCLUDE 'INCLIB:SYSDEFINE.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'
+        INCLUDE 'INCLIB:PRMLOG.DEF'
+        INCLUDE 'INCLIB:DESLOG.DEF'
+        INCLUDE 'INCLIB:DESTRA.DEF'
+C	
+	INTEGER*4 MAX_DRAWS
+	INTEGER*4 CNT,AMT
+	PARAMETER(CNT=1)
+	PARAMETER(AMT=2)
+	PARAMETER(MAX_DRAWS=4000)
+	INTEGER*4 PROM(2,MAX_DRAWS,MAXGAM)
+	LOGICAL*4 FOUND(MAXGAM)/MAXGAM*.FALSE./, EOF/.FALSE./
+	INTEGER*4 I,K, GNUM, DUMMY, LAST, KGNUM, KLAST, GTYP
+	INTEGER*4 ST,PAGE
+	INTEGER*4 LOGREC(LMUREC)
+	INTEGER*4 REPLU/7/
+C
+	CALL COPYRITE
+C
+	CALL GETSCONF(SCFREC,ST)
+	IF(ST.NE.0) CALL GSTOP(GEXIT_FATAL)
+C
+	CALL ROPEN('PROMORPT.REP',REPLU,ST)
+	IF(ST.NE.0) CALL GSTOP(GEXIT_FATAL)
+	PAGE = 0
+	CALL TITLE('PROMOTION REPORT','PROMORPT',1,REPLU,PAGE,DAYCDC)
+C
+C OPEN CARRYOVER FILE
+C
+        CALL IOPEN(SCFSFN(1,TCF),1,LREC*2,LCDC,LSER*2-1,ST)
+        IF(ST.NE.0)  CALL FILERR(SCFSFN(1,TCF),1,ST,0)
+C
+	CALL FASTSET(0,PROM,2*MAX_DRAWS*MAXGAM)
+C
+20	CONTINUE
+	CALL READTCF(LOGREC,1,EOF)
+	IF(EOF) GOTO 50
+	CALL LOGTRA(TRABUF,LOGREC)
+	IF(TRABUF(TWFFLG).EQ.1) GOTO 20
+	IF(TRABUF(TSTAT).NE.GOOD .AND.
+     *     TRABUF(TSTAT).NE.EXCH .AND.
+     *     TRABUF(TSTAT).NE.FRAC) GOTO 20
+	IF(TRABUF(TWADDFW).EQ.0) GOTO 20
+	
+	LAST  = TRABUF(TWEND) + 1
+	KLAST = TRABUF(TWKEND) + 1
+	GNUM  = TRABUF(TGAM)
+	GTYP  = TRABUF(TGAMTYP)
+	KGNUM = TRABUF(TWKGME)	
+
+	IF(TRABUF(TWAMT).GT.0) THEN
+	   PROM(AMT, LAST,  GNUM)  = PROM(AMT,LAST,  GNUM)  + TRABUF(TWAMT)
+	   PROM(CNT, LAST,  GNUM)  = PROM(CNT,LAST,  GNUM)  + 1
+	   FOUND(GNUM) = .TRUE.
+	ENDIF
+
+	IF(TRABUF(TWKAMT).GT.0.AND.GTYP.NE.TKIK) THEN
+	   PROM(AMT, KLAST, KGNUM) = PROM(AMT,KLAST, KGNUM) + TRABUF(TWKAMT)
+	   PROM(CNT, KLAST, KGNUM) = PROM(CNT,KLAST, KGNUM) + 1
+	   FOUND(KGNUM) = .TRUE.
+        ENDIF
+
+	GOTO 20
+50	CONTINUE
+	CALL ICLOSE(1,DUMMY,ST)
+	DO 100 GNUM=1,MAXGAM
+	   IF(.NOT.FOUND(GNUM)) GOTO 100
+	   WRITE(REPLU,9000) (SCFLGN(K,GNUM),K=1,4)
+  	   DO 200 I=1, MAX_DRAWS
+	      IF(PROM(CNT,I,GNUM).EQ.0) GOTO 200
+	      WRITE(REPLU,9010) I, PROM(CNT,I,GNUM), 
+     *                      CSMONY(PROM(AMT,I,GNUM),12,BETUNIT)
+200	   CONTINUE
+100	CONTINUE
+	CALL GSTOP(GEXIT_SUCCESS)
+C	      
+9000	FORMAT(/,1X,'PROMOTIONS FOR ',4A4,
+     *         /,'    Draw       Count        Amount')
+9010	FORMAT(4X,I4,2X, I10, 2X,A12)
+	END

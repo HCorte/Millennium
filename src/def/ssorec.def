@@ -1,0 +1,47 @@
+C SSOREC.DEF
+C
+C V02 14-JUN-2000 UXN Cleaned up.
+C V01 23-Dec-1997 RXK Initial release.
+C
+C Superscore pool overflow file record layout
+C 
+C This overflow file contains entrys of Superscore pools control table, 
+C which did not fit into memory tables
+C
+C
+C SSOCMB		1024	tabel of combination numbers
+C SSOAMT                1024	table of combination amounts
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 SSOLEN,SSOSEC
+        PARAMETER(SSOLEN=2048)                  !16 512B VAX sectors
+        PARAMETER(SSOSEC=SSOLEN/64)
+        INTEGER*4 SSOREC(SSOLEN)                !record
+C
+        INTEGER*4 SSONUM                        !number of entries
+        PARAMETER(SSONUM=SSOLEN/2)
+C
+        INTEGER*4 SSOCMB(SSONUM)
+        INTEGER*4 SSOAMT(SSONUM)
+C
+        INTEGER*4 SSOCMB_OFF,SSOAMT_OFF
+C
+        PARAMETER(SSOCMB_OFF  = 1 )
+        PARAMETER(SSOAMT_OFF  = SSOCMB_OFF + SSONUM )
+C
+        EQUIVALENCE(SSOCMB, SSOREC(SSOCMB_OFF))
+        EQUIVALENCE(SSOAMT, SSOREC(SSOAMT_OFF))
+
+    

@@ -1,0 +1,184 @@
+C
+C SUBROUTINE X2RSTNST
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2RSTNST.FOV                                 $
+C  $Date::   17 Apr 1996 16:32:36                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C ** Source - x2xrel.for **
+C
+C
+C X2RSTNST.FOR
+C
+C V04 12-DEC-94 DAS Integrate UK changes into X2X Baseline
+C V02 05-APR-94 GPR USE X2X_I4_STATION TO DETERMINE STATION AND TERNUM
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C 
+C     SUBROUTINE:
+C        X2RSTNST(STATION,CHAIN,GROUP,PROCESS,STATUS) 
+C
+C     PURPOSE:
+C        STARTS A STATION BRAODCAST/RELAY
+C        BUILDS MESSAGE AND SENDS TO RELAY APPLICATION INPUT QUEUE
+C
+C     INPUT:
+C       STATION  -     STATION TO BE STARTED
+C       CHAIN    -     IF A CHAINED MESSAGE THEN .TRUE.
+C       GROUP    -     GROUP NUMBER IF CHAIN = .TRUE.
+C       PROCESS  -     PROCESS NUMBER ASSIGNED
+C
+C     OUTPUT:
+C       STATUS   -     0 IF STATION STARTED
+C                     -1 IF ERROR (NO BUFFER)
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C 
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+C
+	SUBROUTINE X2RSTNST(STATION,CHAIN,GROUP,PROCESS,STATUS)
+C
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:X2XREL.DEF'
+C 
+	INTEGER*4 RETRY_OFF, PROBUF, STATUS, PROCESS, GROUP, STATION
+	INTEGER*4 NEXT_TIME(X2X_RELAY_APPS) /X2X_RELAY_APPS*0/
+	INTEGER*4 CURRENTLY_RELEASED_SEND(X2X_RELAY_APPS) 
+     *		      /X2X_RELAY_APPS*0/
+	INTEGER*4 CURRENTLY_RELEASED_CALL(X2X_RELAY_APPS)
+     *		      /X2X_RELAY_APPS*0/
+	LOGICAL	  PROCEED, CHECK_SENDING, CHECK_CONNECTION
+	LOGICAL	  STATION_CONNECTED
+	SAVE	  NEXT_TIME, CURRENTLY_RELEASED_SEND, 
+     *		  CURRENTLY_RELEASED_CALL
+C
+	LOGICAL CHAIN
+C 
+	IF (IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0) THEN
+           TYPE *,'X2RSTNST:, STATION, CHAIN, GROUP, PROCESS '
+           TYPE *,'         ',STATION, CHAIN, GROUP, PROCESS
+        ENDIF
+C
+C	LOGIC TO START ONLY LIMITED NO OF TERMINAL PER SEC
+C
+	IF (X2XR_START_IN_A_SEC(PROCESS).NE.0 .OR. 
+     *	      X2XR_CALL_IN_A_SEC(PROCESS).NE.0)	      THEN
+
+	   CHECK_SENDING=.FALSE.
+	   CHECK_CONNECTION=.FALSE.
+	   IF (X2XR_START_IN_A_SEC(PROCESS).NE.0) CHECK_SENDING=.TRUE.
+	   IF (X2XR_CALL_IN_A_SEC(PROCESS).NE.0)  CHECK_CONNECTION=.TRUE.
+	   STATION_CONNECTED=.FALSE.
+	   IF (BX2XS_SAP(STATION).NE.0) STATION_CONNECTED=.TRUE.
+
+	   IF (X2X_SYSTIM.GE.NEXT_TIME(PROCESS)	    .OR.	!SEC EXPIRED
+     *	       X2X_SYSTIM.LT.NEXT_TIME(PROCESS)-1000) THEN !MIDNITE PROBLEM
+		NEXT_TIME(PROCESS)=X2X_SYSTIM+1
+		CURRENTLY_RELEASED_SEND(PROCESS)=0
+		CURRENTLY_RELEASED_CALL(PROCESS)=0
+	   ENDIF
+	   PROCEED=.FALSE.
+
+	   IF (CURRENTLY_RELEASED_SEND(PROCESS).LT.
+     *					      X2XR_START_IN_A_SEC(PROCESS)
+     *	       .AND. CHECK_SENDING) PROCEED=.TRUE.
+	   IF (CURRENTLY_RELEASED_SEND(PROCESS).EQ.0 .AND.
+     *		  STATION_CONNECTED) PROCEED=.TRUE.
+	   IF (CURRENTLY_RELEASED_CALL(PROCESS).LT.
+     *				  X2XR_CALL_IN_A_SEC(PROCESS)
+     *	       .AND. CHECK_CONNECTION .AND..NOT.STATION_CONNECTED) 
+     *			      PROCEED=.TRUE.
+	   IF (IAND(X2X_DEBUG,2048).NE.0) THEN
+	    CALL OPS('checking sending ',X2X_SYSTIM,STATION)
+	    CALL OPS('released ', CURRENTLY_RELEASED_SEND(PROCESS),
+     *	      CURRENTLY_RELEASED_CALL(PROCESS))
+	    CALL OPS('PROCEED ',PROCEED,STATION_CONNECTED)
+	    CALL OPS('next time ',NEXT_TIME(PROCESS),0)
+	   ENDIF
+	   IF (.NOT.PROCEED) THEN
+		STATUS=-2
+		RETURN
+	   ENDIF
+	ENDIF
+			
+	CALL GETBUF(PROBUF)
+	IF (PROBUF.LE.0) THEN
+           STATUS = -1
+           RETURN 
+        ENDIF
+C 
+C       BUILD THE RELAY MESSAGE FOR THE STATION
+C
+	CALL X2RSTNMS(PRO(INPTAB,PROBUF),STATION,PROCESS)
+C 
+
+C       ***** Start V02 changes *****
+
+        IF (X2X_I4_STATION) THEN
+	   PRO(LINENO,PROBUF) = STATION
+        ELSE
+	   HPRO(LINENO,PROBUF) = STATION
+        ENDIF
+
+C       ***** End V02 changes *****
+
+	HPRO(TRCODE,PROBUF) = TYPX2X_RELAY
+C
+C       REMOVE FROM REQUESTED TO ACTIVE FOR PROCESS
+C 
+	X2XR_NO_REQUEST(PROCESS) = X2XR_NO_REQUEST(PROCESS) - 1
+	X2XR_NO_ACTIVE(PROCESS)  = X2XR_NO_ACTIVE(PROCESS)  + 1
+C
+	IF (CHAIN) THEN
+	   X2XR_GROUP_ACTIVE(GROUP,PROCESS)  = 
+     *          X2XR_GROUP_ACTIVE(GROUP,PROCESS) + 1
+	   X2XR_GROUP_REQUEST(GROUP,PROCESS) = 0
+	ENDIF
+C 
+C       MARK STATION AS NO LONGER REQUESTED BUT ACTIVE
+C
+	CALL BCLR(X2XR_STATION_REQUEST(STATION),PROCESS-1)
+	CALL BSET(X2XR_STATION_ACTIVE(STATION),PROCESS-1)
+C
+	RETRY_OFF = X2X_STATIONS*(PROCESS-1)+STATION
+	CALL ISBYTE(X2XR_MAX_RETRY(PROCESS),IX2XR_RETRY_CNT,
+     *	               RETRY_OFF-1)
+C
+C       QUEUE TO RELAY APPLICATION INPUT QUEUE
+C
+	CALL X2RADDBF(PROBUF)
+	IF (CHECK_CONNECTION)
+     *	      CURRENTLY_RELEASED_CALL(PROCESS)=
+     *		      CURRENTLY_RELEASED_CALL(PROCESS)+1
+	IF (CHECK_SENDING)
+     *	      CURRENTLY_RELEASED_SEND(PROCESS)=
+     *		      CURRENTLY_RELEASED_SEND(PROCESS)+1
+	STATUS=0
+C
+	RETURN
+	END

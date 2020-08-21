@@ -1,0 +1,52 @@
+C
+C SUBROUTINE LNGSRT2
+C $Log:   GXAFXT:[GOLS]LNGSRT2.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:51:00   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:52:02   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - vis_attsnp.for **
+C
+C
+C
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE LNGSRT2(VALUES,SORT)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:PRMTSL.DEF'
+C
+	INTEGER*4    ATLTOP
+	PARAMETER    (ATLTOP=30)
+	INTEGER*4    START,I,TEMP
+	INTEGER*4    VALUES(ATLTOP)
+	INTEGER*4    SORT(ATLTOP)
+	INTEGER*4    S(30) /01,02,03,04,05,06,07,08,09,10,
+     *	                    11,12,13,14,15,16,17,18,19,20,
+     *	                    21,22,23,24,25,26,27,28,29,30 /
+C
+	CALL FASTMOV(S,SORT,ATLTOP)
+	START=1
+C
+5	CONTINUE
+	IF(START.LT.1) START = 1
+	DO 10 I = START , ATLTOP-1
+	  IF (VALUES(SORT(I)).LT.VALUES(SORT(I+1))) THEN
+	     TEMP = SORT(I)
+	     SORT(I) = SORT(I+1)
+	     SORT(I+1) = TEMP
+	     START = I-1
+	     GOTO 5
+	  ENDIF
+10	CONTINUE
+	RETURN
+	END

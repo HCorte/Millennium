@@ -1,0 +1,42 @@
+C
+C SUBROUTINE COPYRITX
+C $Log:   GXAFXT:[GOLS]COPYRITX.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:42:26   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:00:32   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_copyrite.for **
+C
+C
+C
+C THIS ROUTINE IS USED IN SCREEN ORIENTED PROGRAMS
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE COPYRITX(CLRLU)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INTEGER*4     CLRLU         !Logical unit to Clear screen
+	INTEGER*4     ST            !Error status
+C
+C CLEAR THE SCREEN
+C
+	CALL CLRSCR(CLRLU)
+C
+C DISPLAY GTECH COPYRIGHT NOTICE
+C
+	CALL COPYRITE
+C
+C WAIT 2 SECONDS
+C
+	CALL XWAIT(2,2,ST)
+C
+	RETURN
+	END

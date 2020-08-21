@@ -1,0 +1,44 @@
+                          GTECH Distibuted Network
+                        Terminal Configuration Help               Page 1 of 2
+ 
+      This help screen describes each of the fields associated with
+      updating Terminal Configurations.  For specific instructions
+      on how to use the Add and Modify screens, refer to the Terminal
+      Configuration Menu Help.
+ 
+      The following describes each of the station port configuration
+      parameters:
+ 
+      Terminal number - number associated to this terminal.  Same as
+                        terminal number defined in the ASF file.
+      Station number  - the number of the station for which this
+                        terminal will communicate with.
+      Port -            the port on the station for which communications
+                        messsages will pass through.
+      Drop -            the drop address which the station will poll to enable
+                        communications with the terminal
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                        Terminal Configuration Help               Page 2 of 2
+ 
+      State -           the default terminal state when initially loaded into
+                        memory. (should be set to 1 or 5).
+                        0=not defined       1=defined       3=active
+                        4=slow poll         5=disabled
+      Update -          CDC date of the last time this record was updated.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

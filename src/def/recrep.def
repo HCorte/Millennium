@@ -1,0 +1,176 @@
+C RECREP.DEF                                                                    
+C
+C V17 24-JAN-2011 RXK Fix for offsets REPN5W_OFF and REPNAW_OFF.
+C V16 02-FEB-2000 OXK REPFRE & REPSEC changed (Vakio changes)
+C V15 09-SEP-1998 RXK Structure change, Kicker direction and QP type added  
+C V14 17 Apr 1996 HXK Release of Finland for X.25, Telephone Betting, 
+C			Instant Pass Thru Phase 1
+C V13 24 Jul 1995 PXB Changed top ten coupon to be dimensioned by game index. 
+C			This change has increased the length of this file.
+C V12 17 Jul 1995 PXB Add top ten coupon for ravi game. Use free sapce.
+C V11 17 Aug 1993 HXN Added NUMPPP to GAMLEN.
+C V10 21 Jun 1993 HXN UPDATE REPSEC=11953. BECAUSE NUMLTO=4 INSTEAD OF 2.
+C V09 03 May 1993 STUART Restored Baseline version
+C V08 28 Apr 1993 HUY Adapt REPSEC, from Concurrent sector size=256, 
+C			to VAX block size=512
+C V07 27 Apr 1993 HUY Initial revision.
+C V06 27-APR-1993 HHN INITIAL RELEASE FOR VAX
+C V05 24-FEB-1992 HJK ALLOW FULL FREE SYSTEMS > 256                 
+C V04 22-NOV-1991 STC CHANGED FOR DOUBLE JOKERI                   
+C V03 17-OCT-1990 MTK CHANGED FOR KENO GAME                     
+C V02 15-FEB-1990 MGM  REARRANGED RAVI SECTION                  
+C V01 26-SEP-1989 MGM  INITIAL RELEASE FOR FINLAND                
+C                                         
+C OFFLINE RECORD DESCRIPTION FOR STORING INFORMATION USED TO          
+C PRODUCE OFFLINE COUPON DISTRIBUTION STATISTICS REPORTS.             
+C THIS FILE IS UPDATED DURING STOPSYS FROM TMFREP.                
+C                                         
+C NOTE! - GAMLEN IS NUMBER OF LOTTO GAMES + NUMBER OF SPORT GAMES               
+C         TO INDEX INTO THESE ARAYS USE:                                        
+C                                 LOTTO - GAMIND                                
+C                                 SPORT - NUMLTO + GAMIND                       
+C                                 KICKER(ONLY) - NUMLTO + NUMSPT + GAMIND
+C                                                                               
+C REPUPD                                        LAST CDC RECORD WAS UPDATED
+C REPPRG                                        LAST CDC RECORD WAS PURGED 
+C REPBEG                                        REPORT BEGINNING  CDC      
+C REPEND                                        REPORT ENDING CDC          
+C REPN1W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY)  1 WEEK CUPONS           
+C REPN2W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY)  2 WEEK CUPONS           
+C REPN3W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY)  3 WEEK CUPONS           
+C REPN5W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY)  5 WEEK CUPONS           
+C REPNAW (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY) 10 WEEK CUPONS           
+C
+C REPT1W (JOKLEN,MAXDAY)                        1 WEEK CUPONS TOTAL        
+C REPT2W (JOKLEN,MAXDAY)                        2 WEEK CUPONS TOTAL         
+C REPT3W (JOKLEN,MAXDAY)                        3 WEEK CUPONS TOTAL         
+C REPT5W (JOKLEN,MAXDAY)                        5 WEEK CUPONS TOTAL         
+C REPTAW (JOKLEN,MAXDAY)                       10 WEEK CUPONS TOTAL         
+C
+C                                               TOTAL WORDS             
+C REPFRE ()                                     FREE SPACE                  
+C                                               -------------------------------
+C                                                     TOTAL           
+C 
+C                                                                               
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++            
+C This item is the property of GTECH Corporation, W.Greenwich, Rhode            
+C Island, and contains confidential and trade secret information. It            
+C may not be transferred from the custody or control of GTECH except            
+C as authorized in writing by an officer of GTECH. Neither this item            
+C nor the information it contains may be used, transferred,                     
+C reproduced, published, or disclosed, in whole or in part, and                 
+C directly or indirectly, except as expressly authorized by an                  
+C officer of GTECH, pursuant to written agreement.                              
+C                                                                               
+C Copyright 2000 GTECH Corporation. All rights reserved.                        
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++            
+C                                                                               
+C
+      INCLUDE 'INCLIB:BIGFRSYS.DEF'
+
+      INTEGER*4 GAMLEN, JOKLEN
+      PARAMETER (GAMLEN=NUMLTO+NUMSPT+NUMKIK)        != 4+2+1 = 7
+      PARAMETER (JOKLEN=NUMLTO+NUMSPT+NUMKIK) != 4+2+1+2 = 9 
+
+      INTEGER*4 MAXDAY,MAXVCP,SYSTYPS,QPTYPS
+      PARAMETER (MAXDAY=7)              !MAX NUMBER OF DAYS IN A WEEK      
+      PARAMETER (MAXVCP=10)             !MAX NUMBER OF TOP COUPONS DISPLAYED
+      PARAMETER (SYSTYPS=3)             !NUMBER OF SYSTEM TYPES IN REPORT FILE
+                                        !(1-NOSYS,2-FULLSYS,3-REDUCED SYS)
+      PARAMETER (QPTYPS=3)              !QUICK PICK TYPES
+                                        !(1-QP NO,2-QP YES,3-QP WEIGHTED)
+C FOR SPORTS
+C STORE SIMPLE BETS (NOSYS) WITH OFFSETS 1-MAXBRD 
+C STORE FULL SYSTEM (FULLSYS) BETS WITH OFFSETS 1-256
+C STORE BIG FULL SYSTEMS (> 256) BEHIND REGULAR FULL SYSTEM BETS (257-333)
+C REDUCED SYSTEM (REDSYS) OFFSETS ARE FROM 21 (LOWEST REDUCED SYSTEM NUMBER)
+C UNTIL SPGSYS+21
+C                                                                               
+      INTEGER*4 MAXCMB
+      PARAMETER (MAXCMB=256+BIGSYS)     !MAX SPORT COMBIN=256+77=333 
+C                                    
+      COMMON/RPTCOM/                                                            
+     *          REPPRG,REPUPD,                                                  
+     *          REPBEG,REPEND,
+     *          REPN1W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY),
+     *          REPN2W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY),
+     *          REPN3W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY),
+     *          REPN5W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY),
+     *          REPNAW (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY)
+
+
+      COMMON/RPTCOM/                           
+     *          REPT1W (JOKLEN,MAXDAY),
+     *          REPT2W (JOKLEN,MAXDAY),
+     *          REPT3W (JOKLEN,MAXDAY),
+     *          REPT5W (JOKLEN,MAXDAY),
+     *          REPTAW (JOKLEN,MAXDAY)
+
+
+	        INTEGER*4 REPPRG_OFF,REPUPD_OFF,REPBEG_OFF,REPEND_OFF
+		INTEGER*4 REPN1W_OFF, REPN2W_OFF, REPN3W_OFF, REPN5W_OFF
+		INTEGER*4 REPNAW_OFF
+		INTEGER*4 REPT1W_OFF, REPT2W_OFF, REPT3W_OFF, REPT5W_OFF
+		INTEGER*4 REPTAW_OFF, REPFRE_OFF
+		
+		PARAMETER(REPPRG_OFF=1)
+		PARAMETER(REPUPD_OFF=REPPRG_OFF+1)
+		PARAMETER(REPBEG_OFF=REPUPD_OFF+1)
+		PARAMETER(REPEND_OFF=REPBEG_OFF+1)
+		PARAMETER(REPN1W_OFF=REPEND_OFF+1)
+		PARAMETER(REPN2W_OFF=REPN1W_OFF+
+     *                    (MAXCMB*GAMLEN*SYSTYPS*QPTYPS*MAXDAY))
+		PARAMETER(REPN3W_OFF=REPN2W_OFF+
+     *                    (MAXCMB*GAMLEN*SYSTYPS*QPTYPS*MAXDAY))
+		PARAMETER(REPN5W_OFF=REPN3W_OFF+
+     *                    (MAXCMB*GAMLEN*SYSTYPS*QPTYPS*MAXDAY))
+		PARAMETER(REPNAW_OFF=REPN5W_OFF+
+     *                    (MAXCMB*GAMLEN*SYSTYPS*QPTYPS*MAXDAY))
+		PARAMETER(REPT1W_OFF=REPNAW_OFF+
+     *                    (MAXCMB*GAMLEN*SYSTYPS*QPTYPS*MAXDAY))
+		PARAMETER(REPT2W_OFF=REPT1W_OFF+JOKLEN*MAXDAY)
+		PARAMETER(REPT3W_OFF=REPT2W_OFF+JOKLEN*MAXDAY)
+		PARAMETER(REPT5W_OFF=REPT3W_OFF+JOKLEN*MAXDAY)
+		PARAMETER(REPTAW_OFF=REPT5W_OFF+JOKLEN*MAXDAY)
+		PARAMETER(REPFRE_OFF=REPTAW_OFF+JOKLEN*MAXDAY)
+
+                INTEGER*4 RECREPLEN
+                PARAMETER(RECREPLEN = REPFRE_OFF-1)
+C
+                INTEGER*4 IRECREPSEC
+                PARAMETER(IRECREPSEC = RECREPLEN/128 + 1)
+C
+                INTEGER*4 RECREPSEC
+                PARAMETER(RECREPSEC = IRECREPSEC*2)
+C
+                INTEGER*4 RECREPFRESIZ
+                PARAMETER(RECREPFRESIZ = RECREPSEC * 64 - RECREPLEN)
+
+      COMMON/RPTCOM/                                                            
+     *          REPFRE (RECREPFRESIZ)
+
+      INTEGER*4 REPPRG ,REPUPD,
+     *          REPBEG ,REPEND,                                 
+     *          REPN1W ,
+     *          REPN2W ,
+     *          REPN3W ,
+     *          REPN5W ,
+     *          REPNAW ,
+     *          REPT1W ,
+     *          REPT2W ,
+     *          REPT3W ,
+     *          REPT5W ,
+     *          REPTAW ,
+     *          REPFRE 
+
+
+      INTEGER*4 REPSEC
+      PARAMETER (REPSEC=RECREPSEC)
+      INTEGER*4 REPREC(REPSEC*64)                                               
+                                                                                
+      EQUIVALENCE(REPREC,REPPRG)                                                
+
+      VOLATILE /RPTCOM/
+
+C                                                                               

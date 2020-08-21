@@ -1,0 +1,44 @@
+                          GTECH Distributed Network
+                     Relay Application Configuration Help          Page 1 of 2
+ 
+      This help screen describes each of the fields associated with
+      updating a relay application.  For specific instructions
+      on how to use the Add and Modify screens, refer to the Relay
+      Application Menu Help.
+ 
+      The following describes each of the application parameters:
+ 
+      Application number  - application identifier for this record.
+      Send timeout        - time (in msecs) to wait before sending.
+      Max retries         - max times to retry before disabling relay.
+      Wait timeout        - time (in msecs) to wait when a ACKW received.
+      Relay status        - current status of the application
+                            1=idle        2=active
+                            NOTE: set to idle in configuration
+      Max active          - max number of active lines for this relay
+                            (based on percentage of available capacity)
+ 
+ 
+ 
+                          GTECH Distributed Network
+                     Relay Application Configuration Help          Page 2 of 2
+ 
+      Attribute           - attribute of the relay application
+                            1=chain relay
+                            2=unsolicted to all relay form
+                            3=unsolicited to all, non-relay format
+                            4=non formated broadcast to all stations
+      Application flags   - relay application flags
+                            1=single relay    2=many relay
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

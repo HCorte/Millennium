@@ -1,0 +1,25 @@
+$! GXSRC:POOLMGR.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]POOLMGR.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:49:04   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:30:14   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:45:44   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:POOLMGR.EXE -
+OBJLIB:POOLMGR,-
+POOLCLR,-
+POOLDISP,-
+POOLREAD,-
+POOLWRITE,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXPOOLLTO.ESH/SHAREABLE

@@ -1,0 +1,21 @@
+    GTCSNP.HLP              GTECH Distributed Network
+		      Getcheck Serial # Snapshot Help      Page 1 of 1
+ 
+    The GTC snapshot displays information about a transaction.
+
+    The information displayed includes:
+ 
+    date      - the date requested both as CDC and as a julian date
+    internal# - internal serial number of the requested transaction
+    external# - external serial number of the requested transaction
+
+
+
+
+
+
+
+
+
+
+

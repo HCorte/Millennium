@@ -1,0 +1,48 @@
+$! GXSRC:X2XRAPP.LNK
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]X2XRAPP.LNV                                  $
+$! $Date::   14 Jul 1996 21:03:00                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! V02 27-FEB-96 wsm Added X2GETAPPNO.
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$!
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! This item is the property of GTECH Corporation, Providence, Rhode
+$! Island, and contains confidential and trade secret information. It
+$! may not be transferred from the custody or control of GTECH except
+$! as authorized in writing by an officer of GTECH. Neither this item
+$! nor the information it contains may be used, transferred,
+$! reproduced, published, or disclosed, in whole or in part, and
+$! directly or indirectly, except as expressly authorized by an
+$! officer of GTECH, pursuant to written agreement.
+$!
+$! Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:X2XRAPP.EXE -
+OBJLIB:X2XRAPP,-
+X2ADDPRO,-
+X2RADDBF,-
+X2RDLOAD,-
+X2RINI,-
+X2RSTOP,-
+X2RTOTER,-
+X2GETLOAD,-
+X2GETAPPNO,-
+X2LOAD1,-
+OPS1,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXX2XCOM.ESH/SHAREABLE, -
+TSKLIB:GXAPPCOM.ESH/SHAREABLE, -
+TSKLIB:GXCTMCOM.ESH/SHAREABLE, -
+TSKLIB:GXCPLCOM.ESH/SHAREABLE

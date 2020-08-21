@@ -1,0 +1,50 @@
+C
+C  GXSRC:X2TERMSTA.DEF
+C  
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2TERMSTA.DEV                                $
+C  $Date::   17 Apr 1996 16:38:26                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C  
+C V01 13-DEC-94 GPR RELEASED FOR UK
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C INCLUDE FILE FOR X2TERMSTA.FOR
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:X2XCOM.DEF'
+C
+	INTEGER*4 TERM_NUMBER,ADDRESS1,ADDRESS2,ERR_NR,INST_DATE,FIRST_DATE
+	INTEGER*4 LAST_DATE
+C
+        PARAMETER (TERM_NUMBER=1)
+        PARAMETER (ADDRESS1=2)
+        PARAMETER (ADDRESS2=3)
+        PARAMETER (ERR_NR=4)
+        PARAMETER (INST_DATE=5)
+        PARAMETER (FIRST_DATE=6)
+        PARAMETER (LAST_DATE=7)
+C
+	INTEGER*4 LEN_SORTARRAY
+	PARAMETER (LEN_SORTARRAY=7)
+        INTEGER*4 LENRECORD		! LENGTH RECORD IN INTEGER*4 FORMAT
+	INTEGER*4 BLOCKSIZE		! LENGTH BLOCK IN INTEGER*4 FORMAT
+	PARAMETER (LENRECORD=8)
+	PARAMETER (BLOCKSIZE=128)

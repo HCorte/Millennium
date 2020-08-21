@@ -1,0 +1,296 @@
+C
+C SUBROUTINE X2DIALPT
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2DIALPT.FOV                                 $
+C  $Date::   17 Apr 1996 16:15:12                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2dialpt.for;1 **
+C
+C X2DIALPT.FOR
+C
+C V02 22-AUG-94 GPR USE DIAL PORTS FROM STATION CLASS - Integrate UK 
+C		    changes into X2X Baseline
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C This routine will assign dialup ports to be used when
+C attempting a connection to the host system.  NOTE:
+C specific dialup addresses previously configured
+C in the Station Configuration file will override any
+C default dialup ports.
+C
+C Calling sequence:
+C
+C     CALL X2DIALPT(STN,OFFLINE,PRTCNT,DIALPORT)
+C
+C Input parameters:
+C
+C     STN         Int*4       Station Number
+C     OFFLINE     Int*4       -1 = offline update
+C
+C Output parameters:
+C
+C     PRTCNT      Int*4                       Number of ports assigned
+C     DIALPORT    Int*4(X2X_MAXDIAL_ASSIGN)   Network ports assigned
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2DIALPT(STN,OFFLINE,PRTCNT,DIALPORT)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+	INCLUDE 'INCLIB:X2XSTN.DEF'
+	INCLUDE 'INCLIB:X2XNPC.DEF'
+	INCLUDE 'INCLIB:X2DIAL.DEF'
+C
+	INTEGER*4   STN                             !Station number
+	INTEGER*4   OFFLINE                         !Offline update
+	INTEGER*4   PRTCNT                          !Number of ports assigned
+	INTEGER*4   DIALPORT(X2X_MAXDIAL_ASSIGN)    !Dialup ports assigned
+	INTEGER*4   MAX_COMB                        !Number of combinations
+	INTEGER*4   NUM_DIGS                        !Number of octal digits
+	INTEGER*4   TOTAL                           !Work variable
+	INTEGER*4   SEED,LSTSEED                    !UNIRAN variables
+	INTEGER*4   PORT                            !Work variable
+	INTEGER*4   MAX_LOOP,LOOP_CNT               !Max times to loop
+	INTEGER*4   LOCAL_HUNT(X2X_MAX_HUNT)        !Local hunt port
+	INTEGER*4   LOCAL_HUNT_ADR(2,X2X_MAX_HUNT)  !Local hunt address
+	INTEGER*4   TEMP_ADDRESS(2)                 !Local address
+	INTEGER*4   J, FASTBIN, ST, I
+	INTEGER*4   CLASS			    !Station class	!V02
+	CHARACTER   X2FILNAM*20                     !File name function
+	LOGICAL     INIT /.FALSE./                  !Table loaded flag
+C
+	DATA        LSTSEED     / 0 /
+	DATA        MAX_COMB    / 0 /
+	DATA        MAX_LOOP    / 100 /
+C
+C COUNT THE NUMBER OF DIALUP PORTS.
+C
+	IF(.NOT.INIT) THEN
+C
+C IF ONLINE PROCESS SCAN THROUGH MEMORY TO COUNT
+C THE NUMBER OF PORTS.
+C
+	  CALL FASTSET(0,LOCAL_HUNT,X2X_MAX_HUNT)
+	  CALL FASTSET(0,LOCAL_HUNT_ADR,X2X_MAX_HUNT*2)
+	  X2DIAL_TOT_PORTS=0
+	  IF(OFFLINE.EQ.0) THEN
+	    DO 100 I=1,X2X_MAX_HUNT
+	      IF(X2XPN_HUNT(I).NE.0 .AND.
+     *	         X2XPN_TYPE(X2XPN_HUNT(I)).EQ.X2XPT_DIALUP) THEN
+	        X2DIAL_TOT_PORTS=X2DIAL_TOT_PORTS+1
+	        X2DIAL_AVAIL_PORTS(X2DIAL_TOT_PORTS)=X2XPN_HUNT(I)
+	      ENDIF
+100	    CONTINUE
+C
+C SEARCH THROUGH THE HUNT ADDRESS TO SEE IF WE HAVE A
+C NEW ONE.
+C
+	  ELSE
+C
+C OPEN THE NETWORK PORT CONFIGURATION FILE IF
+C PROCESS IS OFFLINE.
+C
+	    CALL OPENX2X(X2FILNAM(XNPC),2)
+C
+C LOOP THROUGH ALL NETWORK PORTS IN THE FILE.
+C
+	    PORT=0
+200	    CONTINUE
+	    PORT=PORT+1
+	    IF(PORT.GT.X2X_NETWORK_PORTS) GOTO 300
+	    CALL READX2X(2,PORT,X2XNPC_REC,ST)
+	    IF(ST.EQ.144) GOTO 300
+	    IF(X2XNPC_REC(1).LE.0) GOTO 200
+	    IF(X2XNPC_HUNTADR(1).EQ.0 .AND.
+     *	       X2XNPC_HUNTADR(2).EQ.0) GOTO 200
+	    IF(X2XNPC_TYPE.NE.X2XPT_DIALUP) GOTO 200
+C
+C SEARCH TABLE OF PORTS TO DETERMINE IF THIS IS A NEW ONE.
+C
+	    DO 202 I=1,X2X_MAX_HUNT
+	      IF(LOCAL_HUNT(I).EQ.0) GOTO 205
+	      IF(X2XNPC_HUNTADR(1).EQ.LOCAL_HUNT_ADR(1,I).AND.
+     *	         X2XNPC_HUNTADR(2).EQ.LOCAL_HUNT_ADR(2,I))
+     *	           GOTO 200
+202	    CONTINUE
+C
+C HUNT ADDRESS IS A NEW ONE, SO STORE IT.
+C
+205	    CONTINUE
+	    IF(I.LE.X2X_MAX_HUNT) THEN
+	      LOCAL_HUNT(I)=PORT
+	      LOCAL_HUNT_ADR(1,I)=X2XNPC_HUNTADR(1)
+	      LOCAL_HUNT_ADR(2,I)=X2XNPC_HUNTADR(2)
+	      X2DIAL_TOT_PORTS=X2DIAL_TOT_PORTS+1
+	      X2DIAL_AVAIL_PORTS(X2DIAL_TOT_PORTS)=LOCAL_HUNT(I)
+	    ENDIF
+	    GOTO 200
+	  ENDIF
+C
+C DETERMINE THE TOTAL NUMBER OF COMBINATIONS.
+C
+300	  CONTINUE
+	  MAX_COMB=FASTBIN(X2DIAL_TOT_PORTS,
+     *	              MIN0(X2DIAL_TOT_PORTS,X2X_MAXDIAL_ASSIGN))
+C
+C DETERMINE HOW MANY OCTAL DIGITS TO USE FOR UNIRAN.
+C
+	  NUM_DIGS=0
+	  TOTAL=MAX_COMB
+320	  CONTINUE
+	  TOTAL=TOTAL/8
+	  NUM_DIGS=NUM_DIGS+1
+	  IF (TOTAL.NE.0) GOTO 320
+	  NUM_DIGS=MIN0(10,NUM_DIGS)
+C
+C SET THE DEFAULT LOADING LEVELS INTO THE TABLES.
+C
+	  SEED=0
+	  LSTSEED=0
+	  CALL FASTSET(0,X2DIAL_ALLLEV,X2X_NETWORK_PORTS)
+	  CALL FASTSET(1,X2DIAL_CURLEV,X2X_NETWORK_PORTS)
+	  CALL FASTSET(0,X2DIAL_DIALTBL,
+     *	                 X2X_MAXDIAL_ASSIGN*X2X_NETWORK_PORTS)
+	  CALL CLOSX2X(2)
+	  INIT=.TRUE.
+	ENDIF
+C
+C INITIALIZE LOCAL VARIABLES.
+C
+	PRTCNT=1
+	CALL FASTSET(0,DIALPORT,X2X_MAXDIAL_ASSIGN)
+	LOOP_CNT=0
+C
+C ==================== SPECIFIC PORT ASSIGNMENT ====================
+C
+	CLASS=X2XS_STNCLS(STN)					    !V02
+        IF(STN.NE.0) THEN
+          DO 350 I=1,X2XSTN_MAXDIAL
+	    PORT=X2XS_DIAL_PORT(I,STN)				    !V02
+	    IF(PORT.EQ.0) THEN					    !V02
+	      PORT=X2XC_DIAL_PORT(I,CLASS)			    !V02
+	    ENDIF						    !V02
+	    IF(OFFLINE.NE.0 .AND. I.EQ.1) THEN
+	      CALL OPENX2X(X2FILNAM(XNPC),2)
+	    ENDIF
+	    IF(PORT.EQ.0) GOTO 350
+C
+C IF OFFLINE UPDATE, READ THE PORT.
+C
+	  IF(OFFLINE.NE.0) THEN
+	    CALL READX2X(2,PORT,X2XNPC_REC,ST)
+	    TEMP_ADDRESS(1)=X2XNPC_ADDRES(1)
+	    TEMP_ADDRESS(2)=X2XNPC_ADDRES(2)
+	    CALL CLOSX2X(2)
+	  ELSE
+	    TEMP_ADDRESS(1)=X2XPN_ADRESS(1,PORT)
+	    TEMP_ADDRESS(2)=X2XPN_ADRESS(2,PORT)
+	  ENDIF
+C
+C IF THE PORT EXISTS, ASSIGN IT FOR OUTCALL.
+C
+	  IF(PORT.NE.0 .AND.
+     *	    (TEMP_ADDRESS(1).NE.0 .OR.
+     *	     TEMP_ADDRESS(2).NE.0)) THEN
+	    DIALPORT(PRTCNT)=-PORT
+	    PRTCNT=PRTCNT+1
+	  ENDIF
+350	CONTINUE
+        ENDIF
+	IF(OFFLINE.NE.0) CALL CLOSX2X(2)
+C
+C ================== MAIN LOOP ====================
+C
+400	CONTINUE
+	IF(PRTCNT.LE.MIN0(X2DIAL_TOT_PORTS,X2X_MAXDIAL_ASSIGN)) THEN
+	  LSTSEED=LSTSEED+1
+	  IF(LSTSEED.GE.MAX_COMB) LSTSEED=1
+	  SEED=LSTSEED
+	  IF(MAX_COMB.GT.64) THEN
+	    CALL RND64(SEED,1,1,MAX_COMB,NUM_DIGS)
+	    IF(SEED.EQ.0) GOTO 400
+	  ENDIF
+C
+C NOW GENERATE POSSIBLE X2DIAL_COMBINATIONS BASED ON THE RANDOM GENERATED
+C BY UNIRAN.
+C
+	  CALL OFFCMB(X2DIAL_COMBINATIONS,SEED,
+     *	              MIN0(X2DIAL_TOT_PORTS,X2X_MAXDIAL_ASSIGN))
+	  CALL RANNUMB(STN,MIN0(X2DIAL_TOT_PORTS,X2X_MAXDIAL_ASSIGN),
+     *	               X2DIAL_COMBINATIONS,X2DIAL_PERMUTATIONS)
+C
+C LOOP FOR ALL GENERATED COMBINATIONS, TESTING TO ENSURE
+C THAT THE ASSIGNMENT LEVEL IS CONSISTENT BETWEEN ALL PORTS
+C BEFORE ASSIGNING.
+C
+	  DO 420 J=1,MIN0(X2DIAL_TOT_PORTS,X2X_MAXDIAL_ASSIGN)
+	    PORT=X2DIAL_PERMUTATIONS(J)
+C
+C IF PORT LEVEL EXCEEDS CURRENT GLOBAL LEVEL, SKIP THIS
+C PORT AND USE ANOTHER ONE, OTHERWISE UPDATE THE PORT
+C COUNTER AND THE PORT LEVEL.
+C
+	    IF(X2DIAL_DIALTBL(PRTCNT,PORT).GE.
+     *	       X2DIAL_CURLEV(PRTCNT)) GOTO 420
+	    X2DIAL_DIALTBL(PRTCNT,PORT)=X2DIAL_DIALTBL(PRTCNT,PORT)+1
+	    X2DIAL_ALLLEV(PRTCNT)=X2DIAL_ALLLEV(PRTCNT)+1
+C
+C IF SAME LEVEL REACHED ON ALL PORTS, INCREMENT THE LEVEL.
+C
+	    IF(X2DIAL_ALLLEV(PRTCNT).EQ.X2DIAL_TOT_PORTS) THEN
+	      X2DIAL_ALLLEV(PRTCNT)=0
+	      X2DIAL_CURLEV(PRTCNT)=X2DIAL_CURLEV(PRTCNT)+1
+	    ENDIF
+C
+C STORE THE RETURN PORT NUMBER.
+C
+	    DIALPORT(PRTCNT)=X2DIAL_AVAIL_PORTS(PORT)
+	    PRTCNT=PRTCNT+1
+	    IF(PRTCNT.GT.MIN0(X2DIAL_TOT_PORTS,
+     *	                      X2X_MAXDIAL_ASSIGN)) GOTO 430
+420	  CONTINUE
+	ENDIF
+C
+C IF LESS THAN THE REQUIRED NUMBER OF PORTS HAVE BEEN
+C GENERATED, GO BACK AND SEARCH SOME MORE.
+C
+430	CONTINUE
+	LOOP_CNT=LOOP_CNT+1
+	IF(LOOP_CNT.LT.MAX_LOOP) THEN
+	  IF(PRTCNT.LE.MIN0(X2DIAL_TOT_PORTS,
+     *	                    X2X_MAXDIAL_ASSIGN)) GOTO 400
+	ELSE
+	  CALL OPS('X2DIALPT: Error assigning dialup ports ',STN,
+     *	            PRTCNT)
+	ENDIF
+C
+	PRTCNT=PRTCNT-1
+	RETURN
+	END

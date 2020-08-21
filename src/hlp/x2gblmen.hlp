@@ -1,0 +1,44 @@
+                          GTECH Distributed Network
+                             Global Menu Help               Page 1 of 2
+ 
+ 
+      This menu allows access into the global parameters which are
+      used to customize the X2X Distributed Network.  These parameters
+      are the basis of how the network will respond at the backend,
+      frontends, and stations.
+ 
+      This menu allows global parameters to be modified, copied to
+      a backup record, and restored from backup.
+ 
+      To modify parameters, enter "1", press return, and the global
+      parameters modification screen will be displayed.
+ 
+      To backup the current global configuration, enter "2", and the
+      program will prompt for the record number.  Enter the number of
+      the record for where you wish to save the current configuration.
+      The current configuration will be displayed, and you must
+      ensure that you want to save the information.
+ 
+ 
+                          GTECH Distributed Network
+                             Global Menu Help               Page 2 of 2
+ 
+      To restore global parameters from a previously saved configuration,
+      enter "3", and the program will prompt for the number of the record
+      from which you wish to restore from.  After the record number has
+      been entered, if the backup exists, it will be displayed, and
+      you must confirm whether you want to restore from this backup.
+ 
+      A network port is a port which connects an X.21 or X.25 line to
+      a port on the network matix switch.  This menu allows the Network
+      Port functions to be performed including: adding, modifying,
+      deleting, and listing network ports.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

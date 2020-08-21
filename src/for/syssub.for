@@ -1,0 +1,346 @@
+C
+C SUBROUTINE SYSSUB
+C
+C SYSSUB.FOR
+C 
+C V13 01-JAN-2010 FJG  ePassive
+C V12 12-MAR-2010 RXK  TCLM replaced with TRET
+C V11 01-DEC-2000 UXN  TOTOGOLO ADDED.
+C V10 08-DEC-1999 OXK  Small fix on layout of the reports. FORMAT 902
+C V09 07-DEC-1999 OXK  Report fixed (removed line 'STOP SUCCESS' from bottom)
+C V08 13-OCT-1999 RXK  World Tour added.
+C V07 04-FEB-1999 UXN  Fix for big sales.
+C V06 18-AUG-1995 RXK  Change of RAVI report name
+C V05 15-OCT-1994 HXK  Adding /developing Bingo (15.Oct.94)
+C V04 13-JUL-1993 SXH  Released for Finland
+C V03 21-JAN-1993 DAB  Initial Release
+C                      Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                      DEC Baseline
+C V02 31-JAN-1992 GCAN ADDED JOKER.
+C V01 03-APR-1991 MTK  INITIAL RELEASE FOR MARYLAND
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE SYSSUB(GNUM,GTYP,GIND,COPY)
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:RECDAF.DEF'
+	INCLUDE 'INCLIB:LTOCOM.DEF'
+	INCLUDE 'INCLIB:NBRCOM.DEF'
+	INCLUDE 'INCLIB:SPTCOM.DEF'
+	INCLUDE 'INCLIB:TGLCOM.DEF'
+	INCLUDE 'INCLIB:KIKCOM.DEF'
+        INCLUDE 'INCLIB:BNGCOM.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+C
+        ! arguments
+        INTEGER*4  GNUM                  !
+        INTEGER*4  GTYP                  !
+        INTEGER*4  GIND                  !
+        INTEGER*4  COPY                  !
+
+        ! variables
+	INTEGER*4  FDB(7)                !
+	INTEGER*4  SALES(DATLEN)         !
+	INTEGER*4  TSALES(DATLEN)        !
+	INTEGER*4  DTAB(DATLEN)          !
+	INTEGER*4  NETAMT(2)             !
+	INTEGER*4  I                     !
+	INTEGER*4  J                     !
+	INTEGER*4  K                     !
+	INTEGER*4  PAGE                  !
+	INTEGER*4  IND                   !
+	INTEGER*4  CDC                   !
+	INTEGER*4  ST                    !
+	INTEGER*4  TOTDIS                !
+	INTEGER*4  LINCNT                !
+	INTEGER*4  SDRAW                 !
+	INTEGER*4  EDRAW                 !
+	INTEGER*4  TOTALS(2,NUMFIN)      !
+	INTEGER*4  GRSSAL(2)             !
+	INTEGER*4  DUML                  !
+	INTEGER*4  MLT                   !
+
+	INTEGER*2  DATE(LDATE_LEN)              !
+        INTEGER*2  DRWDAT(LDATE_LEN,DATLEN)     !
+
+	CHARACTER    HEAD*37             !
+	CHARACTER    HEAD2*46            !
+	CHARACTER    CDRW*4/'DRW '/      !
+        CHARACTER    CBLANK*4/'    '/    !
+	CHARACTER*13 REPNAM              ! REPORT NAME
+C
+C
+	IF(GNUM.EQ.0) GOTO 1000
+	LINCNT=100
+	PAGE = 0
+	CALL FASTSET(0,TSALES,DATLEN)
+C
+C GET DRAW DATES
+C
+	IF(GTYP.EQ.TLTO) THEN
+            CALL FASTMOV(LTODAT(1,GIND),DTAB(1),DATLEN)
+	    MLT = LTOMLT(GIND)
+	    WRITE(REPNAM,800) GIND
+	ENDIF
+
+	IF(GTYP.EQ.TSPT) THEN
+	    CALL FASTMOV(SPTDAT(1,GIND),DTAB(1),DATLEN)
+	    MLT = SPTMLT(GIND)
+	    WRITE(REPNAM,801) GIND
+	ENDIF
+
+	IF(GTYP.EQ.TTGL) THEN
+	    CALL FASTMOV(TGLDAT(1,GIND),DTAB(1),DATLEN)
+	    MLT = TGLMLT(GIND)
+	    WRITE(REPNAM,805) GIND
+	ENDIF
+
+	IF(GTYP.EQ.TNBR) THEN
+ 	    CALL FASTMOV(NBRDAT(1,GIND),DTAB(1),DATLEN)
+	    MLT = NBRMLT(GIND)
+	    WRITE(REPNAM,802),GIND
+	ENDIF
+
+        IF(GTYP.EQ.TBNG) THEN
+            CALL FASTMOV(BNGDAT(1,GIND),DTAB(1),DATLEN)
+            MLT = BNGMLT(GIND)
+            WRITE(REPNAM,804) GIND
+        ENDIF
+
+	IF(GTYP.EQ.TKIK) THEN
+	    CALL FASTMOV(KIKDAT(1,GIND),DTAB(1),DATLEN)
+	    MLT = KIKMLT(GIND)
+	    WRITE(REPNAM,803) GIND
+	ENDIF
+
+	IF(MLT.EQ.0) MLT=10
+	MLT = MLT+1
+C
+C
+	WRITE(HEAD, 850) (GLNAMES(K,GNUM),K=1,4)
+	CALL ROPEN(REPNAM,6,ST)
+	IF(ST.NE.0) THEN
+	    TYPE*,IAM(),REPNAM,' open error ',ST
+	    RETURN
+	ENDIF
+C
+C
+	DO I = 1, DATLEN
+	    DRWDAT(5,I)=DTAB(I)
+	    CALL LCDATE(DRWDAT(1,I))
+	END DO 
+	SDRAW = DAYDRW(GNUM)
+	EDRAW = SDRAW+10
+C
+C OPEN DAILY ACTIVITY FILE
+C
+	
+	CALL OPENW(1,SFNAMES(1,DAF),4,0,0,ST)
+	CALL IOINIT(FDB,1,DAFSEC*256)
+	IF(ST.NE.0) THEN
+	    CALL CLOSEFIL(FDB)
+	    CALL FILERR(SFNAMES(1,DAF),1,ST,0)
+	ENDIF
+C
+	CDC=DAYCDC
+20	CONTINUE
+	DATE(5)=CDC
+	CALL LCDATE(DATE)
+	CALL FASTSET(0,SALES,DATLEN)
+C
+C
+	IF(CDC.LE.0 .OR. CDC.LE.(DAYCDC-MLT*7)) GOTO 60
+	CALL READW(FDB,CDC,DAFREC,ST)
+	IF(ST.NE.0) CALL FILERR(SFNAMES(1,DAF),2,ST,CDC)
+	IND = SDRAW-DAFDRW(GNUM)+1
+	IF(IND.LT.1.OR.IND.GT.MAXDRW) GOTO 60
+C
+C
+	J=1
+	DO I = IND, IND+10
+	    IF(I.GT.MAXDRW) GOTO 40
+	    SALES(J)=DAFSAL(I,GNUM)
+	    J=J+1
+        END DO
+C
+C
+40	CONTINUE
+	IF(LINCNT.GT.50) THEN
+	    CALL TITLE(HEAD,'SYSTOT  ',GNUM,6,PAGE,DAYCDC)
+	    WRITE(6,900) (CDRW,ITOC(I,DUML),I=SDRAW,SDRAW+MLT-1),
+     *	        	 (CBLANK,CBLANK,I=SDRAW+MLT,EDRAW),
+     *                 ((DRWDAT(I,J),I=9,13),J=1,MLT)
+	    LINCNT=4
+	ENDIF
+C
+C
+	LINCNT=LINCNT+1
+	WRITE(6,902) (DATE(I),I=9,13),
+     *               (CMONY(SALES(I),11,BETUNIT),I=1,MLT)
+C
+C
+	DO I=1,DATLEN
+	    TSALES(I)=TSALES(I)+SALES(I)
+        END DO
+
+	CDC=CDC-1
+	GOTO 20
+C
+C
+60	CONTINUE
+	WRITE(6,903) (CMONY(TSALES(I),11,BETUNIT),I=1,MLT)
+        CLOSE(UNIT=6)
+	CALL SPOOL(REPNAM,COPY,ST)
+
+	RETURN
+C
+C
+C PRINT DAILY SUMMARY REPORT
+C
+1000	CONTINUE
+	IF(DAYCDC.LT.1) RETURN
+
+        CALL OPENW(1,SFNAMES(1,DAF),4,0,0,ST)
+        CALL IOINIT(FDB,1,DAFSEC*256)
+        IF(ST.NE.0) THEN
+            CALL CLOSEFIL(FDB)
+            CALL FILERR(SFNAMES(1,DAF),1,ST,0)
+        ENDIF
+        CALL READW(FDB,DAYCDC,DAFREC,ST)
+        IF(ST.NE.0) CALL FILERR(SFNAMES(1,DAF),2,ST,DAYCDC)
+	CALL CLOSEFIL(FDB)
+C
+C
+        CALL ROPEN('SALSUM.REP',6,ST)
+        IF(ST.NE.0) THEN
+          TYPE*,IAM(),'SALSUM.REP open error ',ST
+          RETURN
+        ENDIF
+	PAGE=0
+        DATE(5)=DAYCDC
+        CALL LCDATE(DATE)
+	WRITE(HEAD2, 851) (DATE(I),I=7,13)
+	CALL TITLE(HEAD2,'SALSUM  ',1,6,PAGE,DAYCDC)
+C
+C
+	NETAMT(1)=0
+	NETAMT(2)=0
+	CALL FASTSET(0,TOTALS,NUMFIN*2)
+	TOTDIS=0
+	DO I = 1, NUMFIN
+	    DO J = 1, MAXGAM
+ 	        TOTALS(1,I) = TOTALS(1,I) + DAFTYP(1,I,J)
+	        TOTALS(2,I) = TOTALS(2,I) + DAFTYP(2,I,J)
+            END DO
+        END DO
+
+	DO J = 1,MAXGAM
+	    TOTDIS=TOTDIS+DAFDIS(2,J)
+        END DO
+
+	GRSSAL(1) = TOTALS(1,TWAG)+TOTALS(1,TCAN)
+	GRSSAL(2) = TOTALS(2,TWAG)+TOTALS(2,TCAN)
+	CALL ADDI8I4(NETAMT,TOTALS(2,TWAG),BETUNIT)
+	CALL SUBI8I4(NETAMT,TOTDIS,BETUNIT)
+	CALL SUBI8I4(NETAMT,TOTALS(2,TVAL),VALUNIT)
+C
+C GROSS SALES BY GAME
+C
+	WRITE(6,906) 'GROSS SALES'
+        DO 200 I=1,MAXGAM
+            IF(DAYDRW(I).LE.0) GOTO 200
+            WRITE(6,905) (GLNAMES(K,I),K=1,4),
+     *                    DAFTYP(1,TWAG,I)+DAFTYP(1,TCAN,I),
+     *                    CSMONY(DAFTYP(2,TWAG,I)+DAFTYP(2,TCAN,I)
+     *		         ,13,BETUNIT)
+200     CONTINUE
+C
+C CANCELS BY GAME
+C
+	WRITE(6,906) '  CANCELS  '
+        DO 300 I=1,MAXGAM
+            IF(DAYDRW(I).LE.0) GOTO 300
+            WRITE(6,905) (GLNAMES(K,I),K=1,4),
+     *                    DAFTYP(1,TCAN,I),CSMONY(DAFTYP(2,TCAN,I)
+     *			,13,BETUNIT)
+300     CONTINUE
+C
+C DISCOUNTS BY GAME
+C
+	WRITE(6,906) ' DISCOUNTS '
+        DO 400 I=1,MAXGAM
+            IF(DAYDRW(I).LE.0) GOTO 400
+            WRITE(6,905) (GLNAMES(K,I),K=1,4),
+     *                    DAFDIS(1,I),
+     *                    CSMONY(DAFDIS(2,I),13,BETUNIT)
+400     CONTINUE
+C
+C NET SALES BY GAME BY GAME
+C
+	WRITE(6,906) 'NET   SALES'
+        DO 500 I=1,MAXGAM
+            IF(DAYDRW(I).LE.0) GOTO 500
+            WRITE(6,905) (GLNAMES(K,I),K=1,4),
+     *                    DAFTYP(1,TWAG,I),
+     *                    CSMONY(DAFTYP(2,TWAG,I)-DAFDIS(2,I),13,BETUNIT)
+500     CONTINUE
+C
+C
+	WRITE(6,904) GRSSAL(1),CMONY(GRSSAL(2),13,BETUNIT),
+     *               TOTALS(1,TCAN),CMONY(TOTALS(2,TCAN),13,BETUNIT),
+     *               CMONY(TOTDIS,13,BETUNIT),
+     *               TOTALS(1,TWAG),
+     *               CMONY(TOTALS(2,TWAG)-TOTDIS,13,BETUNIT),
+     *               TOTALS(1,TVAL),CMONY(TOTALS(2,TVAL),13,VALUNIT),
+     *               TOTALS(1,TRET),CMONY(TOTALS(2,TRET),13,VALUNIT),
+     *               CSMONYI8(NETAMT,13,BETUNIT)
+
+	CLOSE (UNIT=6)
+	CALL SPOOL('SALSUM.REP',COPY,ST)
+
+	RETURN
+C
+800	FORMAT('LO',I1,'SYSTOT.REP')
+801	FORMAT('TB',I1,'SYSTOT.REP')
+802	FORMAT('NB',I1,'SYSTOT.REP')
+803	FORMAT('JO',I1,'SYSTOT.REP')
+804     FORMAT('BG',I1,'SYSTOT.REP')
+805	FORMAT('TG',I1,'SYSTOT.REP')
+C
+850	FORMAT(4A4,' ADVANCE SALES REPORT')
+851     FORMAT('SYSTEM SALES SUMMARY REPORT FOR ',7A2)
+C
+900	FORMAT(/,11X, 11(3X, A4, A4), /, ' SOLD ON   ', 11(1X, 5A2))
+901	FORMAT(/)
+902	FORMAT(1X,5A2,11(A11))
+903	FORMAT(/,' TOTAL',4X,11(A11))
+904	FORMAT(//,T20,'GROSS SALES',T40,I8,T50,A13,/,
+     *            T20,'CANCELS    ',T40,I8,T50,A13,/,
+     *            T20,'DISCOUNT   ',T50,A13,/,
+     *            T20,'NET SALES  ',T40,I8,T50,A13,/,
+     *            T20,'VALIDATIONS',T40,I8,T50,A13,/,
+     *            T20,'RETURNS    ',T40,I8,T50,A13,/,
+     *            T20,'NET AMOUNT ',T49,A13)
+905     FORMAT(T20,4A4,T40,I8,T50,A13)
+906     FORMAT(/,T20,15('-'),A11,17('-'),/)
+C
+	END

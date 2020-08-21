@@ -1,0 +1,243 @@
+C SCANSUBS.FOR
+C
+C V02 25-NOV-10 FJG Avoid the RESV to be considered as Wager
+C V01 08-SEP-00 OXK Initial release (Global 161 customized for Finland)
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE INTRETRY(UNIT,CDC,STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+ 	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:DESLOG.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+C
+	INTEGER*4 RECSIZE, NUMREC
+	PARAMETER (RECSIZE=2048)
+	PARAMETER (NUMREC=((NUMAGT*TRALEN)/RECSIZE)+1)
+	INTEGER*4 LASTRA(TRALEN,NUMAGT)
+	INTEGER*4 TABLE(RECSIZE,NUMREC)
+	INTEGER*4 COUNT
+	CHARACTER*13 REPNAM
+	EQUIVALENCE (LASTRA,TABLE)
+	COMMON/RETRY/TABLE, COUNT, REPNAM
+C
+	INTEGER*4 FDB(7), ST, STATUS, UNIT, CDC, REC
+	INTEGER*4 FILNAM(5)
+	DATA FILNAM/'FILE',':RET','RY.F','IL ','    '/
+C
+C LOAD RETRY FILE
+C
+      COUNT=0
+      STATUS=0
+      TYPE*,IAM(),'Loading the terminal retry file...'
+      CALL OPENW(UNIT,FILNAM,4,0,0,ST)
+      CALL IOINIT(FDB,UNIT,RECSIZE*4)
+      IF(ST.NE.0) THEN
+        TYPE*,IAM(),'RETRY.FIL open error ',ST
+        STATUS=-1
+        CLOSE(UNIT=UNIT)
+        RETURN
+      ENDIF
+C
+      DO 10 REC=1,NUMREC
+        CALL READW(FDB,REC,TABLE(1,REC),ST)
+        IF(ST.NE.0) THEN
+          TYPE*,IAM(),'RETRY.FIL read error ',ST
+          STATUS=-1
+          CLOSE(UNIT=UNIT)
+          RETURN
+        ENDIF
+10    CONTINUE
+      CLOSE(UNIT=UNIT)
+C
+C OPEN RETRY REPORT
+C
+      WRITE(REPNAM,830) CDC
+830   FORMAT('RETRY',I4.4,'.REP')
+      CALL ROPEN(REPNAM,UNIT,ST)
+      IF(ST.NE.0) THEN
+        TYPE*,IAM(),REPNAM,' open error ',ST
+        STATUS=-1
+        CLOSE(UNIT=UNIT)
+        RETURN
+      ENDIF
+      RETURN
+      END
+
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C SUBROUTINE TO COMPARE CURRENT TRANSACTION WITH THE LAST TRANSACTION
+C TO CHECK IF IT IS A RETRY
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE CHKRETRY(UNIT,TRABUF)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:DESLOG.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+C
+	INTEGER*4 RECSIZE, NUMREC
+	PARAMETER (RECSIZE=2048)
+	PARAMETER (NUMREC=((NUMAGT*TRALEN)/RECSIZE)+1)
+	INTEGER*4 LASTRA(TRALEN,NUMAGT)
+	INTEGER*4 TABLE(RECSIZE,NUMREC)
+	INTEGER*4 COUNT
+	CHARACTER*13 REPNAM
+	EQUIVALENCE (LASTRA,TABLE)
+	COMMON/RETRY/TABLE, COUNT, REPNAM
+C
+	INTEGER*4 TER, UNIT, RETCNT(NUMAGT)
+	INTEGER*4   DUMMY(TCRS+NUMCRS+1,2)	! AS DEFINED IN PRINTRA.FOR
+	DATA RETCNT/NUMAGT*0/
+C
+	TER=TRABUF(TTER)
+	IF(TRABUF(TSTAT).EQ.NUSD) GOTO 9000
+	IF(TRABUF(TINTRA).NE.0) GOTO 9000
+	IF(TRABUF(TSTAT).EQ.EXCH.OR.
+     *     TRABUF(TSTAT).EQ.XCSH.OR.
+     *     TRABUF(TSTAT).EQ.XCLM) GOTO 9000
+	IF(TER.LT.1.OR.TER.GT.NUMAGT) GOTO 9000
+!-------V02---------------------------------------------------------------------	
+        IF(TRABUF(TGAMTYP).EQ.TPAS.AND.
+     *   (TRABUF(TWEPOP).EQ.EPASRES.OR.TRABUF(TWEPOP).EQ.EPASREL)) GOTO 9000
+!-------V02---------------------------------------------------------------------
+	IF(TRABUF(TERR).EQ.RETY) THEN
+	  RETCNT(TER)=RETCNT(TER)+1
+	  GOTO 9000
+	ENDIF
+C
+C
+	IF( (TRABUF(TTYP).EQ.TWAG  .OR.
+     *     TRABUF(TTYP).EQ.TCAN  .OR.
+     *     TRABUF(TTYP).EQ.TVAL) .AND.
+     *    (LASTRA(TTIM,TER).NE.0) .AND.
+     *    (TRABUF(TTRN).EQ.LASTRA(TTRN,TER)) .AND.
+     *    (TRABUF(TCHK).EQ.LASTRA(TCHK,TER))) THEN
+C Some conditions added to separate non-issues for Finland
+C       1. FRACTIONED TICKETS
+            IF (
+     *          ((TRABUF(TWFFLG).EQ.0) .AND. (LASTRA(TWFFLG,TER).EQ.0))) THEN
+		CALL PRINTRA(LASTRA(1,TER),UNIT,.TRUE.,.FALSE.,DUMMY,.FALSE.)
+		CALL PRINTRA(TRABUF,       UNIT,.TRUE.,.FALSE.,DUMMY,.FALSE.)
+		IF(TRABUF(TCDC).EQ.LASTRA(TCDC,TER)) THEN
+		    WRITE(UNIT,904) RETCNT(TER)
+		ELSE
+		    WRITE(UNIT,905) RETCNT(TER)
+		ENDIF
+		COUNT=COUNT+1
+            ENDIF
+      ENDIF
+C
+C
+      RETCNT(TER)=0
+      IF (TRABUF(TERR).EQ.NOER) THEN
+         CALL FASTMOV(TRABUF(1),LASTRA(1,TER),TRALEN)
+      ELSE
+         LASTRA(TTIM,TER)=0
+      ENDIF
+C
+9000  CONTINUE
+      RETURN
+C
+C
+904   FORMAT(1X,'Retry count ',I3,' -----------------------------')
+905   FORMAT(1X,'Retry count ',I3,' FROM PREVIOUS DAY! ----------')
+      END
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C SUBROUTINE TO PRINT RETRY REPORT AND UPDATE THE RETRY FILE
+C
+
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE UPDRETRY(UNIT,COPY,STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:DESLOG.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+C
+	INTEGER*4 RECSIZE, NUMREC
+	PARAMETER (RECSIZE=2048)
+	PARAMETER (NUMREC=((NUMAGT*TRALEN)/RECSIZE)+1)
+	INTEGER*4 LASTRA(TRALEN,NUMAGT)
+	INTEGER*4 TABLE(RECSIZE,NUMREC)
+	INTEGER*4 COUNT
+	CHARACTER*13 REPNAM
+	EQUIVALENCE (LASTRA,TABLE)
+	COMMON/RETRY/ TABLE, COUNT, REPNAM
+C
+	INTEGER*4 FDB(7), REC, ST, STATUS, UNIT, COPY
+	INTEGER*4 FILNAM(5)
+	DATA FILNAM/'FILE',':RET','RY.F','IL ','    '/
+C
+	STATUS=0
+	WRITE(UNIT,910) COUNT
+	IF (COUNT.EQ.0) THEN
+	    WRITE(6,920) IAM(),' '
+C	    WRITE(6,920) IAM(),'     EVERYTHING SEEMS TO BE OK!'
+C	    WRITE(6,920) IAM(),' '
+	ELSE
+	    WRITE(6,920) IAM(),' '
+	    WRITE(6,920) IAM(),'     TOTAL # OF POSSIBLE DUPLICATES IS NON-ZERO !!!'
+	    WRITE(6,920) IAM(),' '
+	ENDIF
+	WRITE(6,930) IAM(),COUNT
+	WRITE(6,920) IAM(),' '
+
+      CLOSE(UNIT=UNIT)
+      CALL SPOOL(REPNAM,COPY,ST)
+C
+C UPDATE RETRY FILE
+C
+      TYPE*,IAM(),'Updating the terminal retry file...'
+      CALL OPENW(UNIT,FILNAM,4,0,0,ST)
+      CALL IOINIT(FDB,UNIT,RECSIZE*4)
+      IF(ST.NE.0) THEN
+        TYPE*,IAM(),'RETRY.FIL open error ',ST
+        STATUS=-1
+        CLOSE(UNIT=UNIT)
+        RETURN
+      ENDIF
+C
+      DO REC=1,NUMREC
+        CALL WRITEW(FDB,REC,TABLE(1,REC),ST)
+        IF(ST.NE.0) THEN
+          TYPE*,IAM(),'RETRY.FIL write error ',ST
+          STATUS=-1
+          CLOSE(UNIT=UNIT)
+          RETURN
+        ENDIF
+      ENDDO
+
+      CLOSE(UNIT=UNIT)
+      RETURN
+
+910	FORMAT(/////,1X,'TOTAL TICKETS FOUND ',I6)
+920	FORMAT(1X,A,A)
+930     FORMAT(1X,A,I9,' possibly unprinted tickets found.')
+	END

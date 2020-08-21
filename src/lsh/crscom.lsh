@@ -1,0 +1,24 @@
+$! GXSRC:CRSCOM.LSH
+$! 
+$! $Log:   GXAFXT:[GOLS]CRSCOM.LSV  $
+$! 
+$!    Rev 1.0   17 Apr 1996 12:44:02   HXK
+$! Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+$! 
+$!    Rev 1.1   04 Jan 1994 12:07:28   SYSTEM
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    21 Dec 1993 19:51:52   SYSTEM
+$! Initial revision.
+$!
+$!
+$! 
+$! V01 18-NOV-91 KWP INITIAL RELEASE FOR VAX
+$! 
+LINK'P1' -
+/EXE=TSKLIB:GXCRSCOM.ESH -
+/SHAREABLE -
+OBJLIB:CRSCOM,-
+SYS$INPUT/OPTION
+SYMBOL_VECTOR=(CRSCOM=PSECT)
+PSECT_ATTR=CRSCOM,SHR,WRT

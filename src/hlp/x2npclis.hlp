@@ -1,0 +1,22 @@
+                          GTECH Distibuted Network
+                          Network Port Listing Help               Page 1 of 1
+ 
+      This screen displays all network ports which are currently defined
+      in the Distributed Network Database.  The information displayed
+      includes: port number, port address, connection capacity, port
+      state, and enable host assign flag.
+ 
+      The screen can display up to 10 ports on one screen, and allows
+      scrolling forward and back through pages of ports.  This is
+      accomplished by entering "N" to screen to the next page of ports,
+      or "P" to screen to the previous page of ports.  It is also possible
+      to directly display a port by entering "X##", where XX is the
+      number of the port that you wish to display.
+ 
+      To return back to the main menu, enter "E".
+ 
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,70 @@
+C
+C *** DEFINITION_FILE MSCALRMS ***
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]MSCALRMS.DEV                                 $
+C  $Date::   17 Apr 1996 14:05:16                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C  
+C *** Pre-Baseline Source - mscalrms.def ***
+C
+C V01 06-FEB-91 RRB VAX INITIAL RELEASE
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Purpose:
+C	DEFINE TELENEX MATRIX SWITCH ALARM CONDITIONS.
+C
+C	ALARM CONDITIONS ARE DESCRIBED IN THE TELENEX MATRIX SWITCH ASCII
+C	INTERFACE SPECIFICATION.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4    MSC_SYS_ALARMS, MSC_PORT_ALARMS, MSC_MAX_ALARM
+	   PARAMETER (MSC_SYS_ALARMS = 1)       !SYSTEM ALARMS START AT #1
+	   PARAMETER (MSC_PORT_ALARMS = 100)    !PORT ALARM #'S START AT 100
+	   PARAMETER (MSC_MAX_ALARM = 223)      !HIGHEST VALID ALARM NUMBER
+C
+C THE MSC ALARM ACTION TABLE WILL SERVE TO INDICATE WHAT TYPE OF ACTION 
+C TO TAKE GIVEN A PARTICULAR ALARM CONDITION.
+C
+	INTEGER*4    MSC_ALARM_ACTION(MSC_MAX_ALARM) 
+	   INTEGER*4 MSC_NO_ACTION, MSC_REPORT, MSC_SWITCH, 
+     *               MSC_RECONNECT, MSC_FATAL 
+	   PARAMETER (MSC_NO_ACTION = 1)        !DISCARD ERROR
+	   PARAMETER (MSC_REPORT = 2)           !REPORT ERROR ONLY
+	   PARAMETER (MSC_RECONNECT = 3)        !ATTEMPT RECONNECT
+	   PARAMETER (MSC_SWITCH = 4)           !ERROR REQUIRES PORT SWITCH
+	   PARAMETER (MSC_FATAL = 5)            !FATAL ERROR, DISABLE SWITCH
+	INTEGER*4    RECONNECT_LIMIT
+	   PARAMETER (RECONNECT_LIMIT = 3)
+C
+C                                      1                   2
+C                    1:2:3:4:5:6:7:8:9:0:1:2:3:4:5:6:7:8:9:0
+	   DATA      MSC_ALARM_ACTION/
+     *               2,2,1,2,1,1,1,1,2,1,1,1,1,1,1,2,2,2,2,2, !1-20
+     *               2,2,2,2,2,2,2,2,2,2,1,2,2,1,5,1,1,1,1,1, !21-40
+     *               1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1,2, !41-60
+     *               2,2,1,1,35*1,                         3, !65-99 NOT USED
+     *               2,2,2,4,2,2,2,2,2,1,1,2,3,3,1,1,1,1,1,1, !101-120
+     *               1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1, !121-140
+     *               1,1,1,1,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, !141-160
+     *               1,1,1,3,2,2,2,2,2,2,1,1,1,1,1,1,1,2,1,1, !161-180
+     *               1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,2,2,2,2, !181-200
+     *               4,2,2,2,2,4,2,2,4,2,1,2,4,2,2,2,2,4,2,2, !201-220
+     *               2,2,4/                                   !221-223
+C

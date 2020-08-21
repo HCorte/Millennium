@@ -1,0 +1,344 @@
+C
+C PROGRAM X2CHKMEN
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2CHKMEN.FOV                                 $
+C  $Date::   17 Apr 1996 16:12:28                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2chkmen.for;1 **
+C
+C X2CHKMEN.FOR
+C
+C V02 12-DEC-94 GPR Integrate UK changes into X2X Baseline
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C This subroutine will control the routines which will
+C perform edit checks of the input network configuration.
+C All errors are displayed to the screen, and optionally
+C to the printer.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM X2CHKMEN
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+C
+	CHARACTER*6 PASSENT,DEFTPASS
+	CHARACTER*20 PASPAS
+	EQUIVALENCE(PASPAS,PASSENT)
+	INTEGER*4   ANS,ST          !Answer/status
+	INTEGER*4   ERRCNT          !Error count
+	INTEGER*4   OPT             !Menu selection
+	INTEGER*4   EXT             !Exit flag
+	CHARACTER   PROMPT*60       !Input prompt
+	CHARACTER   INTERUP*1       !Screen interupt
+	CHARACTER   NULL*60         !Null string
+	CHARACTER   NULLEQV(60)*1   !Null string
+	LOGICAL     PRTFLG          !Display errors to printer
+	LOGICAL     DISFLG          !Display modified fields
+	LOGICAL     ERRFLG          !Errors detected flag
+	LOGICAL     UPDFLG          !Update memory flag
+	LOGICAL	    FAST	    !Edit check using bitmaps
+C
+	DATA        NULLEQV/60*Z00/
+	EQUIVALENCE (NULL,NULLEQV)
+	DATA        DEFTPASS/'NIKREP'/
+C
+	PRTFLG=.FALSE.
+	ERRFLG=.FALSE.
+	DISFLG=.FALSE.
+	UPDFLG=.FALSE.
+	FAST=.FALSE.
+	ERRCNT=0
+C
+C DISPLAY COPYRIGHT.
+C
+	CALL COPYRITX(5)
+C
+C CLEAR THE SCREEN AND DISPLAY THE MENU.
+C
+100	CONTINUE
+	CALL CLRSCR(5)
+	WRITE(5,9000)
+C
+C READ THE MENU OPTION.
+C
+	PROMPT=NULL
+	WRITE (PROMPT,9010)
+	CALL INPNUM(PROMPT,OPT,1,2,EXT)
+	IF(EXT.LT.0) GOTO 8000
+C
+C IF REQUEST IS TO BYPASS EDIT CHECKS THEN GET PASSWORD
+C
+	IF(OPT.EQ.2) THEN
+	   CALL PASSWORD(5,PASPAS)
+	   IF(PASSENT.EQ.DEFTPASS.AND.PASSENT.NE.'        ') GOTO 7500	!V02
+	   WRITE(5,9013)
+	   CALL XWAIT(3,2,ST)
+	   GOTO 100
+	ENDIF
+C
+C DETERMINE WHETHER TO DISPLAY ERRORS TO THE PRINTER.
+C
+	WRITE (PROMPT,9015)
+	CALL INPYESNO(PROMPT,ANS)
+	IF(ANS.EQ.-9) THEN
+	  CALL X2XHLP('X2CHKMEN.HLP')
+	  GOTO 100
+	ELSE IF(ANS.EQ.3) THEN
+	  GOTO 8000
+	ENDIF
+C
+	IF(ANS.EQ.1) THEN
+          OPEN(6, FILE='X2XCHK.REP', STATUS='NEW', DISP='PRINT/DELETE')
+	  IF(ST.NE.0) THEN
+	    CALL OS32ER(5,'X2XCHK.REP','OPEN',ST,0)
+	    CALL GPAUSE
+	  ENDIF
+	  PRTFLG=.TRUE.
+	ENDIF
+C
+C DETERMINE WHETHER TO CHECK BITMAPS OR CHECK THE
+C ENTIRE DATABASE.
+C
+	PROMPT=NULL
+	WRITE (PROMPT,9017)
+	CALL INPYESNO(PROMPT,ANS)
+	IF(ANS.EQ.1) FAST=.TRUE.
+
+C
+C CHECK THE NETWORK PORT CONFIGURATION FILE.
+C
+	CALL CLRSCR(5)
+	CALL X2CHKNPC(PRTFLG,FAST,ERRCNT)
+	IF(ERRCNT.NE.0) THEN
+	  ERRFLG=.TRUE.
+	  CALL X2CHKMOD(XNPC,1)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9020)
+	  CALL INPYESNO(PROMPT,ANS)
+	  IF(ANS.NE.1) GOTO 8000
+	ELSE
+	  CALL X2CHKMOD(XNPC,0)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9040)
+	  CALL XWAIT(2,2,ST)
+	ENDIF
+C
+C CHECK THE LOCAL PORT CONFIGURATION FILE.
+C
+	CALL CLRSCR(5)
+	CALL X2CHKLPC(PRTFLG,FAST,ERRCNT)
+	IF(ERRCNT.NE.0) THEN
+	  ERRFLG=.TRUE.
+	  CALL X2CHKMOD(XLPC,1)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9020)
+	  CALL INPYESNO(PROMPT,ANS)
+	  IF(ANS.NE.1) GOTO 8000
+	ELSE
+	  CALL X2CHKMOD(XLPC,0)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9040)
+	  CALL XWAIT(2,2,ST)
+	ENDIF
+C
+C CHECK THE REPORT CLASS FILE.
+C
+	CALL CLRSCR(5)
+	CALL X2CHKRCL(PRTFLG,FAST,ERRCNT)
+	IF(ERRCNT.NE.0) THEN
+	  ERRFLG=.TRUE.
+	  CALL X2CHKMOD(XRCL,1)
+	  CALL X2CHKMOD(XRCD,1)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9020)
+	  CALL INPYESNO(PROMPT,ANS)
+	  IF(ANS.NE.1) GOTO 8000
+	ELSE
+	  CALL X2CHKMOD(XRCL,0)
+	  CALL X2CHKMOD(XRCD,0)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9040)
+	  CALL XWAIT(2,2,ST)
+	ENDIF
+C
+C CHECK THE STATION CLASS FILE.
+C
+	CALL CLRSCR(5)
+	CALL X2CHKSCL(PRTFLG,FAST,ERRCNT)
+	IF(ERRCNT.NE.0) THEN
+	  ERRFLG=.TRUE.
+	  CALL X2CHKMOD(XSCL,1)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9020)
+	  CALL INPYESNO(PROMPT,ANS)
+	  IF(ANS.NE.1) GOTO 8000
+	ELSE
+	  CALL X2CHKMOD(XSCL,0)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9040)
+	  CALL XWAIT(2,2,ST)
+	ENDIF
+C
+C CHECK THE TERMINAL CONFIGURATION FILE.
+C
+	CALL CLRSCR(5)
+	CALL X2CHKTER(PRTFLG,FAST,ERRCNT)
+	IF(ERRCNT.NE.0) THEN
+	  ERRFLG=.TRUE.
+	  CALL X2CHKMOD(XTER,1)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9020)
+	  CALL INPYESNO(PROMPT,ANS)
+	  IF(ANS.NE.1) GOTO 8000
+	ELSE
+	  CALL X2CHKMOD(XTER,0)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9040)
+	  CALL XWAIT(2,2,ST)
+	ENDIF
+C
+C CHECK THE STATION PORT CONFIGURATION FILE.
+C
+	CALL CLRSCR(5)
+	CALL X2CHKSPC(PRTFLG,FAST,ERRCNT)
+	IF(ERRCNT.NE.0) THEN
+	  ERRFLG=.TRUE.
+	  CALL X2CHKMOD(XSPC,1)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9020)
+	  CALL INPYESNO(PROMPT,ANS)
+	  IF(ANS.NE.1) GOTO 8000
+	ELSE
+	  CALL X2CHKMOD(XSPC,0)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9040)
+	  CALL XWAIT(2,2,ST)
+	ENDIF
+C
+C CHECK THE STATION CONFIGURATION FILE.
+C
+	CALL CLRSCR(5)
+	CALL X2CHKSTN(PRTFLG,FAST,ERRCNT)
+	IF(ERRCNT.NE.0) THEN
+	  ERRFLG=.TRUE.
+	  CALL X2CHKMOD(XSTN,1)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9020)
+	  CALL INPYESNO(PROMPT,ANS)
+	  IF(ANS.NE.1) GOTO 8000
+	ELSE
+	  CALL X2CHKMOD(XSTN,0)
+	  CALL X2CHKMOD(XBLD,0)
+	  PROMPT=NULL
+	  WRITE (PROMPT,9040)
+	  CALL XWAIT(2,2,ST)
+	ENDIF
+C
+C LOAD ANY STATIONS WHICH REQUIRE DEFAULT PORTS TO BE
+C ASSIGNED.
+C
+C**	CALL CLRSCR(5)
+C**	WRITE(5,9000)
+C**	DISFLG=.TRUE.
+C**	CALL X2LODDEF(1,DISFLG,PRTFLG)
+C
+C IF NO ERRORS EXIST, ALLOW THE USER TO EXIT.
+C
+	CALL X2CHKMOD(XGBL,0)
+	CALL X2CHKMOD(XBRO,0)
+	CALL X2CHKMOD(XTTN,0)
+	CALL X2CHKMOD(XGRP,0)
+	CALL X2CHKMOD(XBRO,0)
+	IF(.NOT.ERRFLG) THEN
+	  PROMPT=NULL
+	  WRITE(5,9030) IAM()
+	  WRITE (PROMPT,9040)
+	  CALL WIMG(6,PROMPT)
+	  READ(5,9050) INTERUP
+	ENDIF
+C
+C ASK USER IF THEY WANT TO UPDATE MEMORY/SECONDARY SYSTEM.
+C
+7000	CONTINUE
+	PROMPT=NULL
+	WRITE (PROMPT,9060)
+	CALL INPYESNO(PROMPT,ANS)
+	IF(ANS.EQ.1) UPDFLG=.TRUE.
+C
+	PROMPT=NULL
+	WRITE (PROMPT,9070)
+	CALL INPYESNO(PROMPT,ANS)
+	DISFLG=.FALSE.
+	IF(ANS.EQ.1) DISFLG=.TRUE.
+	CALL X2POST(DISFLG,PRTFLG,UPDFLG)
+C
+	GOTO 8000
+C
+C	***** Start V02 Changes *****
+C
+C ASK USER IF THEY WANT TO UPDATE MEMORY/SECONDARY SYSTEM.
+C
+7500	CONTINUE
+	PROMPT=NULL
+	WRITE (PROMPT,9060)
+	CALL INPYESNO(PROMPT,ANS)
+	IF(ANS.EQ.1) UPDFLG=.TRUE.
+C
+	PROMPT=NULL
+	WRITE (PROMPT,9070)
+	CALL INPYESNO(PROMPT,ANS)
+	DISFLG=.FALSE.
+	IF(ANS.EQ.1) DISFLG=.TRUE.
+	CALL X2POSTX(DISFLG,PRTFLG,UPDFLG)
+C
+C	***** End V02 Changes *****
+C
+C PROGRAM EXIT.
+C
+8000	CONTINUE
+C
+C     ================== Format Statements =====================
+C
+9000	FORMAT(//,T26,'GTECH Distributed Network',/,
+     *	          T26,'Network Files Edit Check',///,
+     *	          T20,'  1. Perform edit checks',/,
+     *	          T20,'  2. Load Database/Bypass edit checks',/,
+     *	          T20,'  E. Exit',/)
+9010    FORMAT(25(' '),'Enter Option ')
+9013    FORMAT(25(' '),'Access Denied!!!!')
+9015	FORMAT(15(' '),'Display errors to the printer [Y/N] ')
+9017	FORMAT(15(' '),'Fast edit check ............. [Y/N] ')
+9020	FORMAT('Do you wish to continue edit [Y/N] ')
+9030	FORMAT(1X,A18,'Edit check complete - no errors exist')
+9040	FORMAT('    Press RETURN to continue         ')
+9050	FORMAT(A)
+9060	FORMAT('Do you wish to update memory/secondary [Y/N] ')
+9070	FORMAT('Do you wish to display modified fields [Y/N] ')
+	END

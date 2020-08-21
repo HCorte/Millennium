@@ -1,0 +1,357 @@
+C
+C SUBROUTINE LMESTRAP
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]LMESTRAP.FOV                                 $
+C  $Date::   17 Apr 1996 13:50:46                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - lmestrap.for;1 **
+C
+C LMESTRAP.FOR
+C
+C V04 24-JAN-2011 RXK IF command split
+C V03 01-AUG-2000 UXN OPSTXT() ADDED.
+C V02 19-DEC-1991 DAS FIXED FORMAT STATEMENT 900 (CAUSED OVERFLOW OF RECORD)
+C V01 28-NOV-1990 XXX RELEASED FOR VAX
+C
+C THIS SUBROUTINE WILL INTERCEPT A COMMAND FROM A CONSOLE
+C      DECODE AND EXECUTE IT
+C
+C     OS ENDS MESSAGE WITH 0D
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE LMESTRAP
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:LANCOM.DEF'
+	INCLUDE 'INCLIB:LANEVN.DEF'
+	INCLUDE '($IODEF)'
+        INCLUDE '($SSDEF)'
+        INCLUDE '($SYSSRVNAM)'
+C
+	INTEGER*4 MESS(18),LMESS(18)
+	INTEGER*4 ENTRY, SAP, LAN, QUE, QUECNT, ST, BUF, STATUS
+	INTEGER*4 DIG, NUM, CMD, PAR, PNT, OFF, K, NPAR
+	INTEGER*4 FUNCOD
+	CHARACTER*64 CH
+	CHARACTER*1  C1(64)
+	LOGICAL NUMBER
+	RECORD /LN_IOSSTRUCT/ LOCAL_IOSB
+C
+	PARAMETER (NPAR=3)
+	CHARACTER*80 MNEM(NPAR)
+	INTEGER*4 CMDL
+	INTEGER*4 CMDS(NPAR)
+	INTEGER*4 ECMD(2,2)
+C
+	EQUIVALENCE(LMESS(1),CH,C1)
+C
+	CHARACTER*1 SPACE/' '/
+	CHARACTER*1 CR/Z0D/
+C
+	DATA MNEM(1)(1:1)    /Z01/
+	DATA MNEM(1)(2:9)    /'ACTIVATE'/
+	DATA MNEM(1)(10:10)  /Z02/
+	DATA MNEM(1)(11:20)  /'DEACTIVATE'/
+	DATA MNEM(1)(21:21)  /Z02/
+	DATA MNEM(1)(22:28)  /'DISPLAY'/
+	DATA MNEM(1)(29:29)  /Z02/
+	DATA MNEM(1)(30:32)  /'SET'/
+	DATA MNEM(1)(33:33)  /Z02/
+	DATA MNEM(1)(34:35)  /'GO'/
+	DATA MNEM(1)(36:36)  /Z02/
+	DATA MNEM(1)(37:40)  /'STOP'/
+	DATA MNEM(1)(41:41)  /Z01/
+	DATA MNEM(1)(42:45)  /'HELP'/
+	DATA MNEM(1)(46:46)  /Z04/
+	DATA MNEM(1)(47:50)  /'KILL'/
+	DATA MNEM(1)(51:51)  /Z01/
+	DATA MNEM(1)(52:58)  /'QUIESCE'/
+	DATA MNEM(1)(59:59)  /Z01/
+	DATA MNEM(1)(60:64)  /'TRACE'/
+	DATA MNEM(1)(65:65)  /Z00/
+	DATA MNEM(1)(66:66)  /Z00/
+C
+	DATA MNEM(2)(1:1)    /Z01/
+	DATA MNEM(2)(2:4)    /'LAN'/
+	DATA MNEM(2)(5:5)    /Z05/
+	DATA MNEM(2)(6:12)   /'STATION'/
+	DATA MNEM(2)(13:13)  /Z05/
+	DATA MNEM(2)(14:19)  /'STATUS'/
+	DATA MNEM(2)(20:20)  /Z02/
+	DATA MNEM(2)(21:23)  /'ALL'/
+	DATA MNEM(2)(24:24)  /Z02/
+	DATA MNEM(2)(25:28)  /'TEST'/
+	DATA MNEM(2)(29:29)  /Z00/
+	DATA MNEM(2)(30:30)  /Z00/
+C
+	DATA MNEM(3)(1:1)    /Z00/
+	DATA MNEM(3)(2:2)    /Z00/
+C
+	DATA CMDL /11/ !MAX NUMBER OF KEYWORDS +1 (ERROR)
+	DATA ECMD /CACTETH,CDISETH,CACTSTA,CDISSTA/
+C
+C READ THE MESSAGE FROM THE MAILBOX.
+C
+        FUNCOD=IO$_READVBLK
+        STATUS=SYS$QIOW(,%VAL(LN_MESCHANNEL),%VAL(FUNCOD),
+     *                  LOCAL_IOSB,,,MESS,%VAL(64),,,,)
+        IF(.NOT.STATUS) THEN
+D         TYPE *,'ERROR READING MESSAGE '
+          CALL LIB$SIGNAL(%VAL(STATUS))
+        ENDIF
+C
+	DO 5 K=1,18
+	  LMESS(K)=MESS(K)
+5	CONTINUE
+C
+	IF(LANGO.EQ.0) THEN
+	   CALL OPSTXT('SYSTEM NOT READY')
+	   GOTO 7000
+	ENDIF
+C
+	DO 6 OFF=1,NPAR
+	  CMDS(OFF)=0
+6	CONTINUE
+C
+	NUMBER=.FALSE.
+	PNT=1
+	DO 10 PAR=1,NPAR
+	IF(NUMBER) GOTO 15
+	CALL SCAN(CH,PNT,MNEM(PAR),CMD)
+11      CONTINUE
+        IF(PNT.LT.64) THEN
+          IF(C1(PNT).NE.SPACE) THEN
+            PNT=PNT+1
+            GOTO 11
+          ENDIF
+        ENDIF
+C
+	CMDS(PAR)=CMD
+	GOTO (10,10,10,10,10,10,10,10,10,10,10,
+     *	      10,20,10,10,10,20,10,10,10,10,10, !20 MEANS NEXT PAR IS NUM
+     *	      10,10,10,10,10,10,10,10,10,10,10)
+     *	                       (PAR-1)*CMDL+CMD+1
+	GOTO 300
+15	CONTINUE
+C
+C     NUMBER FOLLOWS
+C     ANALIZE AND PUT IN CMDS(PAR)
+C
+	DO 100 K=PNT,64
+	IF(C1(K).EQ.CR) GOTO 300
+	IF(C1(K).NE.SPACE) GOTO 200
+100	CONTINUE
+	GOTO 300
+200	CONTINUE
+	PNT=K
+	NUM=0
+	DIG=0
+	DO 110 K=PNT,64
+	IF(C1(K).EQ.SPACE.OR.C1(K).EQ.CR) GOTO 210
+	CALL ASCBIN(LMESS(1),K,1,DIG,STATUS)
+	IF(STATUS.NE.0) GOTO 300
+	NUM=NUM*10+DIG
+110	CONTINUE
+	GOTO 300
+210	CONTINUE
+	IF(NUM.LT.0) GOTO 300
+	CMDS(PAR)=NUM
+	PNT=K
+	NUMBER=.FALSE.
+	GOTO 10
+C
+20	CONTINUE
+	NUMBER=.TRUE.
+10	CONTINUE
+C
+D	TYPE*,'**** LMESTRAP ****[',CMDS,']'
+D	TYPE*,'STRING [',CH,']'
+C
+C CMDS IS ALL SET NOW
+C ANALIZE AND EXECUTE
+C
+	IF(CMDS(1).EQ.1.OR.CMDS(1).EQ.2) THEN !ACT OR DEACT
+	    IF(CMDS(2).NE.1.AND.CMDS(2).NE.2) GOTO 300
+	    IF(CMDS(2).EQ.1) THEN
+	       IF(CMDS(3).LE.0.OR.CMDS(3).GT.MAXLAN) GOTO 300
+	    ENDIF
+	    CALL LANGETX(BUF,ST)
+	    IF (ST.EQ.2) THEN
+	       CALL OPS('**** NO BUFFERS ****',CMDS,0)
+	       GOTO 1000
+	    ENDIF
+	    LANBUF(LANBTYP,BUF)=LTYPCMD
+	    LANBUF(LANDATAF,BUF)=ECMD(CMDS(1),CMDS(2))
+	    LANBUF(LANDATAF+1,BUF)=CCOMMAND
+	    LANBUF(LANDATAF+2,BUF)=0
+	    LANBUF(LANDATAF+3,BUF)=-1 !         DSAP=0 LOCAL ONLY
+	    LANBUF(LANDATAF+4,BUF)=CMDS(3)
+	    CALL ABL(BUF,LANEXEC,ST)
+D	    IF(ST.NE.0) TYPE*,'**** ABL STATUS ****[',ST,']'
+	    CALL QUEUE(LANTASKS(0),BUF,ST)
+D	    IF(ST.NE.0) TYPE*,'**** Q-TRAP STATUS ****[',ST,']'
+	ELSEIF(CMDS(1).EQ.3) THEN
+	   IF(CMDS(2).EQ.3.OR.CMDS(2).EQ.4) THEN !STAT AND ALL
+	      TYPE*   ,'CURLAN    ',CURLAN
+	      TYPE*   ,'LANCONN   ',LANCONN
+	      TYPE*   ,'LANSAPSTS ',LANSAPSTS
+	      TYPE 900,'FLANADR   ',FLANADR
+	      TYPE 900,'FLANHOME  ',FLANHOME
+	      TYPE*   ,'LANLUN    ',LANLUN
+	      TYPE*   ,'LUNLAN    ',LUNLAN
+	      TYPE*   ,'LANTOUT   ',LANTOUT
+	      TYPE*   ,'LANOPN    ',LANOPN
+	      TYPE*   ,'LANLAN    ',LANLAN
+	      TYPE*   ,'LOCLAN    ',LOCLAN
+	      TYPE*   ,'QUESAP    ',QUESAP
+	      TYPE*   ,'WRITECNT  ',WRITECNT
+	      TYPE*   ,'READCNT   ',READCNT
+	      TYPE*   ,'LANFRAMES ',LANFRAMES
+	      TYPE*   ,'EXEC      ',QUECNT(LANEXEC)
+	      TYPE*   ,'EXTRA     ',QUECNT(LANEXTRA)
+	      TYPE*   ,'FREE      ',QUECNT(LANFREE)
+	      DO 50 QUE=0,LANMAXTSK
+	      TYPE*   ,'APPL      ',QUE,QUECNT(LANAPP(1,QUE))
+	      TYPE*   ,'FRAP      ',QUE,QUECNT(LANFRAP(1,QUE))
+50	      CONTINUE
+	      DO 60 LAN=1,MAXLAN
+	      TYPE*   ,'WRITE     ',LAN,QUECNT(LANWRITE(1,LAN))
+	      TYPE*   ,'DONER     ',LAN,QUECNT(LANDONER(1,LAN))
+	      TYPE*   ,'DONEW     ',LAN,QUECNT(LANDONEW(1,LAN))
+60	      CONTINUE
+900	      FORMAT(1X,A10/(10(4(1X,2Z8)/)))
+901	      FORMAT(1X,A10/(6(1X,A8)/))
+	   ENDIF
+	   IF(CMDS(2).EQ.4)THEN !ALL
+	      TYPE*   ,'CONNTION  ',CONNECTION
+	      TYPE*   ,'LANSTATES ',LANSTATES
+	      TYPE*   ,'LANSTEP   ',LANSTEP
+	      TYPE*   ,'LANDEL1   ',LANDEL1
+	      TYPE*   ,'LANDEL2   ',LANDEL2
+	      TYPE 900,'FLANDEV   ',FLANDEV
+	      TYPE*   ,'LANTEST   ',LANTEST
+	      TYPE 901,'LANTASKS  ',LANTASKS
+	      TYPE*   ,'LANTRPTSK ',LANTRPTSK
+	      TYPE*   ,'LANLADDR  ',LANLADDR
+C
+	   ENDIF
+	ELSEIF(CMDS(1).EQ.4) THEN
+	   IF(CMDS(2).NE.5) GOTO 300
+	   LANTEST=CMDS(3)
+	   TYPE*,'**** TEST FLAG ****[',LANTEST,']'
+	ELSEIF(CMDS(1).EQ.5.OR.CMDS(1).EQ.6) THEN !GO STOP LAN
+	    IF(CMDS(2).NE.1) GOTO 300
+	    IF(CMDS(3).LE.0.OR.CMDS(3).GT.MAXLAN) GOTO 300
+	    CALL LANGETX(BUF,ST)
+	    IF (ST.EQ.2) THEN
+	       CALL OPS('**** NO BUFFERS ****',CMDS,0)
+	       GOTO 1000
+	    ENDIF
+	    LANBUF(LANBTYP,BUF)=LTYPCMD
+	    IF(CMDS(1).EQ.5) THEN
+	       LANBUF(LANDATAF,BUF)=CGOLAN
+	    ELSEIF(CMDS(1).EQ.6) THEN
+	       LANBUF(LANDATAF,BUF)=CSTOPLAN
+	    ELSE
+	       GOTO 300
+	    ENDIF
+	    LANBUF(LANDATAF+1,BUF)=CCOMMAND
+	    LANBUF(LANDATAF+2,BUF)=CMDS(3)
+	    CALL ABL(BUF,LANEXEC,ST)
+D	    IF(ST.NE.0) TYPE*,'**** ABL STATUS ****[',ST,']'
+	    CALL QUEUE(LANTASKS(0),BUF,ST)
+D	    IF(ST.NE.0) TYPE*,'**** Q-TRAP STATUS ****[',ST,']'
+	ELSEIF(CMDS(1).EQ.7) THEN
+C
+	   TYPE*,' '
+	   TYPE*,'Activate Lan <number>'
+	   TYPE*,'Deactivate Lan <number>'
+	   TYPE*,'Activate STATIon'
+	   TYPE*,'DEctivate STATIon'
+	   TYPE*,'DIsplay ALl/STATUs'
+	   TYPE*,'GO Lan <number>'
+	   TYPE*,'STop Lan <number>'
+	   TYPE*,'Help'
+	   TYPE*,' '
+C
+	ELSEIF(CMDS(1).EQ.8) THEN
+C
+	   CALL OPSTXT('OK')
+	   CALL GSTOP(GEXIT_SUCCESS)
+C
+	ELSEIF(CMDS(1).EQ.9) THEN
+C
+	  DO 400 SAP=1,MAXSAP
+	    IF(LANSAPSTS(SAP).EQ.SAPUP) THEN
+	      CALL LANGETX(BUF,ST)
+	      IF (ST.EQ.2) THEN
+	         CALL OPS('**** NO BUFFERS ****',CMDS,0)
+	         GOTO 1000
+	      ENDIF
+	      QUE=QUESAP(SAP)
+	      LANBUF(LANBTYP,BUF)=LTYPCMD
+	      LANBUF(LANDATAF,BUF)=CCLOSE
+	      LANBUF(LANDATAF+1,BUF)=CCOMMAND
+	      LANBUF(LANDATAF+2,BUF)=SAP
+	      LANBUF(LANDATAF+3,BUF)=QUE
+	      LANBUF(LANDATAF+4,BUF)=0
+	      CALL ABL(BUF,LANEXEC,ST)
+D	      IF(ST.NE.0) TYPE*,'**** ABL STATUS ****[',ST,']'
+	      CALL QUEUE(LANTASKS(0),BUF,ST)
+D	      IF(ST.NE.0) TYPE*,'**** Q-TRAP STATUS ****[',ST,']'
+	    ENDIF
+400	  CONTINUE
+C
+	ELSEIF(CMDS(1).EQ.10) THEN
+C
+500	   CONTINUE
+C
+	   CALL RBL(ENTRY,LANTLIST,ST)
+	   IF(ST.EQ.2) GOTO 7000
+	   TYPE 50001,ENTRY
+50001	   FORMAT(1X,Z8)
+	   GOTO 500
+C
+	ELSE
+	   GOTO 300
+	ENDIF
+	GOTO 7000
+C
+300	CONTINUE
+	CALL OPSTXT('INVALID COMMAND ')
+	GOTO 7000
+C
+1000	CONTINUE
+	CALL OPSTXT('****BUFFER ALLOCATION ERROR**** ')
+C
+C SINGLE EXIT POINT
+C
+7000	CONTINUE
+	CALL LN_START_MESS  !START WAITING FOR ANOTHER MESSAGE TRAP
+	RETURN
+	END

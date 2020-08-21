@@ -1,0 +1,41 @@
+C CLMREC.DEF
+C $Log:   GXAFXT:[GOLS]CLMREC.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:35:20   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:41:12   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-SEP-92 WLM INITAL RELEASE FOR NETHERLANDS
+C
+C
+C FORTRAN DESCRIPTION OF CLAIM WORK FILE RECORD LAYOUT.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4    CLMSEC, CLMBLK, CLMLEN
+	PARAMETER   (CLMSEC=128)
+	PARAMETER   (CLMBLK=512)
+	PARAMETER   (CLMLEN=CLMSEC*64)
+C
+	INTEGER*4    CLMREC(CLMLEN)
+	INTEGER*4    CLMBUF(16,CLMBLK)
+C
+	EQUIVALENCE (CLMREC,CLMBUF)
+C
+	DATA CLMREC /CLMLEN*0/

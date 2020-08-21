@@ -1,0 +1,64 @@
+C PRMWIT.DEF
+C $Log:   GXAFXT:[GOLS]PRMWIT.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:32:18   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   16 Jun 1993 14:14:58   GXA
+C  Released for Finland Dec Conversion / Oddset.
+C  
+C     Rev 1.0   21 Jan 1993 18:50:46   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 07-OCT-91 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C WINNERS TIP GAME AND POOL PARAMETERS
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1990 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 NUMWIT, MAXWRW, MAXWTI
+	PARAMETER(NUMWIT=6)            !NUMBER OF WINNERS GAMES
+	PARAMETER(MAXWRW=36)           !MAX NUMBER OF WINNERS ROWS
+	PARAMETER(MAXWTI=4)	       !MAX NUMBER OF TIES
+C
+C NAME FILED LNGTH PARAMETERS
+C
+	INTEGER*4 WENM_LEN, WDES_LEN , WNMS_LEN, WTVC_LEN
+	PARAMETER (WENM_LEN=28)	       !EVENT NAME LENGTH IN BYTES
+	PARAMETER (WDES_LEN=120)       !EVENT DESCRIPTION LENGTH IN BYTES     
+	PARAMETER (WNMS_LEN=16)	       !ROW NAME LENGTH IN BYTES
+	PARAMETER (WTVC_LEN= 4)        !LENGTH IN BYTES OF TC-CHANEL NAME.
+C
+C WINNERS POOL PARAMETERS
+C
+	INTEGER*4 VALW, WPODDS, WPAMNT
+	PARAMETER(VALW=2)
+	  PARAMETER(WPODDS=1)          ! WINNERS POOL ODDS INDEX
+	  PARAMETER(WPAMNT=2)          ! WINNERS POOL AMOUNT INDEX
+C
+	INTEGER*4 TYPW, WPDYNM, WPSTAT
+	PARAMETER(TYPW=2)
+	  PARAMETER(WPDYNM=1)          ! WINNERS DYNAMIC POOL INDEX
+	  PARAMETER(WPSTAT=2)          ! WINNERS STATIC POOL INDEX
+C
+C WINNERS MAXIMUM NUMBER OF TEXT MESSAGES
+C
+	INTEGER*4 WTXMAX
+	PARAMETER(WTXMAX=3)            !MAXIMUM TEXT MESSAGES
+C

@@ -1,0 +1,35 @@
+$! GXSRC:HASF.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]HASF.LNV  $
+$! 
+$!    Rev 1.2   14 Jul 1996 20:43:46   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:09:38   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:41:44   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:HASF.EXE -
+OBJLIB:HASF,-
+CHGPASS,-
+CHKPAS,-
+ENCLVL,-
+ENCPAS,-
+PRINTSON,-
+BUILDALL,-
+BUILDLEV,-
+CHKHMENU,-
+SGNON,-
+AIDENT,-
+ALIST,-
+PAYAGT,-
+QUEHSF,-
+QUEAGTINF,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE

@@ -1,0 +1,22 @@
+    JOK.HLP                GTECH Distributed Network
+                           Joker Snapshot Help               Page 1 of 1
+ 
+    The JOK snapshot contains draw information for the Jokeri game.  It     
+    defaults to show the current draw but other draws can be displayed:
+    The information displayed includes:
+ 
+    game name     - Jokeri game name
+    game data for - draw number
+    pools are     - pool status for the current draw (open, closed)
+    div           - division won for numbers picked
+    prize         - fixed amount won in each division
+    shares won    - count and amount of winners for each division
+    fraction paid - count and amount for validations on a fraction 
+                    basis. Results are shown only for previous draws. 
+    sales         - current daily, advance, off-line for the displayed draw.
+    total         - total shares and fractions paid for displayed draw
+    winning number  Jokeri winning number for the displayed draw.
+
+
+
+

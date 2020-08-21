@@ -1,0 +1,340 @@
+C OUTPAS.FOR
+C
+C V03 14-apr-10 RXK Serie & fraction put together in 1 byte.
+C V02 31-MAR-10 RXK EPASSIVE CHANGES
+C V01 14-DEC-00 CS  INITIAL RELEASE FOR PORTUGAL
+C
+C
+C SUBROUTINE TO BUILD PASSIVE UNSOLD TICKET OUTPUT MESSAGES.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE OUTPAS(TRABUF,OUTTAB,OUTLEN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:PASCOM.DEF'
+	INCLUDE 'INCLIB:CHKSUMCM.DEF'
+C
+C LOCAL VARIABLES
+C
+	LOGICAL	  FOUND
+	BYTE      OUTTAB(*),I1TEMP(4)
+
+	INTEGER*2 OUTLEN
+
+	INTEGER*4 TEMP,OFFSET,OFFSET_TRA
+	INTEGER*4 ERRTYP,TICKETS,CHECK,CONTRL
+	INTEGER*4 CHKLEN,MYCHKSUM,GIND
+	INTEGER*4 WEEK,YEAR,OFF_AUXEMIS
+	INTEGER*4 TOTAMT,ST,QTDFRAC
+        INTEGER*4 CHKDIG,OFFBEG,OFFEND
+        INTEGER*4 I,K,IND
+
+	EQUIVALENCE (TEMP,I1TEMP)
+
+	DATA ERRTYP/Z90/
+	DATA CONTRL/Z20/
+
+	TOTAMT    = 0
+C
+C CONTROL AND SEQUENCE #
+C
+	TEMP      = CONTRL + TRABUF(TTRN)
+	OUTTAB(1) = I1TEMP(1)
+C
+C IF TRANSACTION STATUS IS NOT GOOD
+C BUILD ERROR MESSAGE.
+C
+        IF(TRABUF(TSTAT).NE.GOOD) THEN
+            OUTTAB(2) = ERRTYP
+            OUTTAB(5) = TRABUF(TERR)
+            OUTTAB(6) = TRABUF(TSUBERR)
+            OUTLEN=6
+            GOTO 1000
+        ENDIF
+C
+C BUILD EPASSIVE WAGER RESPOND MESSAGE
+C
+	IF(TRABUF(TTYP).EQ.TWAG) THEN
+C
+C TYPE
+C
+           OUTTAB(2) = 0                    ! #2
+C
+C GAME TYPE AND GAME INDEX
+C
+           OUTTAB(5) = TRABUF(TGAMTYP)    ! #5
+           OUTTAB(6) = TRABUF(TGAMIND)    ! #6
+           IND = 7
+C
+C SERIAL NUMBER AND CHECK DIGITS
+C
+           CALL OUTGEN(TRABUF(TCDC),TRABUF(TSER),TEMP,CHKDIG)
+           OUTTAB(IND+0) = I1TEMP(3)        ! #7
+           OUTTAB(IND+1) = I1TEMP(2)        ! #8
+           OUTTAB(IND+2) = I1TEMP(1)        ! #9
+           OUTTAB(IND+3) = CHKDIG           ! #10
+           IND=IND+4
+C
+C OFFSET OF START AND END CDC DATES
+C
+           CALL GETOFF(TRABUF,OFFBEG,OFFEND)
+           TEMP = OFFBEG
+           OUTTAB(IND+0) = I1TEMP(2)        ! #11
+           OUTTAB(IND+1) = I1TEMP(1)        ! #12
+           TEMP = OFFEND
+           OUTTAB(IND+2) = I1TEMP(2)        ! #13
+           OUTTAB(IND+3) = I1TEMP(1)        ! #14
+           IND=IND+4
+C
+C SET OFFSETS TO FIRST - SECOND WEEK / YEAR DATES
+C
+           CALL PUT_WEEK_YEAR_DRAWS(TRABUF, OUTTAB, IND)
+C
+C FILL IN TIME
+C
+           CALL PUTIME(TRABUF(TTIM), OUTTAB, IND)
+C
+C OPTION
+C
+           OUTTAB(IND) = 0                  ! #18
+           IND=IND+1
+C
+C OPERATION REQUEST
+C           
+           OUTTAB(IND) = TRABUF(TWEPOP)     ! #19
+           IND=IND+1     
+C
+C FILL IN RESERVED NUMBER, SERIES AND FRACTIONS 
+C
+           IF(TRABUF(TWEPOP).EQ.EPASRES) THEN
+              OUTTAB(IND) = TRABUF(TWEPNR)
+              IND=IND+1        
+
+              DO I=1,TRABUF(TWEPNR)
+C
+                 OUTTAB(IND) = ISHFT(TRABUF(TWEPNF),4) + TRABUF(TWEPNFR1+(I-1))
+                 IND=IND+1
+C
+                 TEMP = TRABUF(TWEPRES1+(I-1))              
+                 OUTTAB(IND+0) = I1TEMP(4)        
+                 OUTTAB(IND+1) = I1TEMP(3)    
+                 OUTTAB(IND+2) = I1TEMP(2)    
+                 OUTTAB(IND+3) = I1TEMP(1)     
+                 IND=IND+4
+C
+                 DO K=1,TRABUF(TWEPNFR1+(I-1))                 
+                    OUTTAB(IND+0) = ISHFT(TRABUF(TWEPSER1_1+(I-1)*20+(K-1)),4)+
+     *                              TRABUF(TWEPFRC1_1+(I-1)*20+(K-1))
+                    IND=IND+1 
+                 ENDDO
+C
+              ENDDO
+              OUTLEN = IND-1
+           ENDIF
+C
+C FILL IN SOLD NUMBER,SERIE AND FRACTION
+C
+           IF(TRABUF(TWEPOP).EQ.EPASSAL) THEN
+              TEMP = TRABUF(TWEPSN)
+              OUTTAB(IND+0) = I1TEMP(4)        
+              OUTTAB(IND+1) = I1TEMP(3)    
+              OUTTAB(IND+2) = I1TEMP(2)    
+              OUTTAB(IND+3) = I1TEMP(1)     
+              IND=IND+4
+              OUTTAB(IND) = ISHFT(TRABUF(TWEPSS),4) + TRABUF(TWEPSF)
+              IND=IND+1 
+              OUTLEN = IND-1
+           ENDIF
+C
+C FILL IN RELEASED NUMBERS
+C
+           IF(TRABUF(TWEPOP).EQ.EPASREL) THEN
+              OUTTAB(IND+0) = TRABUF(TWEPNR)    
+              IND=IND+1
+              OUTLEN = IND-1
+           ENDIF
+ 
+	ENDIF
+C
+C BUILD TICKET RETURN MESSAGE
+C
+        IF(TRABUF(TTYP).EQ.TRET) THEN
+	    TEMP       = '46'X
+	    OUTTAB(2)  = TEMP		  !TYPE/SUBTYPE
+C
+            TEMP = 5
+            CALL PUTIME(TRABUF(TTIM), OUTTAB, TEMP)  ! TIME IN HHMMSS FORMAT
+C            
+      	    CALL OUTGEN(TRABUF(TCDC),TRABUF(TSER),TEMP,CHECK)
+      	    OUTTAB(8)  = I1TEMP(3)
+      	    OUTTAB(9)  = I1TEMP(2)
+      	    OUTTAB(10) = I1TEMP(1)	  !UNSOLD TICKET SERIAL NUMBER
+
+      	    OUTTAB(11) = CHECK		  !UNSOLD TICKET CHECK DIGITS
+C
+C GAME INDEX AND RETURN TYPE
+C
+	    GIND       = TRABUF(TGAMIND)
+      	    OUTTAB(16) = IAND(TRABUF(TPRETYP), '0F'X) +
+     *                   ISHFT(GIND,4)
+C
+C OFFLINE AGENT #
+C
+	    TEMP       = 0
+            IF (TRABUF(TPOFFTER).GT.0)  TEMP = AGTTAB(AGTNUM,TRABUF(TPOFFTER))
+	    OUTTAB(17) = I1TEMP(4)
+	    OUTTAB(18) = I1TEMP(3)
+	    OUTTAB(19) = I1TEMP(2)
+	    OUTTAB(20) = I1TEMP(1)
+C
+C # OF TICKETS
+C
+	    OUTTAB(21) = TRABUF(TPTCK)
+C
+C SEND ALL POSSIBLE UNSOLD TICKET MESSAGES
+C
+	    DO	TICKETS = 1, TRABUF(TPTCK)
+
+		 OFFSET_TRA = (TICKETS-1)*OFFTRA
+		 OFFSET     = (TICKETS-1)*13
+C
+C VALIDATION STATUS
+C		 
+		 ST = TRABUF(TPSTS1+OFFSET_TRA)
+		 IF (ST.EQ.RETAFDR) ST = RETURND      !FOR THE TERMINAL, WE MUST SEND RETURND, NOT RETAFDR
+
+		 OUTTAB(22+OFFSET) = ST               !STATUS
+
+		 TEMP              = TRABUF(TPEMIS1+OFFSET_TRA)
+C
+C CHECK EMISSION #
+C
+		 WEEK   = 0
+		 YEAR   = 0
+		 FOUND  = .FALSE.
+
+		 IF (TEMP.GT.0) THEN
+C
+C CREATE AUXILIARY VARIABLES (OFFSET TO PASCOM)
+C
+		    OFF_AUXEMIS = CURDRW
+		    DO	WHILE(OFF_AUXEMIS.LE.PAGEMI .AND. .NOT.FOUND)
+			IF  (TEMP.EQ.PASEMIS(OFF_AUXEMIS,GIND)) THEN
+			    FOUND   = .TRUE.
+			ELSE
+			    OFF_AUXEMIS = OFF_AUXEMIS + 1
+			ENDIF
+		    ENDDO
+C
+		    IF	( FOUND ) THEN
+			TEMP = PASDRAW(OFF_AUXEMIS,GIND)
+			CALL GETPASDRW(TEMP,WEEK,YEAR)
+		    ENDIF
+		 ENDIF
+
+      		 OUTTAB(23+OFFSET) = WEEK		  !WEEK (WW)
+      		 OUTTAB(24+OFFSET) = MOD(YEAR,100)	  !YEAR (YY)
+
+		 TEMP              = TRABUF(TPNUM1+OFFSET_TRA)
+      		 OUTTAB(25+OFFSET) = I1TEMP(4)
+      		 OUTTAB(26+OFFSET) = I1TEMP(3)
+      		 OUTTAB(27+OFFSET) = I1TEMP(2)
+      		 OUTTAB(28+OFFSET) = I1TEMP(1)	  !TICKET NUMBER
+C
+C SERIE
+C
+		 OUTTAB(29+OFFSET) = TRABUF(TPSER1+OFFSET_TRA)
+C
+C FIRST FRACTION RETURNED (IF STATUS == RETURND)
+C
+		 OUTTAB(30+OFFSET) = TRABUF(TPTEN1+OFFSET_TRA)
+C
+C GET NUMBER OF FRACTIONS
+C
+		 QTDFRAC = 0
+		 IF ( FOUND ) THEN
+		    IF ( TRABUF(TPRETYP).EQ.ALLTCK ) THEN
+                       QTDFRAC = PASNOFFRA(OFF_AUXEMIS,GIND)
+		       IF  (TRABUF(TGAMIND).EQ.PSBPOP)   QTDFRAC = QTDFRAC * 2
+
+		    ELSEIF (TRABUF(TPRETYP).EQ.BYFRAC ) THEN
+                       QTDFRAC = 1
+
+		    ELSEIF (TRABUF(TPRETYP).EQ.HALFTCK) THEN
+
+			IF (TRABUF(TGAMIND).EQ.PSBPOP) THEN
+                            QTDFRAC = PASNOFFRA(OFF_AUXEMIS,GIND)
+			ELSE
+                            QTDFRAC = PASNOFFRA(OFF_AUXEMIS,GIND) / 2
+			ENDIF
+
+		    ELSEIF (TRABUF(TPRETYP).EQ.QUARTCK) THEN
+                        QTDFRAC = PASNOFFRA(OFF_AUXEMIS,GIND) / 4
+
+	            ENDIF
+		 ENDIF
+		 TEMP = QTDFRAC			  ! USING ONLY ONE BYTE
+C
+C RETURN # OF FRACTIONS
+C
+      	         OUTTAB(31+OFFSET) = I1TEMP(4)
+      	         OUTTAB(32+OFFSET) = I1TEMP(3)
+      	         OUTTAB(33+OFFSET) = I1TEMP(2)
+      	         OUTTAB(34+OFFSET) = I1TEMP(1)	  ! RETURN # OF FRACTIONS
+C
+CC		 TEMP              = TRABUF(TPPAY1+OFFSET_TRA)
+C
+C SCML DOES NOT WANT THIS TOTAL PRINTED ON TERMINAL ALTURA
+CC      		 IF (TRABUF(TPSTS1+OFFSET_TRA).EQ.RETURND .OR. TRABUF(TPSTS1+OFFSET_TRA).EQ.RETAFDR)
+CC     *      	    TOTAMT         = TOTAMT + TRABUF(TPPAY1+OFFSET_TRA)
+C
+C
+	    ENDDO
+C
+C FILL TOTAL RETURNED AMOUNT (= 0 FOR SCML)
+C
+      	    TEMP       = TOTAMT
+      	    OUTTAB(12) = I1TEMP(4)
+      	    OUTTAB(13) = I1TEMP(3)
+      	    OUTTAB(14) = I1TEMP(2)
+      	    OUTTAB(15) = I1TEMP(1)    !TOTAL RETURNED AMOUNT
+C
+C DESCRIBE MESSAGE SIZE
+C
+  	    OUTLEN = 34 + OFFSET
+	ENDIF
+
+C
+C CALCULATE CHECKSUM
+C
+1000    CONTINUE
+	I4CCITT = TRABUF(TCHK)
+	OUTTAB(3)=I1CCITT(2)
+	OUTTAB(4)=I1CCITT(1)
+	CHKLEN=OUTLEN-1
+	CALL GETCCITT(OUTTAB,1,CHKLEN,MYCHKSUM)
+	I4CCITT=MYCHKSUM
+	OUTTAB(3)=I1CCITT(2)
+	OUTTAB(4)=I1CCITT(1)
+
+	RETURN
+	END

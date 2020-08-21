@@ -1,0 +1,22 @@
+    ATT.HLP               GTECH Distributed Network
+                        Pitka Most Played Bets Snapshot Help   Page 1 of 1
+ 
+    The Agent Top Select snapshot contains information about the most played  
+    combinations in the Pitka game for each agent.   
+    
+    The information displayed includes:
+ 
+    name          - agent's name
+    address       - address of premises
+    telephone     - agent's telephone number
+    agt/trm       - agent and terminal number
+    last tra      - serial number of last transaction 
+    daily sales   - total sales amount for Pitka today
+    combination   - played ticket
+    amount bet    - ticket price
+    time          - time since the wager has been played
+
+
+
+
+

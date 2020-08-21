@@ -1,0 +1,118 @@
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C File      : M_ISLN_PJMC.DEF
+C Change Log:
+C
+C Ver Date       Author  Comment
+C --- ---------- ------- ----------------------------------------------
+C V01 2013.02.01 SCML    Created - module that contains additional
+C                        functionality for processing Stamp Tax in
+C                        national lottery
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C      THIS ITEM IS THE PROPERTY OF SCML.
+C
+C      COPYRIGHT 2013 SCML. ALL RIGHTS RESERVED.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+C----|--!--------------------------------------------------------------
+C       ! MAX_DIV constant for structure TAX_SHARES
+C----|--!--------------------------------------------------------------      
+      INTEGER*4  TAX_SHARES_MAXDIV
+      PARAMETER (TAX_SHARES_MAXDIV = 40)
+C----|--!--------------------------------------------------------------
+C       ! LDATE_LEN constant for structure TAX_SHARES
+C----|--!--------------------------------------------------------------      
+      INTEGER*4  TAX_SHARES_LDATE_LEN
+      PARAMETER (TAX_SHARES_LDATE_LEN = 14)
+C----|--!--------------------------------------------------------------
+C       ! LDATE_LEN constant for structure TAX_SHARES
+C----|--!--------------------------------------------------------------      
+      STRUCTURE /TAX_SHARES/
+C----|--!--------------------------------------------------------------
+C       ! Field Tax Percentage (i.e. 20.00% => 2000)
+C----|--!--------------------------------------------------------------      
+          INTEGER*4     TAXPER
+C----|--!--------------------------------------------------------------
+C       ! Field Base amount (i.e. 5000.00 EUR => 500000)
+C----|--!--------------------------------------------------------------      
+          INTEGER*4     BASAMT
+C----|--!--------------------------------------------------------------
+C       ! Field Refund amount (i.e. 5000.00 EUR => 500000)
+C----|--!--------------------------------------------------------------      
+          INTEGER*4     RFNAMT
+C----|--!--------------------------------------------------------------
+C       ! Field Popular Lottery Winning Series
+C----|--!--------------------------------------------------------------      
+          INTEGER*4     POPWSER
+C----|--!--------------------------------------------------------------
+C       ! Field Game number: 8) Classical Lottery; 9) Popular Lottery
+C----|--!--------------------------------------------------------------      
+          INTEGER*4     GNUM
+C----|--!--------------------------------------------------------------
+C       ! Field Game extraction (week-year)
+C----|--!--------------------------------------------------------------      
+          CHARACTER*6   EEAAAA
+C----|--!--------------------------------------------------------------
+C       ! Field Game Shares (for Classical Lottery, in EUR cents)
+C----|--!--------------------------------------------------------------      
+          INTEGER*8 GAMSHV(TAX_SHARES_MAXDIV)
+C----|--!--------------------------------------------------------------
+C       ! Field Number of game share divisions (for Classical Lottery)
+C----|--!--------------------------------------------------------------      
+          INTEGER*8 NUMDIVS
+C----|--!--------------------------------------------------------------
+C       ! Field Draw date
+C----|--!--------------------------------------------------------------      
+          INTEGER*8 DRWDT
+C----|--!--------------------------------------------------------------
+C       ! Field Number of fractions
+C----|--!--------------------------------------------------------------      
+          INTEGER*8 NOFFRAC
+C----|--!--------------------------------------------------------------
+C       ! Field Game Shares (for Popular Lottery, in EUR cents)
+C----|--!--------------------------------------------------------------      
+          INTEGER*8 GAMEXSHV(TAX_SHARES_MAXDIV)
+C----|--!--------------------------------------------------------------
+C       ! Field Number of game share divisions (for Popular Lottery)
+C----|--!--------------------------------------------------------------      
+          INTEGER*8 NUMXDIVS
+C----|--!--------------------------------------------------------------
+C       ! Field Draw number
+C----|--!--------------------------------------------------------------      
+          INTEGER*8 DRWN
+C----|--!--------------------------------------------------------------
+C       ! Field Draw date
+C----|--!--------------------------------------------------------------      
+          INTEGER*2 DRDAT(TAX_SHARES_LDATE_LEN)
+C----|--!--------------------------------------------------------------
+C       ! Field Has tax: indicates if a given prize is subject to 
+C       ! taxation
+C----|--!--------------------------------------------------------------      
+          LOGICAL   HASTAX
+C----|--!--------------------------------------------------------------
+C       ! Field Total division amount (auxilliary field)
+C----|--!--------------------------------------------------------------      
+          INTEGER*4 TOTDIVAMT(TAX_SHARES_MAXDIV)
+C----|--!--------------------------------------------------------------
+C       ! Field Total net division amount (auxilliary field)
+C----|--!--------------------------------------------------------------      
+          INTEGER*4 NETDIVAMT(TAX_SHARES_MAXDIV)
+C----|--!--------------------------------------------------------------
+C       ! Field Total prize division amount (auxilliary field)
+C----|--!--------------------------------------------------------------      
+          INTEGER*4 TOTDIVPRZ(TAX_SHARES_MAXDIV)
+C----|--!--------------------------------------------------------------
+C       ! Field Prize amount: will return the prize amount
+C----|--!--------------------------------------------------------------      
+          INTEGER*4 PRZAMT
+C----|--!--------------------------------------------------------------
+C       ! Field Net prize amount: will return the net prize amount
+C----|--!--------------------------------------------------------------      
+          INTEGER*4 NETPRZAMT
+C----|--!--------------------------------------------------------------
+C       ! Fields Max,Min prize amount,net prize amount: for
+C       ! statistical purposes only          
+C----|--!--------------------------------------------------------------      
+          INTEGER*8 MAX_PRZAMT, MIN_PRZAMT
+          INTEGER*8 MAX_NETPRZAMT, MIN_NETPRZAMT
+      END STRUCTURE

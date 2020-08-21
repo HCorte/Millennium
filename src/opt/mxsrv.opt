@@ -1,0 +1,121 @@
+! MXSRV.OPT
+!
+! V00 06-JAN-2011 FJG MXSRV
+!
+!==============================================================================
+!
+!  This item is the property of GTECH Corporation, West Greewich, Rhode       
+!  Island, and contains confidential and trade secret information. It may     
+!  not be transferred from the custody or control of GTECH except as          
+!  authorized in writing by an officer of GTECH. Neither this item not the    
+!  information it contains may be used, transferred, reproduced, published    
+!  or disclosed, in whole or in part, and directly or indirectly, except      
+!  as expressly authorized by an officer of GTECH, pursuant to written        
+!  agreement.                                                                 
+!                                                                            
+!  Any and all modifications to this item must have the prior written         
+!  authorization of GTECH's Enterprise Series Platform Team.  GTECH shall     
+!  not be liable in any way for any direct or indirect damages,  whatsoever,  
+!  as a result of any unauthorized modifications.  The Enterprise Series      
+!  Platform Team reserves the right to refuse support as a result of          
+!  unauthorized modification.
+!
+!  Copyright 2003 GTECH Corporation. All rights reserved.                     
+!                                                                            
+!====[MXSRV.OPT]===============================================================
+!
+OBJLIB:bufpool,-        
+create_core_sections,-
+dequeue_from_game,-
+get_cdc,-
+get_game_state,-
+get_max_terms,-
+get_x2x_comm_state,-
+log_to_tmf,-
+logrpc,-
+mballoc,-
+mbpacket,-
+mbqueue,-
+mbuf,-
+mbuf_stubs,-
+mx_build_rpc_server_data_pdu,-
+mx_client_id,-
+mx_comm_mode,-
+mx_config_file,-
+mx_conn_mgr,-
+mx_crypto_funcs,-
+mx_debug,-
+mx_define_apps,-
+mx_define_conns,-
+mx_dump,-
+mx_es_rpc_gols_msgs,-
+mx_es_rpc_response_msg,-
+mx_event_handler,-
+mx_event_log,-
+mx_file_io,-
+mx_mbuf_sup,-
+mx_proto_calcs,-
+mx_rpc_timeout,-
+mx_send_app_msgs,-
+mx_send_oltp_msgs,-
+mx_send_rpc_to_client,-
+mx_socket,-
+mx_time_utils,-
+mxsrv,-
+mxsrv_command,-
+mxsrv_global,-
+output_err,-
+queue_rpc_resp,-
+queue_to_game,-
+server_main_loop,-
+tni_assign_connection,-
+tni_build_client_param_response_pdu,-
+tni_build_clt_session_resp_pdu,-
+tni_build_error_pdu,-
+tni_build_oltp_msgs,-
+tni_build_parameter,-
+tni_build_pdu,-
+tni_build_server_alive_pdu,-
+tni_build_server_cmd_request_pdu,-
+tni_build_server_data,-
+tni_build_server_request_pdu,-
+tni_build_serv_challenge_notify_pdu,-
+tni_build_serv_challenge_rqst_pdu,-
+tni_build_srv_enc_key_rqst_pdu,-
+tni_build_term_data_pdu,-
+tni_build_term_pdu_header,-
+tni_calc_game_delay,-
+tni_cfg,-
+tni_check_blocking_timers,-
+tni_check_game_output,-
+tni_check_keep_alive,-
+tni_check_server_takeover,-
+tni_check_statistics_timer,-
+tni_client_alive,-
+tni_client_cmd_request,-
+tni_client_request,-
+tni_client_session_rqst,-
+tni_clt_enc_key_notify,-
+tni_config_file,-
+tni_error_pdu,-
+tni_init,-
+tni_initialize_statistics,-
+tni_print_pdu,-
+tni_process_pdu,-
+tni_process_term_msg_block,-
+tni_read_client_data,-
+tni_read_from_connection,-
+tni_rpc_client_data,-
+tni_send_authentication_requests,-
+tni_send_error_pdu,-
+tni_send_srv_enc_key_rqst,-
+tni_server_challenge_response,-
+tni_server_cmd_response,-
+tni_server_response,-
+tni_setup,-
+tni_srv_enc_key_resp,-
+tni_term_client_data,-
+tni_ustr,-
+tni_valid_term_input,-
+tni_validate_connection,-
+x2relbuf

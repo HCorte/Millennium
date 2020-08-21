@@ -1,0 +1,22 @@
+    SPE.HLP                GTECH Distributed Network
+                 Terminal Report Suppression Snapshot Help     Page 1 of 1
+ 
+    The Terminal Report Suppression snapshot controls whether terminal 
+    reports are suppressed or active. Reports can be suppressed by game or
+    by function.   
+ 
+    Information in the snapshot includes:
+
+    num           - number of the game for which reports can be suppressed
+    game name     - name of the game for which reports can be suppressed
+    status        - status of the game for which reports can be suppressed
+    comm          - Functions that can be suppressed:0=enabled, 1=disabled
+                   *GAMRep : all game result reports
+                   *SALRep : all sales reports 
+                   *INVRep : all invoice reports 
+                   *DSLRep : all daily sales reprots
+                   *INFRep : all information reports
+                   *NEWRep : all news message reports
+                   *ODSNew : all updates for Oddset games
+     type         - type of reports that can be suppressed
+     status       - status of the game report functions

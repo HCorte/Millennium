@@ -1,0 +1,67 @@
+C
+C NAMDEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]NMADEF.DEV                                   $
+C  $Date::   17 Apr 1996 14:12:34                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+!****************************************************************************
+!*									    *
+!*  COPYRIGHT (c) 1990	BY				    		    *
+!*  DIGITAL EQUIPMENT CORPORATION, MAYNARD, MASSACHUSETTS.		    *
+!*  ALL RIGHTS RESERVED.						    *
+!* 									    *
+!*  THIS SOFTWARE IS FURNISHED UNDER A LICENSE AND MAY BE USED AND COPIED   *
+!*  ONLY IN  ACCORDANCE WITH  THE  TERMS  OF  SUCH  LICENSE  AND WITH THE   *
+!*  INCLUSION OF THE ABOVE COPYRIGHT NOTICE. THIS SOFTWARE OR  ANY  OTHER   *
+!*  COPIES THEREOF MAY NOT BE PROVIDED OR OTHERWISE MADE AVAILABLE TO ANY   *
+!*  OTHER PERSON.  NO TITLE TO AND OWNERSHIP OF  THE  SOFTWARE IS  HEREBY   *
+!*  TRANSFERRED.							    *
+!* 									    *
+!*  THE INFORMATION IN THIS SOFTWARE IS  SUBJECT TO CHANGE WITHOUT NOTICE   *
+!*  AND  SHOULD  NOT  BE  CONSTRUED AS  A COMMITMENT BY DIGITAL EQUIPMENT   *
+!*  CORPORATION.							    *
+!* 									    *
+!*  DIGITAL ASSUMES NO RESPONSIBILITY FOR THE USE  OR  RELIABILITY OF THIS  *
+!*  SOFTWARE.								    *
+!* 									    *
+!*									    *
+!****************************************************************************
+!
+       parameter nma$c_pcli_bfn = 1105
+       parameter nma$c_pcli_bus = 2801
+       parameter nma$c_pcli_fmt = 2770
+       parameter nma$c_linfm_802 = 2
+       parameter nma$c_pcli_gsp = 2773
+       parameter nma$c_pcli_sap = 2772
+       parameter nma$c_pcli_srv = 2771
+       parameter nma$c_linsr_usr = 1
+       parameter nma$c_linsr_cli = 2
+       parameter nma$c_pcli_mca = 2831
+       parameter nma$c_linmc_set = 1
+       parameter nma$c_ctlvl_ui = 3
+       parameter nma$c_pcli_pha = 2820
+       parameter nma$c_linmc_sdf = 4
+       PARAMETER NMA$C_PCLI_MLT = 2841
+       PARAMETER NMA$C_STATE_ON = 0	

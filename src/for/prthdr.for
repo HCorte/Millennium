@@ -1,0 +1,45 @@
+C
+C SUBROUTINE PRTHDR
+C $Log:   GXAFXT:[GOLS]PRTHDR.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:32:58   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:22:56   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - signrpt.for **
+C
+C
+C Subroutine to print ount header of report
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE PRTHDR(DTES)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+C
+	CHARACTER *52 NAME
+	INTEGER*2 DTES(LDATE_LEN)
+	INTEGER*4 PAGE,  K
+	DATA PAGE/0/
+C
+C Print title to report
+C
+	WRITE (NAME,900) (DTES(K),K=7,13)
+	CALL TITLE(NAME,'SIGNRPT ',1,6,PAGE,DAYCDC)
+	WRITE(6,901)
+C
+ 900	FORMAT(' PASSWORD SIGN ON TRANSACTIONS FOR - ',7A2)
+ 901  FORMAT(1X,'STAT',6X,'SERIAL#',6X,'TIME',4X,'DATE',3X,'TASK NAME'
+     *	   ,2X,'LOCATION',' USER ID',3X,'USER NAME',7X,'DATE ADDED',
+     *	    2X,' DATE LAST',4X,'USER WHO',4X,'USER WHO',/,99X,
+     *	       'CHANGED',5X,'ADDED REC',3X,'CHGED REC')
+	RETURN
+	END

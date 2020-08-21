@@ -1,0 +1,86 @@
+C RECSSF.DEF
+C
+C V01 02-FEB-2000 OXK Renaming (Vakio changes)
+C
+C SPORTS SYSTEM BETS RECORD DESCRIPTION
+C
+C
+C OSSFATR(SPGSYS)           SYSTEM ATRIBUTES                     110
+C OSSFPTR(SPGSYS)           POINTERS INTO SYSTAB                 110
+C OSSFNUM(5,SPGSYS)         SYSTEM DESCRIPTION                   550
+C OSSFTAB(260000)           SYSTEM BET TABLE  (INT*2)         130000
+C OSSFFPT                   FREE POINTER INTO SYSTAB               1
+C OSSFTST                   TEST FLAG                              1
+C OSSFINT                   COMMON INIT FLAG                       1
+C OSSFFSF(0:15,0:15,NUMSPT) FULL SYSTEM FLAGS  MARK_3/MARK_2     512
+C OSSFGAR(SPGSYS)           SYSTEM QUARANTEE                     110
+C                                                           ____________
+C                                                            131395 I*4       
+C OSSFFRE                   FREE SPACE                        CALCULATED
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4  ONUMSPT
+        PARAMETER (ONUMSPT=2)
+
+        INTEGER*4 OSSFFPT,OSSFINT,OSSFTST
+        INTEGER*4 OSSFATR(SPGSYS)
+        INTEGER*4 OSSFPTR(SPGSYS)
+        INTEGER*4 OSSFNUM(5,SPGSYS)
+        INTEGER*2 OSSFTAB(SFTABMAX)
+        INTEGER*4 OSSFFSF(0:15,0:15,ONUMSPT)
+        INTEGER*4 OSSFGAR(SPGSYS)
+C
+        INTEGER*4 OSSFATR_OFF, OSSFPTR_OFF, OSSFNUM_OFF, OSSFTAB_OFF
+        INTEGER*4 OSSFFPT_OFF, OSSFTST_OFF, OSSFINT_OFF, OSSFFSF_OFF
+        INTEGER*4 OSSFGAR_OFF, OSSFFRE_OFF
+C
+        PARAMETER (OSSFATR_OFF = 1)
+        PARAMETER (OSSFPTR_OFF = OSSFATR_OFF + SPGSYS)
+        PARAMETER (OSSFNUM_OFF = OSSFPTR_OFF + SPGSYS)
+        PARAMETER (OSSFTAB_OFF = OSSFNUM_OFF + 5*SPGSYS)
+        PARAMETER (OSSFFPT_OFF = OSSFTAB_OFF + SFTABMAX/2)
+        PARAMETER (OSSFTST_OFF = OSSFFPT_OFF + 1)
+        PARAMETER (OSSFINT_OFF = OSSFTST_OFF + 1)
+        PARAMETER (OSSFFSF_OFF = OSSFINT_OFF + 1) 
+        PARAMETER (OSSFGAR_OFF = OSSFFSF_OFF + 16*16*ONUMSPT)
+        PARAMETER (OSSFFRE_OFF = OSSFGAR_OFF + SPGSYS)
+C
+        INTEGER*4 OSSFLEN
+        PARAMETER(OSSFLEN = OSSFFRE_OFF-1)
+C
+        INTEGER*4 IOSSFSEC
+        PARAMETER(IOSSFSEC = OSSFLEN/128 + 1)
+C
+        INTEGER*4 OSSFSEC
+        PARAMETER(OSSFSEC = IOSSFSEC*2)
+C
+        INTEGER*4 OSSFFRESIZ
+        PARAMETER(OSSFFRESIZ = OSSFSEC * 64 - OSSFLEN)
+C
+        INTEGER*4 OSSFREC(OSSFLEN+OSSFFRESIZ)
+C
+        INTEGER*4 OSSFFRE(OSSFFRESIZ)
+C
+        EQUIVALENCE (OSSFATR, OSSFREC(OSSFATR_OFF))
+        EQUIVALENCE (OSSFPTR, OSSFREC(OSSFPTR_OFF))
+        EQUIVALENCE (OSSFNUM, OSSFREC(OSSFNUM_OFF))
+        EQUIVALENCE (OSSFTAB, OSSFREC(OSSFTAB_OFF))
+        EQUIVALENCE (OSSFFPT, OSSFREC(OSSFFPT_OFF))
+        EQUIVALENCE (OSSFTST, OSSFREC(OSSFTST_OFF))
+        EQUIVALENCE (OSSFINT, OSSFREC(OSSFINT_OFF))
+        EQUIVALENCE (OSSFFSF, OSSFREC(OSSFFSF_OFF))
+        EQUIVALENCE (OSSFGAR, OSSFREC(OSSFGAR_OFF))
+        EQUIVALENCE (OSSFFRE, OSSFREC(OSSFFRE_OFF))
+

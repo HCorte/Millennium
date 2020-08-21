@@ -1,0 +1,84 @@
+C QUECOM.DEF
+C $Log:   GXAFXT:[GOLS]QUECOM.DEV  $
+C  
+C     Rev 1.0   17 JAN 2001 14:36:16   CS
+C  ADDED A NEW REPROCESSING QUEUE FOR PASSIVE (VALIDATIONS AND RETURN TICKS)
+C
+C     Rev 1.0   17 Apr 1996 14:36:16   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:50:58   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 24-FEB-2014 SCML PLACARD PROJECT - Added support for IGS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C
+C FORTRAN QUECOM DESCRIPTION
+C QUECOM CONTAINS THE APPLICATIONS TASK QUEUES.
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  REPVLEN
+	PARAMETER (REPVLEN=10000)             !# OF VALIDATION ENTRIES
+C                                             !  OUTSTANDING TO UPDATE
+C
+C PASSIVE QUEUE'S PARAMETERS
+C
+	INTEGER*4  RQPASPRO,RQPASVAL
+	PARAMETER  (RQPASPRO=1)		      !PASPRO REPROCESSING
+	PARAMETER  (RQPASVAL=2)		      !PASVAL REPROCESSING
+C
+	INTEGER*4  QUETAB, REPVQUE, REPQUEPAS
+
+C----+------------------------------------------------------------------
+C V02| Adding support to IGS
+C----+------------------------------------------------------------------
+        INTEGER*4  COMIGSQUE
+C----+------------------------------------------------------------------
+C V02| Adding support to IGS
+C----+------------------------------------------------------------------
+
+	COMMON/QUECOM/  QUETAB(NUMPRO +QHEDSZ,NUMAPPQUE),
+     *                  REPVQUE(REPVLEN+QHEDSZ),
+     *                  REPQUEPAS(REPVLEN+QHEDSZ,2),
+C----+------------------------------------------------------------------
+C V02| Adding support to IGS
+C----+------------------------------------------------------------------
+     *                  COMIGSQUE(NUMPRO+QHEDSZ)
+C----+------------------------------------------------------------------
+C V02| Adding support to IGS
+C----+------------------------------------------------------------------
+C
+C
+	INTEGER*4	 FRST_QUECOM(2)
+	EQUIVALENCE	(FRST_QUECOM, QUETAB)
+	INTEGER*4	 LAST_QUECOM
+C----+------------------------------------------------------------------
+C V02| Adding support to IGS
+C----+------------------------------------------------------------------
+C       EQUIVALENCE     (LAST_QUECOM, REPQUEPAS(REPVLEN+QHEDSZ,2))
+C	EQUIVALENCE	(LAST_QUECOM, REPVQUE(REPVLEN+QHEDSZ))
+        EQUIVALENCE     (LAST_QUECOM, COMIGSQUE(NUMPRO+QHEDSZ))
+C----+------------------------------------------------------------------
+C V02| Adding support to IGS
+C----+------------------------------------------------------------------
+	VOLATILE /QUECOM/
+C
+C END QUECOM.DEF
+C

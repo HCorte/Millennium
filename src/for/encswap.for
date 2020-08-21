@@ -1,0 +1,53 @@
+C
+C SUBROUTINE ENCSWAP
+C $Log:   GXAFXT:[GOLS]ENCSWAP.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:05:06   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:13:46   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - encini.for **
+C
+C
+C*********************************************************************
+C
+C	ENCSWAP(ENCKEY)  SWAP BYTES TO FOLLOW CONCURRENT CONVENTION
+C			 MAKE SURE THAT PARITY IS EVEN, BIT 0
+C			 (LEAST SIGNIFICANT)
+C			 IS USED TO MANIPULATE PARITY
+C	ENCKEY	-  AGENT KEY AFTER INITIAL XFORM
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE ENCSWAP(ENKEY)
+	IMPLICIT NONE
+	INTEGER*4 ENKEY(2)
+	INTEGER*4 BT, RES, SUM, TEMP
+	INTEGER*4 I, J, K, M
+	BYTE BRES(4), BSUM(4), BTEMP(4)
+        EQUIVALENCE(RES,BRES)
+	EQUIVALENCE(SUM,BSUM)
+	EQUIVALENCE(TEMP,BTEMP)
+	DO 60 I=1,2
+	    TEMP=ENKEY(I)
+	    DO 40 J=1,4
+		M=0
+		BT=ZEXT(BTEMP(J))
+		DO 20 K=1,7
+		    IF(BTEST(BT,K)) M=M+1
+20		CONTINUE
+	    IF(MOD(M,2) .EQ. 1) THEN
+		SUM=IBSET(BT,0)
+		BRES(5-J)=BSUM(1)
+	    ELSE
+		SUM=IBCLR(BT,0)
+		BRES(5-J)=BSUM(1)
+	    ENDIF
+40	    CONTINUE
+	    ENKEY(I)=RES
+60	CONTINUE
+	RETURN
+	END	

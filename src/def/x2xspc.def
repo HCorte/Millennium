@@ -1,0 +1,140 @@
+C
+C X2XSPC.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XSPC.DEV                                   $
+C  $Date::   17 Apr 1996 16:45:14                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V04 15-JUN-00 UXN COMMON/X2XSPC_NAME/ X2XSPC_NAME added.
+C V03 12-DEC-94 DAS Integrate UK changes into X2X Baseline
+C V02 01-NOV-94 GPR Add ! to fields which require RUNSYS and $ to
+C                   fields which require X2BLDNET to take effect
+C                   and get rid of X2XGBL_COMTYP
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C The DEF describes the variables which are contained in the
+C X2X Station Port Configuration file.
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XSPC_ENTRIES counter, the X2XSPC_FIELD, and
+C        the X2XSPC_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   X2XSPC_REC(128)     !Record buffer
+	CHARACTER   X2XSPC_CREC(512)*1  !Record buffer
+	EQUIVALENCE (X2XSPC_REC, X2XSPC_CREC)
+C
+	INTEGER*4   X2XSPC_SECT         !Number of sectors per rec
+	PARAMETER  (X2XSPC_SECT=2)
+	CHARACTER   X2XSPC_NAME*10      !Global Setup file name
+	DATA        X2XSPC_NAME /'X2XSPC.FIL'/
+	COMMON/X2XSPC_NAME/ X2XSPC_NAME
+	INTEGER*4   X2XSPC_FDB(7)       !File descriptor block
+	DATA        X2XSPC_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XSPC_STN              !Station number
+	INTEGER*4   X2XSPC_PORT             !Port number
+	INTEGER*4   X2XSPC_TERCNT           !Terminal count
+	CHARACTER   X2XSPC_TERM(39)*8       !Defined terminals (extended)
+	INTEGER*4   X2XSPC_UPDATE           !Last date updated
+	INTEGER*4   X2XSPC_FREE(42)         !Free space
+	INTEGER*4   X2XSPC_BITMAP           !Modified fields flag
+	INTEGER*4   X2XSPC_BITMAP2          !Modified fields flag
+	INTEGER*4   X2XSPC_BITMAP3          !Modified fields flag
+	INTEGER*4   X2XSPC_BITMAP4          !Modified fields flag
+C
+	CHARACTER   X2XSPC_DROPS(X2X_MAXTERMS)*2
+	EQUIVALENCE (X2XSPC_DROPS,X2XSPC_TERM)
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+	EQUIVALENCE (X2XSPC_REC(1),  X2XSPC_STN)
+	EQUIVALENCE (X2XSPC_REC(2),  X2XSPC_PORT)
+	EQUIVALENCE (X2XSPC_REC(3),  X2XSPC_TERCNT)
+	EQUIVALENCE (X2XSPC_REC(4),  X2XSPC_TERM)
+	EQUIVALENCE (X2XSPC_REC(82), X2XSPC_UPDATE)
+	EQUIVALENCE (X2XSPC_REC(83), X2XSPC_FREE)
+	EQUIVALENCE (X2XSPC_REC(125),X2XSPC_BITMAP)
+	EQUIVALENCE (X2XSPC_REC(126),X2XSPC_BITMAP2)
+	EQUIVALENCE (X2XSPC_REC(127),X2XSPC_BITMAP3)
+	EQUIVALENCE (X2XSPC_REC(128),X2XSPC_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XSPC_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XSPC_ENTRIES
+	PARAMETER (X2XSPC_ENTRIES=43)
+C
+	CHARACTER X2XSPC_FIELD(X2XSPC_ENTRIES)*15
+	DATA      X2XSPC_FIELD
+     *	    /'Station        ','Port           ','$Terminal count',	!V02
+     *	  39*'$Drop address  ','Last updated   '/			!V02
+C
+C STORE THE VALID BOT AND TOP RANGE FOR EACH VARIABLE.
+C NOTE: A -1 IN THE BOT RANGE DESIGNATES A CHARACTER
+C       VARIABLE AND THE TOP RANGE INDICATES THE LENGTH,
+C       A -2 IN THE BOTTOM RANGE DESIGNATES BCD INPUT.
+C
+	INTEGER*4 X2XSPC_RANGE(2,X2XSPC_ENTRIES)
+	DATA      X2XSPC_RANGE
+     *	    /1,X2X_STATIONS,  1,X2X_MAXPORT,     1,X2X_MAXTERMS,
+     *	    -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8,
+     *	    -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8,
+     *	    -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8,
+     *	    -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8, -1,8,  0,0/
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XSPC_INDEX(X2XSPC_ENTRIES)
+	DATA      X2XSPC_INDEX
+     *	    /1,   2,  3,
+     *	     4,   6,  8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28,
+     *      30,  32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54,
+     *      56,  58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80,
+     *      82 /
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+	INTEGER*4 X2XSPC_VALUE(15,X2XSPC_ENTRIES)
+	DATA      X2XSPC_VALUE
+     *	    /15*-1, 15*-1, 15*-1,
+     *	     585*-1,15*-1 /
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XSPC_COMMON/
+	COMMON /X2XSPC_COMMON/ X2XSPC_REC,   X2XSPC_FDB,
+     *	                       X2XSPC_RANGE, X2XSPC_INDEX,
+     *	                       X2XSPC_VALUE, X2XSPC_FIELD
+C
+C

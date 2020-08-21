@@ -1,0 +1,78 @@
+C RECUSE.DEF
+C
+C V05 09-JUL-1999 UXN  EXPDAY added.
+C V04 19-MAY-1996 HXK  Wojtek's security (password) changes
+C V03 25-OCT-1991 GCAN INCREASED USERS TO 120
+C V02 01-AUG-1990 XXX  RELEASED FOR VAX
+C V01 27-MAY-1988 DSL  Initial release Michigan
+C
+C USER.DEF
+C
+C****************************************************************
+C                                                               *
+C    USERID   I4      User identification number                *
+C    PASWORD1 C8      Password (SCRAMBLED)                      *
+C    PRIVGROP I4      Privilege groups                          *
+C                                                               *
+C    GROUPNUM I4(3)   24 Terminal groups                        *
+C                     Level specified for each group            *
+C                     Terminal groups by nibble (max group 16)  *
+C                     See below description of terminal groups  *
+C                                                               *
+C    USERNAM  C20     User name                                 *
+C                                                               *
+C    USERSECL I4(3)   24 Function security levels               *
+C                     Levels specified for each function        *
+C                     Function levels by nibble (max level 16)  *
+C                     See below description of functions        *
+C                                                               *
+C    PASWORD2 C8      Second Password (SCRAMBLED)               *
+C    USERADD  I4      User number who adds the record           *
+C    USERCHA  I4      User number who last changes the record   *
+C    DATEADD  I4(3)   Date on which record is added (DD/MM/YY)  *
+C    DATECHA  I4(3)   Date on which record is changed (DD/MM/YY)*
+C    EXPDAY   I4      Password expiration time in days          *
+C    FREE     I4(38)  Free space available                      *
+C                                                               *
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	COMMON /SECUREU/ USERS(168,16)
+	INTEGER*2 USERS
+C
+	INTEGER*4     USESEC
+	PARAMETER    (USESEC=1)
+C
+	INTEGER*4    USEREC(64)
+	INTEGER*4    USERID,GROUPNUM(3),PRIVGROP
+	CHARACTER*8  PASWORD1,PASWORD2
+	CHARACTER*20 USERNAM
+	INTEGER*4    USERSECL(3)
+	INTEGER*4    USERADD,USERCHA,DATEADD(3),DATECHA(3)
+	INTEGER*4    EXPDAY
+	INTEGER*4    FREE(38)
+C
+	EQUIVALENCE (USERID,USEREC(1))
+	EQUIVALENCE (PASWORD1,USEREC(2))
+	EQUIVALENCE (PRIVGROP,USEREC(4))
+	EQUIVALENCE (GROUPNUM,USEREC(5))
+	EQUIVALENCE (USERNAM,USEREC(8))
+	EQUIVALENCE (USERSECL,USEREC(13))
+	EQUIVALENCE (PASWORD2,USEREC(16))
+	EQUIVALENCE (USERADD,USEREC(18))
+	EQUIVALENCE (USERCHA,USEREC(19))
+	EQUIVALENCE (DATEADD,USEREC(20))
+	EQUIVALENCE (DATECHA,USEREC(23))
+	EQUIVALENCE (EXPDAY,USEREC(26)) 
+	EQUIVALENCE (FREE,USEREC(27))

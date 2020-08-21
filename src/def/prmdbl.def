@@ -1,0 +1,72 @@
+C  GXSRC:PRMDBL.DEF
+C  
+C  $Log:   GXAFXT:[GOLS]PRMDBL.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:30:16   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.3   15 Nov 1995 11:35:48   PXB
+C  Added MAX ODDS DISPLAY
+C  
+C     Rev 1.2   07 Nov 1995 22:14:32   HXK
+C  Changes for Double, Couple install
+C  
+C     Rev 1.1   06 Nov 1995  9:15:16   PXB
+C  Applying PVCS header for automatic revision history
+C  
+C     Rev 1.0    06 Nov 1995 9:14:10   PXB
+C  Initial revision.
+C  
+C PRMDBL.DEF
+C
+C  Initial Release
+C  DEC Baseline
+C
+C SUPER DOUBLE GAME AND POOL PARAMETERS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	INTEGER*4 NUMDBL, MAXDBLRW, MAXDBLTI
+	PARAMETER(NUMDBL=6)             ! NUMBER OF SUPER DOUBLE GAMES
+	PARAMETER(MAXDBLRW=18)          ! MAX NUMBER OF WINNERS ROWS
+	PARAMETER(MAXDBLTI=12)	        ! MAX NUMBER OF TIES
+
+C NAME FILED LNGTH PARAMETERS
+
+	INTEGER*4 DBLENM_LEN, DBLDES_LEN , DBLNMS_LEN, DBLTVC_LEN
+	PARAMETER (DBLENM_LEN=28)	! EVENT NAME LENGTH IN BYTES
+	PARAMETER (DBLDES_LEN=120)      ! EVENT DESCRIPTION LENGTH IN BYTES     
+	PARAMETER (DBLNMS_LEN=16)	! ROW NAME LENGTH IN BYTES
+	PARAMETER (DBLTVC_LEN= 4)       ! LENGTH IN BYTES OF TC-CHANEL NAME.
+
+C SUPER DOUBLE POOL PARAMETERS
+
+	INTEGER*4 VALDBL, DBLPODDS, DBLPAMNT
+	PARAMETER(VALDBL=2)
+	  PARAMETER(DBLPODDS=1)         ! DOUBLE POOL ODDS INDEX
+	  PARAMETER(DBLPAMNT=2)         ! DOUBLE POOL AMOUNT INDEX
+
+	INTEGER*4 TYPDBL, DBLPDYNM, DBLPSTAT
+	PARAMETER(TYPDBL=2)
+	  PARAMETER(DBLPDYNM=1)         ! DOUBLE DYNAMIC POOL INDEX
+	  PARAMETER(DBLPSTAT=2)         ! DOUBLE STATIC POOL INDEX
+
+C SUPER DOUBLE MAXIMUM NUMBER OF TEXT MESSAGES
+
+	INTEGER*4 DBLTXMAX
+	PARAMETER(DBLTXMAX=3)           ! MAXIMUM TEXT MESSAGES
+
+	INTEGER*4 DBLMAXD		
+	PARAMETER(DBLMAXD=45)		! # OF ODDS TO DISPLAY.
+

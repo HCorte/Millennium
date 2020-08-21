@@ -1,0 +1,27 @@
+$! GXSRC:APUCOM.LSH
+$! 
+$! $Log:   GXAFXT:[GOLS]APUCOM.LSV  $
+$! 
+$!    Rev 1.0   17 Apr 1996 12:12:42   HXK
+$! Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+$! 
+$!    Rev 1.0   18 Nov 1994 17:19:10   MCM
+$! Initial revision.
+$! 
+$!    Rev 1.1   04 Jan 1994 12:12:18   SYSTEM
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    21 Dec 1993 19:53:10   SYSTEM
+$! Initial revision.
+$!
+$!
+$! 
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$! 
+LINK'P1' -
+/EXE=TSKLIB:GXAPUCOM.ESH -
+/SHAREABLE -
+OBJLIB:APUCOM,-
+SYS$INPUT/OPTION
+SYMBOL_VECTOR=(APUCOM=PSECT)
+PSECT_ATTR=APUCOM,SHR,WRT

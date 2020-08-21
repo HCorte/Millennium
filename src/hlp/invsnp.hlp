@@ -1,0 +1,44 @@
+    INV.HLP                  GTECH Distributed Network
+                            Agent Invoice Snapshot Help        Page 1 of 2
+ 
+    The Agent Invoice snapshot is used to display the current day sales 
+    in addition to the week-to-date totals for a specific agent.  The
+    last invoice period details are also shown.
+    The invoice information displayed includes:
+ 
+    name          - Agent's name
+    address       - address of premises
+    agtnum        - unique 7-digit agent number
+    terminal      - terminal number assigned by Veikkaus
+    today         - count and amount information for the current day. The      
+                    following fields are displayed: all on-line game sales 
+                    (Lotto, Vakio, Tulos etc.) instant ticket sales, total 
+                    net sales, total cancellations, total refunds, total 
+                    on-line cashed, total instant tickets cashed and total
+                    claimed
+                    In addition,the Amount column contains Sales commission
+                    adjustments and amount due information.
+    
+    
+    INV.HLP                  GTECH Distributed Network
+                            Agent Invoice Snapshot Help         Page 2 of 2
+
+
+     invoice to   - count and amount information for the invoice week so 
+     date           far.  The same categories apply as in "today" above.
+
+
+     last invoice - count and amount information for the last invoice 
+                    period 
+                    This category also contains a section for winners
+                    commission.
+
+
+
+
+
+
+
+
+
+

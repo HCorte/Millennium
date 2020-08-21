@@ -1,0 +1,26 @@
+$! GXSRC:ASYSOFT.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]ASYSOFT.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:33:44   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 12:40:56   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:35:42   SYSTEM
+$! Initial revision.
+$!
+$! X2X Upgrade: 27-FEB-96 wsm Added OPS, MLOG, GXEVNNAM.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:ASYSOFT.EXE -
+OBJLIB:ASYSOFT,-
+X2RADDBF,-
+X2RSTART,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE,-
+TSKLIB:GXX2XCOM.ESH/SHAREABLE

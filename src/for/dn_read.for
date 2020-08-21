@@ -1,0 +1,166 @@
+C
+C SUBROUTINE DN_READ
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]DN_READ.FOV                                  $
+C  $Date::   17 Apr 1996 12:58:52                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C  
+C *** Pre-Baseline Source - dn_read.for  ***
+C
+C V01 21-APR-91 Steve Sullivan, DEC
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Purpose:
+C This routine will queue a read to to the link indicated by the LINK
+C field in the buffer header we are passed. We use the address of the 
+C data buffer (DBUFFER field) as the address to receive, and size field 
+C in the buffer header to determine how big it is.
+C If there is an error that prevents us from performing a successful QIO
+C function we immediately return the buffer to the sending task using the
+C IODONE subroutine
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+C
+	SUBROUTINE DN_READ(BUFFER)
+C
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+C
+        INCLUDE 'INCLIB:DESNET.DEF'
+        INCLUDE 'INCLIB:DN_LINK.DEF'			! DECNET STRUCTURES
+        INCLUDE 'INCLIB:DN_BLOCK.DEF'			! DECNET DATA BLOCKS
+C
+	INCLUDE '($IODEF)'
+        INCLUDE '($SSDEF)'
+        INCLUDE '($SYSSRVNAM)'
+C
+C LOCAL DECLARATIONS
+C
+	INTEGER*4	IDX,				! INDEX TO LINK STRUCT
+     *			STATUS				! STATUS HOLDER
+C
+	RECORD /DN_BUFFER_STRUCT/ BUFFER		! BUFFER ARGUMENT
+C
+C EXTERNAL DECLARATIONS
+C
+	EXTERNAL	DN_READ_AST
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C FIND THE LINK BLOCK
+C
+C FIND THE LINK BLOCK
+C
+	IDX = BUFFER.LINK				! LINK BLOCK INDEX
+	IF (IDX .EQ. 0) THEN				! THIS IS CLEARLY WRONG!
+	  CALL OPS('*** DN_READ - INVALID BUFFER LINK ***',
+     *             IDX ,IDX)
+	  BUFFER.IOSB.STAT = SS$_NORMAL			! NO I/O, SO FAKE IOSB
+	  CALL DN_AP_STATUS(BUFFER, DNE_NOLINKBLOCK)
+	  CALL IODONE(BUFFER)
+	  GOTO 9999
+	ENDIF
+C
+C IF WE MAKE IT HERE WE HAVE A VALID LINK BLOCK ID, CAN WE READ FROM IT ?
+C
+	IF (DN_LINK(IDX).STATE .NE. STATE_RUNNING) THEN
+D	  IF (NETROUT(IDX, 1) .EQ. ROUACT)
+D	    CALL OPS('*** DN_READ - INVALID LINK STATE ***',
+D    *               DN_LINK(IDX).STATE, IDX)
+	  BUFFER.IOSB.STAT = SS$_NORMAL			! NO I/O, SO FAKE IOSB
+	  CALL DN_AP_STATUS(BUFFER, DNE_WRONGSTATE)
+	  CALL IODONE(BUFFER)
+	  GOTO 9999
+	ENDIF
+C
+C MAKE SURE WE HAVE A VALID BUFFER POINTER...
+C
+	IF (BUFFER.DBUFFER .EQ. 0) THEN
+	  CALL OPS('*** DN_READ -  INVALID BUFFER POINTER ***',
+     *             BUFFER.DBUFFER, IDX)
+	  BUFFER.IOSB.STAT = SS$_NORMAL			! NO I/O, SO FAKE IOSB
+	  CALL DN_AP_STATUS(BUFFER, DNE_INVALIDBUFFER)
+	  CALL IODONE(BUFFER)
+	  GOTO 9999
+	ENDIF
+C
+C MAKE SURE WE HAVE A VALID BUFFER SIZE... MORE THAN ZERO
+C
+	IF (BUFFER.DBUFFER_SIZE .LE. 0) THEN
+	  CALL OPS('*** DN_READ - INVALID BUFFER LENGTH ***',
+     *             BUFFER.DBUFFER_SIZE, IDX)
+	  BUFFER.IOSB.STAT = SS$_NORMAL			! NO I/O, SO FAKE IOSB
+	  CALL DN_AP_STATUS(BUFFER, DNE_INVALIDBUFLEN)
+	  CALL IODONE(BUFFER)
+	  GOTO 9999
+	ENDIF
+C
+C MAKE SURE WE HAVE A VALID CHANNEL
+C
+	IF (DN_LINK(IDX).CHANNEL .EQ. 0) THEN
+	  CALL OPS('*** DN_READ - INVALID CHANNEL ***',
+     *             DN_LINK(IDX).CHANNEL, IDX)
+	  BUFFER.IOSB.STAT = SS$_NORMAL			! NO I/O, SO FAKE IOSB
+	  CALL DN_AP_STATUS(BUFFER, DNE_INVALIDCHAN)
+	  CALL IODONE(BUFFER)
+	  GOTO 9999
+	ENDIF
+C
+C WE KNOW WE ARE CONNECTED, AND EXIST, PERHAPS WE SHOULD ATTEMPT A READ !
+C QUEUE A DECNET READ REQUEST
+C
+	CALL DN_AP_STATUS(BUFFER, DNE_SUCCESS)
+	BUFFER.CHANNEL = DN_LINK(IDX).CHANNEL
+	STATUS = SYS$QIO(,				! EVENT FLAG 
+     *                   %VAL(BUFFER.CHANNEL),		! CHANNEL
+     *                   %VAL(IO$_READVBLK),		! FUNCTION 
+     *                   %REF(BUFFER.IOSB),		! STATUS BLOCK
+     *                   DN_READ_AST,			! AST ADDRESS
+     *                   %REF(BUFFER),			! AST PARAMETER
+     *                   %VAL(BUFFER.DBUFFER +		! P1
+     *                   %LOC(FRST_NETCOM(1))),         ! P1 (CONT)
+     *                   %VAL(BUFFER.DBUFFER_SIZE),	! P2
+     *                   ,				! P3
+     *                   ,				! P4
+     *                   ,				! P5
+     *                   )				! P6
+C
+	IF (.NOT. STATUS) THEN
+	  CALL OPS('*** DN_READ - UNABLE TO QUEUE NETWORK READ ***',
+     *             STATUS, IDX)
+	  BUFFER.IOSB.STAT = STATUS
+	  CALL DN_AP_STATUS(BUFFER, DNE_CHECKIOSB)
+	  CALL IODONE(BUFFER)
+	  GOTO 9999
+	ENDIF
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C RETURN & END.
+C
+9999	CONTINUE
+C
+	RETURN
+	END

@@ -1,0 +1,316 @@
+C
+C SUBROUTINE WNET
+C
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFIP:[GOLS]WNET.FOV                                     $
+C  $Date::   16 Apr 1997 10:40:16                                         $
+C  $Revision::   1.4                                                      $
+C  $Author::   RXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - net_wnet.for;1 **
+C
+C WNET.FOR
+C
+C V05 06-MAR-2014 SCML Added support to PLACARD Project - IGS
+C V04 09-AUG-1995 DAS  COMMENTED OUT REFERENCES TO APU/ THIS IS UK SPECIFIC
+C V03 05-APR-1994 GPR  USE X2X_I4_STATION TO DETERMINE STATION AND TERNUM
+C V02 03-APR-1992 TKO  REMOVE HARDWIRED VALUE FOR LENGTHS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C V01 01-FEB-1989 XXX  INITIAL RELEASE FOR SWEDEN
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE WNET(BUF,PROBUF,STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C+
+C
+C INPUT: BUF,TRABUF,LEN,STA
+C
+C OUTPUT: STATUS
+C          -1 = THERE ARE NO BACKUP SYSTEMS
+C          -2 = TRANSACTION WITHOUT SERIAL #
+C          -3 = ALL SECONDARY SYSTEMS WERE DROPPED
+C           0 = RECORD WRITTEN
+C           1 = RECORD NOT WRITTEN (BUFFER FULL)
+C
+C SIDE EFFECTS:
+C         # OF FREE BUFFERS COULD CHANGE
+C         NETLOG COULD BE AWAKENED.
+C
+C     FOR COMMANDS BUFFER IS FLUSHED AND SENT OVER THE NETWORK
+C
+C-
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DESNET.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+	INCLUDE 'INCLIB:X2XPRM.DEF'					! V04
+	INCLUDE 'INCLIB:APUCOM.DEF'
+C
+	INTEGER*4 WLEN, LENGTH, BASE, TOTLEN, TRANS, LINK, ST
+	INTEGER*4 TRCADR, CNT, OFF, SEND, ONCE, STATUS, PROBUF, BUF
+C
+	INTEGER*4 TEMP
+	INTEGER*2 HTEMP(2)
+	CHARACTER*1 CTEMP(4)
+	EQUIVALENCE(TEMP,HTEMP(1),CTEMP(1))
+	DATA ONCE/0/
+C
+C IS THERE AT LEAST ONE SECONDARY AND THIS IS PRIMARY SYSTEM
+C
+	SEND=-1
+C
+	DO 10, OFF=1,NETSYS
+	IF(NETROUT(OFF,WAYINP).EQ.ROUACT) THEN
+	   IF(NETMODE(OFF,WAYINP).EQ.TRNMD) SEND=0
+	ENDIF
+10	CONTINUE
+C
+	IF(SEND.EQ.-1) THEN
+	   STATUS=-1
+	   RETURN
+	ENDIF
+C
+	IF(NETMASTER(WAYINP).NE.NODEID) THEN
+	  STATUS=-1
+	  RETURN
+	ENDIF
+C
+	IF (PRO(SERIAL,PROBUF).EQ.0) THEN
+	  STATUS=-2
+	  RETURN
+	ENDIF
+C
+C
+C IF BUF EQUALS ZERO, THEN ALLOCATE A BUFFER FROM
+C THE FREE BUFFER POOL
+C
+	IF (ONCE.EQ.0) THEN
+	   BUF=0
+	   ONCE=-1
+	ENDIF
+C
+	IF(BUF.EQ.0)THEN
+	  CNT=0
+1	  CALL GRABBUF(BUF,WAYINP,STATUS)
+	  IF(STATUS.EQ.2)THEN
+	    DO 2,OFF=1,NETSYS    !CHECK IF ANY SYSTEM ACTIVE
+	      IF (NETROUT(OFF,WAYINP).EQ.ROUACT) GOTO 3
+2	    CONTINUE
+	    STATUS=-3
+	    GOTO 9000
+3	    CONTINUE
+	    CALL XWAIT(50,1,STATUS)
+	    IF (CNT.EQ.0) CALL NOTIFY(TRCADR,NOTBUF,ST,WAYINP)
+	    CNT=MOD(CNT+1,20)
+	    GOTO 1
+	  ENDIF
+	ENDIF
+C
+C GET LINK & LENGTH FROM BUF
+C
+	LINK=NETBUF(NEXT,BUF)
+	TRANS=HPRO(TRCODE,PROBUF)
+C
+C CORRECT INPLEN IF TRANSACTION IS A TYPCMD OR TYPDEL
+C SO THAT THE STUFF ROUTINE MOVES THE CORRECT NUMBER
+C OF BYTES OVER.
+C
+	IF(TRANS.EQ.TYPCMD) 
+     *     HPRO(INPLEN,PROBUF) = (CBAL-INPTAB)*4+MAXGAM*NUMTOT*4 + 4
+C                                         ;OF BALANCING INFORMATION
+	IF(TRANS.EQ.TYPDEL) HPRO(INPLEN,PROBUF)=4
+	IF(TRANS.EQ.TYPNON) HPRO(INPLEN,PROBUF)=24
+C
+C CORRECT INPLEN IF ZERO (UNFORTUNATE, BUT TRUE)
+C
+	IF (HPRO(INPLEN,PROBUF).LE.0) THEN !JUST TO FIND IF IT'S RIGHT
+	  TYPE *,IAM(),CHAR(7),'procom buffer error ',PROBUF
+	   TYPE 910,(PRO(OFF,PROBUF),OFF=1,64)
+910	   FORMAT(8(1H ,Z8))
+	ENDIF
+	IF(HPRO(INPLEN,PROBUF).LE.0)HPRO(INPLEN,PROBUF)=OUTLEN_MAX
+C
+C NOW SEE IF BUFFER IS FULL (OR NEAR FULL).
+C IF SO, THEN WE MUST SHIP THIS BUFFER TO THE
+C NETLOG FOR TRANSFERRING TO THE OTHER SYSTEM
+C AND ALLOCATE A NEW ONE.
+C
+C       ***** Start V03 changes *****
+
+        IF (X2X_I4_STATION) THEN
+	   TOTLEN=((HPRO(INPLEN,PROBUF)+3)/4)+6
+	ELSE
+           TOTLEN=((HPRO(INPLEN,PROBUF)+3)/4)+5
+        ENDIF
+
+C       ***** End V03 changes *****
+
+C
+C IF TRANSACTION IS A TYPCRS THEN ADD APU BUFFER LENGTH TO TOTLEN
+C
+	IF(TRANS.EQ.TYPCRS) TOTLEN=TOTLEN+APULEN !c...... reinstated
+C
+C EURO MIL PROJECT - SEND TO OTHER SYSTEMS EURO MIL TRANSACTIONS
+C
+	IF(TRANS.EQ.TYPEUR) TOTLEN=TOTLEN+APULEN+4 
+C----+------------------------------------------------------------------
+C V05| Added support to PLACARD Project - IGS
+C----+------------------------------------------------------------------
+        IF(TRANS .EQ. TYPIGS) TOTLEN=TOTLEN+APULEN+4 
+C----+------------------------------------------------------------------
+C V05| Added support to PLACARD Project - IGS
+C----+------------------------------------------------------------------
+C
+C
+	IF(LINK+TOTLEN.GE.NETLEN-2)THEN
+	  CALL SENDBUF(BUF)
+	  CNT=0
+6	  CALL GRABBUF(BUF,WAYINP,STATUS)
+	  IF(STATUS.EQ.2)THEN
+	    DO 8,OFF=1,NETSYS    !CHECK IF ANY SYSTEM ACTIVE
+	      IF (NETROUT(OFF,WAYINP).EQ.ROUACT) GOTO 9
+8	    CONTINUE
+	    STATUS=-3
+	    GOTO 9000
+9	    CONTINUE
+	    IF (CNT.EQ.0) CALL NOTIFY(TRCADR,NOTBUF,ST,WAYINP)
+	    CNT=MOD(CNT+1,20)
+	    CALL XWAIT(50,1,ST)
+	    GOTO6
+	  ENDIF
+	  LINK=NETBUF(NEXT,BUF)               !RESET LINK
+	ENDIF
+C
+C STUFF THE PERTINENT INFORMATION OF PROCOM INTO
+C THE BUF AT INDEX NEXT. ON RETURN UPDATE NEXT
+C AND NUMREC TO REFLECT THE NEW RECORD.
+C
+	BASE=LINK
+	LINK=LINK+1
+	HTEMP(1)=HPRO(TRCODE,PROBUF)          !TRANSACTION CODE
+
+C       ***** Start V03 changes *****
+
+        IF (X2X_I4_STATION) THEN
+	   HTEMP(2)=HPRO(INPLEN,PROBUF)          !INPUT LENGTH
+	   NETBUF(LINK,BUF)=TEMP
+	   LINK=LINK+1
+C
+C Oct 9, 94 MP: save simulator indication
+C
+	   IF(HPRO(SIMMOD,PROBUF).EQ.-999) 
+     *	      PRO(LINENO,PROBUF) = HPRO(SIMMOD,PROBUF)
+C
+	   NETBUF(LINK,BUF)=PRO(LINENO,PROBUF)
+	   NETBUF(LINK+1,BUF)=PRO(TERNUM,PROBUF)
+	   LINK=LINK+2
+	ELSE
+           HTEMP(2)=HPRO(TERNUM,PROBUF)          !TERMINAL NUMBER
+	   NETBUF(LINK,BUF)=TEMP
+	   LINK=LINK+1
+C
+C Oct 9, 94 MP: save simulator indication
+C
+	   IF(HPRO(SIMMOD,PROBUF).EQ.-999) 
+     *	      HPRO(LINENO,PROBUF) = HPRO(SIMMOD,PROBUF)
+C
+	   HTEMP(1)=HPRO(LINENO,PROBUF)
+	   HTEMP(2)=HPRO(INPLEN,PROBUF)
+	   NETBUF(LINK,BUF)=TEMP
+	   LINK=LINK+1
+        ENDIF
+
+C       ***** End V03 changes *****
+
+	NETBUF(LINK,BUF)=PRO(SERIAL,PROBUF)
+	NETBUF(LINK+1,BUF)=PRO(TSTAMP,PROBUF)
+	LINK=LINK+2
+	LENGTH=HPRO(INPLEN,PROBUF)
+	WLEN=(LENGTH+3)/4
+C
+C EURO MIL PROJECT - IF THIS IS ONE TRANSACTION OF EURO MIL THEN PUT WRKTAB INTO NETBUF
+C
+        IF(HPRO(TRCODE,PROBUF) .EQ. TYPEUR) THEN
+           CALL MOVTAB(PRO(INPTAB,PROBUF),NETBUF(LINK,BUF),4)
+           LINK=LINK + 4
+           CALL MOVTAB(PRO(WRKTAB,PROBUF),NETBUF(LINK,BUF),WLEN)
+C----+------------------------------------------------------------------
+C V05| Added support to PLACARD Project - IGS
+C----+------------------------------------------------------------------
+        ELSEIF(HPRO(TRCODE,PROBUF) .EQ. TYPIGS) THEN
+           CALL MOVTAB(PRO(INPTAB,PROBUF),NETBUF(LINK,BUF),4)
+           LINK=LINK + 4
+           CALL MOVTAB(PRO(WRKTAB,PROBUF),NETBUF(LINK,BUF),WLEN)
+C----+------------------------------------------------------------------
+C V05| Added support to PLACARD Project - IGS
+C----+------------------------------------------------------------------
+        ELSE
+	   CALL MOVTAB(PRO(INPTAB,PROBUF),NETBUF(LINK,BUF),WLEN)
+        ENDIF
+	LINK=LINK+WLEN
+C
+C COPY APU BUFFER TO NETLOG BUFFER FOR TYPCRS TRANSACTIONS
+C
+	IF(HPRO(TRCODE,PROBUF).EQ.TYPCRS) THEN
+	  CALL MOVTAB(APUBUF(1,PROBUF),NETBUF(LINK,BUF),APULEN)
+	  LINK=LINK+APULEN
+	ENDIF
+C
+C EURO MIL PROJECT - SEND TO OTHER SYSTEMS EURO MIL TRANSACTIONS
+C
+	IF(HPRO(TRCODE,PROBUF).EQ.TYPEUR) THEN
+	  CALL MOVTAB(APUBUF(1,PROBUF),NETBUF(LINK,BUF),APULEN)
+	  LINK=LINK+APULEN
+	ENDIF
+C----+------------------------------------------------------------------
+C V05| Added support to PLACARD Project - IGS
+C----+------------------------------------------------------------------
+        IF(HPRO(TRCODE,PROBUF) .EQ. TYPIGS) THEN
+          CALL MOVTAB(APUBUF(1,PROBUF),NETBUF(LINK,BUF),APULEN)
+          LINK=LINK+APULEN
+        ENDIF
+C----+------------------------------------------------------------------
+C V05| Added support to PLACARD Project - IGS
+C----+------------------------------------------------------------------
+	NETBUF(BASE,BUF)=LINK
+	NETBUF(NEXT,BUF)=LINK
+	NETBUF(LINK,BUF)=0                !SET NXT LINK TO ZERO
+	NETBUF(NUMREC,BUF)=NETBUF(NUMREC,BUF)+1
+	NETBUF(PSER,BUF)=PRO(SERIAL,PROBUF)
+C
+C     FOR 'FREEZING' COMMANDS FLUSH THE BUFFER AND SEND
+C
+	IF (TRANS.EQ.TYPCMD .AND.
+     *	(PRO(CTYP,PROBUF).NE.TCX2X.AND.PRO(CTYP,PROBUF).NE.TCSPE))THEN
+	   CALL SENDBUF(BUF)
+	ENDIF
+	STATUS=0
+9000	RETURN
+	END

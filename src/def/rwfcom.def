@@ -1,0 +1,75 @@
+C ROLL POOL COMMON DEFINTION
+C
+C V06 25-FEB-2000 OXK RWF_SPTPOLDIV added & cleanup
+C V05 17-APR-1996 HXK Release of Finland for X.25, Telephone Betting, 
+C                     Instant Pass Thru Phase 1
+C V04 08-FEB-1996 HXK Increased hardcoded CSBs for change in MAXGAM, MAXTYP 
+C                     for Double/Couple 
+C V03 10-SEP-1993 HXK Initial revision.
+C V02 09-SEP-1992 HJK INITIAL RELEASE FOR FINLAND VAX CONVERSION
+C V01 12-NOV-1991 MTK INITIAL RELEASE FOR NETHERLANDS
+C
+C
+C RWFPOL(MAXGAM)           !TOTAL ROLL POOL (UNITS/CENTS)       
+C RWFADD(MAXGAM)           !LAST AMOUNT ADDED (UNITS/CENTS)  
+C RWFUSE(MAXGAM)           !LAST AMOUNT USED (UNITS/CENTS)  
+C RWFUDW(MAXGAM)           !LAST DRAW USED                
+C RWFADW(MAXGAM)           !LAST DRAW ADDED               
+C RWFADR(MAXGAM)	   !LAST AMOUNT ADDED TO A DRAW	
+C RWFUSD(MAXGAM)	   !LAST AMOUNT USED FOR A DRAW	
+C RWFDRW(MAXGAM)	   !LAST DRAW ADDED TO		
+C
+C RWF_WRFGAM(10,MAXGAM)    !WINNER RESERVE FUND TABLE   
+C RWF_WRFDRW(MAXGAM)       !WINNER RESERVE DRAW         
+C
+C RWF_SPTPOLDIV(NUMSPT,SPGDIV)	!SPT ROLL POOLS
+C
+C RWFLAST		   !ANCHOR VALUE			
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        COMMON /RWFCOM/
+     *      RWFPOL,
+     *      RWFADD,
+     *      RWFUSE,
+     *      RWFUDW,
+     *      RWFADW,
+     *      RWFADR,
+     *      RWFUSD,
+     *      RWFDRW,
+     *      RWF_WRFGAM,
+     *      RWF_WRFDRW,
+     *      RWF_SPTPOLDIV,
+     *      RWFLAST		! KEEP THIS LAST VALUE IN THE COMMON BLOCK
+
+
+	INTEGER*4 RWFPOL(MAXGAM) 
+	INTEGER*4 RWFADD(MAXGAM)
+	INTEGER*4 RWFUSE(MAXGAM)
+	INTEGER*4 RWFUDW(MAXGAM)
+	INTEGER*4 RWFADW(MAXGAM)
+	INTEGER*4 RWFADR(MAXGAM)
+	INTEGER*4 RWFUSD(MAXGAM)
+	INTEGER*4 RWFDRW(MAXGAM)
+        INTEGER*4 RWF_WRFGAM(10,MAXGAM)
+        INTEGER*4 RWF_WRFDRW(MAXGAM)	
+        INTEGER*4 RWF_SPTPOLDIV(NUMSPT,SPGDIV)	
+        INTEGER*4 RWFLAST
+
+        INTEGER*4        FRST_RWFCOM(2)
+        EQUIVALENCE     (FRST_RWFCOM, RWFPOL(1))
+        INTEGER*4        LAST_RWFCOM
+        EQUIVALENCE     (LAST_RWFCOM, RWFLAST)
+
+        VOLATILE /RWFCOM/

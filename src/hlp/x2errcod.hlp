@@ -1,0 +1,195 @@
+ X2ERRCOD.HLP            GTECH Distributed Network
+                             X2X ERROR CODES                    Page 1 of 9
+ 
+    GTP PROTOCOL - delivery errors                                       
+
+    Value (hex)    Diagnostic                                         
+    -----------    ---------------------------------------------------
+      10           Unable to allocate buffer
+      20           Expired retries
+      31           Memory allocation error
+      32           Unable to set timer for retry
+      33           Bad connection control code
+      34           Bad disconnect control code
+      35           Invalid coprocessor
+      36           Invalid line
+      37           Invalid port
+      38           No existing connection
+      39           Connection dropped
+      3A           Function not implemented/supported
+      3B           Invalid downline address
+ 
+ 
+ X2ERRCOD.HLP            GTECH Distributed Network
+                             X2X ERROR CODES                    Page 2 of 9
+ 
+    GTP PROTOCOL - delivery errors                                       
+
+    Value (hex)    Diagnostic                                         
+    -----------    ---------------------------------------------------
+      3C           Outcall disabled           
+      3D           Front end saturated
+      3E           No available ports
+      3F           Invalid address format
+      40           Front end offline
+      50           No coprocessor buffers available
+      60           Address out of rrange
+      61           Link down
+      62           Unable to allocate frame buffer
+      63           Error sending frame
+      70ccdd       Cause/Diagnostic to follow (extended errors)
+      71           Invalid address for given connection ID
+      72           Driver interface error
+      73           Unexpexted packet received
+ 
+ X2ERRCOD.HLP            GTECH Distributed Network
+                             X2X ERROR CODES                    Page 3 of 9
+ 
+    GTP PROTOCOL - Delivery errors                                       
+
+    Value (hex)    Diagnostic                                         
+    -----------    ---------------------------------------------------
+      74           Virtual circuit flow controlled
+ 
+
+    EXTENDED ERROR CODES - Clearing cause   
+
+    Value (hex)    Diagnostic
+    -----------    ---------------------------------------------------
+      01           Number busy
+      03           Invalid facility request
+      05           Network congestion
+      09           Out of order
+      0A           Access barred
+      0D           Not obtainable 
+      11           Remote procedure error
+ 
+ X2ERRCOD.HLP            GTECH Distributed Network
+                             X2X ERROR CODES                    Page 4 of 9
+ 
+    EXTENTED ERROR CODES - Clearing cause                                
+
+    Value (hex)    Diagnostic                                         
+    -----------    ---------------------------------------------------
+      13           Local procedure error
+      19           Reverse charging acceptance not subscribed 
+      21           Incompatible destination
+      29           Fast select acceptance not subscribed
+                                                     
+    EXTENDED ERROR CODES - Diagnostic 
+    
+    Value (hex)    Diagnostic                                         
+    -----------    ---------------------------------------------------
+      00           No additional information
+      01           Invalid P(S)
+      02           Invalid P(R)
+      10           Packet type invalid             
+      11           Packet type invalid for state r1
+
+ X2ERRCOD.HLP            GTECH Distributed Network
+                             X2X ERROR CODES                    Page 5 of 9
+ 
+    EXTENTED ERROR CODES - Diagnostic                                    
+
+    Value (hex)    Diagnostic                                         
+    -----------    ---------------------------------------------------
+      12           Packet type invalid for state r2
+      13           Packet type invalid for state r3
+      14           Packet type invalid for state p1
+      15           Packet type invalid for state p2
+      16           Packet type invalid for state p3
+      17           Packet type invalid for state p4
+      18           Packet type invalid for state p5
+      19           Packet type invalid for state p6
+      1A           Packet type invalid for state p7
+      1B           Packet type invalid for state d1
+      1C           Packet type invalid for state d2
+      1D           Packet type invalid for state d3
+
+
+
+ X2ERRCOD.HLP            GTECH Distributed Network
+                             X2X ERROR CODES                    Page 6 of 9
+ 
+    EXTENTED ERROR CODES - Diagnostic                                    
+
+    Value (hex)    Diagnostic                                         
+    -----------    ---------------------------------------------------
+      20           Packet not allowed                 
+      21           Unidentifiable packet            
+      22           Call on one-way logical channel 
+      23           Invalid packet type on a permanent virtual circuit
+      24           Packet on unassigned logical channel
+      25           Reject not subscribed to
+      26           Packet too short
+      27           Packet too long
+      28           Invalid general format identifier
+      29           Restart or registration packet nonzero bits        
+      2A           Packet type not compatible with facility
+      2B           Unauthorized interrupt confirmation
+      2C           Unauthorized interrupt
+      2D           Unathorized reject
+
+  X2ERRCOD.HLP            GTECH Distributed Network
+                             X2X ERROR CODES                    Page 7 of 9
+ 
+    EXTENTED ERROR CODES - Diagnostic                                    
+
+    Value (hex)    Diagnostic                                         
+    -----------    ---------------------------------------------------
+      30           Timer expired
+      31           Timer expired for incom ing call
+      32           Timer expired for clear indication
+      33           Timer expired for reset indication
+      34           Timer expired for restart indication 
+      40           Call setup, call clearing or registration problem
+      41           Facility/registration code not allowed
+      42           Facility parameter not allowed
+      43           Invalid called address
+      44           Invalid calling address
+      45           Invalid facility/registration length
+      46           Incomming call barred
+      47           No logical channel available
+      48           Call collision
+
+  X2ERRCOD.HLP            GTECH Distributed Network
+                             X2X ERROR CODES                    Page 8 of 9
+ 
+    EXTENTED ERROR CODES - Clearing cause                                
+
+    Value (hex)    Diagnostic                                         
+    -----------    ---------------------------------------------------
+      49           Duplicate facility requested
+      4A           Non zero address length
+      4B           Non zero facility length
+      4C           Facility not provided when expected
+      4D           Invalid CCITT specified DTE facliity
+      50           Miscellaneous
+      51           Improper cause code from DTE
+      52           Not aligned octet
+      53           Inconsistent Q bit setting
+      70           Internation problem
+      71           Remote network problem
+      72           International protocol problem
+      73           International link out of order
+      74           Internation link busy
+
+  X2ERRCOD.HLP            GTECH Distributed Network
+                             X2X ERROR CODES                    Page 9 of 9
+ 
+    EXTENTED ERROR CODES - Clearing cause                                
+
+    Value (hex)    Diagnostic                                         
+    -----------    ---------------------------------------------------
+      75           Transit network facility problem
+      76           Remote network facility problem
+      77           International routing problem
+      78           Temporary routing problem
+      79           Unknown called DNIC
+      7A           Mainenance action
+      
+      
+      
+      
+      
+       

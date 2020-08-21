@@ -1,0 +1,25 @@
+$! GXSRC:SET_CALLBACK.LNK
+$! 
+$! $Log:   GXAFIP:[GOLS]SET_CALLBACK.LNV  $
+$! 
+$!    Rev 1.0   03 Feb 1997 21:27:58   HXK
+$! Initial revision.
+$! 
+$!    Rev 1.1   13 Jan 1995 15:07:30   DJO
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    13 Jan 1995 15:06:52   DJO
+$! Initial revision.
+$! 
+$!
+$!
+$! V01 011-JAN-94 DJO RELEASED FOR VAX
+$!
+LINK'P1' -
+/EXE=TSKLIB:SET_CALLBACK.EXE -
+OBJLIB:SET_CALLBACK,-
+STDLIB:NORMLIB/LIB,-
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXAGTCOM.ESH/SHAREABLE

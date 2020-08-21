@@ -1,0 +1,22 @@
+    COM.HLP                GTECH Distributed Network
+                          Communications Snapshot Help          Page 1 of 1
+
+    The communications snapshot displays information on the current status 
+    of the on-line network.  This screen is used primarily to determine
+    the total number of terminals in the network and how many of these are
+    on slow poll.  
+    
+    The information displayed includes:
+ 
+    terminals          - total number of terminals configured in network
+    configured
+    terminals on       - total number of terminals not responding to the
+    slow poll            polling sequence
+    term               - terminal number  
+    stn                - station number assigned to the terminal
+    d                  - drop address
+    mins               - total number of minutes the terminal is on 
+                         slowpoll
+
+
+

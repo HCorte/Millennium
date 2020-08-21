@@ -1,0 +1,20 @@
+$! VAX_SEND.LNK
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]VAX_SEND.LNV                                 $
+$! $Date::   14 Jul 1996 20:57:28                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$!
+LINK'P1' -
+/EXE=TSKLIB:VAX_SEND.EXE -
+OBJLIB:VAX_SEND,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXLANCOM.ESH/SHAREABLE

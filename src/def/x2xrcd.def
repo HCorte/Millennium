@@ -1,0 +1,127 @@
+C
+C X2XRCD.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XRCD.DEV                                   $
+C  $Date::   17 Apr 1996 16:44:30                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 15-JUN-00 UXN COMMON/X2XRCD_NAME/ X2XRCD_NAME added.
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C The DEF describes the variables which are contained in the
+C X2X Statistics Report Code file.
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XRCD_ENTRIES counter, the X2XRCD_FIELD, and
+C        the X2XRCD_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   X2XRCD_REC(128)     !Record buffer
+	CHARACTER   X2XRCD_CREC(512)*1  !Record buffer
+	EQUIVALENCE (X2XRCD_REC, X2XRCD_CREC)
+C
+	INTEGER*4   X2XRCD_SECT         !Number of sectors per rec
+	PARAMETER  (X2XRCD_SECT=2)
+	CHARACTER   X2XRCD_NAME*10      !Global Setup file name
+	DATA        X2XRCD_NAME /'X2XRCD.FIL'/
+	COMMON/X2XRCD_NAME/ X2XRCD_NAME
+	INTEGER*4   X2XRCD_FDB(7)       !File descriptor block
+	DATA        X2XRCD_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XRCD_CODE             !Report code index
+	INTEGER*4   X2XRCD_TYPE             !Report type
+	INTEGER*4   X2XRCD_RESET            !Reset statistics flag
+	CHARACTER   X2XRCD_DESC(12)*1       !Report description
+	INTEGER*4   X2XRCD_UPDATE           !Last date updated
+	INTEGER*4   X2XRCD_FREE(117)        !Free space
+	INTEGER*4   X2XRCD_BITMAP           !Modified field flags
+	INTEGER*4   X2XRCD_BITMAP2          !Modified field flags
+	INTEGER*4   X2XRCD_BITMAP3          !Modified field flags
+	INTEGER*4   X2XRCD_BITMAP4          !Modified field flags
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+	EQUIVALENCE (X2XRCD_REC(1),  X2XRCD_CODE)
+	EQUIVALENCE (X2XRCD_REC(2),  X2XRCD_TYPE)
+	EQUIVALENCE (X2XRCD_REC(3),  X2XRCD_RESET)
+	EQUIVALENCE (X2XRCD_REC(4),  X2XRCD_DESC)
+	EQUIVALENCE (X2XRCD_REC(7),  X2XRCD_UPDATE)
+	EQUIVALENCE (X2XRCD_REC(8),  X2XRCD_FREE)
+	EQUIVALENCE (X2XRCD_REC(125),X2XRCD_BITMAP)
+	EQUIVALENCE (X2XRCD_REC(126),X2XRCD_BITMAP2)
+	EQUIVALENCE (X2XRCD_REC(127),X2XRCD_BITMAP3)
+	EQUIVALENCE (X2XRCD_REC(128),X2XRCD_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XRCD_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XRCD_ENTRIES
+	PARAMETER (X2XRCD_ENTRIES=5)
+C
+	CHARACTER X2XRCD_FIELD(X2XRCD_ENTRIES)*15
+	DATA      X2XRCD_FIELD
+     *	    /'Report code    ','Report type    ','Reset flag     ',
+     *	     'Report name    ','Last Updated   '/
+C
+C STORE THE VALID BOT AND TOP RANGE FOR EACH VARIABLE.
+C NOTE: A -1 IN THE BOT RANGE DESIGNATES A CHARACTER
+C       VARIABLE AND THE TOP RANGE INDICATES THE LENGTH,
+C       A -2 IN THE BOTTOM RANGE DESIGNATES BCD INPUT.
+C
+	INTEGER*4 X2XRCD_RANGE(2,X2XRCD_ENTRIES)
+	DATA      X2XRCD_RANGE
+     *	    /1,16,    1,16,    0,1,
+     *	    -1,12,    0,0/
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XRCD_INDEX(X2XRCD_ENTRIES)
+	DATA      X2XRCD_INDEX
+     *	    /1,   2,   3,
+     *	     4,   7/
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+	INTEGER*4 X2XRCD_VALUE(15,X2XRCD_ENTRIES)
+	DATA      X2XRCD_VALUE
+     *	    /15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1/
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XRCD_COMMON/
+	COMMON /X2XRCD_COMMON/ X2XRCD_REC,   X2XRCD_FDB,
+     *	                       X2XRCD_RANGE, X2XRCD_INDEX,
+     *	                       X2XRCD_VALUE, X2XRCD_FIELD
+C
+C

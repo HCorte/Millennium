@@ -1,0 +1,32 @@
+$! GXSRC:BINGOSCAN.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]BINGOSCAN.LNV  
+$! 
+$!    Rev 1.1   14 Jul 1996 20:34:04   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   07 Jan 1995 13:17:18   HXK
+$! Added required object modules for results entry
+$!
+$!    Rev 1.0   27 Oct 1994 17:10:18   HXK
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:BINGOSCAN.EXE -
+OBJLIB:BINGOSCAN,-
+BNGCHK,-
+BFHSCAN,-
+BFHSCANF,-
+BSCANRES,-
+BWIN_WININT,-
+WIN_OPNDRW,-
+BINGBMAP,-
+GETB_BTMBRD,-
+OFFLOG,-
+READTMF,-
+READDRWN,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXRESCOM.ESH/SHAREABLE

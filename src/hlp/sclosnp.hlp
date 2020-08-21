@@ -1,0 +1,22 @@
+    SCL.HLP            GTECH Distributed Network
+                      Pitka Draw Date Snapshot Help             Page 1 of 1
+    
+    The SCLose snapshot contains close times for all rows in the Pitka game
+    
+    The information displayed includes:
+    
+    game name     - Pitka
+    dates         - current date and dates when sales are opened for 
+                    the event
+    event code    - Pitka draw number
+    game          - game status for the draw (open, closed..)
+    row           - row number
+    team names    - team names associated with row numbers
+    close time    - closing time for corresponding row
+    act time      - actual closing time for corresponding row
+    cdc           - CDC closing date for the row
+    date          - the week day name and date in European format
+    sts           - row status (open -opn, closed -cls, cancelled -can
+                    refund -ref, final -fin)
+
+

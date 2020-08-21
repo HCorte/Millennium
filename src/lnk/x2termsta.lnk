@@ -1,0 +1,53 @@
+$! GXSRC:X2TERMSTA.LNK
+$! 
+$! $Log:   GXAFXT:[GOLS]X2TERMSTA.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 22:10:52   HXK
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Jul 1996 22:09:24   HXK
+$! Initial revision.
+$! 
+$! X2TERMSTA.LNK
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]X2TERMSTA.LNV                                $
+$! $Date::   14 Jul 1996 22:10:52                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$! 
+$! V02 27-FEB-96 wsm Removed NRM_DISKIO for Finland.
+$! V01 28-SEPTEMBER-1994 RELEASED FOR THE UK NATIONAL LOTTERY
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! This item is the property of GTECH Corporation, Providence, Rhode
+$! Island, and contains confidential and trade secret information. It
+$! may not be transferred from the custody or control of GTECH except
+$! as authorized in writing by an officer of GTECH. Neither this item
+$! nor the information it contains may be used, transferred,
+$! reproduced, published, or disclosed, in whole or in part, and
+$! directly or indirectly, except as expressly authorized by an
+$! officer of GTECH, pursuant to written agreement.
+$!
+$! Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK 'P1' -
+/EXE=GXTSK:X2TERMSTA.EXE -
+OBJLIB:X2TERMSTA,-
+X2INTERN_UPD,-
+X2PRINT_REP,-
+HTOA,-
+I4XSORT,-
+OPENFILE,-
+STDLIB:NORMLIB/LIB,-
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXX2XCOM.ESH/SHAREABLE,-
+TSKLIB:GXNETCOM.ESH/SHAREABLE,-
+TSKLIB:GXAGTCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE 

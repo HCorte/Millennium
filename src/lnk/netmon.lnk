@@ -1,0 +1,69 @@
+$! GXSRC:NETMON.LNK
+$! 
+$! $Log:   GXAFIP:[GOLS]NETMON.LNV  $
+$! 
+$!    Rev 1.2   07 Jan 1997 13:11:00   HXK
+$! Release from Wojtek (WXW)
+$! 
+$!    Rev 1.2   14 Dec 1996 22:14:56   WXW
+$! Replace DN_FREEBUF with NET_FREEBUF.
+$! 
+$!    Rev 1.1   14 Jul 1996 21:54:26   HXK
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Jul 1996 21:53:04   HXK
+$! Initial revision.
+$! 
+$!*** LINKER FILE NETMON ***
+$!
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFIP:[GOLS]NETMON.LNV                                   $
+$! $Date::   07 Jan 1997 13:11:00                                         $
+$! $Revision::   1.2                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$! 
+$!*** Pre-Baseline Source - netmon.lnk ***
+$!
+$! V02 27-JUL-95 PJS REMOVED THE FOLLOWING:
+$!                   NET_DUMP, TSNDNET.
+$! V01 14-JAN-94 PJS SORTED & CLEANED UP.
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!This item is the property of GTECH Corporation, Providence, Rhode Island,
+$!and contains confidential and trade secret information. It may not be
+$!transferred from the custody or control of GTECH except as authorized in
+$!writing by an officer of GTECH. Neither this item nor the information it
+$!contains may be used, transferred, reproduced, published, or disclosed,
+$!in whole or in part, and directly or indirectly, except as expressly
+$!authorized by an officer of GTECH, pursuant to written agreement.
+$!
+$!Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:NETMON.EXE -
+OBJLIB:NETMON, - 
+DN_BUILD_TIMEOUT, -
+NET_FREEBUF, -
+EXTRABUF, -
+FREEBUF, -
+NET_CHKACK, -
+NET_CHKFRZ, -
+NET_CHKQUEUE, -
+NET_CHKSLOW, -
+NET_CHKSTS, -
+NET_DIFTIM, -
+NET_FILLNET, -
+NET_TIMEOUT, -
+NET_UPDSTA, -
+CHKQCOR,-
+TSTCHG2, -
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION 
+TSKLIB:GXAPPCOM.ESH/SHARE,-
+TSKLIB:GXCPLCOM.ESH/SHARE,-
+TSKLIB:GXNETCOM.ESH/SHARE

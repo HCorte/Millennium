@@ -1,0 +1,42 @@
+C PRMSSC.DEF
+C $Log:   GXAFXT:[GOLS]PRMSSC.DEV  $
+C  
+C
+C SUPERSCORE GAME AND POOL PARAMETERS
+C
+C
+C
+C SUPERSCORE GAME PARAMETERS
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 NUMSSC
+	PARAMETER (NUMSSC=6)           !NUMBER OF SUPERSCORE GAMES
+C
+C NAME FIELD LENGTH PARAMETERS
+C
+	INTEGER*4 SSNMS_LEN, SSDES_LEN
+	PARAMETER (SSNMS_LEN= 28)      !LENGTH IN BYTES OF NAME FIELD
+	PARAMETER (SSDES_LEN= 84)      !EVENT DESSCIPTION LENGTH IN BYTES
+C
+	INTEGER*4 SSMAXD
+	PARAMETER(SSMAXD=30)             ! # OF ODDS TO DISPLAY
+C
+	INTEGER*4 SSMAXSSC
+	PARAMETER(SSMAXSSC=15)           !MAXIMUM SCORE
+C
+	INTEGER*4 SSTXMAX
+	PARAMETER(SSTXMAX=1)            !MAXIMUM TEXT MESSAGES
+C

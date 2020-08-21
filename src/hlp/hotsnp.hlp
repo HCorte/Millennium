@@ -1,0 +1,88 @@
+ HOTSNP.HLP              GTECH Distributed Network
+                           Hotline Snapshot Help                Page 1 of 4
+ 
+    The Hotline snapshot has been modified with the implementation of
+    the X2X Distributed Network.  If a terminal has been defined as
+    communicating via the X2X Network, the station and terminal statistics
+    information as the X2X network sees it will be displayed.
+ 
+    If the terminal is defined as communicating on a leased async line,
+    the snapshot will display the regular communications information.
+    The COMTYP parameter informs of the type of network the terminal
+    is defined on.
+ 
+    A facility exists which allows all terminal messages to be captured
+    and displayed.  This is accomplished by setting the MONITOR count (max
+    of 255).  Each time a message from the terminal is received, it is
+    written to a file.  The TRACE parameter displays the last index into
+    the trace file.  To view the messages, use the PTLSNP using the TRACE
+    number as the index.  The TRACE facility can be used on all types
+    of networks.
+ 
+ 
+ HOTSNP.HLP              GTECH Distributed Network
+                           Hotline Snapshot Help                Page 2 of 4
+ 
+    The X2X information displayed includes:
+ 
+    station       - station number of the station that this terminal
+                    uses to communicate with the backend.
+    addr          - network address of the station.
+    cnfter        - number of configured terminals on the station.
+    actter        - number of currently active terminals on the station.
+    ssta          - current state of the station.
+                        0=inactive     1=idle
+                        3=initialized  4=disabled
+    last          - last time the station had activity with the backend.
+    derr          - informs whether delivery error reporting is enable
+                    for the station.
+    errcnt        - number of messages which could not be sent to the
+                    station and were reported because delivery error was
+                    enabled.
+    x2xtpro       - number of buffers released because another buffer
+                    was already in the game
+ 
+ HOTSNP.HLP              GTECH Distributed Network
+                           Hotline Snapshot Help                Page 3 of 4
+ 
+ 
+    errcde        - the error code informing why the last delivery error
+                    occurred.
+    dact          - informs the station to send a delivery acknowledgement
+                    when if has received a message.
+    ackcnt        - number of messages which were acknowledged by the
+                    station due to the fact that delivery acknowledgement
+                    was enabled.
+    rescnt        - number of times that the station has reset and requested
+                    configuration during the day.
+    tsta          - current terminal status
+                         0=undefined   1=defined      3=slowpoll
+                         4=disabled
+    last          - last time the terminal was active.
+    drop          - drop address of the terminal relative to the station.
+ 
+ 
+ 
+ 
+ HOTSNP.HLP              GTECH Distributed Network
+                           Hotline Snapshot Help                Page 4 of 4
+ 
+    General commands:
+ 
+        OPStat    - changes the operating status of the terminal.
+        BROnum    - sends an unsolicted broadcast to the terminal.
+        PASnum    - changes the agent's signon password.
+        SUMmary   - calculates the summary terminal sales for all clerks.
+        CLErk     - displays clerk accounting totals.
+        MONitor   - set the number of messages to trace (max 255).
+ 
+    X2X Network commands:
+ 
+        TERstate  - changes the status of a defined terminal.
+                         0=undefined   1=defined
+                         3=slowpoll    4=disabled
+        PRTSTATS  - sends a port polling status request to the station.
+        SOFTres   - sends a soft reset command to the station.
+        HARdres   - sends a hard reset command to the station.
+ 
+    NOTE: For descriptions of delivery errors refer to X2STNSNP.HLP

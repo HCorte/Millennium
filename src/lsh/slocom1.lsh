@@ -1,0 +1,19 @@
+$! GXSRC:SLOCOM1.LSH
+$! 
+$! $Log:   GXAFXT:[GOLS]SLOCOM1.LSV  $
+$! 
+$!    Rev 1.0   17 Apr 1996 15:08:44   HXK
+$! Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+$! 
+$!    Rev 1.1   14 Apr 1994 13:42:04   SYSTEM
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Apr 1994 9:57:44   SYSTEM
+$! Initial revision.
+$! 
+$ LINK 'P1' -
+/EXE=TSKLIB:GXSLOCOM1.ESH/SHAREABLE -
+OBJLIB:SLOCOM1,-
+SYS$INPUT/OPTION
+SYMBOL_VECTOR=(SLOCOM1=PSECT)
+PSECT_ATTR=SLOCOM1,SHR,WRT

@@ -1,0 +1,61 @@
+C BLDEURSYS.DEF
+C
+C V01 23-03-2016 SCML CREATION (M16 PROJECT)
+C
+C EUROMILLIONS SYSTEM GAMES PARAMETERS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Copyright 2016 SCML Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C BASELINE PARAMETERS
+C
+        CHARACTER*4 BLDEURSYS_VERSION
+        PARAMETER  (BLDEURSYS_VERSION = 'v1.0')
+C
+        INTEGER*4    EUM1SGN_BASELINE
+        DATA         EUM1SGN_BASELINE /'    '/
+C
+        INTEGER*4    EUM1LGN_BASELINE(5)
+        DATA         EUM1LGN_BASELINE /'    ','    ','    ','    ',
+     *                                 '    '/
+C
+        INTEGER*4    EUM1GOPTSON_DEFAULT
+        PARAMETER   (EUM1GOPTSON_DEFAULT = '0004'X)
+C
+        INTEGER*4    EUM1GOPTCTR_DEFAULT
+        PARAMETER   (EUM1GOPTCTR_DEFAULT = '0054'X)
+C
+        INTEGER*4    RAF2SGN_BASELINE
+        DATA         RAF2SGN_BASELINE /'    '/
+C
+        INTEGER*4    RAF2LGN_BASELINE(5)
+        DATA         RAF2LGN_BASELINE /'    ','    ','    ','    ',
+     *                                 '    '/
+C
+        CHARACTER*(*) DSP3_MENU_CONFIRM_MSG
+        PARAMETER (DSP3_MENU_CONFIRM_MSG =
+     *             'Use setas para movimentar '//
+     *             'cursor e <ENTER> para escolher')
+C
+        INTEGER*4    RAF2GOPTSON_DEFAULT
+        PARAMETER   (RAF2GOPTSON_DEFAULT = '0004'X)
+C
+        INTEGER*4    RAF2GOPTCTR_DEFAULT
+        PARAMETER   (RAF2GOPTCTR_DEFAULT = '0054'X)
+C
+C GAME OPTION FLAGS OF SIGN-ON/CTRL REQUEST MESSAGES
+C
+        INTEGER*2 SMACTV_GOPT /Z1000/                                           !SM ACTIVE FOR THIS GAME
+        INTEGER*2 PLANIF_GOPT /Z0800/                                           !SM ACTIVE FOR THIS GAME
+        INTEGER*2 BETLIM_GOPT /Z0040/                                           !MAX BET LIMIT PRESENT OPTION FLAG
+        INTEGER*2 MAXFRA_GOPT /Z0020/                                           !MAX FRACTION PRESENT OPTION FLAG
+        INTEGER*2 MDRBIT_GOPT /Z0010/                                           !MULTI-DRAW BITMAP PRESENT OPTION FLAG
+        INTEGER*2 TKTCHA_GOPT /Z0008/                                           !TICKET CHARGE PRESENT OPTION FLAG
+        INTEGER*2 CTRREV_GOPT /Z0004/                                           !CONTROL REVISION PRESENT OPTION FLAG
+        INTEGER*2 TXTREV_GOPT /Z0002/                                           !TEXT REVISION PRESENT OPTION FLAG
+        INTEGER*2 TTXREV_GOPT /Z0001/                                           !TICKET TEXT REVISION PRESENT OPTION FLAG
+C
+C END BLDEURSYS.DEF
+C

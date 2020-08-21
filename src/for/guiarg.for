@@ -1,0 +1,449 @@
+C GUIARG.FOR
+C
+C V04 25-MAY-2010 RXK If CDC=0 then replace date with spaces.
+C V03 06-FEB-2001 UXN Added GUIARG_NO_DATA and GUIARG_MONYI8
+C V02 25-JAN-2001 UXN Added GUIARG_TIME, GUIARG_DATE.
+C V01 08-NOV-2000 UXN INITIAL RELEASE.
+C
+C Usage:
+C
+C For GUI messages (data class 20) first:
+C
+C CALL GUIARG_INIT()
+C
+C For RPC messages (data class 6)  first:
+C
+C CALL RPCARG_INIT()
+C
+C Before each result sets:
+C
+C CALL GUIARG_NEXT_SET(MSG,NR_OF_COLUMNS)
+C
+C For empty response message:
+C
+C CALL GUIARG_EMPTY_RESPONSE(MSG,MSGLEN)
+C
+C Before completing the message, set message length with:
+C
+C CALL GUIARG_SET_MESLEN(MESLEN)
+C
+C Use following entrys to send data to GUI:
+C
+C GUIARG_BYTE(MSG,VALUE)	  - 1 byte
+C GUIARG_INT2(MSG,VALUE)	  - 2 bytes (INTEGER*2)
+C GUIARG_INT4(MSG,VALUE)	  - 4 bytes (INTEGER*4)
+C GUIARG_TIME(MSG,VALUE)	  - value in I4 will be converted to HH:MM:SS
+C GUIARG_DATE(MSG,VALUE)	  - CDC will be converted to DD.MM.YYYY 
+C GUIARG_MONY(MSG,VALUE)	  - value in I4 will be converted to I8 money
+C GUIARG_MONYI8(MSG,VALUE)	  - value in I8 will be converted to I8 money
+C GUIARG_CHAR(MSG,VALUE,STRLEN)	  - string, value passed by reference !!!
+C
+C Example:
+C
+C CHARACTER*20 STR
+C BYTE         BB
+C 
+C STR = 'HELLO'
+C LEN = 20
+C
+C CALL GUIARG_INIT()                  ! initialize output
+C CALL GUIARG_NEXT_SET(MSG, 4)        ! result set 1 with 4 columns
+C
+C CALL GUIARG_BYTE(MSG,BB)            ! 1 byte
+C CALL GUIARG_INT4(MSG,CDC)           ! 4 byte CDC
+C CALL GUIARG_CHAR(MSG,%REF(STR),LEN) ! send string, LEN bytes
+C CALL GUIARG_TIME(MSG, TRABUF(TTIM)) ! send time.
+C
+C CALL GUIARG_SET_MESLEN(MESLEN)      ! finally set output message length
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	SUBROUTINE GUIARGS(MSG,COL,VALUE,LEN,MESLEN)
+	IMPLICIT NONE
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:GUIMPRM.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+C
+	BYTE      MSG(*)
+	INTEGER*4 COL
+	BYTE      VALUE(*)
+	INTEGER*4 LEN,MESLEN
+
+        INTEGER*2 DATE(LDATE_LEN)
+C
+	LOGICAL*4 HEADER
+	INTEGER*4 SET_CNT,COL_CNT,MAX_COL
+	INTEGER*4 ROW_IDX,COL_IDX,DATA_IDX, HDR_IDX
+	INTEGER*8 I8TEMP
+	INTEGER*4 I4TEMP(2)
+	INTEGER*2 I2TEMP(4)
+	BYTE      I1TEMP(8)
+	EQUIVALENCE(I8TEMP,I4TEMP,I2TEMP,I1TEMP)
+C
+	INTEGER*8 I8TEMP2
+	INTEGER*4 I4TEMP2(2)
+	BYTE	  I1TEMP2(8)
+	EQUIVALENCE(I8TEMP2,I4TEMP2,I1TEMP2)
+	
+	LOGICAL*4 GUI_FORMAT
+C
+	INTEGER*4 SET_IDX
+	PARAMETER(SET_IDX = 9)
+C
+	INTEGER*4 TIME_LENGTH, DATE_LENGTH
+	PARAMETER(TIME_LENGTH=8)   ! HH:MM:SS
+	PARAMETER(DATE_LENGTH=10)  ! DD.MM.YYYY
+
+        BYTE DATSPAC(DATE_LENGTH)/DATE_LENGTH*' '/
+C
+C GUI response in GUI format (data class 20)
+C
+	ENTRY GUIARG_INIT()
+	DATA_IDX = SET_IDX + 1
+	SET_CNT = 0 
+	GUI_FORMAT = .TRUE.
+	RETURN
+C
+C GUI response in RPC format (data class 6)
+C
+	ENTRY RPCARG_INIT()
+	DATA_IDX = SET_IDX + 1
+	SET_CNT = 0 
+	GUI_FORMAT = .FALSE.
+	RETURN
+C
+C Empty response
+C
+	ENTRY GUIARG_EMPTY_RESPONSE(MSG,MESLEN)
+	MSG( SET_IDX ) = 0
+	MESLEN   = SET_IDX
+	RETURN	
+C
+C START NEW RESULT SET
+C
+	ENTRY GUIARG_NEXT_SET(MSG,COL)
+C
+	COL_IDX = DATA_IDX
+	ROW_IDX = DATA_IDX + 1
+	HDR_IDX = DATA_IDX + 2
+
+	MAX_COL  = COL
+	IF(GUI_FORMAT) THEN
+	   DATA_IDX = HDR_IDX + MAX_COL*3
+	ELSE
+	   DATA_IDX = HDR_IDX + MAX_COL*2
+	ENDIF
+	SET_CNT = SET_CNT + 1
+
+	MSG( SET_IDX ) = SET_CNT
+	MSG( COL_IDX ) = 0
+	MSG( ROW_IDX ) = 1
+
+	COL_CNT = 0
+	HEADER  = .TRUE.
+C
+	RETURN
+C
+C GUIARG_NO_DATA, SEND ONLY HEADER, BUT NO ROWS
+C
+	ENTRY GUIARG_NO_DATA(MSG,COL)
+C
+        MSG( COL_IDX ) = COL
+        MSG( ROW_IDX ) = 0
+
+	DO COL_CNT=1,COL
+	   IF(GUI_FORMAT) THEN
+	      MSG(HDR_IDX) = COL_CNT
+	      HDR_IDX = HDR_IDX + 1
+	   ENDIF
+	   MSG(HDR_IDX+0) = GUIBYTE
+	   MSG(HDR_IDX+1) = 1
+	   HDR_IDX = HDR_IDX + 2
+	ENDDO
+
+	HEADER = .FALSE.
+
+	RETURN
+C
+C BYTE ARGUMENT
+C
+	ENTRY GUIARG_BYTE(MSG,VALUE)
+	COL_CNT = COL_CNT + 1
+	IF(COL_CNT.GT.MAX_COL) THEN
+	   COL_CNT = 1
+	   HEADER  = .FALSE.
+	   MSG( ROW_IDX ) = MSG( ROW_IDX ) + 1   ! NEXT ROW
+	ENDIF
+	IF(HEADER) THEN
+	   IF(GUI_FORMAT) THEN
+              MSG(HDR_IDX) = COL_CNT  ! ID
+	      HDR_IDX = HDR_IDX + 1
+	   ENDIF
+	   MSG(HDR_IDX+0) = GUIBYTE  ! TYPE
+	   MSG(HDR_IDX+1) = 1        ! LENGTH
+           HDR_IDX = HDR_IDX + 2
+           MSG( COL_IDX ) = MSG( COL_IDX ) + 1   ! NEXT COLUMN
+	ENDIF
+
+	MSG( DATA_IDX ) = VALUE(1)
+	DATA_IDX = DATA_IDX + 1 
+	RETURN
+C
+C CHAR ARGUMENT
+C
+	ENTRY GUIARG_CHAR(MSG,VALUE,LEN)
+	COL_CNT = COL_CNT + 1
+	IF(COL_CNT.GT.MAX_COL) THEN
+	   COL_CNT = 1
+	   HEADER  = .FALSE.
+	   MSG( ROW_IDX ) = MSG( ROW_IDX ) + 1   ! NEXT ROW
+	ENDIF
+	IF(HEADER) THEN
+	   IF(GUI_FORMAT) THEN
+              MSG(HDR_IDX) = COL_CNT  ! ID
+	      HDR_IDX = HDR_IDX + 1
+	   ENDIF
+	   MSG(HDR_IDX+0) = GUICHAR  ! TYPE
+	   MSG(HDR_IDX+1) = LEN      ! LENGTH
+           HDR_IDX = HDR_IDX + 2
+           MSG( COL_IDX ) = MSG( COL_IDX ) + 1   ! NEXT COLUMN
+	ENDIF
+
+	CALL MOVBYT(VALUE,1,MSG,DATA_IDX,LEN)
+	DATA_IDX = DATA_IDX + LEN
+	RETURN
+C
+C TIME ARGUMENT
+C
+	ENTRY GUIARG_TIME(MSG,VALUE)
+	COL_CNT = COL_CNT + 1
+	IF(COL_CNT.GT.MAX_COL) THEN
+	   COL_CNT = 1
+	   HEADER  = .FALSE.
+	   MSG( ROW_IDX ) = MSG( ROW_IDX ) + 1   ! NEXT ROW
+	ENDIF
+	IF(HEADER) THEN
+	   IF(GUI_FORMAT) THEN
+              MSG(HDR_IDX) = COL_CNT  ! ID
+	      HDR_IDX = HDR_IDX + 1
+	   ENDIF
+	   MSG(HDR_IDX+0) = GUICHAR     ! TYPE
+	   MSG(HDR_IDX+1) = TIME_LENGTH ! LENGTH
+           HDR_IDX = HDR_IDX + 2
+           MSG( COL_IDX ) = MSG( COL_IDX ) + 1   ! NEXT COLUMN
+	ENDIF
+
+	I8TEMP = 0
+	I1TEMP(1) = VALUE(1)
+	I1TEMP(2) = VALUE(2)
+	I1TEMP(3) = VALUE(3)
+	I1TEMP(4) = VALUE(4)
+
+	CALL MOVBYT(DISTIM(I4TEMP(1)),1,MSG,DATA_IDX,TIME_LENGTH)
+	DATA_IDX = DATA_IDX + TIME_LENGTH
+	RETURN
+C
+C DATE ARGUMENT
+C
+	ENTRY GUIARG_DATE(MSG,VALUE)
+	COL_CNT = COL_CNT + 1
+	IF(COL_CNT.GT.MAX_COL) THEN
+	   COL_CNT = 1
+	   HEADER  = .FALSE.
+	   MSG( ROW_IDX ) = MSG( ROW_IDX ) + 1   ! NEXT ROW
+	ENDIF
+	IF(HEADER) THEN
+	   IF(GUI_FORMAT) THEN
+              MSG(HDR_IDX) = COL_CNT  ! ID
+	      HDR_IDX = HDR_IDX + 1
+	   ENDIF
+	   MSG(HDR_IDX+0) = GUICHAR      ! TYPE
+	   MSG(HDR_IDX+1) = DATE_LENGTH  ! LENGTH
+           HDR_IDX = HDR_IDX + 2
+           MSG( COL_IDX ) = MSG( COL_IDX ) + 1   ! NEXT COLUMN
+	ENDIF
+
+	I8TEMP = 0
+	I1TEMP(1) = VALUE(1)
+	I1TEMP(2) = VALUE(2)
+	I1TEMP(3) = VALUE(3)
+	I1TEMP(4) = VALUE(4)
+
+	DATE(VCDC) = I4TEMP(1)
+
+        IF(DATE(VCDC).EQ.0) THEN
+           CALL MOVBYT(DATSPAC(1),1,MSG,DATA_IDX,DATE_LENGTH)
+        ELSE  
+           CALL LCDATE(DATE)
+	   CALL MOVBYT(DATE(9),1,MSG,DATA_IDX,DATE_LENGTH)
+        ENDIF
+	DATA_IDX = DATA_IDX + DATE_LENGTH
+	RETURN
+C
+C INT2 ARGUMENT
+C
+	ENTRY GUIARG_INT2(MSG,VALUE)
+	COL_CNT = COL_CNT + 1
+	IF(COL_CNT.GT.MAX_COL) THEN
+	   COL_CNT = 1
+	   HEADER  = .FALSE.
+	   MSG( ROW_IDX ) = MSG( ROW_IDX ) + 1   ! NEXT ROW
+	ENDIF
+	IF(HEADER) THEN
+	   IF(GUI_FORMAT) THEN
+              MSG(HDR_IDX) = COL_CNT  ! ID
+	      HDR_IDX = HDR_IDX + 1
+	   ENDIF
+	   MSG(HDR_IDX+0) = GUIINT   ! TYPE
+	   MSG(HDR_IDX+1) = 2        ! LENGTH
+           HDR_IDX = HDR_IDX + 2
+           MSG( COL_IDX ) = MSG( COL_IDX ) + 1   ! NEXT COLUMN
+	ENDIF
+
+	MSG( DATA_IDX+0 ) = VALUE(1)
+	MSG( DATA_IDX+1 ) = VALUE(2)
+	DATA_IDX = DATA_IDX + 2
+	RETURN
+C
+C INT4 ARGUMENT
+C
+	ENTRY GUIARG_INT4(MSG,VALUE)
+	COL_CNT = COL_CNT + 1
+	IF(COL_CNT.GT.MAX_COL) THEN
+	   COL_CNT = 1
+	   HEADER  = .FALSE.
+	   MSG( ROW_IDX ) = MSG( ROW_IDX ) + 1   ! NEXT ROW
+	ENDIF
+	IF(HEADER) THEN
+	   IF(GUI_FORMAT) THEN
+              MSG(HDR_IDX) = COL_CNT  ! ID
+	      HDR_IDX = HDR_IDX + 1
+	   ENDIF
+	   MSG(HDR_IDX+0) = GUIINT  ! TYPE
+	   MSG(HDR_IDX+1) = 4        ! LENGTH
+           HDR_IDX = HDR_IDX + 2
+           MSG( COL_IDX ) = MSG( COL_IDX ) + 1   ! NEXT COLUMN
+	ENDIF
+
+	MSG( DATA_IDX+0 ) = VALUE(1)
+	MSG( DATA_IDX+1 ) = VALUE(2)
+	MSG( DATA_IDX+2 ) = VALUE(3)
+	MSG( DATA_IDX+3 ) = VALUE(4)
+	DATA_IDX = DATA_IDX + 4 
+	RETURN
+C
+C MONEY ARGUMENT
+C
+	ENTRY GUIARG_MONY(MSG,VALUE)
+	COL_CNT = COL_CNT + 1
+	IF(COL_CNT.GT.MAX_COL) THEN
+	   COL_CNT = 1
+	   HEADER  = .FALSE.
+	   MSG( ROW_IDX ) = MSG( ROW_IDX ) + 1   ! NEXT ROW
+	ENDIF
+	IF(HEADER) THEN
+	   IF(GUI_FORMAT) THEN
+              MSG(HDR_IDX) = COL_CNT  ! ID
+	      HDR_IDX = HDR_IDX + 1
+	   ENDIF
+	   MSG(HDR_IDX+0) = GUIMONEY  ! TYPE
+	   MSG(HDR_IDX+1) = 8         ! LENGTH
+           HDR_IDX = HDR_IDX + 2
+           MSG( COL_IDX ) = MSG( COL_IDX ) + 1   ! NEXT COLUMN
+	ENDIF
+
+	I8TEMP = 0	
+	I1TEMP(1) = VALUE(1)
+	I1TEMP(2) = VALUE(2)
+	I1TEMP(3) = VALUE(3)
+	I1TEMP(4) = VALUE(4)            
+	
+	                                ! AVOID TO HAVE NEGATIVE BIT 
+	IF(I4TEMP(1).LT.0) THEN         ! ON THE MIDDLE OF THE NUMBER
+          I4TEMP(1) = I4TEMP(1) * -1    ! SO FIRST PASS I4 TO POSITIVE
+          I8TEMP = I8TEMP * -1          ! AND THEN PASS BACK TO NEGATIVE 
+	ENDIF                           ! IN I8 FORMAT 	
+	
+	I8TEMP = I8TEMP*DYN_BETUNIT*100 ! IN HUNDRETH OF PENNIES
+	
+	MSG( DATA_IDX+0 ) = I1TEMP(5)
+	MSG( DATA_IDX+1 ) = I1TEMP(6)
+	MSG( DATA_IDX+2 ) = I1TEMP(7)
+	MSG( DATA_IDX+3 ) = I1TEMP(8)
+	MSG( DATA_IDX+4 ) = I1TEMP(1)
+	MSG( DATA_IDX+5 ) = I1TEMP(2)
+	MSG( DATA_IDX+6 ) = I1TEMP(3)
+	MSG( DATA_IDX+7 ) = I1TEMP(4)
+	
+	DATA_IDX = DATA_IDX + 8
+	RETURN
+C
+C
+C MONEY ARGUMENT
+C
+	ENTRY GUIARG_MONYI8(MSG,VALUE)
+	COL_CNT = COL_CNT + 1
+	IF(COL_CNT.GT.MAX_COL) THEN
+	   COL_CNT = 1
+	   HEADER  = .FALSE.
+	   MSG( ROW_IDX ) = MSG( ROW_IDX ) + 1   ! NEXT ROW
+	ENDIF
+	IF(HEADER) THEN
+	   IF(GUI_FORMAT) THEN
+              MSG(HDR_IDX) = COL_CNT  ! ID
+	      HDR_IDX = HDR_IDX + 1
+	   ENDIF
+	   MSG(HDR_IDX+0) = GUIMONEY  ! TYPE
+	   MSG(HDR_IDX+1) = 8         ! LENGTH
+           HDR_IDX = HDR_IDX + 2
+           MSG( COL_IDX ) = MSG( COL_IDX ) + 1   ! NEXT COLUMN
+	ENDIF
+
+	I8TEMP2 = 0	
+	I1TEMP2(1) = VALUE(1)
+	I1TEMP2(2) = VALUE(2)
+	I1TEMP2(3) = VALUE(3)
+	I1TEMP2(4) = VALUE(4)
+
+	I1TEMP2(5) = VALUE(5)
+	I1TEMP2(6) = VALUE(6)
+	I1TEMP2(7) = VALUE(7)
+	I1TEMP2(8) = VALUE(8)
+
+C     I don't understand this code
+C
+C	I8TEMP = I4TEMP2(1)*DYN_BETUNIT + I4TEMP2(2) ! IN HUNDRETH OF PENNIES
+C	I8TEMP = I8TEMP*100
+C  
+C     This one works      
+	I8TEMP = I8TEMP2*DYN_BETUNIT*100 ! IN HUNDRETH OF PENNIES
+C
+	MSG( DATA_IDX+0 ) = I1TEMP(5)
+	MSG( DATA_IDX+1 ) = I1TEMP(6)
+	MSG( DATA_IDX+2 ) = I1TEMP(7)
+	MSG( DATA_IDX+3 ) = I1TEMP(8)
+	MSG( DATA_IDX+4 ) = I1TEMP(1)
+	MSG( DATA_IDX+5 ) = I1TEMP(2)
+	MSG( DATA_IDX+6 ) = I1TEMP(3)
+	MSG( DATA_IDX+7 ) = I1TEMP(4)
+	DATA_IDX = DATA_IDX + 8
+	RETURN
+C
+	ENTRY GUIARG_SET_MESLEN(MESLEN)
+	MESLEN = DATA_IDX - 1
+	RETURN
+	END

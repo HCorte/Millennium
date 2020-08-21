@@ -1,0 +1,66 @@
+ X2NETSNP.HLP             GTECH Distributed Network
+                            Network Ports Snapshot             Page 1 of 3
+ 
+    This snapshot will list summary information on all network ports,
+    local ports, and SAP ports configured in the system.
+    This information consists of the following:
+ 
+    === Network ===
+    Prt             - Network port number.
+    Status          - Network port status. Possible values:
+                      not def, idle, online, and down.
+    ==== Local ====
+    Prt             - Local port number.
+    Status          - Local port status. Possible values:
+                      not def, idle, online, and down.
+    ====  SAP  ====
+    SAP             - Service Access Point identifier number.
+    Prt             - SAP port number.
+    Status          - SAP port status. Possible values:
+                      not def, idle, online, and down.
+ 
+ 
+ X2NETSNP.HLP             GTECH Distributed Network
+                            Network Ports Snapshot          Page 2 of 3
+ 
+    Capcty          - Number of available connections into network.
+    Last Act Time   - Last time port was active.
+    Address         - Network port address.
+    Outcall         - Indicates whether this network port can be used
+                      for station configurations.
+ 
+    The information displayed on the snapshot can be sorted by any of the
+    indicated sort fields.  Sort fields are those columns label with a
+    number in parenthesis.  This snapshot can be sorted by any of the
+    following columns:
+ 
+    (1) Network Prt
+    (2) Local Prt
+    (3) SAP
+    (4) Last Act Time
+ 
+ 
+ 
+ 
+ X2NETSNP.HLP             GTECH Distributed Network
+                            Network Ports Snapshot        Page 3 of 3
+ 
+    To sort by any of these columns, enter at the command line, XSRT
+    followed by the number indicated above the column.  For example,
+    to sort by Last Act Time enter:
+ 
+    XSRT 4
+ 
+    Additional facilities are included with this snapshot through
+    input at the command line:
+ 
+    XNET    - To view a specific Network Port.
+    XFOR #  - Can be used to page forward X number of pages.
+    XBAK #  - Can be used to page backward X number of pages.
+    XTOP    - Will bring you to first Network Port in the list.
+    XBOT    - Will bring to the last Network Port in the list.
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,190 @@
+C  GXSRC:ENC_SFTCRYPT.FOR
+C  
+C  $Log:   GXAGBR:[GOLS]ENC_SFTCRYPT.FOV  $
+C  
+C     Rev 1.2   25 Jan 1994 15:43:18   JPJ
+C  Updated procom TERNUM location from 2 bytes to 4 bytes
+C  
+C     Rev 1.1   03 Jan 1994 20:22:24   SYSTEM
+C  Applying PVCS header for automatic revision history
+C  
+C     Rev 1.0    21 Dec 1993 17:41:50   SYSTEM
+C  Initial revision.
+C
+C
+C
+C V03 14-MAR-03 GPW DESENCR PRO(TERNUM -> HPRO(TERNUM
+C V02 13-MAR-03 GPW DESENCR TAKEN FROM UK
+C V01 07-APR-91 WS  Initial release
+C
+C
+C       SOFT ENCRYPTION PROCESSING ROUTINES
+CC
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C       ADDITIONAL ROUTINES ARE "BUILT IN" IN THIS MODULE
+C       SFTENCBF(BUFFER,STATUS)                 - PREPARE TO SOFT ENCRYPT BUFFER
+C       SFTDECBF(BUFFER,STATUS)                 - PREPARE TO SOFT DECRYPT BUFFER
+C       SFTCHKBF(BUFFER,ENCRYPTION_TYPE,STATUS) - CHECK IF ANYTHING
+C                                                 WAS ENCRYPTED OR DECRYPTED
+C                                                 BY SOFT ENCRYPTION/DECRYPTION
+C
+C
+C***************************************************
+C
+C       SFTENCBF(BUFNUM,STATUS)
+C       IN:
+C       BUFNUM     -    PROCOM BUFFER USED
+C       OUT:
+C       STATUS     -    0 IF OPERATION "QUEUED TO BE EXECUTED"
+C
+C       ENCRYPT   BUFFER WITH DATA WITH DATA, THIS SUBROUTINE ONLY STARTS
+C       ENCRYPTION PROCESS, ACTUAL ENCRYPTION RESULTS ARE OBTAINED FROM
+C       SUBROUTINE SFTCHKBF
+C
+C       FOR SOFT ENCRYPTION
+C       BUFFERS TO CRYPT RESIDE ON SOFT_ENCQUE LIST,
+C       BUFFERS TO ENCRYPT HAVE BUFFER POINTER POSITIVE
+C       BUFFERS TO DECRYPT HAVE BUFFER POINTER NEGATIVE
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE SFTENCBF(BUFNUM,STATUS)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:PROCOM.DEF'
+        INCLUDE 'INCLIB:PRMAGT.DEF'
+        INCLUDE 'INCLIB:ENCCOM.DEF'
+C
+        INTEGER*4 BUFNUM,STATUS
+C
+C       COULD CHECK MESSAGE LENGTH HERE, I AM NOT SURE WHAT SHOULD
+C       BE DONE AT THAT POINT, POSTPONED
+C
+        CALL ABL(BUFNUM,SOFT_ENCQUE,STATUS)
+        STATUS=0
+        RETURN
+        END
+C
+C***************************************************************
+C
+C       SFTDECBF(BUFNUM,STATUS)
+C       IN:
+C       BUFNUM     -    PROCOM BUFFER USED
+C       OUT:
+C       STATUS     -    0 IF OPERATION "QUEUED TO BE EXECUTED"
+C
+C       DECRYPT   BUFFER WITH DATA WITH DATA, THIS SUBROUTINE ONLY STARTS
+C       DECRYPTION PROCESS, ACTUAL ENCRYPTION RESULTS ARE OBTAINED FROM
+C       SUBROUTINE SFTCHKBF
+C
+C       FOR SOFT ENCRYPTION
+C       BUFFERS TO CRYPT RESIDE ON SOFT ENCQUE LIST,
+C       BUFFERS TO ENCRYPT HAVE BUFFER POINTER POSITIVE
+C       BUFFERS TO DECRYPT HAVE BUFFER POINTER NEGATIVE
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE SFTDECBF(BUFNUM,STATUS)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:PROCOM.DEF'
+        INCLUDE 'INCLIB:PRMAGT.DEF'
+        INCLUDE 'INCLIB:ENCCOM.DEF'
+C
+        INTEGER*4 BUFNUM,STATUS
+C
+        IF (HPRO(INPLEN,BUFNUM).LT.ENCLEN_MIN) THEN
+            STATUS=-1
+            RETURN
+        ENDIF
+C
+        CALL ABL(-BUFNUM,SOFT_ENCQUE,STATUS)
+        STATUS=0
+        RETURN
+        END
+C
+C*****************************************************************
+C
+C       SFTCHKBF(BUFNUM,TYPE,STATUS)
+C       OUT:
+C       BUFNUM  -   BUFFER WITH  DATA
+C       TYPE    -   OPERATION TYPE
+C       STATUS  -   0 IF ANY DATA RECEIVED
+C
+C       CHECK IF ANY DATA WAS DECRYPTED OR ENCRYPTED
+C
+C       FOR SOFT ENCRYPTION
+C       BUFFERS TO CRYPT RESIDE ON SOF_ENCQUE LIST,
+C       BUFFERS TO ENCRYPT HAVE BUFFER POINTER POSITIVE
+C       BUFFERS TO DECRYPT HAVE BUFFER POINTER NEGATIVE
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE SFTCHKBF(BUFNUM,TYPE,STATUS)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:PROCOM.DEF'
+        INCLUDE 'INCLIB:AGTCOM.DEF'
+        INCLUDE 'INCLIB:ENCCOM.DEF'
+C
+        INTEGER*4 BUFNUM,TYPE,STATUS, TERMINAL
+D       INTEGER*4 OFFSET,LENGTH
+C
+        INTEGER*4 HALF_KEYTAB(2,NUMAGT) !GLS  DUMMY TO AVOID COMPILATION ERRORS
+C
+C
+        CALL RTL(BUFNUM,SOFT_ENCQUE,STATUS)
+        IF (STATUS.NE.2) THEN
+            STATUS = 0               !REMEMBER THERE WAS SOMETHING
+            IF (BUFNUM.GT.0) THEN    !THAT WAS ENCRYPTION REQUEST
+C
+C           DO SOFT ENCRYPTION NOW
+C
+                TERMINAL=HPRO(TERNUM,BUFNUM)
+                CALL ENCRYPTV(PRO(1,BUFNUM),KEYTAB(1,TERMINAL),
+     *                                      HALF_KEYTAB(1,TERMINAL))
+C
+                TYPE=ENC_TYPE_ENCRYPT
+            ELSE
+C
+C           DO DECRYPTION NOW
+C
+                BUFNUM=-BUFNUM
+                TERMINAL=HPRO(TERNUM,BUFNUM)
+D       LENGTH = HPRO(INPLEN,BUFNUM)
+D       TYPE *,'TERMINAL ',TERMINAL,LENGTH
+D       TYPE 900,KEYTAB(1,TERMINAL),KEYTAB(2,TERMINAL)
+D900    FORMAT(1H ,2(1X,Z8))
+D       TYPE 910,(BPRO(OFFSET,BUFNUM),OFFSET=INPTAB*4-3,INPTAB*4-3+LENGTH)
+D910    FORMAT( 5(1H ,4Z2))
+                CALL DECRYPTV(PRO(1,BUFNUM),KEYTAB(1,TERMINAL),
+     *                                      HALF_KEYTAB(1,TERMINAL))
+C
+D       TYPE *,'After decryption '
+D       TYPE 910,(BPRO(OFFSET,BUFNUM),OFFSET=INPTAB*4-3,INPTAB*4-3+LENGTH)
+                TYPE=ENC_TYPE_DECRYPT
+            ENDIF
+        ENDIF
+        RETURN
+        END
+C

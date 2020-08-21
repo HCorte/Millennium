@@ -1,0 +1,43 @@
+C GVTPHN.DEF
+C
+C V01 01-FEB-94 PXN INITIAL RELEASE FOR NETHERLANDS
+C V01 01-JUN-93 PXN INITIAL RELEASE FOR IRELAND
+C V04 19-Nov-92 ceb Fixed the GVT phone numbers and made it
+C                   a shared segment.
+C V03 04-SEP-92 NJA ADDED (RETRY COUNT FOR GVT NUMBERS)
+C V02 12-AUG-92 NJA ADDED (2ND PHONE NUMBER)
+C V01 16-MAY-92 JPJ INITIAL RELEASE FOR TEXAS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1992 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	CHARACTER*12 PHONE_NUM(10)
+	INTEGER*4    PHONE_LEN(10)
+	INTEGER*2    PHONE_CHK(10)
+	BYTE	     PHONE_RTY(10),FREE(2)
+C
+	COMMON /GVTPHN/ PHONE_NUM,
+     *                  PHONE_LEN,
+     *                  PHONE_CHK,
+     *                  PHONE_RTY,
+     *                  FREE
+C
+	INTEGER*4 FRST_GVTPHN(2)
+	INTEGER*4 LAST_GVTPHN
+	EQUIVALENCE (FRST_GVTPHN,PHONE_NUM)
+	EQUIVALENCE (LAST_GVTPHN,PHONE_RTY(9))
+C
+	VOLATILE /GVTPHN/
+C
+C END GVTPHN.DEF
+C

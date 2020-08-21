@@ -1,0 +1,68 @@
+C GTNAMES.DEF
+C
+C V22 10-MAR-2016 SCML  M16 PROJECT:
+C                        Added Raffle game type name description
+C                        MAXTYP increased to 21 games
+C V21 24-FEB-2014 SCML  PLACARD PROJECT - Added Oddset game type
+C V20 08-FEB-2001 ANG   Added Passive game type
+C V19 29-NOV-2000 JHR   Added Results Game Type
+C V18 19-JUL-2000 UXN   Names changed to English
+C V17 08-JUN-2000 UXN   RGTNAMES removed
+C                       FTNAMES moved to FTNAMES.DEF
+C                       TTNAMES moved to TTNAMES.DEF
+C                       ITNAMES moved to ITNAMES.DEF
+C V16 12-MAY-2000 OXK   Sports -> Vakio
+C V15 13-OCT-1999 RXK   World Tour game added.
+C V14 10-MAY-1999 UXN   TRIPLE CHANGED TO TRIO. SUPER TRIPLE ADDED.
+C V13 11-FEB-1997 RXK   IMNU=instant supply message, IORD=instant games names 
+C                       request message
+C V12 03-FEB-1997 WPW   Missing names added to itnames.
+C V11 18-JAN-1997 RXK   Name 'paththru' added 
+C V10 05-DEC-1996 HXK   Updated for Finland IPS
+C V09 17-APR-1996 HXK   Release of Finland for X.25, Telephone Betting, 
+C                       Instant Pass Thru Phase 1
+C V08 15-OCT-1994 HXK   Adding / Developing Bingo
+C V07 15-SEP-1993 GXA   Changed Oddset game names to Finish names.
+C V06 13-MAY-1993 HXK   Corrected spelling of Spede game name.
+C V05 12-MAY-1993 SXH   LEFT-CENTERED INSTANT IN GTNAMES(12)
+C V04 29-APR-1993 GABOR Released for Finland Dec Conversion / Oddset
+C V03 21-JAN-1993 DAB   Initial Release
+C                       Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                       DEC Baseline
+C V02 07-OCT-1991 MTK   INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX   RELEASED FOR VAX
+C
+C GAME TYPE NAMES
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C
+C M16 PROJECT      - GTNAMES 19 ='Raffle  '
+C PLACARD  PROJECT - GTNAMES 18 ='Oddset  '
+C EURO MIL PROJECT - GTNAMES 17 ='EuroMil '
+
+	REAL*8 GTNAMES(0:MAXTYP)
+C
+        DATA GTNAMES/'        ','Lotto   ','Sports  ',
+     *               'Numbers ','Joker   ','Bingo   ',
+     *               'Wintip  ','Todays C','Todays T',
+     *               'Super D ','Super T ','Langen  ',
+     *               'Score   ','Super S ','Instant ',
+     *               'Results ','Passive ','EuroMil ',
+     *               'Oddset  ','Raffle  ','        ',
+     *               '        '/
+        COMMON /GTNAMES/ GTNAMES

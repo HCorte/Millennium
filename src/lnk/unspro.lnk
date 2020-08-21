@@ -1,0 +1,32 @@
+$! GXSRC:UNSPRO.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]UNSPRO.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:55:28   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:54:38   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:50:18   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:UNSPRO.EXE -
+OBJLIB:UNSPRO,-
+RLOG,-
+WLOG,-
+BLDJAK,-
+BLDODS,-
+BLDTVN,-
+CALODD,-
+INDPOL,-
+SRTPOL,-
+ISORT,-
+POLIND,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAGTCOM.ESH/SHAREABLE,-
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE

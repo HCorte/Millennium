@@ -1,0 +1,27 @@
+$! GXSRC:BNGFHPRG.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]BNGFHPRG.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:34:28   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.3   06 Jan 1995 14:16:40   HXK
+$! Added comment to enforce PVCS revision
+$!
+$!    Rev 1.2   06 Jan 1995 14:13:38   HXK
+$! Resolve to WINCOM, RESCOM
+$!
+$!
+$! comment just to change file for PVCS mixup
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:BNGFHPRG.EXE -
+OBJLIB:BNGFHPRG,-
+BINGO_CHECKSUM,-
+GETLUN,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXRESCOM.ESH/SHAREABLE,-
+TSKLIB:GXWINCOM.ESH/SHAREABLE

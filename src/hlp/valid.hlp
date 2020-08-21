@@ -1,0 +1,66 @@
+ VALSNP.HLP              GTECH Distributed Network
+                         Validation Snapshot Help             Page 1 of 3
+ 
+    The validation transaction snapshot is used for looking up validation 
+    records in the VLF.FIL.  It can be used only to find winning tickets
+    that participated in winner selection. To find a desired ticket 
+    either it's internal or external serial number can be used to perform
+    the search.
+    
+    The following information is displayed:
+
+    status        - status of the ticket.
+                    UNCX-uncashed, CASH-cashed, CSHX-cashed with exchange
+    fractions     - indicats if a ticket was fractioned
+    Scdc          - CDC ticket was sold
+    Ccdc          - CDC ticket was cashed
+    Lcdc          - CDC the ticket was claimed
+    expdrw        - last draw the ticket will participate in winner 
+                    selection for multidraw tickets
+    bank id       - bank id number.  Applies to tickets played with a 
+                    bank card option
+
+
+ VALSNP.HLP              GTECH Distributed Network
+                         Validation Snapshot Help              Page 2 of 3
+
+    game          - game number
+    # wins        - number of times the ticket is a winner
+    ster          - selling terminal number
+    cter          - cashing terminal number
+    lter          - claim terminal number
+    kexpdrw       - last draw the ticket will participate in Jokeri winner
+                    selection (multidraw tickets). This applies to tickets 
+                    with Jokeri only 
+    bank #        - bank account number that the prize will be transferred 
+                    to
+    gtype         - game type (Lotto, Sports, Pitka, Ravi etc)
+    Gindx         - game index
+    sser          - internal selling transaction serial number
+    cser          - internal cashing transaction serial number 
+    lser          - internal claiming transaction
+    winsel cdc    - last winner selection cdc date
+    kgame         - jokeri game number
+     
+     VALSNP.HLP           GTECH Distributed Network
+                          Validaton Snapshot Help             Page 3 of 3
+ 
+ 
+    regpay        - amount won, excluding Jokeri
+    Kikpay1       - Jokeri 1 amount won   
+    Kikpay2       - Jokeri 2 amount won   
+    totpay        - total amount won for all the games
+    wintax        - n/a
+    refund        - total amount refunded in the case of a canceled event
+    prz           - number of prizes with each winning division shown
+                    separately
+    upd           - indicates status of prize     
+    kik           - indicates if prize includes jokeri winner
+    bns           - indicates if ticket was a bonus winner
+    div           - indicates division number won
+    shr           - number of shares won
+
+
+
+
+

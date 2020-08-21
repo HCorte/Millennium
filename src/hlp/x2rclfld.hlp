@@ -1,0 +1,44 @@
+                          GTECH Distibuted Network
+                          Report Class Update Help                Page 1 of 2
+ 
+      This help screen describes each of the fields associated with
+      updating Report Class Configurations.  For specific instructions
+      on how to use the Add and Modify screens, refer to the Report
+      Class Menu Help.
+ 
+      The following describes each of the report class configuration
+      parameters:
+ 
+      1) Report class  - the identification number associated with this
+              report class.  The class can only be input from the
+              menu and can not be modified.
+      2) Report format - this field describes the general format of
+              the data portion of the statistics message, allowing
+              stations to format statistics differently.
+      3) Report count - the number of report codes defined for this
+              report class.
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                          Report Class Update Help                Page 2 of 2
+ 
+      4) Report code - up to 16 report codes can be defined per report
+              class.  The report codes inform which reports should be
+              included when a statistics request is generated.  The
+              report codes must be defined to be contained in a report
+              class.
+      5) Last Updated - this is the CDC date of the last time this
+              record was modified.  This is not a changeable parameter.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

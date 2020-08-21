@@ -1,0 +1,222 @@
+C SUBROUTINE CMDTGL
+C
+C V02 13-FEB-2001 HXK ALLOW WINNING NUMBERS TO BE ENTERED FOR
+C                     A PREVIOUS DRAW
+C V01 29-NOV-2000 UXN Initial release.
+C
+C SUBROUTINE TO PROCESS RESULTS GAME COMMANDS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE CMDTGL(TRABUF,MESS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:TGLCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:DTGREC.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+	INCLUDE 'INCLIB:STANDARD.DEF'
+
+	INTEGER*4 MESS(EDLEN), TEMP, IND, OFF, GIND, CMDNUM, DIV
+	INTEGER*4 DRAW, FDB(7), GNUM, UNIT, ST
+	INTEGER*2 I2TEMP(2)
+	EQUIVALENCE (TEMP,I2TEMP)
+	LOGICAL   PREVIOUS_DRAW
+C
+C
+C
+	CMDNUM=TRABUF(TCMNUM)
+	GOTO (10,20,30,40,50,60,70,80,90,100) CMDNUM
+	GOTO 1000
+C
+C CHANGE RESULTS GAME STATUS
+C
+10	CONTINUE
+	GIND=TRABUF(TCMDT1)
+	TRABUF(TCMOLD)=TGLSTS(GIND)
+	TGLSTS(GIND)=TRABUF(TCMNEW)
+	IF(TRABUF(TCMNEW).EQ.GAMBFD) THEN
+	  TGLCTM(GIND)=TRABUF(TTIM)
+	  CALL BSET(TGLTIM(GIND),1)
+	  CALL CLRSUM
+	  TEMP=TGLREV(GIND)
+	  I2TEMP(1)=I2TEMP(1)+1
+	  TGLREV(GIND)=TEMP
+	ENDIF
+	MESS(2)=TECMD
+	MESS(3)=3
+	MESS(6)=GIND
+	MESS(9)=TRABUF(TCMOLD)
+	MESS(10)=TRABUF(TCMNEW)
+	RETURN
+C
+C SET RESULTS WINNING NUMBERS
+C
+20	CONTINUE
+
+	GIND=TRABUF(TCMDT1)
+	DRAW=TRABUF(TCMNEW)
+
+        PREVIOUS_DRAW = .FALSE.
+        IF(DRAW.GT.0 .AND. DRAW.LT.TGLDRW(GIND)) PREVIOUS_DRAW = .TRUE.
+
+        IF(PREVIOUS_DRAW) THEN
+
+          ! GET AN AVAILABLE LUN
+          CALL FIND_AVAILABLE_LUN(UNIT, ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = HANDLE_ERROR
+            RETURN
+          ENDIF
+
+          ! OPEN GAME FILE
+          GNUM = GTNTAB(TTGL, GIND)
+          CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = OPEN_ERROR
+            RETURN
+          ENDIF
+          
+          ! READ GAME FILE
+          CALL IOINIT(FDB,UNIT,DTGSEC*256)
+          CALL READW(FDB,DRAW,DTGREC,ST)
+          IF(ST.NE.0) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 33
+            MESS(6)  = GIND
+            MESS(10) = READ_ERROR
+            CALL CLOSEFIL(FDB)
+            RETURN
+          ENDIF
+
+          ! SET WINNING NUMBERS IF NOT ENTERED
+          IF(DTGSTS.NE.GAMBFD) THEN
+            MESS(2)  = TECMD
+            MESS(3)  = 34
+            MESS(6)  = GIND
+            MESS(10) = DRAW
+            CALL CLOSEFIL(FDB)
+            RETURN
+          ENDIF
+          OFF=0
+          IND=1
+21        CONTINUE
+          CALL ILBYTE(TEMP,TRABUF(TCMDT2),OFF)
+	  DTGWIN(1,IND) = ISHFT(TEMP,-4)
+	  DTGWIN(2,IND) = IAND(TEMP,'0F'X)
+          IND=IND+1
+          IF(IND.GT.DTGMAX) THEN
+             MESS(2)=TECMD
+             MESS(3)=4
+             MESS(6)=GIND
+          ELSE
+             OFF=OFF+1
+             GOTO 21
+          ENDIF
+
+          ! WRITE NEW RECORD
+          DTGSTS = GAMENV
+          CALL WRITEW(FDB,DRAW,DTGREC, ST)
+          IF(ST.NE.0) THEN
+             MESS(2)  = TECMD
+             MESS(3)  = 33
+             MESS(6)  = GIND
+             MESS(10) = WRITE_ERROR
+             CALL CLOSEFIL(FDB)
+             RETURN
+          ENDIF
+
+          CALL CLOSEFIL(FDB)
+	  RETURN
+
+        ELSE
+
+	  OFF=0
+	  IND=1
+22	  CONTINUE
+	  CALL ILBYTE(TEMP,TRABUF(TCMDT2),OFF)
+	  TGLWIN(1,IND,GIND) = ISHFT(TEMP,-4)
+	  TGLWIN(2,IND,GIND) = IAND(TEMP,'0F'X)
+	  OFF=OFF+1
+	  IND=IND+1
+	  IF(IND.GT.TGLMAX(GIND)) THEN
+	    MESS(2)=TECMD
+	    MESS(3)=4
+	    MESS(6)=GIND
+	    RETURN
+	  ENDIF
+	  GOTO 22
+
+	ENDIF
+C
+C CHANGE SPORT OFFLINE SALES
+C
+30	CONTINUE
+	GIND=TRABUF(TCMDT1)
+	TRABUF(TCMOLD)=TGLSAL(2,GIND)    !OFFLINE SALES TABLE
+	TGLSAL(2,GIND)=TRABUF(TCMNEW)
+	MESS(2)=TECMD
+	MESS(3)=3
+	MESS(6)=GIND
+	MESS(9)=TRABUF(TCMOLD)
+	MESS(10)=TRABUF(TCMNEW)
+	RETURN
+C
+C UPDATE ROLLOVER FOR DIVSIONS
+C
+40	CONTINUE
+	GIND=TRABUF(TCMDT1)
+	DIV =TRABUF(TCMDT2)
+	TGLROD(1,GIND) = TRABUF(TCMDT3)  ! GIND WHERE MONEY CAME FROM
+	TGLROD(2,GIND) = TRABUF(TCMDT4)  ! DRAW WHERE MONEY CAME FROM
+	TRABUF(TCMOLD)=TGLPOL(DIV,GIND)
+	TGLPOL(DIV,GIND)=TGLPOL(DIV,GIND)+TRABUF(TCMNEW)
+	MESS(2)=TECMD
+	MESS(3)=32
+	MESS(6)=GIND
+	MESS(9)=DIV
+	MESS(10)=TRABUF(TCMNEW)
+	RETURN
+C
+C PUT NEXT RESULTS COMMAND HERE
+C
+50	CONTINUE
+60	CONTINUE
+70	CONTINUE
+80	CONTINUE
+90	CONTINUE
+100	CONTINUE
+C
+C INVALID COMMAND NUMBER
+C
+1000	CONTINUE
+	TRABUF(TSTAT)=REJT
+	TRABUF(TERR)=INVL
+	MESS(2)=TECMD
+	MESS(3)=1
+	MESS(4)=TRABUF(TCMTYP)
+	MESS(5)=TRABUF(TCMNUM)
+	RETURN
+	END

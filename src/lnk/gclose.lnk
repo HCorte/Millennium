@@ -1,0 +1,27 @@
+$! GXSRC:GCLOSE.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]GCLOSE.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:41:56   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:03:14   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:40:10   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:GCLOSE.EXE -
+OBJLIB:GCLOSE,-
+GCLCMD,-
+POOL3,-
+POOL4,-
+QUECMD,-
+VNUMOD,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXPOLCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE

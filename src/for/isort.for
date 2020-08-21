@@ -1,0 +1,64 @@
+C
+C SUBROUTINE ISORT
+C $Log:   GXAFXT:[GOLS]ISORT.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:41:00   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:42:54   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - srtpol.for **
+C
+C
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE ISORT(I4ARAY,CNT)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INTEGER*4   CNT
+	INTEGER*4   I4ARAY(2,CNT)
+	INTEGER*4   I4TEMP
+	INTEGER*4   I, J, K, L, M, XX
+C
+C
+	M = CNT
+20	CONTINUE
+	M = M / 2
+	IF(M.EQ.0) GO TO 8000
+	J = 1
+	K = CNT - M
+C
+140	CONTINUE
+	I = J
+C
+150	CONTINUE
+	L = I + M
+	IF(I4ARAY(1,I) .GT. I4ARAY(1,L))GO TO 210
+	IF(I4ARAY(1,I) .LT. I4ARAY(1,L))GO TO 170
+	GO TO 210
+C
+170	CONTINUE
+	DO 175 XX = 1,2
+	  I4TEMP = I4ARAY(XX,I)
+	  I4ARAY(XX,I) = I4ARAY(XX,L)
+	  I4ARAY(XX,L) = I4TEMP
+175	CONTINUE
+	I = I - M
+	IF(I.GE.1)GO TO 150
+C
+210	CONTINUE
+	J = J + 1
+	IF(J.GT.K)GO TO 20
+	GO TO 140
+C
+C
+8000	CONTINUE
+	RETURN
+	END

@@ -1,0 +1,104 @@
+C
+C SUBROUTINE AGTPUT
+C $Log:   GXAFXT:[GOLS]AGTPUT.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:09:18   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 15:37:58   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - agtput.for **
+C
+C AGTPUT.FOR
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C
+C INPUT:
+C ------
+C  OFFSET : OFFSET
+C  AMOUNT : AMOUNT ON THIS BET (DIVIDED BY BASE PRICE (IN BETUNITS))
+C  TER    : TERMINAL NUMBER
+C  ROWCNT : NUMBER OF ROWS
+C
+C OUTPUT:
+C -------
+C  STATUS : HASH_RETURN_OK OR HASH_RETURN_TOO_MANY
+C  NEWAMT : TOTAL AMOUNT FOR THIS TERMINAL AND COMBINATION
+C
+C
+C COPYRITF.DEF+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C COPYRIGHT 1991 GTECH CORPORATION.  ALL RIGHTS RESERVED.
+C
+C CONFIDENTIAL PROPRIETARY INFORMATION
+C This item is the property of GTECH Corporation, W. Greenwich, Rhode
+C Island, and contains confidential and trade secret information.  It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH.  Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published or disclosed, in whold or in part, directly
+C or indirectly, except as expressly authorized by an officer of
+C GTECH pursuant to written agreement.
+C COPYRITF.DEF-------------------------------------------------------
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE AGTPUT(OFFSET,AMOUNT,TER,ROWCNT,NEWAMT,STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:HASHMEM.DEF'
+C
+	INTEGER*4  OFFSET , AMOUNT , TER , ROWCNT , NEWAMT , STATUS
+C
+C LOCAL VARIABLES
+C
+	INTEGER*4  BLK , BLKX , REC , KEY1 , KEY2
+C
+C CHECK FOR VALID KEYS
+C
+	IF (ROWCNT.LT.1.OR.ROWCNT.GT.6.OR.
+     *	    TER.LT.1.OR.TER.GT.HASH_NUMAGT) THEN
+	    STATUS = HASH_RETURN_INVALID_KEY
+	    GOTO 9000
+	ENDIF
+C
+C SET DAFULT STATUS
+C
+	STATUS = HASH_RETURN_TOO_MANY
+	NEWAMT = AMOUNT
+C
+	DO 10 BLKX=TER,TER+HASH_MAX_SEARCH-1
+	 BLK=BLKX
+	 IF(BLK.GT.HASH_NUMAGT) BLK = BLK-HASH_NUMAGT
+	 DO 20 REC=1,HASH_AGT_RECORDS
+	  KEY1=HASH_AGT(1,REC,BLK)
+	  IF(KEY1.EQ.0) THEN
+	     HASH_AGT(1,REC,BLK)=OFFSET
+	     HASH_AGT(2,REC,BLK)=AMOUNT*HASH_MOV_AMT+TER*HASH_MOV_TER+
+     *	                         ROWCNT*HASH_MOV_ROW
+	     STATUS=HASH_RETURN_OK
+	     GOTO 9000
+	  ENDIF
+	  IF (KEY1.NE.OFFSET) GOTO 20
+	  KEY2=IAND(HASH_AGT(2,REC,BLK),HASH_TER_MASK)/HASH_MOV_TER
+	  IF (KEY2.NE.TER) GOTO 20
+	  KEY2=IAND(HASH_AGT(2,REC,BLK),HASH_ROW_MASK)/HASH_MOV_ROW
+	  IF (KEY2.NE.ROWCNT) GOTO 20
+	  NEWAMT=HASH_AGT(2,REC,BLK)/HASH_MOV_AMT+AMOUNT
+	  HASH_AGT(2,REC,BLK)=NEWAMT*HASH_MOV_AMT+TER*HASH_MOV_TER+
+     *	                      ROWCNT*HASH_MOV_ROW
+	  STATUS=HASH_RETURN_OK
+	  GOTO 9000
+20	 CONTINUE
+10	CONTINUE
+C
+9000	CONTINUE
+	RETURN
+	END

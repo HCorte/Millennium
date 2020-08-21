@@ -1,0 +1,189 @@
+C TASKID.DEF
+C
+C V12 13-FEB-2014 SCML Added support for IGS
+C V11 06-JAN-2011 FJG MILLENNIUM MXSRV
+C V10 12-MAR-2003 GPW DESENCR ENCPRO -> ENCPROI
+C V09 13-DEC-2000 CS  INCLUDED PASVAL & PASPRO TO PORTUGAL PASSIVE GAME.
+C V08 31-OCT-2000 UXN GUI added.
+C V07 29-OCT-2000 UXN PTH,RAV,SPEI removed from baseline.
+C V06 13-JUN-2000 OXK COMMONs added
+C V05 19 May 1993 HXK Declared RAV as Integer*4
+C V04 17 May 1993 HXK Added Spede and Ravi task IDs.
+C V03 21 Jan 1993 DAB Initial Release
+C			Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C			DEC Baseline
+C V02 07-OCT-1991 MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C SYSTEM TASK IDENTIFICATION CODES
+C NAMES AND QUEUE ID NUMBERS FOR ALL SYSTEM TASKS
+C
+C     TSKNAM(NUMTSK)             TASK NAMES
+C     LOGID(NUMTSK)              LOGGER ID NUMBER
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  NUMTSK
+	PARAMETER (NUMTSK=64)     !64 (MAX) SYSTEM TASKS
+C
+	INTEGER*4  WAG, NBR, ODD, CAN, VAL,  SPE
+        INTEGER*4  SPEF, INC, CMD, ERR, LOG, DIS
+	PARAMETER (WAG=1)         !LOTTO/SPORTS/KICKER WAGER TASK #
+C----+-----------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+        ! This index is deprecated. Is reused by IGI
+	PARAMETER (NBR=2)         !NUMBERS PROCESSING TASK #
+C----+-----------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+	PARAMETER (ODD=3)         !ODDS GAME WAGER TASK #
+	PARAMETER (CAN=4)         !CANCEL TASK #
+	PARAMETER (VAL=5)         !VALIDATION TASK #
+	PARAMETER (SPE=6)         !SPECIAL SERVICE TASK (NO FREEZE)#
+	PARAMETER (SPEF=7)        !SPECIAL SERVICE TASK (FREEZE) #
+	PARAMETER (INC=8)         !INTERNAL CANCEL TASK #
+	PARAMETER (CMD=9)         !COMMAND TASK #
+	PARAMETER (ERR=10)        !ERROR LOGGING TASK #
+	PARAMETER (LOG=11)	  !LOGGER TASK
+	PARAMETER (DIS=12)        !DISPATCHER TASK #
+C
+	INTEGER*4  RPC, NTM, X2P, X2R, APU, NTL
+	INTEGER*4  ENC, X2M, ODS, UNS
+C       INTEGER*4  PPP            !MXSRV	
+	PARAMETER (RPC=13)        !REPROCESS CANCEL TASK #
+	PARAMETER (NTM=14)        !NETWORK MANAGER TASK #
+	PARAMETER (X2P=15)        !X2X LOGGER
+	PARAMETER (X2R=16)        !X2X RELAY
+	PARAMETER (APU=17)        !APULOG TASK #
+	PARAMETER (NTL=18)        !NETWORK LOGGER TASK #
+	PARAMETER (ENC=19)        !ENCRYPTION PROCESSING TASK#
+	PARAMETER (X2M=20)        !X2X MANAGER
+C----+-----------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+        ! This index is deprecated. Is reused by IGO
+	PARAMETER (ODS=21)        !ODDS CALCULATION TASK #
+C----+-----------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+	PARAMETER (UNS=22)	  !UNSOLICITED MESSAGE BROADCAST TASK
+C
+        INTEGER*4  INI, INO, CRS, GUI, PSV, PST
+C EURO MIL PROJECT
+        INTEGER*4 EUI, EUO, EUC
+        INTEGER*4 MXS
+C       PARAMETER (PPP=23)	  !BINGO PROCESSING TASK MXSRV
+        PARAMETER (MXS=23)	  !MXSRV
+        PARAMETER (INI=24)        !INSTANT INPUT  PROCESSING TASK #
+        PARAMETER (INO=25)        !INSTANT OUTPUT PROCESSING TASK #
+        PARAMETER (CRS=26)        !CROSS SYSTEM PROCESSING TASK #
+	PARAMETER (GUI=27)	  !GUIMGR
+	PARAMETER (PSV=28)        !PASSIVE VALIDATION TASK # (PASVAL)
+        PARAMETER (PST=29)        !PASSIVE PROCESSING TASK # (PASPRO)
+        PARAMETER (EUI=30)	  !EURO MIL INPUT 
+        PARAMETER (EUO=31)        !EURO MIL OUTPUT
+        PARAMETER (EUC=32)        !EURO MIL CONNECT
+C
+C FOLLOWING TASKS DO NOT REQUIRE AN APPLICATION QUEUE.
+C
+	INTEGER*4  TAP, TIM, CHK, SCK, LAN, POL
+	INTEGER*4  OVR, GCL, FPT     
+	PARAMETER (TAP=33)        !TAPE LOGGER TASK #
+	PARAMETER (TIM=34)        !TIMER TASK
+	PARAMETER (CHK=35)        !CHECKPOINT TASK #
+	PARAMETER (SCK=36)        !SLOW POLL CHECK TASK #
+	PARAMETER (LAN=37)        !LAN PROTOCOL SERVER
+	PARAMETER (POL=38)        !LOTTO POOL TASK #
+	PARAMETER (OVR=39)        !LOTTO POOL OVERFLOW TASK #
+	PARAMETER (GCL=40)        !GAME CLOSE TASK #
+	PARAMETER (FPT=41)        !FINANCIAL PASS-THROUGH TASK
+C----+-----------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+C
+C FOLLOWING TASKS DO REQUIRE AN APPLICATION QUEUE.
+C
+        INTEGER*4  IGI, IGO, IGC
+        PARAMETER (IGI=2)         !IGS Input    -- reusing NBR -> inigs
+        PARAMETER (IGO=21)        !IGS Output   -- reusing ODS -> outigs
+        PARAMETER (IGC=42)        !IGS Connect  -- new -> comigs
+C----+------------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+C
+C
+        INTEGER*4     IXI
+	REAL*8        TSKNAM(NUMTSK)
+	CHARACTER*8 CXTSKNAM(NUMTSK)		!TO ELIMINATE FLINT WARNINGS
+	EQUIVALENCE (CXTSKNAM,TSKNAM)
+	COMMON /TSKNAM/ TSKNAM
+C
+C EURO MIL PROJECT - CXTSKNAM = 'INMGR   ','OUTMGR  ','COMMGR  '
+        DATA (CXTSKNAM(IXI),IXI=1,32)/
+C----+------------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+C     *                'WAGPRO  ','NBRPRO  ','ODDPRO  ','CANPRO  ',
+     *                'WAGPRO  ','INIGS   ','ODDPRO  ','CANPRO  ',
+C----+------------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+     *                'VALPRO  ','SPESRV  ','SPESRVF ','INCPRO  ',
+     *                'CMDPRO  ','ERRLOG  ','LOGGER  ','DISPAT  ',
+     *                'REPCAN  ','NETMGR  ','X2XPRO  ','X2XREL  ',
+     *                'APULOG  ','NETLOG  ','ENCPROI ','X2XMGR  ',  !V10
+C    *                'ODSPRO  ','UNSPRO  ','BNGPRO  ','INSPRO  ',  !MXSRV
+C----+------------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+C     *                'ODSPRO  ','UNSPRO  ','MXSRV   ','INSPRO  ',  !MXSRV
+     *                'OUTIGS  ','UNSPRO  ','MXSRV   ','INSPRO  ',  !MXSRV
+C----+------------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+     *                'INSOUT  ','CRSPRO  ','GUIMGR  ','PASVAL  ',
+     *                'PASPRO  ','INMGR   ','OUTMGR  ','COMMGR  '/
+C
+        DATA (CXTSKNAM(IXI),IXI=33,64)/
+     *                'TAPLOG  ','TIMER   ','CHKPNT  ','SLOCHK  ',
+     *                'LANPRO  ','POOLPRO ','OVERPRO ','GCLOSE  ',
+C----+------------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+C     *                'FPTPRO  ','        ','        ','        ',
+     *                'FPTPRO  ','COMIGS  ','        ','        ',
+C----+------------------------------------------------------------------
+C V12| Adding support for IGS
+C----+------------------------------------------------------------------
+     *                '        ','        ','        ','        ',
+     *                '        ','        ','        ','        ',
+     *                '        ','        ','        ','        ',
+     *                '        ','        ','        ','        ',
+     *                '        ','        ','        ','        '/
+C
+C
+	INTEGER*4     LOGID(NUMAPPQUE)
+	COMMON /LOGID/ LOGID
+	DATA LOGID/  Z00000001, Z00000002, Z00000004, Z00000008,  !01-04
+     *               Z00000010, Z00000020, Z00000040, Z00000080,  !05-08
+     *               Z00000100, Z00000200, Z00000400, Z00000800,  !09-12
+     *               Z00001000, Z00002000, Z00004000, Z00008000,  !13-16
+     *		     Z00010000, Z00020000, Z00040000, Z00080000,  !17-20
+     *		     Z00100000, Z00200000, Z00400000, Z00800000,  !21-24
+     *		     Z01000000, Z02000000, Z04000000, Z08000000,  !25-27
+     *               Z10000000, Z20000000, Z40000000, Z80000000/  !28-32
+C
+C END TASKID.DEF
+C

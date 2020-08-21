@@ -1,0 +1,16 @@
+    TSP.HLP               GTECH Distributed Network
+                           Pitka Pool Snapshot Help      Page 1 of 1
+ 
+    This is the Pitka Pool snapshot which contains count and amount
+    wagered information for each outcome and for each row.  
+
+    The information displayed includes:
+ 
+
+    game name     - Pitka
+    1, X, 2       - Possible outcomes for each game
+    count         - total count bet on result (1, X or 2)
+    amount        - total amount bet on result (1, X or 2)
+    status        - row status (open, closed)
+
+    

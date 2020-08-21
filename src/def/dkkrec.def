@@ -1,0 +1,234 @@
+C DKKREC.DEF
+C
+C V08 11-MAY-2000 OXK *SPL added (for promotion etc)
+C V07 25-APR-2000 UXN DKKPOL stored in GTECH I8.
+C V06 10-AUG-1993 GXA Added Ballance table by Draw.
+C V05 08-JUN-1993 SXH Use parameters for free lengths etc, Released for Finland
+C V04 01-APR-1993 HUY Initial Release for Vax.
+C V03 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V02 07-OCT-1991 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C
+C KICKER DATA FILE RECORD LAYOUT (DISK)
+C
+C     DKKSTS                         ;STATUS
+C     DKKCTM                         ;ACTUAL TIME CLOSED
+C     DKKTIM                         ;TIME WHEN GAME SHOULD CLOSE
+C     DKKDRW                         ;DRAW NUMBER
+C     DKKBSD                         ;KICKER BEGGINING DRAW DATE
+C     DKKESD                         ;KICKER ENDING DRAW DATE
+C     DKKPUP                         ;LAST PURGE UPDATE
+C     DKKUPD                         ;LAST FILE UPDATE
+C     DKKDAT(DATLEN)                 ;DRAW DATES
+C     DKKADV(NUMADV)                 ;ADVANCE DRAW DATES
+C     DKKSAL(KIGENT,MAXGAM)          ;SALES DATA
+C     DKKSHR(KIGDIV)                 ;SHARES
+C     DKKPAD(KIGDIV)                 ;AMOUNT PAID
+C     DKKPRG(KIGDIV)                 ;AMOUNT PURGED
+C     DKKSHV(KIGDIV)                 ;SHARE VALUES
+C     DKKPOL(2,KIGDIV)               ;POOL
+C     DKKBRK(KIGDIV)                 ;BREAKAGE
+C     DKKFRZ(KIGDIV)                 ;DIVISION PAYOUT FROZEN FLAGS
+C     DKKTAX                         ;LOTTERY TAX
+C     DKKRES(2)                      ;RESERVE AMOUNT
+C     DKKWIN                         ;WINNING NUMBERS
+C     DKKHLD                         ;WINNING NUMBER HOLD
+C     DKKSER                         ;LAST SERIAL NUMBER
+C     DKKPRC                         ;PRICE
+C     DKKMAX                         ;MAXIMUM NUMBER BET
+C     DKKDIV                         ;NUMBER OF DIVISIONS
+C     DKKSPR                         ;SALES PERCENTAGE
+C     DKKMAT(3,KIGDIV)               ;WINNERS MATCH TABLE
+C     DKKPER(KIGDIV)                 ;DIVISION PERCENTAGE
+C     DKKTSR(KIGDIV)                 ;TOTAL SHARE COUNT
+C     DKKREV                         ;KICKER REVISION NUMBER
+C     DKKSED(2)                      ;KICKER NUMBER SEED
+C     DKKOCT                         ;# OF OCTAL DIGITS (FOR UNIRAN)
+C     DKKMLT                         ;MULTI-DRAW FLAG
+C     DKKWRF(10)                     ;WIN RESERVE FUND TABLE                    
+C     DKKASH(KIGDIV)                 ;ADDITIONAL POOL BY DIV                    
+C     DKKMIN                         ;MINIMUM JACKPOT                           
+C     DKKDFF                         ;DOUBLE JOKERI FREE FLAG                   
+C     DKKMDS(MAXMLTD_AVL)            ;MULTI DRAW SELECTED TABLE
+C                                     (52 BYTE / 4 = 13)
+C     DKKBAL(MAXDRW)                 ;BALANCE SALES INFO. BY DRAW
+C     DKKSPL			     ;SPECIAL POOL, ADDED TO TOTAL POOL -
+C                                     NOT TO DIV1 POOL AS OTHER POOL MONEY
+C     DKKFRE                         ;FREE SPACE
+C
+C KICKER GAME FILE PARAMETERS
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C OFFSET PARAMETERS AND EQUIVALENCES
+C
+        INTEGER*4 DKKSTSOFF, DKKCTMOFF, DKKTIMOFF, DKKDRWOFF
+        PARAMETER(DKKSTSOFF = 1)                            !    1
+        PARAMETER(DKKCTMOFF = DKKSTSOFF + 1)                !    2
+        PARAMETER(DKKTIMOFF = DKKCTMOFF + 1)                !    3
+        PARAMETER(DKKDRWOFF = DKKTIMOFF + 1)                !    4
+C
+        INTEGER*4 DKKBSDOFF, DKKESDOFF, DKKPUPOFF, DKKUPDOFF
+        PARAMETER(DKKBSDOFF = DKKDRWOFF + 1)                !    5
+        PARAMETER(DKKESDOFF = DKKBSDOFF + 1)                !    6
+        PARAMETER(DKKPUPOFF = DKKESDOFF + 1)                !    7
+        PARAMETER(DKKUPDOFF = DKKPUPOFF + 1)                !    8
+C
+        INTEGER*4 DKKDATOFF, DKKADVOFF, DKKSALOFF, DKKSHROFF
+        PARAMETER(DKKDATOFF = DKKUPDOFF + 1)                !    9
+        PARAMETER(DKKADVOFF = DKKDATOFF + DATLEN)           !   29
+        PARAMETER(DKKSALOFF = DKKADVOFF + NUMADV)           !   36
+        PARAMETER(DKKSHROFF = DKKSALOFF + KIGENT*MAXGAM)    !  661
+C
+        INTEGER*4 DKKPADOFF, DKKPRGOFF, DKKSHVOFF, DKKPOLOFF
+        PARAMETER(DKKPADOFF = DKKSHROFF + KIGDIV)           !  667
+        PARAMETER(DKKPRGOFF = DKKPADOFF + KIGDIV)           !  673
+        PARAMETER(DKKSHVOFF = DKKPRGOFF + KIGDIV)           !  679
+        PARAMETER(DKKPOLOFF = DKKSHVOFF + KIGDIV)           !  685
+C
+        INTEGER*4 DKKBRKOFF, DKKFRZOFF, DKKTAXOFF, DKKRESOFF
+        PARAMETER(DKKBRKOFF = DKKPOLOFF + 2*KIGDIV)
+        PARAMETER(DKKFRZOFF = DKKBRKOFF + KIGDIV)           !  697
+        PARAMETER(DKKTAXOFF = DKKFRZOFF + KIGDIV)           !  703
+        PARAMETER(DKKRESOFF = DKKTAXOFF + 1)                !  704
+C
+        INTEGER*4 DKKWINOFF, DKKHLDOFF, DKKSEROFF, DKKPRCOFF
+        PARAMETER(DKKWINOFF = DKKRESOFF + 2)                !  706
+        PARAMETER(DKKHLDOFF = DKKWINOFF + 1)                !  707
+        PARAMETER(DKKSEROFF = DKKHLDOFF + 1)                !  708
+        PARAMETER(DKKPRCOFF = DKKSEROFF + 1)                !  709
+C
+        INTEGER*4 DKKMAXOFF, DKKDIVOFF, DKKSPROFF, DKKMATOFF
+        PARAMETER(DKKMAXOFF = DKKPRCOFF + 1)                !  710
+        PARAMETER(DKKDIVOFF = DKKMAXOFF + 1)                !  711
+        PARAMETER(DKKSPROFF = DKKDIVOFF + 1)                !  712
+        PARAMETER(DKKMATOFF = DKKSPROFF + 1)                !  713
+C
+        INTEGER*4 DKKPEROFF, DKKTSROFF, DKKREVOFF, DKKSEDOFF
+        PARAMETER(DKKPEROFF = DKKMATOFF + 3*KIGDIV)         !  731
+        PARAMETER(DKKTSROFF = DKKPEROFF + KIGDIV)           !  737
+        PARAMETER(DKKREVOFF = DKKTSROFF + KIGDIV)           !  743
+        PARAMETER(DKKSEDOFF = DKKREVOFF + 1)                !  744
+C
+        INTEGER*4 DKKOCTOFF, DKKMLTOFF, DKKWRFOFF, DKKASHOFF
+        PARAMETER(DKKOCTOFF = DKKSEDOFF + 2)                !  746
+        PARAMETER(DKKMLTOFF = DKKOCTOFF + 1)                !  747
+        PARAMETER(DKKWRFOFF = DKKMLTOFF + 1)                !  748
+        PARAMETER(DKKASHOFF = DKKWRFOFF + 10)               !  758
+
+        INTEGER*4 DKKMINOFF, DKKDFFOFF, DKKMDSOFF, DKKBALOFF
+        PARAMETER(DKKMINOFF = DKKASHOFF + KIGDIV)           !  764
+        PARAMETER(DKKDFFOFF = DKKMINOFF + 1)                !  765
+        PARAMETER(DKKMDSOFF = DKKDFFOFF + 1)                !  766
+        PARAMETER(DKKBALOFF = DKKMDSOFF + (MAXMLTD_AVL/4))  !  779
+C
+        INTEGER*4 DKKSPLOFF
+        PARAMETER(DKKSPLOFF = DKKBALOFF + MAXDRW)
+
+        INTEGER*4 DKKFREOFF
+        PARAMETER(DKKFREOFF = DKKSPLOFF+ 1)
+
+
+        INTEGER*4 DKKSEC_VAX, DKKSEC_NUM
+        PARAMETER (DKKSEC_VAX = SECSIZE/4)
+        PARAMETER (DKKSEC_NUM = NINT(FLOAT((DKKFREOFF-2)/
+     *                                      DKKSEC_VAX)+.5))
+
+        INTEGER*4 DKKRECLEN, DKKSEC
+        PARAMETER(DKKRECLEN = DKKSEC_VAX * DKKSEC_NUM)     ! even sector size
+        PARAMETER(DKKSEC    = DKKRECLEN/64)
+
+        INTEGER*4 DKKREC(DKKRECLEN)
+C
+        INTEGER*4 DKKSTS,DKKCTM
+        INTEGER*4 DKKTIM,DKKDRW
+        INTEGER*4 DKKBSD,DKKESD
+        INTEGER*4 DKKPUP,DKKUPD
+        INTEGER*4 DKKDAT(DATLEN),DKKADV(NUMADV)
+        INTEGER*4 DKKSAL(KIGENT,MAXGAM)
+        INTEGER*4 DKKSHR(KIGDIV)
+        INTEGER*4 DKKPAD(KIGDIV)
+        INTEGER*4 DKKPRG(KIGDIV)
+        INTEGER*4 DKKSHV(KIGDIV)
+        INTEGER*4 DKKPOL(2,KIGDIV)
+        INTEGER*4 DKKBRK(KIGDIV)
+        INTEGER*4 DKKFRZ(KIGDIV)
+        INTEGER*4 DKKTAX,DKKRES(2)
+        INTEGER*4 DKKWIN,DKKHLD
+        INTEGER*4 DKKSER,DKKPRC
+        INTEGER*4 DKKMAX,DKKDIV
+        INTEGER*4 DKKSPR
+        INTEGER*4 DKKMAT(3,KIGDIV)
+        INTEGER*4 DKKPER(KIGDIV)
+        INTEGER*4 DKKTSR(KIGDIV)
+        INTEGER*4 DKKREV,DKKSED(2)
+        INTEGER*4 DKKOCT,DKKMLT
+        INTEGER*4 DKKWRF(10)  
+        INTEGER*4 DKKASH(KIGDIV)                 
+        INTEGER*4 DKKMIN
+        INTEGER*4 DKKDFF   
+        BYTE      DKKMDS(MAXMLTD_AVL)      ! must be divisible by 4        
+        INTEGER*4 DKKBAL(MAXDRW)
+C
+	INTEGER*4 DKKSPL
+
+        INTEGER*4 DKKFRE(DKKRECLEN - DKKFREOFF + 1)
+C
+        EQUIVALENCE(DKKSTS,DKKREC(DKKSTSOFF))
+        EQUIVALENCE(DKKCTM,DKKREC(DKKCTMOFF))
+        EQUIVALENCE(DKKTIM,DKKREC(DKKTIMOFF))
+        EQUIVALENCE(DKKDRW,DKKREC(DKKDRWOFF))
+        EQUIVALENCE(DKKBSD,DKKREC(DKKBSDOFF))
+        EQUIVALENCE(DKKESD,DKKREC(DKKESDOFF))
+        EQUIVALENCE(DKKPUP,DKKREC(DKKPUPOFF))
+        EQUIVALENCE(DKKUPD,DKKREC(DKKUPDOFF))
+        EQUIVALENCE(DKKDAT,DKKREC(DKKDATOFF))
+        EQUIVALENCE(DKKADV,DKKREC(DKKADVOFF))
+        EQUIVALENCE(DKKSAL,DKKREC(DKKSALOFF))
+        EQUIVALENCE(DKKSHR,DKKREC(DKKSHROFF))
+        EQUIVALENCE(DKKPAD,DKKREC(DKKPADOFF))
+        EQUIVALENCE(DKKPRG,DKKREC(DKKPRGOFF))
+        EQUIVALENCE(DKKSHV,DKKREC(DKKSHVOFF))
+        EQUIVALENCE(DKKPOL,DKKREC(DKKPOLOFF))
+        EQUIVALENCE(DKKBRK,DKKREC(DKKBRKOFF))
+        EQUIVALENCE(DKKFRZ,DKKREC(DKKFRZOFF))
+        EQUIVALENCE(DKKTAX,DKKREC(DKKTAXOFF))
+        EQUIVALENCE(DKKRES,DKKREC(DKKRESOFF))
+        EQUIVALENCE(DKKWIN,DKKREC(DKKWINOFF))
+        EQUIVALENCE(DKKHLD,DKKREC(DKKHLDOFF))
+        EQUIVALENCE(DKKSER,DKKREC(DKKSEROFF))
+        EQUIVALENCE(DKKPRC,DKKREC(DKKPRCOFF))
+        EQUIVALENCE(DKKMAX,DKKREC(DKKMAXOFF))
+        EQUIVALENCE(DKKDIV,DKKREC(DKKDIVOFF))
+        EQUIVALENCE(DKKSPR,DKKREC(DKKSPROFF))
+        EQUIVALENCE(DKKMAT,DKKREC(DKKMATOFF))
+        EQUIVALENCE(DKKPER,DKKREC(DKKPEROFF))
+        EQUIVALENCE(DKKTSR,DKKREC(DKKTSROFF))
+        EQUIVALENCE(DKKREV,DKKREC(DKKREVOFF))
+        EQUIVALENCE(DKKSED,DKKREC(DKKSEDOFF))
+        EQUIVALENCE(DKKOCT,DKKREC(DKKOCTOFF))
+        EQUIVALENCE(DKKMLT,DKKREC(DKKMLTOFF))
+        EQUIVALENCE(DKKWRF,DKKREC(DKKWRFOFF))
+        EQUIVALENCE(DKKASH,DKKREC(DKKASHOFF))
+        EQUIVALENCE(DKKMIN,DKKREC(DKKMINOFF))
+        EQUIVALENCE(DKKDFF,DKKREC(DKKDFFOFF)) 
+        EQUIVALENCE(DKKMDS,DKKREC(DKKMDSOFF))                         
+        EQUIVALENCE(DKKBAL,DKKREC(DKKBALOFF))
+        EQUIVALENCE(DKKSPL,DKKREC(DKKSPLOFF))
+        EQUIVALENCE(DKKFRE,DKKREC(DKKFREOFF))

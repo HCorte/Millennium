@@ -1,0 +1,44 @@
+    VO5.HLP                GTECH Distributed Network
+                             Ravi V5 Snapshot Help          Page 1 of 2
+ 
+    The VO5 snapshot reflets sales information for the horse racing game
+    Rai V5.
+    
+    The information displayed includes:
+ 
+    game name      - Ravi V5
+    draw           - draw number
+    page n         - page 1 all cartels - show the combined sales figures
+                     and pool values of all cartels
+                     page 2 horsetrack - shows the combined sales figures 
+                     and pool values only from horsetrack
+                     page 3 other that horsetrack - shows the combined 
+                     sales figures and pool values from terminals other 
+                     than on the horsetrack
+    pools are      - pool status for the current darw (open, closed)
+    div            - division won for winning combinaton
+    pool/prize     - % amount and divisions between each tier
+    shares won     - count and amount of winners for each division
+    
+    VO5.HLP                GTECH Distributed Network
+                             Ravi V5 Snapshot Help          Page 2 of 2
+    
+    
+    fraction paid  - count and amount for validations on a fraction count
+                     basis. Results are shown only for previous draws
+    sales          - curent daily, off-line and previous sales for the 
+                     current draw
+    rollover       - amount carried forward from the previous draw                 
+    total          - total shares and fractions paid for displayed draw
+    race # winners - winning horses in each race.
+
+
+
+
+
+
+
+
+
+
+

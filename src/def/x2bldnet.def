@@ -1,0 +1,180 @@
+C
+C *** DEFINITION FILE X2BLDNET ***
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2BLDNET.DEV                                 $
+C  $Date::   17 Apr 1996 16:09:40                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C *** Pre-Baseline Source - x2bldnet.def ***
+C
+C X2X Upgrade: 22-FEB-96 wsm Removed AGTINF.DEF for Finland. 
+C
+C V08 15-JUN-00 UXN COMMON/CLASS_NAMES/ CLASS_NAMES added.
+C                   DATE_FORMAT removed. X2XTER_STRUCT aligned.
+C V07 13-DEC-94 GPR Integrate UK changes into X2X Baseline
+C V06 22-OCT-94 SCD Add flag to skip start date format in ASF - Integrate 
+C		    UK changes into X2X Baseline
+C V05 06-OCT-94 SCD Add flag to determine start date format in ASF (could be
+C		    day month year or month day year) - Integrate UK 
+C		    changes into X2X Baseline
+C V04 22-SEP-94 GPR ADD GTX DIAL FLAG - Integrate UK changes into X2X Baseline
+C V03 09-SEP-94 GPR ADD BROADCAST SERVER ARRAY - Integrate UK changes 
+C		    into X2X Baseline
+C V02 02-AUG-94 SCD ADD DUMMMY STATION PARAMETER TO SUPPORT GVT INSTALLATION
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C INCLUDE FILES.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C PARAMETER DECLARATIONS.
+C
+	INTEGER*4	CLASS_ASYNC,
+     *			CLASS_ISOCH,
+     *			CLASS_USAT,
+     *			CLASS_GVT,
+     *			CLASS_GTX,
+     *			CLASS_X25,
+     *			CLASS_X21,
+     *			CLASS_X28,
+     *			CLASS_X25PVC,
+     *			CLASS_X25_REMOTE,
+C
+     *			DUMMY_STN_NUMBER,		! V02
+C
+     *			MAX_EQUIV,
+C
+     *			AGT_CLASS,			! COMMTBL INDEX.
+     *			STD_CLASS,			! COMMTBL INDEX.
+     *			TERNUM,				! COMMTBL INDEX.
+C
+     *			RMS_MAXBYT,			! MAX BYTES PER RMS I/O.
+     *			CON_SECBYT,			! CONCURRENT BYTES/SECT.
+     *			DEC_BLKBYT,			! DIGITAL BYTES/BLOCK.
+C
+     *			X2XSPC_LUN,			! SPC LUN (DON'T CHNG !)
+     *			DAY_MONTH_YEAR,			! V05 - FLAG FOR MONTH
+							! DAY YEAR ASF DATE 
+							! FORMAT
+     *			MONTH_DAY_YEAR,			! V05 - FLAG FOR DAY
+							! MONTH YEAR ASF DATE 
+							! FORMAT
+     *			SKIP_START_DATE			! V06 - FLAG TO SKIP
+							! ASF DATE 
+C
+C	***** Start V07 changes *****
+C
+        PARAMETER (CLASS_X21        =     X2XC_CLASS_X21)
+        PARAMETER (CLASS_X25        =     X2XC_CLASS_X25)
+        PARAMETER (CLASS_ASYNC      =     X2XC_CLASS_ASYNC)
+        PARAMETER (CLASS_ISOCH      =     X2XC_CLASS_ISOCH)
+        PARAMETER (CLASS_USAT       =     X2XC_CLASS_USAT)
+        PARAMETER (CLASS_X25PVC     =     X2XC_CLASS_X25PVC)
+        PARAMETER (CLASS_GVT        =     X2XC_CLASS_GVT)
+        PARAMETER (CLASS_GTX        =     X2XC_CLASS_GTX)
+        PARAMETER (CLASS_X28        =     X2XC_CLASS_X28)
+        PARAMETER (CLASS_X25_REMOTE =    X2XC_CLASS_X25_REMOTE)
+C
+C	***** End V07 changes *****
+C
+	PARAMETER (DUMMY_STN_NUMBER = 99999)		! V02
+C
+	PARAMETER (MAX_EQUIV        =    10)
+C
+	PARAMETER (AGT_CLASS        =     1)
+	PARAMETER (STD_CLASS        =     2)
+	PARAMETER (TERNUM           =     3)
+C
+	PARAMETER (RMS_MAXBYT       = 65535)
+	PARAMETER (CON_SECBYT       =   256)
+	PARAMETER (DEC_BLKBYT       =   512)
+C
+	PARAMETER (X2XSPC_LUN       =     4)		! DON'T CHANGE THIS !
+C
+	PARAMETER (DAY_MONTH_YEAR   =     1)			! V05
+	PARAMETER (MONTH_DAY_YEAR   =     2)			! V05
+	PARAMETER (SKIP_START_DATE   =    3)			! V06
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C STRUCTURE FOR X2X TERMINAL VARIABLE INFORMATION.
+C
+	STRUCTURE	/X2XTER_STRUCT/
+	  INTEGER*4	T_PORT
+	  INTEGER*4	T_STATE
+	  INTEGER*4	T_STN
+	  CHARACTER*2	T_DROP
+	  CHARACTER*2	ALIGN
+	END STRUCTURE
+C
+	RECORD	/X2XTER_STRUCT/	X2XTER_TBL(X2X_TERMS)
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C LOCAL DECLARATIONS.
+C
+	INTEGER*4	COMMTBL(3, X2X_STATIONS, X2X_MAXTERMS),
+     *			END_STN(X2XC_CLASSES),
+     *			EQUIV_CLASS(X2XC_PERM_CLASSES, MAX_EQUIV),
+     *			LAPB_PORTS(X2X_MAXPVC_LINES),
+     *			START_STN(X2XC_CLASSES),
+     *			STN_CLASS(X2XC_CLASSES),
+     *			TERCNT(X2X_STATIONS),		! ACTIVE TERMS/STATION.
+     *			TER_PER_PORT(X2X_STATIONS, X2X_MAXPORT)
+	LOGICAL*4							!V03
+     *			IS_BROADCAST_SERVER(X2X_STATIONS)		!V03
+C
+	INTEGER*4	GTX_DIAL_NEEDED					!V04
+C
+	CHARACTER	X2XADR(X2X_STATIONS)*(LXADR)	! X2X ADDRESS.
+C 
+	CHARACTER*10	CLASS_NAMES(X2XC_PERM_CLASSES)
+     *			/'X.21      ', 'X.25      ',
+     *			 'ASYNC     ', 'ISOCH     ',
+     *			 'USAT      ', 'X25PVC    ',
+     *			 'GTECH DIAL', 'GTX DIAL  ',
+     *			 'X28PAD    ', 'X.25 REM  '/
+        COMMON/CLASS_NAMES/ CLASS_NAMES
+C
+	CHARACTER	C2DROP(X2X_TERMS)*(LDROP)	! DROP ADDRESS.
+C
+	LOGICAL*4	DISABLE_FLAG
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C COMMON AREA DECLARATIONS.
+C
+	COMMON	/STNDEF_COM/
+     *			EQUIV_CLASS,
+     *			END_STN,
+     *			LAPB_PORTS,
+     *			START_STN,
+     *			STN_CLASS,
+     *			X2XADR,
+     *			IS_BROADCAST_SERVER				!V03 
+C
+	COMMON	/UPD_XTER/
+     *			C2DROP,
+     *			COMMTBL,
+     *			DISABLE_FLAG,
+     *			TERCNT,
+     *			TER_PER_PORT,
+     *			X2XTER_TBL
+C
+	COMMON	/XSCL_COM/						!V04
+     *			GTX_DIAL_NEEDED					!V04
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C

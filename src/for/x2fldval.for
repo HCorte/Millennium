@@ -1,0 +1,175 @@
+C
+C SUBROUTINE X2FLDVAL
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2FLDVAL.FOV                                 $
+C  $Date::   17 Apr 1996 16:17:18                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2fldval.for;1 **
+C
+C X2FLDVAL.FOR
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C This subroutine will return the value of a modified field, up
+C to a maximum of 4 words of information.  This routine is
+C necessary to handle character and BCD field updates.
+C
+C Input parameters:
+C
+C     FILE        Int*4       File number
+C     FIELD       Int*4       Field number relative to file
+C     ALLREC      Int*4(128)  Record from file
+C
+C Output parameters:
+C
+C     VALUE       Int*4(4)    Value of modified field
+C     FLDIDX      Int*4       Actual field index into file
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2FLDVAL(FILE,FIELD,ALLREC,VALUE,FLDIDX)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:X2XPRM.DEF'
+	INCLUDE 'INCLIB:X2XGBL.DEF'
+	INCLUDE 'INCLIB:X2XNPC.DEF'
+	INCLUDE 'INCLIB:X2XLPC.DEF'
+	INCLUDE 'INCLIB:X2XSPC.DEF'
+	INCLUDE 'INCLIB:X2XRCD.DEF'
+	INCLUDE 'INCLIB:X2XRCL.DEF'
+	INCLUDE 'INCLIB:X2XSCL.DEF'
+	INCLUDE 'INCLIB:X2XSTN.DEF'
+	INCLUDE 'INCLIB:X2XTER.DEF'
+	INCLUDE 'INCLIB:X2XBLD.DEF'
+	INCLUDE 'INCLIB:X2XBRO.DEF'
+	INCLUDE 'INCLIB:X2XGRP.DEF'
+	INCLUDE 'INCLIB:X2XTTN.DEF'
+C
+	INTEGER*4   FILE            !File number
+	INTEGER*4   FIELD           !Field number
+	INTEGER*4   FLDIDX          !Actual field index
+	INTEGER*4   ALLREC(128)     !Record buffer
+	INTEGER*4   VALUE(4)        !Field values
+	INTEGER*4   FLDTYP          !Field type
+	INTEGER*4   FLDLEN          !Field length
+	INTEGER*4   WORDS           !Number of required words
+	INTEGER*4   I
+C
+C INITIALIZE THE FIELD VALUE.
+C
+	DO 100 I=1,4
+	  VALUE(I)=-1
+100	CONTINUE
+	FLDTYP=0
+	FLDLEN=0
+	FLDIDX=0
+C
+C EXTRACT THE FIELD TYPE AND LENGTH.
+C
+	IF(FIELD.LE.0) THEN
+	  VALUE(1)=-1
+	  FLDTYP=-100
+	ELSE IF(FILE.EQ.XGBL.AND.FIELD.LE.X2XGBL_ENTRIES) THEN
+	  FLDTYP=X2XGBL_RANGE(1,FIELD)
+	  FLDLEN=X2XGBL_RANGE(2,FIELD)
+	  FLDIDX=X2XGBL_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XNPC.AND.FIELD.LE.X2XNPC_ENTRIES) THEN
+	  FLDTYP=X2XNPC_RANGE(1,FIELD)
+	  FLDLEN=X2XNPC_RANGE(2,FIELD)
+	  FLDIDX=X2XNPC_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XLPC.AND.FIELD.LE.X2XLPC_ENTRIES) THEN
+	  FLDTYP=X2XLPC_RANGE(1,FIELD)
+	  FLDLEN=X2XLPC_RANGE(2,FIELD)
+	  FLDIDX=X2XLPC_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XSPC.AND.FIELD.LE.X2XSPC_ENTRIES) THEN
+	  FLDTYP=X2XSPC_RANGE(1,FIELD)
+	  FLDLEN=X2XSPC_RANGE(2,FIELD)
+	  FLDIDX=X2XSPC_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XRCD.AND.FIELD.LE.X2XRCD_ENTRIES) THEN
+	  FLDTYP=X2XRCD_RANGE(1,FIELD)
+	  FLDLEN=X2XRCD_RANGE(2,FIELD)
+	  FLDIDX=X2XRCD_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XRCL.AND.FIELD.LE.X2XRCL_ENTRIES) THEN
+	  FLDTYP=X2XRCL_RANGE(1,FIELD)
+	  FLDLEN=X2XRCL_RANGE(2,FIELD)
+	  FLDIDX=X2XRCL_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XSCL.AND.FIELD.LE.X2XSCL_ENTRIES) THEN
+	  FLDTYP=X2XSCL_RANGE(1,FIELD)
+	  FLDLEN=X2XSCL_RANGE(2,FIELD)
+	  FLDIDX=X2XSCL_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XSTN.AND.FIELD.LE.X2XSTN_ENTRIES) THEN
+	  FLDTYP=X2XSTN_RANGE(1,FIELD)
+	  FLDLEN=X2XSTN_RANGE(2,FIELD)
+	  FLDIDX=X2XSTN_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XTER.AND.FIELD.LE.X2XTER_ENTRIES) THEN
+	  FLDTYP=X2XTER_RANGE(1,FIELD)
+	  FLDLEN=X2XTER_RANGE(2,FIELD)
+	  FLDIDX=X2XTER_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XBLD.AND.FIELD.LE.X2XBLD_ENTRIES) THEN
+	  FLDTYP=X2XBLD_RANGE(1,FIELD)
+	  FLDLEN=X2XBLD_RANGE(2,FIELD)
+	  FLDIDX=X2XBLD_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XBRO.AND.FIELD.LE.X2XBRO_ENTRIES) THEN
+	  FLDTYP=X2XBRO_RANGE(1,FIELD)
+	  FLDLEN=X2XBRO_RANGE(2,FIELD)
+	  FLDIDX=X2XBRO_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XGRP.AND.FIELD.LE.X2XGRP_ENTRIES) THEN
+	  FLDTYP=X2XGRP_RANGE(1,FIELD)
+	  FLDLEN=X2XGRP_RANGE(2,FIELD)
+	  FLDIDX=X2XGRP_INDEX(FIELD)
+	ELSE IF(FILE.EQ.XTTN.AND.FIELD.LE.X2XTTN_ENTRIES) THEN
+	  FLDTYP=X2XTTN_RANGE(1,FIELD)
+	  FLDLEN=X2XTTN_RANGE(2,FIELD)
+	  FLDIDX=X2XTTN_INDEX(FIELD)
+	ENDIF
+C
+C FIELD IS CHARACTER.
+C
+	IF(FLDTYP.EQ.-1) THEN
+	  WORDS=FLDLEN/4
+	  IF(MOD(FLDLEN,4).NE.0) WORDS=WORDS+1
+	  WORDS=MIN0(WORDS,4)
+	  CALL FASTMOV(ALLREC(FLDIDX),VALUE(1),WORDS)
+C
+C FIELD IS BINARY CODED DECIMAL.
+C
+	ELSE IF(FLDTYP.EQ.-2) THEN
+	  WORDS=FLDLEN/8
+	  IF(MOD(FLDLEN,4).NE.0) WORDS=WORDS+1
+	  WORDS=MIN0(WORDS,4)
+	  CALL FASTMOV(ALLREC(FLDIDX),VALUE(1),WORDS)
+C
+C IF THE FIELD TYPE IS INTEGER, SET THE VALUE.
+C
+	ELSE
+	  VALUE(1)=ALLREC(FLDIDX)
+	ENDIF
+C
+	RETURN
+	END

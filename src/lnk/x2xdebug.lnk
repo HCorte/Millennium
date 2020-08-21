@@ -1,0 +1,21 @@
+$! GXSRC:X2XDEBUG.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]X2XDEBUG.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 21:02:44   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 14:22:04   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:55:48   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:X2XDEBUG.EXE -
+OBJLIB:X2XDEBUG,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXX2XCOM.ESH/SHAREABLE

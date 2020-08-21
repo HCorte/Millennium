@@ -1,0 +1,93 @@
+C RECSTF.DEF
+C 
+C V08 13-OCT-99 RXK STFWTD added for World Tour. 
+C V07 16-JAN-96 RXK Rfss 94166.Fix for offsets (STFSPT_TAB2_OFF,STFTSL_OFF)
+C V06 24-AUG-93 HXK amended stfspt array length for quick picks in finland
+C V05 23-AUG-93 HXK fixed bug; line length too long (> 72)
+C V04 22-AUG-93 HXK changed dimensions of stats arrays
+C V03 16-JUL-93 HXK ADDED VAKIO STATS MATCH LIST
+C V02 21-JAN_93 DAB Initial Release Based on Netherlands Bible
+C                   DEC Baseline
+C V01 05-MAY-92 GCAN INITIAL RELEASE FOR THE NEHTERLANDS
+C
+C RECORD LAYOUT FOR THE SYSTEM STATISTICS FILE.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C RECORD LAYOUT FOR THE SYSTEM STATISTICS FILE
+C FOR DETAILS ON SIZES AND OFFSETS: STACOM.DEF
+C 
+C STFLTO(NUMTOT,2,MAXBRD,MAXBRD+1,NUMLTO)       LOTTO STATISTICS
+C                               
+C STFGAM(NUMTOT,4,MAXGAM)       GAME STATISTICS
+C                               
+C STFKIK(2,MAXGAM)              KICKER GAME STATISTICS
+C
+C STFSPT(NUMTOT,2,MAXBRD,MAXBRD+1,NUMSPT)       SPORTS STATISTICS
+C 
+C STFSPT_CUP(NUMSPT)            SPORTS COUPONS PLAYED 
+C
+C STFSPT_TAB1(SPGNBR,7,NUMSPT)  SPORTS STATS TABLE 1  
+C
+C STFSPT_TAB2(SPGNBR,3,NUMSPT)  SPORTS STATS TABLE 2  
+C
+C STFTSL(NUMTOT,5,NUMTSL)       TOTO SELECT STATISTICS
+C
+C
+        INTEGER*4  STFLTO_OFF, STFGAM_OFF, STFKIK_OFF, STFSPT_OFF
+        PARAMETER (STFLTO_OFF=1)
+        PARAMETER (STFGAM_OFF=STFLTO_OFF+NUMTOT*2*MAXBRD*(MAXBRD+1)*
+     *             NUMLTO)
+        PARAMETER (STFKIK_OFF=STFGAM_OFF+NUMTOT*4*MAXGAM)
+        PARAMETER (STFSPT_OFF=STFKIK_OFF+2*MAXGAM)
+
+        INTEGER*4  STFSPT_CUP_OFF, STFSPT_TAB1_OFF, STFSPT_TAB2_OFF
+        PARAMETER (STFSPT_CUP_OFF = STFSPT_OFF+NUMTOT*2*MAXBRD*
+     *             (MAXBRD+1)*NUMSPT)
+        PARAMETER (STFSPT_TAB1_OFF=STFSPT_CUP_OFF+NUMSPT)
+        PARAMETER (STFSPT_TAB2_OFF=STFSPT_TAB1_OFF+SPGNBR*7*NUMSPT)
+
+        INTEGER*4  STFTSL_OFF, STFFRE_OFF
+        PARAMETER (STFTSL_OFF=STFSPT_TAB2_OFF+SPGNBR*3*NUMSPT)
+        PARAMETER (STFFRE_OFF=STFTSL_OFF+NUMTOT*5*NUMTSL)
+
+        INTEGER*4  STFSEC_VAX, STFSEC_NUM
+        PARAMETER (STFSEC_VAX=SECSIZE/4)
+        PARAMETER (STFSEC_NUM=NINT(FLOAT((STFFRE_OFF-2)/
+     *                                   STFSEC_VAX)+.5))
+
+        INTEGER*4  STFLEN                       !STATICS RECORD SIZE
+        INTEGER*4  STFSEC                       !NUMBER OF SEC IN RECORD
+        PARAMETER  (STFLEN = STFSEC_VAX*STFSEC_NUM) !EVEN SECTOR SIZE
+        PARAMETER  (STFSEC = STFLEN/64)
+
+        INTEGER*4  STFREC(STFLEN)
+
+        INTEGER*4  STFLTO(NUMTOT,2,MAXBRD,MAXBRD+1,NUMLTO)
+        INTEGER*4  STFGAM(NUMTOT,4,MAXGAM)
+        INTEGER*4  STFKIK(2,MAXGAM)
+        INTEGER*4  STFSPT(NUMTOT,2,MAXBRD,MAXBRD+1,NUMSPT)
+        INTEGER*4  STFSPT_CUP(NUMSPT)
+        INTEGER*4  STFSPT_TAB1(SPGNBR,7,NUMSPT)
+        INTEGER*4  STFSPT_TAB2(SPGNBR,3,NUMSPT)
+        INTEGER*4  STFTSL(NUMTOT,5,NUMTSL)
+
+        EQUIVALENCE (STFLTO,      STFREC(STFLTO_OFF))
+        EQUIVALENCE (STFGAM,      STFREC(STFGAM_OFF))
+        EQUIVALENCE (STFKIK,      STFREC(STFKIK_OFF))
+        EQUIVALENCE (STFSPT,      STFREC(STFSPT_OFF))
+        EQUIVALENCE (STFSPT_CUP,  STFREC(STFSPT_OFF))
+        EQUIVALENCE (STFSPT_TAB1, STFREC(STFSPT_TAB1_OFF))
+        EQUIVALENCE (STFSPT_TAB2, STFREC(STFSPT_TAB2_OFF))
+        EQUIVALENCE (STFTSL,      STFREC(STFTSL_OFF))

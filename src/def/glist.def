@@ -1,0 +1,151 @@
+C GLIST.DEF
+C $Log:   GXAFXT:[GOLS]GLIST.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:25:12   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:44:00   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 26-JAN-91 TKO  CHANGE METHOD TO DO LOCKS IN PLACE IN BUFFER.
+C V01 05-JUL-90 MP	INITIAL RELEASE
+C			TARGETED FOR PORT OF CONCURRENT FORTRAN
+C			MADE FOR VAX/VMS
+C
+C This describes the structure of lists used by GLIST.FOR
+C routines.
+C
+C
+C Define constants to match return codes and statuses with
+C what is returned on Concurrent
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C
+C
+C GLIST_LOCK_FLAG is the mask used in GLIST_TOP_LOCK and GLIST_BOT_LOCK
+C to indicate that locking is to be done (it is a bit mask for bit 7).
+C GLIST_LOCK_BIT is the bit # which is actually used to perform the lock.
+C
+	INTEGER*4	 GLIST_LOCK_FLAG
+	PARAMETER	(GLIST_LOCK_FLAG = '80'X) !HIGH ORDER BIT OF A BYTE
+C
+	INTEGER*4	 GLIST_LOCK_BIT
+	PARAMETER	(GLIST_LOCK_BIT  = 0)	!LOW  ORDER BIT OF A BYTE
+C
+C GLIST_LOCK_DELAY_VALUE is the amount of time (msecs) to wait before retrying
+C in the event a resource is locked.  GLIST_LOCK_DELAY_COUNT is the maximum
+C # of times to wait GLIST_LOCK_DELAY_VALUE msecs before printing a message
+C that there is a problem.  (It will continue waiting, however).
+C
+	INTEGER*4	 GLIST_LOCK_DELAY_VALUE
+	PARAMETER	(GLIST_LOCK_DELAY_VALUE = 10)	 !10 MSECS
+C
+	INTEGER*4	 GLIST_LOCK_DELAY_COUNT
+	PARAMETER	(GLIST_LOCK_DELAY_COUNT = 1000)  !10 SECONDS
+C
+C
+C Define offsets in lists header structure
+C
+C *** NOTE THAT SYSPARAM.DEF DEFINES QHEDSZ WHICH MUST BE DECLARED BEFORE
+C *** INCLUDING THIS ROUTINE.
+C
+C
+C
+C Maximum offset into the GLIST
+C
+	INTEGER*4	 GLIST_MAX_OFFSET
+	PARAMETER	(GLIST_MAX_OFFSET = 1)
+C
+C RTL maintains the following 'top' of the GLIST value
+C
+	INTEGER*4	 GLIST_TOP
+	PARAMETER	(GLIST_TOP = 2)
+C
+C Lock word for 'top' value maintenance
+C
+	INTEGER*4	 GLIST_TOP_LOCK
+	PARAMETER	(GLIST_TOP_LOCK = 3)
+C
+C Count of number of times top was locked when a routine tried to access it.
+C (not completely accurate because of multi-processor considerations,
+C  but close enough).
+C
+	INTEGER*4	 GLIST_TOP_LOCK_CNT
+	PARAMETER	(GLIST_TOP_LOCK_CNT = 4)
+C
+C ABL maintains the following 'bottom' of the GLIST value
+C
+	INTEGER*4	 GLIST_BOT
+	PARAMETER	(GLIST_BOT = 5)
+C
+C Lock word for 'bottom' value maintenance
+C
+	INTEGER*4	 GLIST_BOT_LOCK
+	PARAMETER	(GLIST_BOT_LOCK = 6)
+C
+C Count of number of times top was locked when a routine tried to access it.
+C (not completely accurate because of multi-processor considerations,
+C  but close enough).
+C
+	INTEGER*4	 GLIST_BOT_LOCK_CNT
+	PARAMETER	(GLIST_BOT_LOCK_CNT = 7)
+C
+C Total count of successful ABL operations
+C
+	INTEGER*4	 GLIST_ABL_CNT
+	PARAMETER	(GLIST_ABL_CNT = 8)
+C
+C Total count of successful ATL operations
+C
+	INTEGER*4	 GLIST_ATL_CNT
+	PARAMETER	(GLIST_ATL_CNT = 9)
+C
+C Total count of successful RBL operations
+C
+	INTEGER*4	 GLIST_RBL_CNT
+	PARAMETER	(GLIST_RBL_CNT = 10)
+C
+C Total count of successful RTL operations
+C
+	INTEGER*4	 GLIST_RTL_CNT
+	PARAMETER	(GLIST_RTL_CNT = 11)
+C
+C Total # of times 'list empty' status returned
+C
+	INTEGER*4	 GLIST_EMPTY_CNT
+	PARAMETER	(GLIST_EMPTY_CNT = 12)
+C
+C Total # of times 'list full' status returned
+C
+	INTEGER*4	 GLIST_FULL_CNT
+	PARAMETER	(GLIST_FULL_CNT = 13)
+C
+C ***** NOTE *****
+C
+C Because of the way this queue stuff works, if you have 10 potential
+C items to add to the queue, the list must be 11 words long - i.e., you
+C always need at least one more word than the number of elements which
+C may be in the queue.  In order to accommodate this, we use the last
+C word in the header as actually part of the queue.
+C
+C **** REMAINDER OF HEADER (14-15) IS NOT USED ****
+C
+	INTEGER*4	 GLIST_START
+	PARAMETER	(GLIST_START = QHEDSZ)	!last word of header
+C
+C

@@ -1,0 +1,147 @@
+C
+C V11 29-NOV-2000 UXN TOTOGOLA ADDED.
+C V10 16-JAN-2000 OXK SPT_PRZDRW added (Vakio changes)
+C V09 13-OCT-1999 RXK World Tour game added.
+C V08 29-JUL-1998 RXK Reserved table for old kicker (using numkik+1)
+C V07 30-NOV-1999 HXK Changed BPZSHV
+C V06 15-OCT-1994 HXK Adding / Developing Bingo
+C V05 13-AUG-1993 GXA Corected VPZDAT_OFF typo.
+C V04 13-AUG-1993 GXA Initial revision.
+C V03 12-JAN-1993 HJK   CORRECTED FOR VALIDATION DETAILS
+C V02 14-AUG-1990 GCAN  MODIFIED FOR POSTPONED POOLS
+C                      REMOVED SWEDISH GAMES AND ADDED RAVI(V5/V65)
+C
+C
+C PRZCOM.DEF
+C
+C DETAIL PRIZE DATA COMMON FOR PAST 100 DRAWS
+C
+C
+C LPZSHV(LTGDIV,2,100,NUMLTO)        ;LOTTO SHARE VALUES        2*3200
+C LPZDAT(100,NUMLTO)                 ;LOTTO DRAW DATES           200
+C
+C SPZSHV(SPGDIV,PRZDRW,NUMSPT)   ;SPORTS SHARE VALUES       1600
+C SPZDAT(PRZDRW,NUMSPT)          ;SPORTS DRAW DATES          200
+C SPZMAT(SPGDIV,PRZDRW,NUMSPT)   ;SPORTS MATCH TABLE        1600
+C
+C TGZSHV(TGGDIV,PRZDRW,NUMTGL)   ;RESULTS SHARE VALUES       1600
+C TGZDAT(PRZDRW,NUMTGL)          ;RESULTS DRAW DATES          200
+C TGZMAT(TGGDIV,PRZDRW,NUMTGL)   ;RESULTS MATCH TABLE        1600
+C
+C KPZSHV(KIGDIV,100,NUMKIK)          ;KICKER SHARE VALUES       1200
+C KPZDAT(100,NUMKIK)                 ;KICKER DRAW DATES          100
+C
+C BPZSHV(BGODIV,BGOSUB,100,NUMBGO)   ;BINGO SHARE VALUES        2400
+C BPZDAT(100,NUMBGO)                 ;BINGO DRAW DATES           100
+C BPZLOT(BGODIV,100,NUMBGO)          ;CORRESPOND BINGO DIVS IN
+C                                     LOTTERY SCALE             1500   
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, W.Greenwich, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+        INTEGER*4 PRZDRW
+        PARAMETER(PRZDRW = 100)                 !Max # of draws to Store
+C            
+C DEFINE OFFSETS
+C
+        INTEGER*4 LPZSHV_OFF, LPZDAT_OFF
+        PARAMETER(LPZSHV_OFF = 1)
+        PARAMETER(LPZDAT_OFF = LPZSHV_OFF + (2*LTGDIV*PRZDRW*NUMLTO))
+C
+        INTEGER*4 SPZSHV_OFF, SPZDAT_OFF, SPZMAT_OFF
+        PARAMETER(SPZSHV_OFF = LPZDAT_OFF + (PRZDRW*NUMLTO))
+        PARAMETER(SPZDAT_OFF = SPZSHV_OFF + (SPGDIV*PRZDRW*NUMSPT))
+        PARAMETER(SPZMAT_OFF = SPZDAT_OFF + (PRZDRW*NUMSPT))
+C
+        INTEGER*4 TGZSHV_OFF, TGZDAT_OFF, TGZMAT_OFF
+        PARAMETER(TGZSHV_OFF = SPZMAT_OFF + (SPGDIV*PRZDRW*NUMSPT))
+        PARAMETER(TGZDAT_OFF = TGZSHV_OFF + (TGGDIV*PRZDRW*NUMTGL))
+        PARAMETER(TGZMAT_OFF = TGZDAT_OFF + (PRZDRW*NUMTGL))
+C
+        INTEGER*4 KPZSHV_OFF, KPZDAT_OFF
+        PARAMETER(KPZSHV_OFF = TGZMAT_OFF + (TGGDIV*PRZDRW*NUMTGL))
+        PARAMETER(KPZDAT_OFF = KPZSHV_OFF + (KIGDIV*PRZDRW*NUMKIK))
+C
+        INTEGER*4 BPZSHV_OFF, BPZDAT_OFF, BPZLOT_OFF
+        PARAMETER(BPZSHV_OFF = KPZDAT_OFF + (PRZDRW*NUMKIK))
+        PARAMETER(BPZDAT_OFF = BPZSHV_OFF + 
+     *                         (BGODIV*BGOSUB*PRZDRW*NUMBGO))
+        PARAMETER(BPZLOT_OFF = BPZDAT_OFF + (PRZDRW*NUMBGO))
+C
+        INTEGER*4 PRZFRE_OFF
+        PARAMETER(PRZFRE_OFF = BPZLOT_OFF + (BGODIV*PRZDRW*NUMBGO))
+C
+C CALCULATE LENGTH OF COMMON
+C
+        INTEGER*4 PRZSEC_SIZE, PRZSEC_NUM, PRZLEN
+        PARAMETER(PRZSEC_SIZE = 2048)
+        PARAMETER(PRZSEC_NUM = NINT(FLOAT((PRZFRE_OFF-2)/
+     *                         PRZSEC_SIZE)+.5))
+        PARAMETER(PRZLEN = PRZSEC_SIZE * PRZSEC_NUM)
+C
+C DEFINE COMMON
+C
+        COMMON /PRZCOM/
+     *          LPZSHV(LTGDIV,2,PRZDRW,NUMLTO),
+     *          LPZDAT(PRZDRW,NUMLTO)
+C
+C
+        COMMON /PRZCOM/
+     *          SPZSHV(SPGDIV,PRZDRW,NUMSPT),
+     *          SPZDAT(PRZDRW,NUMSPT),
+     *          SPZMAT(SPGDIV,PRZDRW,NUMSPT)
+
+        COMMON /PRZCOM/
+     *          TGZSHV(TGGDIV,PRZDRW,NUMTGL),
+     *          TGZDAT(PRZDRW,NUMTGL),
+     *          TGZMAT(TGGDIV,PRZDRW,NUMTGL)
+C
+C
+        COMMON /PRZCOM/
+     *          KPZSHV(KIGDIV,PRZDRW,NUMKIK),
+     *          KPZDAT(PRZDRW,NUMKIK)
+C
+C
+        COMMON /PRZCOM/
+     *          BPZSHV(BGODIV,BGOSUB,PRZDRW,NUMBGO),
+     *          BPZDAT(PRZDRW,NUMBGO),
+     *          BPZLOT(BGODIV,PRZDRW,NUMBGO)
+C
+
+C
+C
+C DECLARE VARIABLES
+C
+        INTEGER*4 LPZSHV, LPZDAT
+        INTEGER*4 SPZSHV, SPZDAT, SPZMAT
+        INTEGER*4 TGZSHV, TGZDAT, TGZMAT
+        INTEGER*4 KPZSHV, KPZDAT
+        INTEGER*4 BPZSHV, BPZDAT, BPZLOT
+C
+C EQUIVALENCE FOR CHECKPOINT
+C
+        INTEGER*4 PRZCSB
+        PARAMETER(PRZCSB = PRZSEC_NUM)
+C
+        INTEGER*4 PRZBLK(2048,PRZCSB)
+        EQUIVALENCE(PRZBLK(1,1),LPZSHV(1,1,1,1))
+C
+C
+        INTEGER*4        FRST_PRZCOM(2)
+        EQUIVALENCE     (FRST_PRZCOM, PRZBLK(1,1))
+        INTEGER*4        LAST_PRZCOM
+        EQUIVALENCE     (LAST_PRZCOM, PRZBLK(2048,PRZCSB))
+C
+        VOLATILE /PRZCOM/
+C
+

@@ -1,0 +1,98 @@
+C TCPCOM.DEF
+C
+C V07 16-JUN-2000 UXN TCPCOM aligned properly.
+C V06 14-JUN-2000 OXK COMMON /TCP_EVNS/ added
+C V05 17 Apr 1996 HXK Release of Finland for X.25, Telephone Betting, 
+C			Instant Pass Thru Phase 1
+C V04 03 Jan 1994 JPJ Initial revision.
+C V03 29 Jul 1993 MP  Added TCP_WATCH_DOG
+C V02 22 Jul 1993 PJS Initial revision.
+C V01 17-JUN-1993 MP  Adopted from TCPEVN to be used with TCP_LINK
+C
+C This def file contain the global TCP/IP event flags, parameters and
+c variables used iN TCP_LINK for TCP/IP environment.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C direTCPy or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C following events are used with 'passive' TCP_LINK.
+C They should be different from events of the 'active' TCPASST if
+C TCP_LINK and TCPASST to run on the same computer.
+C Indexes into TCP_EVNS array are defined in SERVPRM.DEF since
+C they are used by SERV... software.
+C
+	INTEGER*4	TCP_MAX_EVNS
+	PARAMETER      (TCP_MAX_EVNS=5)
+C
+	INTEGER*4	TCP_EVNS(TCP_MAX_EVNS)		!EVENT NUMBERS
+	COMMON /TCP_EVNS/ TCP_EVNS
+	DATA		TCP_EVNS(SERV_PCONNECT)/80/
+	DATA		TCP_EVNS(SERV_WRITE)/81/
+	DATA		TCP_EVNS(SERV_DISC_RED_IGN)/82/
+	DATA		TCP_EVNS(SERV_DISCONNECT)/83/
+	DATA		TCP_EVNS(SERV_STOP)/84/
+C
+	INTEGER*4	TCP_CONNECTIONS(SERV_MAX_CONN)	!pass connection to AST
+C
+C Time trap values
+C
+	INTEGER*4	TCP_TIME_PCON
+	PARAMETER      (TCP_TIME_PCON=1)
+C
+	INTEGER*4	TCP_TIME_READ
+	PARAMETER      (TCP_TIME_READ=2)
+C
+	INTEGER*4	TCP_TIME_WRITE		! not used
+	PARAMETER      (TCP_TIME_WRITE=3)
+C
+	INTEGER*4	TCP_TIME_WATCH		! used for WATCH_DOG check
+	PARAMETER      (TCP_TIME_WATCH=4)
+C
+	INTEGER*4	TCP_MAX_TIME_TRAPS
+	PARAMETER      (TCP_MAX_TIME_TRAPS=4)
+C
+C STRUCTURE USED FOR SOCK ADDRESS.
+C
+        STRUCTURE /SOCKADR/
+          INTEGER*2   INET_FAMILY
+          INTEGER*2   INET_PORT
+          INTEGER*4   ADRS
+          CHARACTER*8 BLKB
+	END STRUCTURE
+C
+        STRUCTURE /SOCKADR_BYT/
+          INTEGER*2   INET_FAMILY
+          INTEGER*2   INET_PORT
+          BYTE	      ADRS_BYT(4)
+          CHARACTER*8 BLKB
+	END STRUCTURE
+C
+C TCP/IP default port 
+C
+	INTEGER*4	TCP_LOCAL_PORT_DEFAULT
+	PARAMETER	(TCP_LOCAL_PORT_DEFAULT=1500)
+C
+	INTEGER*4	TCP_TIMEINMS(TCP_MAX_TIME_TRAPS)
+	INTEGER*4	TCP_TIMEDELY(2,TCP_MAX_TIME_TRAPS)
+	INTEGER*4	TCP_TIMEINPR(TCP_MAX_TIME_TRAPS)
+C
+	COMMON /TCPCOM/	TCP_TIMEINMS,TCP_TIMEDELY,TCP_TIMEINPR,
+     *			TCP_CONNECTIONS
+C
+	LOGICAL		TCP_WATCH_DOG(SERV_MAX_CONN)
+	COMMON /TCPCOM/ TCP_WATCH_DOG
+
+	INTEGER*2	TCP_MESCHANNEL
+	COMMON /TCPCOM/ TCP_MESCHANNEL
+C
+C

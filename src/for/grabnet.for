@@ -1,0 +1,276 @@
+C
+C *** SUBROUTINE GRABNET ***
+C
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]GRABNET.FOV                                  $
+C  $Date::   17 Apr 1996 13:27:52                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C *** Pre-Baseline Source - net_netsub1.for ***
+C
+C V02 22-OCT-91 TKO Change CALL ABORT to CALL TSKABORT
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Purpose:
+C   Force a takeover.
+C
+C Calling Sequence:
+C   GRABNET(ACTION, RESMD, WAY)
+C
+C Input:
+C   ACTION  - IF 0 FORCE IT, IF 1 CHECK A LOT THINGS BEFOREHAND
+C   RESMD   - IF 1 NEW MASTER SENDS "SETMASTER" BACK TO THE OLD
+C   WAY     - OUR WAY
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+C
+	SUBROUTINE GRABNET(ACTION, RESMD, WAY)
+C
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+C
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:CTLCOM.DEF'
+	INCLUDE 'INCLIB:DESNET.DEF'
+	INCLUDE 'INCLIB:LANCOM.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+C
+C LOCAL DECLARATIONS
+C
+	INTEGER*4	ACTION,
+     *			BUF,
+     *			BWAY,
+     *			DISPLAY_MESSAGE,
+     *			DUMMY,
+     *			OFF,
+     *			RESMD,
+     *			ST,
+     *			TIMES,
+     *			TRCADR,
+     *			WAY
+C
+	LOGICAL*4	TAKEOVER
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C DISPLAY MESSAGE DELAY IS NORMALLY 30.
+C SETTING IT TO 10 HERE WILL CAUSE IT TO INITIALLY DISPLAY IN 20 SECONDS.
+C
+	DISPLAY_MESSAGE = 10
+C
+100	CONTINUE
+	IF (NODEID .EQ. NETMASTER(WAY)) GOTO 9999	! IF ALREADY MASTER NODE
+C
+	IF (ACTION .NE. 0) THEN				! CHECK IF WE CAN DO IT
+C
+C ARE WE THE DESIGNATED BACKUP ?
+C
+	  IF (NODEID .NE. NETBACKUP(WAY)) GOTO 9999
+C
+C ARE WE IN TRANSACTION MODE ?
+C
+	  IF (NETMODE(NODEID, WAY) .NE. TRNMD) GOTO 9999
+C
+C ANYTHING SENT FROM MASTER YET ?
+C
+	  IF (NETTIM(NETMASTER(WAY),  WAY) .EQ. 0 .AND.
+     *        NETROUT(NETMASTER(WAY), WAY) .EQ. ROUACT) GOTO 9999
+	ENDIF
+C
+C TAKEOVER ONLY IF YOUR CTLPRO IS NOT (!!!) TALKING TO PRI COMM SAP
+C
+	TAKEOVER = LANGO     .NE. LANPRODIS .AND.
+     *             THISSTA   .NE. STADOWN   .AND.
+     *             CTLX2XLOC .EQ. CTLX2XOK  .AND.
+     *             CTLSTAUP  .NE. CTLSAPSTA(X2X_GAME_SAP)
+C
+C NO CAN DO ...
+C
+	IF (.NOT. TAKEOVER) THEN
+	  IF (DISPLAY_MESSAGE .GE. 30) THEN
+	    DISPLAY_MESSAGE = 0
+C
+	    CALL OPS('*** THIS SYSTEM WILL NOT TAKE OVER'//
+     *               CHAR(7), NXTSER, LANGO)
+	    CALL OPS('*** BECAUSE OF INTERNAL NETWORK INCONSISTENCIES'//
+     *               CHAR(7), THISSTA, CTLX2XLOC)
+	    CALL OPS('*** PERFORM KILSYS ON PRIMARY OR BACKUP CONSOLE'//
+     *               CHAR(7), CTLSAPSTA(X2X_GAME_SAP), 0)
+	  ENDIF
+C
+	  DISPLAY_MESSAGE = DISPLAY_MESSAGE + 1
+	  CALL XWAIT(1, 2, ST)				! WAIT 1 SECOND
+	  GOTO 100					! TRY AGAIN
+	ENDIF
+C
+C THIS SYSTEM WILL NOW TAKE OVER
+C
+	CALL OPS(CHAR(7)//'THIS SYSTEM IN PROCESS OF TAKEOVER', 0, 0)
+	CALL OPS(CHAR(7)//'THIS SYSTEM IN PROCESS OF TAKEOVER', 0, 0)
+	CALL OPS(CHAR(7)//'THIS SYSTEM IN PROCESS OF TAKEOVER', 0, 0)
+C
+C GRAB RESOURCES ...
+C FIRST FINISH LAST FREEZE
+C
+150	CONTINUE
+	IF (P(CMDFRZ) .NE. 0 .AND. P(CMDFRZ) .NE. 997) THEN
+	  CALL XWAIT(10, 1, ST)				! WAIT 10 MILLISECONDS
+	  GOTO 150
+	ENDIF
+C
+C FREEZE THE SYSTEM FOR A WHILE.
+C CANNOT WAIT FOR REGULAR NETFLUSH ON SECONDARY NODE
+C
+	P(CMDFRZ) = 997
+C
+	IF (RESMD .EQ. 1) CALL XWAIT(5, 2, ST)		! WAIT 5 SECONDS
+C
+C DECLARE ALL CONNECTIONS TO OTHER PRIMARY SYSTEMS TO BE DEAD
+C
+	DO 300 BWAY = 1, NUMWAY
+	  DO 250 OFF = 1, NETSYS
+	    NETREM(OFF, BWAY) = 0
+C
+	    IF (OFF .NE. NODEID) THEN
+200	      CONTINUE
+	      CALL EXTRABUF(BUF, BWAY, ST)
+	      IF (ST .EQ. 2) THEN
+		CALL XWAIT(20, 1, ST)			! WAIT 20 MILLISECONDS
+		GOTO 200
+	      ENDIF
+C
+	      NETBUF(MODE,     BUF) = DRVMD
+	      NETBUF(HDRSIZ+1, BUF) = REMLINK
+	      NETBUF(HDRSIZ+2, BUF) = OFF
+	      NETBUF(HDRSIZ+4, BUF) = BWAY
+C
+	      NETREM(OFF, BWAY) = -1			! MARK FOR REMOVAL
+C
+	      CALL SNDNET(BUF, BWAY)
+C
+	      NETROUT(OFF, BWAY) = ROUIDLE
+	      NETSTAT(OFF, BWAY) = -IABS(NETSTAT(OFF,BWAY))
+	    ENDIF
+250	  CONTINUE
+300	CONTINUE
+C
+C WAIT BEFORE ADDLINK (AFTER REMLINK)
+C ADD LINK ONLY ON YOUR LOG WAY OR OTHER SYSTEM LOG WAY
+C
+	TIMES = 0
+	DO 400 BWAY = 1, NUMWAY
+	  IF (NETMASTER(BWAY) .EQ. 0) GOTO 400
+350	  CONTINUE
+	  CALL XWAIT(100, 1, ST)			! WAIT 100 MILLISECONDS
+	  TIMES = TIMES + 1
+	  IF (NETREM(NETMASTER(BWAY), BWAY) .NE. 0 .AND.
+     *        TIMES .LE. 100) GOTO 350
+400	CONTINUE
+C
+	DO 600 BWAY = 1, NUMWAY
+	  DO 500 OFF = 1, NETSYS
+	    IF (NETROUT(OFF, BWAY) .EQ. ROUIDLE) THEN
+450	      CONTINUE
+	      CALL EXTRABUF(BUF, BWAY, ST)
+	      IF (ST .EQ. 2) THEN
+		CALL XWAIT(20, 1, ST)			! WAIT 20 MILLISECONDS
+		GOTO 450
+	      ENDIF
+C
+	      NETBUF(MODE,     BUF) = DRVMD
+	      NETBUF(WAYNR,    BUF) = BWAY
+	      NETBUF(HDRSIZ+1, BUF) = ADDLINK
+	      NETBUF(HDRSIZ+2, BUF) = OFF
+	      NETBUF(HDRSIZ+3, BUF) = NSTAPRIM
+	      NETBUF(HDRSIZ+4, BUF) = BWAY
+C
+	      NETSTAT(OFF, BWAY) = NETBUF(HDRSIZ+3, BUF)
+	      NETROUT(OFF, BWAY) = ROUACT
+C
+	      CALL SNDNET(BUF,BWAY)
+	    ENDIF
+500	  CONTINUE
+600	CONTINUE
+C
+C TELL EVERYBODY YOU ARE THE MASTER
+C
+	DO 700 BWAY = 1, NUMWAY
+	  IF (BWAY .NE. WAYINP .AND. BWAY .NE. WAYLOG) GOTO 700
+C
+650	  CONTINUE
+	  CALL EXTRABUF(BUF, BWAY, ST)
+	  IF (ST .EQ. 2) THEN
+	    CALL XWAIT(20, 1, ST)			! WAIT 20 MILLISECONDS
+	    GOTO 650
+	  ENDIF
+C
+	  CALL OPS('*** GRABNET - SET MASTER COMMAND ***'//
+     *             CHAR(7), 1, 0)
+C
+	  NETBUF(MODE,     BUF) = CMDMD
+	  NETBUF(WAYNR,    BUF) = BWAY
+	  NETBUF(BUFTYP,   BUF) = INP
+	  NETBUF(HDRSIZ+1, BUF) = SETMASTER
+	  NETBUF(HDRSIZ+2, BUF) = NODEID
+	  NETBUF(HDRSIZ+3, BUF) = 0
+	  NETBUF(HDRSIZ+4, BUF) = BWAY
+C
+	  IF (NETATR(BWAY) .NE. INP) NETBUF(BUFTYP, BUF) = RLG
+C
+	  CALL SNDNET(BUF, BWAY)			! SEND IT OVER NETWORK
+700	CONTINUE
+C
+C GENERATE TRANSACTION TO SET YOURSELF MASTER ...
+C HOPEFULLY EVERYTHING COOL AND CONNECTED (WAIT 5 SECS TO BE SURE).
+C 
+	CALL XWAIT(5, 2, ST)				! WAIT 5 SECONDS
+C
+	P(SYSTYP)          = LIVSYS
+	NETMASTER(WAYINP)  = NODEID
+	NODEMASTER(WAYINP) = 0
+C
+	CALL GAMECMD(SETMASTER, NODEID, DUMMY, WAYINP)
+C
+	IF (WAYLOG .GT. 0) THEN
+	  NETMASTER(WAYLOG)  = NODEID
+	  NODEMASTER(WAYLOG) = 0
+	  CALL GAMECMD(SETMASTER, NODEID, DUMMY, WAYLOG)
+	ENDIF
+C
+	CALL NOTIFY(TRCADR, NOTMASTER, NODEID, WAY)
+C
+	P(CMDFRZ) = 0					! UNFREEZE
+C
+	CALL STARTCOM					! START COMMUNICATION
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C RETURN & END.
+C
+9999	CONTINUE
+C
+	RETURN
+	END

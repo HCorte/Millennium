@@ -1,0 +1,184 @@
+C BIGPRIZE.FOR
+C
+C V09 29-NOV-00 UXN TotoGOla added.
+C V08 03-FEB-00 RXK Use for all Maailman Ympari refund divisions the same column
+C V07 13-OCT-99 RXK World Tour added.
+C V06 09-SEP-98 RXK Changes for new Kicker game
+C V05 02-OCT-97 UXN CHANAGES FOR BINGO LOTTO
+C V03 04-SEP-95 RXK Bonus draw for Viking lotto
+C V02 30-NOV-94 PXB Added bingo game.
+C V01 28-SEP-93 HXK Initial revision.
+C
+C SUBROUTINE TO GET PRIZE VALUES FOR DRAW REQUESTED                             
+C                                                                               
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS/CHECK=NOOVERFLOW/EXT
+	SUBROUTINE BIGPRIZE(VALREC,GAMOUNT,KAMOUNT,GDIVS,KDIVS)
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF' 
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DESVAL.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'
+	INCLUDE 'INCLIB:VDETAIL.DEF'
+	INCLUDE 'INCLIB:LKKREC.DEF'
+	INCLUDE 'INCLIB:LLTREC.DEF'
+	INCLUDE 'INCLIB:LSPREC.DEF'
+	INCLUDE 'INCLIB:LTGREC.DEF'
+	INCLUDE 'INCLIB:LBNREC.DEF'
+	INTEGER*4	BSUB		  !---- Bingo subgame.
+                          
+	INTEGER*4 GAMOUNT,KAMOUNT,GDIVS,KDIVS,GAM,GTYP,GIND,KGAM
+	INTEGER*4 FRCS,KIND,PRZCNT,I,DRW,DIV,SHR,PRG,UPD,KIK,KI2
+	INTEGER*4 DIND
+
+	COMMON /SCF/ SCFREC
+	COMMON /PRIZE/ LLTREC,LSPREC,LKKREC,LBNREC,LTGREC
+	DIMENSION GDIVS(20),KDIVS(20,2)
+
+	GAMOUNT=0
+	KAMOUNT=0
+	CALL FASTSET(0,GDIVS,20)
+	CALL FASTSET(0,KDIVS,20*2)
+
+	CALL DLOGVAL(VALREC,VDETAIL)
+	GAM=VALREC(VGAM)
+	GTYP=VALREC(VGTYP)
+	GIND=VALREC(VGIND)
+	KGAM=VALREC(VKGME)
+	FRCS=VALREC(VFRAC)
+	IF(KGAM.NE.0) KIND=SCFGNT(GAMIDX,KGAM)
+
+	PRZCNT=VALREC(VPZOFF)
+	IF(PRZCNT.GT.VMAX) PRZCNT=VMAX
+
+	DO 100 I=1,PRZCNT
+
+	DRW=VDETAIL(VDRW,I)
+	DIV=VDETAIL(VDIV,I)
+	SHR=VDETAIL(VSHR,I)
+	PRG=VDETAIL(VPRG,I)
+	UPD=VDETAIL(VUPD,I)
+	KIK=VDETAIL(VKIK,I)
+	KI2=VDETAIL(VKI2,I)
+	BSUB = VDETAIL(VSUB,I)
+	IF(DRW.LE.0) GOTO 100
+C
+C UPDATE  KICKER PRIZES FOR THE CASE GAME+KICKER
+C
+	IF(KIK.NE.0) THEN 
+          IF(DRW.NE.LKKDRW(KIND)) GOTO 100
+          KDIVS(DIV,1)=KDIVS(DIV,1)+SHR
+          IF(FRCS.EQ.0.OR.FRCS.EQ.SCFFRC(KGAM)) THEN
+               KAMOUNT=KAMOUNT+LKKSHV(DIV,KIND)*SHR
+          ELSE
+               KAMOUNT=KAMOUNT+
+     *           (LKKSHV(DIV,KIND)/SCFFRC(KGAM))*SHR*FRCS
+          ENDIF
+          GOTO 100
+	ENDIF
+C
+	IF(KI2.NE.0) THEN
+          IF(DRW.NE.LKKDRW(KIND)) GOTO 100
+          KDIVS(DIV,2)=KDIVS(DIV,2)+SHR
+          IF(FRCS.EQ.0.OR.FRCS.EQ.SCFFRC(KGAM)) THEN
+               KAMOUNT=KAMOUNT+LKKSHV(DIV,KIND)*SHR
+          ELSE
+               KAMOUNT=KAMOUNT+
+     *           (LKKSHV(DIV,KIND)/SCFFRC(KGAM))*SHR*FRCS
+          ENDIF
+          GOTO 100
+	ENDIF
+C
+C UPDATE LOTTO PRIZE
+C
+	IF(GTYP.EQ.TLTO) THEN
+          IF(DRW.NE.LLTDRW(GIND)) GOTO 100
+          DIND=1
+          IF(LLTBDR(GIND).NE.0) DIND=VDETAIL(VBDR,I)+1
+          IF(DIND.EQ.1) GDIVS(DIV)=GDIVS(DIV)+SHR
+          IF(DIND.EQ.2) GDIVS(LLTDIV(GIND)+1)=GDIVS(LLTDIV(GIND)+1)+SHR
+          IF(FRCS.EQ.0.OR.FRCS.EQ.SCFFRC(GAM)) THEN
+            GAMOUNT=GAMOUNT + LLTSHV(DIV,DIND,GIND)*SHR
+          ELSE
+            GAMOUNT=GAMOUNT+
+     *           (LLTSHV(DIV,DIND,GIND)/SCFFRC(GAM))*SHR*FRCS
+          ENDIF
+          GOTO 100
+	ENDIF
+C
+C UPDATE SPORTS PRIZE
+C
+	IF(GTYP.EQ.TSPT) THEN
+          IF(DRW.NE.LSPDRW(GIND)) GOTO 100
+          GDIVS(DIV)=GDIVS(DIV)+SHR
+          IF(FRCS.EQ.0.OR.FRCS.EQ.SCFFRC(GAM)) THEN
+            GAMOUNT=GAMOUNT+LSPSHV(DIV,GIND)*SHR
+          ELSE
+            GAMOUNT=GAMOUNT+
+     *           (LSPSHV(DIV,GIND)/SCFFRC(GAM))*SHR*FRCS
+          ENDIF
+          GOTO 100
+	ENDIF
+C
+C UPDATE TOTOGOLA PRIZE
+C
+	IF(GTYP.EQ.TTGL) THEN
+          IF(DRW.NE.LTGDRW(GIND)) GOTO 100
+          GDIVS(DIV)=GDIVS(DIV)+SHR
+          IF(FRCS.EQ.0.OR.FRCS.EQ.SCFFRC(GAM)) THEN
+            GAMOUNT=GAMOUNT+LTGSHV(DIV,GIND)*SHR
+          ELSE
+            GAMOUNT=GAMOUNT+
+     *           (LTGSHV(DIV,GIND)/SCFFRC(GAM))*SHR*FRCS
+          ENDIF
+          GOTO 100
+	ENDIF
+C
+C UPDATE BINGO PRIZE
+C
+	IF (GTYP .EQ. TBNG) THEN
+          IF (DRW .NE. LBNDRW(GIND)) GOTO 100
+          GDIVS(DIV) = GDIVS(DIV) + SHR
+          IF (FRCS .EQ. 0 .OR. FRCS .EQ. SCFFRC(GAM)) THEN
+            GAMOUNT = GAMOUNT + LBNSHV(DIV,BSUB,GIND) * SHR
+          ELSE
+            GAMOUNT = GAMOUNT +
+     *           (LBNSHV(DIV,BSUB,GIND)/SCFFRC(GAM)) * SHR * FRCS
+          END IF
+          GOTO 100
+	END IF
+C
+C UPDATE KICKER  PRIZE
+C
+	IF(GTYP.EQ.TKIK) THEN
+          IF(DRW.NE.LKKDRW(GIND)) GOTO 100
+          KDIVS(DIV,1)=KDIVS(DIV,1)+SHR
+          IF(FRCS.EQ.0.OR.FRCS.EQ.SCFFRC(GAM)) THEN
+               KAMOUNT=KAMOUNT+LKKSHV(DIV,KIND)*SHR
+          ELSE
+               KAMOUNT=KAMOUNT+
+     *           (LKKSHV(DIV,KIND)/SCFFRC(KGAM))*SHR*FRCS
+          ENDIF
+          GOTO 100
+	ENDIF
+C
+100	CONTINUE
+	RETURN
+	END

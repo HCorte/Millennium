@@ -1,0 +1,22 @@
+    VAK.HLP                GTECH Distributed Network
+                             Vakio Snapshot Help               Page 1 of 1
+ 
+    The VAK snapshot contains information about the VAKIO (Sports 
+    type) game. It defaults to show the current draw but other draws
+    can be displayed.
+    The information displayed includes:
+ 
+    game name     - Vakio Veikkaus (Sports)   
+    draw          - Vakio draw number
+    status        - game status for the draw (open,closed)
+    div           - division won for results matched
+    team name     - team name associated with row number
+    pool prize    - pool amount applicable to each category 
+    shares won    - count and amount of winners for each division 
+    fraction paid - count and amount for validations on a fraction count
+                    basis. Results are shown only for previous draws.
+    sales         - current daily, advance, off-line and previous sales
+                    for the current draw
+    rollover      - amount carried forward from the previous draw
+    total         - total shares and fractions paid for displayed draw.
+    winning row   - winning numbers (1, X, or 2) 

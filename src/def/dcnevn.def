@@ -1,0 +1,82 @@
+C DCNEVN.DEF
+C
+C V03 14-JUN-2000 OXK DN_EVNMASK MOVED TO DCNPRO & DN_INIT
+C V02 04-DEC-1992 DAS PARAMETERIZE EVENT FLAGS 70 - 74
+C V01 11-DEC-1990 MRM INITIAL RELEASE.
+C
+C THIS DEF FILE CONTAIN THE GLOBAL SYSTEM EVENT FLAGS USED
+C TO COMMUNICATE BETWEEN DCNPRO AND ITS ASSOCIATED TASKS.
+C
+C I WOULD REALLY LIKE TO CLEAN THIS UP. THE ONLY EVENT FLAGS THAT
+C ARE EVER USED ARE : NETIOTRAP, DCN_EVENT AND NET_EVENT. THE ARRAY
+C DN_EVNTASK_FLAG IS NOT REALLY VERY USEFUL SINCE I PARAMETERIZE
+C EVENT FLAGS 70-74. HOWEVER IF THIS WERE EVER TO GO INTO AN EXISTING
+C SYSTEM PROBLEMS WOULD OCCUR SINCE DISPAT USES THE ARRAY. ALL REFERENCES
+C TO THE ARRAY HAVE BEEN CHANGED IN NETLOG, NETMGR, AND OTHER COM TASKS
+C                               
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C       NAME OF COMMON EVENT FLAG CLUSTER.
+C       NOTE THAT THESE EVENT FLAGS ARE ASSOCIATED WITH CLUSTER 2
+C
+        CHARACTER*8     DN_EVNNAME
+        PARAMETER      (DN_EVNNAME='DNFLAGS')   !COMMON EVENT CLUSTER NAME 
+C
+C       DN_EVNTIMER ONLY PURPOSE AT THIS TIME IS TO ASSOCIATE A TASK
+C       WITH THE EVENT CLUSTER. THE EVENT FLAG ITSELF IS NEVER SET.
+C
+	INTEGER*4	DN_EVNTIMER		!NOT USED
+	PARAMETER      (DN_EVNTIMER=64)         !BIT 0 OF DN_EVNMASK
+C
+        INTEGER*4       NETIOTRAP               !NETLOG I/O EVENT
+        PARAMETER      (NETIOTRAP=65)           !BIT 1 OF DN_EVNMASK
+C
+        INTEGER*4       DCN_EVENT               !DCNPRO
+        PARAMETER       (DCN_EVENT = 66)        !BIT 2 OF DN_EVNMASK
+C
+        INTEGER*4       NET_EVENT               !NETLOG
+        PARAMETER       (NET_EVENT = 67)        !BIT 3 OF DN_EVNMASK
+C
+	INTEGER*4	FREE_EVENT1		!NOT USED
+    	PARAMETER      (FREE_EVENT1=68)	        !BIT 4 OF DN_EVNMASK
+C
+     	INTEGER*4	FREE_EVENT2             !NOT USED
+     	PARAMETER      (FREE_EVENT2=69)		!BIT 5 OF DN_EVNMASK            
+C
+        INTEGER*4       FREE_EVENT3             !NOT USED
+     	PARAMETER      (FREE_EVENT3=70)		!BIT 6 OF DN_EVNMASK
+C
+     	INTEGER*4       FREE_EVENT4             !NOT USED
+     	PARAMETER      (FREE_EVENT4=71)		!BIT 7 OF DN_EVNMASK
+C
+        INTEGER*4       FREE_EVENT5             !NOT USED
+        PARAMETER       (FREE_EVENT5 = 72)      !BIT 8 OF DN_EVNMASK
+C
+        INTEGER*4       FREE_EVENT6             !NOT USED
+        PARAMETER       (FREE_EVENT6 = 73)      !BIT 9 OF DN_EVNMASK
+C
+        INTEGER*4       FREE_EVENT7             !NOT USED
+        PARAMETER       (FREE_EVENT7 = 74)      !BIT 10 OF DN_EVNMASK
+C
+        INTEGER*4       DN_EVNTSK_MAXTSK        !MAX. TASK SUPPORTED
+        PARAMETER      (DN_EVNTSK_MAXTSK=1)
+C
+	INTEGER*4	DN_EVNTSK_FLAG(0:DN_EVNTSK_MAXTSK)
+	DATA		DN_EVNTSK_FLAG /DCN_EVENT,
+     *                                  NET_EVENT/
+C
+	COMMON /DNEVN/ DN_EVNTSK_FLAG
+C

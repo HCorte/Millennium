@@ -1,0 +1,112 @@
+C
+C SUBROUTINE X2FASTBYT
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2FASTBYT.FOV                                $
+C  $Date::   17 Apr 1996 16:16:16                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2fastbyt.for;1 **
+C
+C X2FASTBYT.FOR
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C
+C     FAST BYTE MOVE
+C
+C     SUBROUTINE X2FASTBYT(INPUT,IN_OFFSET,OUTPUT,OUT_OFFSET,LEN)
+C     IN:
+C     INPUT    - INPUT BUFFER
+C     IN_OFFSET- OFFSET OF INPUT DATA
+C     OUT_OFFSET- OFFSET OF OUTPUT DATA
+C     LEN      - LENGTH OF DATA TO MOVE (WILL WORK ON UPT TO 16 BYTES
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2FASTBYT(INPUT,IN_OFFSET,OUTPUT,OUT_OFFSET,LEN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INTEGER*2 INPUT(*)
+	INTEGER*2 OUTPUT(*)
+	INTEGER*4 LEN, BYTE, IN_OFFSET, OUT_OFFSET
+C
+	GOTO (900,800,700,600,500,400,300,200,100,90,80,70,60,50,40,30)
+     *	            LEN
+C
+	RETURN         !INVALID LENGTH
+C
+30	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+14)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+14)
+40	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+13)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+13)
+50	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+12)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+12)
+60	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+11)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+11)
+70	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+10)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+10)
+80	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+9)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+9)
+90	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+8)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+8)
+100	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+7)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+7)
+200	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+6)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+6)
+300	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+5)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+5)
+400	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+4)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+4)
+500	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+3)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+3)
+600	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+2)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+2)
+700	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET+1)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET+1)
+800	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET)
+900	CONTINUE
+	CALL ILBYTE(BYTE,INPUT,IN_OFFSET-1)
+	CALL NSBYTE(BYTE,OUTPUT,OUT_OFFSET-1)
+	RETURN
+	END

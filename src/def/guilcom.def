@@ -1,0 +1,95 @@
+C GUILCOM.DEF
+C
+C V02 09-NOV-2000 UXN GUITCP prefix added.
+C V01 17-JUN-1993 MP  Adopted from TCPEVN to be used with TCP_LINK
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C direTCPy or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2001 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C This def file contain the global TCP/IP event flags, parameters and
+c variables used iN GUILINK for TCP/IP environment.
+C
+C
+C following events are used with 'passive' GUILINK.
+C They should be different from events of the 'active' TCPASST if
+C GUILINK and TCPASST to run on the same computer.
+C Indexes into TCP_EVNS array are defined in SERVPRM.DEF since
+C they are used by SERV... software.
+C
+        INTEGER*4       GUITCP_MAX_EVNS
+        PARAMETER      (GUITCP_MAX_EVNS=5)
+C
+        INTEGER*4       GUITCP_EVNS(GUITCP_MAX_EVNS)          !EVENT NUMBERS
+	COMMON/GUITCP_EVNS/ GUITCP_EVNS
+        DATA            GUITCP_EVNS(GUI_PCONNECT)/90/
+        DATA            GUITCP_EVNS(GUI_WRITE)/91/
+        DATA            GUITCP_EVNS(GUI_DISC_RED_IGN)/92/
+        DATA            GUITCP_EVNS(GUI_DISCONNECT)/93/
+        DATA            GUITCP_EVNS(GUI_STOP)/94/
+C
+        INTEGER*4       GUITCP_CONNECTIONS(GUI_MAX_CONN)  !pass connection to AST
+C
+C Time trap values
+C
+        INTEGER*4       GUITCP_TIME_PCON
+        PARAMETER      (GUITCP_TIME_PCON=1)
+C
+        INTEGER*4       GUITCP_TIME_READ
+        PARAMETER      (GUITCP_TIME_READ=2)
+C
+        INTEGER*4       GUITCP_TIME_WRITE          ! not used
+        PARAMETER      (GUITCP_TIME_WRITE=3)
+C
+        INTEGER*4       GUITCP_TIME_WATCH          ! used for WATCH_DOG check
+        PARAMETER      (GUITCP_TIME_WATCH=4)
+C
+        INTEGER*4       GUITCP_MAX_TIME_TRAPS
+        PARAMETER      (GUITCP_MAX_TIME_TRAPS=4)
+C
+C STRUCTURE USED FOR SOCK ADDRESS.
+C
+        STRUCTURE /SOCKADR/
+          INTEGER*2   INET_FAMILY
+          INTEGER*2   INET_PORT
+          INTEGER*4   ADRS
+          CHARACTER*8 BLKB
+        END STRUCTURE
+C
+        STRUCTURE /SOCKADR_BYT/
+          INTEGER*2   INET_FAMILY
+          INTEGER*2   INET_PORT
+          BYTE        ADRS_BYT(4)
+          CHARACTER*8 BLKB
+        END STRUCTURE
+C
+C TCP/IP default port
+C
+        INTEGER*4       GUITCP_LOCAL_PORT_DEFAULT
+        PARAMETER       (GUITCP_LOCAL_PORT_DEFAULT=2000)
+C
+        INTEGER*4       GUITCP_TIMEINMS(GUITCP_MAX_TIME_TRAPS)
+        INTEGER*4       GUITCP_TIMEDELY(2,GUITCP_MAX_TIME_TRAPS)
+        INTEGER*4       GUITCP_TIMEINPR(GUITCP_MAX_TIME_TRAPS)
+C
+        INTEGER*2       GUITCP_MESCHANNEL
+        LOGICAL         GUITCP_WATCH_DOG(GUI_MAX_CONN)
+        COMMON /GUITCPCOM/ GUITCP_TIMEINMS,
+     *                  GUITCP_TIMEDELY,
+     *                  GUITCP_TIMEINPR,
+     *                  GUITCP_CONNECTIONS,
+     *                  GUITCP_WATCH_DOG,
+     *                  GUITCP_MESCHANNEL
+C
+C
+C END GUILCOM.DEF
+C

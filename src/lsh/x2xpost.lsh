@@ -1,0 +1,20 @@
+$! GXSRC:X2XPOST.LSH
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]X2XPOST.LSV                                  $
+$! $Date::   17 Apr 1996 16:43:48                                         $
+$! $Revision::   1.0                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$! 
+LINK'P1' -
+/EXE=TSKLIB:GXX2XPOST.ESH -
+/SHAREABLE -
+OBJLIB:X2XPOST,-
+SYS$INPUT/OPTION
+SYMBOL_VECTOR=(X2POST=PSECT)
+PSECT_ATTR=X2POST,SHR,WRT

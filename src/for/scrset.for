@@ -1,0 +1,788 @@
+C SUBROUTINE SCRSET
+C
+C V09 24-MAY-1999 UXN Minimum stake added.
+C V08 05-JUN-1997 UXN Calculation of REV3 changed.
+C V07 14-APR-1996 HXK Putting RXK's (Rita's) changes into archive
+C V06 03-APR-1996 RXK Calculation of control revision byte changed
+C V05 19-FEB-1996 HXK Fix for updating game control counter
+C V04 07-JUL-1993 GXA Released for Finland Dec Conversion / Oddset.
+C V03 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V02 07-OCT-1991 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C SCRSET.FOR
+C
+C SCORE GAME SETUP
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SCRSET(GIND)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'
+	INCLUDE 'INCLIB:DSCREC.DEF'
+	INCLUDE 'INCLIB:RECDAF.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+C
+	COMMON SCFREC
+	INTEGER*4 DFDB(7),SFDB(7),VSFDB(7),INPFDB(7),BYTTAB(200)
+	INTEGER*2 BDATE(LDATE_LEN),EDATE(LDATE_LEN),DATE(LDATE_LEN)
+        INTEGER*2 DDATE(LDATE_LEN)
+	INTEGER*4 GIND,ST,I,DRW,E,LSTAT,WEK,K,TIND,YEAR
+	INTEGER*4 CDC,EXT,TYPE,BUFIND,REV1,REV2,REV3,REV4
+	INTEGER*4 PREV3,VERR,FLAG,GNUM,MTYPE,SALPER,PRICE
+C
+	INTEGER*4 NAME(SNMS_LEN/4)
+	INTEGER*4 DNAME(SDES_LEN/4)
+	INTEGER*4 DSCIND
+	INTEGER*4 CLEARED
+	INTEGER*4 DESCRIPT_LINES
+	INTEGER*4 TEMP
+C
+	CHARACTER*6 PASS,OKPASS,GTYPE(3)
+	CHARACTER*20 PWORD,CDSCPFN
+	EQUIVALENCE (PASS,PWORD)
+	EQUIVALENCE (DSCPFN,CDSCPFN)
+	CHARACTER*2 FUN
+	CHARACTER INPFIL,ANS
+C
+	CHARACTER CNAME(SNMS_LEN)
+	CHARACTER CDNAME(SDES_LEN)
+	CHARACTER SCOR_NAME*8
+C
+	EQUIVALENCE (NAME,CNAME)
+	EQUIVALENCE (DNAME,CDNAME)
+C
+	CHARACTER*12 GSTAT(11)
+	DATA GSTAT/'Not set     ','Game closed ',
+     *	           'Info entered','Game open   ',
+     *	           3*'End of game ',
+     *	           'Drawing done','Game final  ',
+     *	           'Cancelled   ','Refund      '/
+	CHARACTER*14 CDAY
+	INTEGER*2 DAY(7)
+	DATA CDAY/'---not  set---'/
+	DATA OKPASS/'PERKIN'/
+	DATA INPFDB/ 7*'    '/
+	EQUIVALENCE(CDAY,DAY)
+	DATA GTYPE/'notset','soccer','hockey'/
+C
+        INTEGER*4 M251
+        PARAMETER(M251=251)
+C
+C
+C INITIALIZE / SET VARIABLES 
+C
+	WRITE(SCOR_NAME,990) GTNAMES(TSCR)
+	DESCRIPT_LINES = SDES_LEN/40		!40 Bytes / line
+
+C
+C CHECK IF SCORE GAME IS ACTIVE
+C
+	GNUM=SCFGTN(TSCR,GIND)
+	IF(GNUM.LT.1) THEN
+	   WRITE(5,991) IAM(),GTNAMES(TSCR),GIND
+	   CALL XWAIT(2,2,ST)
+	   RETURN
+	ENDIF
+C
+C
+	CALL OPENW(1,SCFSFN(1,DAF),4,0,0,ST)
+	CALL IOINIT(DFDB,1,DAFSEC*256)
+	IF(ST.NE.0) THEN
+	  CALL FILERR(SCFSFN(1,DAF),1,ST,0)
+	  RETURN
+	ENDIF
+C
+C
+	CALL OPENW(2,SCFGFN(1,GNUM),4,0,0,ST)
+	CALL IOINIT(SFDB,2,DSCSEC*256)
+	IF(ST.NE.0)THEN
+	  CALL FILERR(SCFGFN(1,GNUM),1,ST,0)
+	  CALL CLOSEFIL(DFDB)
+	  RETURN
+	ENDIF
+C
+C
+	CALL OPENW(3,SCFGVN(1,GNUM),4,0,0,ST)
+	CALL IOINIT(VSFDB,3,DSCSEC*256)
+	IF(ST.NE.0)THEN
+	  CALL FILERR(SCFGVN(1,GNUM),1,ST,0)
+	  CALL CLOSEFIL(DFDB)
+	  CALL CLOSEFIL(SFDB)
+	  RETURN
+	ENDIF
+C
+10	CONTINUE
+C
+	CALL CLRSCR(5)
+	WRITE(5,900)
+	CALL WIMG(5,'Enter function: ')
+	READ(5,901) FUN
+C
+C
+	IF(FUN.EQ.'EX') THEN
+	  CALL CLOSEFIL(DFDB)
+	  CALL CLOSEFIL(SFDB)
+	  CALL CLOSEFIL(VSFDB)
+	  RETURN
+	ENDIF
+C
+C
+	IF(FUN.NE.'LI'.AND.FUN.NE.'MO'.AND.
+     *	   FUN.NE.'VE'.AND.FUN.NE.'UN'.AND.
+     *	   FUN.NE.'CH') THEN
+	  CALL CLRSCR(5)
+	  TYPE*,'Invalid input '
+	  CALL XWAIT(1,2,ST)
+	  GOTO 10
+	ENDIF
+C
+C
+	DO  I=1,7
+	   INPFDB(I)=SFDB(I)
+	END DO
+	IF(FUN.EQ.'LI'.OR.FUN.EQ.'MO') THEN
+15	  CONTINUE
+	  CALL WIMG(5,'Use (P)rimary or (V)erification file as input?')
+	  READ(5,902) INPFIL
+	  IF(INPFIL.EQ.'E')THEN
+	    GOTO 10
+	  ELSEIF(INPFIL.EQ.'V')THEN
+	    DO 16 I=1,7
+	       INPFDB(I)=VSFDB(I)
+16	    CONTINUE
+	  ELSE
+	    IF(INPFIL.NE.'P')THEN
+	      TYPE*,'OPTIONS ARE P, V, AND E ONLY...RETRY.'
+	      GOTO 15
+	    ENDIF
+	  ENDIF
+	ENDIF
+C
+20	CONTINUE
+	IF(FUN.NE.'LI') CALL CLRSCR(5)
+	CALL INPNUM('Enter event number(E-exit) ',DRW,1,9999,E)
+	IF(E.LT.0)GOTO 10
+C
+C	Get previous text checksum.
+C	
+	PREV3 = 0
+	IF(DRW.GT.1) THEN
+	  CALL READW(INPFDB,DRW-1,DSCREC,ST)
+	  IF(ST.NE.0) THEN
+	    CALL CLRSCR(5)
+	    IF(INPFIL.EQ.'V')THEN
+	       CALL FILERR(SCFGVN(1,GNUM),2,ST,DRW-1)
+	    ELSE
+	       CALL FILERR(SCFGFN(1,GNUM),2,ST,DRW-1)
+	    ENDIF
+	    GOTO 20
+	  ENDIF
+	  CALL ILBYTE(PREV3,DSCREV,2)          !GET PREVIOUS TEXT REV #
+        ENDIF
+
+C
+C
+C
+	CALL CLRSCR(5)
+	CALL READW(INPFDB,DRW,DSCREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL CLRSCR(5)
+	  IF(INPFIL.EQ.'V')THEN
+	     CALL FILERR(SCFGVN(1,GNUM),2,ST,DRW)
+	  ELSE
+	     CALL FILERR(SCFGFN(1,GNUM),2,ST,DRW)
+	  ENDIF
+	  GOTO 20
+	ENDIF
+C
+C
+	LSTAT=DSCSTS+1
+	DO 30 I=1,7
+	BDATE(I+6)=DAY(I)
+	EDATE(I+6)=DAY(I)
+	DDATE(I+6)=DAY(I)
+30	CONTINUE
+	BDATE(5)=DSCBSD
+	IF(BDATE(5).NE.0)CALL LCDATE(BDATE)
+	EDATE(5)=DSCESD
+	IF(EDATE(5).NE.0)CALL LCDATE(EDATE)
+	DDATE(5)=DSCDAT
+	IF(DDATE(5).NE.0)CALL LCDATE(DDATE)
+	WEK=DSCWEK
+	MTYPE=DSCTYP
+	SALPER=DSCSPR
+	PRICE=DSCPRC
+C
+C
+	IF(FUN.EQ.'MO'.AND.DSCSTS.GE.GAMOPN)THEN
+	   CALL CLRSCR(5)
+	   WRITE(5,992) IAM(),GTNAMES(TSCR),GIND,DRW,IAM()
+	   CALL WIMG(5,'Hit return to continue')
+	   READ(5,901) ANS
+	   GOTO 10
+	ENDIF
+C
+C
+	DO K = 1,SNMS_LEN/4
+	   IF(DSCNM1(K).EQ.0) DSCNM1(K) = '    '
+	   IF(DSCNM2(K).EQ.0) DSCNM2(K) = '    '
+	END DO
+C
+C
+	IF(FUN.EQ.'MO') GOTO 120
+	IF(FUN.EQ.'VE') GOTO 1000
+	IF(FUN.EQ.'UN') GOTO 2000
+	IF(FUN.EQ.'CH') GOTO 3000
+C
+C DISPLAY GAME DATA
+C
+	CALL CLRSCR(5)
+	TIND=MTYPE+1
+	IF(TIND.LT.1.OR.TIND.GT.3) TIND=1
+	WRITE(5,903) GTNAMES(TSCR),GIND,DRW,WEK,GSTAT(LSTAT)
+        WRITE(5,904)(BDATE(I),I=7,13),BDATE(5),
+     *              (EDATE(I),I=7,13),EDATE(5)
+	WRITE(5,905) DISTIM(DSCTIM),(DDATE(I),I=7,13),
+     *	 DDATE(5),GTYPE(TIND)
+        WRITE(5,945) CMONY(DSCPRC,10,BETUNIT)
+        DSCIND = 0
+	DO I = 1,DESCRIPT_LINES
+	   WRITE(5,914) (DSCDES(DSCIND+K),K=1,10)
+	   DSCIND = DSCIND + 10
+	END DO
+	WRITE(5,906) (DSCNM1(K),K=1,SNMS_LEN/4),
+     *               (DSCNM2(K),K=1,SNMS_LEN/4)
+	WRITE(5,910) (DSCPFN(K),K=1,5),(DSCTVC(K),K=1,STVC_LEN/4)
+	GOTO 20
+C
+C
+C MODIFY GAME DATE
+C
+C
+120	CONTINUE
+	WRITE(5,917) IAM()
+	WRITE(5,918) IAM(),(BDATE(I),I=7,13) 
+	CALL INPDAT(CDC,EXT)
+	IF(EXT.NE.0) CDC = DSCBSD
+	BDATE(5)=CDC
+	CALL LCDATE(BDATE)
+C
+C
+	WRITE(5,919) IAM()
+	WRITE(5,918) IAM(),(EDATE(I),I=7,13) 
+	CALL INPDAT(CDC,EXT)
+	IF(EXT.NE.0) CDC = DSCESD
+	EDATE(5)=CDC
+	CALL LCDATE(EDATE)
+	CALL FIGWEK(CDC-WEEK_OFFSET,WEK,YEAR)
+C
+C
+	WRITE(5,923) IAM()
+	WRITE(5,924) IAM(),(DDATE(I),I=7,13)
+	CALL INPDAT(CDC,EXT)
+	IF(EXT.NE.0)CDC = DSCDAT
+	DDATE(5)=CDC
+	CALL LCDATE(DDATE)
+C
+	WRITE(5,921) IAM()
+	WRITE(5,922) IAM(),DISTIM(DSCTIM)
+	TEMP = DSCTIM
+	CALL INPTIM('Enter time HH:MM:SS....................',DSCTIM,EXT)
+	IF(EXT.NE.0) DSCTIM = TEMP 
+C
+        WRITE(5,944) IAM(), CMONY(PRICE,10,BETUNIT)
+        CALL INPMONY('Enter minimum stake.........',PRICE,BETUNIT,EXT)
+        IF(EXT.NE.0) DSCPRC=PRICE
+C
+	WRITE(5,929) IAM()
+	WRITE(5,930) IAM(),DSCPFN(1)
+	WRITE (CDSCPFN,911) GIND,DRW
+	CALL WIMG(5,'Enter pool file volume name............')
+	READ(5,907) NAME(1)
+	IF(NAME(1).NE.'    ') DSCPFN(1)=NAME(1)
+C
+C
+	WRITE(5,934) IAM()
+	DSCIND = 0
+	DO I = 1,DESCRIPT_LINES
+	   WRITE(5,935) IAM(),I,(DSCDES(DSCIND+K),K=1,10)
+	   DSCIND = DSCIND + 10
+	END DO
+	DO I = 1,DESCRIPT_LINES
+	   DSCIND = ((I-1)*10) + 1
+	   CALL WIMG(5,'Enter description')
+	   READ(5,936) (DNAME(K),K=DSCIND,DSCIND+9)
+	END DO
+C
+C DID HE HIT RETURN?
+C
+	CLEARED = 0
+	DO I =1,SDES_LEN/4
+	   IF(DNAME(I).EQ.'    ') CLEARED = CLEARED + 1
+	END DO
+	IF(CLEARED.EQ.SDES_LEN/4) GOTO 165
+C
+C DOES HE WANT USS TO CLEAR IT?
+C
+	IF(CDNAME(1).EQ.'+') THEN
+	   DO I = 1,SDES_LEN/4
+	      DNAME(I) = '    '
+	   END DO
+	ENDIF
+C
+C MOVE THE DESCRIPTION OVER.
+C
+	DO I = 1,SDES_LEN/4
+	   DSCDES(I) = DNAME(I)
+	END DO
+C
+C
+165	CONTINUE
+	WRITE(5,937) IAM()
+	WRITE(5,938) IAM(),(DSCTVC(K),K=1,STVC_LEN/4)
+	CALL WIMG(5,'Enter TV-Chanel Name...................')
+	READ(5,939) (NAME(K),K=1,STVC_LEN/4) 
+C
+C DID HE HOT RETURN?
+C
+	CLEARED = 0
+	DO I = 1,STVC_LEN/4
+	   IF(NAME(I).EQ.'    ') CLEARED = CLEARED + 1
+	END DO
+	IF(CLEARED.EQ.STVC_LEN/4) GOTO 300
+C
+C DOES HE WANT USS TO CLEAR IT?
+C
+	IF(CNAME(1).EQ.'+') THEN
+	   DO I = 1,STVC_LEN/4
+	      NAME(I) = '    '
+	   END DO
+	ENDIF
+C
+C MOVE THE NAME OVER.
+C
+	DO I = 1,STVC_LEN/4
+	   DSCTVC(I) = NAME(I)
+	END DO
+C
+C
+300	CONTINUE
+	WRITE(5,940) IAM(),'1'
+	WRITE(5,941) IAM(),(DSCNM1(K),K=1,SNMS_LEN/4)
+	CALL WIMG(5,'Enter Team 1 Name......................')
+	READ(5,993) (NAME(K),K=1,SNMS_LEN/4)
+C
+C
+C DID HE HIT RETURN?
+C
+	CLEARED = 0
+	DO I = 1,SNMS_LEN/4
+	   IF(NAME(I).EQ.'    ') CLEARED = CLEARED + 1
+	END DO
+	IF(CLEARED.EQ.SNMS_LEN/4) GOTO 210
+C
+C DOES HE WANT USS TO CLEAR IT?
+C
+	IF(CNAME(1).EQ.'+') THEN
+	   DO I = 1,SNMS_LEN/4
+	      NAME(I) = '    '
+	   END DO
+	ENDIF
+C
+C MOVE THE NAME OVER.
+C
+	DO I = 1,SNMS_LEN/4
+	   DSCNM1(I) = NAME(I)
+	END DO
+210	CONTINUE
+C
+	WRITE(5,940) IAM(),'2'
+	WRITE(5,941) IAM(),(DSCNM2(K),K=1,SNMS_LEN/4)
+	CALL WIMG(5,'Enter Team 2 Name......................')
+	READ(5,993) (NAME(K),K=1,SNMS_LEN/4)
+C
+C
+C DID HE HIT RETURN?
+C
+	CLEARED = 0
+	DO I = 1,SNMS_LEN/4
+	   IF(NAME(I).EQ.'    ') CLEARED = CLEARED + 1
+	END DO
+	IF(CLEARED.EQ.SNMS_LEN/4) GOTO 220
+C
+C DOES HE WANT USS TO CLEAR IT?
+C
+	IF(CNAME(1).EQ.'+') THEN
+	   DO I = 1,SNMS_LEN/4
+	      NAME(I) = '    '
+	   END DO
+	ENDIF
+C
+C MOVE THE NAME OVER.
+C
+	DO I = 1,SNMS_LEN/4
+	   DSCNM2(I) = NAME(I)
+	END DO
+220	CONTINUE
+C
+C
+      CALL INPNUM('Enter game type (E-no change, 1-soccer, 2-hockey ',
+     *	             TYPE,1,2,EXT)
+	IF(EXT.GE.0) MTYPE=TYPE
+C
+C
+	DSCBSD=BDATE(5)
+	DSCESD=EDATE(5)
+	DSCDAT=DDATE(5)
+	DSCWEK=WEK
+	DSCTYP=MTYPE
+	DSCSTS=GAMINF
+	DSCDRW=DRW
+	DSCSPR=SALPER
+	DSCPRC=PRICE
+C
+	BUFIND = 1
+	CALL MOVBYT(DSCNM1(1),1,BYTTAB,BUFIND,SNMS_LEN-2)  !HOME TEAM
+	BUFIND = BUFIND+SNMS_LEN-2
+	CALL MOVBYT(DSCNM2(1),1,BYTTAB,BUFIND,SNMS_LEN-2)  !AWAY TEAM
+	BUFIND = BUFIND+SNMS_LEN-2
+	CALL MOVBYT(DSCDES(1),1,BYTTAB,BUFIND,SDES_LEN)    !DESCRIPTION LINES
+	BUFIND = BUFIND + SDES_LEN
+	BUFIND = BUFIND - 1
+C
+	CALL CHECKSUM(BYTTAB,1,BUFIND,REV4)
+	CALL ILBYTE(REV1,DSCREV,0)
+        IF(DSCDRW.EQ.M251-1) THEN
+           REV1 = MOD(REV1+DSCDRW,(M251-10)) + 1
+        ELSE
+           REV1 = MOD(REV1+DSCDRW,M251) + 1
+        ENDIF
+	REV2 = MOD(DSCDRW,255)
+	CALL ILBYTE(REV3,DSCREV,2)          !GET PREVIOUS TEXT REV #
+	REV3 = MOD(PREV3 + REV3,255) + 1
+	CALL ISBYTE(REV1,DSCREV,0)          !CONTROL REV BYTE (SEQUENCE#)
+	CALL ISBYTE(REV2,DSCREV,1)          !DRAW REV BYTE
+	CALL ISBYTE(REV3,DSCREV,2)          !TEXT REV # BYTE  (SEQUENCE#)
+	CALL ISBYTE(REV4,DSCREV,3)          !TEXT CHECKSUM BYTE
+	CALL WRITEW(INPFDB,DRW,DSCREC,ST)
+	IF(ST.NE.0)THEN
+	  IF(INPFIL.EQ.'V')THEN
+	    CALL FILERR(SCFGVN(1,GNUM),3,ST,DRW)
+	  ELSE
+	    CALL FILERR(SCFGVN(1,GNUM),3,ST,DRW)
+	  ENDIF
+	ENDIF
+	GOTO 20
+C
+C
+C VERIFICATION
+C
+1000	CONTINUE
+	CALL CLRSCR(5)
+	CALL PASSWORD(5,PWORD)
+	IF(PASS.NE.OKPASS) THEN
+	  TYPE*,'Invalid password entered'
+	  CALL XWAIT(2,2,ST)
+	  GOTO 10
+	ENDIF
+	VERR=0
+C
+C
+	IF(DSCSTS.EQ.GAMOPN) THEN
+	  TYPE*,SCOR_NAME,GIND,' event ',DRW,' already verified'
+	  CALL WIMG(5,'Hit return to continue')
+	  READ(5,901) ANS
+	  GOTO 10
+	ENDIF
+C
+C
+	IF(DSCSTS.NE.GAMINF) THEN
+	  TYPE*,SCOR_NAME,GIND,' event ',DRW,' invalid game status ',
+     *	        DSCSTS
+	  CALL WIMG(5,'Hit return to continue')
+	  READ(5,901) ANS
+	  GOTO 10
+	ENDIF
+C
+C
+	IF(DSCBSD.GT.DSCESD) THEN
+	  TYPE*,IAM(),'Begining sales date greater then ending sales date'
+	  VERR=VERR+1
+	ENDIF
+C
+C
+	IF(DSCBSD.EQ.0) THEN
+	  TYPE*,IAM(),'Begining sales date not set '
+	  VERR=VERR+1
+	ENDIF
+C
+C
+C**      IF(DSCESD-DSCBSD.GT.13) THEN
+C**        TYPE*,'Too many sales days set for this event '
+C**        VERR=VERR+1
+C**      ENDIF
+C
+C
+	IF(DSCESD.EQ.0) THEN
+	  TYPE*,IAM(),'Ending sales date not set'
+	  VERR=VERR+1
+	ENDIF
+C
+C
+	IF(DSCDAT.LT.DSCESD) THEN
+	  TYPE*,IAM(),'Event date is less than ending sales date'
+	  VERR=VERR+1
+	ENDIF
+C
+C
+	IF(DSCTYP.NE.1.AND.DSCTYP.NE.2) THEN
+	  TYPE*,IAM(),'Game type is not set '
+	  VERR=VERR+1
+	ENDIF
+C
+C
+	IF(DSCSPR.EQ.0) THEN
+	  TYPE*,IAM(),'Pool percentage not set '
+	  VERR=VERR+1
+	ENDIF
+C
+C
+	IF(VERR.NE.0) THEN
+	  TYPE*,IAM(),VERR,' data entry errors found for ',SCOR_NAME,GIND,
+     *	       ' event ',DRW
+	  TYPE*,IAM(),'Event has not been verified'
+	  CALL WIMG(5,'Hit return to continue')
+	  READ(5,901) ANS
+	  GOTO 10
+	ENDIF
+C
+C
+	DO 1020 I=DSCBSD,DSCESD
+	DATE(5)=I
+	CALL LCDATE(DATE)
+	CALL READW(DFDB,I,DAFREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL FILERR(SCFSFN(1,DAF),2,I,ST)
+	  GOTO 10
+	ENDIF
+C
+C
+	IF(DAFSTS.NE.DNOSAL.AND.DAFSTS.NE.DSOPEN) THEN
+	  WRITE(5,908) (DATE(K),K=7,13)
+	  VERR=VERR+1
+	ENDIF
+C
+C
+	IF(DAFDRW(GNUM).NE.0.AND.DAFDRW(GNUM).NE.DRW) THEN
+	  WRITE(5,909) (DATE(K),K=7,13),GIND,DAFDRW(GNUM)
+	  CALL WIMG(5,'Do you wish to over-write? ')
+	  CALL YESNO(FLAG)
+	  IF(FLAG.NE.1) VERR=VERR+1
+	ENDIF
+1020	CONTINUE
+C
+C
+	IF(VERR.NE.0) THEN
+	  TYPE*,IAM(),VERR,' game date errors found for ',SCOR_NAME,GIND,
+     *	        ' event ',DRW
+	  TYPE*,IAM(),'Event has not been verified'
+	  CALL WIMG(5,'Hit return to continue')
+	  READ(5,901) ANS
+	  GOTO 10
+	ENDIF
+C
+C
+	DSCSTS=GAMOPN
+	DO 1040 I=DSCBSD,DSCESD
+	CALL READW(DFDB,I,DAFREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL FILERR(SCFSFN(1,DAF),2,ST,I)
+	  GOTO 10
+	ENDIF
+	DAFDRW(GNUM)=DRW
+	CALL WRITEW(DFDB,I,DAFREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL FILERR(SCFSFN(1,DAF),3,ST,I)
+	  GOTO 10
+	ENDIF
+1040	CONTINUE
+C
+C
+	 CALL WRITEW(SFDB,DRW,DSCREC,ST)
+	 IF(ST.NE.0) THEN
+	   CALL FILERR(SCFGFN(1,GNUM),3,ST,DRW)
+	   GOTO 10
+	 ENDIF
+	 TYPE*,SCOR_NAME,GIND,' event ',DRW,' verify complete'
+	 CALL WIMG(5,'Hit return to continue')
+	 READ(5,901) ANS
+	 GOTO 10
+C
+C
+2000	CONTINUE
+	CALL CLRSCR(5)
+	CALL PASSWORD(5,PWORD)
+	IF(PASS.NE.OKPASS) THEN
+	  TYPE*,'Invalid password entered'
+	  CALL XWAIT(2,2,ST)
+	  GOTO 10
+	ENDIF
+C
+C
+	IF(DSCSTS.LE.GAMINF) THEN
+	  TYPE*,IAM(),SCOR_NAME,GIND,' event ',DRW,' has not been verified '
+	  CALL WIMG(5,'Hit return to continue')
+	  READ(5,901) ANS
+	  GOTO 10
+	ENDIF
+C
+C
+	IF(DSCSTS.GT.GAMOPN) THEN
+	  TYPE*,IAM(),SCOR_NAME,GIND,' event ',DRW,' has already ended'
+	  CALL WIMG(5,'Hit return to continue')
+	  READ(5,901) ANS
+	  GOTO 10
+	ENDIF
+C
+C
+	DO 2010 I=DSCBSD,DSCESD
+	CALL READW(DFDB,I,DAFREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL FILERR(SCFSFN(1,DAF),2,ST,I)
+	  GOTO 10
+	ENDIF
+	IF(DAFSTS.GT.GAMOPN) THEN
+	  TYPE*,IAM(),SCOR_NAME,GIND,
+     *    ' currently active, cannot be changed'
+	  CALL WIMG(5,'Hit return to continue')
+	  READ(5,901) ANS
+	  GOTO 10
+	ENDIF
+2010	CONTINUE
+C
+C
+	DSCSTS=GAMINF
+C
+C
+	DO 2030 I=DSCBSD,DSCESD
+	CALL READW(DFDB,I,DAFREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL FILERR(SCFSFN(1,DAF),2,ST,I)
+	  GOTO 10
+	ENDIF
+	DAFDRW(GNUM)=0
+	CALL WRITEW(DFDB,I,DAFREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL FILERR(SCFSFN(1,DAF),3,ST,I)
+	  GOTO 10
+	ENDIF
+2030	CONTINUE
+C
+C
+	CALL WRITEW(SFDB,DRW,DSCREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL FILERR(SCFGFN(1,GNUM),3,ST,DRW)
+	  GOTO 10
+	ENDIF
+	TYPE*,IAM(),SCOR_NAME,GIND,' event ',DRW,IAM(),
+     *	      ' is un-verified and can be modified'
+	CALL WIMG(5,'Hit return to continue')
+	READ(5,901) ANS
+	GOTO 10
+C
+C
+3000	CONTINUE
+	IF((FUN.EQ.'CH').AND.(DSCSTS.GE.GAMOPN))THEN
+	   CALL CLRSCR(5)
+	   TYPE*,IAM(),SCOR_NAME,GIND,' EVENT ',DRW,' HAS BEEN VERIFIED'
+	   TYPE*,IAM(),' CHANGES CANNOT BE MAD UNLESS EVENT IS UNVERIFIED'
+	   CALL WIMG(5,'HIT RETURN TO CONTINUE')
+	   READ(5,901) ANS
+	   GOTO 10
+	ENDIF
+C
+	CALL SCCOMP(SFDB,VSFDB,GIND,DRW,GNUM,ST)
+	IF(ST.NE.0) THEN
+	  TYPE*,IAM(),'ERROR IN SCCOMP...ST IS :',ST
+	  GOTO 10
+	ENDIF
+	GOTO 20
+C
+900	FORMAT(' LI - List event data',/,
+     *	       ' MO - Modify event data',/,
+     *	       ' VE - Verify event data',/,
+     *	       ' UN - Unverify event data',/,
+     *	       ' CH - Check event data',/,
+     *	       ' EX - Return to main menu',/)
+901	FORMAT(A2)
+902	FORMAT(A1)
+903	FORMAT(1X,A8,I1,2X,'Draw ',I4.4,2X,'Week ',I2.2,
+     *	       2X,'Status - ',A14)
+904	FORMAT(/,' Sales dates  ',7A2,'  Cdc - ',I4,
+     *	               '  < to >  ',7A2,'  Cdc - ',I4)
+905	FORMAT(/,' Time ',A8,1X,'Event date ',7A2,
+     *	 ' Cdc - ',I4,5X,' Game type ',A6)
+906	FORMAT(/,' Team 1 name ',<SNMS_LEN/4>A4,/,
+     *	       ' Team 2 name ',<SNMS_LEN>A4)
+907	FORMAT(A4)
+908	FORMAT(1X,7A2,' has an invalid day status ')
+909   FORMAT(1X,7A2,' is already active for Score ',I1,' event ',I4)
+910	FORMAT(1X,'Pool file name ',5A4,' TV-Chanel Name: ',<STVC_LEN/4>A4)
+911	FORMAT(4X,':S',I1,'P',I4.4,'.FIL    ')
+912	FORMAT(1X,'Pool percentage ',F8.3)
+913     FORMAT(1X,'Base price    ',A10)
+914	FORMAT(1X,'( ',10A4,' )')
+917	FORMAT(1X,A,'Begining sales date')
+918	FORMAT(1X,A,'Current is, (E-no change)...............',7A2)
+C
+919	FORMAT(1X,A,'Ending sales date')
+C
+921	FORMAT(1X,A,'Close time')
+922	FORMAT(1X,A,'Current is, (E-no change)...............',A8)
+
+923	FORMAT(1X,A,'Event date')
+924	FORMAT(1X,A,'Current is, (E-no change)...............',7A2)
+929	FORMAT(1X,A,'Pool file volume name')
+930	FORMAT(1X,A,'Current is, (RETURN for System Volume)..',3A4)
+934	FORMAT(1X,A,'Discription lines (RETURN no change /+ clear)')
+935	FORMAT(1X,A,'Line <',I1,'>',10A4)
+936	FORMAT(10A4)
+937	FORMAT(1X,A,'TV-Chanel Name')
+938	FORMAT(1X,A,'Current is, (RETURN no change /+ clear)',
+     *         <STVC_LEN/4>A4)
+939	FORMAT(<STVC_LEN/4>A4)
+940	FORMAT(1X,A,'Team name'1X,A1)
+941	FORMAT(1X,A,'Current is, (RETURN no change /+ clear)',
+     *         <SNMS_LEN/4>A4)
+C
+944     FORMAT(1X,A,'Current stake .....................',A10)
+945     FORMAT(1X,'Minimum stake   ',A10)
+C
+990	FORMAT(A8)
+991	FORMAT(1X,A,'Sorry, ',A8,1X,I1,' game not active')
+992	FORMAT(1X,A,A8,1X,I1,' draw ',I4,' has been verified',/,
+     *         1X,A,A8,'Changes can not be made unless event ',
+     *                 'is UNverified')
+993	FORMAT(<SNMS_LEN/4>A4)
+	END

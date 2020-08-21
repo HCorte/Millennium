@@ -1,0 +1,55 @@
+C
+C PASIOSUBS.DEF
+C
+C V01 01-JAN-2010 FJG ePassive
+C
+C Definitions for subroutines to handle access to TPF files.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        include 'inclib:fileioerr.def'
+!+++++++FOR TPFS PASPRO
+        structure /stpasfdb/
+          integer*4    lun        !LUN
+          integer*4    err        !Last I/O status
+          integer*4    gind       !Passive index
+          integer*4    draw       !Draw Emission
+          integer*4    maxser     !Max ser for Emission
+          integer*4    maxfra     !Max fran for Emission
+          integer*4    maxnum     !Max num for Emission 
+          integer*4    fdb(7)     !File Descriptor Block
+          character*20 filnam     !File name    
+        endstructure              !Total 36 bytes/record
+!        
+        structure /stpasrec/
+          character*3  key        !Consistency key
+          integer*1    stat       !Billet status
+          integer*2    cdc        !Last status CDC
+          integer*2    agt        !Terminal
+          integer*4    serial     !Last serial CDC
+          integer*4    control    !Security digits
+        endstructure              !Total 16 bytes/record
+!
+        integer*4      pasbuklen
+        parameter     (pasbuklen = 512)          ! Bytes in Buckets
+        integer*4      pasbukrec
+        parameter     (pasbukrec = pasbuklen/16) ! Records in Bucket
+!
+        character*3    pasio_key  !Function
+        external       pasio_key
+!+++++++FOR VPF PASVAL
+        structure /stpaslun/
+          integer*4    emis              !Emission Draw number for checking
+          integer*4    plun              !Logical unit used
+        endstructure

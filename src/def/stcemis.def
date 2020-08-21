@@ -1,0 +1,44 @@
+C STCEMIS.DEF
+C
+C V01 03-JAN-01 ANG INITIAL RELEASE FOR PORTUGAL
+C
+C STRUCT WITH DATE EMISSION STRUCT
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+C
+C STRUCT WITH DATA EMISSION INFORMATION
+C
+	STRUCTURE /STCEMIS/
+	  INTEGER*8 STCSHV(PAGDIV)		! SHARE VALUE
+	  INTEGER*8 STCEXSHV(PAGEDV)		! EXTRA SHARE VALUE
+	  INTEGER*4 STCEMIS			! EMISSION NUMBER
+	  INTEGER*4 STCEMT                      ! EMISSION TYPE
+	  INTEGER*4 STCNUMTCK			! NUMBER OF TICKETS/EMISSION
+	  INTEGER*4 STCNUMSER                   ! # OF SERIES
+	  INTEGER*4 STCWSER			! WINNING SERIE
+	  INTEGER*4 STCDIV			! NUMBER OF DIVISIONS
+	  INTEGER*4 STCBSD			! BEGIN SALES DATE
+	  INTEGER*4 STCESD			! END SALES DATE
+	  INTEGER*4 STCNOFFRA			! NUMBER OF FRACTIONS
+	  INTEGER*4 STCPRGCDC			! PURGING CDC OF THIS EMISSION
+	  INTEGER*4 STCWIN(PAGNBR,PAGDIV)	! REGULAR WINNING NUMBERS
+	  INTEGER*4 STCSHR(PAGDIV)		! SHARES
+	  INTEGER*4 STCEXSHR(PAGEDV)		! EXTRA SHARES
+	  INTEGER*4 STCWNUM(PAGDIV)             ! NUMBER OF WIN. NO.
+	  INTEGER*4 STCTYP(PAGDIV)              ! PRIZE TYPE
+	  INTEGER*4 STCDIG(PAGDIV)              ! # OF DIGITS
+	  INTEGER*4 STCIDNUM(PAGDIV)		! CROSS REFERENCE
+          INTEGER*4 ALIGN                       ! ALIGNMENT,FREE FOR USE  
+	END STRUCTURE

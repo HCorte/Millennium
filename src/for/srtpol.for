@@ -1,0 +1,179 @@
+C
+C SUBROUTINE SRTPOL
+C $Log:   GXAFXT:[GOLS]SRTPOL.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:17:46   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:43:12   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - srtpol.for **
+C
+C SRTPOL.FOR
+C
+C V01 25-NOV-91 GCAN INITIAL RELEASE FOR THE NETHERLANDS
+C
+C SUBROUTINE TO SORT SCORE POOLS FOR DISPLAY PURPOSES
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SRTPOL(GINDX,INDTAB,OTHER)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:SCRCOM.DEF'
+C
+	INTEGER*4   LENSCR
+	PARAMETER   (LENSCR = MAXD/3)		!SCORES IN ONE COLUMN
+C
+	INTEGER*4   INDTAB(LENSCR,3)		!TABLE FOR ALL COMBINATIONS.
+	INTEGER*4   OTHER(3),OTHAMT(3)
+	INTEGER*4   HTAB(2,SLEN)		!SORT TAB HOME SCORES
+	INTEGER*4   DTAB(2,SLEN)		!SORT TAB DRAW SCORES
+	INTEGER*4   ATAB(2,SLEN)		!SORT TAB AWAY SCORES
+	INTEGER*4   GINDX			!SCORE GAME INDEX
+	INTEGER*4   I, J			!LOOP VARIABLES
+	INTEGER*4   SRTTYP			!SORT TYPE (HOCKEY,SOCKER)
+	INTEGER*4   AMT				!AMOUNT BET
+	INTEGER*4   IND				!INDEX INTO INDTAB
+	INTEGER*4   HCNT			!HOME COUNT
+	INTEGER*4   ACNT			!AWAY COUNT
+	INTEGER*4   DCNT			!DRAW COUNT
+C
+C
+	DO 10 I = 1,MAXO
+	   OTHAMT(I) = 0
+	   OTHER(I) = OPOOL(I,SPSCOR,GINDX)
+10	CONTINUE
+C
+	SRTTYP = SCRTYP(GINDX)
+C
+C PROCESS SOCCER GAME
+C
+	IF(SRTTYP.NE.2) THEN
+	   DO 20 I = 1,LENSCR
+	      INDTAB(I,1) = DPOOL(I,SPSCOR,GINDX)
+	      INDTAB(I,2) = DPOOL(I+LENSCR,SPSCOR,GINDX)
+	      INDTAB(I,3) = DPOOL(I+(LENSCR*2),SPSCOR,GINDX)
+20	  CONTINUE
+C
+	  DO 100 I=0,50
+	  DO 100 J=0,50
+	  IF(I.LE.5.AND.J.LE.5) GOTO 100
+	  CALL POLIND(I,J,IND)
+	  AMT = SCPOOL(IND,SPAMNT,SPSTAT,GINDX)
+	  IF(I.GT.J) THEN
+	     IF(AMT.GE.OTHAMT(1)) THEN
+	        OTHAMT(1) = AMT
+	        OTHER(1) = IND
+	        GOTO 100
+	     ENDIF
+	  ENDIF
+	  IF(I.EQ.J) THEN
+	     IF(AMT.GE.OTHAMT(2)) THEN
+	        OTHAMT(2) = AMT
+	        OTHER(2) = IND
+	        GOTO 100
+	     ENDIF
+	  ENDIF
+	  IF(I.LT.J) THEN
+	     IF(AMT.GE.OTHAMT(3)) THEN
+	        OTHAMT(3) = AMT
+	        OTHER(3) = IND
+	     ENDIF
+	  ENDIF
+100	  CONTINUE
+	  RETURN
+	ENDIF
+C
+C PROCESS HOCKEY GAME
+C
+	HCNT=0
+	DCNT=0
+	ACNT=0
+	DO 300 I=0,5
+	DO 300 J=0,5
+	CALL POLIND(I,J,IND)
+	AMT = SCPOOL(IND,SPAMNT,SPSTAT,GINDX)
+	IF(I.GT.J) THEN
+	   HCNT = HCNT + 1
+	   HTAB(1,HCNT) = AMT
+	   HTAB(2,HCNT) = IND
+	   GOTO 300
+	ENDIF
+	IF(I.EQ.J) THEN
+	   DCNT = DCNT + 1
+	   DTAB(1,DCNT) = AMT
+	   DTAB(2,DCNT) = IND
+	   GOTO 300
+	ENDIF
+	IF(I.LT.J) THEN
+	   ACNT = ACNT + 1
+	   ATAB(1,ACNT) = AMT
+	   ATAB(2,ACNT) = IND
+	ENDIF
+300	CONTINUE
+C
+C
+	DO 310 I=0,50
+	DO 310 J=0,50
+	IF(I.LE.5.AND.J.LE.5) GOTO 310
+	CALL POLIND(I,J,IND)
+	AMT = SCPOOL(IND,SPAMNT,SPSTAT,GINDX)
+	IF(I.GT.J) THEN
+	   HCNT = HCNT + 1
+	   HTAB(1,HCNT) = AMT
+	   HTAB(2,HCNT) = IND
+	   GOTO 310
+	ENDIF
+	IF(I.EQ.J) THEN
+	   DCNT = DCNT + 1
+	   DTAB(1,DCNT) = AMT
+	   DTAB(2,DCNT) = IND
+	   GOTO 310
+	ENDIF
+	IF(I.LT.J) THEN
+	   ACNT = ACNT + 1
+	   ATAB(1,ACNT) = AMT
+	   ATAB(2,ACNT) = IND
+	ENDIF
+310	CONTINUE
+C
+C
+	CALL ISORT(HTAB,HCNT)
+	CALL ISORT(DTAB,DCNT)
+	CALL ISORT(ATAB,ACNT)
+C
+C
+C
+	DO 400 I =1,LENSCR
+	   INDTAB(I,1) = HTAB(2,I)
+	   INDTAB(I,2) = DTAB(2,I)
+	   INDTAB(I,3) = ATAB(2,I)
+400	CONTINUE
+	OTHER(1) = HTAB(2,16)
+	OTHER(2) = DTAB(2,7)
+	OTHER(3) = ATAB(2,16)
+	RETURN
+	END

@@ -1,0 +1,32 @@
+C
+C FUNCTION SCENT
+C $Log:   GXAFXT:[GOLS]SCENT.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:52:08   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:34:48   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_bigamt.for **
+C
+C
+C
+C SUBROUTINE TO CONVERT 4 BYTE SIGNED INTEGER TO CENT
+C
+C
+	DOUBLE PRECISION FUNCTION SCENT(NUM)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	DOUBLE PRECISION BIG
+	INTEGER*4 NUM
+C
+C
+	BIG=DFLOAT(NUM)
+	SCENT=BIG/100.0D0
+	RETURN
+	END

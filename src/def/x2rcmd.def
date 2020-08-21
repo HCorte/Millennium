@@ -1,0 +1,67 @@
+C
+C X2RCMD.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2RCMD.DEV                                   $
+C  $Date::   17 Apr 1996 16:28:50                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 20-JUL-94 WS MULTINETWORK CHANGES - Integrate UK changes into X2X Baseline
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  X2ROFF_CMD, X2RCMD_STOP, X2RCMD_START
+	PARAMETER (X2ROFF_CMD=1)    !COMMAND OFFSET
+	   PARAMETER (X2RCMD_STOP=2)        !STOP
+	   PARAMETER (X2RCMD_START=3)       !START
+C
+	INTEGER*4  X2ROFF_PROCESS, X2ROFF_DEST, X2RDEST_ALL
+	INTEGER*4  X2ROFF_POLL, X2RPOLL, X2RNOPOLL
+	INTEGER*4  X2ROFF_SUBNETWORK			!V02
+	PARAMETER (X2ROFF_PROCESS=2) !RELAY PROCESS NUMBER
+	PARAMETER (X2ROFF_POLL=3)    !POLL NOPOLL INDICATOR
+	   PARAMETER (X2RPOLL = 0)
+	   PARAMETER (X2RNOPOLL = 1)
+	PARAMETER (X2ROFF_DEST=4)    !STATION OR GROUP NO, -1 - ALL
+	   PARAMETER (X2RDEST_ALL=-1)     !SEND TO ALL STATIONS/GROUPS
+	PARAMETER (X2ROFF_SUBNETWORK=8)   !SUBNETWORK NO - V02
+C
+C     DATA BELOW IS DEFINED FOR SINGLE MESSAGE BROADCASTS
+C     FOR NOT SINGLE MESSAGES E.G. DOWNLOAD THEY SHOULD BE SET TO 0
+C
+	INTEGER*4  X2ROFF_DATA_MSGNUM, X2ROFF_DATA_LEN
+	INTEGER*4  X2ROFF_DATA_DEST, X2ROFF_DATA_ATRIBUTE
+	INTEGER*4  X2ROFF_DATA
+CV02	PARAMETER (X2ROFF_DATA_MSGNUM=8)  !MESSAGE # OF DATA SEND
+CV02	PARAMETER (X2ROFF_DATA_LEN=10)     !DATA LENGTH OF MESSAGE SENT
+CV02	PARAMETER (X2ROFF_DATA_DEST=12)   !DESTINATION (VALUES AS RELAY
+CV02	PARAMETER (X2ROFF_DATA_ATRIBUTE=13) !ATRIBUTE OF DATA, SHOULD
+C                                         ;BE SAME AS X2XR_APPA_***
+CV02	PARAMETER (X2ROFF_DATA=14)        !DATA
+	PARAMETER (X2ROFF_DATA_MSGNUM=9)  !MESSAGE # OF DATA SEND - V02
+	PARAMETER (X2ROFF_DATA_LEN=11)     !DATA LENGTH OF MESSAGE SENT - V02
+	PARAMETER (X2ROFF_DATA_DEST=13)   !DESTINATION (VALUES AS RELAY - V02
+	PARAMETER (X2ROFF_DATA_ATRIBUTE=14) !ATRIBUTE OF DATA, SHOULD   - V02
+C                                         ;BE SAME AS X2XR_APPA_***
+	PARAMETER (X2ROFF_DATA=15)        !DATA				- V02

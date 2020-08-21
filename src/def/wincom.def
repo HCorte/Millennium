@@ -1,0 +1,151 @@
+C WINCOM.DEF
+C  
+C V15 23-NOV-2010 MAC LUCKY NUMBER
+C V14 16-JAN-2000 OXK Spede Winner Sel Tables dimension fixed NUMSPT -> NUMPPP
+C V13 13-OCT-1999 RXK World Tour game added.
+C V12 17-MAY-1999 UXN Super Triple added.
+C V11 27-APR-1999 RXK STOPSYS optimization: CARYSCAN is now an array.
+C V10 23-NOV-1995 PXB Couple and Double games added
+C V09 06-JAN-1995 HXK Added B_WRKSHR array
+C V08 27-OCT-1994 HXK Tidied up for Bingo
+C V07 23-OCT-1994 GXA Declare BNGSCAN.
+C V06 23-OCT-1994 GXA Added BINGO related information.
+C V05 02-OCT-1993 HXK Redimensioned KMATCH.
+C V04 23-AUG-1993 GXA Declared SPBEST.
+C V03 22-AUG-1993 GXA Released for Finland Dec Conversion / Oddset.
+C V02 07-OCT-1991 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C WINNER SELECTION GAME COMMON
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+	INCLUDE 'INCLIB:LLTREC.DEF'
+	INCLUDE 'INCLIB:LSPREC.DEF'
+	INCLUDE 'INCLIB:LKKREC.DEF'
+	INCLUDE 'INCLIB:LSCREC.DEF'
+	INCLUDE 'INCLIB:LWIREC.DEF'
+	INCLUDE 'INCLIB:LTSREC.DEF'
+	INCLUDE 'INCLIB:LBNREC.DEF'
+	INCLUDE 'INCLIB:LDBREC.DEF'
+	INCLUDE 'INCLIB:LCPREC.DEF'
+	INCLUDE 'INCLIB:LSSREC.DEF'
+	INCLUDE 'INCLIB:LTRREC.DEF'
+	INCLUDE 'INCLIB:LSTREC.DEF'
+	INCLUDE 'INCLIB:LTGREC.DEF'
+C
+	COMMON /WINCOM/
+     *	                LLTREC,
+     *	                LSPREC,
+     *	                LTGREC,
+     *	                LKKREC,
+     *                  LSCREC,
+     *                  LWIREC,
+     *                  LTSREC,
+     *                  LBNREC,
+     *                  LDBREC,
+     *                  LCPREC,
+     *                  LSSREC,
+     *                  LTRREC,
+     *                  LSTREC,
+     *	                CARYSCAN,
+     *                  MAILSCAN,
+     *                  SPTSCAN,
+     *                  BNGSCAN
+C
+C LOTTO WINNER SELECTION TABLES
+C
+	COMMON /WINCOM/
+     *	                LADVSAL(NUMLTO),
+     *	                LWINMAP(2,MAXBDR,NUMLTO),
+     *	                LBONMAP(2,MAXBDR,NUMLTO),
+     *                  LLNMMAP(2,MAXBDR,NUMLTO),       !V15
+     *                  LTDELAY(NUMLTO),
+     *                  LTDELDR(NUMLTO)
+C
+C SPORTS WINNER SELECTION TABLES
+C
+	COMMON /WINCOM/
+     *	               SADVSAL(NUMSPT),
+     *                 SPDELAY(NUMSPT),
+     *                 SPDELDR(NUMSPT),
+     *                 SPBEST(SPGDIV,NUMSPT)
+C
+C TOTOGOLA WINNER SELECTION TABLES
+C
+	COMMON /WINCOM/
+     *	               TGADVSAL(NUMTGL),
+     *                 TGDELAY(NUMTGL),
+     *                 TGDELDR(NUMTGL),
+     *                 TGBEST(TGGDIV,NUMTGL)
+C
+C WINNERS TIP WINNER SELECTION TABLES
+	COMMON /WINCOM/
+     *                 WREFUND(NUMWIT)
+C
+C KICKER WINNER SELECTION TABLES
+C
+	COMMON /WINCOM/
+     *	               KADVSAL(MAXGAM,NUMKIK),
+     *	               KMATCH(7,3,KIGDIV,NUMKIK),
+     *	               KWINNUM(7,NUMKIK)
+C
+C BINGO WINNER SELECTION TABLES
+C
+	COMMON /WINCOM/
+     *		        BMWINTAB(BGOPHS,BGONBR,NUMBGO),
+     *		       	BNWINTAB(BGOPHS,NUMBGO),
+     *			BWWINTAB(BGONBR,NUMBGO),
+     *                  MATCHTAB((BGONBR/32)+1,BGONBR),
+     *                  B_WRKSHR(BGODIV)
+C
+C
+C SUPER DOUBLE  WINNER SELECTION TABLES
+	COMMON /WINCOM/
+     *                 DBREFUND(NUMDBL)
+
+C
+C TODAY'S COUPLE WINNER SELECTION TABLES
+	COMMON /WINCOM/
+     *                 CPREFUND(NUMCPL)
+C
+C
+C TODAY'S TRIO WINNER SELECTION TABLES
+	COMMON /WINCOM/
+     *                 TRREFUND(NUMTRP)
+C
+C SUPER TRIPLE WINNER SELECTION TABLES
+	COMMON /WINCOM/
+     *                 STREFUND(NUMSTR)
+C
+C
+	LOGICAL   CARYSCAN(MAXTYP), MAILSCAN, SPTSCAN, WREFUND
+	LOGICAL   BNGSCAN, DBREFUND, CPREFUND, TRREFUND,STREFUND
+	INTEGER*4 LADVSAL, LWINMAP, LBONMAP, LTDELDR, LTDELAY
+	INTEGER*4 SADVSAL, SPDELAY, SPDELDR, SPBEST
+	INTEGER*4 TGADVSAL, TGDELAY, TGDELDR, TGBEST
+	INTEGER*4 KADVSAL,KMATCH,KWINNUM
+	INTEGER*4 BMWINTAB, BNWINTAB, BWWINTAB
+        INTEGER*4 MATCHTAB, B_WRKSHR
+        INTEGER*4 LLNMMAP                   !V15
+C
+C
+	INTEGER*4	 FRST_WINCOM(2)
+	EQUIVALENCE	(FRST_WINCOM, LLTREC)
+	INTEGER*4	 LAST_WINCOM
+	EQUIVALENCE	(LAST_WINCOM, STREFUND(NUMSTR))
+C
+	VOLATILE /WINCOM/
+C

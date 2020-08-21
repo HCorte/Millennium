@@ -1,0 +1,49 @@
+C
+C SUBROUTINE IMXBLK
+C $Log:   GXAFXT:[GOLS]IMXBLK.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:35:50   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:38:34   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_hshfili4.for **
+C
+C
+C
+C
+C *** IMXBLK
+C
+C Obtain number of blocks in file (i.e., hash factor)
+C
+C *** THIS ROUTINE IS PROVIDED ONLY FOR COMPATABILITY WITH THE OLD
+C     INDIRECT FILE SYSTEM.  IT MAY BE CALLED BY AN APPLICATION, BUT
+C     IS NEVER CALLED BY ANY OF THE HSH... SUBROUTINES.
+C ***
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE IMXBLK(LUN,NUMBLK)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:HSHCOM.DEF'
+C
+	INTEGER*4 LUN                       !  INPUT: LOGICAL UNIT #
+	INTEGER*4 NUMBLK                    ! OUTPUT: # OF BLOCKS
+C
+C
+C
+	IF(FCB(FCBLUN,LUN).NE.LUN)THEN
+	  NUMBLK=0
+	ELSE
+	  NUMBLK=FCB(FCBHSH,LUN)
+	ENDIF
+C
+	RETURN
+	END

@@ -1,0 +1,86 @@
+C
+C	THRUSEND.FOR
+C	_________
+C
+C	THRUSEND(TM_BLOCK_NO,DATA) - ROUTINE USED TO SEND DATA TO REMLOG TASK
+C				  (TO SEND BUFFER TO THE OTHER SYSTEM)
+C	IN:
+C	TM_BLOCK_NO	-   TMF FILE LOGGER BLOCK NO
+C	DATA		-   DATA TO BE WRITTEN
+C
+C	THIS PROGRAM WILL ATTEMPT TO PASS DATA TO REMLOG USING ONE OF THE 
+C	REMOTE BUFFERS, IF NO BUFFERS AVAILABLE IT WILL QUEUE REQUEST TO LOG
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE THRUSEND(TM_BLOCK_NO,DATA)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE	'INCLIB:LOGCOM.DEF'
+	INCLUDE 'INCLIB:THRUCOM.DEF'
+	INTEGER*4   QUECNT
+	EXTERNAL    QUECNT
+
+	INTEGER*4   TM_BLOCK_NO
+	INTEGER*4   DATA(*)
+
+	INTEGER*4   SEND_BUF_NO
+	INTEGER*4   IN_DELAY
+	INTEGER*4   STATUS, ST
+	INTEGER*4   SYSTEM
+C
+C
+C	GET A BUFFER TO SEND
+C	IF CANNOT QUEUE IT TO DELAYED QUEUE
+
+	DO 100, SYSTEM=1,THRU_SYSTEMS
+
+	    CALL RTL(SEND_BUF_NO,THRU_FREEQUE(1,SYSTEM),STATUS)
+	    IF (STATUS.NE.GLIST_STAT_EMPTY) THEN
+		CALL FASTMOV(DATA,THRU_BUF(1,SEND_BUF_NO,SYSTEM),DBLOCK)
+                THRU_BUF_LOG_BLOCK(SEND_BUF_NO,SYSTEM)=TM_BLOCK_NO
+		CALL ABL(SEND_BUF_NO,THRU_SENDQUE(1,SYSTEM),ST)
+	    ELSE
+C
+C	QUEUE TO SEND LATER, IF COULD NOT QUEUE TELL ABOUT FAILURE
+C			     (SHOULD NEVER HAPPEN)
+C	I.E. QUEUE TO THRU_DELAYQUE
+
+		THRU_DELAY_CNT(SYSTEM)=THRU_DELAY_CNT(SYSTEM)+1
+		CALL ABL(TM_BLOCK_NO,THRU_DELAYQUE(1,SYSTEM),ST)
+		IF (ST.EQ.GLIST_STAT_FULL) THEN
+		    THRU_DELAY_FULL(SYSTEM)=THRU_DELAY_FULL(SYSTEM)+1
+		    IF (MOD(THRU_DELAY_FULL(SYSTEM),100).EQ.1) 
+     *		    CALL OPS('Cannot send to remote',THRU_DELAY_FULL,SYSTEM)
+		ELSE
+		    IN_DELAY=QUECNT(THRU_DELAYQUE(1,SYSTEM))
+		    IF (MOD(IN_DELAY,10).EQ.1 .AND. IN_DELAY.NE.1 
+     *				  .AND. IN_DELAY.LT.52)  THEN
+			CALL OPS('delay sending to remote',
+     *				  IN_DELAY,SYSTEM)
+		    ELSEIF (MOD(IN_DELAY,100).EQ.1 .AND. IN_DELAY.GE.52) THEN 
+			CALL OPS(' sending to remote inoperational ',
+     *				  IN_DELAY,SYSTEM)
+		    ENDIF
+		ENDIF
+	    ENDIF
+100	CONTINUE
+C
+	RETURN
+	END

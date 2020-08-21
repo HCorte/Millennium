@@ -1,0 +1,20 @@
+    
+    PTL.HLP                GTECH Distributed Network
+                    Protocol Transport Layer Snapshot Help     Page 1 of 1
+ 
+    The Protocol transport layer snapshot displays several items of 
+    information about a specific terminal or wager transaction.   
+									  
+    The information displayed includes:
+ 
+    index     - record number in X2Xlog.FIL 
+    cross ser - serial number of transaction in the TMF
+    cdc       - continuous day counter number of transactions
+    time      - time of transaction
+    station   - source or destination station number
+    terminal  - source or destination terminal number
+    SAP       - Service Access Point, usually Front-End ID
+    layer     - where it is from/to Front End, Station, Global etc
+    PTL code  - internal transaction code of message (for software
+                use only)
+    back link - link to inbound or outbound message

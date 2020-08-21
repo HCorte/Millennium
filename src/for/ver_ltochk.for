@@ -1,0 +1,91 @@
+C
+C SUBROUTINE VER_LTOCHK
+C $Log:   GXAFXT:[GOLS]VER_LTOCHK.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:53:04   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   23 Jul 1993 18:32:24   SXH
+C  Released for Finland
+C  
+C     Rev 1.0   21 Jan 1993 18:01:50   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - ltover.for **
+C
+C V01 07-JAN-93  TD CHANGED SUBROUTINE CALL TO VER_LTOCHK FROM LTOCHK.
+C		    ONLY SUBROUTINE LTOVER CALLS THIS ROUTINE
+C
+C
+C SUBROUTINE TO CHECK LOTTO WINNING NUMBERS
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE VER_LTOCHK(BDROFF,ST)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:RESCOM.DEF'
+
+        ! arguments
+        INTEGER*4  BDROFF          !
+        INTEGER*4  ST              !
+
+        ! variables
+	INTEGER*4  J               !
+        INTEGER*4  TEMP            !
+        INTEGER*4  I               !
+
+	LOGICAL SORT               !
+
+C
+C SORT THE NUMBERS INTO ASCENDING SEQUENCE
+C
+	ST=-1
+10	CONTINUE
+	SORT=.FALSE.
+
+	DO I=1,DLTNUM-1
+	    IF(DLTHLD(I,BDROFF).GT.DLTHLD(I+1,BDROFF)) THEN
+	        TEMP=DLTHLD(I,BDROFF)
+	        DLTHLD(I,BDROFF)=DLTHLD(I+1,BDROFF)
+	        DLTHLD(I+1,BDROFF)=TEMP
+	        SORT=.TRUE.
+	    ENDIF
+        END DO
+
+	IF(SORT) GOTO 10
+C
+C
+25	CONTINUE
+	SORT=.FALSE.
+	DO I=1,DLTBFL-1
+	    IF(DLTBHL(I,BDROFF).GT.DLTBHL(I+1,BDROFF)) THEN
+	        TEMP=DLTBHL(I,BDROFF)
+	        DLTBHL(I,BDROFF)=DLTBHL(I+1,BDROFF)
+	        DLTBHL(I+1,BDROFF)=TEMP
+	        SORT=.TRUE.
+	    ENDIF
+        END DO
+	IF(SORT) GOTO 25
+C
+C
+	DO I=1,DLTNUM-1
+	    IF(DLTHLD(I,BDROFF).EQ.DLTHLD(I+1,BDROFF)) RETURN
+        END DO
+C
+C
+	DO I=1,DLTBFL
+	    DO J=1,DLTNUM
+	        IF(DLTBHL(I,BDROFF).EQ.DLTHLD(J,BDROFF)) RETURN
+            END DO
+        END DO
+C
+C
+	ST=0
+
+	RETURN
+
+	END

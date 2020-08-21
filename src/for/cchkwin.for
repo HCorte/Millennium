@@ -1,0 +1,260 @@
+C
+C SUBROUTINE CCHKWIN
+C
+C V09 03-JUL-2000 UXN Refund too late played tickets.
+C V09 27-MAY-1999 UXN REFUNDS PUT TOGETHER. COUNTTAB restructured.
+C V08 14-JAN-1999 UXN GET_TEBEID ADDED.
+C V07 19-FEB-1996 HXK Fix for HST count
+C V06 23-JAN-1996 HXK Fix for Winsel stats / counts
+C V05 21-JAN-1996 HXK Various fixes for Double / Couple for system bets and ties
+C V04 04-JAN-1996 HXK Further changes for Double / Couple batch
+C V03 28-NOV-1995 PXB Now updates wcp,hst,wbt fields 
+C V02 28-NOV-1995 PXB Added call to get refund routine
+C V01 23-NOV-1995 PXB Initial revision.
+C  
+C SUBROUTINE TO CHECK IF TODAYS COUPLE TICKET IS A WINNER
+C AND UPDATE VALIDATION RECORDS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE CCHKWIN(TRABUF,V4BUF,WIN)
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:WINCOM.DEF'
+	INCLUDE 'INCLIB:DESVAL.DEF'
+	INCLUDE 'INCLIB:VALFIL.DEF'
+	INCLUDE 'INCLIB:VDETAIL.DEF'
+
+	INTEGER*4 WINTAB(25)
+	INTEGER*4 REFTAB(25)
+	INTEGER*4 WIN
+	INTEGER*4 ST
+	INTEGER*4 GIND
+	INTEGER*4 AMTWON
+	INTEGER*4 TOTWON
+	INTEGER*4 COUNT
+	INTEGER*4 I
+	INTEGER*4 PRZIND
+	INTEGER*4 TAXAMT
+	INTEGER*4 NETAMT
+        INTEGER*4 NAMT
+	INTEGER*4 TAMT
+	INTEGER*4 J
+	INTEGER*4 COUNTTAB(2,MAXCPLTI)
+	INTEGER*4 AMTTAB(MAXCPLTI)
+
+	LOGICAL CXLED
+	LOGICAL PRVFLG
+	LOGICAL HLDFLG
+
+        INTEGER*4 AWNTAB(2,NUMAGT)
+        COMMON/BIGWIN/ AWNTAB
+	INTEGER*4   REFROWS,WINFLG
+	LOGICAL*4   LATEFLG
+C--------------------------- Start of code -----------------------------
+
+	WIN    = 0
+	COUNT  = 0
+	TOTWON = 0
+        NETAMT = 0
+        TAXAMT = 0
+	PRVFLG = .FALSE.
+	CXLED  = .FALSE.
+	HLDFLG = .FALSE.
+
+        CALL FASTSET(0,WINTAB,25)
+        CALL FASTSET(0,REFTAB,25)
+        CALL FASTSET(0,COUNTTAB,2*MAXCPLTI)
+        CALL FASTSET(0,AMTTAB,MAXCPLTI)
+
+	ST     = TRABUF(TSTAT)
+	GIND   = TRABUF(TGAMIND)
+
+	IF (LCPDRW(GIND) .LT. 0) RETURN
+	IF (ST .NE. GOOD .AND. ST .NE. VOID .AND.
+     *	    ST .NE. INCA .AND. ST .NE. EXCH) RETURN
+	IF (TRABUF(TWBEG) .GT. LCPDRW(GIND)) RETURN
+	IF (TRABUF(TWEND) .LT. LCPDRW(GIND)) RETURN
+	IF (TRABUF(TSTAT) .EQ. VOID .OR. 
+     *	    TRABUF(TSTAT) .EQ. INCA) CXLED = .TRUE.
+
+C---- Check for cancelled game/row.
+
+	LATEFLG = .FALSE.
+        IF (CPREFUND(GIND)) THEN
+          IF (.NOT.CXLED) THEN
+	      LATEFLG = LCPLAT(LATCDC,GIND).GT.0.AND.
+     *                  (LCPLAT(LATCDC,GIND).LT.TRABUF(TCDC).OR.
+     *                   (LCPLAT(LATCDC,GIND).EQ.TRABUF(TCDC).AND.
+     *                    LCPLAT(LATTIM,GIND).LT.TRABUF(TTIM)))
+               CALL CPL_GETREF (TRABUF,WINTAB,REFTAB,WIN,REFROWS,LATEFLG)
+          ENDIF
+        ENDIF
+	
+	WINFLG = 0
+
+	IF (LCPSTS(GIND) .GE. GAMENV .AND. LCPSTS(GIND).NE.GAMCAN .AND.
+     *      .NOT. LATEFLG) THEN
+	  WINFLG = WIN
+          CALL CWINLOS(TRABUF,WINTAB,WIN,COUNTTAB)
+	  WINFLG = WIN - WINFLG
+        END IF
+
+C---- Update validation record.
+
+	IF (WIN .EQ. 0) RETURN
+
+	IF (V4BUF(VFSSER) .NE. 0) THEN
+	  CALL LOGVAL(VALREC,V4BUF)
+	  CALL DLOGVAL(VALREC,VDETAIL)
+	ELSE
+	  CALL FASTSET(0,VALREC,VALLEN)
+	  CALL FASTSET(0,VDETAIL,VPLEN*VMAX)
+	END IF
+
+	DO 1000 I = 1,WIN
+	  AMTWON = WINTAB(I)
+	  IF (REFTAB(I).NE.0) THEN
+	    LCPREF(GIND) = LCPREF(GIND) + AMTWON
+	    IF(WINFLG .EQ. 0) THEN
+              LCPWRO(1,PRWON,GIND) = LCPWRO(1,PRWON,GIND) + REFROWS
+              LCPWRO(2,PRWON,GIND) = LCPWRO(2,PRWON,GIND) + AMTWON
+	    END IF
+            LCPWRA(1,PRWON,GIND) = LCPWRA(1,PRWON,GIND) + REFROWS
+            LCPWRA(2,PRWON,GIND) = LCPWRA(2,PRWON,GIND) + AMTWON
+            LCPWON(GIND) = LCPWON(GIND) + AMTWON 
+            LCPWPR(1,PRWON,GIND) = LCPWPR(1,PRWON,GIND) + REFROWS
+            LCPWPR(2,PRWON,GIND) = LCPWPR(2,PRWON,GIND) + AMTWON
+   	  END IF
+
+	  VALREC(VPZOFF) = VALREC(VPZOFF) + 1
+	  PRZIND = VALREC(VPZOFF)
+	  IF (PRZIND .GT. VMAX) THEN
+	    TYPE*,IAM(),' Prize table overflow ',TRABUF(TCDC),TRABUF(TSER)
+	    CALL GPAUSE
+	    HLDFLG = .TRUE.
+	    VALREC(VPZOFF) = VMAX
+	    GOTO 20
+	  END IF
+
+	  VDETAIL(VKIK,PRZIND) = 0
+          VDETAIL(VKI2,PRZIND) = 0
+          VDETAIL(VPRG,PRZIND) = 0
+	  VDETAIL(VREF,PRZIND) = 0
+	  VDETAIL(VBDR,PRZIND) = 0
+	  VDETAIL(VDIV,PRZIND) = 0
+	  VDETAIL(VUPD,PRZIND) = 1
+	  VDETAIL(VSHR,PRZIND) = AMTWON
+	  IF (REFTAB(I).NE.0) VDETAIL(VREF,PRZIND) = 1
+	  VDETAIL(VDRW,PRZIND) = LCPDRW(GIND)
+
+20	  CONTINUE
+
+	  IF (REFTAB(I).NE.0) THEN
+	    VALREC(VRAMT) = VALREC(VRAMT) + AMTWON
+	  ELSE
+	    TOTWON = TOTWON + AMTWON
+            DO J = 1,MAXCPLTI
+               IF(COUNTTAB(1,J).NE.0.AND.AMTTAB(J).EQ.0) THEN
+                  AMTTAB(J) = AMTWON
+	          GOTO 1000
+               ENDIF
+            ENDDO
+	  END IF
+
+1000	CONTINUE
+
+C---- Update validation header if new winner.
+
+	IF (VALREC(VSTAT) .EQ. VNOWIN) THEN
+	  VALREC(VSCDC) = TRABUF(TCDC)
+	  VALREC(VSTER) = TRABUF(TTER)
+	  VALREC(VSSER) = TRABUF(TSER)
+	  VALREC(VEXP ) = TRABUF(TWEND)
+	  VALREC(VKEXP) = TRABUF(TWKEND)
+	  VALREC(VGAM ) = TRABUF(TGAM)
+	  VALREC(VKGME) = TRABUF(TWKGME)
+	  VALREC(VGTYP) = TRABUF(TGAMTYP)
+	  VALREC(VGIND) = TRABUF(TGAMIND)
+          VALREC(VFRAC) = TRABUF(TFRAC)
+          VALREC(VBNKID) = TRABUF(TWBNKID)
+          VALREC(VBNKNUM) = TRABUF(TWBNKNM)
+	ENDIF
+
+C---- Get taxes and set priv pay flag
+C---- and update big winner commission table.
+
+        IF (.NOT. CXLED .AND. TOTWON .NE. 0) THEN
+          LCPWON(GIND) = LCPWON(GIND) + TOTWON
+ 
+	  DO J = 1,MAXCPLTI
+	    IF (COUNTTAB(1,J) .GT. 0) THEN
+	      LCPWCP(J,GIND) = LCPWCP(J,GIND) + 1
+	      LCPWBT(TRACNT,J,GIND) = LCPWBT(TRACNT,J,GIND) + 1
+	      LCPWBT(DOLAMT,J,GIND) = LCPWBT(DOLAMT,J,GIND) + COUNTTAB(2,J)
+              IF (AMTTAB(J) .GT. LCPHST(J,GIND)) THEN
+	        LCPHST(J,GIND) = AMTTAB(J)
+	      END IF
+	    END IF
+	  END DO
+
+1001	  CONTINUE
+
+          DO 2000 I = 1,WIN
+             AMTWON = WINTAB(I)
+             IF (REFTAB(I).EQ.0) THEN
+               LCPWPR(1,PRWON,GIND) = LCPWPR(1,PRWON,GIND) + 1
+               LCPWPR(2,PRWON,GIND) = LCPWPR(2,PRWON,GIND) + AMTWON
+               LCPWPO(1,PRWON,GIND) = LCPWPO(1,PRWON,GIND) + 1
+               LCPWPO(2,PRWON,GIND) = LCPWPO(2,PRWON,GIND) + AMTWON
+               CALL GETTAX(AMTWON,TAMT,NAMT)
+               NETAMT = NETAMT + NAMT
+               TAXAMT = TAXAMT + TAMT
+             END IF
+2000      CONTINUE
+
+          IF (NETAMT .GT. REDMAX(TRABUF(TGAM))) PRVFLG = .TRUE.
+
+          LCPTAX(GIND) = LCPTAX(GIND) + TAXAMT
+
+          IF (HVCLVL .NE. 0) THEN
+            IF (NETAMT .GE. HVCLVL) THEN
+              AWNTAB(1,TRABUF(TTER)) = AWNTAB(1,TRABUF(TTER)) + 1
+              AWNTAB(2,TRABUF(TTER)) = AWNTAB(2,TRABUF(TTER)) + NETAMT
+            END IF
+          END IF
+          VALREC(VPAMT) = VALREC(VPAMT) + TOTWON
+          VALREC(VTAMT) = VALREC(VTAMT) + TAXAMT
+        END IF
+
+	VALREC(VWCDC) = DAYCDC
+	VALREC(VSTAT) = VUNCSH
+	IF (PRVFLG) VALREC(VSTAT) = VPRPAY
+	IF (HLDFLG) VALREC(VSTAT) = VHOLD
+	IF (TRABUF(TSTAT) .EQ. VOID) VALREC(VSTAT) = VCXL
+	IF (TRABUF(TSTAT) .EQ. INCA) VALREC(VSTAT) = VDEL
+	CALL DVALLOG(VALREC,VDETAIL)
+	CALL VALLOG (VALREC,V4BUF  )
+
+
+	RETURN
+
+	END

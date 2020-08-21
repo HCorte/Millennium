@@ -1,0 +1,154 @@
+C GUIRDIOCOMP.FOR
+C
+C V02 31-OCT-2000 UXN GUI prefix added.
+C V01 16-JUN-1993 MP  INITIAL RELEASE FOR VAX (Produced From TCPASST).
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C		This routine is called once a read completes. If a read
+C		completes with a good status then another read is started
+C		(using the DOREAD routine). The buffer status in the GUI header
+C		is set to GUI_GODRED for good reads. The GUI buffer is added 
+C		to the GUI_FROM_LINK_QUE. If a read completes with an error 
+C		then an	error message is printed. The buffer status is
+C		set to GUI_BADRED. If the connection status is currently
+C		connected then the routine forces a disconnect by calling
+C		GUITCPPDODISC. In this case the buffer status is set to 
+C		GUI_DISRED. The GUI buffer is added to the 
+C		GUI_FROM_LINK_QUE.
+C
+C INPUT:
+C	CONN_RIO - following product: (CONN-1)*MAX_CONN+RIO
+C OUTPUT:
+C	none
+C RESULTS:
+C	buffer with data segment is placed on one of GUI_FROM_LINK_QUES
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GUITCPPRDIOCOMP(CONN_RIO)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:GUIMCOM.DEF'
+	INCLUDE 'INCLIB:GUILCOM.DEF'
+C
+        INCLUDE '($IODEF)'
+        INCLUDE '($SSDEF)'
+        INCLUDE '($SYSSRVNAM)'
+C
+	INTEGER*4 CONN_RIO	!CONN AND READ IOSB COUNTER
+	INTEGER*4 RIO	        !READ IOSB COUNTER
+	INTEGER*4 CONN_CUR	!CURRENT CONNECTION
+	INTEGER*4 BUF_CUR	!GUI_BUF #
+	INTEGER*4 IERR		!RTL/ABL ERROR STATUS
+	INTEGER*4 QUE_SIZE	!to keep LINK_FRE queue size
+	LOGICAL   RED_IGN_ONLY  ! If .FALSE. no matter what RED_IGNORE is
+C
+	INTEGER*4   BLANK
+	DATA	    BLANK/'    '/
+C
+	CONN_CUR = CONN_RIO / GUI_MAX_READS + 1
+	RIO      = MOD(CONN_RIO, GUI_MAX_READS)
+	IF(GUI_DBG_UNIT.NE.0) THEN
+	  TYPE *,IAM(),'GUILRDIOCOMP:  CONN,RIO ', CONN_CUR,RIO
+	ENDIF
+C
+	IF(CONN_CUR.LT.1 .OR. CONN_CUR.GT.GUI_MAX_CONN) THEN
+	  CALL FASTSET(BLANK,GUI_MES_BUF,33)
+	  WRITE(GUI_MES_CBUF,9000) IAM(),CONN_CUR, RIO
+9000	  FORMAT(A,'GUILRDIOCOMP: Invalid CONN,RIO # ',2I)
+	  CALL WRITEBRK(GUI_MES_CBUF)
+	  RETURN
+	ENDIF
+C
+	BUF_CUR=GUI_READ_BUF(RIO,CONN_CUR)
+	IF(GUI_DBG_UNIT.NE.0) THEN
+	  TYPE *,IAM(),'GUILRDIOCOMP:  BUF_CUR ',BUF_CUR
+	ENDIF
+C
+	IF(BUF_CUR.LT.1 .OR. BUF_CUR.GT.GUI_LINK_BUFS) THEN
+	  CALL FASTSET(BLANK,GUI_MES_BUF,33)
+	  WRITE(GUI_MES_CBUF,9100) IAM(),BUF_CUR
+9100	  FORMAT(A,'GUILRDIOCOMP: Invalid GUI_LINK Buffer  # ',I)
+	  CALL WRITEBRK(GUI_MES_CBUF)
+	  RETURN
+	ENDIF
+C
+        GUI_READ_OUT(RIO,CONN_CUR)=GUI_READY
+C
+	IF(GUI_READ_IOSB(RIO,CONN_CUR).STAT .EQ. SS$_NORMAL) THEN
+	  IF(GUI_DBG_UNIT.NE.0) THEN
+	    TYPE *,IAM(),'GUILRDIOCOMP : GOOD READ'
+	  ENDIF
+C
+	  GUITCP_WATCH_DOG(CONN_CUR) = .TRUE.
+C
+	  GUI_READS(CONN_CUR) = GUI_READS(CONN_CUR) + 1
+	  GUI_LINK_BUF(GUI_BUF_IO_STS_OFF,BUF_CUR) = GUI_GODRED
+	  GUI_LINK_BUF(GUI_BUF_LEN_OFF,BUF_CUR) = 
+     *		       GUI_READ_IOSB(RIO,CONN_CUR).XSIZE
+	  GUI_LINK_BUF(GUI_BUF_ERR_OFF,BUF_CUR) = 0
+	  GUI_LINK_BUF(GUI_BUF_CONN_OFF,BUF_CUR) = CONN_CUR
+	  CALL ABL (BUF_CUR,GUI_FROM_LINK_QUES(1,CONN_CUR),IERR)
+C
+	  CALL LISTSIZE(GUI_LINK_FRE_QUE, QUE_SIZE)
+	  IF(QUE_SIZE.LT.GUI_LINK_FRE_BUFS_GOAL) THEN
+	    CALL GUITCPPSTARTTIME(GUITCP_TIME_READ,300)
+	    RETURN
+	  ENDIF
+C
+	  CALL RTL(BUF_CUR,GUI_LINK_FRE_QUE,IERR)
+	  IF(IERR.EQ.2) THEN	    !NO BUFFERS AVAILABLE
+	    CALL GUITCPPSTARTTIME(GUITCP_TIME_READ,300)
+	  ELSE
+	    CALL GUIMGR_CHECK_BUF(BUF_CUR,'GUILRDIOCOMP')
+	    CALL GUITCPPDOREAD(RIO,BUF_CUR, CONN_CUR)
+	  ENDIF
+	ELSE
+	  IF(GUI_READ_IOSB(RIO,CONN_CUR).STAT.NE.SS$_DISCONNECT
+     *  .AND.GUI_READ_IOSB(RIO,CONN_CUR).STAT.NE.SS$_LINKDISCON) THEN
+	    CALL FASTSET(BLANK,GUI_MES_BUF,33)
+ 	    WRITE(GUI_MES_CBUF,9200) IAM(),
+     *	        GUI_READ_IOSB(RIO,CONN_CUR).STAT
+9200	    FORMAT(A,'GUILRDIOCOMP: Error completing read ',I)
+	    CALL WRITEBRK(GUI_MES_CBUF)
+	  ENDIF
+C
+	  GUI_READERRS(CONN_CUR) = GUI_READERRS(CONN_CUR) + 1
+	  GUI_READLERR(CONN_CUR) = GUI_READ_IOSB(RIO,CONN_CUR).STAT
+	  GUI_LINK_BUF(GUI_BUF_IO_STS_OFF,BUF_CUR) = GUI_BADRED
+	  GUI_LINK_BUF(GUI_BUF_LEN_OFF,BUF_CUR) = 
+     *	           GUI_READ_IOSB(RIO,CONN_CUR).XSIZE
+	  GUI_LINK_BUF(GUI_BUF_ERR_OFF,BUF_CUR) =
+     *		   GUI_READ_IOSB(RIO,CONN_CUR).STAT
+	  IF(GUI_CONN_STS(CONN_CUR).EQ.GUI_CONN_STS_CONNECTED) THEN
+	    IF(GUI_DBG_UNIT.NE.0) THEN
+	      TYPE *,IAM(),
+     *		   'GUILRDIOCOMP : Disconnecting CONN_CUR=', CONN_CUR
+	    ENDIF
+	    GUI_LINK_BUF(GUI_BUF_IO_STS_OFF,BUF_CUR) = GUI_DISRED
+	    CALL ABL (BUF_CUR,GUI_FROM_LINK_QUES(1,CONN_CUR),IERR)
+	    RED_IGN_ONLY=.FALSE.
+	    CALL GUITCPPDODISC(CONN_CUR, RED_IGN_ONLY)
+	  ELSE
+	    CALL ABL (BUF_CUR,GUI_FROM_LINK_QUES(1,CONN_CUR),IERR)
+	  ENDIF
+	ENDIF
+C
+	RETURN
+C
+	END

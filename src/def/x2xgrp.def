@@ -1,0 +1,126 @@
+C
+C X2XGRP.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XGRP.DEV                                   $
+C  $Date::   17 Apr 1996 16:43:02                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V04 15-JUN-00 UXN COMMON/X2XGRP_NAME/ X2XGRP_NAME added.
+C V03 12-DEC-94 DAS Integrate UK changes into X2X Baseline
+C V02 01-NOV-94 GPR Add ! to fields which require RUNSYS
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C The DEF describes the variables which are used to define
+C the broadcast relay groups.
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XGRP_ENTRIES counter, the X2XGRP_FIELD, and
+C        the X2XGRP_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   X2XGRP_REC(128)     !Record buffer
+	CHARACTER   X2XGRP_CREC(512)*1  !Record buffer
+	EQUIVALENCE (X2XGRP_REC, X2XGRP_CREC)
+C
+	INTEGER*4   X2XGRP_SECT         !Number of sectors per rec
+	PARAMETER  (X2XGRP_SECT=2)
+	CHARACTER   X2XGRP_NAME*10      !Global Setup file name
+	DATA        X2XGRP_NAME /'X2XGRP.FIL'/
+	COMMON/X2XGRP_NAME/ X2XGRP_NAME
+	INTEGER*4   X2XGRP_FDB(7)       !File descriptor block
+	DATA        X2XGRP_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XGRP_GROUP        !Group number
+	CHARACTER   X2XGRP_DESC*12      !Description
+        INTEGER*4   X2XGRP_STATE        !Group state
+	INTEGER*4   X2XGRP_UPDATE       !CDC last updated
+	INTEGER*4   X2XGRP_FREE(118)    !Free space
+	INTEGER*4   X2XGRP_BITMAP       !Modified fields
+	INTEGER*4   X2XGRP_BITMAP2      !Modified fields
+	INTEGER*4   X2XGRP_BITMAP3      !Modified fields
+	INTEGER*4   X2XGRP_BITMAP4      !Modified fields
+C
+	INTEGER*4   X2XGRP_IDESC(3)     !Integer group description
+	EQUIVALENCE (X2XGRP_DESC,X2XGRP_IDESC)
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+	EQUIVALENCE (X2XGRP_REC(1),  X2XGRP_GROUP)
+	EQUIVALENCE (X2XGRP_REC(2),  X2XGRP_DESC)
+        EQUIVALENCE (X2XGRP_REC(5),  X2XGRP_STATE)
+	EQUIVALENCE (X2XGRP_REC(6),  X2XGRP_UPDATE)
+	EQUIVALENCE (X2XGRP_REC(7),  X2XGRP_FREE)
+	EQUIVALENCE (X2XGRP_REC(125),X2XGRP_BITMAP)
+	EQUIVALENCE (X2XGRP_REC(126),X2XGRP_BITMAP2)
+	EQUIVALENCE (X2XGRP_REC(127),X2XGRP_BITMAP3)
+	EQUIVALENCE (X2XGRP_REC(128),X2XGRP_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XGRP_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XGRP_ENTRIES
+	PARAMETER (X2XGRP_ENTRIES=4)
+C
+	CHARACTER X2XGRP_FIELD(X2XGRP_ENTRIES)*15
+	DATA      X2XGRP_FIELD
+     *      /'Group number   ','!Description   ',			!V02
+     *       'Group state    ','Last Updated   '/
+C
+C STORE THE VALID INPUT RANGE FOR EACH VARIABLE.
+C NOTE: A -1 IN THE FIRST RANGE DESIGNATES A CHARACTER
+C       VARIABLE, -2 INPUT REAL.
+C
+	INTEGER*4 X2XGRP_RANGE(2,X2XGRP_ENTRIES)
+	DATA      X2XGRP_RANGE
+     *      /1,X2X_NUM_GROUPS,   -1,12,   0,2,  0,0/
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XGRP_INDEX(X2XGRP_ENTRIES)
+	DATA      X2XGRP_INDEX
+     *      /1,   2,   5,   6/
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+	INTEGER*4 X2XGRP_VALUE(15,X2XGRP_ENTRIES)
+	DATA      X2XGRP_VALUE
+     *	    /15*-1, 15*-1, 15*-1, 15*-1/
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XGRP_COMMON/
+	COMMON /X2XGRP_COMMON/ X2XGRP_REC,   X2XGRP_FDB,
+     *	                       X2XGRP_RANGE, X2XGRP_INDEX,
+     *	                       X2XGRP_VALUE, X2XGRP_FIELD
+C
+C

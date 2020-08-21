@@ -1,0 +1,21 @@
+$! GXSRC:LODLTO.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]LODLTO.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:46:00   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:17:38   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:43:26   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:LODLTO.EXE -
+OBJLIB:LODLTO,-
+DECLTO,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

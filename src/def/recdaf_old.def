@@ -1,0 +1,136 @@
+C RECDAF_OLD.DEF
+C $Log:   GXAFXT:[GOLS]RECDAF.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:40:06   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.3   03 Jun 1993 14:24:04   GXA
+C  Canged calculation of the record length.
+C  
+C     Rev 1.2   02 Jun 1993 16:59:10   GXA
+C  Cleaned up calculations in comments.
+C  
+C     Rev 1.1   01 Jun 1993 18:40:08   GXA
+C  Released for Finland Dec Conversion / Oddset.
+C  Parameterized record offsets and added automatic resizeing of record.
+C  
+C     Rev 1.0   21 Jan 1993 18:51:10   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V04 14-FEB-2017 FRP MAXCDC from 6000 to 9999
+C V03 22-FEB-2011 FRP MAXGAM from 10 to 50
+C V02 07-OCT-91 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C DAILY ACTIVITY FILE LAYOUT
+C DAFSTS                           DAY STATUS                      1
+C DAFCDC                           CURRENT CDC DATE                1
+C DAFYER                           CURRENT YEAR                    1
+C DAFJUL                           CURRENT JULIAN DATE             1
+C DAFWEK                           CURRENT WEEK NUMBER             1
+C DAFTYP(NUMTOT,NUMFIN,MAXGAM)     DAILY ACTIVITY BY GAME        600
+C DAFDRW(MAXGAM)                   GAME DRAWING NUMBERS           50
+C DAFHDR(MAXGAM)                   HIGH DRAW NUMBERS              50
+C DAFVAL(MAXGAM)                   CASH EXPIRE DRAW BY GAME       50
+C DAFSAL(MAXDRW,MAXGAM)            SALES BY DRAW/GAME           1000
+C DAFDIS(NUMTOT,MAXGAM)            DISCOUNTS BY GAME             100
+C DAFCRS(NUMCRS)                   CROSS SYSTEM COUNTERS          16
+C DAFIVAL                          INSTANT VALIDATION AMT          1
+C DAFICLM                          INSTANT CLAIM AMT               1
+C DAFFRE	                   FREE SPACE                     47
+C
+C                                  TOTAL                        1920
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C RECORD OFFSET PARAMETERS
+C
+	INTEGER*4 ODAFSTS_OFF, ODAFCDC_OFF, ODAFYER_OFF, ODAFJUL_OFF
+	INTEGER*4 ODAFWEK_OFF
+	PARAMETER (ODAFSTS_OFF = 1)				   !1
+	PARAMETER (ODAFCDC_OFF = ODAFSTS_OFF + 1)			   !2
+	PARAMETER (ODAFYER_OFF = ODAFCDC_OFF + 1)			   !3
+	PARAMETER (ODAFJUL_OFF = ODAFYER_OFF + 1)			   !4
+	PARAMETER (ODAFWEK_OFF = ODAFJUL_OFF + 1)			   !5
+C
+	INTEGER*4 ODAFTYP_OFF, ODAFDRW_OFF, ODAFHDR_OFF, ODAFVAL_OFF
+	INTEGER*4 ODAFSAL_OFF
+	PARAMETER (ODAFTYP_OFF = ODAFWEK_OFF + 1)			   !6
+	PARAMETER (ODAFDRW_OFF = ODAFTYP_OFF + NUMTOT*NUMFIN*MAXGAM) !306
+	PARAMETER (ODAFHDR_OFF = ODAFDRW_OFF + MAXGAM)		   !331
+	PARAMETER (ODAFVAL_OFF = ODAFHDR_OFF + MAXGAM)		   !356
+	PARAMETER (ODAFSAL_OFF = ODAFVAL_OFF + MAXGAM)		   !381
+C
+	INTEGER*4 ODAFDIS_OFF , ODAFFRE_OFF
+	INTEGER*4 ODAFCRS_OFF, ODAFIVAL_OFF, ODAFICLM_OFF
+	PARAMETER (ODAFDIS_OFF = ODAFSAL_OFF + MAXDRW*MAXGAM)	   !881
+	PARAMETER (ODAFCRS_OFF = ODAFDIS_OFF + NUMTOT*MAXGAM)	   !931
+	PARAMETER (ODAFIVAL_OFF = ODAFCRS_OFF + NUMCRS)
+	PARAMETER (ODAFICLM_OFF = ODAFIVAL_OFF + 1)
+	PARAMETER (ODAFFRE_OFF = ODAFICLM_OFF + 1)
+C
+C CALCULATE FREE SPACE BASED ON MACHINE DEPENDENT SECTOR SIZES.
+C SHOULD ALLWAYS ADD UP TO A EVEN SECTOR SIZE BYTES (VAX 512).
+C NOTE! IN CALCULATIONS, FRE_OFF-2 IS DONE TO TAKE CARE OF WHEN THE DATA SIZE
+C       ENDS ON A EVEN SECTOR SIZE.
+C 
+        INTEGER*4 ODAFLEN
+        PARAMETER(ODAFLEN = ODAFFRE_OFF-1)
+C
+        INTEGER*4 IODAFSEC
+        PARAMETER(IODAFSEC = ODAFLEN/128 + 1)
+C
+        INTEGER*4 ODAFSEC
+        PARAMETER(ODAFSEC = IODAFSEC*2)
+C
+        INTEGER*4 ODAFFRESIZ
+        PARAMETER(ODAFFRESIZ = ODAFSEC *64 - ODAFLEN)
+C
+        INTEGER*4 ODAFREC(ODAFSEC*64)
+C
+	INTEGER*4 ODAFSTS,ODAFCDC,ODAFYER,ODAFJUL,ODAFWEK
+	INTEGER*4 ODAFTYP(NUMTOT,NUMFIN,MAXGAM)
+	INTEGER*4 ODAFDRW(MAXGAM),ODAFHDR(MAXGAM)
+	INTEGER*4 ODAFVAL(MAXGAM),ODAFSAL(MAXDRW,MAXGAM)
+	INTEGER*4 ODAFDIS(NUMTOT,MAXGAM)
+        INTEGER*4 ODAFCRS(NUMCRS)
+        INTEGER*4 ODAFIVAL
+        INTEGER*4 ODAFICLM
+        INTEGER*4 ODAFFRE(ODAFFRESIZ)
+C
+C
+	EQUIVALENCE (ODAFSTS,ODAFREC(ODAFSTS_OFF))
+	EQUIVALENCE (ODAFCDC,ODAFREC(ODAFCDC_OFF))
+	EQUIVALENCE (ODAFYER,ODAFREC(ODAFYER_OFF))
+	EQUIVALENCE (ODAFJUL,ODAFREC(ODAFJUL_OFF))
+	EQUIVALENCE (ODAFWEK,ODAFREC(ODAFWEK_OFF))
+	EQUIVALENCE (ODAFTYP(1,1,1),ODAFREC(ODAFTYP_OFF))
+	EQUIVALENCE (ODAFDRW(1),ODAFREC(ODAFDRW_OFF))
+	EQUIVALENCE (ODAFHDR(1),ODAFREC(ODAFHDR_OFF))
+	EQUIVALENCE (ODAFVAL(1),ODAFREC(ODAFVAL_OFF))
+	EQUIVALENCE (ODAFSAL(1),ODAFREC(ODAFSAL_OFF))
+	EQUIVALENCE (ODAFDIS(1),ODAFREC(ODAFDIS_OFF))
+        EQUIVALENCE (ODAFCRS,ODAFREC(ODAFCRS_OFF))
+        EQUIVALENCE (ODAFIVAL,ODAFREC(ODAFIVAL_OFF))
+        EQUIVALENCE (ODAFICLM,ODAFREC(ODAFICLM_OFF))
+        EQUIVALENCE (ODAFFRE,ODAFREC(ODAFFRE_OFF))
+C
+C END RECDAF_OLD.DEF
+C

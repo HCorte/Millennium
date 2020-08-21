@@ -1,0 +1,111 @@
+C PROGRAM PCLOG
+C  
+C V04 15-JUN-2000 OXK PC_EVNMASK form PCEVN.DEF to PCLOG.FOR
+C v04 17 Apr 1996 HXK Release of Finland for X.25, Telephone Betting, 
+C			Instant Pass Thru Phase 1
+C v03 02 Nov 1993 JWE Change from permant to temporary mailboxs
+C v02 21 Jan 1993 DAB Initial Release
+C  			Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  			DEC Baseline
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C THIS PROGRAM WILL HANDLE ALL PHYSICAL IO'S TO AND FROM
+C RS232 LINE TO THE PC
+C AFTER INITIIALIZATION IT WILL GO TO TRAP MODE AND WILL BE
+C AWAKEN ONLY BY : IO COMPLETE TRAP, TASK TRAP OR TIMER TRAP.
+C EACH KIND OF TRAPS WILL BE HANDLED BY A DESIGNATED
+C SUBROUTINE.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM PCLOG
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:PCCOM.DEF'
+	INCLUDE 'INCLIB:PCEVN.DEF'
+C
+	INCLUDE '($IODEF)'
+        INCLUDE '($SSDEF)'
+        INCLUDE '($SYSSRVNAM)'
+C
+        INTEGER*4  PC_EVNMASK              !BITMAP OF ALL EVENTS SET
+	INTEGER*4  K, STATUS
+C
+	CALL COPYRITE
+C
+100	CONTINUE
+	CALL WIMG(5,'Enter LAT device volume name (eg. LTA3:) ')
+	READ(5,8000) LAT_NAME
+8000	FORMAT(A6)
+	IF(LAT_NAME.EQ.'      ') GOTO 100
+C
+	TSKSTAT=INACTIVE
+C
+C
+	TESTFLG=0
+	IORPROG=0
+	IOWPROG=0
+	TIMSHORT=10	    !SHORT WAIT IS 100 MILLISECONDS
+	IOLEN=0
+	NUMBERS=NUMBER3
+	PC_CNTSTIM=0	    !INITIALIZE STATISTICS
+	PC_CNTMES=0	    !INITIALIZE STATISTICS
+C
+	DO 10 K=1,NUMMES
+	  TIMINPROG(K)=0
+	  INTVAL(K)=0	    !INITIALIZE TIMER VALUES TO 0
+	  PC_INIT(K)=-1	    !FORCE CALCULATION OF TIMER DELAY VALUES
+	  PC_PARAM(K)=K	    !SET UP PARAMETER
+	  PC_CNTTIM(K)=0    !INITIALIZE STATISTICS
+	  PC_CNTIO(K)=0	    !INITIALIZE STATISTICS
+10	CONTINUE
+C
+C***	TYPE *,'OPENING LAT DEVICE '
+C***	CALL LAT_OPEN(LAT_NAME,LAT_CHANNEL,ST)
+C
+C SET UP TRAPS
+C
+C CREATE THE COMMON EVENT FLAG CLUSTER.
+C
+        STATUS=SYS$ASCEFC(%VAL(PC_EVNTIMER),PC_EVNNAME,0,0)
+        IF(.NOT.STATUS) CALL LIB$SIGNAL(%VAL(STATUS))
+C
+C SETUP THE MAILBOX FOR INTERTASK MESSAGES.
+C IF MAILBOX DOES NOT EXIST, CREATE IT.
+C
+        STATUS=SYS$ASSIGN(PC_MESNAME,PC_MESCHANNEL,,)
+        IF(.NOT.STATUS) THEN
+          STATUS=SYS$CREMBX(%VAL(0),PC_MESCHANNEL,,,
+     *                      %VAL('FD00'X),,PC_MESNAME)
+          IF(.NOT.STATUS) CALL LIB$SIGNAL(%VAL(STATUS))
+        ENDIF
+C
+C START WAITING FOR A MESSAGE TRAP
+C DO NOT START ANY TIMER TRAPS UNTIL A 'START' MESSAGE IS RECEIVED
+C
+        CALL PC_START_MESS
+C
+1000    CONTINUE
+        PC_EVNMASK=0
+        STATUS=SYS$WFLOR(%VAL(PC_EVNTIMER),%VAL(PC_EVNMASK))
+        IF(.NOT.STATUS) CALL LIB$SIGNAL(%VAL(STATUS))
+C
+        GOTO 1000
+C
+	END

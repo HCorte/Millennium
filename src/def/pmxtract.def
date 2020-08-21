@@ -1,0 +1,97 @@
+C
+C      PMXTRACT.DEF
+C
+C      V01 29-SEP-2011 ACC ACN INITIAL RELEASE
+C
+C      THIS FILE CONTAINS SOME CONFIGURATION DATA OF THE PROGRAM
+C      DEFINED BY THE SOURCE FILE PMXTRACT.FOR.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C      THIS ITEM IS THE PROPERTY OF ACCENTURE/SCML.
+C
+C      COPYRIGHT 2011 ACCENTURE/SCML. ALL RIGHTS RESERVED.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+       INTEGER*4 OFF       ! NO LOGGING
+       PARAMETER (OFF=1)
+       INTEGER*4 FATAL     ! FATAL
+       PARAMETER (FATAL=2)
+       INTEGER*4 ERROR     ! ERROR
+       PARAMETER (ERROR=3)
+       INTEGER*4 WARN      ! WARNING
+       PARAMETER (WARN=4)
+       INTEGER*4 INFO      ! INFO
+       PARAMETER(INFO=5)
+       INTEGER*4 DEBUG     ! DEBUG
+       PARAMETER (DEBUG=6)
+       INTEGER*4 ALL       ! ALL
+       PARAMETER (ALL=7)
+
+       CHARACTER*5 LTAGS(7) ! LOG LEVEL TAG NAME
+       DATA LTAGS/'OFF  ',
+     *            'FATAL',
+     *            'ERROR',
+     *            'WARN ',
+     *            'INFO ',
+     *            'DEBUG',
+     *            'ALL  '/
+C
+       INTEGER*4 HLEVEL         ! HIGH LOG LEVEL
+       PARAMETER (HLEVEL=FATAL)
+       INTEGER*4 LLEVEL         ! LOW LOG LEVEL
+       PARAMETER (LLEVEL=ALL)
+C
+       INTEGER*4 LOGLEVEL
+       PARAMETER (LOGLEVEL=INFO) ! LOG LEVEL
+C
+       CHARACTER*9 LOGNAME/'PMXTRACT_'/  ! LOG FILE NAME PREFIX
+       CHARACTER*4 LOGEXT/'.LOG'/        ! LOG FILE EXTENSION
+C
+       CHARACTER*8 OUTFILEPREF/'PMAUDIT_'/ ! OUTPUT FILE NAME PREFIX
+       CHARACTER*4 OUTFILEEXT/'.ASC'/      ! OUTPUT FILE EXTENSION
+       CHARACTER*8 TMPFILEPREF/'PMAUDIT_'/ ! TEMPORARY FILE NAME PREFIX
+       CHARACTER*4 TMPFILEEXT/'.TMP'/      ! TEMPORARY FILE EXTENSION
+C
+       INTEGER*4   SAPAGTP ! SAP NUMBER OF A PORTAL AGENT
+       PARAMETER   (SAPAGTP=007456)
+C=======================================================================
+C      TRANSACTION COUNTERS
+C=======================================================================
+       INTEGER*4   TC         ! TOTAL
+       INTEGER*4   TCWAG      ! WAGER
+       INTEGER*4   TCEUR      ! EURO TOTAL
+       INTEGER*4     TCEURWAG ! EURO WAGER
+       INTEGER*4     TCEURCAN ! EURO CANCELLATION
+       INTEGER*4     TCEURVAL ! EURO VALIDATION
+       INTEGER*4     TCEURERR ! EURO ERROR
+       INTEGER*4   TCCAN      ! CANCELLATION
+       INTEGER*4   TCVAL      ! VALIDATION
+       INTEGER*4   TCSPC      ! SPECIAL
+       INTEGER*4   TCCMD      ! COMMANDS
+       INTEGER*4   TCIPS      ! IPS
+       INTEGER*4   TCINC      ! INTERNAL CANCELLATION
+       INTEGER*4   TCCLA      ! CLAIM
+       INTEGER*4   TCREF      ! REFUND
+       INTEGER*4   TCGUI      ! GUI
+       INTEGER*4   TCDEVLOT   ! LOTTERY DEVOLUTION
+       INTEGER*4   TCUNKNOWN  ! UNKNOWN
+       COMMON /TRXCDATA/ TC,
+     *                   TCWAG,
+     *                   TCEUR,
+     *                   TCEURWAG,
+     *                   TCEURCAN,
+     *                   TCEURVAL,
+     *                   TCEURERR,
+     *                   TCCAN,
+     *                   TCVAL,
+     *                   TCSPC,
+     *                   TCCMD,
+     *                   TCIPS,
+     *                   TCINC,
+     *                   TCCLA,
+     *                   TCREF,
+     *                   TCGUI,
+     *                   TCDEVLOT,
+     *                   TCUNKNOWN
+C
+

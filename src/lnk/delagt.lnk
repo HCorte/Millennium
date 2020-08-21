@@ -1,0 +1,23 @@
+$! GXSRC:DELAGT.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]DELAGT.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:38:50   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.2   28 Mar 1995 17:32:22   HXK
+$! Added BINASC, BSET objects.
+$!
+$!    Rev 1.1   14 Apr 1994 12:55:22   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:38:30   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:DELAGT.EXE -
+OBJLIB:DELAGT,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

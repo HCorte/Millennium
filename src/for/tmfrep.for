@@ -1,0 +1,210 @@
+C
+C PROGRAM TMREPORTS
+C
+C V03 01-FEB-2000 UXN Fix for WHALE.
+C V02 09-JUL-1999 UXN GUTS reports commented out.
+C V01 22-OCT-1997 UXN INITIAL RELEASE. PRODUCED FROM TMSCAN, TMREPS,
+C	   	      TEBEBAL AND CANREP.
+C
+C EXTRACTS SALES INFORMATION FROM THE TM FILE AND
+C UPDATES OFFLINE DATA BASE FOR REPORT GENERATION PURPOSES
+C
+C Files produced : REP.FIL       (by TMREPORT)
+C                  WHALE.REP     (by WHALE)
+C                  ORDER.REP     (by TMORDER)
+C                  GUTS.FIL      (by GUTSW)
+C                  SWAP.FIL      (by GUTSW)
+C		   INSRPT.REP
+C		   MISCRPT.REP
+C		   SYSSUM.REP
+C		   ONLGAMS.REP
+C		   BALANS.FIL
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	PROGRAM TMFREPT
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'     
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:RECAGT.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:TMFREP.DEF'
+
+	INTEGER*4 LOGREC(LMUREC)
+	INTEGER*4 I
+	INTEGER*4 SER, ST
+        INTEGER*4 COUNT
+	INTEGER*4 NOCONSIG
+	EXTERNAL  NOCONSIG
+C 
+C BEGIN CODE
+C
+	CALL COPYRITE
+	CALL SNIF_AND_WRKSET
+C
+C INHIBIT OUTPUT CONVERSION ERRORS
+C
+	CALL LIB$ESTABLISH( NOCONSIG )
+C
+	EOF = .FALSE.
+	TYPE *, IAM(),
+     *         ' <<<<< TMREPORTS Transaction Master File Scanning >>>>>'
+C
+C OPEN & READ DISTRIBUTION REPORT FILE (REP.FIL)
+C ------------------------------------
+	TRABUF(TTYP)=0
+	CALL TMREPORT
+C
+C OPEN AGENT SALES FILE
+C ---------------------
+C        CALL OPENASF(ASF)
+C        CALL TMLODASF
+C       CALL CLOSASF
+C 
+C LOAD CARTAB
+C
+	IF(AGT_LOOKUP_CNT.EQ.0) THEN
+	  TYPE*,IAM(),'Agent lookup table is not loaded into commons' 
+	  CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+	CALL FASTSET(0,CARTAB,2*NUMAGT)
+	DO I=1,AGT_LOOKUP_CNT
+	  CARTAB(1,AGT_LOOKUP_TER(I)) = AGTCAR(AGT_LOOKUP_TER(I))
+	  CARTAB(2,AGT_LOOKUP_TER(I)) = AGT_LOOKUP_AGT(I)
+	ENDDO
+C
+C OPEN THE TMF FILE
+C -----------------
+	CALL OPENW(PTMF,SFNAMES(1,PTMF),4,0,0,ST)
+	IF(ST.NE.0) CALL FILERR(SFNAMES(1,PTMF),1,ST,0)
+	CALL TOPEN(PTMF)      
+C
+C LOOP AND READ THE TM FILE
+C -------------------------
+	TYPE*,IAM(),' Now Scanning the TM for all transactions'
+	SER=1
+	COUNT=0
+100	CONTINUE
+	CALL READTMF(LOGREC,SER,EOF)   !THIS NEEDS COMMON
+	IF(EOF) GOTO 1000
+	COUNT = COUNT + 1
+	IF (MOD(COUNT,100000).EQ.0) TYPE*,IAM(),COUNT,' records processed...'
+	CALL LOGTRA(TRABUF,LOGREC)  
+C
+C ACCUMULATE STATISTICS FOR INSTANT, PETTY CASH AND MISC ITEMS.
+C	
+C	IF(TRABUF(TTYP).EQ.TSPE.AND.TRABUF(TSTAT).EQ.GOOD) THEN
+C	    CALL INMIRPT
+C	ENDIF
+C
+C COLLECT ONLINE SALES BY GAME INFORMATION
+C
+	CALL ONLGAMS
+C
+C CANREP
+C
+	IF(TRABUF(TSTAT).EQ.VOID.AND.TRABUF(TTYP).EQ.TWAG) THEN
+	   CALL CANREP1
+	ENDIF
+C
+C 	UPDATE WHALE REPORT ONLY INCLUDE TYPE GOOD WAGERS
+C	-------------------------------------------------
+	IF( TRABUF(TTYP).EQ.TWAG. AND.
+     *      (TRABUF(TSTAT).EQ.GOOD.OR.TRABUF(TSTAT).EQ.FRAC) .AND.
+     *       TRABUF(TWFFLG).NE.1 )
+     *       CALL WHALE
+C
+C 	UPDATE TMORDER REPORT ( NOT USED FOR PORTUGAL )
+C	---------------------
+C	IF ( TRABUF(TTYP) .EQ.TSPE    .AND.
+C     *       TRABUF(TSFUN).EQ.TORDR )
+C     *       CALL TMORDER
+C
+C
+C COLLECT SYSSUM INFORMATION
+C	
+	CALL SYSTRPT
+C
+C 	UPDATE GUTS SWAP FILE
+C	---------------------
+
+C	IF(TRABUF(TTYP).EQ.TSPE .AND.TRABUF(TSFUN).EQ.TSON) 
+C     *	   CALL GUTSW
+
+C
+C 	UPDATE GUTS TERSTAT FIL
+C	-----------------------
+
+C	IF(TRABUF(TTYP).EQ.TSPE .AND.TRABUF(TSFUN).EQ.TTERSTS)
+C     *	   CALL GUTSTAT
+
+C
+C       UPDATE DISTRIBUTION REPORT FILE
+C	-------------------------------
+	IF (TRABUF(TTYP).EQ.TWAG.AND.TRABUF(TFRAC).EQ.10.AND.
+     *      (TRABUF(TSTAT).EQ.GOOD.OR.TRABUF(TSTAT).EQ.FRAC)) THEN
+	   CALL TMREPORT 
+	ENDIF
+C
+	GOTO 100
+1000	CONTINUE
+C
+C CANREP REPORT.
+C
+	CALL CANREP1
+C
+C ONLINE SALES BY GAME INFORMATION
+C
+	CALL ONLGAMS
+C
+C INSTANT, PETTY CASH AND MISC ITEMS. ( NOT USED FOR PORTUGAL )
+C	
+C	CALL INMIRPT
+C
+C COLLECT SYSSUM INFORMATION
+C	
+	CALL SYSTRPT
+C
+C FINAL UPDATE OF GUTS FILES
+C --------------------------
+
+C	CALL GUTSW
+C	CALL GUTSTAT
+
+C
+C PRINT OUT WHALE REPORT
+C ----------------------
+        CALL WHALE
+C
+C UPDATE & PRINT DISTRIBUTION FILE/REPORTS
+C ----------------------------------------
+	CALL TMREPORT
+C
+C ORDER REPORT ( NOT USED FOR PORTUGAL )
+C
+C	CALL TMORDER
+C
+C CLOSE TM FILE
+C -------------
+	CALL USRCLOS1 (PTMF)
+	CALL GSTOP(GEXIT_SUCCESS)
+	END

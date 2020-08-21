@@ -1,0 +1,54 @@
+C STRFREC.DEF
+C
+C V01 13-MAY-1999 UXN Initial release.
+C
+C SUPER TRIPLE POOLS FILE RECORD DESCRIPTION
+C
+C
+C     STRFLAMT                             1   ;LOWEST COMBINATION AMOUNT
+C     STRFFEL                              1   ;LINK TO FIRST COMBINATION
+C     STRFLEL                              1   ;LINK TO LAST COMBINATION
+C     STRFTNUM                             1   ;NUMBER OF COMBINATIONS PLAYED
+C     STRFODDS(2,STRGPOL)               11664   ;COMBINATION'S LINKS AND AMOUNT
+C     STRFFREE                               
+C                            TOTAL    11776 I*4 ( = 23 512B VAX SECTORS)
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expretrly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4 STRFLEN,STRFSEC
+	PARAMETER (STRFLEN=11776)        !LENGTH IN FULL WORDS
+	PARAMETER (STRFSEC=STRFLEN/64)   !LENGTH IN SECTORS
+C
+        INTEGER*4 STRFREC(STRFLEN)       !RECORD
+C
+        INTEGER*4 STRFLAMT,STRFFEL,STRFLEL,STRFTNUM
+        INTEGER*4 STRFODDS(2,STRGPOL)
+        INTEGER*2 STRFODDS2(4,STRGPOL)
+	EQUIVALENCE(STRFODDS,STRFODDS2)
+C
+        INTEGER*4 STRFLAMT_OFF, STRFFEL_OFF, STRFLEL_OFF, STRFTNUM_OFF
+        INTEGER*4 STRFODDS_OFF
+
+        PARAMETER (STRFLAMT_OFF = 1)
+        PARAMETER (STRFFEL_OFF  = STRFLAMT_OFF + 1 )
+        PARAMETER (STRFLEL_OFF  = STRFFEL_OFF  + 1 )
+	PARAMETER (STRFTNUM_OFF = STRFLEL_OFF  + 1 )
+        PARAMETER (STRFODDS_OFF = STRFTNUM_OFF + 1 )
+     
+        EQUIVALENCE (STRFLAMT,STRFREC(STRFLAMT_OFF))       
+        EQUIVALENCE (STRFFEL, STRFREC(STRFFEL_OFF ))       
+        EQUIVALENCE (STRFLEL, STRFREC(STRFLEL_OFF ))       
+        EQUIVALENCE (STRFTNUM,STRFREC(STRFTNUM_OFF))       
+        EQUIVALENCE (STRFODDS,STRFREC(STRFODDS_OFF))       
+

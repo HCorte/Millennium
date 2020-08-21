@@ -1,0 +1,66 @@
+                          GTECH Distibuted Network
+                          Network Port Update Help                Page 1 of 3
+ 
+      This help screen describes each of the fields associated with
+      updating Network Port Configurations.  For specific instructions
+      on how to use the Add and Modify screens, refer to the Network
+      Port Menu Help.
+ 
+      The following describes each of the network port configuration
+      parameters:
+ 
+      1) Network Port - the identification number associated with this
+              port.  This field is only input from the Network Menu
+              and can not be modified.
+      2) Fast Select  - this field is meaningful only to X.25 stations
+              and informs whether to use the X.25 Fast Select facility.
+      3) Default Disconnect - this field defines the default disconnect
+              mode to be used by the station when connecting to the
+              Host when using this network port.
+              0=Default Mode          7=Unconditional Disconnect
+              8-14=Timer Disconnect  15=Remain connected
+ 
+                          GTECH Distibuted Network
+                          Network Port Update Help                Page 2 of 3
+ 
+      4) Retry Count  - this field set the maximum number of Response
+              Timer expirations that may occur between successive
+              downline messages from the Host.  If the retry count is
+              exceeded, the station will clear the existing call.
+      5) Retry Interval   - this field sets the maximum duration that
+              the station will wait for a response to a pending request.
+              It is started when the request is sent upline to the host
+              and cleared when the response is received (seconds).
+      6) Address Length   - this field contains the number of valid
+              Binary Coded Decimal digits contained in the address field.
+      7) Address  - this field contains the network address that the
+              station should use for calls to host.  This is a string of
+              BCD digits as per CCITT recommendations.
+      8) Incall Enable - this field informs the Host whether this Network
+              port is available to be used as a default address to be
+              assigned to stations for access to the Host.
+      9) Port Capacity - this field informs the Host of the capacity
+              of the X.2X port.
+ 
+                          GTECH Distibuted Network
+                          Network Port Update Help                Page 3 of 3
+ 
+     10) Port State - this field informs the Host of the current state
+              of the port.  The valid values are defined as:
+                  0=not defined       1=idle
+                  2=online            3=down  (default set to 0)
+     11) Port type - communications type for this port (NOTE: all
+              ports on each individual Front End must have the same
+              communications type). The valid values are defined as:
+                  1=X.21 port      2=X.25 port      3=Dialup port    
+                  4=Async port     5=Digital port
+     12) Number of PVC - if the port supports Permanent Virtual Circuits,
+              this field contains the number of PVC connections
+     13) Last Updated - this field is the CDC date that this record was
+              last modified.  This is not a changeable parameter.
+  
+ 
+ 
+ 
+ 
+ 

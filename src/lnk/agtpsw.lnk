@@ -1,0 +1,18 @@
+$! GXSRC:AGTPSW.LNK
+$!
+$! $Log:   GXAFIP:[GOLS]AGTPSW.LNV  $
+$! 
+$!    Rev 1.1   06 Mar 1997 14:00:24   RXK
+$! Applying PVCS header for automatic revision history
+$!
+$! 
+$ LINK 'P1' -
+    /EXE=gxtsk:AGTPSW.EXE -
+OBJLIB:AGTPSW,- 
+SRTFLD,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAGTCOM.ESH/SHARE,-
+TSKLIB:GXAPPCOM.ESH/SHARE
+!

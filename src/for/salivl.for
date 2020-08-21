@@ -1,0 +1,142 @@
+C
+C SUBROUTINE SALIVL
+C
+C SALIVL.FOR
+C
+C V01 15-JAN-93 HJK INITIAL RELEASE FOR FINLAND
+C
+C
+C INSTANT VALIDATIONS TERMINAL REPORT SUBROUTINE
+C
+C CALLING SEQUENCE:
+C     CALL SALIVL(SALES,SUBCLASS,MANAGER,SALOFF,CDC,RTER,TRABUF)
+C INPUT
+C     SUBCLASS - REPORT SUBCLASS
+C     MANAGER  - MANAGER FLAG
+C
+C OUTPUT
+C     SALES    - SALES INFO FOR REPORT
+C     SALOFF   - TOTAL WORDS USED
+C     CDC      - CDC OF REPORT
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SALIVL(SALES,SUBCLASS,MANAGER,SALOFF,CDC,RTER,TRABUF)
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+        INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:SPECOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+
+
+        ! arguments
+	INTEGER*4  SALES(*)       !
+	INTEGER*4  SUBCLASS       !
+	INTEGER*4  SALOFF         !
+	INTEGER*4  CDC            !
+	INTEGER*4  RTER           !
+
+	LOGICAL	   MANAGER        !
+
+        ! variables
+	INTEGER*4  SALIND         !
+	INTEGER*4  CLRKNUM       !
+	INTEGER*4  CLERK          !
+	INTEGER*4  I              !
+	INTEGER*4  TMPCNT	  ! TEMP. TOTAL COUNT, UNTIL INDEX COMPUTED
+	INTEGER*4  TMPAMT	  ! TEMP. TOTAL AMOUNT UNTIL INDEX COMPUTED
+
+C
+C SET / CLEAR VARIABLES
+C
+        CLRKNUM = AGTHTB(AGTPASOFF,RTER)
+	TMPCNT = 0
+	TMPAMT = 0
+        CDC = DAYCDC
+C
+C PROCESS ONLY INSTANT VALIDATION REPORT
+C
+	IF(SUBCLASS.EQ.0.OR.SUBCLASS.EQ.8) THEN  !TODAY OR W. T. D.
+            TMPCNT = AGTMIS(CLRKNUM,1,RTER)
+            TMPAMT = AGTMIS(CLRKNUM,2,RTER)
+C
+C IF SHOP OWNER GET EVERYONE OF HIS CLERKS ACCOUNTS
+C
+	    IF(MANAGER)  THEN     !GET CLERKS ACCOUNTS ALSO
+	       DO CLERK=2,NUMCLERK
+	          IF(AGTTAB((APSNUM+CLERK)-1,RTER).EQ.0) GOTO 220
+	          TMPCNT = TMPCNT + CLRKMIS(CLERK,1,CLERK)
+                  TMPAMT = TMPAMT + CLRKMIS(CLERK,2,CLERK)
+220	          CONTINUE
+               ENDDO
+	    ENDIF
+	ENDIF
+C
+C IF WEEK TO DATE ALSO ACCUMULATE WEEK TO DATE
+C
+	IF(SUBCLASS.EQ.8) THEN
+            DO CLERK=1,NUMCLERK
+	        IF(AGTTAB((APSNUM+CLERK)-1,RTER).EQ.0) GOTO 240
+	        DO I= 1,9
+	            IF(ASFDAT(ASFCDC,I).LE.ASFINV(ASFEND,1)) GOTO 240
+	            TMPCNT = TMPCNT + ASFMIS(CLERK,1,I)
+                    TMPAMT = TMPAMT + ASFMIS(CLERK,2,I)
+                ENDDO 
+240	        CONTINUE
+            ENDDO
+	ENDIF
+C
+C PROCESS FOR DAY REQUESTED
+C
+	IF(SUBCLASS.GE.1.AND.SUBCLASS.LE.7) THEN
+	    DO I= 1,9
+	        IF(ASFDAT(ASFDOW,I).EQ.SUBCLASS) GOTO 260
+            ENDDO
+	    TRABUF(TERR)=INVL
+	    GOTO 8000
+
+260	    CONTINUE
+            DO CLERK=1,NUMCLERK
+	        IF(AGTTAB((APSNUM+CLERK)-1,RTER).EQ.0) GOTO 270
+	        TMPCNT = TMPCNT + ASFMIS(CLERK,1,I)
+                TMPAMT = TMPAMT + ASFMIS(CLERK,2,I)
+270             CONTINUE
+            ENDDO
+	    CDC=ASFDAT(ASFCDC,I)
+        ENDIF
+
+
+C
+C BUILD REPORT BACK TO TERMINAL
+C 
+        SALIND = 1
+	SALES(SALIND)   = TMPCNT
+	SALES(SALIND+1) = TMPAMT
+
+	SALIND = SALIND + 2
+	SALOFF = SALIND
+
+8000	CONTINUE
+
+	RETURN
+
+	END

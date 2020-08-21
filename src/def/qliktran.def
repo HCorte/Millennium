@@ -1,0 +1,129 @@
+C
+C      QLIKTRAN.DEF
+C
+C      FILE DEFINITION OF QLIKTRAN PROGRAM.
+C
+C V01 07-MAR-2016 SCML INITIAL RELEASE
+C
+C STRUCTURE WITH QLIKTRAN DEFINITIONS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Copyright 2015 SCML. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C STRUCTURE SUPPORTING QLIKTRAN PROGRAM
+C
+       STRUCTURE /STCQLIKTRAN/
+C
+          INTEGER*4    QLIK_LUN                                                 !LUN FOR QLIK FILE
+C
+          INTEGER*4    QLIKGENDAT(8)                                            !QLIK GENERATION DATE
+          CHARACTER*22 QLIKFILNAM                                               !QLIK INTERFACE FILE FILE NAME
+          CHARACTER*22 TMPFILNAM                                                !QLIK TEMPORARY FILE NAME
+          INTEGER*4    FILLER                                                   !ALIGNMENT, FREE FOR USE
+C
+       ENDSTRUCTURE
+C
+       RECORD /STCQLIKTRAN/ QLIKDATA
+C
+       CHARACTER*1 FS /';'/                                                     !CSV FIELD SEPARATOR
+       INTEGER*4   FS_LEN                                                       !LENGTH OF CSV FIELD SEPARATOR
+       PARAMETER (FS_LEN = 1)
+C
+C HEADER FIELDS NAMES OF QLIK FILE
+C
+       INTEGER*4 QLIK_HFTOT                                                     !TOTAL HEADER FIELDS OF QLIK FILE
+       PARAMETER (QLIK_HFTOT = 26)
+       CHARACTER*28 QLIK_HFNAM(QLIK_HFTOT)                                      !HEADER FIELD NAME ARRAY OF QLIK FILE
+       DATA QLIK_HFNAM/ 'ESTADO                     ',                          !HEADER FIELD NAME 1
+     *                  'CODIGO_ERRO                ',                          !HEADER FIELD NAME 2
+     *                  'DATA                       ',                          !HEADER FIELD NAME 3
+     *                  'N_SER_INTERNO              ',                          !HEADER FIELD NAME 4
+     *                  'HORA                       ',                          !HEADER FIELD NAME 5
+     *                  'N_TERMINAL                 ',                          !HEADER FIELD NAME 6
+     *                  'N_MEDIADOR                 ',                          !HEADER FIELD NAME 7
+     *                  'N_FIRMA                    ',                          !HEADER FIELD NAME 8
+     *                  'SEQUENCIA                  ',                          !HEADER FIELD NAME 9
+     *                  'TIPO_TRANSACCAO            ',                          !HEADER FIELD NAME 10
+     *                  'N_JOGO                     ',                          !HEADER FIELD NAME 11
+     *                  'TIPO_JOGO                  ',                          !HEADER FIELD NAME 12
+     *                  'INDICE_JOGO                ',                          !HEADER FIELD NAME 13
+     *                  'ESTATISTICA_TERMINAL       ',                          !HEADER FIELD NAME 14
+     *                  'FLAG_INTERNA               ',                          !HEADER FIELD NAME 15
+     *                  'ESTADO_FICHEIRO            ',                          !HEADER FIELD NAME 16
+     *                  'ID_BILHETE                 ',                          !HEADER FIELD NAME 17
+     *                  'CHECKSUM_MENSAGEM          ',                          !HEADER FIELD NAME 18
+     *                  'N_FRACCOES                 ',                          !HEADER FIELD NAME 19
+     *                  'N_SEGMENTOS_LOG            ',                          !HEADER FIELD NAME 20
+     *                  'SUB_CODIGO_ERRO            ',                          !HEADER FIELD NAME 21
+     *                  'DATA_CDC_VENDIDA           ',                          !HEADER FIELD NAME 22
+     *                  'FLAG_MONTANTE_APOSTA       ',                          !HEADER FIELD NAME 23
+     *                  'PROMOCAO_ADD_1_FREE_WEEK   ',                          !HEADER FIELD NAME 24
+     *                  'N_REAL_FRACCOES            ',                          !HEADER FIELD NAME 25
+     *                  'SUBTIPO_TRANSACCAO         ' /                         !HEADER FIELD NAME 26
+
+c       CHARACTER*6  HFN_01 /'ESTADO'/
+c       CHARACTER*11 HFN_02 /'CODIGO_ERRO'/
+c       CHARACTER*4  HFN_03 /'DATA'/
+c       CHARACTER*13 HFN_04 /'N_SER_INTERNO'/
+c       CHARACTER*4  HFN_05 /'HORA'/
+c       CHARACTER*10 HFN_06 /'N_TERMINAL'/
+c       CHARACTER*10 HFN_07 /'N_MEDIADOR'/
+c       CHARACTER*7  HFN_08 /'N_FIRMA'/
+c       CHARACTER*9  HFN_09 /'SEQUENCIA'/
+c       CHARACTER*15 HFN_10 /'TIPO_TRANSACCAO'/
+c       CHARACTER*6  HFN_11 /'N_JOGO'/
+c       CHARACTER*9  HFN_12 /'TIPO_JOGO'/
+c       CHARACTER*11 HFN_13 /'INDICE_JOGO'/
+c       CHARACTER*20 HFN_14 /'ESTATISTICA_TERMINAL'/
+c       CHARACTER*12 HFN_15 /'FLAG_INTERNA'/
+c       CHARACTER*15 HFN_16 /'ESTADO_FICHEIRO'/
+c       CHARACTER*10 HFN_17 /'ID_BILHETE'/
+c       CHARACTER*17 HFN_18 /'CHECKSUM_MENSAGEM'/
+c       CHARACTER*10 HFN_19 /'N_FRACCOES'/
+c       CHARACTER*15 HFN_20 /'N_SEGMENTOS_LOG'/
+c       CHARACTER*15 HFN_21 /'SUB_CODIGO_ERRO'/
+c       CHARACTER*16 HFN_22 /'DATA_CDC_VENDIDA'/
+c       CHARACTER*20 HFN_23 /'FLAG_MONTANTE_APOSTA'/
+c       CHARACTER*24 HFN_24 /'PROMOCAO_ADD_1_FREE_WEEK'/
+c       CHARACTER*15 HFN_25 /'N_REAL_FRACCOES'/
+c       CHARACTER*18 HFN_26 /'SUBTIPO_TRANSACCAO
+C
+       LOGICAL*4 TDETAIL
+       PARAMETER (TDETAIL = .FALSE.)
+C
+       CHARACTER*3 WRITE__ADVANCE_VALUE
+       PARAMETER (WRITE__ADVANCE_VALUE = 'YES')
+C      
+C      BET TYPES
+C      
+       INTEGER*4 UNDF_BETTYP                                                    !UNDEFINED BET TYPE
+       PARAMETER (UNDF_BETTYP = 0)
+       INTEGER*4 SIMP_BETTYP                                                    !SIMPLE BET TYPE
+       PARAMETER (SIMP_BETTYP = 1)
+       INTEGER*4 MULT_BETTYP                                                    !MULTIPLE BET TYPE
+       PARAMETER (MULT_BETTYP = 2)
+       INTEGER*4 COMB_BETTYP                                                    !COMBINED BET TYPE
+       PARAMETER (COMB_BETTYP = 3)
+C      
+C      TEMPORARY VARIABLES
+C      
+       CHARACTER*32 C32TMP
+       CHARACTER*32 C32TMP2
+       CHARACTER*32 C32TMP3
+       CHARACTER*32 C32TMP4
+       CHARACTER*32 C32TMP5
+       CHARACTER*32 C32TMP6
+       CHARACTER*32 C32TMP7
+       CHARACTER*32 C32TMP8
+       CHARACTER*32 C32TMP9
+       CHARACTER*32 C32TMP10
+       
+       CHARACTER*8 BLNK_SPCS_8
+       PARAMETER (BLNK_SPCS_8 = '        ')
+       CHARACTER*16 BLNK_SPCS_16
+       PARAMETER (BLNK_SPCS_16 = '                ')
+       CHARACTER*32 BLNK_SPCS_32
+       PARAMETER (BLNK_SPCS_32 = '                                ')
+

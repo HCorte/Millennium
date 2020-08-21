@@ -1,0 +1,80 @@
+C PRMSCR.DEF
+C $Log:   GXAFXT:[GOLS]PRMSCR.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:31:40   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   17 Jun 1993 14:54:08   GXA
+C  Released for Finland Dec Conversion / Oddset.
+C  
+C     Rev 1.0   21 Jan 1993 18:50:18   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V03 18-AUG-92 GCAN ADDED STARTING SCORE CONSIDERED OUTSIDE SCORES.
+C V02 07-OCT-91 MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX  RELEASED FOR VAX
+C
+C SCORE GAME AND POOL PARAMETERS
+C
+C
+C
+C SCORE GAME PARAMETERS
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1990 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 NUMSCR
+	PARAMETER (NUMSCR=6)           !NUMBER OF SCORE GAMES
+C
+C NAME FIELD LENGTH PARAMETERS
+C
+	INTEGER*4 SNMS_LEN, SDES_LEN, STVC_LEN
+	PARAMETER (SNMS_LEN= 16)       !LENGTH IN BYTES OF NAME FIELD
+	PARAMETER (SDES_LEN=120)       !EVENT DESCRIPTION LENGTH IN BYTES
+	PARAMETER (STVC_LEN=  4)       !LENGTH IN BYTES OF TC-CHANEL NAME.
+C
+C SCORE POOL PARAMETERS
+C
+	INTEGER*4 VALS, SPODDS, SPAMNT
+	PARAMETER(VALS=2)
+	  PARAMETER(SPODDS=1)          ! SCORE ODDS INDEX
+	  PARAMETER(SPAMNT=2)          ! SCORE AMOUNT INDEX
+C
+	INTEGER*4 TYPS, SPDYNM, SPSTAT
+	PARAMETER(TYPS=2)
+	  PARAMETER(SPDYNM=1)          ! DYNAMIC POOL
+	  PARAMETER(SPSTAT=2)          ! STATIC POOL
+C
+	INTEGER*4 MAXD, MAXO, STSCO
+	PARAMETER(MAXD=45)             ! # OF SCORES TO DISPLAY
+	PARAMETER(MAXO=3)              ! NUMBER OF OUTSIDE SCORES
+	PARAMETER(STSCO=6)	       ! START SCORE OF OUTSIDE SCORES
+C
+	INTEGER*4 VALD, SPSCOR, SPDODS, SPDAMT
+	PARAMETER(VALD=3)
+	  PARAMETER(SPSCOR=1)          ! SCORE INDEX
+	  PARAMETER(SPDODS=2)          ! DISPLAYED ODDS INDEX
+	  PARAMETER(SPDAMT=3)          ! DISPLAYED AMOUNT BET
+C
+	INTEGER*4 MAX_SCORE,SLEN
+	PARAMETER(MAX_SCORE=50)           !MAXIMUM SCORE
+	PARAMETER(SLEN=(MAX_SCORE+1)*(MAX_SCORE+1))
+C
+C SCORE MAXIMUM NUMBER OF TEXT MESSAGES
+C
+	INTEGER*4 STXMAX
+	PARAMETER(STXMAX=1)            !MAXIMUM TEXT MESSAGES
+C

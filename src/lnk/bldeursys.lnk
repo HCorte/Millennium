@@ -1,0 +1,13 @@
+$!
+$! BLDEURSYS.LNK
+$!
+$! V01  23-MAR-2016 SCML  M16 PROJECT
+$!
+$!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! Copyright 2016 SCML Corporation. All rights reserved.
+$!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:BLDEURSYS.EXE -
+OBJLIB:BLDEURSYS,-
+STDLIB:NORMLIB/LIB

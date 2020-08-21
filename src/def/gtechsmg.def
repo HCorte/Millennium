@@ -1,0 +1,25 @@
+C
+C GTECHSMG.DEF
+C
+C V01 13-DEC-00 CAR INITIAL RELEASE FOR CEF
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+      INCLUDE	'($SMGDEF)'
+      INCLUDE   '(SMG$ROUTINES)'
+
+      INTEGER*4	iNEXT_KEY		!NEXT KEY RETURN VALUE ON
+      PARAMETER (iNEXT_KEY    = 316)	!READ_KEYSTROKE
+C
+C END OF GTECHSMG.DEF
+C

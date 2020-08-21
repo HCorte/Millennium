@@ -1,0 +1,22 @@
+                          GTECH Distibuted Network
+                          Network Port Delete Help                Page 1 of 1
+ 
+      The delete network port screen allows a network port to be
+      deleted from the Distributed Network Database.  Before deleting
+      a port, you must be sure that you have entered the correct
+      port number.  The program will display all of the configuration
+      information for the input port number allowing you to confirm that
+      this is the desired port.  If you wish to delete the port, enter
+      "Y" and press return.  If you do not wish to delete the port, enter
+      "N".  It should be noted that a port can be deleted even though
+      other components of the network rely on this information.  This
+      error will be detected when the Perform Edit Check function is
+      executed.
+ 
+      It should also be noted that when deleting ports online, the port
+      is not dynamically removed from memory.
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,102 @@
+C PRMHSH.DEF
+C $Log:   GXAFXT:[GOLS]PRMHSH.DEV  $
+C  
+C
+C V04 02-MAY-11 RXK VLFROUNDING added.
+C
+C     Rev 1.0   17 Apr 1996 14:30:30   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:49:36   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C This defines overall parameters for HSHFIL subroutines
+C
+C This source should be included in any program using the indirect
+C file subsystem.
+C
+C
+C     -------------------- APPLICATION DEPENDENT
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  MAXLUN
+	PARAMETER (MAXLUN=100)          !HIGHEST LUN THAT MAY BE USED
+C                                    (I.E, # OF FCB'S TO ALLOCATE)
+C
+	INTEGER*4  BUCSEC, I4BUCSIZ, I2BUCSIZ, I1BUCSIZ, BUCSIZ
+	PARAMETER (BUCSEC=32)           !# OF SECTORS IN 1 BUCKET
+	PARAMETER (I4BUCSIZ=BUCSEC*64)   !I*4 BUCKET SIZE
+	PARAMETER (I2BUCSIZ=BUCSEC*128)  !I*2 BUCKET SIZE
+	PARAMETER (I1BUCSIZ=BUCSEC*256)  !I*1 BUCKET SIZE
+	PARAMETER (  BUCSIZ=I1BUCSIZ)    !SAME AS I1BUCSIZ
+C
+C     The following parameter (MAXREC) is not actually used
+C     by the hash subroutines.  It is, however, referenced by
+C     INTDATA.DEF.  Since is originally declared in INDDATA.DEF,
+C     it is also included here for compatability.
+C
+C     Set MAXREC to the maximum size (in I*4 words) of any record in
+C     an indirect file.
+C
+	INTEGER*4  MAXREC
+	PARAMETER (MAXREC=192)
+C
+C
+C     The following parameter (BUFSIZ) has been included only for
+C     compatibility with INDDATA.DEF.  It is not used by the
+C     hash file subsystem and, in my opinion, should not be used
+C     by any other program.  It was originally used to set a buffer
+C     size so that IINIBF could be called without a size.  Since
+C     IINIBF has been disabled (use IINIB instead), this parameter
+C     should eventually be removed.
+C
+	INTEGER*4  BUFSIZ
+	PARAMETER (BUFSIZ=BUCSIZ*32)   !SIZE OF BIGBUF (IN BYTES)
+C
+C
+C     --------------------
+C
+C     RETURN STATUS DEFINITIONS
+C     STATUS=0 ;SUCCESS
+C
+	INTEGER*4  ERRUNT, ERRREQ, ERROPN, ERRSER, ERRMOD, ERRDAT
+	PARAMETER (ERRUNT=-128) !INVALID LOGICAL UNIT
+	PARAMETER (ERRREQ=-129) !INVALID REQUEST
+	PARAMETER (ERROPN=-130) !INVALID OPEN
+	PARAMETER (ERRSER=-131) !INVALID SERIAL #
+	PARAMETER (ERRMOD=-132) !INVALID MODE
+	PARAMETER (ERRDAT=-133) !INVALID DATA
+C
+	INTEGER*4  ERREND, ERRRNF, ERRFUL, ERRUPD, ERRBUF, ERRERR
+	PARAMETER (ERREND=-134) !END OF FILE DETECTED (FOR ISREAD)
+	PARAMETER (ERRRNF=-135) !RECORD NOT FOUND
+	PARAMETER (ERRFUL=-136) !FILE IS FULL, RECORD WAS NOT MOVED
+	PARAMETER (ERRUPD=-137) !RECORD WAS UPDATED SINCE LAST READ
+	PARAMETER (ERRBUF=-138) !CANNOT GET A BUFFER
+	PARAMETER (ERRERR=-139) !OTHER ERROR
+C
+	INTEGER*4  ERRRFN
+	PARAMETER (ERRRFN=-140) !RECORD FOUND & INOCHKS WAS DONE
+C
+        INTEGER*4 VLFROUNDING
+        PARAMETER (VLFROUNDING=18)      !V04 DUE TO CLUSTER SIZE = 18
+C
+C

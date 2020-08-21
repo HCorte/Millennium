@@ -1,0 +1,25 @@
+$! GXSRC:FCANWIN.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]FCANWIN.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:40:36   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 12:59:58   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:39:28   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:FCANWIN.EXE -
+OBJLIB:FCANWIN,-
+CANWIN,-
+GETLUN,-
+FCANWIN_GETGAM,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAGTCOM.ESH/SHAREABLE,-
+TSKLIB:GXSTOPCOM.ESH/SHAREABLE,-
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

@@ -1,0 +1,267 @@
+C DTSREC.DEF
+C
+C V12 24-NOV-97 UXN DTSROWTYP ADDED.
+C
+C $Log:   GXAFXT:[GOLS]DTSREC.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:01:18   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.7   01 Mar 1994 13:53:44   HXK
+C  FIXED DIMENSION OF DTSTOP.
+C  
+C     Rev 1.6   25 Feb 1994 18:42:52   HXK
+C  PITKA LIABILITY LIMITATIONS CHANGE.
+C  
+C     Rev 1.6   17 Feb 1994 17:56:26   JXP
+C  Allow for new dtswtop array
+C  
+C     Rev 1.5   18 Oct 1993 23:11:04   GXA
+C  Expanded DTSSBD to hold count and amount.
+C  
+C     Rev 1.4   24 Sep 1993 23:04:44   GXA
+C  Expanded DTSWBD, DTSRBD, DTSPBD to hold counts and amount.
+C  
+C     Rev 1.3   06 Sep 1993 21:37:30   GXA
+C  Increased TV-names to be for all rows. Corrected declaration of DTSNMS.
+C  
+C     Rev 1.2   17 Jun 1993 14:50:18   GXA
+C  Added Multi-Draw Selected table.
+C  
+C     Rev 1.1   10 Jun 1993 21:36:04   GXA
+C  Released for Finland Dec Conversion / Oddset.
+C  
+C     Rev 1.0   21 Jan 1993 18:43:30   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V03 02-SEP-92 GCAN ADDED EVENT DRAW DATE FOR POSTPONING OF WINNER SELECTION.
+C V02 07-OCT-91 MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX  RELEASED FOR VAX
+C
+C
+C TOTO SELECT DATE FILE RECORD LAYOUT (DISK)
+C
+C
+C     DTSSTS                            ! GAME STATUS                     1
+C     DTSWEK                            ! WEEK NUMBER                     1
+C     DTSDAT(MAXSRW)                    ! DRAW DATE                      40
+C     DTSDRW                            ! DRAW NUMBER                     1
+C     DTSBSD                            ! BEGINNING SALES DATE            1
+C     DTSESD                            ! ENDING SALES DATE               1
+C     DTSPUP                            ! LAST PURGE UPDATE   (FILE ONLY) 1
+C     DTSUPD                            ! LAST FILE UPDATE    (FILE ONLY) 1
+C     DTSCTM(MAXSRW)                    ! ACTUAL TIME WHEN CLOSED        40
+C     DTSTIM(MAXSRW)                    ! TIME WHEN GAME SHOULD CLOSE    40
+C     DTSBRK                            ! BREAKAGE AMOUNT                 1
+C     DTSSAL                            ! TOTAL SALES                     1
+C     DTSPAD                            ! PRIZES PAID + REFUNDS           1
+C     DTSPRG                            ! PRIZES PURGED                   1
+C     DTSPRF                            ! PAID REFUNDS                    1
+C     DTSREF                            ! TOTAL REFUND AMOUNT             1
+C     DTSWON                            ! PRIZES WON                      1
+C     DTSWBD(TSLDIV,NUMTOT)             ! WON BY DIVISION COUNT,AMOUNT    8
+C     DTSRBD(TSLDIV,NUMTOT)             ! REFUNDS BY DIVISION COUNT,AMOUNT8
+C     DTSPBD(TSLDIV,NUMTOT)             ! PAID BY DIVISION COUNT, AMOUNT  8
+C     DTSTBD(TSLDIV)                    ! WINNING TAX BY DIVISION         4
+C     DTSSBD(TSLDIV,NUMTOT)             ! SALES BY DIVISION CNT,AMT       8
+C     DTSODS(3,MAXSRW)                  ! TOTOSELECT ODDS BY ROW (1,2,3)120
+C     DTSWIN(MAXSRW)                    ! WINNING RESULTS                40
+C     DTSHLD(MAXSRW)                    ! RESULTS HOLD                   40
+C     DTSTAX                            ! WINNING TAXES                   1
+C     DTSOTX(NUMTOT)                    ! OVER TAX LIMIT                  2
+C     DTSMID(NUMTOT)                    ! >REDMIN <REDMAX                 2
+C     DTSUTX(NUMTOT)                    ! UNDER TAX LIMIT                 2
+C     DTSHST                            ! HIGHEST WINNER FOR THIS GAME    1
+C     DTSORM(NUMTOT)                    ! OVER REDMAX                     2
+C     DTSNMS(TNMS_LEN/4,2,MAXSRW)       ! TEAM NAMES (HOME,AWAY)        320
+C     DTSSTA(MAXSRW)                    ! ROW STATUS                     40
+C     DTSREV                            ! REV #                           1
+C     DTSPFN(5)                         ! POOL FILE NAME                  5
+C     DTSTOP(2,30)                      ! TOP 30 COMBINATIONS            60
+C     DTSRWS                            ! ACTUAL NUMBER OF ROWS USED      1
+C     DTSCMB                            ! NUMBER OF PLAYED COMB. TODAY    1
+C     DTSPRC                            ! BASE PRICE                      1
+C     DTSDTE                            ! EVENT DRAW DATE                 1
+C     DTSTVC(TTVC_LEN/4,MAXSRW)         ! TV-CHANEL NAME                  4
+C     DTSMDS(MAXMLTD_AVL)               ! MULTI DRAW SELECTED TABLE
+C                                         (52 BYTE / 4 = 13)
+C     DTSWTOP(2,100)                    ! TOP 100 LIABILITIES           100
+C     DTSROWTYP(MAXSRW)                 ! 1-SINGLE,2-DOUBLE,3-NORMAL
+C
+C TOTO SELECT GAME FILE PARAMETERS
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1990 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+        INTEGER*4 DTSSTS,DTSWEK,DTSDRW
+        INTEGER*4 DTSDAT(MAXSRW),DTSBSD
+        INTEGER*4 DTSESD,DTSPUP
+        INTEGER*4 DTSUPD,DTSCTM(MAXSRW)
+        INTEGER*4 DTSTIM(MAXSRW),DTSBRK
+        INTEGER*4 DTSSAL,DTSPAD
+        INTEGER*4 DTSPRG,DTSPRF
+        INTEGER*4 DTSREF,DTSWON
+        INTEGER*4 DTSWBD(TSLDIV,NUMTOT),DTSRBD(TSLDIV,NUMTOT)
+        INTEGER*4 DTSPBD(TSLDIV,NUMTOT),DTSTBD(TSLDIV)
+        INTEGER*4 DTSSBD(TSLDIV,NUMTOT),DTSODS(3,MAXSRW)
+        INTEGER*4 DTSWIN(MAXSRW),DTSHLD(MAXSRW)
+        INTEGER*4 DTSTAX,DTSOTX(NUMTOT)
+        INTEGER*4 DTSMID(NUMTOT),DTSUTX(NUMTOT)
+        INTEGER*4 DTSHST,DTSORM(NUMTOT)
+        INTEGER*4 DTSNMS(TNMS_LEN/4,2,MAXSRW)
+        INTEGER*4 DTSSTA(MAXSRW),DTSREV
+        INTEGER*4 DTSPFN(5),DTSTOP(2,30),DTSRWS
+        INTEGER*4 DTSCMB,DTSPRC,DTSDTE
+        INTEGER*4 DTSTVC(TTVC_LEN/4,MAXSRW)
+        INTEGER*4 DTSWTOP(2,100)
+C
+        BYTE      DTSMDS(MAXMLTD_AVL)
+        BYTE      DTSROWTYP(MAXSRW)
+C
+C OFFSET PARAMETERS AND EQUIVALENCES
+C
+        INTEGER*4 DTSSTS_OFF, DTSWEK_OFF, DTSDAT_OFF, DTSDRW_OFF
+        PARAMETER(DTSSTS_OFF = 1)                                       !001
+        PARAMETER(DTSWEK_OFF = DTSSTS_OFF + 1)                          !002
+        PARAMETER(DTSDAT_OFF = DTSWEK_OFF + 1)                          !003
+        PARAMETER(DTSDRW_OFF = DTSDAT_OFF + MAXSRW)                     !043
+C
+        INTEGER*4 DTSBSD_OFF, DTSESD_OFF, DTSPUP_OFF, DTSUPD_OFF
+        PARAMETER(DTSBSD_OFF = DTSDRW_OFF + 1)                          !044
+        PARAMETER(DTSESD_OFF = DTSBSD_OFF + 1)                          !045
+        PARAMETER(DTSPUP_OFF = DTSESD_OFF + 1)                          !046
+        PARAMETER(DTSUPD_OFF = DTSPUP_OFF + 1)                          !047
+C
+        INTEGER*4 DTSCTM_OFF, DTSTIM_OFF, DTSBRK_OFF, DTSSAL_OFF
+        PARAMETER(DTSCTM_OFF = DTSUPD_OFF + 1)                          !048
+        PARAMETER(DTSTIM_OFF = DTSCTM_OFF + MAXSRW)                     !088
+        PARAMETER(DTSBRK_OFF = DTSTIM_OFF + MAXSRW)                     !128
+        PARAMETER(DTSSAL_OFF = DTSBRK_OFF + 1)                          !129
+C
+        INTEGER*4 DTSPAD_OFF, DTSPRG_OFF, DTSPRF_OFF, DTSREF_OFF
+        PARAMETER(DTSPAD_OFF = DTSSAL_OFF + 1)                          !130
+        PARAMETER(DTSPRG_OFF = DTSPAD_OFF + 1)                          !131
+        PARAMETER(DTSPRF_OFF = DTSPRG_OFF + 1)                          !132
+        PARAMETER(DTSREF_OFF = DTSPRF_OFF + 1)                          !133
+C
+        INTEGER*4 DTSWON_OFF, DTSWBD_OFF, DTSRBD_OFF, DTSPBD_OFF
+        PARAMETER(DTSWON_OFF = DTSREF_OFF + 1)                          !134
+        PARAMETER(DTSWBD_OFF = DTSWON_OFF + 1)                          !135
+        PARAMETER(DTSRBD_OFF = DTSWBD_OFF + (TSLDIV*NUMTOT))            !139
+        PARAMETER(DTSPBD_OFF = DTSRBD_OFF + (TSLDIV*NUMTOT))            !143
+C
+        INTEGER*4 DTSTBD_OFF, DTSSBD_OFF, DTSODS_OFF, DTSWIN_OFF
+        PARAMETER(DTSTBD_OFF = DTSPBD_OFF + (TSLDIV*NUMTOT))            !147
+        PARAMETER(DTSSBD_OFF = DTSTBD_OFF + TSLDIV)                     !151
+        PARAMETER(DTSODS_OFF = DTSSBD_OFF + (TSLDIV*NUMTOT))            !155
+        PARAMETER(DTSWIN_OFF = DTSODS_OFF + 3*MAXSRW)                   !275
+C
+        INTEGER*4 DTSHLD_OFF, DTSTAX_OFF, DTSOTX_OFF, DTSMID_OFF
+        PARAMETER(DTSHLD_OFF = DTSWIN_OFF + MAXSRW)                     !315
+        PARAMETER(DTSTAX_OFF = DTSHLD_OFF + MAXSRW)                     !355
+        PARAMETER(DTSOTX_OFF = DTSTAX_OFF + 1)                          !356
+        PARAMETER(DTSMID_OFF = DTSOTX_OFF + NUMTOT)                     !358
+C
+        INTEGER*4 DTSUTX_OFF, DTSHST_OFF, DTSORM_OFF, DTSNMS_OFF
+        PARAMETER(DTSUTX_OFF = DTSMID_OFF + NUMTOT)                     !360
+        PARAMETER(DTSHST_OFF = DTSUTX_OFF + NUMTOT)                     !362
+        PARAMETER(DTSORM_OFF = DTSHST_OFF + 1)                          !363
+        PARAMETER(DTSNMS_OFF = DTSORM_OFF + NUMTOT)                     !365
+C
+        INTEGER*4 DTSSTA_OFF, DTSREV_OFF, DTSPFN_OFF, DTSTOP_OFF,DTSWTOP_OFF
+        PARAMETER(DTSSTA_OFF = DTSNMS_OFF + ((TNMS_LEN/4)*2*MAXSRW))    !685
+        PARAMETER(DTSREV_OFF = DTSSTA_OFF + MAXSRW)                     !725
+        PARAMETER(DTSPFN_OFF = DTSREV_OFF + 1)                          !726
+        PARAMETER(DTSTOP_OFF = DTSPFN_OFF + 5)                          !731
+C
+        INTEGER*4 DTSRWS_OFF, DTSCMB_OFF, DTSPRC_OFF, DTSDTE_OFF
+        PARAMETER(DTSRWS_OFF = DTSTOP_OFF + (2*30))                     !791
+        PARAMETER(DTSCMB_OFF = DTSRWS_OFF + 1)                          !792
+        PARAMETER(DTSPRC_OFF = DTSCMB_OFF + 1)                          !793
+        PARAMETER(DTSDTE_OFF = DTSPRC_OFF + 1)                          !794
+C
+        INTEGER*4 DTSTVC_OFF, DTSMDS_OFF
+        PARAMETER(DTSTVC_OFF = DTSDTE_OFF + 1)                          !795
+        PARAMETER(DTSMDS_OFF = DTSTVC_OFF + (TTVC_LEN/4)*MAXSRW)        !796
+        PARAMETER(DTSWTOP_OFF = DTSMDS_OFF + (MAXMLTD_AVL/4))           !809
+C
+        INTEGER*4 DTSROWTYP_OFF
+        PARAMETER(DTSROWTYP_OFF = DTSWTOP_OFF + (2*100))
+        INTEGER*4 DTSFRE_OFF
+        PARAMETER(DTSFRE_OFF = DTSROWTYP_OFF+MAXSRW/4)
+C
+C CALCULATE FREE SPACE BASED ON MACHINE DEPENDENT SECTOR SIZES.
+C SHOULD ALLWAYS ADD UP TO A EVEN SECTOR SIZE BYTES (VAX 512).
+C NOTE! IN CALCULATIONS, FRE_OFF-2 IS DONE TO TAKE CARE OF WHEN THE DATA SIZE
+C       ENDS ON A EVEN SECTOR SIZE.
+C
+        INTEGER*4 DTSSEC_VAX, DTSSEC_NUM
+        PARAMETER (DTSSEC_VAX = SECSIZE/4)
+        PARAMETER (DTSSEC_NUM = NINT(FLOAT((DTSFRE_OFF-2)/DTSSEC_VAX)+.5))
+C
+        INTEGER*4 DTSLEN, DTSSEC
+        PARAMETER(DTSLEN = DTSSEC_VAX * DTSSEC_NUM)        ! even sector size
+        PARAMETER(DTSSEC = DTSLEN/64)
+C
+        INTEGER*4 DTSREC(DTSLEN)
+C
+        EQUIVALENCE(DTSSTS,DTSREC(DTSSTS_OFF))
+        EQUIVALENCE(DTSWEK,DTSREC(DTSWEK_OFF))
+        EQUIVALENCE(DTSDAT,DTSREC(DTSDAT_OFF))
+        EQUIVALENCE(DTSDRW,DTSREC(DTSDRW_OFF))
+        EQUIVALENCE(DTSBSD,DTSREC(DTSBSD_OFF))
+        EQUIVALENCE(DTSESD,DTSREC(DTSESD_OFF))
+        EQUIVALENCE(DTSPUP,DTSREC(DTSPUP_OFF))
+        EQUIVALENCE(DTSUPD,DTSREC(DTSUPD_OFF))
+        EQUIVALENCE(DTSCTM,DTSREC(DTSCTM_OFF))
+        EQUIVALENCE(DTSTIM,DTSREC(DTSTIM_OFF))
+        EQUIVALENCE(DTSBRK,DTSREC(DTSBRK_OFF))
+        EQUIVALENCE(DTSSAL,DTSREC(DTSSAL_OFF))
+        EQUIVALENCE(DTSPAD,DTSREC(DTSPAD_OFF))
+        EQUIVALENCE(DTSPRG,DTSREC(DTSPRG_OFF))
+        EQUIVALENCE(DTSPRF,DTSREC(DTSPRF_OFF))
+        EQUIVALENCE(DTSREF,DTSREC(DTSREF_OFF))
+        EQUIVALENCE(DTSWON,DTSREC(DTSWON_OFF))
+        EQUIVALENCE(DTSWBD,DTSREC(DTSWBD_OFF))
+        EQUIVALENCE(DTSRBD,DTSREC(DTSRBD_OFF))
+        EQUIVALENCE(DTSPBD,DTSREC(DTSPBD_OFF))
+        EQUIVALENCE(DTSTBD,DTSREC(DTSTBD_OFF))
+        EQUIVALENCE(DTSSBD,DTSREC(DTSSBD_OFF))
+        EQUIVALENCE(DTSODS,DTSREC(DTSODS_OFF))
+        EQUIVALENCE(DTSWIN,DTSREC(DTSWIN_OFF))
+        EQUIVALENCE(DTSHLD,DTSREC(DTSHLD_OFF))
+        EQUIVALENCE(DTSTAX,DTSREC(DTSTAX_OFF))
+        EQUIVALENCE(DTSOTX,DTSREC(DTSOTX_OFF))
+        EQUIVALENCE(DTSMID,DTSREC(DTSMID_OFF))
+        EQUIVALENCE(DTSUTX,DTSREC(DTSUTX_OFF))
+        EQUIVALENCE(DTSHST,DTSREC(DTSHST_OFF))
+        EQUIVALENCE(DTSORM,DTSREC(DTSORM_OFF))
+        EQUIVALENCE(DTSNMS,DTSREC(DTSNMS_OFF))
+        EQUIVALENCE(DTSSTA,DTSREC(DTSSTA_OFF))
+        EQUIVALENCE(DTSREV,DTSREC(DTSREV_OFF))
+        EQUIVALENCE(DTSPFN,DTSREC(DTSPFN_OFF))
+        EQUIVALENCE(DTSTOP,DTSREC(DTSTOP_OFF))
+        EQUIVALENCE(DTSRWS,DTSREC(DTSRWS_OFF))
+        EQUIVALENCE(DTSCMB,DTSREC(DTSCMB_OFF))
+        EQUIVALENCE(DTSPRC,DTSREC(DTSPRC_OFF))
+        EQUIVALENCE(DTSDTE,DTSREC(DTSDTE_OFF))
+        EQUIVALENCE(DTSTVC,DTSREC(DTSTVC_OFF))
+        EQUIVALENCE(DTSMDS,DTSREC(DTSMDS_OFF))
+        EQUIVALENCE(DTSWTOP,DTSREC(DTSWTOP_OFF))
+        EQUIVALENCE(DTSROWTYP,DTSREC(DTSROWTYP_OFF))
+C       

@@ -1,0 +1,112 @@
+                          GTECH Distributed Network
+                         Station Configuration Help              Page 1 of 5
+ 
+      This help screen describes each of the fields associated with
+      updating station configurations.  For specific instructions
+      on how to use the Add and Modify screens, refer to the Station
+      Configuration Menu Help.
+ 
+      The following describes each of the station port configuration
+      parameters:
+ 
+      Station number      - station identifier for this record.
+      Address length      - number of digits in the station address.
+      Address             - the network address of the station.
+      Protocol            - current protocol (always=1).
+      Port count          - number of possible ports (always=1).
+      Serial              - serial number of the station.
+      Station type        - station network type (1=X.21,2=X.25).
+      Delivery ACK        - Front End to acknowledgment flag of messages
+                            sent to the station (0=ack on,1=no ack).
+ 
+ 
+                          GTECH Distributed Network
+                          Station Configuration Help             Page 2 of 5
+ 
+ 
+      Delivery ERR        - Front End to send an error report when message
+                            can not be forwarded to the station.
+                            0=reporting on,1=reporting off.
+      Station Disconnect  - Informs the station how to disconnect when
+                            communicating with the X2X network.
+                            0=remain in current mode   7=uncondition disconnect
+                            8-14=timer disconnect     15=remain connected
+      FE Disconnect -       Informs Front End how to disconnect after
+                            sending a message to the station.
+                            0=no action                1=condition disconnect
+                            2=unconditional disconnect 3=Fast Select disconnect
+      Group -               Logical grouping of stations based on some physical
+                            parameters (ie location,zip code).  Note: also
+                            used for relay chains.
+ 
+ 
+ 
+ 
+                          GTECH Distributed Network
+                         Station Configuration Help              Page 3 of 5
+ 
+ 
+      Station Class -       Index of the record in the station class file
+                            which contains further configuration parameters
+                            for the station.
+      Report Class -        Index of the record in the report class file
+                            which contains report codes which the station
+                            is to send.
+      Station State -       Default state of the station. (set to 1 or 3)
+                            0=inactive   1=idle
+                            2=init       3=disabled
+      Network Ports -       Update to 7 network ports can be specifically
+                            assigned for a station to use when trying to
+                            connect to the central system.  The value to
+                            input for specific values is the network port
+                            number which you wish to use.  These ports will
+                            override the system defaults.
+ 
+ 
+ 
+                          GTECH Distributed Network
+                          Station Configuration Help             Page 4 of 5
+ 
+      PVC Channel -         Permanent Virtual Circuit Channel (future use)
+      PVC Port -            Permanent Virtual Circuit Port (future use)
+      Debug flag -          Station debugging flag (for Software use only).
+      Poll Timeout -        Maximum time, in secs, a station will poll a
+                            terminal and wait for a response before marking
+                            the terminal as being on slow poll.
+      Network Statistics -  Informs the station to determine and transfer
+                            network delay information to the backend.
+      Auto Update -         Informs the station to automatically send a
+                            polling statistics report when the polling status
+                            of a terminal is changed.
+      Baud -                Speed for which the station is to use when
+                            communicating with the polling terminals
+                            0 = 1800      1 = 300     2 = 1200
+                            3 = 1800      4 = 2400    5 = 3600
+                            6 = 4800      7 = 9600    8 = 19200
+      TITN port 1 -         pointer to the TITN record which contains X.25
+                            parameters for port 1 on the terminal
+
+
+                              GTECH Distributed Network
+                             Station Configuration Help          Page 5 of 5
+
+      TITN port 2 -         pointer to the TITN record which contains X.25
+                            parameters for port 2 on the terminal
+      Default ports 1-4     network port numbers for the default numbers the
+                            station uses to connect to the host - these are
+                            stored into EEPROM in the terminal
+      Dial enable           determines whether the station is permitted to
+                            use the alternate communications modem to connect
+                            to the host (0=dialup enabled 1=dialup disabled)
+      Dial ports 1-2        contains the network port numbers the station
+                            will use over the alternate communications modem
+                            to connect to the host
+      Rank -                sales ranking of the station to determine the
+                            amount of traffic, allowing even distribution of
+                            network port assignments
+      Poll Enable -         determine whether the station is permitted to
+                            poll the drops defined on the station ports
+                            (0=poll enabled, 1=polling disabled)
+      Update -              CDC date of the last time this station was
+                            modified.
+ 

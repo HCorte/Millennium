@@ -1,0 +1,127 @@
+C RVALUPD_PAS.FOR
+C
+C V02 01-Jan-10 FJG ePassive
+C V01 13-DEC-00 CS  INITIAL RELEASE FOR PORTUGAL
+C
+C
+C SUBROUTINE TO REAPPLY VALIDATIONS FOR REPROCESSING.
+C
+C CALLING SEQUENCE:
+C      CALL RVALUPD_PAS(TRABUF,STATUS)
+C
+C INPUT
+C       TRABUF - INTERNAL TRANSACTION BUFFER
+C OUTPUT
+C       STATUS - 0 NO ERROR
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS    /CHECK=NOOVERFLOW
+	SUBROUTINE RVALUPD_PAS(TRABUF,STATUS)
+	IMPLICIT   NONE
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:DESVAL.DEF'
+	INCLUDE 'INCLIB:VALPASFIL.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:PRMHSH.DEF'
+C
+C ROUTINE PARAMETERS
+C
+	INTEGER*4 STATUS
+C+++++++FUNCTIONS
+        INTEGER*4  GETPAGEMI	
+C
+C LOCAL VARIABLES
+C
+	INTEGER*4 GIND
+	INTEGER*4 EMIS
+	INTEGER*4 EOFF
+	INTEGER*4 XNUM
+	INTEGER*4 XSER
+	INTEGER*4 XFRA
+	INTEGER*4 TCKS
+	INTEGER*4 STAT
+	INTEGER*4 ST_FILE
+	INTEGER*4 EXPECTED
+	INTEGER*4 UPDATED
+C
+C WE ARE REPROCESSING TICKETS ONLY WITH STATUS = VWINNER
+C
+        EXPECTED = 0
+        UPDATED  = 0
+	DO  1000 TCKS = 1, TRABUF(TPTCK)
+C
+C TRY TO READ RECORD FROM THE VALIDATION FILE
+C (WE ARE ONLY RECEIVING THE WINNERS FROM SNDTRA)
+C
+            GIND = TRABUF(TGAMIND)
+            EMIS = TRABUF(TPEMIS1 + OFFTRA*(TCKS-1))
+            EOFF = GETPAGEMI(EMIS,GIND)
+            XNUM = TRABUF(TPNUM1+OFFTRA*(TCKS-1))
+            XSER = TRABUF(TPSER1+OFFTRA*(TCKS-1))
+            XFRA = TRABUF(TPTEN1+OFFTRA*(TCKS-1))
+	    STAT = TRABUF(TPSTS1+OFFTRA*(TCKS-1))
+            IF(STAT.EQ.VWINNER) THEN			
+	        EXPECTED = EXPECTED + 1
+                CALL REAVAL(EOFF,GIND,EMIS,XNUM,XSER,XFRA,V4BUF_PAS,ST_FILE)
+	        IF(ST_FILE.EQ.0) THEN
+                    CALL LOGPAS(VALREC,V4BUF_PAS)
+		    CALL UPDSUB_PAS(VALREC)
+		    TRABUF(TSTAT) = GOOD
+		    CALL UPD_AGT_BANK_WITH_CLERK_FLAG(TRABUF)
+
+		    VALREC(VCCDC) = DAYCDC
+		    VALREC(VCTER) = TRABUF(TTER)
+		    VALREC(VCSER) = TRABUF(TSER)
+                    IF(TRABUF(TVTYPE).EQ.VPNBNK) THEN
+                      VALREC(VSTAT)   = VBANK
+                    ELSE
+                      VALREC(VSTAT)   = VCASH
+                    ENDIF		    
+                    VALREC(VOFFTER) = TRABUF(TPOFFTER)                    
+C
+C WRITE RECORD BACK TO VALIDATION FILE
+C
+		    CALL PASLOG(VALREC,V4BUF_PAS)
+                    CALL WRIVAL(EOFF,GIND,EMIS,V4BUF_PAS,ST_FILE)
+		    IF(ST_FILE.EQ.0) UPDATED = UPDATED + 1
+		ENDIF
+	    ENDIF
+
+	    IF  (ST_FILE.NE.0) THEN
+		STATUS = -1			!FILE ERROR
+		CALL VALERR(ST_FILE,VPF,TRABUF(TSER),16,0,0,0,0)
+		GOTO 1000
+	    ENDIF
+C
+C END OF LOOP
+C
+1000	CONTINUE
+C
+        IF(UPDATED.EQ.EXPECTED) THEN
+          STATUS = VWINNER
+        ELSE
+          STATUS = -1
+        ENDIF
+C        
+	RETURN
+        END

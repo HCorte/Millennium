@@ -1,0 +1,55 @@
+C
+C SUBROUTINE WRITEQNW
+C $Log:   GXAFXT:[GOLS]WRITEQNW.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 16:04:16   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:08:34   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_diskqio.for **
+C
+C
+C
+C *** WRITEQNW       <<<write and do not wait for completion>>>
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE WRITEQNW(FDB, BLOCK, BUFFER)
+	IMPLICIT NONE
+C
+	INCLUDE	'INCLIB:SYSPARAM.DEF'
+	INCLUDE	'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:DISKQIO.DEF'
+C
+	INTEGER*4   FDB(7)
+	INTEGER*4   BLOCK
+	INTEGER*4   BUFFER(*)
+C
+	INTEGER*4   STATUS
+	INTEGER*4   FLAG
+C
+	CALL LIB$GET_EF(FLAG)			    !GET AN EVENT FLAG TO USE
+	IF(FLAG.EQ.-1)THEN
+	  FDB(FDB_EVNT) = -1
+	  STATUS = -99
+	  GOTO 9000
+	ENDIF
+	FDB(FDB_EVNT) = FLAG
+C
+	CALL WRITEQNWX(FDB, BLOCK, BUFFER, STATUS)
+C
+	IF(.NOT.STATUS)THEN
+	  CALL LIB$FREE_EF(FLAG)		    !ERROR...FREE THE FLAG
+	  FDB(FDB_EVNT) = -1
+	  GOTO 9000
+	ENDIF
+C
+	STATUS = 0                ! FOR COMPATIBILITY
+C
+C
+9000	CONTINUE
+	RETURN
+	END

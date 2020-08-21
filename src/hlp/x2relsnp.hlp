@@ -1,0 +1,88 @@
+ X2RELSNP.HLP             GTECH Distributed Network
+                          Relay Application Snapshot            Page 1 of 4
+ 
+    This snapshot can be divided into 4 sections: relay summary information,
+    all active groups, active stations, and specific stations.
+ 
+    The relay summary information displays the current status along with
+    various counters.  This information includes:
+ 
+    Relay         - Relay application number
+    Status        - currecnt status of relay application
+                    0=not defined       1=idle      2=active
+    Attribute     - identifies the relay application type
+                    0=not defined           1=chain relay
+                    2=send to all relay     3=send to all broadcast
+                    4=station broadcast
+    Activity      - number of processes currently active for the relay
+    Request       - number of processes waiting to processed
+    Max Capacity  - maximum number of lines to utilize at one time
+    Send timeout  - time (in secs) to wait between sending
+    Wait timeout  - time (in secs) to wait when the station sends ACKW
+ 
+ X2RELSNP.HLP             GTECH Distributed Network
+                          Relay Application Snapshot            Page 2 of 4
+ 
+    Activity      - count of activity performed by the application
+    Non Active    - number of times a request was encountered for an
+                    application which is no longer active.
+    Timeout cnt   - number of times a timeout was encountered
+    Queue cnt     - current number of buffers on the application queue.
+    Active groups - number of relay groups currently active in the
+                    relay application
+ 
+    The active groups, stations, and specific station portions of this
+    snapshot are only displayed if the relay is active, and it is
+    currently processing a chain relay, otherwise this information is
+    meaningless and is not displayed.
+ 
+    The All Groups section displays all groups which are currently
+    active in the chain relay.  Each group contains three variables:
+    group number, number of stations, and number of timeouts.
+ 
+ 
+ 
+ X2RELSNP.HLP             GTECH Distributed Network
+                          Relay Application Snapshot            Page 3 of 4
+ 
+ 
+    The All Stations section displays all stations which are currently
+    active for a given group.  To view different groups, you must use
+    the XGRP ##, and if the group is within the relay, it will display
+    the stations within the group.  Two indicators are utilized in this
+    section:  the "*" illustrates the head station in the chain (this
+    is the only station in the group the central is communicating with),
+    the "+" illustrates which station is being displayed in the specific
+    station section.
+ 
+    The Specific Station section displays relay parameters for a given
+    station.  This information includes:
+ 
+    Retry count   - number of retries which can occur before this
+                    station is dropped from the relay
+    Process       - shows the current relay process that the station
+                    is active in
+ 
+ 
+ X2RELSNP.HLP             GTECH Distributed Network
+                          Relay Application Snapshot            Page 4 of 4
+ 
+    Load          - for terminal downloads being sent in a relay chain,
+                    this parameters will show the current load number
+                    being sent
+    Segment       - for terminal downloads being sent in a relay chain,
+                    this parameters will show the current segment within
+                    the current load being sent.
+    Active        - this section displays all 16 relay applications, and
+                    indicates whether the station is active (yes or no).
+                    It is possible for a station to be active in more than
+                    one relay application at the same time.
+    Requested     - this section displays all 16 relay applications, and
+                    indicates whether the station has requested to be
+                    active in a relay application
+    Timeout       - time the next scheduled activity for the station is
+                    to occur
+ 
+    To view different relay applications, use the XREL ## command.
+    To view different groups use the X2GRO ## command.
+    To view different stations use the X2STN ## command.

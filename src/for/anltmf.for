@@ -1,0 +1,1152 @@
+C ANLTMF.FOR
+C
+C V20 30-JUL-2014 SCML Placard Project - Avoid IGS Transactions
+C V19 23-APR-2013 FRP PTLA-11:avoid reporting anomalies for Passive returns which are rejected before setting the game number
+C V18 21-JUN-2012 FRP RFSS0262: only added Passive "Sold" (excluded "Reserved" and "Released") in Fractions counter
+C V17 16-NOV-2011 FRP TIR2570: only added Passive "Sold" (excluded "Reserved" and "Released")
+C V16 11-MAR-2010 RXK Claims replaced with returns
+C V15 01-FEB-2000 UXN Fractions changed.
+C V14 21-MAY-1999 UXN MAXGAM changes.
+C V13 11-FEB-1997 RXK Cross and paththru transactions added
+C V12 17-MAY-1996 HXK Update from Wojtek, Siew Mun
+C V11 02-SEP-1994 HXK Merge of May,June RFSS batch 
+C V10 23-JUN-1994 HXK ALLOW KICKER
+C V09 14-SEP-1993 HXN Added some financial calculations (FRAC_CNT and 
+C                     FINANCE_CNT,AMT) to balance against Vision Sales 
+C                     snapshots.
+C V08 06-SEP-1993 HXN Resize NRMCNT and NRMAMT arrays.
+C V07 31-AUG-1993 HXN Added few minor TYPE statements.
+C V06 12-JUL-1993 HXN NEW VERSION. BASED ON THE NETHERLANDS PACK.
+C V05 09-JUL-1993 HXN INITIAL VERSION FOR FINLAND. 
+C                     THIS  VERSION IS BASED ON THE NETHERLANDS PACK.
+C V04 25-JUN-1993 HXN Initial release for Finland. 
+C                     This version is based on the Netherlands pack.
+C V03 01-AUG-1990 XXX RELEASED FOR VAX
+C V02 23-MAY-1990 XXX initial release for STL (National Lottery)
+C V01 24-JUN-1989 TKO RELEASED FOR ILLINOIS
+C
+C THIS PROGRAM WILL READ THROUGH A TMF & ANALYZE IT FOR
+C VARIOUS ERRORS AND AT THE SAME TIME WILL ACCUMLATE TOTALS
+C FOR EACH GAME,ETC.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK/EXT
+	PROGRAM ANLTMF
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+        INCLUDE 'INCLIB:LTOCOM.DEF'
+C
+C THE FIRST INDEX IS STATUS     (TSTAT)
+C THE SECOND INDEX IS FILE TYPE (TFIL)
+C THE THIRD  INDEX IS GAME      (TGAM)
+C THE FOURTH INDEX IS TRANSACTION TYPE (TTYP), EXCEPT THAT
+C SPECIAL SERVICE XACTIONS ARE BROKEN DOWN INTO ADDITIONAL
+C TYPES BY ADDING 7 TO TSFUN
+C
+	INTEGER*4  TYPSON,TYPDLL,TYPRPT,TYPRPN
+	PARAMETER (TYPSON=8)           !SIGNON
+	PARAMETER (TYPDLL=9)           !DOWNLOAD
+	PARAMETER (TYPRPT=10)          !REPORT
+	PARAMETER (TYPRPN=11)          !REPRINT
+C
+	INTEGER*4  MAXNDX1, MAXNDX2, MAXNDX3, MAXNDX4
+	PARAMETER (MAXNDX1=FRAC)   !max valid transaction status    FRAC=11
+	PARAMETER (MAXNDX2=CDEAD)  !max valid file type             CDEAD=5
+	PARAMETER (MAXNDX3=MAXGAM) !max valid games
+	PARAMETER (MAXNDX4=TCRS)   !max valid transaction type ...  TCRS=9
+C
+	INTEGER*4  NRMCNT(MAXNDX1+1,MAXNDX2+1,MAXGAM+1,MAXNDX4+1)      !COUNT
+	INTEGER*4  NRMAMT(MAXNDX1+1,MAXNDX2+1,MAXGAM+1,MAXNDX4+1)      !AMOUNT
+
+	INTEGER*4  FDB(7)
+	INTEGER*4  BUF(64*128)   !8192
+
+	INTEGER*4  I
+	INTEGER*4  J
+	INTEGER*4  K
+	INTEGER*4  L
+	INTEGER*4  ST
+	INTEGER*4  YNFLG
+	INTEGER*4  TOTERR
+	INTEGER*4  PAGE
+	INTEGER*4  EOFCNT
+	INTEGER*4  THSSER
+	INTEGER*4  BLK
+	INTEGER*4  OFF
+	INTEGER*4  RTYP
+	INTEGER*4  LSTRTP
+	INTEGER*4  BEGOFF
+	INTEGER*4  ENDOFF
+	INTEGER*4  ERRFLG
+	INTEGER*4  EMPTYBLK
+	INTEGER*4  EMPTYOFF
+	INTEGER*4  EMPTYCNT
+	INTEGER*4  QNDX1
+	INTEGER*4  QNDX2
+	INTEGER*4  QNDX3
+	INTEGER*4  QNDXK3
+	INTEGER*4  QNDX4
+	INTEGER*4  NDX1
+	INTEGER*4  NDX2
+	INTEGER*4  NDX3
+	INTEGER*4  NDX4
+	INTEGER*4  AMT
+	INTEGER*4  KAMT
+	INTEGER*4  GMAX
+	INTEGER*4  PASS
+	INTEGER*4  POFF
+	INTEGER*4  PMAX
+	INTEGER*4  UNIT
+        INTEGER*4  GIND       ! GAME INDEX
+        INTEGER*4  GTYP       ! GAME TYPE
+        INTEGER*4  TOTTCK     ! TOTAL NUMBER OF FRACTIONS FOR PASSIVE GAME
+        INTEGER*4  TOT_CNT    ! TOTAL COUNTER TO UPDATE
+
+	INTEGER*4 AMT_PENNY(MAXGAM),KAMT_PENNY(MAXGAM)
+
+	CHARACTER*24 INPNAM
+	CHARACTER*10 XXREPNAM/'ANLTMF.REP'/
+C
+	CHARACTER*20 NDX1NM(MAXNDX1)
+	DATA NDX1NM/'        GOOD        ','        VOID        ',
+     *	            ' INTERNALLY DELETED ','    NEW EXCHANGE    ',
+     *	            '        CASHED      ','      REJECTED      ',
+     *	            '      EXCHANGED     ',' CASHED WITH EXCHNG ',
+     *	            '       CLAIMED      ',' CLAIMD WITH EXCHNG ',
+     *	            '        FRAC        '/
+C
+	CHARACTER*4 NDX2NM(MAXNDX2)
+	DATA NDX2NM/'ERLY','LATE','CARY','POST','DEAD'/
+C
+	CHARACTER*12 NDX4NM(MAXNDX4)
+	DATA NDX4NM/'wagers      ','cancels     ','int cancels ',
+     *	            'validations ','returns     ','refund      ',
+     *	            'spe func    ','commands    ','cross system'/
+C	DATA NDX4NM/'wagers      ','cancels     ','int cancels ',
+C     *	            'validations ','claims      ','refund      ',
+C     *	            'spe func    ','commands    ','sign-offs   ',
+C     *	            'downloads   ','getkey      ','sales report',
+C     *              'game reports','reprints    ','adjustments ',
+C     *              'slochk      ','news message','jackpot rpts',
+C     *              'X2X specials','loopback    ','term stats  ',
+C     *              'faults      ','last 4 win #','bonus win # ',
+C     *              'ticket msgs ','other ttyp  '/
+C
+C
+	CHARACTER BELL/Z07/
+
+	LOGICAL TAPE
+	LOGICAL INORDR
+	LOGICAL CHKBLK
+	LOGICAL ANYGUD
+	LOGICAL CRYFIL
+	LOGICAL DRWFIL
+	LOGICAL ENDBLK
+
+	INTEGER*4 FRAC_CNT (MAXGAM)
+	INTEGER*4 FINANCE_CNT  (MAXNDX1+1,MAXNDX2+1,MAXGAM+1,MAXNDX4+1),!VALID COUNT
+     *            FINANCE_AMT  (MAXNDX1+1,MAXNDX2+1,MAXGAM+1,MAXNDX4+1) !VALID COUNT
+
+C *********************************************
+C
+	CALL COPYRITE
+	TYPE *,'<<<<<<<<<< ANLTMF V01 >>>>>>>>>>'
+
+	CALL FASTSET(0,AMT_PENNY,MAXGAM)
+	CALL FASTSET(0,KAMT_PENNY,MAXGAM)
+C CLEAR TOTALS
+C ------------
+	DO 110 L= 1, MAXNDX4+1
+	DO 110 K= 1, MAXGAM+1
+	DO 110 J = 1, MAXNDX2+1
+	DO 110 I = 1, MAXNDX1+1
+	   NRMCNT (I,J,K,L)=0
+	   NRMAMT (I,J,K,L)=0
+	   FINANCE_CNT(I,J,K,L)=0
+	   FINANCE_AMT(I,J,K,L)=0
+110	CONTINUE
+
+	TOTERR=0
+
+
+C OPEN REPORT FILE
+C ----------------
+	PAGE=0
+	CALL ROPEN(XXREPNAM,6,ST)
+	IF(ST.NE.0)THEN
+	  TYPE *,'cannot open ',XXREPNAM,' status ',ST
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+
+CRXK	CALL TITLE('ANALYSIS OF '//INPNAM,'ANLTMF  ',01,6,PAGE,
+CRXK     *	            DAYCDC)
+CRXK	WRITE(6,501)
+CRXK501	FORMAT(///,X,30('*'),' ANOMALIES ',30('*'),/)
+
+
+
+C OPEN TM FILE
+C ------------
+200	CONTINUE
+
+
+        TYPE*,IAM(),'For a tape, you must use MAG1: or MAG2: etc...'
+        TYPE*,IAM(),'And it is easy to define these names as logical names'
+        TYPE*,IAM(),'    to point to the physical device.'
+        TYPE*,IAM()
+ 
+	CALL WIMG(5,'Input file or device:             ')
+	ACCEPT 201,INPNAM
+201	FORMAT(A24)
+
+	IF(INPNAM.EQ.'E ')CALL GSTOP(GEXIT_OPABORT)
+
+	IF(INPNAM(1:3).EQ.'MAG' .AND. INPNAM(5:5).EQ.':')THEN
+	  TAPE = .TRUE.
+	  CALL TAPOPEN(FDB,INPNAM,ST)
+	ELSE
+	  TAPE = .FALSE.
+	  CALL OPENX(1,INPNAM,0,0,0,ST)
+	ENDIF
+
+	IF(ST.NE.0)THEN
+	  TYPE *,'CANNOT OPEN THAT FILE OR DEVICE ',ST
+	  GO TO 200
+	ENDIF
+
+	CRYFIL=.FALSE.
+	DRWFIL=.FALSE.
+	CALL WIMG(5,'Is this a normal TMF type file?: ')
+	CALL YESNO(YNFLG)
+	IF(YNFLG.EQ.3)CALL GSTOP(GEXIT_SUCCESS)
+
+	IF(YNFLG.NE.1)THEN
+	  CALL WIMG(5,'Is this a draw (LM) type file? : ')
+	  CALL YESNO(YNFLG)
+	  IF(YNFLG.EQ.3)CALL GSTOP(GEXIT_SUCCESS)
+	  IF(YNFLG.EQ.1)THEN
+	    DRWFIL=.TRUE.
+	  ELSE
+	    TYPE *,'I am assuming it is a carry type file'
+	    CRYFIL=.TRUE.
+	  ENDIF
+	ENDIF
+
+	IF(DRWFIL .OR. CRYFIL)THEN
+	  INORDR=.FALSE.
+	ELSE
+	  INORDR=.TRUE.
+C***        CALL WIMG(5,'Should this file be in order?:    ')
+C***        CALL YESNO(YNFLG)
+C***        IF(YNFLG.EQ.1)THEN
+C***          INORDR=.TRUE.
+C***        ELSE IF(YNFLG.EQ.2)THEN
+C***          INORDR=.FALSE.
+C***        ELSE
+C***          CLOSE(UNIT=1)
+C***          GO TO 200
+C***        ENDIF
+	ENDIF
+C
+C
+	IF(TAPE) THEN
+	    IF(DRWFIL)THEN
+	      CALL TAPINT(FDB,1,8*1024*4)
+	    ELSE
+	      CALL TAPINT(FDB,1,8*256*4)
+	    ENDIF
+	ELSE
+	    IF(DRWFIL)THEN
+	      CALL IOINIT(FDB,1,128*256)
+	    ELSE
+	      CALL IOINIT(FDB,1,32*256)    !TM disk file
+	    ENDIF
+	ENDIF
+
+	CALL TITLE('ANALYSIS OF '//INPNAM,'ANLTMF  ',01,6,PAGE,
+     *	            DAYCDC)
+	WRITE(6,501)
+501	FORMAT(///,X,30('*'),' ANOMALIES ',30('*'),/)
+
+
+
+C NOW, SCAN TM FILE
+C -----------------
+	CHKBLK = .TRUE.
+	EOFCNT = 0
+	THSSER = 0
+	BLK    = 0
+
+C       READ NEXT BLOCK
+C       ---------------
+1000	CONTINUE
+
+	IF (MOD(BLK,1000).EQ.0) THEN
+	    TYPE*,' ANLTMF in progress...',BLK
+	ENDIF
+
+	BLK=BLK+1
+	IF(.NOT.TAPE)THEN
+	  CALL READW(FDB,BLK,BUF,ST)
+	  IF(ST.NE.0)THEN
+	    IF(ST.EQ.'88'X) THEN
+	      TYPE *,'End of file encountered'
+	    ELSE IF(ST.EQ.'90'X) THEN
+	      TYPE*,' End of medium '
+	    ELSE
+	      TYPE*,'cannot read block ',BLK,' error = ',ST
+	    ENDIF
+	    CALL USRCLOS1(     1)
+C*          IF(.NOT.CRYFIL)TYPE *,'CANNOT READ BLK ',BLK,' ERROR = ',ST
+	    GO TO 6000
+	  ENDIF
+
+	ELSE                        !IF TAPE
+	  CALL RTAPEW(FDB,BUF,ST)
+	  IF(ST.NE.0)THEN
+	    IF(ST.EQ.'88'X) THEN
+	      TYPE *,'End of tape encountered'
+	    ELSE
+	      TYPE *,'Tape read error  >>  ',ST
+	    ENDIF
+	    CALL XREWIND(FDB,ST)
+	    CALL TAPCLOS(FDB,ST)
+	    CALL WIMG(5,'Is there another tape [Y/N]: ')
+	    CALL YESNO(YNFLG)
+	    IF(YNFLG.NE.1)GOTO 6000         !PRINT TOTALS AND STOP
+
+1100	    CONTINUE
+	    CALL WIMG(5,' Input device name: ')
+	    ACCEPT 201,INPNAM
+	    CALL TAPOPEN(FDB,INPNAM,ST)
+	    IF(ST.NE.0)THEN
+	      TYPE *,'Cannot open device status ',ST
+	      GO TO 1100
+	    ENDIF
+	    IF(DRWFIL)THEN
+	      CALL TAPINT(FDB,1,8*1024*4)
+	    ELSE
+	      CALL TAPINT(FDB,1,8*256*4)
+	    ENDIF
+	    GO TO 1000
+	  ENDIF
+
+C	  Ignore header record
+C
+	  IF(BUF(2).EQ.-1)THEN
+	    BLK = BLK-1
+	    GOTO 1000
+	  ENDIF
+
+	ENDIF
+
+
+
+
+
+	IF (TAPE .AND. .NOT.CRYFIL .AND. BUF(2).EQ.-1) THEN
+	  BLK=BLK-1
+	  GO TO 1000
+	ENDIF
+
+
+	EMPTYBLK=0
+	EMPTYOFF=0
+	EMPTYCNT=0
+	ANYGUD=.FALSE.
+	LSTRTP=0
+	BEGOFF=LHDR+1
+	IF(DRWFIL .OR. CRYFIL)BEGOFF=1
+	ENDOFF=DBLOCK
+	IF(DRWFIL)ENDOFF=DBLOCK*4
+
+	OFF=BEGOFF-LREC
+2000	CONTINUE
+	OFF=OFF+LREC
+	IF(OFF.GT.ENDOFF)GOTO 5000
+
+
+	IF(DRWFIL .OR. CRYFIL .OR. OFF.LT.DBLOCK-(2*LREC))THEN
+	  ENDBLK=.FALSE.
+	ELSE
+	  ENDBLK=.TRUE.
+	ENDIF
+
+
+	IF(.NOT.ENDBLK)THEN
+	  THSSER=THSSER+1
+	ENDIF
+
+
+	CALL ILBYTE(RTYP, BUF(OFF),(LREC*4)-1)
+	RTYP=IAND(RTYP,'0F'X)
+
+	ERRFLG=0
+	
+	IF(RTYP.EQ.0)THEN                    !IF 0, SHD BE EMPTY
+	  DO 2010 K=0,LREC-1
+	    IF(BUF(OFF+K).NE.0)ERRFLG=1
+2010	  CONTINUE
+	  IF(.NOT.ENDBLK .AND. .NOT.DRWFIL .AND. .NOT.CRYFIL)THEN
+	    EMPTYCNT=EMPTYCNT+1
+	    IF(EMPTYBLK.EQ.0)THEN
+	      EMPTYBLK=BLK
+	      EMPTYOFF=OFF
+	    ENDIF
+	    GOTO 2000
+	  ENDIF
+
+	ELSE IF(RTYP.EQ.LREG .OR. RTYP.EQ.LONE)THEN
+	  IF(ENDBLK)ERRFLG=2
+	  IF(LSTRTP.EQ.LTWO)ERRFLG=3
+
+	ELSE IF(RTYP.EQ.LTWO)THEN
+	  IF(LSTRTP.NE.LONE)ERRFLG=4
+
+	ELSE IF(RTYP.EQ.LEND)THEN
+	  IF(LSTRTP.NE.LONE .AND. LSTRTP.NE.LTWO)ERRFLG=5
+
+	ELSE
+	  ERRFLG=6
+	ENDIF
+
+	IF(ERRFLG.NE.0)THEN
+	  WRITE(6,2002)BLK,OFF,RTYP,LSTRTP,ERRFLG
+2002	  FORMAT(X,'BLK ',I8,'/',I4,' BAD RTYP=',I2,' LAST=',I2,
+     *	           ' ERRFLG=',I2)
+	  TOTERR=TOTERR+1
+	  LSTRTP=0
+	  GOTO 2000
+	ENDIF
+C
+	LSTRTP=RTYP
+	IF(RTYP.EQ.0)THEN
+	  EOFCNT = EOFCNT+1
+	  IF(.NOT.CRYFIL .AND. EOFCNT.GT.2000)GOTO 6000
+	ELSE
+	  EOFCNT = 0
+	ENDIF
+C
+	IF(RTYP.NE.LREG .AND. RTYP.NE.LONE)GOTO 2000
+C
+	CALL LOGTRA(TRABUF,BUF(OFF))
+ 
+C CHECK FOR END OF FILE
+C ---------------------
+	IF(TRABUF(TSTAT).EQ.NUSD) THEN
+	  IF(RTYP.NE.0)THEN
+	    ERRFLG=7
+	    WRITE(6,2002)BLK,OFF,RTYP,LSTRTP,ERRFLG
+	    TOTERR=TOTERR+1
+	    LSTRTP=0
+	  ENDIF
+	  GOTO 2000
+	ENDIF
+C
+
+
+
+C Display approximate serial number, when there is hole.
+C -----------------------------------------------------
+C	IF(EMPTYCNT.NE.0)THEN
+C	  TEMPBLK=EMPTYBLK-1        !determine the block
+C	  TEMPBLK=TEMPBLK*LBLK      !125 words in block
+C	  TEMPOFF=(EMPTYOFF-1)/LREC !from word offset determine record
+C	  TEMPSER=TEMPBLK+TEMPOFF   !serial in question
+C	  TYPE*,' Approximate serial number of hole ',TEMPSER
+C	  WRITE(6,2003)EMPTYCNT,EMPTYBLK,EMPTYOFF,TEMPSER
+C 2003	  FORMAT(X,I8,' EMPTY RECORDS STARTING AT BLK ',I8,'/',I4,
+C     *	  ' Approximate serial number ',I8)
+C	  EMPTYCNT=0
+C	  EMPTYBLK=0
+C	  EMPTYOFF=0
+C	ENDIF
+
+
+
+	EOFCNT=0
+	ANYGUD=.TRUE.
+
+
+C****** TO BE REPLACE AFTER TEST ***********************
+C	IF(INORDR)THEN
+C	  IF(MOD(TRABUF(TSER),SYSOFF).NE.THSSER)THEN
+C	    WRITE(6,2004)BLK,OFF,TRABUF(TSER),THSSER
+C	    TOTERR=TOTERR+1
+C 2004	    FORMAT(X,'BLK ',I8,'/',I4,' SRL # ',I8,' SHD BE ',I8)
+C	  ENDIF
+C	ENDIF
+C****** TO BE REPLACE AFTER TEST ***********************
+
+C CHECK FOR VALID VALUES OF TSTAT,TFIL,TGAM 
+C -----------------------------------------
+	QNDX1 = MIN (MAXNDX1,TRABUF(TSTAT))
+	IF (QNDX1.LT.1) QNDX1 = MAXNDX1+1
+
+	QNDX2=MIN(MAXNDX2,TRABUF(TFIL))
+        IF(TRABUF(TGAMTYP) .EQ. TPAS) QNDX2 = 1
+        IF(TRABUF(TTYP) .EQ. TCAN) QNDX2 = 1
+	IF(QNDX2.LT.1)QNDX2=MAXNDX2+1
+
+	QNDX3=MIN(MAXGAM,TRABUF(TGAM))
+	IF(QNDX3.LT.1)QNDX3=MAXGAM+1
+
+	IF (TRABUF(TTYP).EQ.TVAL) THEN
+ 	    QNDXK3=MIN(MAXGAM,TRABUF(TVKGME))
+	ELSE                                     ! (TRABUF(TTYP).EQ.TWAG) THEN
+ 	    QNDXK3=MIN(MAXGAM,TRABUF(TWKGME))
+	ENDIF
+C 	QNDXK3=MIN(MAXGAM,TRABUF(TWKGME))
+	IF(QNDXK3.LT.1)QNDXK3=MAXGAM+1
+
+	QNDX4 = TRABUF(TTYP)
+	IF(QNDX4.GT.TCRS.OR. QNDX4.LT.1)THEN
+	  QNDX4 = MAXNDX4+1
+	ENDIF
+
+C****************************************************************
+
+	AMT=0
+	KAMT=0
+
+	IF(TRABUF(TTYP).EQ.TWAG)THEN
+
+           IF(TRABUF(TTYP)   .EQ.TWAG .AND.
+     *        TRABUF(TGAMTYP).EQ.TPAS .AND.
+     *        TRABUF(TWEPOP) .NE.EPASSAL) GOTO 4000 !only add Passive "Sold" (exclude "Reserved" and "Released")
+
+	   IF((TRABUF(TSTAT).EQ.GOOD.AND.TRABUF(TWFFLG).NE.1).OR.
+     *         TRABUF(TSTAT).EQ.FRAC) THEN
+	       FRAC_CNT(TRABUF(TGAM)) = FRAC_CNT(TRABUF(TGAM)) + 1
+               IF(TRABUF(TWKGME) .NE. 0) THEN
+                 FRAC_CNT(TRABUF(TWKGME)) = FRAC_CNT(TRABUF(TWKGME)) + 1
+               ENDIF
+           ENDIF
+
+	    IF(QNDX2.EQ.MAXNDX2+1 .OR. QNDX3.EQ.MAXGAM+1)THEN
+	      IF(TRABUF(TSTAT).NE.REJT)THEN
+		WRITE(6,3001)BLK,OFF,TRABUF(TSER),'TGAM or TFIL',
+     *                     TRABUF(TGAM),TRABUF(TFIL),TRABUF(TSTAT)
+		TOTERR=TOTERR+1
+	      ENDIF
+	    ELSEIF(TRABUF(TSTAT).EQ.GOOD .OR. TRABUF(TSTAT).EQ.VOID .OR. TRABUF(TSTAT).EQ.FRAC) THEN
+	      AMT= TRABUF(TWAMT)*TRABUF(TWDUR)
+	      KAMT=TRABUF(TWKAMT)*TRABUF(TWKDUR)
+	      IF(TRABUF(TFAMTFLG).EQ.1) THEN
+	         CALL ADD_PENNY(AMT_PENNY(TRABUF(TGAM)), AMT, TRABUF(TNFRAC))
+	         CALL ADD_PENNY(KAMT_PENNY(TRABUF(TGAM)), KAMT, TRABUF(TNFRAC))
+	      ENDIF
+	    ENDIF
+
+        ELSE IF(TRABUF(TTYP).EQ.TRET) THEN
+	    IF(QNDX3.EQ.MAXGAM+1) THEN
+	      IF(TRABUF(TSTAT).NE.REJT)THEN  !V19 (same approach as for rejected Passive validations)
+		WRITE(6,3001)BLK,OFF,TRABUF(TSER),'TGAM',TRABUF(TGAM)
+		TOTERR=TOTERR+1
+	      ENDIF
+            ELSE
+              CALL GET_PASSIVE_WIN_AMOUNT(TRABUF, AMT, KAMT, TOTTCK)
+	      FRAC_CNT(TRABUF(TGAM)) = FRAC_CNT(TRABUF(TGAM)) + TOTTCK
+            ENDIF
+
+ 3001	FORMAT(X,'BLK ',I8,'/',I4,' SRL ',I9,X,A,I5,I5,I5)
+
+	ELSE IF(TRABUF(TTYP).EQ.TCAN .OR. TRABUF(TTYP).EQ.TINC)THEN
+	    IF(QNDX3.EQ.MAXGAM+1)THEN
+	      IF(TRABUF(TSTAT).NE.REJT)THEN
+		WRITE(6,3001)BLK,OFF,TRABUF(TSER),'TGAM ',TRABUF(TGAM)
+		TOTERR=TOTERR+1
+	      ENDIF
+	    ELSE
+	      AMT= TRABUF(TWAMT)*TRABUF(TWDUR)
+	      KAMT=TRABUF(TWKAMT)*TRABUF(TWKDUR)
+	    ENDIF
+
+	ELSE IF(TRABUF(TTYP).EQ.TVAL .OR. 
+     *          TRABUF(TTYP).EQ.TREF) THEN
+	    IF(QNDX3.EQ.MAXGAM+1)THEN
+	      IF(TRABUF(TSTAT).NE.REJT)THEN
+		WRITE(6,3001)BLK,OFF,TRABUF(TSER),'TGAM',TRABUF(TGAM)
+		TOTERR=TOTERR+1
+	      ENDIF
+	    ELSE
+              IF(TRABUF(TGAMTYP) .NE. TPAS) THEN
+	        AMT = TRABUF(TVPAY) - TRABUF(TVOPPAY)
+	        KAMT = TRABUF(TVKPAY) - TRABUF(TVKOPPAY)
+              ELSE
+                CALL GET_PASSIVE_WIN_AMOUNT(TRABUF, AMT, KAMT, TOTTCK)
+              ENDIF
+	    ENDIF
+
+	ELSE IF(TRABUF(TTYP).EQ.TSPE)THEN
+	    AMT=0
+	    IF(TRABUF(TSFUN).LE.0 .OR. 
+     *        TRABUF(TSFUN)+TCRS.GT.MAXNDX4-1)THEN
+	      QNDX4 = TSPE
+	    ELSE
+	      QNDX4 = TRABUF(TSFUN) + TCRS
+	    ENDIF
+
+	ELSE IF(TRABUF(TTYP).EQ.TCMD)THEN
+	  AMT=0
+
+	ELSE IF(TRABUF(TTYP).EQ.TCRS)THEN
+	  AMT=0
+C
+C EURO MIL PROJECT - IGNORE EURO MIL TRANSACTIONS
+C
+        ELSE IF (TRABUF(TTYP) .EQ. TEUR) THEN
+           AMT = 0
+C
+C IGS PROJECT - IGNORE IGS TRANSACTIONS
+C
+        ELSE IF (TRABUF(TTYP) .EQ. TIGS) THEN
+           AMT = 0
+	ELSE
+	  WRITE(6,3001)BLK,OFF,TRABUF(TSER),'TTYP',TRABUF(TTYP)
+	  TOTERR=TOTERR+1
+	ENDIF
+
+C--------------------------------------------
+        TOT_CNT = 1
+C
+	IF (TRABUF(TTYP).EQ.TVAL.OR.TRABUF(TTYP).EQ.TRET) THEN
+           IF(TRABUF(TGAMTYP) .EQ. TPAS) TOT_CNT = TOTTCK
+
+           IF(TRABUF(TVPAY) .NE. 0 .OR. TRABUF(TGAMTYP) .EQ. TPAS) THEN
+ 	     NRMCNT(QNDX1,QNDX2,QNDX3,QNDX4) = NRMCNT(QNDX1,QNDX2,QNDX3,QNDX4)+TOT_CNT
+	     NRMAMT(QNDX1,QNDX2,QNDX3,QNDX4) = NRMAMT(QNDX1,QNDX2,QNDX3,QNDX4)+AMT
+           ENDIF
+C
+           IF(TRABUF(TVKPAY).NE.0 .AND. TRABUF(TGAMTYP) .NE. TPAS) THEN
+             NRMCNT(QNDX1,QNDX2,QNDXK3,QNDX4) = NRMCNT(QNDX1,QNDX2,QNDXK3,QNDX4)+TOT_CNT
+             NRMAMT(QNDX1,QNDX2,QNDXK3,QNDX4) = NRMAMT(QNDX1,QNDX2,QNDXK3,QNDX4)+KAMT
+           ENDIF
+C
+     	   IF (TRABUF(TTYP).EQ.TVAL.AND.TRABUF(TVTYPE).NE.VPTB) THEN    !financial report to check Vision
+	       IF (TRABUF(TVPAY).GT.0 .AND. TRABUF(TGAMTYP) .NE. TPAS) THEN
+	           FINANCE_CNT(QNDX1,QNDX2,QNDX3,QNDX4) = FINANCE_CNT(QNDX1,QNDX2,QNDX3,QNDX4)+TOT_CNT
+	           FINANCE_AMT(QNDX1,QNDX2,QNDX3,QNDX4) = FINANCE_AMT(QNDX1,QNDX2,QNDX3,QNDX4)+AMT
+               ELSE
+                   IF(TOTTCK .GT. 0) THEN
+                     FINANCE_CNT(QNDX1,QNDX2,QNDX3,QNDX4) = FINANCE_CNT(QNDX1,QNDX2,QNDX3,QNDX4)+TOTTCK
+                     FINANCE_AMT(QNDX1,QNDX2,QNDX3,QNDX4) = FINANCE_AMT(QNDX1,QNDX2,QNDX3,QNDX4)+AMT
+                   ENDIF
+	       ENDIF
+
+	       IF (TRABUF(TVKPAY) .NE. 0 .AND. TRABUF(TGAMTYP) .NE. TPAS) THEN !IF kicker played
+		 FINANCE_CNT(QNDX1,QNDX2,QNDXK3,QNDX4)=FINANCE_CNT(QNDX1,QNDX2,QNDXK3,QNDX4)+TOT_CNT
+		 FINANCE_AMT(QNDX1,QNDX2,QNDXK3,QNDX4)=FINANCE_AMT(QNDX1,QNDX2,QNDXK3,QNDX4)+KAMT
+	       ENDIF
+
+	   ENDIF
+
+	ELSE       ! WAGER and others
+	IF (TRABUF(TGAM).EQ.QNDXK3) THEN  !that is the jokeri game
+	    NRMCNT(QNDX1,QNDX2,QNDXK3,QNDX4)=NRMCNT(QNDX1,QNDX2,QNDXK3,QNDX4)+TOT_CNT
+	    NRMAMT(QNDX1,QNDX2,QNDXK3,QNDX4)=NRMAMT(QNDX1,QNDX2,QNDXK3,QNDX4)+AMT
+	ELSE 
+           IF(TRABUF(TTYP)   .EQ.TWAG .AND.
+     *        TRABUF(TGAMTYP).EQ.TPAS .AND.
+     *        TRABUF(TWEPOP) .NE.EPASSAL) GOTO 4000 !only add Passive "Sold" (exclude "Reserved" and "Released")
+
+	    NRMCNT(QNDX1,QNDX2,QNDX3,QNDX4) = NRMCNT(QNDX1,QNDX2,QNDX3,QNDX4)+TOT_CNT
+	    NRMAMT(QNDX1,QNDX2,QNDX3,QNDX4) = NRMAMT(QNDX1,QNDX2,QNDX3,QNDX4)+AMT
+	    IF (KAMT.NE.0) THEN !IF kicker played
+	      NRMCNT(QNDX1,QNDX2,QNDXK3,QNDX4)=NRMCNT(QNDX1,QNDX2,QNDXK3,QNDX4)+TOT_CNT
+	      NRMAMT(QNDX1,QNDX2,QNDXK3,QNDX4)=NRMAMT(QNDX1,QNDX2,QNDXK3,QNDX4)+KAMT
+	    ENDIF
+	ENDIF
+	ENDIF
+
+4000    CONTINUE
+
+C--------------------------------------------
+
+
+C	IF (TRABUF(TGAM).EQ.3) THEN
+C           KIK_COUNT = KIK_COUNT + 1
+C        ELSE
+C           IF ( (TRABUF(TWKAMT).NE.0) .AND.
+C     *          (TRABUF(TWKDUR).NE.0)       ) THEN
+C     		 LOTTO_DUR_COUNT=LOTTO_DUR_COUNT+1
+C     		 LOTTO_KIK_COUNT=LOTTO_KIK_COUNT+1
+C           ENDIF
+C	ENDIF
+
+	IF(TRABUF(TTYP).EQ.TWAG .AND.
+     *	  (TRABUF(TSTAT).EQ.GOOD .OR. TRABUF(TSTAT).EQ.VOID))THEN
+
+	  IF(TRABUF(TGAMTYP).EQ.TLTO)THEN
+C	    IF (TRABUF(TGAMIND).EQ.1) THEN  !LOTTO 1
+C               GMAX=39
+C            ELSE                            !VIKING
+C               GMAX=48
+C            ENDIF
+C
+C CHECK IF LOTTO GAME HAS BEEN LOADED IN MEMORY ( FOR LTOMAX )
+C
+C
+            IF(LTOSTS(TRABUF(TGAMIND)) .LT. GAMOPN) THEN
+              TYPE *, IAM()
+              TYPE *, IAM(), 'Lotto Game Information It Is Not In Memory'
+              TYPE *, IAM(), 'Please Load It, And Try Again ...'
+              TYPE *, IAM()
+              CALL GSTOP(GEXIT_FATAL)
+            ENDIF
+C
+C GET MAXIMUN NUMBER FOR DRAW IN LOTTO GAMES
+C
+            GMAX = LTOMAX(TRABUF(TGAMIND))
+
+	    CALL SCHKINT(TRABUF(TWNBET),TRABUF(TWNMRK),GMAX,TRABUF(TWBORD),ST)
+	    IF(ST.NE.0)THEN
+	      TYPE*,' SELECTION ERROR. TSER,GAMIND      : ',TRABUF(TSER),TRABUF(TGAMIND)
+	      TYPE*,'                . WNBET,WNMRK,GMAX : ',
+     *                TRABUF(TWNBET),TRABUF(TWNMRK),GMAX
+
+	      WRITE(6,3001)BLK,OFF,TRABUF(TSER),'SELECTION ERROR'
+	      TOTERR=TOTERR+1
+C
+	      WRITE(6,77701)(TRABUF(I),I=1,TWBORD-1)  !TWBORD=88
+77701	      FORMAT(X,'TRABUF= ',5I12,/,
+     *               16(X,'        ',5I12,/),
+     *               2 (X,'        ',5I12,/)
+     *              )
+
+	      WRITE(6,77702)(TRABUF(I),I=TWBORD,TWBEND)  !TWBORD=88
+77702	      FORMAT(X,'TRABUF= ',5(Z8,'  '),/,
+     *               5(X,'        ',5(Z8,'   '),/),
+     *               3(X,'        ',5(Z8,'   '),/)
+     *              )
+	    ENDIF
+	  ENDIF
+	ENDIF
+
+
+	GOTO 2000   !Read next record
+
+C************************************************************
+
+5000	CONTINUE
+	IF(ANYGUD .AND. INORDR .AND. CHKBLK)THEN
+	  IF(BLK.NE.BUF(2))THEN
+	    WRITE(6,2001)BLK,BUF(2)
+	    TOTERR=TOTERR+1
+2001	    FORMAT(X,'BLK ',I8,' HAS BLOCK # ',I8,' ** NO MORE CHECKS')
+	    CHKBLK=.FALSE.
+	  ENDIF
+	ENDIF
+	GO TO 1000  !Read next block
+
+
+C Come here when all done
+C -----------------------
+6000	CONTINUE
+
+	DO 6500 PASS=1,(MAXNDX1+4)/5
+	    POFF=(PASS-1)*5+1
+	    PMAX=MIN(POFF+4,MAXNDX1)
+
+	    CALL TITLE('ANALYSIS OF '//INPNAM,'ANLTMF  ',01,6,PAGE,
+     *	                DAYCDC)
+	    WRITE(6,6002)(NDX1NM(K),K=POFF,PMAX)
+6002	    FORMAT(//,X,T25,X,5A20)
+
+	    WRITE(6,6003)
+6003	    FORMAT(   X,T25,5('   COUNT','      AMOUNT'),/)
+
+	    DO 6240 NDX3=1,MAXGAM
+	    DO 6230 NDX2=1,MAXNDX2
+	    DO 6220 NDX4=1,MAXNDX4
+
+	       DO 6210 NDX1=POFF,PMAX
+	          IF(NRMCNT(NDX1,NDX2,NDX3,NDX4).NE.0)GO TO 6215
+6210	       CONTINUE
+	       GO TO 6220
+
+6215	       CONTINUE
+
+	       IF(NDX4.EQ.TVAL) THEN
+	                    UNIT = VALUNIT
+	       ELSE
+	                    UNIT = BETUNIT
+	       ENDIF
+
+               IF (NDX3 .EQ. MAXGAM+1) THEN
+                  WRITE(6,6101)NDX2NM(NDX2),'   ',NDX4NM(NDX4),
+     *	                       (NRMCNT(K,NDX2,NDX3,NDX4),
+     *	                       CMONY(NRMAMT(K,NDX2,NDX3,NDX4),12,
+     *                         UNIT),K=POFF,PMAX)
+               ELSE
+                  WRITE(6,6101)NDX2NM(NDX2),GSNAMES(NDX3),
+     *                         NDX4NM(NDX4),
+     *	                       (NRMCNT(K,NDX2,NDX3,NDX4),
+     *	                       CMONY(NRMAMT(K,NDX2,NDX3,NDX4),12,
+     *                         UNIT),K=POFF,PMAX)
+               END IF
+
+6101	       FORMAT(X,A,X,A,X,A,T25,5(I8,A12))
+
+6220	    CONTINUE
+6230	    CONTINUE
+6240	    CONTINUE
+6500	CONTINUE
+
+
+C Financial report (to check against Vision)
+C ------------------------------------------
+
+	DO 4450 PASS=1,(MAXNDX1+4)/5
+	    POFF=(PASS-1)*5+1
+	    PMAX=MIN(POFF+4,MAXNDX1)
+
+	    CALL TITLE('ANALYSIS OF '//INPNAM,'ANLTMF  ',01,6,PAGE,
+     *	                DAYCDC)
+	    WRITE(6,6002)(NDX1NM(K),K=POFF,PMAX)
+
+	    WRITE(6,6003)
+
+	    DO 4440 NDX3=1,MAXGAM
+	    DO 4430 NDX2=1,MAXNDX2
+	    DO 4420 NDX4=1,MAXNDX4
+	       DO 4410 NDX1=POFF,PMAX
+	          IF(FINANCE_CNT(NDX1,NDX2,NDX3,NDX4).NE.0)GO TO 4415
+4410	       CONTINUE
+	       GO TO 4420
+
+4415	       CONTINUE
+
+	       IF(NDX4.EQ.TVAL)THEN
+	          UNIT = VALUNIT
+	       ELSE
+	          UNIT = BETUNIT
+	       ENDIF
+
+               IF (NDX3 .EQ. MAXGAM+1) THEN
+                  WRITE(6,6101)NDX2NM(NDX2),'   ',NDX4NM(NDX4),
+     *	                       (FINANCE_CNT(K,NDX2,NDX3,NDX4),
+     *	                       CMONY(FINANCE_AMT(K,NDX2,NDX3,NDX4),12,
+     *                         UNIT),K=POFF,PMAX)
+               ELSE
+                  WRITE(6,6101)NDX2NM(NDX2),GSNAMES(NDX3),
+     *                         NDX4NM(NDX4),
+     *	                       (FINANCE_CNT(K,NDX2,NDX3,NDX4),
+     *	                       CMONY(FINANCE_AMT(K,NDX2,NDX3,NDX4),12,
+     *                         UNIT),K=POFF,PMAX)
+               END IF
+
+4420	    CONTINUE
+4430	    CONTINUE
+4440	    CONTINUE
+4450	CONTINUE
+
+	DO 3000 I = 1,MAXGAM
+           GIND = GNTTAB(GAMIDX, I)
+           GTYP = GNTTAB(GAMTYP, I)
+           IF(GIND .LE. 0 .OR. GIND .GT. MAXIND) GOTO 3000
+           IF(GTYP .LE. 0 .OR. GTYP .GT. MAXTYP) GOTO 3000
+	   WRITE(6,7071) GSNAMES(I),FRAC_CNT(I)
+C
+7071       FORMAT(1X,A,' : ',I10)
+C
+3000    CONTINUE
+
+	CALL USRCLOS1(1)
+	CALL USRCLOS1(6)
+
+C	COPIES = 0
+C	CALL SPOOL(XXREPNAM,COPIES,ST)
+C	TYPE *,'ANLTMF.REP HAS BEEN SPOOLED'
+
+	IF(TOTERR.NE.0)THEN
+	  TYPE *,BELL,BELL,BELL
+	  TYPE *,' '
+	  TYPE *,' ***************************************** '
+	  TYPE *,' '
+	  TYPE *,' **** ANOMALIES WERE FOUND ... SEE REPORT ****'
+	  TYPE *,' '
+	  TYPE *,BELL,BELL,BELL
+	ENDIF
+
+C	  TYPE*,IAM(),'LOTTO count,amount: ',LOTTO_CNT,LOTTO_AMT/20
+C	  TYPE*,IAM(),'VIKING count,amount: ',VIKING_CNT,VIKING_AMT/20
+C	  TYPE*,IAM(),'Kiker       count : ',KIK_COUNT
+C	  TYPE*,IAM(),'LOTTO Kiker count : ',LOTTO_KIK_COUNT
+C	  TYPE*,IAM(),'LOTTO Durat count : ',LOTTO_DUR_COUNT
+C	  TYPE*,IAM(),'SPEDEN      count : ',SPE_COUNT
+C	  TYPE*,IAM(),'VALID JOKER good  : ',VALID_JOKER_GOOD
+C	  TYPE*,IAM(),'VALID JOKER count : ',VALID_JOKER_COUNT
+
+	CALL GSTOP(GEXIT_SUCCESS)
+
+	END
+
+
+C ******************************************************************************
+C
+C     SUBROUTINE: GET_PASSIVE_WIN_AMOUNT
+C     AUTHOR    : J.H.R
+C     VERSION   : 01            DATE: 08 / 07 / 2002
+C
+C ******************************************************************************
+C
+C FUNCTION TO GET TOTAL TRANSACTION AMOUNT FOR PASSIVE GAMES
+C
+C=======OPTIONS /CHECK = NOOVERFLOW /EXT
+      SUBROUTINE GET_PASSIVE_WIN_AMOUNT(TRABUF, AMOUNT, KIK_AMOUNT, TOTTCK)
+      IMPLICIT NONE
+C
+C INCLUDES DEFINITION TO GET TOTAL TRANSACTION AMOUNT FOR PASSIVE GAMES
+C
+      INCLUDE 'INCLIB:GLOBAL.DEF'
+      INCLUDE 'INCLIB:DESTRA.DEF'
+C
+C PARAMETERS DEFINITION TO  GET TOTAL TRANSACTION AMOUNT FOR PASSIVE GAMES
+C
+      INTEGER * 4 AMOUNT           ! GAME WINNER AMOUNT
+      INTEGER * 4 KIK_AMOUNT       ! KIKER WINNER AMOUNT
+      INTEGER * 4 TOTTCK           ! TOTAL WINNER FRACTION FOR PASSIVE
+C
+C VARIABLES DEFINITION TO GET TOTAL TRANSACTION AMOUNT FOR PASSIVE GAMES
+C
+      INTEGER * 4 TCKS             ! NUMBER OF TICKETS COUNTER
+C
+C FUNCTION DEFINITION TO GET TOTAL TRANSACTION AMOUNT FOR PASSIVE GAMES
+C
+      INTEGER * 4 CHECK_PASSIVE_STATUS
+      INTEGER * 4 GET_PASSIVE_FRACTIONS
+C
+C INITIATE VARIABLES TO GET TOTAL TRANSACTION AMOUNT FOR PASSIVE GAMES
+C
+      AMOUNT = 0
+      KIK_AMOUNT = 0
+C
+C PASSIVE ALMOST IT HAVE ONE TICKET FOR REJECTED TRANSACTIONS
+C
+      TOTTCK = 1
+C
+C CHECK TRANSACTION STATUS ( IF NOT GOOD ONE THEN RETURN )
+C
+      IF(TRABUF(TTYP) .EQ. TVAL .AND. TRABUF(TSTAT) .NE. GOOD) RETURN
+      IF(TRABUF(TTYP) .EQ. TRET .AND. TRABUF(TSTAT) .NE. GOOD) RETURN
+      IF(TRABUF(TERR) .NE. NOER) THEN
+        TOTTCK = 0
+        RETURN
+      ENDIF
+C
+C FOR GOOD TRANSACTIONS WE HAVE TO CHECK IN DETAILS
+C
+      TOTTCK = 0
+C
+C LOOP TO CALCULATE TOTAL VALIDATION / CANCEL AMOUNT FOR PASSIVE GAME
+C
+      DO TCKS = 1, TRABUF(TPTCK)
+        IF(CHECK_PASSIVE_STATUS(TRABUF, TCKS)) THEN
+          AMOUNT = AMOUNT + TRABUF(TPPAY1 + OFFTRA * (TCKS - 1))
+          TOTTCK = TOTTCK + GET_PASSIVE_FRACTIONS(TRABUF, TCKS)
+        ENDIF
+      ENDDO
+C
+C IF TOTAL TICKET COUNTER IS ZERO, AMOUNT SHOULD BE ZERO
+C
+      IF(TOTTCK .LE. 0) AMOUNT = 0
+C
+C THIS IS THE END TO  GET TOTAL TRANSACTION AMOUNT FOR PASSIVE GAMES
+C
+      END
+
+
+C ******************************************************************************
+C
+C     SUBROUTINE: GET_PASSIVE_FRACTIONS
+C     AUTHOR    : J.H.R
+C     VERSION   : 01            DATE: 19 / 02 / 2001
+C
+C ******************************************************************************
+C
+C FUNCTION TO GET TOTAL NUMBER OF FRACTIONS FOR PASSIVE GAMES
+C
+C=======OPTIONS /CHECK = NOOVERFLOW /EXT
+      INTEGER * 4 FUNCTION GET_PASSIVE_FRACTIONS(TRABUF, TCKS)
+      IMPLICIT NONE
+C
+C INCLUDES DEFINITION TO GET TOTAL NUMBER OF FRACTIONS FOR PASSIVE GAMES
+C
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:SYSEXTRN.DEF'
+      INCLUDE 'INCLIB:GLOBAL.DEF'
+      INCLUDE 'INCLIB:DESTRA.DEF'
+      INCLUDE 'INCLIB:PASCOM.DEF'
+C
+C PARAMETERS DEFINITION TO GET TOTAL NUMBER OF FRACTIONS FOR PASSIVE GAMES
+C
+      INTEGER * 4 TCKS             ! NUMBER OF TICKETS COUNTER
+C
+C VARIABLES DEFINITION TO GET TOTAL NUMBER OF FRACTIONS FOR PASSIVE GAMES
+C
+       INTEGER * 4 GIND             ! GAME INDEX
+       INTEGER * 4 TOTFRCT          ! TOTAL NUMBER OF FRACTIONS
+       INTEGER * 4 MYEMIS           ! EMISION NUMBER TO SEARCH
+       INTEGER * 4 EMISIND          ! EMISION INDEX
+C
+       LOGICAL FOUND                ! FOUND EMISION NUMBER
+C
+C INITIATE VARIABLES TO GET TOTAL NUMBER OF FRACTIONS FOR PASSIVE GAMES
+C
+       TOTFRCT = 0
+       GIND = TRABUF(TGAMIND)
+       MYEMIS  = TRABUF(TPEMIS1 + OFFTRA * (TCKS - 1))
+       EMISIND = CURDRW
+       FOUND = .FALSE.
+C
+C IF TRANSACTION TYPE IS VALIDATION NUMBER OF FACTION IS ONE
+C
+       IF(TRABUF(TTYP) .EQ. TVAL) THEN
+         TOTFRCT = 1
+         GOTO 1000
+       ENDIF
+C
+C SEARCH MY EMISION NUMBER
+C
+      DOWHILE(EMISIND .LE. PAGEMI .AND. FOUND .EQ. .FALSE.)
+        IF(PASEMIS(EMISIND, GIND) .EQ. MYEMIS) THEN
+          FOUND = .TRUE.
+        ELSE
+          EMISIND = EMISIND + 1
+        ENDIF
+      ENDDO
+C
+C IF WE DON'T HAVE EMISION NUMBER GO END
+C
+      IF(FOUND .EQ. .FALSE.) THEN
+        TYPE *, IAM()
+        TYPE *, IAM(), 'Passive Game Information It Is Not In Memory'
+        TYPE *, IAM(), 'Please Load It, And Try Again ...'
+        TYPE *, IAM()
+        TYPE *, IAM(), 'Draw Number Not Found: ', MYEMIS
+        TYPE *, IAM(), 'Game Index           : ', GIND
+        TYPE *, IAM()
+        CALL GSTOP(GEXIT_FATAL)
+      ENDIF
+C
+C SET NUMBER OF FRACTIONS ( ALL TICKETS )
+C
+      IF(TRABUF(TPRETYP) .EQ. ALLTCK) THEN
+         TOTFRCT = PASNOFFRA(EMISIND, GIND)
+         IF(GIND .EQ. PSBPOP) TOTFRCT = TOTFRCT * 2
+         GOTO 1000
+      ENDIF
+C
+C SET NUMBER OF FRACTIONS ( BY FRACTION - EACH ONE )
+C
+      IF(TRABUF(TPRETYP) .EQ. BYFRAC) THEN
+        TOTFRCT = 1
+        GOTO 1000
+      ENDIF
+C
+C SET NUMBER OF FRACTIONS ( HALF TICKET )
+C
+      IF(TRABUF(TPRETYP) .EQ. HALFTCK) THEN
+        TOTFRCT = PASNOFFRA(EMISIND, GIND)
+        IF(GIND .EQ. PSBCLA) TOTFRCT = TOTFRCT / 2
+        GOTO 1000
+      ENDIF
+C
+C SET NUMBER OF FRACTIONS ( QUARTER TICKET )
+C
+      IF(TRABUF(TPRETYP) .EQ. QUARTCK) THEN
+        TOTFRCT = PASNOFFRA(EMISIND, GIND) / 4
+        GOTO 1000
+      ENDIF
+C
+C WRITE NUMBER OF FRACTIONS RETURN FUNCTION
+C
+1000   CONTINUE
+       GET_PASSIVE_FRACTIONS = TOTFRCT
+C
+C THIS IS THE END TO GET TOTAL NUMBER OF FRACTIONS FOR PASSIVE GAMES
+C
+      END
+
+
+C ******************************************************************************
+C
+C     SUBROUTINE: CHECK_PASSIVE_STATUS
+C     AUTHOR    : J.H.R
+C     VERSION   : 01            DATE: 16 / 02 / 2001
+C
+C ******************************************************************************
+C
+C FUNCTION TO CHECK IF VALIDATION STATUS IS OK OR NOT
+C
+C=======OPTIONS /CHECK = NOOVERFLOW /EXT
+      LOGICAL FUNCTION CHECK_PASSIVE_STATUS(TRABUF, TCKS)
+      IMPLICIT NONE
+C
+C INCLUDES DEFINITION TO CHECK IF VALIDATION STATUS IS OK OR NOT
+C
+      INCLUDE 'INCLIB:GLOBAL.DEF'
+      INCLUDE 'INCLIB:DESTRA.DEF'
+C
+C PRAMETERS DEFINITION TO CHECK IF VALIDATION STATUS IS OK OR NOT
+C
+      INTEGER * 4 TCKS             ! NUMBER OF TICKETS COUNTER
+C
+C VARIABLES DEFINITION TO TO CHECK IF VALIDATION STATUS IS OK OR NOT
+C
+      INTEGER * 4 WINSTS           ! WINNER STATUS
+C
+C GET VALIDATION STATUS
+C
+      WINSTS = TRABUF(TPSTS1 + OFFTRA * (TCKS - 1))
+C
+C CHECK IF TRANSACTION IT'S WAGER AND STATUS IS RETURND
+C
+      IF(TRABUF(TTYP) .EQ. TRET .AND. WINSTS .EQ. RETURND) THEN
+        CHECK_PASSIVE_STATUS = .TRUE.
+        RETURN
+      ENDIF
+C
+C CHECK IF TRANSACTION IT'S WAGER AND STATUS IS RETURND AFTHER DRAW
+C
+      IF(TRABUF(TTYP) .EQ. TRET .AND. WINSTS .EQ. RETAFDR) THEN
+        CHECK_PASSIVE_STATUS = .TRUE.
+        RETURN
+      ENDIF
+C
+C CHECK IF TRANSACTION IT'S VALIDATION AND STATUS IS VWINNER
+C
+      IF(TRABUF(TTYP) .EQ. TVAL .AND. WINSTS .EQ. VWINNER) THEN
+        CHECK_PASSIVE_STATUS = .TRUE.
+        RETURN
+      ENDIF
+C
+C TRANSACTION PASSIVE STATUS IS NOT OK
+C
+      CHECK_PASSIVE_STATUS = .FALSE.
+      RETURN
+C
+C THIS IS THE END TO CHECK IF VALIDATION STATUS IS OK OR NOT
+C
+      END
+

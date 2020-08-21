@@ -1,0 +1,34 @@
+C
+C V02 19-SEP-2005 HXK Increased GUI_MAX_ARGS from 40 to 50
+C V01 06-NOV-2000 UXN Initial release.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C GUI ARGUMENTS PASSED FROM GUI
+C
+	INTEGER*4 GUI_MAX_ARGS
+	PARAMETER(GUI_MAX_ARGS=50)
+
+	INTEGER*8 GUI_ARGVAL(GUI_MAX_ARGS)
+
+	INTEGER*4 GUI_ARGCHAR_MAXLEN
+	PARAMETER(GUI_ARGCHAR_MAXLEN = 256)
+
+	CHARACTER*(GUI_ARGCHAR_MAXLEN) GUI_ARGCHAR(GUI_MAX_ARGS)
+	BYTE      B_GUI_ARGCHAR(GUI_ARGCHAR_MAXLEN,GUI_MAX_ARGS)
+	EQUIVALENCE(GUI_ARGCHAR,B_GUI_ARGCHAR)
+
+	INTEGER*4    GUI_ARGLEN(GUI_MAX_ARGS) ! PARAMETER LENGTH
+
+	COMMON/GUI_ARGS/ GUI_ARGVAL, GUI_ARGLEN, GUI_ARGCHAR

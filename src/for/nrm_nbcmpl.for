@@ -1,0 +1,40 @@
+C
+C SUBROUTINE NBCMPL
+C $Log:   GXAFXT:[GOLS]NBCMPL.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:08:56   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:04:52   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_bitsubs.for **
+C
+C
+C
+C **** NBCMPL - COMPLEMENT A BIT COUNTING FROM LEFT IN INTEGER*4 ARRAY
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE NBCMPL(I4ARY, BITNUM)
+	IMPLICIT NONE
+C
+C
+	INTEGER*4   I4ARY(0:*)
+	INTEGER*4   BITNUM
+C
+	INTEGER*4   WRD
+	INTEGER*4   NDX
+C
+	LOGICAL BTEST
+C
+	WRD = ISHFT(BITNUM, -8)
+	NDX = IAND (BITNUM, '0000001F'X)
+	IF(BTEST(I4ARY(WRD),31-NDX))THEN
+	  I4ARY(WRD) = IBCLR(I4ARY(WRD), 31-NDX)
+	ELSE
+	  I4ARY(WRD) = IBSET(I4ARY(WRD), 31-NDX)
+	ENDIF
+	RETURN
+	END

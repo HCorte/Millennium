@@ -1,0 +1,800 @@
+C
+C PROGRAM STSYSTEM
+C
+C STSYSTEM.FOR
+C
+C V60 30-JAN-2014 SCML New Billing Platform (NBP)/SOUP Platform:
+C                      Inhibiting execution of GERPS2
+C V59 05-SEP-2013 SCML New Billing Platform (NBP):
+C                      Making GNINVALL call daily rather than only in
+C                      invoice days
+C V58 09-NOV-2012 FRP  Start each BALANS report when previous is completed
+C V57 13-DEC-2010 FJG  Lotto2 Batch: New GNINVALL invoice generation
+C V56 01-JAN-2010 FJG  ePassive
+C V55 25-JUN-2002 JHR  REMOVED WINMANUAL FROM SOME TASKS AND FBIGWIN, FCANWIN
+C V54 31-JUL-2001 JHR  INCLUDED BSAGTCTL - CONTROLO DO MOVIMENTO DOS AGENTES -
+C V53 27-APR-2001 ANG  Included UPDVPF
+C V52 02-APR-2001 ANG  Included GETOFSAL 
+C V51 28-FEB-2001 ANG  Excluded WINPAS. Now run manually
+C V50 23-JAN-2001 ANG  Added Winpas,Cshpas,Paspurge for Portugal  
+C V49 12-DEC-2000 EPH  Change invoice day from SUNDAY to SATURDAY 
+C V48 01-DEC-2000 UXN  TOTOGOLO ADDED.
+C V47 20-OCT-2000 UXN  Alpha baseline release. MCLOSE and GAMEMOD replaced with
+C                      SETCLOSE
+C V46 24-JUL-2000 UXN  START() replaced with NRUNTSK.
+C V45 11-APR-2000 UXN  STOPCOM initialized in INTMEM.
+C V44 08-DEC-1999 UXN  ICSLOG stopping added.
+C V43 11-NOV-1999 RXK  Call of MYMDIS added
+C V42 13-OCT-1999 RXK  Call of big and cancelled winners reports creation added.
+C V41 27-AUG-1999 RXK  FTRANS moved back to VLFTSK. 
+C V40 10-AUG-1999 UXN  FIX FOR INVOICE_DAY VARIABLE. On invoice day start
+C                      FTRANS after INVCLC.
+C V39 01-JUN-1999 UXN  WINXRF changed to WINXFR
+C V38 27-MAY-1999 RXK  If Multiwinsel then Check that VLFTSK has been started 
+C                      and BALANS does not start to early.
+C V37 29-APR-1999 RXK  Stopsys optimization.Cleaned up.
+C V36 01-APR-1999 UXN  Initialization added for UPDTSK_AUTO.
+C V35 27-FEB-1997 RXK  Added call to INVTOIPS (creation of invoice file for IPS)
+C V34 04-FEB-1997 RXK  Call of WINTAP commented out
+C V33 18-DEC-1996 HXK  Update from TEBE project (MXP,WXW,PXN,MJF)
+C V32 29-NOV-1996 WXW  Telebetting startup, changes MP/PXN/WXW.
+C                      TEBETM and TEBEBAL added to stopsys.
+C V31 15-DEC-1995 HXK  Added LODIMGS3
+C V30 15-SEP-1995 RXK  CSHREP/page of totals only instead of CSHREP1
+C V29 24-NOV-1994 HXK  Cleared up confusion of text referring to GAMEMOD
+C V28 02-SEP-1994 HXK  Merge of May,June RFSS batch 
+C V27 05-JUL-1994 HXK  RESCHEDULED SOME TASKS
+C V26 21-MAY-1994 HXK FTRANS for HTRANS, FBNKWN for HBNKWN, start CSHREP1 later.
+C V25 30-JAN-1994 HXK  speeded up stopsys for Finland.
+C V24 09-JAN-1994 HXK  MADE HTRANS RUNTSK, BROUGHT IN EXTRA CHECKS.
+C V23 08-JAN-1994 HXK  SPEED UP.
+C V22 18-NOV-1993 SXH  Starts FBIGWIN and FCANWIN
+C V21 30-OCT-1993 HXK  FIX BUG IN HTRANS CALL.
+C V20 17-OCT-1993 HXK  FIX FOR HBNKWN.
+C V19 13-OCT-1993 HXK  PUT IN PAUSES FOR HBNKWN AND HTRANS.
+C V18 08-OCT-1993 HXK  COOMENTED OUT FBIGWIN FOR NOW
+C V17 28-SEP-1993 HXK  Replaced VLFREP with FBIGWIN.
+C V16 28-SEP-1993 GXA  HTRANS needs to run after PAYUPD.
+C V15 23-SEP-1993 GXA  Added HTRANS after Invoicing.
+C V14 16-SEP-1993 SXH  Added Distribution reports
+C V13 02-SEP-1993 HXK  Removed superfluous report.
+C V12 26-AUG-1993 SXH  Moved PAYUPD to after HBNKWN
+C V11 25-AUG-1993 SXH  CHANGED LODIMGSS2 TO LODIMGS2
+C V10 25-AUG-1993 SXH  ADDDED CALL TO LODIMGSS2
+C V09 19-AUG-1993 SXH  Commented out CSHREP, added CSHREP1
+C V08 17-AUG-1993 SXH  Commented out GBASEWK, added CANREP
+C V07 17-AUG-1993 SXH  Added extra reports, commented-out ORDERRPT,
+C                      GBASEID and CLMREP
+C V06 13-JUL-1993 SXH  Released for Finland
+C V05 21-JAN-1993 DAB  Initial Release
+C                      Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                      DEC Baseline
+C V04 02-SEP-1992 WLM  SPLIT CSHREP FOR CASHED AND CLAIMED TICKETS CALL
+C V03 02-APR-1992 GCAN ADDED CHKGAM ROUTINE TO CHECK FOR GAMES TO PERFORME
+C                      WINSEL ON AND TO CHECK IF IT WAS PERFORMED.
+C		       ALSO DID SOME CLEANE UP WORK, INTRODUCED *WINTSK
+C                      FOR ALL GAMES TO STANDARDIZE WINSEL.
+C V02 12-NOV-1991 MTK  INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM STSYSTEM
+	IMPLICIT NONE
+C	
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+ 	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:LTOCOM.DEF'
+	INCLUDE 'INCLIB:SPTCOM.DEF'
+	INCLUDE 'INCLIB:TGLCOM.DEF'
+	INCLUDE 'INCLIB:NBRCOM.DEF'
+	INCLUDE 'INCLIB:KIKCOM.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:WINCOM.DEF'
+	INCLUDE 'INCLIB:STOPCOM.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+C
+	INTEGER*4   GAMBYT_CNT
+	PARAMETER   (GAMBYT_CNT=MAXGAM + (MAXSRW+1)*NUMTSL) !Nuber of Bytes.
+C
+	INTEGER*4   K, GIND, GTYP, GNUM, FLAG, ST
+	INTEGER*4   VALUE			    !Value to Check (Status).
+	INTEGER*4   BIT_CNT/0/			    !Set Bit Count in GAMMAP.
+	INTEGER*4   DUMMY			    !Dummy Variable.
+	INTEGER*4   ROW				    !Row Loop variable.
+	INTEGER*4   ROWOFF			    !Row Offset into GAMMAP.
+        INTEGER*4   STATUS
+        INTEGER*4   TSKSTS
+C
+	BYTE	    GAMMAP(GAMBYT_CNT)		    !Game/Row Status Bit aray.
+C	
+	LOGICAL WARN /.FALSE./
+	LOGICAL WINSEL /.FALSE./
+C	LOGICAL WINUPD /.FALSE./
+	LOGICAL RUNNING/.FALSE./
+C
+C
+C V02   TASK NAME OF THE 'LODIMG' - TO LOCK PAGES IN MEMORY
+C
+        REAL*8	      LODIMG_TSK
+	CHARACTER*8   LODIMG_TSK_CHAR
+	EQUIVALENCE  (LODIMG_TSK_CHAR,LODIMG_TSK)
+        REAL*8	      LODIMG_TSK2
+	CHARACTER*8   LODIMG_TSK_CHAR2
+	EQUIVALENCE  (LODIMG_TSK_CHAR2,LODIMG_TSK2)
+        REAL*8	      LODIMG_TSK3
+	CHARACTER*8   LODIMG_TSK_CHAR3
+	EQUIVALENCE  (LODIMG_TSK_CHAR3,LODIMG_TSK3)
+	INTEGER*4     WAIT_CNT
+	INTEGER*2     DATE(LDATE_LEN)
+C
+        DATA LODIMG_TSK_CHAR/'LODIMGSS'/         ! V02
+        DATA LODIMG_TSK_CHAR2/'LODIMGS2'/  
+        DATA LODIMG_TSK_CHAR3/'LODIMGS3'/  
+C
+	CALL COPYRITE
+	CALL SNIF_AND_WRKSET
+C
+C
+	TYPE *,IAM(),'You have attempted to run STOPSYS.'
+	TYPE *,IAM(),'This program will perform end-of-day shutdown'
+	TYPE *,IAM(),'of the game.  If you do not intend for this to'
+	TYPE *,IAM(),'happen, you may abort now without any damage.'
+C
+	CALL PRMYESNO('Are you sure you want STOPSYS [Y/N]? ', FLAG)
+	IF(FLAG.NE.1) CALL GSTOP(GEXIT_OPABORT)
+C
+C CHECK FOR DAYSTS ( IF VALUE IT IS KILL SYSTEM ASK FOR NORMAL STOPSYS )
+C
+        IF(DAYSTS .EQ. DSKILL) THEN
+	  TYPE *, IAM()
+	  TYPE *, IAM(), 'You Have Run KillSys Procedure Before Start StopSys'
+          TYPE *, IAM(), 'This Operation It Is Not Allowed In StopSys Procedure'
+          TYPE *, IAM(), 'Please, ReStart With Runsys Procedure And When Finish'
+	  TYPE *, IAM(), 'Start StopSys Procedure'
+	  TYPE *, IAM()
+          CALL GSTOP(GEXIT_FATAL) 
+	ENDIF
+C
+C CHECK IF ANY GAMES SHOULD HAVE BEEN CLOSED
+C
+	VALUE = GAMBFD
+	WRITE(5,908) IAM()
+	CALL CHKGAM(2,GAMMAP,VALUE)		!Check GAMSTS for Closed.
+	CALL BITCNT(GAMMAP,GAMBYT_CNT,BIT_CNT)	!Check if any are set.
+	IF(BIT_CNT.NE.0) THEN
+	   WARN = .TRUE.
+	   WRITE(5,909) IAM()
+	   DO 100 GNUM = 1,MAXGAM
+	      GTYP = GNTTAB(GAMTYP,GNUM)
+	      GIND = GNTTAB(GAMIDX,GNUM)
+	      IF(GTYP.LT.1.OR.GTYP.GT.MAXTYP) GOTO 100
+	      IF(GIND.LT.1.OR.GIND.GT.MAXIND) GOTO 100
+	      IF(TSTBIT_BSTRNG(GAMMAP,GNUM)) 
+     *		 WRITE(5,910) IAM(),(GLNAMES(K,GNUM),K=1,4)
+C
+	      IF(GTYP.EQ.TTSL) THEN		!Check all TOTO SELECT Rows.
+		 DO 110 ROW = 1,MAXSRW
+		    ROWOFF = MAXGAM + (GIND-1)*MAXSRW + ROW
+		    IF(TSTBIT_BSTRNG(GAMMAP,ROWOFF)) 
+     *		       WRITE(5,911) IAM(),(GLNAMES(K,GNUM),K=1,4),ROW
+110		 CONTINUE
+	      ENDIF
+C
+100	   CONTINUE
+	ENDIF
+C
+	IF(WARN) THEN
+          TYPE*,IAM(),' One or more games should have been closed today! '
+          TYPE*,IAM(),' You must run SETCLOSE on the Primary System and then '
+          TYPE*,IAM(),' run STOPSYS again after the games have been closed.'
+	  CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+C
+C V02   START LODIMG IF NEEDED
+C
+        IF (P(LOCK_PAGES_MEM) .NE. NOLOCK_PAGES_MEM_VALUE) THEN
+            CALL NRUNTSK(LODIMG_TSK)
+            CALL NRUNTSK(LODIMG_TSK2)
+            CALL NRUNTSK(LODIMG_TSK3)
+        ENDIF
+
+C
+C LOAD AND START GETOFSAL PROGRAM ( DAYEND TASK WAIT UNTIL THIS TASK IS FINISH )
+C
+	WRITE(5,901) IAM(), 'GETOFSAL'
+	CALL NRUNTSK(8HGETOFSAL)
+C
+C LOAD AND START DAYEND PROGRAM
+C
+	WRITE(5,901) IAM(), 'DAYEND  '
+	CALL NRUNTSK(8HDAYEND  )
+600     CONTINUE
+        IF(DAYSTS.NE.DSCLOS) THEN
+          CALL XWAIT(2,2,STATUS)
+          GOTO 600
+        ENDIF
+        CALL XWAIT(30,2,STATUS)
+C
+C RUN SAVDRW PROGRAM
+C
+        WRITE(5,901) IAM(), 'SAVDRW  '
+        CALL NRUNTSK(8HSAVDRW  )
+C
+C MAKE SURE SAVDRW IS DONE
+C
+710     CONTINUE
+        CALL XWAIT(2,2,STATUS)
+        CALL STTSK(8HSAVDRW  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) THEN
+           GOTO 710
+        ENDIF
+C
+C SCAN FOR POSSIBLE RETRIES
+C
+	CALL NRUNTSK(8HSCANRETR)
+C
+C SET P(LOGSTP) TO STOP LOGGER,REPCAN,TAPLOG,TIMER
+C
+	P(LOGSTP) = 1
+	CALL RELSE(TSKNAM(RPC),ST)
+	CALL RELSE(TSKNAM(TIM),ST)
+	CALL RELSE(TSKNAM(TAP),ST)
+	CALL TSKABORT(8HLOGGER  ,ST)
+C
+C	ICSLOG_GLOB.PRODSTATE = 2 ! shutdown ICSLOG
+C
+C LOAD AND START TMF DUMP PROGRAM
+C
+C        WRITE(5,901) IAM(), 'TMFFTP  '
+C        CALL NRUNTSK(8HTMFFTP  )
+C
+C MAKE SURE DAYEND IS DONE
+C
+720     CONTINUE
+        CALL XWAIT(2,2,STATUS)
+        CALL STTSK(8HDAYEND  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) THEN
+           GOTO 720
+        ENDIF
+C
+C TMFREP PROGRAM (READS ASF FOR GUTS INFORMATION !!!)
+C
+	WRITE(5,901) IAM(), 'TMFREPS '
+	CALL NRUNTSK(8HTMFREP  )
+C
+C CHECK IF THERE IS A WINSEL TO BE RUN - IF SO, TELL THE
+C OPERATOR THAT NOW IS THE TIME TO DO IT.
+C
+	WINSEL = .FALSE.
+	BIT_CNT = 0
+	WRITE(5,912) IAM()
+	CALL CHKGAM(1,GAMMAP,DUMMY)		!Check if Winsels.
+	CALL BITCNT(GAMMAP,GAMBYT_CNT,BIT_CNT)	!Count all Set Bits.
+	IF(BIT_CNT.NE.0) THEN
+	   WINSEL = .TRUE.
+	   WRITE(5,913) IAM()
+	   DO 200 GNUM = 1,MAXGAM
+	      GTYP = GNTTAB(GAMTYP,GNUM)
+	      GIND = GNTTAB(GAMIDX,GNUM)
+	      IF(GTYP.LT.1.OR.GTYP.GT.MAXTYP) GOTO 200
+	      IF(GIND.LT.1.OR.GIND.GT.MAXIND) GOTO 200
+	      IF(TSTBIT_BSTRNG(GAMMAP,GNUM)) 
+     *		 WRITE(5,910) IAM(),(GLNAMES(K,GNUM),K=1,4)
+C
+	      IF(GTYP.EQ.TTSL) THEN		!Check all TOTO SELECT Rows.
+		 DO 210 ROW = 1,MAXSRW
+		    ROWOFF = MAXGAM + (GIND-1)*MAXSRW + ROW
+		    IF(TSTBIT_BSTRNG(GAMMAP,ROWOFF)) 
+     *		       WRITE(5,911) IAM(),(GLNAMES(K,GNUM),K=1,4),ROW
+210		 CONTINUE
+	      ENDIF
+C
+200	   CONTINUE
+	ENDIF
+
+	DATE(VCDC) = DAYCDC
+	CALL LCDATE(DATE)
+        INVOICE_DAY = .FALSE.
+        IF(DATE(VDOW) .EQ. SATURDAY) INVOICE_DAY = .TRUE.
+C
+C IF ANY WINSELS, TELL OP TO RUN.
+C IF NO, ASKK FOR POSTPONED ONES.
+C
+	WRITE(5,9141) IAM(), IAM(), IAM(), IAM()
+	CALL FASTSET(0,LTDELDR,NUMLTO)
+	CALL FASTSET(0,SPDELDR,NUMSPT)
+	CALL FASTSET(0,TGDELDR,NUMTGL)
+C
+C RUN VLFTSK FOR WINSELS, UPDTSK, SHARCAL, PURGES, ETC.
+C
+        CALL NRUNTSK(8HVLFTSK  )
+
+	CALL GPAUSE
+C
+C RUN TCFSUM REPORT
+C
+        IF(STOPMOD.EQ.WINMANUAL) THEN
+	   WRITE(5,901) IAM(),'TCFSUM  '
+	   CALL NRUNTSK(8HTCFSUM  )
+	   WRITE(5,907) IAM()
+        ENDIF
+C
+C MAKE SURE TMFREP IS DONE (IT UPDATES GUTS INFO IN ASF !!!!)
+C
+	WAIT_CNT = 0
+230     CONTINUE
+        CALL XWAIT(2,2,STATUS)
+        CALL STTSK(8HTMFREP  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) THEN
+	   IF(MOD(WAIT_CNT,30).EQ.0)
+     *        TYPE*,IAM(),'WAITING FOR TMFREP TO BE COMPLETED.....'
+	   WAIT_CNT = WAIT_CNT + 1
+           GOTO 230
+        ENDIF
+C
+C ANLTPF PROGRAM
+C
+	WRITE(5,901) IAM(), 'ANLTPF  '
+	CALL RUNTSK(8HANLTPF  )
+C
+C ANLVPF PROGRAM
+C
+	WRITE(5,901) IAM(), 'ANLVPF  '
+	CALL RUNTSK(8HANLVPF  )        
+C
+C UPDATE PASSIVE TICKET RETURNS AFTER DRAW
+C
+	WRITE(5,901) IAM(),'UPDVPF  '
+	CALL NRUNTSK(8HUPDVPF  )
+C
+C WE CAN NOT CONTINUE UNTIL UPDVPF IS FINISHED, BECAUSE THIS TASK CHANGE
+C STATUS FOR TICKETS RETURNED WHEN DRAW IS CLOSE FROM UNCASH TO 
+C CANCEL WINNER, AND SOME OTHER TASK USE THIS INFORMATION
+C
+        WAIT_CNT = 0
+240     CONTINUE
+        CALL XWAIT(2, 2, STATUS)
+        CALL STTSK(8HUPDVPF  ,TSKSTS, STATUS)
+        IF (STATUS .NE. 4) THEN
+          IF(MOD(WAIT_CNT, 30) .EQ. 0) THEN
+            TYPE *, IAM(), 'WAITING FOR UPDVPF TASK TO BE COMPLETED ...'
+          ENDIF
+          WAIT_CNT = WAIT_CNT + 1
+          GOTO 240
+        ENDIF
+C
+C INVOICE PROCESSING 
+C	
+	IF(INVOICE_DAY) THEN    
+	  WRITE(5,919) IAM(),(DATE(K),K=7,13)
+          WRITE(5,901) IAM(), 'INVCLC  '
+          CALL NRUNTSK(8HINVCLC  )
+	ELSE
+	  WRITE(5,920) IAM(),(DATE(K),K=7,13)
+	ENDIF
+C	
+C CHECK FROM GAME FILES IF ALL WINSELS WERE DONE. IF NOT, TELL
+C OPERATOR TO AND ASK IF HE/SHE WANTS TO CONTINUE WITH STOPSYS.
+C - IF WINSEL WAS NOT RUN ON SPORTS CHECK TO SE IF IT WAS POSTPONED.
+C
+	WRITE(5,915) IAM()
+	VALUE = GAMENV
+	BIT_CNT = 0
+	WARN = .FALSE.
+	CALL CHKGAM(3,GAMMAP,VALUE)		!Check if run.
+	CALL BITCNT(GAMMAP,GAMBYT_CNT,BIT_CNT)
+	IF(BIT_CNT.NE.0) THEN
+	   WARN = .TRUE.
+	   DO 300 GNUM = 1,MAXGAM
+	      GTYP = GNTTAB(GAMTYP,GNUM)
+	      GIND = GNTTAB(GAMIDX,GNUM)
+	      IF(GTYP.LT.1.OR.GTYP.GT.MAXTYP) GOTO 300
+	      IF(GIND.LT.1.OR.GIND.GT.MAXIND) GOTO 300
+	      IF((GTYP.EQ.TSPT.AND.SPDELAY(GIND).EQ.2).OR.
+     *	         (GTYP.EQ.TLTO.AND.LTDELAY(GIND).EQ.2).OR.
+     *           (GTYP.EQ.TTGL.AND.TGDELAY(GIND).EQ.2)) THEN
+		 WARN = .FALSE.
+		 GOTO 300
+	      ENDIF
+C	
+	      IF(WARN) THEN
+		 WRITE(5,913) IAM()
+		 WARN = .FALSE.
+	      ENDIF
+C
+	      IF(TSTBIT_BSTRNG(GAMMAP,GNUM)) 
+     *		 WRITE(5,910) IAM(),(GLNAMES(K,GNUM),K=1,4)
+C
+	      IF(GTYP.EQ.TTSL) THEN		!Check all TOTO SELECT Rows.
+		 DO 310 ROW = 1,MAXSRW
+		    ROWOFF = MAXGAM + (GIND-1)*MAXSRW + ROW
+		    IF(TSTBIT_BSTRNG(GAMMAP,ROWOFF)) 
+     *		       WRITE(5,911) IAM(),(GLNAMES(K,GNUM),K=1,4),ROW
+310		 CONTINUE
+	      ENDIF
+C
+300	   CONTINUE
+C
+	   CALL PRMYESNO('Do you want to continue with STSYSTEM (Y/N) ',
+     *			 FLAG)
+	   IF(FLAG.NE.1) THEN
+	      WRITE(5,914) IAM(),IAM()
+	      CALL FASTSET(0,LTDELDR,NUMLTO)
+	      CALL FASTSET(0,SPDELDR,NUMSPT)
+	      CALL FASTSET(0,TGDELDR,NUMTGL)
+	      CALL GPAUSE
+	   ENDIF
+C	   
+	ENDIF
+C
+C STOPSYS PHASE 2 (REPORT GENERATION)
+C
+C
+C MAKE SURE INVCLC TASK IS DONE IF INVOICE NIGHT
+C
+        IF(INVOICE_DAY) THEN
+770        CONTINUE
+           CALL XWAIT(2,2,STATUS)
+           CALL STTSK(8HINVCLC  ,TSKSTS,STATUS)
+           IF (STATUS.NE.4) THEN
+              GOTO 770
+           ENDIF
+        ENDIF
+C
+C WE CAN NOT CONTINUE UNTIL PRGTSK IS FINISHED, BECAUSE THIS PURGE INFORMATION
+C IS USED FOR SOME REPORTS LIKE LIABLE REPORT. PRGTSK TASK IT'S STARTED ON
+C VLFTSK TASK ( IF VLF TASK IS NOT ENDED PRGTSK IS NOT STARTED )
+C
+        WAIT_CNT = 0
+260     CONTINUE
+        RUNNING = .FALSE.
+        CALL XWAIT(2, 2, STATUS)
+        CALL STTSK(8HPRGTSK  ,TSKSTS, STATUS)
+        IF(STATUS .NE. 4) RUNNING = .TRUE.
+        CALL STTSK(8HVLFTSK  ,TSKSTS, STATUS)
+        IF(STATUS .NE. 4) RUNNING = .TRUE.
+        IF (RUNNING .EQ. .TRUE.) THEN
+          IF(MOD(WAIT_CNT, 30) .EQ. 0) THEN
+            TYPE *, IAM(), 'WAITING FOR PRGTSK TASK TO BE COMPLETED ...'
+          ENDIF
+          WAIT_CNT = WAIT_CNT + 1
+          GOTO 260
+        ENDIF
+
+C----+------------------------------------------------------------------
+C V60| New Billing Platform (NBP)/SOUP Platform:
+C    |     Inhibiting execution of GERPS2
+C----+------------------------------------------------------------------
+CC
+CC SEND PS2 BANK FILES
+CC
+C        WRITE(5,901) IAM(),'GERPS2  '
+C        CALL NRUNTSK(8HGERPS2  )
+C----+------------------------------------------------------------------
+C V60| New Billing Platform (NBP)/SOUP Platform:
+C    |     Inhibiting execution of GERPS2
+C----+------------------------------------------------------------------
+C
+C START PASSIVE TASK FOR SAP
+C
+	WRITE(5,901) IAM(),'WDRSAP  '
+	CALL NRUNTSK(8HWDRSAP  )
+	WRITE(5,901) IAM(),'WPASAP  '
+	CALL NRUNTSK(8HWPASAP  )
+C
+C Start ASFREP 
+C
+	WRITE(5,901) IAM(),'ASFREP  '
+	CALL NRUNTSK(8HASFREP  )
+
+C
+C RUN PAYUPD TASK 
+C ( USE STOPMOD .EQ. WINMANUAL IF PAYUPD TASK IS STARTED IN VLFTSK )
+C
+	WRITE(5,901) IAM(), 'PAYUPD  '
+	CALL RUNTSK(8HPAYUPD  )
+C
+C RUN CSHREP1 REPORT (DIRECTLY PORTED FROM FINLAND)
+C ( USE STOPMOD .EQ. WINMANUAL IF CSHREP TASK IS STARTED IN VLFTSK )
+C
+        !Wait first for completion of ASFREP (since it writes in BALANS)
+774     CONTINUE
+        CALL XWAIT(2,2,STATUS)
+        CALL STTSK(8HASFREP  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) THEN
+           GOTO 774
+        ENDIF
+C
+        WRITE(5,901) IAM(), 'CSHREP  '
+        CALL NRUNTSK(8HCSHREP  )
+C
+C RUN LIABLE REPORT
+C ( USE STOPMOD .EQ. WINMANUAL IF LIABLE TASK IS STARTED IN VLFTSK )
+C
+        !Wait first for completion of CSHREP (since it writes in BALANS)
+775     CONTINUE
+        CALL XWAIT(2,2,STATUS)
+        CALL STTSK(8HCSHREP  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) THEN
+           GOTO 775
+        ENDIF
+C
+	WRITE(5,901) IAM(), 'LIABLE  '
+	CALL NRUNTSK(8HLIABLE  )
+C
+C RUN PASPURGE PROGRAM ( WE CAN NOT CONTINUE UNTIL PASPURGE IS FINISHED,
+C BECAUSE CSHPAS REPORTS WRITE TOTAL PURGED AMOUNT, SO THAT PASPURGE SHOULD BE
+C FINISHED TO WRITE THIS INFORMATION
+C
+        WRITE(5,901) IAM(), 'PASPURGE'
+        CALL NRUNTSK(8HPASPURGE)
+C
+C WAIT UNTIL PASPURGE IS FINISHED
+C
+        WAIT_CNT = 0
+250     CONTINUE
+        CALL XWAIT(2, 2, STATUS)
+        CALL STTSK(8HPASPURGE, TSKSTS, STATUS)
+        IF (STATUS .NE. 4) THEN
+          IF(MOD(WAIT_CNT, 30) .EQ. 0) THEN
+            TYPE *, IAM(), 'WAITING FOR PASPURGE TASK TO BE COMPLETED ...'
+          ENDIF
+          WAIT_CNT = WAIT_CNT + 1
+          GOTO 250
+        ENDIF
+C
+C RUN CSHPAS PROGRAM
+C
+        !Wait first for completion of LIABLE (since it writes in BALANS)
+776     CONTINUE
+        CALL XWAIT(2,2,STATUS)
+        CALL STTSK(8HLIABLE  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) THEN
+           GOTO 776
+        ENDIF
+C
+        WRITE(5,901) IAM(), 'CSHPAS  '
+        CALL NRUNTSK(8HCSHPAS  )
+C
+C RUN GENPSORC PROGRAM
+C
+        WRITE(5,901) IAM(), 'GENPSORC'
+        CALL NRUNTSK(8HGENPSORC)
+C
+C IF ANY WINSEL TODAY THEN RUN BIGWIN & FCANWIN REPORTS 
+C ( DO NOT IMPLEMENTED FOR PORTUGAL PROJECT )
+C
+C       IF(STOPMOD.EQ.WINMANUAL.AND.WINSEL) THEN
+C          WRITE(5,901) IAM(),'FBIGWIN '
+C          CALL NRUNTSK(8HFBIGWIN )
+C
+C          WRITE(5,901) IAM(),'FCANWIN '
+C          CALL NRUNTSK(8HFCANWIN )
+C       ENDIF
+C
+C RUN GAMTOT REPORT
+C
+        !Wait first for completion of CSHPAS (since it writes in BALANS)
+777     CONTINUE
+        CALL XWAIT(2,2,STATUS)
+        CALL STTSK(8HCSHPAS  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) THEN
+           GOTO 777
+        ENDIF
+C
+	WRITE(5,901) IAM(), 'GAMTOT  '
+	CALL NRUNTSK(8HGAMTOT  )
+C
+C RUN SYSTOT REPORT
+C
+        !Wait first for completion of GAMTOT (since it writes in BALANS)
+778     CONTINUE
+        CALL XWAIT(2,2,STATUS)
+        CALL STTSK(8HGAMTOT  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) THEN
+           GOTO 778
+        ENDIF
+C
+	WRITE(5,901) IAM(), 'SYSTOT  '
+	CALL NRUNTSK(8HSYSTOT  )
+C
+C DISTRIBUTION REPORTS
+C
+        WRITE(5,901) IAM(), 'LTODIS  '
+        CALL NRUNTSK(8HLTODIS  )
+
+        WRITE(5,901) IAM(), 'SPTDIS  '
+        CALL NRUNTSK(8HSPTDIS  )
+
+779     CONTINUE
+C
+C WAIT FOR COMPLETION OF TASKS NEEDED FOR BALANS
+C
+780     CONTINUE
+	RUNNING = .FALSE.
+        CALL XWAIT(2,2,STATUS)
+C
+        CALL STTSK(8HLIABLE  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+        CALL STTSK(8HASFREP  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+        CALL STTSK(8HGAMTOT  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+        CALL STTSK(8HSYSTOT  ,TSKSTS, STATUS)
+        IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+        CALL STTSK(8HCSHREP  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+        CALL STTSK(8HCSHPAS  , TSKSTS, STATUS)
+        IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+	IF(RUNNING) GOTO 780
+C
+C BALANS REPORT
+C
+800     CONTINUE   
+        IF(STOPMOD.EQ.WINMULTI.AND.VLFTSKSTS.LT.REDBAL) THEN
+           TYPE*,IAM(),' Waiting for VLFTSKs permission to continue with ',
+     *                 'BALANS'
+           CALL XWAIT(30,2,STATUS)
+           GOTO 800
+        ENDIF
+
+	WRITE(5,901) IAM(), 'BALANS  '
+	CALL RUNTSK(8HBALANS  )
+C
+C RUN BSAGTCTL - CONTROLO DO MOVIMENTO DOS AGENTES -
+C
+!       WRITE(5, 901) IAM(), 'BSAGTCTL'
+!       CALL NRUNTSK(8HBSAGTCTL)
+C
+C WAIT FOR COMPLETION OF ALL REMAINING TASKS
+C
+820     CONTINUE
+	RUNNING = .FALSE.
+        CALL XWAIT(2,2,STATUS)
+
+C
+        CALL STTSK(8HSCANRETR,TSKSTS,STATUS)
+        IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+        CALL STTSK(8HLTODIS  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+        CALL STTSK(8HSPTDIS  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+C       IF(STOPMOD.EQ.WINMANUAL.AND.WINSEL) THEN
+C          CALL STTSK(8HFBIGWIN ,TSKSTS,STATUS)
+C          IF (STATUS.NE.4) RUNNING = .TRUE.
+C          CALL STTSK(8HFCANWIN ,TSKSTS,STATUS)
+C          IF (STATUS.NE.4) RUNNING = .TRUE.
+C       ENDIF
+C
+        CALL STTSK(8HPAYUPD  ,TSKSTS,STATUS)
+        IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+        CALL STTSK(8HGENPSORC,TSKSTS, STATUS)
+        IF (STATUS .NE. 4) RUNNING = .TRUE.
+C
+        CALL STTSK(8HWDRSAP  ,TSKSTS, STATUS)
+        IF (STATUS .NE. 4) RUNNING = .TRUE.
+C
+!       CALL STTSK(8HBSAGTCTL,TSKSTS, STATUS)
+!       IF (STATUS.NE.4) RUNNING = .TRUE.
+C
+        CALL STTSK(8HWPASAP  ,TSKSTS, STATUS)
+        IF (STATUS .NE. 4) RUNNING = .TRUE.
+
+C----+------------------------------------------------------------------
+C V60| New Billing Platform (NBP)/SOUP Platform:
+C    |     Inhibiting execution of GERPS2
+C----+------------------------------------------------------------------
+CC
+C        CALL STTSK(8HGERPS2  ,TSKSTS, STATUS)
+C        IF (STATUS .NE. 4) RUNNING = .TRUE.
+C----+------------------------------------------------------------------
+C V60| New Billing Platform (NBP)/SOUP Platform:
+C    |     Inhibiting execution of GERPS2
+C----+------------------------------------------------------------------
+
+C
+C CHECK IF ALL TASK ARE FINISHED
+C
+	IF(RUNNING) GOTO 820
+C
+C RUN GSALES LOADERS ( AT THE END ALL CPU TIME FOR GSALES )
+C
+        WRITE(5, 901) IAM(), 'GSALTSK '
+        CALL NRUNTSK(8HGSALTSK )
+C
+C CHECK IF GSALES LOARDES ARE FINISHED ( WAIT UNTIL FINISH )
+C
+1000    CONTINUE
+        RUNNING = .FALSE.
+        CALL XWAIT(2, 2, STATUS)
+        CALL STTSK(8HGSALTSK  ,TSKSTS, STATUS)
+        IF (STATUS .NE. 4) RUNNING = .TRUE.
+C
+C MAKE SURE THAT VLFTSK IS FINISH ( WAIT UNTIL FINISH )
+C
+        CALL STTSK(8HVLFTSK  ,TSKSTS, STATUS)
+        IF (STATUS .NE. 4) RUNNING = .TRUE.
+        IF(RUNNING) GOTO 1000
+C
+C NEW BIG INVOICE INTERFACE FILE
+C
+
+C-----------------------------------------------------------------------
+C V59 - REMOVING INVOICE_DAY VALIDATION
+C-----------------------------------------------------------------------
+C        IF(INVOICE_DAY) THEN
+          WRITE(5,901) IAM(), 'GNINVALL'
+          CALL RUNTSK(8HGNINVALL)            
+C        ENDIF                
+C-----------------------------------------------------------------------
+C V59 - REMOVING INVOICE_DAY VALIDATION
+C-----------------------------------------------------------------------
+
+C
+C FINISH STSYSTEM
+C
+10000	CONTINUE
+
+        IF(STOPMOD.EQ.WINMULTI) THEN
+          CALL STTSK(8HVLFTSK  ,TSKSTS,STATUS)
+          IF (STATUS.NE.4) THEN
+              TYPE*,IAM(),' STSYSTEM finished'             
+	      CALL GSTOP(GEXIT_SUCCESS)
+          ENDIF
+        ENDIF 
+        STOPMOD = WINMANUAL
+	TYPE*,IAM(),' Stopsys complete - Perform file backups'
+	CALL GSTOP(GEXIT_SUCCESS)
+C
+900     FORMAT(1X,A,' Mount drawing packs and continue WINTSK ')
+901     FORMAT(1X,A,' Begining execution of ',A8)
+907     FORMAT(1X,A,' Carryover file merge complete')
+908	FORMAT(1X,A,' Verifying Game Closing')
+909	FORMAT(1X,A,' The following games should be closed before',
+     *		    ' Stopsys is run: ',/)
+910	FORMAT(1X,A,10X,4A4)
+911	FORMAT(1X,A,10X,4A4,' Row> ',I2)
+912	FORMAT(1X,A,' Checking for Winner Selections to be run')
+913	FORMAT(1X,A,' There are WINSELS to be run on the',
+     *		    ' following games: ',/)
+914     FORMAT(1X,A,' Clearing postponed draw section in WINCOM',/,
+     *         1X,A,' Perform Results and Winner Selection Routines',
+     *              ' and continue STSYSTEM')
+9141	FORMAT(1X, A,' Clearing Postponed Draw Section In WINCOM  ',//,
+     *         1X, A,' Starting VlfTsk Procedures, Please Enter   ',/, 
+     *         1X, A,' StSystem CONT, When An Appropriate Message ',/,
+     *         1X, A,' Apeears In Console ....                    ')
+915	FORMAT(1X,A,' Verifying that Winner Selections have been run')
+916	FORMAT(1X,A,' Perform UPDTSK, continue STSYSTEM when done')
+917     FORMAT(1X,A,' Continue STSYSTEM if FBNKWN has been completed')
+918     FORMAT(1X,A,' Continue STSYSTEM if FTRANS has been completed')
+919	FORMAT(1X,A,'Today is ',7A2,', invoices will be run')
+920	FORMAT(1X,A,'Today is ',7A2,', invoices do not need to be run')
+	END

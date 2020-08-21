@@ -1,0 +1,365 @@
+C
+C PROGRAM X2DELTER
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2DELTER.FOV                                 $
+C  $Date::   17 Apr 1996 16:14:58                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2delter.for;1 **
+C
+C X2DELTER.FOR
+C
+C
+C X2X Upgrade: 22-FEB-96 wsm Rearranged order of RECAGT.DEF for Finland.
+C
+C V04 31-Jul-95 das Added call to x2cnvdrp                            
+C V03 03-FEB-94 GPR USE I5 FORMAT FOR STATION AND TERMINAL TYPE-OUTS
+C V02 09-DEC-91 RRB NO LONGER USE COMTYP (SCOMT) NOW STATION CLASS (SSCLS)
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C V01 03-MAY-90 MRM INITIAL RELEASE.
+C
+C This program will delete a terminal from the X2X database
+C and will remove the X2X parameters from the ASF.  The X2X files
+C affected could include: X2XTER, X2XSPC, and X2XSTN.  If the
+C terminal is the only one configured on the station, then
+C the station is deleted.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM X2DELTER
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:X2XPRM.DEF'
+	INCLUDE 'INCLIB:X2XSTN.DEF'
+	INCLUDE 'INCLIB:X2XTER.DEF'
+	INCLUDE 'INCLIB:X2XSPC.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:RECAGT.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+C
+	INTEGER*2   DATBUF(12)      !Date buffer
+	INTEGER*4   SYSDATE(3)      !System date
+	INTEGER*4   DRPCNT          !Count of active terminals
+	INTEGER*4   ASFFDB(7)       !File descriptor block
+	INTEGER*4   I, EXSREC, SREC, DROP, PORT, STN, K, EXT, TER, ST
+	INTEGER*4   ANS
+	CHARACTER   PROMPT*60       !Output prompt
+	CHARACTER   NULL*60         !Null string
+	CHARACTER   NULLEQV(60)*1   !Null string
+	CHARACTER   X2FILNAM*20     !File name function
+	CHARACTER   INTERUP*1       !Screen interrupt
+	CHARACTER   ASFSTN*5        !Station number
+	CHARACTER   ASFPRT*5        !Port number
+	CHARACTER   C2DROP*2	    !Drop address
+	LOGICAL     DELSTN          !Delete station flag
+	LOGICAL     PRTFLG          !Print errors flag
+C
+	DATA        NULLEQV /60*Z00/
+	EQUIVALENCE (NULL,NULLEQV)
+	EQUIVALENCE (ASFSTN,ASFBYT(SXSTN))
+	EQUIVALENCE (ASFPRT,ASFBYT(SXPRT))
+C
+C DISPLAY COPYRIGHT.
+C
+	CALL COPYRITX(5)
+C
+C ASK WHETHER TO DISPLAY ERRORS TO PRINTER.
+C
+	PRTFLG=.FALSE.
+	DELSTN=.FALSE.
+	CALL CLRSCR(5)
+	WRITE(5,9050)
+	WRITE (PROMPT,9070)
+	CALL WIMG(5,PROMPT)
+	CALL YESNO(ANS)
+	IF(ANS.EQ.1) THEN
+	  PRTFLG=.TRUE.
+          OPEN(6,FILE='X2DELTER.REP',STATUS='NEW',DISP='PRINT/DELETE')
+	  IF(ST.NE.0) THEN
+	    CALL OS32ER(5,'PR:','OPEN',ST,0)
+	    CALL GPAUSE
+	  ENDIF
+	ENDIF
+C
+C READ THE TERMINAL NUMBER TO DELETE.
+C
+	WRITE (PROMPT,9072)
+	CALL INPNUM(PROMPT,TER,1,NUMAGT,EXT)
+	IF(EXT.LT.0) GOTO 8000
+C
+C CLEAR SCREEN AND DISPLAY TITLE.
+C
+	CALL CLRSCR(5)
+	WRITE(5,9050)
+C
+C OPEN THE STATION FILE.
+C
+	CALL OPENX(2,X2FILNAM(XSTN),4,0,0,ST)
+	CALL IOINIT(X2XSTN_FDB,2,X2XSTN_SECT*256)
+	IF(ST.NE.0) THEN
+	  CALL OS32ER(5,X2FILNAM(XSTN),'OPENX',ST,0)
+	  CALL GPAUSE
+	ENDIF
+C
+C OPEN THE TERMINAL FILE.
+C
+	CALL OPENX(3,X2FILNAM(XTER),4,0,0,ST)
+	CALL IOINIT(X2XTER_FDB,3,X2XTER_SECT*256)
+	IF(ST.NE.0) THEN
+	  CALL OS32ER(5,X2FILNAM(XTER),'OPENX',ST,0)
+	  CALL GPAUSE
+	ENDIF
+C
+C OPEN THE STATION PORT CONFIGURATION FILE.
+C
+	CALL OPENX2X(X2FILNAM(XSPC),4)
+C
+C OPEN THE ASF FILE.
+C
+	CALL OPENX(11,X2FILNAM(ASF),4,0,0,ST)
+	IF(ST.NE.0)THEN
+	  CALL OS32ER(5,X2FILNAM(ASF),'OPENX',ST,0)
+	  CALL GPAUSE
+	ENDIF
+	CALL IOINIT(ASFFDB,11,ASFSEC*256)
+C
+C READ THE TERMINAL FROM THE ASF.
+C
+	CALL READW(ASFFDB,TER,ASFREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL OS32ER(5,'ASF.FIL','WRITEW',ST,TER)
+	  CALL GPAUSE
+	ENDIF
+C
+	STN=CTOI(ASFSTN,K)
+	PORT=CTOI(ASFPRT,K)
+  	C2DROP=ASFBYT(SDROP)//ASFBYT(SDROP+1)
+        CALL X2CNVDRP(C2DROP, DROP)             !.....V04
+C
+C DETERMINE THE CDC DATE FROM THE SYSTEM DATE.
+C
+	CALL XDAT(SYSDATE)
+	DATBUF(VYEAR)=SYSDATE(1)
+	DATBUF(VMON)=SYSDATE(2)
+	DATBUF(VDAY)=SYSDATE(3)
+	CALL BDATE(DATBUF)
+C
+C ================== TERMINAL FILE UPDATE ==================
+C
+C READ THE TERMINAL RECORD.
+C
+	CALL READW(X2XTER_FDB,TER,X2XTER_REC,ST)
+	IF(ST.NE.0) THEN
+	  CALL OS32ER(5,X2FILNAM(XTER),'READW',ST,TER)
+	  CALL GPAUSE
+	ENDIF
+C
+C CHECK IF THIS TERMINAL IS FOR THIS STATION. IF IT
+C IS NOT, SKIP IT.
+C
+	IF(STN.NE.X2XTER_STN) THEN
+	  WRITE(5,9000) TER,STN
+	  WRITE(5,9010)
+	  IF(PRTFLG) THEN
+	    WRITE(6,9000) TER,STN
+	    WRITE(6,9010)
+	  ENDIF
+	  GOTO 8000
+	ENDIF
+C
+C UPDATE THE TERMINAL FILE.
+C
+	X2XTER_TER=0
+	X2XTER_UPDATE=DATBUF(VCDC)
+	CALL BSET(X2XTER_BITMAP,1)
+C
+C REWRITE THE TERMINAL RECORD.
+C
+	CALL WRITEW(X2XTER_FDB,TER,X2XTER_REC,ST)
+	IF(ST.NE.0) THEN
+	  CALL OS32ER(5,X2FILNAM(XTER),'READW',ST,TER)
+	  CALL GPAUSE
+	ENDIF
+	WRITE(5,9140) TER
+	IF(PRTFLG) WRITE(6,9140) TER
+C
+C ================== STATION PORT UPDATE ==================
+C
+	CALL X2FNDSPC(STN,PORT,ST,SREC,EXSREC)
+C
+C IF STATION PORT DOES NOT EXIST, EXIT.
+C
+	IF(ST.NE.-1) THEN
+	  WRITE(5,9020) STN,PORT,TER
+	  WRITE(5,9010)
+	  IF(PRTFLG) THEN
+	    WRITE(6,9020) STN,PORT,TER
+	    WRITE(6,9010)
+	  ENDIF
+	  GOTO 8000
+	ENDIF
+C
+C COUNT HOW MANY DROPS ARE ACTUALLY CONFIGURED.
+C
+	DRPCNT=0
+	DO 210 I=1,X2X_MAXTERMS
+	  IF(X2XSPC_DROPS(I).GT.'  ') DRPCNT=DRPCNT+1
+210	CONTINUE
+C
+C UPDATE THE STATION PORT RECORD.
+C
+	IF(DRPCNT.GT.1) THEN
+	  IF(X2XSPC_DROPS(DROP).GT.' ') X2XSPC_TERCNT=X2XSPC_TERCNT-1
+	  X2XSPC_DROPS(DROP)='  '
+	  WRITE(5,9030) STN,PORT
+	  IF(PRTFLG) WRITE(6,9030) STN,PORT
+	ELSE IF(DRPCNT.EQ.1) THEN
+	  X2XSPC_STN=0
+	  X2XSPC_PORT=0
+	  CALL FASTSET(0,X2XSPC_REC,120)
+	  CALL BSET(X2XSPC_BITMAP,1)
+	  CALL BSET(X2XSPC_BITMAP,2)
+	  WRITE(5,9040) STN,PORT
+	  IF(PRTFLG) WRITE(6,9040) STN,PORT
+	  DELSTN=.TRUE.
+	ELSE
+	  WRITE(5,9090)
+	  WRITE(5,9010)
+	  IF(PRTFLG) THEN
+	    WRITE(6,9090)
+	    WRITE(6,9010)
+	  ENDIF
+	  GOTO 8000
+	ENDIF
+	X2XSPC_UPDATE=DATBUF(VCDC)
+C
+C REWRITE THE STATION PORT RECORD.
+C
+	CALL WRITX2X(4,SREC,X2XSPC_REC,ST)
+	IF(ST.NE.0) THEN
+	  CALL OS32ER(5,X2FILNAM(XSPC),'WRITEW',ST,SREC)
+	  CALL GPAUSE
+	ENDIF
+C
+C ================== STATION FILE UPDATE ==================
+C
+C IF ONLY ONE TERMINAL DEFINED ON THE STATION, DELETE
+C THE STATION RECORD.
+C
+	IF(DELSTN) THEN
+	  CALL READW(X2XSTN_FDB,STN,X2XSTN_REC,ST)
+	  IF(ST.NE.0) THEN
+	    CALL OS32ER(5,X2FILNAM(XSTN),'READW',ST,STN)
+	    CALL GPAUSE
+	  ENDIF
+C
+C CHECK TO ENSURE THE STATION EXISTS.
+C
+	  IF(X2XSTN_REC(1).LE.0) THEN
+	    WRITE(5,9100) STN
+	    WRITE(5,9010)
+	    IF(PRTFLG) THEN
+	      WRITE(6,9100) STN
+	      WRITE(6,9010)
+	    ENDIF
+	    GOTO 8000
+	  ENDIF
+C
+C REWRITE THE STATION RECORD.
+C
+	  X2XSTN_REC(1)=0
+	  CALL BSET(X2XSTN_BITMAP,1)
+	  CALL FASTSET(0,X2XSPC_REC,120)
+	  CALL WRITEW(X2XSTN_FDB,STN,X2XSTN_REC,ST)
+	  IF(ST.NE.0) THEN
+	    CALL OS32ER(5,X2FILNAM(XSPC),'WRITEW',ST,STN)
+	    CALL GPAUSE
+	  ENDIF
+	  WRITE(5,9110) STN
+	ENDIF
+C
+C ================== ASF FILE UPDATE ==================
+C
+	ASFSTN='     '
+	ASFPRT='     '
+	ASFBYT(SSCLS)='  '
+	ASFBYT(SDROP)='  '
+	CALL WRITEW(ASFFDB,TER,ASFREC,ST)
+	IF(ST.NE.0) THEN
+	  CALL OS32ER(5,'ASF.FIL','WRITEW',ST,TER)
+	  CALL GPAUSE
+	ENDIF
+	WRITE(5,9120) TER
+	IF(PRTFLG) WRITE(6,9120) TER
+C
+C PROGRAM EXIT.
+C
+8000	CONTINUE
+	PROMPT=NULL
+	WRITE (PROMPT,9080)
+	CALL WIMG(5,PROMPT)
+	READ(5,'(1A)') INTERUP
+C
+C CLOSE ALL FILES.
+C
+	CALL CLOSX2X(4)
+	CALL CLOSEFIL(X2XSTN_FDB)
+	CALL CLOSEFIL(X2XTER_FDB)
+	CALL CLOSEFIL(ASFFDB)
+	CALL USRCLOS1(6)
+C
+C FORCE USER TO CHECK INTEGRITY OF DATABASE.
+C
+	CALL X2CHKMOD(XSTN,0)
+	CALL X2CHKMOD(XTER,0)
+	CALL X2CHKMOD(XSPC,0)
+C
+C     ===================== Format Statements ======================
+C
+9000	FORMAT(3X,'Terminal # inconsistant between ASF and ',
+     *	          'Term File ',I5,'/',I5)				! V03
+9010	FORMAT(3X,'Delete terminal from database manually...')
+9020	FORMAT(3X,'Station/port ',I5,'/',I1,' not found for ',
+     *	          'terminal ',I5)					! V03
+9030	FORMAT(3X,'Station/port ',I5,'/',I1,' has been updated')	! V03
+9040	FORMAT(3X,'Station/port ',I5,'/',I1,' has been deleted')	! V03
+9050	FORMAT(//,T26,'GTECH Distributed Network',/,
+     *	          T27,'Auto Delete Terminals',//)
+9070	FORMAT(15(' '),'Display errors to the printer [Y/N]  ')
+9072	FORMAT(15(' '),'Enter terminal number to delete ...  ')
+9080	FORMAT(15(' '),'    Press RETURN to continue         ')
+9090	FORMAT(3X,'Invalid Station port record - no drops defined')
+9100	FORMAT(3X,'Station ',I5,' does not exist')			! V03
+9110	FORMAT(3X,'Station ',I5,' has been deleted')			! V03
+9120	FORMAT(3X,'X2X parameters in ASF have been cleared for ',
+     *	          'terminal ',I5)					! V03
+9130	FORMAT(3X,'Terminal ',I5,' is not configured for X2X')		! V03
+9140	FORMAT(3X,'Terminal ',I5,' deleted')				! V03
+	END

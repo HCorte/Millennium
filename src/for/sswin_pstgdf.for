@@ -1,0 +1,96 @@
+C
+C SUBROUTINE SSWIN_PSTGDF
+C  
+C
+C V02 15-DEC-1999 UXN MULTIWIN changes.
+C V01 XX-XXX-XXXX RXK Initial release.
+C
+C SUBROUTINE TO UPDATE GAME FILES WITH DRAW INFORMATION
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SSWIN_PSTGDF
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:WINCOM.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DSSREC.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+	INCLUDE 'INCLIB:STOPCOM.DEF'
+C
+	INTEGER*4 FDB(7)
+	INTEGER*4 GIND, DRAW, GNUM, K, ST
+C
+C SUPERSCORE GAMES
+C
+	DO 1000 GIND=1,NUMSSC
+	DRAW=LSSDRW(GIND)
+	IF(DRAW.LT.1) GOTO 1000
+	GNUM=GTNTAB(TSSC,GIND)
+	WRITE(5,900) IAM(),(GFNAMES(K,GNUM),K=1,5)
+	CALL OPENW(3,GFNAMES(1,GNUM),4,0,0,ST)
+	CALL IOINIT(FDB,3,DSSSEC*256)
+	IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM),1,ST,0)
+	CALL READW(FDB,DRAW,DSSREC,ST)
+	IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM),2,ST,DRAW)
+C
+C COMPARE WINSEL SALES FIGURES WITH DAILY SALES FIGURES
+C
+	IF(DSSSAL.NE.LSSSAL(GIND)) THEN
+	  CALL BELLS(2)
+	  WRITE(5,901) IAM(),GTNAMES(TSSC),GIND,
+     *	               CMONY(DSSSAL,12,BETUNIT),
+     *		       CMONY(LSSSAL(GIND),12,BETUNIT)
+	  CALL GPAUSE
+	ENDIF
+C
+C
+	IF(LSSSTS(GIND).EQ.GAMCAN) LSSSTS(GIND)=GAMREF
+	IF(LSSSTS(GIND).NE.GAMREF.AND.
+     *	   LSSSTS(GIND).GE.GAMENV) LSSSTS(GIND)=GFINAL
+	LSSDAT(GIND)=DAYCDC
+C
+C CALCULATE ROLL POOL AND BREAKAGE
+C
+	IF( (LSSWON(GIND)-LSSREF(GIND)) .NE.0 ) THEN
+	   LSSBRK(1,GIND) = LSSTPL(GIND) -		!TOTAL POOL (LESS REF)
+     *			   (LSSWON(GIND) -		!WHAT IS PAYED OUT
+     *			    LSSREF(GIND))	        !(LESS REF).
+	ELSEIF(LSSWON(GIND).EQ.0) THEN
+	   LSSBRK(1,GIND) = 0
+	   LSSPOL(2,GIND) = LSSTPL(GIND)
+	   CALL UPDRDF(GNUM,LSSPOL(2,GIND),DRAW)
+	ENDIF
+C
+	CALL GAMLOG(TSSC,GIND,DSSREC,LSSSTS)
+	CALL WRITEW(FDB,DRAW,DSSREC,ST)
+	IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM),3,ST,DRAW)
+	CALL CLOSEFIL(FDB)
+C
+        IF(STOPMOD.EQ.WINMULTI) DRWSTS(MLWININD,GNUM)=WINSOK
+C
+1000	CONTINUE
+	RETURN
+C
+C
+900	FORMAT(1X,A,' Posting winsel data to ',5A4)
+901	FORMAT(1X,A,1X,A8,I1,' sales discrepancy ',/,
+     *	       1X,'Daily posting ',A12,' Winsel posting ',A12)
+	END
+

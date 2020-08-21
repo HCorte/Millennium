@@ -1,0 +1,48 @@
+C
+C X2XLIS.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XLIS.DEV                                   $
+C  $Date::   17 Apr 1996 16:43:10                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C
+C This DEF includes all field declarations which are used
+C to list information to the screen from BLDX2X.
+C
+C STORE THE TERMINAL NUMBERS AND DROPS FOR EACH PORT.
+C NOTE: INDEX 0 OF X2XLIS_TERMS CONTAINS THE NUMBER OF TERMINALS
+C DEFINED ON EACH PORT.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   X2XLIS_TERMS(0:X2X_MAXTERMS,X2X_MAXPORT,
+     *	                         X2X_STATIONS)
+	CHARACTER*2 X2XLIS_DROPS(X2X_MAXTERMS,X2X_MAXPORT,
+     *	                         X2X_STATIONS)
+	INTEGER*2   IX2XLIS_DROPS(X2X_MAXTERMS*X2X_MAXPORT*
+     *	                          X2X_STATIONS)
+	EQUIVALENCE (X2XLIS_DROPS,IX2XLIS_DROPS)
+	COMMON  /X2XLIS/    X2XLIS_TERMS, X2XLIS_DROPS
+C

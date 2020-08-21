@@ -1,0 +1,73 @@
+C PRMBNG.DEF
+C  
+C 
+C V04 17-JAN-00 RXK Added new param BGOSPH for number of subphases in phase1. 
+C V03 23-OCT-94 HXK Added new param, redimensioned others.
+C V02 23-OCT-94 GXA Added BGOPHS and cut down on bitmaps available for 
+C                   definition from 31 to 15.
+C V01 16-OCT-94 GXA Added BGOMAXMAP parameter.
+C
+C BINGO GAME PARAMETERS
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+      INTEGER*4 NUMBGO,BGOENT,BGODIV,BGOCOL,BGOROW,BGOMAXMAP
+      INTEGER*4 BGOSUB,BGOBAB,BGOFHS,BGOLNM,BGOPHS,BGOLOT,BGOSPH
+      PARAMETER(NUMBGO=1)            !NUMBER OF BINGO GAMES
+      PARAMETER(BGOENT=25)           !NUMBER OF SALES ENTRIES
+      PARAMETER(BGODIV=15)           !MAXIMUM NUMBER OF ACTIVE DIVISIONS
+      PARAMETER(BGOLOT=20)           !MAXIMUM NUMBER OF DIVISIONS SET BY LOTTERY
+      PARAMETER(BGOCOL=5)            !MAX NUMBER OF COLUMNS ON A BOARD
+      PARAMETER(BGOROW=5)            !MAX NUMBER OF ROWS ON A BOARD
+      PARAMETER(BGOMAXMAP=20)        !MAX NUMBER OF WINNING BITMAPS/SUBGAME
+      PARAMETER(BGOPHS=2)            !MAX NUMBER OF PHASES
+      PARAMETER(BGOSUB=3)            !# OF SUBGAMES
+         PARAMETER(BGOBAB=1)         !SUBGAME 1: BINGO A,B
+         PARAMETER(BGOFHS=2)         !SUBGAME 2: FULL HOUSE
+         PARAMETER(BGOLNM=3)         !SUBGAME 3: LUCKY NUMBER
+      PARAMETER(BGOSPH=10)           !MAX NUMB OF ACTIVE DIVISIONS BASED ON MAPS
+
+C     FULL HOUSE SUBGAME
+C     ==================
+      INTEGER*4 BGONBR,BGONBB
+      INTEGER*4 BGOBMA,BGONCL,BGORCL,BGO1ST
+      PARAMETER(BGONBR=75)           !MAXIMUM VALUE WINNING #S DRAWN (FHOUSE)
+      PARAMETER(BGONBB=3)            !NUMBER OF FULLHOUSE BOARDS
+      PARAMETER(BGOBMA=BGONBR/8+1)   !NUMBER OF BYTES TO BITMAP NUMBERS
+      PARAMETER(BGONCL=BGONBR/BGOCOL)!POSSIBLE NUMBERS IN A ROW
+      PARAMETER(BGORCL=6)            !NUMBER OF RECIEVED COLUMNS
+      PARAMETER(BGO1ST=4)            !NUMBER OF 1st WINS  
+
+C     BINGO A,B SUBGAME
+C     =================
+      INTEGER*4 BGOVAB,BGONAB,BGOMSK,BGONUM
+      PARAMETER(BGOVAB=100)          !MAXIMUM VALUE WINNING #S DRAWN (A,B)
+      PARAMETER(BGONAB=25)           !MAIXMUM NUMBER WINNING #S DRAWN
+      PARAMETER(BGOMSK=13)           !# OF BITMAP MASKS MAKING UP A OR B
+      PARAMETER(BGONUM=2)            !# OF BINGO A,BOARDS
+
+C     LUCKY NUMBER SUBGAME
+C     ====================
+      INTEGER*4 BGONLN
+      PARAMETER(BGONLN=10)            !MAXIMUM NUMBER WINNING #S DRAWN (LUCKY)
+
+C     PARAMETERS FOR SUBROUTINE BNGCNVDV
+C     ==================================
+      INTEGER*4 BGOSTUFF,BGOSPLIT
+      PARAMETER(BGOSTUFF=1)          !OPTION STUFF DRAW AND DIVISION
+C                                    !TOGETHER
+      PARAMETER(BGOSPLIT=2)          !OPTION SPLIT UP DRAW AND DIVISION
+

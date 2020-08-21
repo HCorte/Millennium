@@ -1,0 +1,177 @@
+C
+C X2MAINT.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2MAINT.DEV                                  $
+C  $Date::   17 Apr 1996 16:23:08                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C THIS DEF DESCRIBES NETWORK MESSAGES TO FACILITATE
+C NETWORK MONITORING AND CONTROL
+C THERE ARE THREE TYPES OF MESSAGES
+C
+C MAINTENANCE MESSAGE TYPE 1
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  X2MAINT_T1M_LINE_NO, X2MAINT_T1M_LINE_STATUS
+	INTEGER*4  X2MAINT_T1M_NO_CONN_VC, X2MAINT_T1M_NO_DISCONN
+	INTEGER*4  X2MAINT_T1M_TOT_NO_DAT_PACK_REC
+	INTEGER*4  X2MAINT_T1M_TOT_NO_DAT_PACK_SEN
+	INTEGER*4  X2MAINT_T1M_NO_AVAIL_LOG_CRC
+	INTEGER*4  X2MAINT_T1M_TOT_NO_ERR, X2MAINT_T1M_LINE_UTIL
+	PARAMETER (X2MAINT_T1M_LINE_NO=1)          !LINE # (PORT #)
+	PARAMETER (X2MAINT_T1M_LINE_STATUS=2)      !LINE STATUS
+	PARAMETER (X2MAINT_T1M_NO_CONN_VC=3)       !# CONNECTED VIRTUAL
+C                                                ;CIRCUITS
+	PARAMETER (X2MAINT_T1M_NO_DISCONN=5)       !# OF DISCONNECTIONS
+	PARAMETER (X2MAINT_T1M_TOT_NO_DAT_PACK_REC=7)   !TOTAL #
+C                                  ;DATA PACKET RECEIVED
+	PARAMETER (X2MAINT_T1M_TOT_NO_DAT_PACK_SEN =9)  !TOTAL #
+C                                  ;DATA PACKET SENT
+	PARAMETER (X2MAINT_T1M_NO_AVAIL_LOG_CRC=11)!# OF AVAILABLE
+C                                                ;LOGICAL CIRCUITS
+	PARAMETER (X2MAINT_T1M_TOT_NO_ERR=13)      !TOTAL # OF ERRORS
+C                                                ;ALL KINDS
+	PARAMETER (X2MAINT_T1M_LINE_UTIL=15)       !LINE UTILIZATION
+C                              ;% OF TIME AT LEAST ONE VC ACTIVE
+C
+C VARIABLES TO BE USED WITH MESSAGE TYPE 1.
+C
+	INTEGER*4   X2MNT1_LINE             !Line number
+	INTEGER*4   X2MNT1_LINSTA           !Line status
+	INTEGER*4   X2MNT1_CONSVC           !Connected SVC
+	INTEGER*4   X2MNT1_DISC             !Number of disconnections
+	INTEGER*4   X2MNT1_PACRCV           !Packets received
+	INTEGER*4   X2MNT1_PACSND           !Packets sent
+	INTEGER*4   X2MNT1_NUMSVC           !Number of SVCS available
+	INTEGER*4   X2MNT1_NUMERR           !Number of errors
+	INTEGER*4   X2MNT1_LINUTL           !Line utilization
+C
+	INTEGER*4   X2MNT1_DATA(10)
+	EQUIVALENCE (X2MNT1_LINE,    X2MNT1_DATA(1))
+	EQUIVALENCE (X2MNT1_LINSTA,  X2MNT1_DATA(2))
+	EQUIVALENCE (X2MNT1_CONSVC,  X2MNT1_DATA(3))
+	EQUIVALENCE (X2MNT1_DISC,    X2MNT1_DATA(4))
+	EQUIVALENCE (X2MNT1_PACRCV,  X2MNT1_DATA(5))
+	EQUIVALENCE (X2MNT1_PACSND,  X2MNT1_DATA(6))
+	EQUIVALENCE (X2MNT1_NUMSVC,  X2MNT1_DATA(7))
+	EQUIVALENCE (X2MNT1_NUMERR,  X2MNT1_DATA(8))
+	EQUIVALENCE (X2MNT1_LINUTL,  X2MNT1_DATA(9))
+C
+C MAINTENANCE MESSAGE TYPE 2
+C
+	INTEGER*4  X2MAINT_T2M_LINE_NO, X2MAINT_T2M_LINE_STATUS
+	INTEGER*4  X2MAINT_T2M_NO_CRC_ERR, X2MAINT_T2M_NO_RNR_REC
+	INTEGER*4  X2MAINT_T2M_NO_RNR_SENT, X2MAINT_T2M_NO_DISCONN_00
+	INTEGER*4  X2MAINT_T2M_NO_DISCONN_05, X2MAINT_T2M_NO_DISCONN_09
+	INTEGER*4  X2MAINT_T2M_NO_DISCONN_OT
+	PARAMETER (X2MAINT_T2M_LINE_NO=1)          !LINE # (PORT #)
+	PARAMETER (X2MAINT_T2M_LINE_STATUS=2)      !LINE STATUS
+	PARAMETER (X2MAINT_T2M_NO_CRC_ERR=3)       !# CRC ERRORS
+	PARAMETER (X2MAINT_T2M_NO_RNR_REC=5)       !# OF RNR RECEIVED
+	PARAMETER (X2MAINT_T2M_NO_RNR_SENT=7)      !# OF RNR SENT
+	PARAMETER (X2MAINT_T2M_NO_DISCONN_00=9)    !# OF
+C                                    ;DISCONNECTIONS CODE = 00
+	PARAMETER (X2MAINT_T2M_NO_DISCONN_05=11)   !# OF
+C                                    ;DISCONNECTIONS CODE = 05
+	PARAMETER (X2MAINT_T2M_NO_DISCONN_09=13)   !# OF
+C                                    ;DISCONNECTIONS CODE = 09
+	PARAMETER (X2MAINT_T2M_NO_DISCONN_OT=15)   !# OF
+C                                    ;DISCONNECTIONS OF OTHER TYPE
+C
+C VARIABLES TO BE USED WITH MESSAGE TYPE 2.
+C
+	INTEGER*4   X2MNT2_LINE             !Line number
+	INTEGER*4   X2MNT2_LINSTA           !Line status
+	INTEGER*4   X2MNT2_LRCERR           !LRC errors
+	INTEGER*4   X2MNT2_RNRRCV           !RNRs received
+	INTEGER*4   X2MNT2_RNRSNT           !RNRs send
+	INTEGER*4   X2MNT2_DISC00           !Disconnections type 00
+	INTEGER*4   X2MNT2_DISC05           !Disconnections type 05
+	INTEGER*4   X2MNT2_DISC09           !Disconnections type 09
+	INTEGER*4   X2MNT2_DISC             !Disconnections other
+C
+	INTEGER*4   X2MNT2_DATA(10)
+	EQUIVALENCE (X2MNT2_LINE,    X2MNT2_DATA(1))
+	EQUIVALENCE (X2MNT2_LINSTA,  X2MNT2_DATA(2))
+	EQUIVALENCE (X2MNT2_LRCERR,  X2MNT2_DATA(3))
+	EQUIVALENCE (X2MNT2_RNRRCV,  X2MNT2_DATA(4))
+	EQUIVALENCE (X2MNT2_RNRSNT,  X2MNT2_DATA(5))
+	EQUIVALENCE (X2MNT2_DISC00,  X2MNT2_DATA(6))
+	EQUIVALENCE (X2MNT2_DISC05,  X2MNT2_DATA(7))
+	EQUIVALENCE (X2MNT2_DISC09,  X2MNT2_DATA(8))
+	EQUIVALENCE (X2MNT2_DISC,    X2MNT2_DATA(9))
+C
+C MAINTENANCE MESSAGE TYPE 3
+C
+	INTEGER*4  X2MAINT_T3M_LINE_NO, X2MAINT_T3M_LINE_STATUS
+	INTEGER*4  X2MAINT_T3M_RUN_MAX_VC_CONN
+	INTEGER*4  X2MAINT_T3M_NO_SABM_DISC_SENT
+	INTEGER*4  X2MAINT_T3M_NO_SABM_DISC_REC
+	INTEGER*4  X2MAINT_T3M_BAND_UTIL, X2MAINT_T3M_RESP_TIME
+	INTEGER*4  X2MAINT_T3M_TOT_TIME_ACT, X2MAINT_T3M_TOT_TIME_AVAIL
+	PARAMETER (X2MAINT_T3M_LINE_NO=1)          !LINE # (PORT #)
+	PARAMETER (X2MAINT_T3M_LINE_STATUS=2)      !LINE STATUS
+	PARAMETER (X2MAINT_T3M_RUN_MAX_VC_CONN=3)   !RUNNING MAXIMUM
+C                                                ;OF VC CONNECTED
+	PARAMETER (X2MAINT_T3M_NO_SABM_DISC_SENT=5)!# OF
+C                                                ;SAMB/DISC SENT
+	PARAMETER (X2MAINT_T3M_NO_SABM_DISC_REC=7) !# OF SABM/DISC
+C                                                ;RECEIVED
+	PARAMETER (X2MAINT_T3M_BAND_UTIL=9)        !BANDWIDTH
+C                                                ;UTILIZATION
+	PARAMETER (X2MAINT_T3M_RESP_TIME=11)       !RESPONCE TIME
+C                                                ;IN MSEC
+	PARAMETER (X2MAINT_T3M_TOT_TIME_ACT=13)    !TOTAL TIME
+C                                                ;ACTIVE IN SEC
+	PARAMETER (X2MAINT_T3M_TOT_TIME_AVAIL=15)  !TOTAL TIME
+C                                                ;AVAILABLE
+C
+C VARIABLES TO BE USED WITH MESSAGE TYPE 3
+C
+	INTEGER*4   X2MNT3_LINE             !Line number
+	INTEGER*4   X2MNT3_LINSTA           !Line status
+	INTEGER*4   X2MNT3_MAXSVC           !Max VC connected
+	INTEGER*4   X2MNT3_SBMSNT           !SABMS/DISC sent
+	INTEGER*4   X2MNT3_SBMRCV           !SABMS/DISC received
+	INTEGER*4   X2MNT3_BNDWID           !Bandwith
+	INTEGER*4   X2MNT3_RESP             !Response time
+	INTEGER*4   X2MNT3_TIMACT           !Time active
+	INTEGER*4   X2MNT3_TIMAVL           !Time available
+C
+	INTEGER*4   X2MNT3_DATA(10)
+	EQUIVALENCE (X2MNT3_LINE,    X2MNT3_DATA(1))
+	EQUIVALENCE (X2MNT3_LINSTA,  X2MNT3_DATA(2))
+	EQUIVALENCE (X2MNT3_MAXSVC,  X2MNT3_DATA(3))
+	EQUIVALENCE (X2MNT3_SBMSNT,  X2MNT3_DATA(4))
+	EQUIVALENCE (X2MNT3_SBMRCV,  X2MNT3_DATA(5))
+	EQUIVALENCE (X2MNT3_BNDWID,  X2MNT3_DATA(6))
+	EQUIVALENCE (X2MNT3_RESP,    X2MNT3_DATA(7))
+	EQUIVALENCE (X2MNT3_TIMACT,  X2MNT3_DATA(8))
+	EQUIVALENCE (X2MNT3_TIMAVL,  X2MNT3_DATA(9))
+C
+	COMMON /MNTCOM/ X2MNT1_DATA, X2MNT2_DATA, X2MNT3_DATA
+C
+C

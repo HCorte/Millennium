@@ -1,0 +1,122 @@
+C PROGRAM MRGTCF
+C  
+C     Rev 1.0   17 Apr 1996 14:04:44   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C     Rev 1.1   13 Feb 1996 11:38:24   RXK
+C  Rfss 256, change of a format. 
+C     Rev 1.0   21 Jan 1993 17:02:16   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C V01 01-OCT-1989 LOU R. INITIAL RELEASE FOR FINLAND
+C
+C IF YOU CHANGE TCF.DRW FILE STRUCTURE, CHANGE POOLBLD
+C PROGRAM TO LOAD CARRYOVERS TO TCF FILE
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM MRGTCF
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'
+	INCLUDE 'INCLIB:DESLOG.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:HSHCOM.DEF'
+	INTEGER*4  MSIZE, TUBSIZ, MXSIZE, MAXRECS
+	PARAMETER (MSIZE=4000000)
+	PARAMETER (TUBSIZ=I4BUCSIZ*7)
+	PARAMETER (MXSIZE=LMUREC)
+	PARAMETER (MAXRECS=170)
+C
+	INTEGER*4 BIGTCF(MSIZE),TCFREC(8192),FDB(7)
+	INTEGER*4 TCFBUF(MXSIZE,MAXRECS)
+	INTEGER*4 NEWBUF(TUBSIZ)
+	INTEGER*4 I, BLOCK, K, COUNT, ST
+	EQUIVALENCE(TCFBUF,TCFREC)
+C
+C
+	CALL COPYRITE
+	CALL SNIF_AND_WRKSET
+C
+	CALL GETSCONF(SCFREC,ST)
+	IF(ST.NE.0) CALL GSTOP(GEXIT_FATAL)
+C
+	COUNT=0
+	CALL IOPEN(SCFSFN(1,TCC),TCC,LREC*2,LCDC,LSER*2-1,ST)
+	IF(ST.NE.0) THEN
+	  WRITE(5,900) (SCFSFN(K,TCC),K=1,5),ST
+	  CALL GPAUSE
+	ENDIF
+	CALL IINIB(TCC,BIGTCF,MSIZE)
+	CALL ITUBSIZE(TCC,TUBSIZ)
+	CALL INOCHKS(TCC)
+C
+C
+	WRITE(5,905) IAM(),(SCFSFN(K,TCW),K=1,5),(SCFSFN(K,TCC),K=1,5)
+	CALL OPENW(TCW,SCFSFN(1,TCW),4,0,0,ST)
+	CALL IOINIT(FDB,TCW,128*256)
+	IF(ST.NE.0)THEN
+	  WRITE(5,901) (SCFSFN(K,TCW),K=1,5),ST
+	  CALL GPAUSE
+	ENDIF
+C
+C
+	BLOCK=0
+40	CONTINUE
+	BLOCK=BLOCK+1
+	CALL READW(FDB,BLOCK,TCFBUF,ST)
+	IF(ST.NE.0) THEN
+	  WRITE(5,902) (SCFSFN(K,TCW),K=1,5),ST,BLOCK
+	  CALL GPAUSE
+	ENDIF
+C
+C
+	DO 50 I=1,MAXRECS
+	IF(TCFBUF(LSER,I).EQ.0) GOTO 60
+	COUNT=COUNT+1
+	IF(MOD(COUNT,50000).EQ.0) TYPE*,IAM(),COUNT,' records loaded'
+	CALL IWRIBF(TCFBUF(1,I),TCC,BIGTCF,NEWBUF,ST)
+	IF(ST.NE.0) THEN
+	  WRITE(5,903) (SCFSFN(K,TCC),K=1,5),ST
+	  CALL GPAUSE
+	ENDIF
+50	CONTINUE
+	GOTO 40
+C
+60	CONTINUE
+	CALL ICLOSB(TCC,BIGTCF,NEWBUF,ST)
+	IF(ST.NE.0) THEN
+	  WRITE(5,904) (SCFSFN(K,TCC),K=1,5),ST
+	  CALL GPAUSE
+	ENDIF
+	CALL CLOSEFIL(FDB)
+	WRITE(5,906) COUNT,(SCFSFN(K,TCC),K=1,5)
+C
+	CALL GSTOP(GEXIT_SUCCESS)
+C
+C
+900	FORMAT(1X,5A4,' Iopen error > ',I4)
+901	FORMAT(1X,5A4,' open error > ',I4)
+902	FORMAT(1X,5A4,' read error > ',I4,' block > ',I4)
+903	FORMAT(1X,5A4,' Iwribf error > ',I4)
+904	FORMAT(1X,5A4,' Iclosb error > ',I4)
+905	FORMAT(1X,A,'Copying ',5A4,' to ',5A4)
+906	FORMAT(1X,I8,' records copied from ',5A4)
+	END

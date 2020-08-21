@@ -1,0 +1,22 @@
+    HRS.HLP                GTECH Distributed Network
+                        Hourly Game Sales Snapshot Help        Page 1 of 1
+ 
+    The game sales by hour snapshot is used to display an hourly financial    
+    listing of all available games.
+
+    The information displayed includes:
+ 
+    game          - game name
+    hours         - in military time format represents hours broken down 
+                    into one hour time slots that start at hour 1 and 
+                    continues up to the 24th hour, for a particular day
+    gross sales   - gross sales for that specific hour  
+    net sales     - gross sales minus cancels for that hour specified
+
+
+
+
+
+
+
+

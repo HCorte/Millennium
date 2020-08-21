@@ -1,0 +1,116 @@
+                          GTECH Distibuted Network
+                           Global Parameters Help                Page 1 of 5
+ 
+      This menu is used to update parameters which are used globally
+      by the X2X Distributed Network systems.  These parameters control
+      the configuration and control of the network.  To update a parameter
+      enter the number of the field to be modified, (the field number is
+      displayed to the left of the field information), and press return.
+      The program will then display a prompt informing of the valid field
+      range.  You must now enter a valid value.  If the input data does
+      not fall within the range, or does not match one of the defined
+      spefic values, an error message will be displayed and you will be
+      prompted to re-enter the value.
+ 
+      The following describes each of the global parameters:
+ 
+      1) Game SAP   - the service access point number to
+                      be assigned to the game.
+      2) Debug flag - system debugging flag
+                      0=no debug,      1=trace in buf,
+                      2=trace out buf, 4=trace subroutines
+ 
+                          GTECH Distibuted Network
+                           Global Parameters Help                Page 2 of 5
+ 
+      3) Station Disconnect - flags informing station how to
+                      disconnect upon receipt of packet.
+                      0=remain in current mode   7=unconditional disconnect
+                      8-14=timer disconnect     15=remain connected
+      4) Front End Disconnect - flags information Front End how to
+                      disconnect upon receipt to transport block.
+                      0=no action                1=condition disconnect
+                      2=unconditional disconnect 3=Fast Select disconnect
+      5) Front End Connect - contains the connection from the Front End
+                      to the destined station.
+                      0=response mode            1=Outcall mode
+                      2=unconditional outcall    3=Fast Select Outcall
+                      4=Connection Access Mode
+      6) Delivery Acknowledgement - Front End to generate an ACK message
+                      when it has successfully relayed a message.
+      7) Delivery Error - Front End to generate an error if message
+                      can not be sent to destined station.
+ 
+ 
+                          GTECH Distibuted Network
+                           Global Parameters Help                Page 3 of 5
+ 
+      8) Network Retry Limit - max number of times a station will try
+                      to establish a connection to the host using the
+                      current network address.
+      9) Network Retry Time - the max interval, in seconds, between
+                      successive attempts to establish a connection
+                      using the current network address.
+      10) Network Outcall Time - the timeout value, in seconds, that the
+                      station will use for its outcall duration timer.
+      11) Network Incall Time - the timeout value, in seconds, that the
+                      station will use for its incall duration timer.
+      12) SAP Block size - maximum size, in bytes, of the Service Access
+                      point block.
+      13) SAP Block max messages - maximum number of messages per
+                      SAP block.
+      14) SAP Send interval - maximum delay, in seconds, that a
+                      SAP message should exist before being sent.
+      15) SAP Flow Timeout - SAP control flow timeout, in seconds.
+      16) Send Begin Frame Timer - time, in seconds, to elapse before sending
+                      a begin state instead of a maintainence packet.
+                          GTECH Distibuted Network
+                           Global Parameters Help                Page 4 of 5
+ 
+      17) Unsolicted Front End Connect - unsolicited messages FE connection
+                      flag (see Front End connection).
+      18) Unsolicted Station Connect - unsolicited messages station
+                      connection flag (see station connection).
+      19) Unsolicted Front End Disconnect - unsolicted messages Front
+                      End disconnection flag (see FE disconnection).
+      20) Unsolicted Station Disconnect - unsolicted messages Station
+                      Disconnect flag (see station disconnect).
+      21) Unsolicited Delivery Flag - unsolicted messages delivery
+                      acknowlegement flag.
+      22) Maximum Message per Xport block - maximum number of messages
+                      to be contained in a Transport block.
+      23) Maximum Message Length per Xport block - maximum size, in bytes,
+                      that a transport block can be.
+      24) X25 station-terminal type - no currently used.
+      25) Communications type - GTECH GSC communications type
+                              0=New Comm      1=Old Comm
+      26) X2XPRO flush interval - interval, in millisecs, that X2XPRO
+                      should flush its message cache.
+                          GTECH Distibuted Network
+                           Global Parameters Help                Page 5 of 5
+ 
+      27) X2XMGR loop delay - interval, in millisecs, that X2XMGR
+                      waits before executing.
+      28) SAP loop delay - time, in millisecs, to loop through the
+                      SAP timer.
+      29) Maintainence loop delay - interval, in millisecs, that a
+                      maintainence packet is sent to a SAP.
+      30) Statistics Interval - interval, in seconds, that the station
+                      should send a statistics packet.
+      31) SAP threshold level 1 - SAP max capacity for level 1
+      32) SAP threshold level 2 - SAP max capacity for level 2
+      33) SAP threshold level 3 - SAP max capacity for level 3
+      34) SAP threshold level 4 - SAP max capacity for level 4
+      35) Game Application Queue - queue number game is to use when
+                      interfacing with LANPRO.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

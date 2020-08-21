@@ -1,0 +1,44 @@
+C PRMMIS.DEF
+C
+C PARAMETER FILE FOR THE MISCELANIOUS ITEMS, OPINION POLLS.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C OPINION POLL SECTION
+C
+	INTEGER*4 PRM_NUMOPN, PRM_STRDAT, PRM_ENDDAT
+C
+	PARAMETER (PRM_NUMOPN = 4)	!# OF OPINION POLLS RUNNING AT ONCE.
+	PARAMETER (PRM_STRDAT = 1)      !OPINION POLL START DATE OFFSET.
+	PARAMETER (PRM_ENDDAT = 2)      !OPINION POLL END DATE OFFSET.
+C
+C INSTANT TICKET SECTION (OFFLINE INSTATNT TICKETS, NOT TO BE CONFUSED WITH ITS)
+C
+	INTEGER*4 PRM_NUMINS, PRM_INSLEN
+C
+	PARAMETER (PRM_NUMINS = 7)      !# OF INSTANT TICKET GAMES SOLD
+	PARAMETER (PRM_INSLEN =20)	!INSTATNT TICKET TEXT LENGTH IN BYTES.
+C
+C MISCELANIOUS ITEMS SALES AND PETTY CASH ITEMS PARAMETERS.
+C
+	INTEGER*4 PRM_NUMISAL, PRM_NUMIPTY
+C
+	PARAMETER (PRM_NUMISAL = 10)	!# OF MISCELANIOUS SALES ITEMS.
+	PARAMETER (PRM_NUMIPTY = 10)	!# OF PETTY CASH ITEMS.
+C
+C CUSTOMER DISPALY UNIT SECTION
+C
+        INTEGER*4 NUMCDU
+        PARAMETER (NUMCDU = 4)          !# OF CDU TEXTS

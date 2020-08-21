@@ -1,0 +1,253 @@
+C LWIREC.DEF                                                                    
+C 
+C V07 30-JUN-2000 UXN LWILAT ADDED.
+C V06 18-DEC-1993 HXK ADDED FIELDS FOR COUNTS AND AMOUNTS FOR 
+C                     PRIZES/REFUNDS WON AND PAID.
+C V05 17-JUN-1993 GXA Corrected LWIMDS declaration.
+C V04 17-JUN-1993 GXA Added Multi-Draw Selected table.
+C V03 16-JUN-1993 GXA Released for Finland Dec Conversion / Oddset.
+C V02 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V01 07-OCT-1991 MTK INITAL RELEASE FOR NETHERLANDS
+C                                                                               
+C LOGICAL WINNERS GAME RECORD                                                  
+C                                                                               
+C                                                                               
+C GAME VARIABLE ARRAYS                                                          
+C                                                                               
+C     LWISTS(NUMWIT)                 ; GAME STATUS                              
+C     LWIWEK(NUMWIT)                 ; WEEK NUMBER                              
+C     LWIDAT(NUMWIT)                 ; DRAW DATE                                
+C     LWIDRW(NUMWIT)                 ; DRAW NUMBER                              
+C     LWIBSD(NUMWIT)                 ; BEGINNING SALES DATE                     
+C     LWIESD(NUMWIT)                 ; ENDING SALES DATE                        
+C     LWIPUP(NUMWIT)                 ; LAST PURGE UPDATE   (FILE ONLY)          
+C     LWIUPD(NUMWIT)                 ; LAST FILE UPDATE    (FILE ONLY)          
+C     LWICTM(NUMWIT)                 ; ACTUAL TIME WHEN CLOSED                  
+C     LWITIM(NUMWIT)                 ; TIME WHEN GAME SHOULD CLOSE              
+C     LWISER(NUMWIT)                 ; LAST SERIAL NUMBER                       
+C     LWISAL(NUMWIT)                 ; TOTAL SALES                              
+C     LWIPAD(NUMWIT)                 ; PRIZES PAID + REFUNDS                    
+C     LWIPRG(NUMWIT)                 ; PRIZES PURGED                            
+C     LWIPRF(NUMWIT)                 ; PAID REFUNDS                             
+C     LWIREF(NUMWIT)                 ; TOTAL REFUND AMOUNT                      
+C     LWIERF(NUMWIT)                 ; EARLY REFUNDS PAID                       
+C     LWITER(NUMWIT)                 ; TOTAL EARLY REFUNDS  (LIAB)              
+C     LWIWON(NUMWIT)                 ; PRIZES WON                               
+C     LWIPOL(2,NUMWIT)               ; ROLL POOL                                
+C     LWITPL(NUMWIT)                 ; TOTAL PRIZE POOL                       
+C     LWITBK(NUMWIT)                 ; TOTAL BREAKAGE                           
+C     LWIBRK(2,NUMWIT)               ; WINNING ROUNDING POT                     
+C     LWIABW(NUMWIT)                 ; AMOUNT BET ON WINNING SCORE              
+C     LWIODS(4,NUMWIT)               ; WINNING ODDS                             
+C     LWIWIN(4,NUMWIT)               ; WINNING RESULTS                          
+C     LWIHLD(4,NUMWIT)               ; WINNING RESULTS HOLD                     
+C     LWITAX(NUMWIT)                 ; WINNING TAXES                            
+C     LWIOTX(NUMTOT,NUMWIT)          ; OVER TAX LIMIT                           
+C     LWIMID(NUMTOT,NUMWIT)          ; >REDMIN <REDMAX                          
+C     LWIUTX(NUMTOT,NUMWIT)          ; UNDER TAX LIMIT                          
+C     LWIHST(NUMWIT)                 ; HIGHEST WINNER FOR THIS GAME             
+C     LWIORM(NUMTOT,NUMWIT)          ; WINNERS >REDMAX                          
+C     LWIENM(WENM_LEN/4,NUMWIT)      ; EVENT NAME                               
+C     LWIDES(WDES_LEN/4,NUMWIT)      ; EVENT DESCRIPTION                        
+C     LWINMS(WNMS_LEN/4,MAXWRW,NUMWIT);ROW NAMES                                
+C     LWISTA(MAXWRW,NUMWIT)          ; ROW STATUS 1 THROUGH MAXWRW              
+C     LWISBR(MAXWRW,NUMWIT)          ; SALES BY ROW                             
+C     LWIREV(NUMWIT)                 ; REV #                                    
+C     LWIPFN(5,NUMWIT)               ; POOL FILE NAME                    
+C     LWIRTM(MAXWRW,NUMWIT)          ; ROW CLOSE TIMES                   
+C     LWIPRC(NUMWIT)                 ; BASE PRICE
+C     LWISPR(NUMWIT)                 ; POOL PERCENTAGE
+C     LWITVC(WTVC_LEN/4,NUMWIT)      ; TV-CHANEL NAME
+C     LWIMDS(MAXMLTD_AVL,NUMWIT)     ; MULTI DRAW SELECTED TABLE
+C                                      (52 BYTE / 4 = 13)
+C     LWIWRO(NUMTOT,2,NUMWIT)        ; WINNING: COUNT,AMOUNT REFUNDS ONLY
+C     LWIWRA(NUMTOT,2,NUMWIT)        ; WINNING: COUNT,AMOUNT REFUNDS ALTOGETHER
+C     LWIWPO(NUMTOT,2,NUMWIT)        ; WINNING: COUNT,AMOUNT PRIZES ONLY
+C     LWIWPA(NUMTOT,2,NUMWIT)        ; WINNING: COUNT,AMOUNT PRIZES ALTOGETHER
+C     LWIWPR(NUMTOT,2,NUMWIT)        ; WINNING: COUNT,AMOUNT PRIZES AND REFUNDS
+C                                    ; (1=PRWON,2=PRPAD)
+C     LWILAT(NUMLAT,NUMWIT)          ; EVENT STARTED BEFORE GAME WAS CLOSED
+C                                    ; TICKETS PLAYED LATER SHOULD BE REFUNDED.
+C                                                                               
+C LOGICAL GAME FILE VARIABLE OFFSETS                                            
+C                                                                               
+C                                                                               
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++            
+C This item is the property of GTECH Corporation, Providence, Rhode             
+C Island, and contains confidential and trade secret information. It            
+C may not be transferred from the custody or control of GTECH except            
+C as authorized in writing by an officer of GTECH. Neither this item            
+C nor the information it contains may be used, transferred,                     
+C reproduced, published, or disclosed, in whole or in part, and                 
+C directly or indirectly, except as expressly authorized by an                  
+C officer of GTECH, pursuant to written agreement.                              
+C                                                                               
+C Copyright 1990 GTECH Corporation. All rights reserved.                        
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++            
+C                                                                               
+      INTEGER*4 LWISTS_OFF, LWIWEK_OFF, LWIDAT_OFF, LWIDRW_OFF
+      INTEGER*4 LWIBSD_OFF, LWIESD_OFF, LWIPUP_OFF, LWIUPD_OFF
+      INTEGER*4 LWICTM_OFF, LWITIM_OFF, LWISER_OFF, LWISAL_OFF
+      PARAMETER(LWISTS_OFF=1)                                             
+      PARAMETER(LWIWEK_OFF=LWISTS_OFF+NUMWIT)                             
+      PARAMETER(LWIDAT_OFF=LWIWEK_OFF+NUMWIT)                             
+      PARAMETER(LWIDRW_OFF=LWIDAT_OFF+NUMWIT)                             
+      PARAMETER(LWIBSD_OFF=LWIDRW_OFF+NUMWIT)                             
+      PARAMETER(LWIESD_OFF=LWIBSD_OFF+NUMWIT)                             
+      PARAMETER(LWIPUP_OFF=LWIESD_OFF+NUMWIT)                             
+      PARAMETER(LWIUPD_OFF=LWIPUP_OFF+NUMWIT)                             
+      PARAMETER(LWICTM_OFF=LWIUPD_OFF+NUMWIT)                             
+      PARAMETER(LWITIM_OFF=LWICTM_OFF+NUMWIT)                             
+      PARAMETER(LWISER_OFF=LWITIM_OFF+NUMWIT)                             
+      PARAMETER(LWISAL_OFF=LWISER_OFF+NUMWIT)                             
+C
+      INTEGER*4 LWIPAD_OFF, LWIPRG_OFF, LWIPRF_OFF, LWIREF_OFF
+      INTEGER*4 LWIERF_OFF, LWITER_OFF, LWIWON_OFF, LWIPOL_OFF
+      INTEGER*4 LWITPL_OFF, LWITBK_OFF, LWIBRK_OFF, LWIABW_OFF
+      PARAMETER(LWIPAD_OFF=LWISAL_OFF+NUMWIT)                             
+      PARAMETER(LWIPRG_OFF=LWIPAD_OFF+NUMWIT)                             
+      PARAMETER(LWIPRF_OFF=LWIPRG_OFF+NUMWIT)                             
+      PARAMETER(LWIREF_OFF=LWIPRF_OFF+NUMWIT)                             
+      PARAMETER(LWIERF_OFF=LWIREF_OFF+NUMWIT)                             
+      PARAMETER(LWITER_OFF=LWIERF_OFF+NUMWIT)                             
+      PARAMETER(LWIWON_OFF=LWITER_OFF+NUMWIT)                             
+      PARAMETER(LWIPOL_OFF=LWIWON_OFF+NUMWIT)                             
+      PARAMETER(LWITPL_OFF=LWIPOL_OFF+2*NUMWIT)                           
+      PARAMETER(LWITBK_OFF=LWITPL_OFF+NUMWIT)                             
+      PARAMETER(LWIBRK_OFF=LWITBK_OFF+NUMWIT)                             
+      PARAMETER(LWIABW_OFF=LWIBRK_OFF+2*NUMWIT)                           
+C
+      INTEGER*4 LWIODS_OFF, LWIWIN_OFF, LWIHLD_OFF, LWITAX_OFF
+      INTEGER*4 LWIOTX_OFF, LWIMID_OFF, LWIUTX_OFF, LWIHST_OFF
+      INTEGER*4 LWIORM_OFF, LWIENM_OFF, LWIDES_OFF, LWINMS_OFF
+      INTEGER*4 LWIPRC_OFF
+      PARAMETER(LWIODS_OFF=LWIABW_OFF+NUMWIT)                             
+      PARAMETER(LWIWIN_OFF=LWIODS_OFF+4*NUMWIT)                           
+      PARAMETER(LWIHLD_OFF=LWIWIN_OFF+4*NUMWIT)                           
+      PARAMETER(LWITAX_OFF=LWIHLD_OFF+4*NUMWIT)                           
+      PARAMETER(LWIOTX_OFF=LWITAX_OFF+NUMWIT)                             
+      PARAMETER(LWIMID_OFF=LWIOTX_OFF+NUMTOT*NUMWIT)                      
+      PARAMETER(LWIUTX_OFF=LWIMID_OFF+NUMTOT*NUMWIT)                      
+      PARAMETER(LWIHST_OFF=LWIUTX_OFF+NUMTOT*NUMWIT)                      
+      PARAMETER(LWIORM_OFF=LWIHST_OFF+NUMWIT)                             
+      PARAMETER(LWIENM_OFF=LWIORM_OFF+NUMTOT*NUMWIT)                      
+      PARAMETER(LWIDES_OFF=LWIENM_OFF + (WENM_LEN/4)*NUMWIT)
+      PARAMETER(LWINMS_OFF=LWIDES_OFF + (WDES_LEN/4)*NUMWIT)
+C
+      INTEGER*4 LWISTA_OFF, LWISBR_OFF, LWIREV_OFF, LWIPFN_OFF
+      INTEGER*4 LWIRTM_OFF, LWISPR_OFF, LWITVC_OFF, LWIMDS_OFF
+      PARAMETER(LWISTA_OFF=LWINMS_OFF + ((WNMS_LEN/4)*MAXWRW*NUMWIT))
+      PARAMETER(LWISBR_OFF=LWISTA_OFF+MAXWRW*NUMWIT)                      
+      PARAMETER(LWIREV_OFF=LWISBR_OFF+MAXWRW*NUMWIT)                      
+      PARAMETER(LWIPFN_OFF=LWIREV_OFF+NUMWIT)                             
+      PARAMETER(LWIRTM_OFF=LWIPFN_OFF+5*NUMWIT)                           
+      PARAMETER(LWIPRC_OFF=LWIRTM_OFF+MAXWRW*NUMWIT)
+      PARAMETER(LWISPR_OFF=LWIPRC_OFF+NUMWIT)
+      PARAMETER(LWITVC_OFF = LWISPR_OFF + NUMWIT)
+      PARAMETER(LWIMDS_OFF = LWITVC_OFF + (WTVC_LEN/4)*NUMWIT)
+C
+
+      INTEGER*4 LWIWRO_OFF, LWIWRA_OFF, LWIWPO_OFF, LWIWPA_OFF
+      INTEGER*4 LWIWPR_OFF
+      PARAMETER(LWIWRO_OFF = LWIMDS_OFF + (MAXMLTD_AVL/4)*NUMWIT)
+      PARAMETER(LWIWRA_OFF = LWIWRO_OFF + NUMTOT*2*NUMWIT)
+      PARAMETER(LWIWPO_OFF = LWIWRA_OFF + NUMTOT*2*NUMWIT)
+      PARAMETER(LWIWPA_OFF = LWIWPO_OFF + NUMTOT*2*NUMWIT)
+      PARAMETER(LWIWPR_OFF = LWIWPA_OFF + NUMTOT*2*NUMWIT)
+C
+      INTEGER*4 LWILAT_OFF
+      PARAMETER(LWILAT_OFF = LWIWPR_OFF + NUMTOT*2*NUMWIT)
+
+      INTEGER*4 LWIRECLEN
+      PARAMETER(LWIRECLEN = LWILAT_OFF + NUMLAT*NUMWIT - 1)
+C                                                                               
+C LOGICAL RECORD DEFINITION                                                     
+C                                                                               
+      INTEGER*4 LWIREC(LWIRECLEN)                                               
+C                                                                               
+C GAME FILE VARIABLE DEFINITIONS                                                
+C                                                                               
+      INTEGER*4 LWISTS(NUMWIT),LWIWEK(NUMWIT)                                   
+      INTEGER*4 LWIDAT(NUMWIT),LWIBSD(NUMWIT)                                   
+      INTEGER*4 LWIESD(NUMWIT),LWIPUP(NUMWIT)                                   
+      INTEGER*4 LWIUPD(NUMWIT),LWIDRW(NUMWIT)                                   
+      INTEGER*4 LWICTM(NUMWIT),LWITIM(NUMWIT)                                   
+      INTEGER*4 LWISER(NUMWIT),LWISAL(NUMWIT)                                   
+      INTEGER*4 LWIPAD(NUMWIT),LWIPRG(NUMWIT)                                   
+      INTEGER*4 LWIPRF(NUMWIT),LWIREF(NUMWIT)                                   
+      INTEGER*4 LWIWON(NUMWIT),LWIPOL(2,NUMWIT)                                 
+      INTEGER*4 LWITPL(NUMWIT),LWITBK(NUMWIT)                                   
+      INTEGER*4 LWIBRK(2,NUMWIT),LWIABW(NUMWIT)                                 
+      INTEGER*4 LWIODS(4,NUMWIT),LWIWIN(4,NUMWIT)                               
+      INTEGER*4 LWIHLD(4,NUMWIT),LWITAX(NUMWIT)                                 
+      INTEGER*4 LWIOTX(NUMTOT,NUMWIT)                                           
+      INTEGER*4 LWIMID(NUMTOT,NUMWIT)                                           
+      INTEGER*4 LWIUTX(NUMTOT,NUMWIT)                                           
+      INTEGER*4 LWIHST(NUMWIT),LWIORM(NUMTOT,NUMWIT)                            
+      INTEGER*4 LWIENM(WENM_LEN/4,NUMWIT),LWIDES(WDES_LEN/4,NUMWIT)
+      INTEGER*4 LWINMS(WNMS_LEN/4,MAXWRW,NUMWIT),LWISTA(MAXWRW,NUMWIT)
+      INTEGER*4 LWISBR(MAXWRW,NUMWIT)                                           
+      INTEGER*4 LWIREV(NUMWIT),LWIRTM(MAXWRW,NUMWIT)                            
+      INTEGER*4 LWIPFN(5,NUMWIT),LWIERF(NUMWIT),LWITER(NUMWIT)                  
+      INTEGER*4 LWIPRC(NUMWIT),LWISPR(NUMWIT)
+      INTEGER*4	LWITVC(WTVC_LEN/4,NUMWIT)
+C
+      BYTE	LWIMDS(MAXMLTD_AVL,NUMWIT)
+      INTEGER*4 LWIWRO(NUMTOT,2,NUMWIT),LWIWRA(NUMTOT,2,NUMWIT)
+      INTEGER*4 LWIWPO(NUMTOT,2,NUMWIT),LWIWPA(NUMTOT,2,NUMWIT)
+      INTEGER*4 LWIWPR(NUMTOT,2,NUMWIT)
+      INTEGER*4 LWILAT(NUMLAT,NUMWIT)
+C                                                                               
+      EQUIVALENCE(LWISTS,LWIREC(LWISTS_OFF))                              
+      EQUIVALENCE(LWIWEK,LWIREC(LWIWEK_OFF))                              
+      EQUIVALENCE(LWIDAT,LWIREC(LWIDAT_OFF))                              
+      EQUIVALENCE(LWIDRW,LWIREC(LWIDRW_OFF))                              
+      EQUIVALENCE(LWIBSD,LWIREC(LWIBSD_OFF))                              
+      EQUIVALENCE(LWIESD,LWIREC(LWIESD_OFF))                              
+      EQUIVALENCE(LWIPUP,LWIREC(LWIPUP_OFF))                              
+      EQUIVALENCE(LWIUPD,LWIREC(LWIUPD_OFF))                              
+      EQUIVALENCE(LWICTM,LWIREC(LWICTM_OFF))                              
+      EQUIVALENCE(LWITIM,LWIREC(LWITIM_OFF))                             
+      EQUIVALENCE(LWISER,LWIREC(LWISER_OFF))                              
+      EQUIVALENCE(LWISAL,LWIREC(LWISAL_OFF))                             
+      EQUIVALENCE(LWIPAD,LWIREC(LWIPAD_OFF))                             
+      EQUIVALENCE(LWIPRG,LWIREC(LWIPRG_OFF))                             
+      EQUIVALENCE(LWIPRF,LWIREC(LWIPRF_OFF))                             
+      EQUIVALENCE(LWIREF,LWIREC(LWIREF_OFF))                             
+      EQUIVALENCE(LWIERF,LWIREC(LWIERF_OFF))                             
+      EQUIVALENCE(LWITER,LWIREC(LWITER_OFF))                             
+      EQUIVALENCE(LWIWON,LWIREC(LWIWON_OFF))                             
+      EQUIVALENCE(LWIPOL,LWIREC(LWIPOL_OFF))                             
+      EQUIVALENCE(LWITPL,LWIREC(LWITPL_OFF))                             
+      EQUIVALENCE(LWITBK,LWIREC(LWITBK_OFF))                             
+      EQUIVALENCE(LWIBRK,LWIREC(LWIBRK_OFF))                             
+      EQUIVALENCE(LWIABW,LWIREC(LWIABW_OFF))                             
+      EQUIVALENCE(LWIODS,LWIREC(LWIODS_OFF))                             
+      EQUIVALENCE(LWIWIN,LWIREC(LWIWIN_OFF))                             
+      EQUIVALENCE(LWIHLD,LWIREC(LWIHLD_OFF))                             
+      EQUIVALENCE(LWITAX,LWIREC(LWITAX_OFF))                             
+      EQUIVALENCE(LWIOTX,LWIREC(LWIOTX_OFF))                             
+      EQUIVALENCE(LWIMID,LWIREC(LWIMID_OFF))                             
+      EQUIVALENCE(LWIUTX,LWIREC(LWIUTX_OFF))                             
+      EQUIVALENCE(LWIHST,LWIREC(LWIHST_OFF))                             
+      EQUIVALENCE(LWIORM,LWIREC(LWIORM_OFF))                             
+      EQUIVALENCE(LWIENM,LWIREC(LWIENM_OFF))                             
+      EQUIVALENCE(LWIDES,LWIREC(LWIDES_OFF))                             
+      EQUIVALENCE(LWINMS,LWIREC(LWINMS_OFF))                             
+      EQUIVALENCE(LWISTA,LWIREC(LWISTA_OFF))                             
+      EQUIVALENCE(LWISBR,LWIREC(LWISBR_OFF))                             
+      EQUIVALENCE(LWIREV,LWIREC(LWIREV_OFF))                             
+      EQUIVALENCE(LWIPFN,LWIREC(LWIPFN_OFF))                             
+      EQUIVALENCE(LWIPRC,LWIREC(LWIPRC_OFF))                             
+      EQUIVALENCE(LWIRTM,LWIREC(LWIRTM_OFF))
+      EQUIVALENCE(LWISPR,LWIREC(LWISPR_OFF))
+      EQUIVALENCE(LWITVC,LWIREC(LWITVC_OFF))
+      EQUIVALENCE(LWIMDS,LWIREC(LWIMDS_OFF))
+      EQUIVALENCE(LWIWRO,LWIREC(LWIWRO_OFF))
+      EQUIVALENCE(LWIWRA,LWIREC(LWIWRA_OFF))
+      EQUIVALENCE(LWIWPO,LWIREC(LWIWPO_OFF))
+      EQUIVALENCE(LWIWPA,LWIREC(LWIWPA_OFF))
+      EQUIVALENCE(LWIWPR,LWIREC(LWIWPR_OFF))
+      EQUIVALENCE(LWILAT,LWIREC(LWILAT_OFF))

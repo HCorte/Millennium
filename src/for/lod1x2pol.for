@@ -1,0 +1,703 @@
+C
+C PROGRAM LOD1X2POL
+C $Log:   GXAFXT:[GOLS]LOD1X2POL.FOV  $
+C  
+C  V03 07-Sep-98 RXK Names of files and other input info hardcoded for new 77
+C                    systems (the case of parameter nolines=.true.)
+C 
+C     Rev 1.0   17 Apr 1996 13:52:42   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:53:34   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - lod1x2pol.for **
+C
+C LOD1X2POL.FOR
+C
+C V01 15-MAR-91 M.P.  MODIFIED FOR POLAND
+C		1. READ BET DEFINITION - DOUBLES,TRIPLES,NR.BETS
+C		   FROM THE FILE1.TXT, RATHER THAN HARD-CODED.
+C		   DEFINE SINGLES AS DIFFERENCE FROM THE NUMBERS
+C		   DRAWN AND SUM OF DOUBLES AND TRIPLES.
+C		2. ALLOW  NEW BET TYPE DEFINITIONS IN THE FILE1.TXT:
+C		    W,Q,M,S,E,K
+C		3. ALLOW NOTATION DEFINITION IN THE FILE1.TXT:
+C
+C		   THE LINE '$DL = AZ_' MAKES THE PROGRAM UZE A,Z
+C		   FOR NOTATION OF DOUBLES
+C
+C		   THE LINE '$TL = 1X2' MAKES THE PROGRAM USE
+C		    1,2,X FOR NOTATION OF TRIPLES
+C
+C		   THE LINE '$DT' MAKES THE PROGRAM SWITCH TO
+C		   POLISH NOTATION <DOUBLES>-<TRIPPLES>-<NR_BETS>
+C
+C		   THE LINE '$TD' MAKES THE PROGRAM SWITCH TO
+C		   THE NOTATION <TRIPLES>-<DOUBLES>-<NR_BETS>
+C
+C		   THE LINE '$SZ = nnn' DEFINES NUMBER OF COLUMNS
+C		   IN BET DEFINITION (3 AND 5 ARE USED IN DENMARK)
+C		   BECAUSE OF COMPATIBILITY WITH OLD DENMARK FILES,
+C		   SIZE IS LIMITTED TO 5 (FIRST 6 BLANKS HAVE
+C		   SPECIAL MEANING)
+C
+C		   THE LINE '$CM' MEANS COMMENT
+C
+C		   THE LINE '$__' MEANS EMPTY LINE
+C		   (BLANKKS IN OLD VERSION)
+C
+C		   THE LINE '$LR' MEANS THAT BET DEFINITIONS
+C		   GO LEFT TO RIGHT RATHER THAN UP/DOWN
+C
+C		   THE LINE '$UD' MEANS THAT BET DEFINITIONS
+C		   GO UP/DOWN
+C
+C	           THE LINE '$MR = nnn' INDICATES THAT ALL FOLLOWING
+C		   DEFINITIONS SHOULD BE USED WITH FIXED NUMBER OF MARKS (13)
+C		   UNTILL THE LINE '$MR = 000' IS FOUND. THIS MEANS THAT
+C		   IN SUSEQUENT DEFINITIONS MARKS = DOUBLES + TRIPLES.
+C		   '$MR = 000' IS ALSO ASSUMED IN THE BEGINING OF THE
+C		   PROGRAM (DEFAULT).
+C
+C		4. INSTEAD OF USING HARD-CODED 'SPTSYS.FIL' AND
+C		   ASKING FOR VOLUME NAME, THE SYSTEM CONFIGURATION SCF.FIL
+C		   FILE IS USED.
+C		5. SSFFPT IS SET TO 0 IN THE BEGINNING, BUT CODE
+C		   CHECKS FOR PREVIOUSLY DEFINED SYSTEM BETS.
+C		   I DON'T KNOW WHAT KIND OF SYSTEM BETS
+C		   COULD BE DEFINED WITHOUT TABLES.
+C		   SHOULD WE RESET POINTERS ALSO? - BUT I DDID NOT
+C		   CHANGE THAT.
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C V01 26-APR-90   LOU R.   INITIAL RELEASE FOR DENMARK.
+C
+C PROGRAM TO CONVERT ASCII DATA FILE CONTAINING DENMARK
+C SYSTEM BETS.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM LOD1X2POL
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:RECSSF.DEF'
+C
+	INTEGER*4  MAXDEFS
+	PARAMETER (MAXDEFS=39)                !NUMBER OF BETS DEFINED
+C
+	INTEGER*4  BET_DEF_MAX
+	PARAMETER (BET_DEF_MAX=3541)
+C
+	INTEGER*4 ROWTAB(SPGNBR,BET_DEF_MAX)
+	INTEGER*4 FDB(7)
+	INTEGER*4 CMD, DOWN, ACCROSS, COUNT, XXX, XX, RECIDX
+	INTEGER*4 BETPROC, J, I, IND, MARK_SIZE
+	INTEGER*4 SINGLE, DOUBLES, TRIPLES
+	INTEGER*4 REDTYP, TYPCNT, STATUS, SYSNR, STYP, ST, LASTPROC
+	LOGICAL MORE,COMPLETE
+	INTEGER*4 NUMPOS
+	INTEGER*4 RSYSNUM/21/   !reduced system numbers begin with 21   
+C
+	CHARACTER*1 C1RECORD(80)
+	CHARACTER*3 C3RECORD(13),C3RECORD2(13,BET_DEF_MAX)
+	INTEGER*4 SPTFIL(5), FLAG
+	CHARACTER*9 SYSDEF(4)
+	EQUIVALENCE (C1RECORD,C3RECORD)
+	DATA SYSDEF/'UNDEFINED','FULL     ',
+     *	            'REDUCED  ','U-SYS    '/
+C
+	CHARACTER*3 NOTATION_DOUBLES/'VO '/
+	CHARACTER*3 NOTATION_TRIPLES/'1X2'/
+	CHARACTER*3 TEMP3
+C
+	LOGICAL	    DOUBLE_FIRST, MARK_SET/.FALSE./
+	INTEGER*4   DOUBLE_START, DOUBLE_END
+	INTEGER*4   TRIPLE_START, TRIPLE_END, COLUMN_SIZE/3/
+	LOGICAL	    UP_DOWN/.TRUE./
+	LOGICAL	    NOLINES/.TRUE./   !in Finland info about system will be
+                                      !taken from file name, the ending lines
+                                      !'***' and 'END' must be present  
+
+        CHARACTER*20 CINPFIL(SPGSYS)
+        INTEGER*4    INPFIL(5,SPGSYS)
+        EQUIVALENCE  (CINPFIL,INPFIL)
+        INTEGER*4    PPVAR,WWVAR,ROWS,GUAR
+        INTEGER*4    PTR,TIMES,FIRSTBET,LASTBET
+        
+        DATA CINPFIL/20*'                    ',   !corresp syst # 
+     *                 'VH_07_03_0060_11.TXD',    !21
+     *                 'VH_00_08_0081_11.TXD',	  !22
+     *                 'VH_00_09_0222_11.TXD',	  !23
+     *                 'VH_08_03_0432_11.TXD',	  !24
+     *                 'VH_00_10_0729_11.TXD',	  !25
+     *                 'VH_08_04_1296_12.TXD',	  !26
+C 
+     *                 'VH_00_04_0009_12.TXD',	  !27
+     *                 'VH_07_00_0016_12.TXD',	  !28
+     *                 'VH_00_05_0027_12.TXD',	  !29
+     *                 'VH_08_00_0032_12.TXD',	  !30
+     *                 'VH_09_00_0062_12.TXD',
+     *                 'VH_00_06_0073_12.TXD',
+     *                 'VH_05_03_0092_12.TXD',
+     *                 'VH_04_04_0128_12.TXD',
+     *                 'VH_09_01_0160_12.TXD',	  !35
+     *                 'VH_00_07_0186_12.TXD',
+     *                 'VH_05_04_0240_12.TXD',
+     *                 'VH_04_05_0324_12.TXD',
+     *                 'VH_06_04_0432_12.TXD',
+     *                 'VH_03_06_0468_12.TXD',	  !40
+     *                 'VH_00_08_0492_12.TXD',
+     *                 'VH_05_05_0639_12.TXD',
+     *                 'VH_04_06_0864_12.TXD',
+     *                 'VH_08_04_1296_12.TXD',	  !44 & 26
+     *                 'VH_00_09_1341_12.TXD',
+C
+     *                 'VH_08_00_0012_11.TXD',	  !46
+     *                 'VH_09_00_0016_11.TXD',	  
+     *                 'VH_00_06_0017_11.TXD',
+     *                 'VH_03_04_0018_11.TXD',
+     *                 'VH_08_01_0021_11.TXD',    !50
+     *                 'VH_05_03_0023_11.TXD',	  
+     *                 'VH_04_04_0024_11.TXD',
+     *                 'VH_10_00_0030_11.TXD',
+     *                 'VH_00_07_0034_11.TXD',
+     *                 'VH_09_01_0035_11.TXD',    !55
+     *                 'VH_06_03_0036_11.TXD',	  
+     *                 'VH_03_05_0036_11.TXD',
+     *                 'VH_05_04_0048_11.TXD',
+     *                 'VH_02_06_0048_11.TXD',
+     *                 'VH_01_07_0054_11.TXD',	  !60
+     *                 'VH_10_01_0060_11.TXD',	  
+     *                 'VH_07_03_0060_11.TXD',    !62 & 21  
+     *                 'VH_04_05_0064_11.TXD',
+     *                 'VH_06_04_0072_11.TXD',
+     *                 'VH_03_06_0072_11.TXD',    !65
+     *                 'VH_00_08_0081_11.TXD',	  !66 & 22
+     *                 'VH_11_01_0096_11.TXD',
+     *                 'VH_08_03_0096_11.TXD',	  
+     *                 'VH_05_05_0108_11.TXD',
+     *                 'VH_02_07_0108_11.TXD',	  !70
+     *                 'VH_10_02_0144_11.TXD',
+     *                 'VH_04_06_0144_11.TXD',
+     *                 'VH_06_05_0192_11.TXD',	  
+     *                 'VH_03_07_0216_11.TXD',
+     *                 'VH_00_09_0222_11.TXD',	  !75 & 23
+     *                 'VH_05_06_0276_11.TXD',
+     *                 'VH_04_07_0384_11.TXD',
+     *                 'VH_08_03_0432_11.TXD',	  !78 & 24
+     *                 'VH_09_04_0480_11.TXD',
+     *                 'VH_00_10_0729_11.TXD',	  !80 & 25
+     *                 'VH_00_11_0729_11.TXD',
+C
+     *                 'VH_04_04_0010_10.TXD',    !82
+     *                 'VH_09_01_0012_10.TXD',
+     *                 'VH_06_03_0012_10.TXD',
+     *                 'VH_03_05_0012_10.TXD',	  !85
+     *                 'VH_00_07_0012_10.TXD',
+     *                 'VH_11_00_0016_10.TXD',
+     *                 'VH_08_02_0016_10.TXD',
+     *                 'VH_05_04_0016_10.TXD',
+     *                 'VH_07_03_0022_10.TXD',	  !90
+     *                 'VH_06_04_0024_10.TXD',
+     *                 'VH_03_06_0024_10.TXD',
+     *                 'VH_00_08_0027_10.TXD',
+     *                 'VH_12_00_0028_10.TXD',
+     *                 'VH_11_01_0032_10.TXD',	  !95
+     *                 'VH_08_03_0032_10.TXD',
+     *                 'VH_13_00_0042_10.TXD',
+     *                 'VH_06_05_0054_10.TXD',
+     *                 'VH_03_07_0054_10.TXD',
+     *                 'VH_00_09_0054_10.TXD',	  !100
+     *                 'VH_02_08_0072_10.TXD',
+     *                 'VH_03_08_0108_10.TXD',
+     *                 'VH_00_10_0108_10.TXD',	  !103
+     *               7*'                    '/
+C
+	CALL COPYRITE
+C
+C
+	TYPE *, IAM(), '<<<<<<<<<< LOD1X2 01.00 >>>>>>>>>>'
+        TYPE *, IAM(), 'INPUTS: '
+        TYPE *, IAM(), ' 1. SCF.FIL file'
+        TYPE *, IAM(), ' 2. Origin of SPORTS-SYSTEM file (SPTSYS.FIL):'
+        TYPE *, IAM(), ' 3. Files  with reduced system definitions '
+        TYPE *, IAM(), 'OUTPUTS:'
+        TYPE *, IAM(), ' 1. LOD1X2.REP file'
+        TYPE *, IAM(), ' 2. Updated SPORTS-SYSTEM file (SPTSYS.FIL):'
+        TYPE *, IAM(), ' 2.1. All reduced system bets are re-built'
+        CALL WIMG(5,'Are you sure you want to continue?')
+        CALL YESNO(FLAG)
+        IF (FLAG.NE.1) THEN
+	  TYPE*, IAM(), 'TERMINATED BY REQUEST'
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+C
+C	READ FILE SPORTS SYSTEM FILE NAME
+C
+	CALL GET_SPT_NAME (SPTFIL)
+ 	LASTPROC=0
+C
+	CALL ROPEN('LOD1X2.REP',7,ST)
+	IF(ST.NE.0) THEN
+	  TYPE*,' LOD1X2.REP OPEN ERROR ',ST
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+C
+C READ 1X2 SYSTEM FILE INTO MEMORY
+C
+	CALL OPENQW(2,SPTFIL,4,0,0,ST)
+	IF(ST.NE.0) THEN
+	  TYPE*,' SPTSYS.FIL OPEN ERROR ',ST
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+	CALL IOQINIT(FDB,2,SSFSEC*256)
+	CALL READQW(FDB,1,SSFREC,ST)
+	IF (ST.NE.0) THEN
+	  TYPE*,' SPTSYS.FIL READ ERROR ',ST
+	  TYPE *,IAM(),'LOD1X2 aborted, file error '
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+C
+	SSFFPT=0                   !set system pointer to zero ....
+	STYP=NOSYS                 !SYSTEM TYPE
+C
+C
+	CALL INPNUM('Enter System # to start loading : ',SYSNR,21,SPGSYS,ST)
+	IF(ST.LT.0) THEN
+	  CALL CLOSEQFIL(FDB)
+	  TYPE *,IAM(),'Loading aborted'
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+        IF(SYSNR.EQ.21) THEN
+	   SSFFPT=0                   !set system pointer to zero ....
+        ELSE
+           PTR=SSFPTR(SYSNR-1)
+           IF(PTR.EQ.0) THEN
+	      TYPE*,' SPTSYS.FIL last system read error ',ST
+	      TYPE *,IAM(),'LOD1X2 aborted'
+	      CALL GSTOP(GEXIT_SUCCESS)
+           ENDIF
+           TIMES=SSFTAB(PTR)
+           FIRSTBET=PTR+1
+           LASTBET=FIRSTBET+TIMES*13
+           SSFFPT=LASTBET
+        ENDIF
+C
+C
+C check if system number is already defined ...
+C
+1000    CONTINUE
+	IF(SSFATR(SYSNR).NE.NOSYS) THEN
+	   TYPE*,' System number ',SYSNR,' already defined '
+	   CALL GPAUSE
+	ENDIF
+C
+	OPEN(4,FILE=CINPFIL(SYSNR),IOSTAT=ST,STATUS='OLD',SHARED     )
+	IF(ST.NE.0)THEN
+	  TYPE *,CINPFIL(SYSNR),' OPEN ERROR ',ST
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+C
+        CALL ASCBIN(INPFIL(1,SYSNR),4,2,PPVAR,ST)
+        CALL ASCBIN(INPFIL(1,SYSNR),7,2,WWVAR,ST)
+        CALL ASCBIN(INPFIL(1,SYSNR),10,4,ROWS,ST)
+        CALL ASCBIN(INPFIL(1,SYSNR),15,2,GUAR,ST)
+        TYPE*
+        TYPE*,' Reading ',CINPFIL(SYSNR)
+        TYPE*,' System number',SYSNR,' :'
+        TYPE*,'             # of partly varied rows:  ',PPVAR       
+        TYPE*,'             # of entirely varied rows:',WWVAR       
+        TYPE*,'             size      :',ROWS
+        TYPE*,'             guarantee :',GUAR
+C
+C
+C IF PARAMETER LINES ARE NOT PRESENT THEN VALUES WILL BE GOT FROM FILE NAME
+C (IN FINLAND)
+C
+        IF(NOLINES) THEN
+	    STYP=REDSYS
+            DOUBLES = PPVAR
+            TRIPLES = WWVAR
+            SINGLE = ROWS
+	    MARK_SIZE = DOUBLES + TRIPLES
+	    DOUBLE_START = 1
+	    DOUBLE_END = DOUBLE_START + DOUBLES - 1
+	    TRIPLE_START = DOUBLE_END + 1
+	    TRIPLE_END = TRIPLE_START + TRIPLES - 1
+            COLUMN_SIZE = 1
+	    DOUBLE_FIRST = .TRUE.
+	    UP_DOWN = .FALSE.
+            REDTYP = ROWS
+        ENDIF
+C
+	DO 10000 TYPCNT=1,MAXDEFS
+C
+	STATUS=0
+C
+C DEFINE BET ATTRIBUTES
+C
+	IND=SSFFPT
+C
+C FILL TABLE WITH DEFAULTS
+C
+	DO 100 I=1,SPGNBR
+	DO 100 J=1,BET_DEF_MAX
+	  ROWTAB(I,J)=1
+100	CONTINUE
+C
+C READ ASCII REPRENTATION OF THIS BET AND LOAD INTO TABLE
+C
+C
+	BETPROC=1
+	RECIDX=1
+150	CONTINUE
+	COMPLETE=.FALSE.
+	MORE=.FALSE.
+        IF(NOLINES) THEN
+	   READ(4,901,END=210) (C1RECORD(XX),XX=1,80)
+        ELSE
+	   READ(4,901) (C1RECORD(XX),XX=1,80)
+        ENDIF
+C
+	IF(C3RECORD(1).EQ.'***') THEN   !THIS BET COMPLETE LOAD IT
+	  COMPLETE=.TRUE.
+	  GOTO 250
+	ENDIF
+	IF(C3RECORD(1).EQ.'END') GOTO 20000
+	IF(C3RECORD(1).EQ.'$__') THEN
+	  MORE=.TRUE.     !PROCESS THIS CHUNCK FIRST
+	  GOTO 250
+	ENDIF
+C
+C	FOLLOWING IS FOR COMPATIBILITY, EXTRA 3 SPACES ARE CHECKED
+C	BECAUSE COLUMNS MAY BE 5 CHARS WIDE
+C
+	IF(C3RECORD(1).EQ.'   '
+     1    .AND.C3RECORD(2).EQ.'   '
+     2    .AND.TYPCNT.LE.13) THEN
+	  MORE=.TRUE.     !PROCESS THIS CHUNCK FIRST
+	  GOTO 250
+	ENDIF
+C
+	IF(C3RECORD(1).EQ.'$CM') THEN	! COMMENT
+	    GOTO 150
+	ENDIF
+C
+	IF(C3RECORD(1).EQ.'$SZ') THEN	! COLUMN SIZE
+	    READ (C3RECORD(3), 151) COLUMN_SIZE
+151	FORMAT (I3)
+	    TYPE *, IAM(), 'NEW COLUMN SIZE: ',
+     1	      COLUMN_SIZE
+C
+C	    FOR COMPATIBILITY:
+C
+	    IF (COLUMN_SIZE .GT. 5) THEN
+		TYPE *,'SINCE EMPTY LINES HAVE SPECIAL MEANING',
+     1	        ' SIZE IS LIMITTED TO 5'
+		CALL GSTOP(GEXIT_SUCCESS)
+	    ENDIF
+	    GOTO 150
+	ENDIF
+C
+	IF(C3RECORD(1).EQ.'$MR') THEN	! NUMBER OF MARKS
+	    READ (C3RECORD(3), 151) MARK_SIZE
+	    TYPE *, IAM(), 'NEW MARKS SIZE: ', MARK_SIZE
+	    IF (MARK_SIZE .LE. 0) THEN
+		MARK_SET = .FALSE.
+	    ELSE
+		MARK_SET = .TRUE.
+	    ENDIF
+	    GOTO 150
+	ENDIF
+C
+	IF(C3RECORD(1).EQ.'$DL') THEN	! NEW NOTATION
+	    NOTATION_DOUBLES = C3RECORD(3)
+	    TYPE *, IAM(), 'SWITCHING TO NOTATION_DOUBLES: ',
+     1	      NOTATION_DOUBLES
+	    GOTO 150
+	ENDIF
+C
+	IF(C3RECORD(1).EQ.'$TL') THEN	! NEW NOTATION
+	    NOTATION_TRIPLES = C3RECORD(3)
+	    TYPE *, IAM(), 'SWITCHING TO NOTATION_TRIPLES: ',
+     1	      NOTATION_TRIPLES
+	    GOTO 150
+	ENDIF
+C
+	IF(C3RECORD(1).EQ.'$DT') THEN	! <DOUBLES>-<TRIPLES>
+	    DOUBLE_FIRST = .TRUE.
+	    GOTO 150
+	ENDIF
+C
+	IF(C3RECORD(1).EQ.'$TD') THEN	! <TRIPLES><DOUBLES>
+	    DOUBLE_FIRST = .FALSE.
+	    GOTO 150
+	ENDIF
+C
+	IF(C3RECORD(1).EQ.'$LR') THEN	! BETS DEFINED LEFT TO RIGHT
+	    UP_DOWN = .FALSE.
+	    GOTO 150
+	ENDIF
+C
+	IF(C3RECORD(1).EQ.'$UD') THEN	! BETS DEFINED UP/DOWN
+	    UP_DOWN = .TRUE.
+	    GOTO 150
+	ENDIF
+C
+	IF(C3RECORD(1).EQ.'$$$') THEN
+	 IF(C1RECORD(6).EQ.'R'.OR.
+     *     C1RECORD(6).EQ.'W'.OR.
+     *     C1RECORD(6).EQ.'Q'.OR.
+     *     C1RECORD(6).EQ.'M'.OR.
+     *     C1RECORD(6).EQ.'S'.OR.
+     *     C1RECORD(6).EQ.'E'.OR.
+     *     C1RECORD(6).EQ.'K'.OR.
+     *	   C1RECORD(6).EQ.'U') THEN
+	  STYP=REDSYS
+	  IF(C1RECORD(6).EQ.'U') STYP=USYS
+	  WRITE(5,902) SYSDEF(STYP+1),(C3RECORD(XXX),XXX=1,5)
+C
+C	  GET DOUBLES,TRIPLES, AND NR BETS FROM THE RECORD
+C	  THE ORDER OF DOUBLES AND TRIPLES IS DEFINED BY
+C	  '$DT' OR '$TD' IN THE INPUT FILE
+C	  ALSO MAKE THE DEFAULT <TRIPLES><DOUBLES>
+C
+	  NUMPOS = 7
+	  CALL EXTNUM(C1RECORD, 80, TRIPLES, NUMPOS)
+	  CALL EXTNUM(C1RECORD, 80, DOUBLES, NUMPOS)
+	  TRIPLE_START = 1
+	  TRIPLE_END = TRIPLE_START + TRIPLES - 1
+	  DOUBLE_START = TRIPLE_END + 1
+	  DOUBLE_END = DOUBLE_START + DOUBLES - 1
+C
+	  IF (DOUBLE_FIRST) THEN
+	    NUMPOS = 7
+	    CALL EXTNUM(C1RECORD, 80, DOUBLES, NUMPOS)
+D	    TYPE *, IAM(), 'DOUBLES: ', DOUBLES
+	    CALL EXTNUM(C1RECORD, 80, TRIPLES, NUMPOS)
+D	    TYPE *, IAM(), 'TRIPLES: ', TRIPLES
+	    DOUBLE_START = 1
+	    DOUBLE_END = DOUBLE_START + DOUBLES - 1
+	    TRIPLE_START = DOUBLE_END + 1
+	    TRIPLE_END = TRIPLE_START + TRIPLES - 1
+	  ENDIF
+D	  TYPE *, IAM(), 'DOUBLES: ', DOUBLE_START,' : ',DOUBLE_END
+D	  TYPE *, IAM(), 'TRIPLES: ', TRIPLE_START,' : ',TRIPLE_END
+	  CALL EXTNUM(C1RECORD, 80, REDTYP, NUMPOS)
+D	  TYPE *, IAM(), 'REDTYP: ', REDTYP
+	  SINGLE = REDTYP
+	  IF (.NOT. MARK_SET) THEN
+	    MARK_SIZE = DOUBLES + TRIPLES
+	  ENDIF
+	  GOTO 150
+	 ENDIF
+	ENDIF
+C
+	DO 200 COUNT=1,13
+	  CALL EXTRACT(C1RECORD, COLUMN_SIZE, COUNT, TEMP3)
+	  C3RECORD2(COUNT,RECIDX) = TEMP3
+D	  TYPE *, IAM(), 'NEW VALUE EXTRACTED: ', TEMP3
+200	CONTINUE
+	RECIDX=RECIDX+1
+	GOTO 150
+C
+210     CONTINUE
+	COMPLETE=.TRUE.
+C
+250	CONTINUE
+	IF(UP_DOWN) THEN
+	  DO 300 ACCROSS=1,10
+	  DO 300 DOWN=1,MARK_SIZE
+	  IF(C3RECORD2(ACCROSS,DOWN).EQ.'   ') GOTO 300
+	  IF(DOWN .GE. DOUBLE_START
+     1    .AND. DOWN .LE. DOUBLE_END) THEN
+	    CALL DEC1X2(C3RECORD2(ACCROSS,DOWN),ROWTAB(DOWN,BETPROC),
+     *	      BETPROC,MARK_SIZE, NOTATION_DOUBLES)
+	  ELSE
+	    CALL DEC1X2(C3RECORD2(ACCROSS,DOWN),ROWTAB(DOWN,BETPROC),
+     *	      BETPROC,MARK_SIZE, NOTATION_TRIPLES)
+	  ENDIF
+D	  TYPE *,IAM(),'BIT MAP IS: ', ROWTAB(DOWN,BETPROC)
+	  IF(DOWN.EQ.MARK_SIZE) BETPROC=BETPROC+1
+	  LASTPROC=BETPROC
+300	  CONTINUE
+C
+C	TYPCNT  COMPARED WITH 13 FOR COMPATIBILITY WITH DENMARK
+C
+	ELSE
+	  DO 350 DOWN=1,RECIDX-1
+	  DO 350 ACCROSS=1,MARK_SIZE
+	  IF(ACCROSS .GE. DOUBLE_START
+     1    .AND. ACCROSS .LE. DOUBLE_END) THEN
+	    CALL DEC1X2(C3RECORD2(ACCROSS,DOWN),ROWTAB(ACCROSS,BETPROC),
+     *	      BETPROC,MARK_SIZE, NOTATION_DOUBLES)
+	  ELSE
+	    CALL DEC1X2(C3RECORD2(ACCROSS,DOWN),ROWTAB(ACCROSS,BETPROC),
+     *	      BETPROC,MARK_SIZE, NOTATION_TRIPLES)
+	  ENDIF
+	  IF(ACCROSS.EQ.MARK_SIZE) BETPROC=BETPROC+1
+	  LASTPROC=BETPROC
+350	  CONTINUE
+	ENDIF
+	IF(COMPLETE) GOTO 375   !LOAD UP THIS INTO OUR TABLES
+	RECIDX=1
+	GOTO 150                !GO READ THE NEXT CHUNK OF DATA
+375	CONTINUE
+	IF(COMPLETE) THEN
+	  IF(IND.EQ.0)IND=1
+	  SSFATR(SYSNR)=STYP
+C
+C SET INTO COMMON
+C
+	  SSFNUM(4,SYSNR)=SPGNBR
+	  SSFPTR(SYSNR)=IND              !pointer
+	  SSFNUM(1,SYSNR)=1
+	  SSFNUM(2,SYSNR)=SSFNUM(1,SYSNR)+TRIPLES
+	  SSFNUM(3,SYSNR)=SSFNUM(2,SYSNR)+DOUBLES
+	  SSFNUM(5,SYSNR)=SINGLE !number of simple bets ...
+          SSFGAR(SYSNR)=GUAR
+C**     SSFTAB(IND)=TABCNT(TYPCNT)     ;# bets
+	  SSFTAB(IND)=LASTPROC-1
+	  IND=IND+1
+C
+	  IF(IND.GT.SFTABMAX) GOTO 710
+C
+C FILL TABLE IN COMMON
+C
+	  DO 490 I=1,LASTPROC-1
+	    DO 400 J=TRIPLE_START,TRIPLE_END
+		SSFTAB(IND)=ROWTAB(J,I)
+		IND=IND+1
+		IF(IND.GT.SFTABMAX) GOTO 710
+400	    CONTINUE
+C
+	    DO 410 J=DOUBLE_START,DOUBLE_END
+		SSFTAB(IND)=ROWTAB(J,I)
+		IND=IND+1
+		IF(IND.GT.SFTABMAX) GOTO 710
+410	    CONTINUE
+C
+	    DO 420 J=JMAX0(TRIPLE_END,DOUBLE_END)+1,SPGNBR
+		SSFTAB(IND)=ROWTAB(J,I)
+		IND=IND+1
+		IF(IND.GT.SFTABMAX) GOTO 710
+420	    CONTINUE
+490	  CONTINUE
+	  SSFFPT=IND
+C
+	  WRITE(5,903) SYSNR,SYSDEF(STYP+1),REDTYP,
+     *	     LASTPROC-1,
+     *	    TRIPLES,DOUBLES,13-(DOUBLES+TRIPLES)
+	  WRITE(7,903) SYSNR,SYSDEF(STYP+1),REDTYP,
+     *	     LASTPROC-1,
+     *	    TRIPLES,DOUBLES,13-(DOUBLES+TRIPLES)
+	  DO 500 I=1,SPGNBR
+	  DO 500 J=1,BET_DEF_MAX
+	     ROWTAB(I,J)=1
+500	  CONTINUE
+	  SYSNR=SYSNR+1
+	  RECIDX=1
+	  BETPROC=1
+C
+C MAKE SURE NEXT IS AVAILABLE
+C
+	  IF(SSFATR(SYSNR).NE.NOSYS) THEN
+	     TYPE*,' System number ',SYSNR,' already defined '
+	     CALL GSTOP(GEXIT_SUCCESS)
+	  ENDIF
+          IF(NOLINES) GOTO 20000
+	  GOTO 10000
+	ENDIF
+	RECIDX=1
+	GOTO 150
+C
+C
+10000	CONTINUE
+20000	CONTINUE
+C
+        IF(SYSNR.LT.SPGSYS) THEN
+           CALL WIMG(5,'Do you want to continue with next system')
+           CALL YESNO(FLAG)
+           IF (FLAG.NE.1) THEN
+              GOTO 30000
+           ELSE
+              GOTO 1000 
+	   ENDIF
+        ENDIF
+C
+30000   CONTINUE
+	CALL USRCLOS1(     7)
+C???	CALL SPOOL('LOD1X2.REP',1,ST)
+	TYPE*,' LOD1X2.REP HAS BEEN SPOOLED '
+	TYPE *,' '
+C
+	TYPE*,' Please check report prior to saving image to file '
+	TYPE*,' '
+C
+600	CONTINUE
+	TYPE *,' 1 - save image in the file'
+	TYPE *,' E - to abort, i.e., do not save image to file '
+	CALL INPNUM('Enter command: ',CMD,1,1,ST)
+	IF(ST.LT.0) THEN
+	  CALL CLOSEQFIL(FDB)
+	  TYPE *,IAM(),'LOD1X2 aborted image not saved'
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+	IF(CMD.EQ.1) GOTO 700
+	TYPE *,'Invalid'
+	GOTO 600
+C
+C     UPDATE SPTSYS.FIL
+C
+700	CONTINUE
+	CALL WRITEQW(FDB,1,SSFREC,ST)
+	IF (ST.NE.0) THEN
+	   TYPE*,' SPTSYS.FIL WRITE ERROR ',ST
+	   TYPE *,'LOD1X2 aborted, write error '
+	   TYPE *,IAM(),'SPTSYS.FIL not updated'
+	   CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+C
+	TYPE *,IAM(),'LOD1X2 complete, SPTSYS.FIL updated '
+	CALL GSTOP(GEXIT_SUCCESS)
+C
+C	SYSTEM TABLE IS FULL
+C
+710	CONTINUE
+	TYPE*,' System Table full .... definition not saved '
+	CALL GSTOP(GEXIT_SUCCESS)
+C
+C
+C THE FOLLOWINMG FORMATS ARE USED.
+C
+901	FORMAT(80A1)
+902	FORMAT(1X,' PROCESSING ',A9,' BET ',5A3)
+903	FORMAT(1X,' CENTRAL SYSTEM # ',I3,' CONVERTED IN COMMON ',/,
+     *	   1X,' DEFINED AS ',A9,' SYSTEM WITH ',I5,' COMBINATIONS',/,
+     *	   1X,' TRANSLATED FROM ',I5,' BETS FROM ASCII DATA ',/,
+     *	   1X,' MADE UP OF ',I2,' TRIPLES ',I2,' DOUBLES ',I4,
+     *	   ' SINGLES ',//)
+904	FORMAT(A4)
+	END

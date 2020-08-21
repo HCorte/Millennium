@@ -1,0 +1,205 @@
+C
+C SUBROUTINE X2REQSTS
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2REQSTS.FOV                                 $
+C  $Date::   17 Apr 1996 16:31:06                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2reqsts.for;1 **
+C
+C X2REQSTS.FOR
+C
+C V03 18-JUL-94 WS MULTINETWORK CHANGES - Integrate UK changes 
+C		   into X2X Baseline
+C V02  9-MAR-94 JWE Add broadcast & X.25 statistics
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C Calling Sequence:
+C
+C     CALL X2REQSTS(TRABUF,MESS,ORGMESS,LEN)
+C
+C This subroutine will build a station message requesting
+C the station to send statistics for the reports defined
+C by the report class.
+C
+C Input parameters:
+C
+C     TRABUF      Int*4(TRALEN)   Transaction buffer
+C     ORGMESS     Int*4(*)        Message from station
+C
+C Output parameters:
+C
+C     MESS        Int*4(*)        Message to be sent to station.
+C     MESLEN      Int*2           Length of output message (bytes)
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2REQSTS(TRABUF,MESS,ORGMESS,MESLEN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+	INCLUDE 'INCLIB:X2STMES.DEF'
+	INCLUDE 'INCLIB:X2XRCD.DEF'
+	INCLUDE 'INCLIB:X2XRCL.DEF'
+	INCLUDE 'INCLIB:X2XSTN.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+C
+	INTEGER*2   MESLEN          !Output message length
+	INTEGER*4   ORGMESS(*)      !Station input message
+	INTEGER*4   MESS(*)         !Station output message
+	INTEGER*4   REPCNT          !Report count
+	INTEGER*4   STN             !Station number
+	INTEGER*4   OFFMES          !Offset of station message
+	INTEGER*4   OFF             !Offset of
+	INTEGER*4   OUTBYT          !Byte index of output message
+	INTEGER*4   ST, CHKVAL, FLAGS, I, TEMP
+	INTEGER*4   REPCLS, STNCLS  !V03
+C
+C DETERMINE THE STARTING OFFSET OF THE STATION
+C MESSAGE IN THE MESSAGE FROM X2XMGR.
+C
+	CALL ILBYTE(OFFMES,ORGMESS,X2PRO_OFFSET-1)
+	STN=TRABUF(TXSTN)
+	TEMP=0
+	MESLEN=0
+	OUTBYT=0
+	OFF=X2STMES_DATA-1
+	REPCNT=0
+C
+C COPY THE INPUT MESSAGE HEADER TO THE OUTPUT MESSAGE.
+C
+	DO 100 I=OFFMES,OFFMES+X2STMES_HDRLEN
+	  OUTBYT=OUTBYT+1
+	  CALL ILBYTE(TEMP,ORGMESS,I-1)
+	  CALL ISBYTE(TEMP,MESS,OUTBYT-1)
+100	CONTINUE
+C
+C SET THE CONFIGURATION CONTROL NUMBER, COMMAND
+C CODE, AND STATION CONFIGURATION CHECKSUM.
+C
+	CALL ISBYTE(X2STMES_DATATYPE_CMD_DOWN,MESS,
+     *	            X2STMES_DATATYPE-1)
+	TEMP=0
+	CALL ILBYTE(TEMP,IX2XS_CONF,STN-1)
+	IF (X2XS_TYPE(STN).EQ.X2XST_BCST) 			!V03
+     *		     TEMP=0					!V03
+	CALL ISBYTE(TEMP,MESS,X2STMES_CONFCHK-1)
+C
+C SET THE OUTGOING FLAGS.
+C
+	FLAGS=X2STMES_DIS_DEFAULT           !  V02 ( remove DIS_UNC mode)
+	CALL ILBYTE(FLAGS,MESS,X2STMES_FLAGS-1)
+C
+C CHECK FOR VALID STATION NUMBER.
+C
+	IF(CHKVAL(STN,1,X2X_STATIONS,' STATION NUMBER ').NE.0) THEN
+	  MESLEN=-1
+	  GOTO 8000
+	ENDIF
+C
+CV03C READ THE STATION RECORD TO OBTAIN REPORT CLASS.
+C
+CV03	CALL READW(X2XSTN_FDB,STN,X2XSTN_REC,ST)
+CV03	IF(ST.NE.0) THEN
+CV03	  CALL OPS('X2REQSTS: Error reading X2XSTN.FIL ',STN,ST)
+C
+C
+C READ THE REPORT CLASS RECORD TO OBTAIN THE REPORT CODES.		!V03
+C
+	STNCLS=X2XS_STNCLS(STN)						!V03
+	REPCLS=X2XC_REPCLS(STNCLS)					!V03
+	IF (REPCLS.LE.0) THEN						!V03
+	  CALL OPS('X2REQSTS: Error reading X2XRCL.FIL ',STN,ST)	!V03
+	  MESLEN=-1
+	  GOTO 8000
+	ENDIF
+C
+C READ THE REPORT CLASS RECORD TO OBTAIN THE REPORT CODES.
+C
+CV03	CALL READW(X2XRCL_FDB,X2XSTN_REPCLS,X2XRCL_REC,ST)
+	CALL READW(X2XRCL_FDB,REPCLS,X2XRCL_REC,ST)			!V03
+	IF(ST.NE.0) THEN
+	  CALL OPS('X2REQSTS: Error reading X2XRCL.FIL ',STN,ST)
+	  MESLEN=-1
+	  GOTO 8000
+	ENDIF
+C
+C LOOP THROUGH ALL 16 POSSIBLE REPORT CODES, READING THE
+C REPORT CODE FILE TO DETERMINE WHETHER TO RESET STATISTICS,
+C AND STORING THE INFORMATION INTO THE OUTPUT BUFFER.
+C
+	DO 200 I=1,X2STMES_STS_MAXCNT
+C
+C CHECK SELECTION CRITERIA.
+C
+	  IF(TRABUF(TXPTL).EQ.X2ERR_GLO_STN_STATS .AND.
+     *	     X2XRCL_RPTCDE(I).NE.X2STMES_STSTYP_PRTSTA) GOTO 200
+C
+	  IF(TRABUF(TXPTL).EQ.X2ERR_GLO_STN_LAST_CALL .AND.
+     *	     X2XRCL_RPTCDE(I).NE.X2STMES_STSTYP_LSTCALL) GOTO 200
+C
+        IF(TRABUF(TXPTL).EQ.X2ERR_GLO_STN_X25_STATS .AND.           ! V02
+     *     X2XRCL_RPTCDE(I).NE.X2STMES_STSTYP_X25) GOTO 200
+C
+        IF(TRABUF(TXPTL).EQ.X2ERR_GLO_STN_BCST_STATS .AND.     ! V02
+     *     X2XRCL_RPTCDE(I).NE.X2STMES_STSTYP_BCST) GOTO 200
+C
+C READ THE REPORT CODE RECORD.
+C
+	  IF(X2XRCL_RPTCDE(I).LE.0) GOTO 200
+	  CALL READW(X2XRCD_FDB,X2XRCL_RPTCDE(I),X2XRCD_REC,ST)
+	  IF(ST.NE.0) THEN
+	    CALL OPS('X2REQSTS: Error reading X2XRCD.FIL ',STN,ST)
+	    MESLEN=-1
+	    GOTO 8000
+	  ENDIF
+C
+C STORE THE REPORT CODE.
+C
+	  IF(X2XRCD_REC(1).GT.0) THEN
+	    REPCNT=REPCNT+1
+	    CALL ISBYTE(X2XRCD_RESET,MESS,OFF+X2STMES_STS_REPFLG1+
+     *	                        ((REPCNT-1)*X2STMES_STS_MAXLEN)-1)
+	    CALL ISBYTE(X2XRCD_TYPE,MESS,OFF+X2STMES_STS_REPTYP1+
+     *	                        ((REPCNT-1)*X2STMES_STS_MAXLEN)-1)
+	  ENDIF
+200	CONTINUE
+C
+C STORE THE REPORT COUNT, COMMAND CODE AND
+C SET THE OUTPUT MESSAGE LENGTH.
+C
+	CALL ISBYTE(X2STMES_STAT_REQ,MESS,OFF+X2STMES_STS_CMD-1)
+	CALL ISBYTE(REPCNT,MESS,OFF+X2STMES_STS_REPCNT-1)
+	MESLEN=(X2STMES_STS_REPFLG1-1)+(X2STMES_STS_MAXLEN*REPCNT)
+	CALL I2TOBUF2(MESLEN,MESS,X2STMES_MESLEN-1)
+	MESLEN=MESLEN+X2STMES_HDRLEN
+C
+C PROGRAM EXIT.
+C
+8000	CONTINUE
+	RETURN
+	END

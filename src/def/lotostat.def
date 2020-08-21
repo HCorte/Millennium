@@ -1,0 +1,122 @@
+C LOTOSTAT.DEF
+C $Log:   GXAFXT:[GOLS]LOTOSTAT.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:55:54   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:46:20   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 18-APR-91 MP  INITIAL RELEASE FOR VAX
+C
+C V01 15-APR-91 JPJ INITIAL RELEASE FOR IOWA
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1990 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C	THIS PARAMETER HAS TO BE 10 BECAUSE OF THE MODULE 'OFFSET.FOR'
+C
+	INTEGER*4 MAX_PER_PANNEL
+	PARAMETER (MAX_PER_PANNEL=10)
+C
+	INTEGER*4 MAX_PANNELS
+	PARAMETER (MAX_PANNELS=10)
+C
+	INTEGER*4 POOL_SIZE
+C
+	INTEGER*4 MAXCNT
+	PARAMETER(MAXCNT=1000000)
+C
+	INTEGER*4 DISK_POOL_RECZ_I4
+	PARAMETER(DISK_POOL_RECZ_I4=256000)
+C
+	INTEGER*4 TOPFDB(7),OFFSET_TABLE(MAXCNT)
+C
+C	THIS TABLE HAS TO BE 0:70,10 BECAUSE OF THE MODULE 'OFFSET.FOR'
+C
+	INTEGER*4 PERTAB(0:70,MAX_PER_PANNEL)
+C
+	INTEGER*4 BLOCK_BET_COUNT
+C
+        INTEGER*4   PANELS_BET
+C
+        INTEGER*4   PANELS_COVERED
+C
+        INTEGER*4   PANELS_NOT_COVERED
+C
+	INTEGER*4 DRAW,COPIES
+C
+	LOGICAL POOL_WRITTEN
+C
+	INTEGER*4   GAME_TYPE, GAME_INDEX, GAME_NUMBER
+	INTEGER*4   GAME_HIGH_DIGIT
+	INTEGER*4   GAME_NUMBERS_DRAWN
+	INTEGER*4   DAY_X_CDC
+C
+C	HAVING THE TABLE IN COMMON WILL SAVE SPACE
+C
+        INTEGER*4 RECORD_TABLE(DISK_POOL_RECZ_I4)
+C
+	INTEGER*4 FREQ_REP_LENGTH
+	PARAMETER (FREQ_REP_LENGTH=42)
+C
+	INTEGER*4 TOP_REP_LENGTH
+	PARAMETER (TOP_REP_LENGTH=100)
+C
+        INTEGER*4   FREQ_TABLE(FREQ_REP_LENGTH)
+        INTEGER*4   TOP_TABLE(2,TOP_REP_LENGTH)
+C
+	CHARACTER*20	L649_FILE
+	PARAMETER	(L649_FILE='L649STAT.FIL')
+C
+	CHARACTER*20	L635_FILE
+	PARAMETER	(L635_FILE='L635STAT.FIL')
+C
+C	6/49 GAME SPECIFIC
+C
+	INTEGER*4	BOARDS_649_MAX
+	PARAMETER	(BOARDS_649_MAX=10)
+C
+C	6/35 GAME SPECIFIC
+C
+	INTEGER*4	BOARDS_635_MAX
+	PARAMETER	(BOARDS_635_MAX=10)
+C
+	INTEGER*4	BOARDS_P_TICKET(BOARDS_635_MAX)
+	INTEGER*4	AMOUNT_P_TICKET(BOARDS_635_MAX)
+C
+	COMMON /LOTOSTAT/ 
+     *	 POOL_SIZE,
+     *	 TOPFDB,
+     *	 OFFSET_TABLE,
+     *	 PERTAB,
+     *	 BLOCK_BET_COUNT,
+     *	 DRAW,COPIES,
+     *	 POOL_WRITTEN,
+     *	 GAME_TYPE,
+     *	 GAME_INDEX,
+     *	 GAME_NUMBER,
+     *   GAME_HIGH_DIGIT,
+     *	 GAME_NUMBERS_DRAWN,
+     *   RECORD_TABLE,
+     *   PANELS_BET,
+     *   PANELS_COVERED,
+     *   PANELS_NOT_COVERED,
+     *   FREQ_TABLE,
+     *   TOP_TABLE,
+     *   DAY_X_CDC,
+     *	BOARDS_P_TICKET,
+     *	AMOUNT_P_TICKET
+C

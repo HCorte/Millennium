@@ -1,0 +1,289 @@
+C
+C PROGRAM SETAGTMXT_PROC
+C
+C ** Source - SETAGTMXT_PROC.FOR;1 **
+C
+C SETAGTMXT_PROC.FOR
+C
+C V01 19-JAN-2015 SCML Initial Release.
+C
+C This program defines online terminals (except X25 Portal terminals 
+C which are ignored) that are not of type MXS as MXS. This is done 
+C by setting the AGTMXT flag of the terminal. A report file named 
+C RELAT_TERMINAIS_NOT_MXS_<CDC>.REP is generated and contains the 
+C list of the terminals whose AGTMXT flag was successfully set. If 
+C some AGTMXT flag was not possible to set to one, the related info 
+C of the agent is written to the error report file named 
+C RELAT_TERMINAIS_NOT_MXS_<CDC>.ERR.
+C
+C 1. Builds the report name (template: RELAT_TERMINAIS_NOT_MXS_<CDC>.REP)
+C 2. Searches for terminals with the AGTMXT flag unset
+C  2.1 Writes agent related info into report file if agent found
+C  2.2 Writes the total number
+C 3. Asks the user if he wants to set the AGTMXT flag if terminals were 
+C    found
+C  3.1 AGTMXT flag change granted - updates memory and ASF file and 
+C      reports the number of changes succeeded into report file. If 
+C      an error occurs during the changing, related 
+C      info is reported to RELAT_TERMINAIS_NOT_MXS_<CDC>.ERR: total 
+C      number of failures and agent.
+C  3.2 AGTMXT flag change not granted - memory and ASF update are not
+C      done. Report file is updated.
+C 4. End of Program
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Copyright 2015 SCML Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM SETAGTMXT_PROC
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:RECAGT.DEF'
+	INCLUDE 'INCLIB:X2XPRM.DEF'
+C
+	INTEGER*4	LIST(NUMAGT), ERRLIST(NUMAGT)
+	INTEGER*4	I,J,K,N
+	INTEGER*4	ST,COUNT,TERNBR
+	INTEGER*4	BITMAP
+	INTEGER*4	FLAG,LUN
+	INTEGER*4 PORTALSAP
+	PARAMETER (PORTALSAP=007456)
+C
+	INTEGER*2	VDAT(LDATE_LEN)
+	INTEGER*4	CTIM(2),CDAT(8),SYS,WEEK,YEAR
+	CHARACTER*56 HEAD/'R E L A T O R I O  T E R M I N A I S  O N L I N E  M X S'/
+	CHARACTER*70 HEAD2/'R E L A T O R I O  D E  E R R O  T E R M I N A I S  O N L I N E  M X S'/
+C
+	CHARACTER*32 REPNAME ! REPORT NAME
+	CHARACTER*32 ERREPNAME ! FILE NAME FOR REPORTING ERRORS
+C
+	CHARACTER	SYSID(6)/'?','A','B','C','D','E'/
+	CHARACTER	CASFBYT*760
+	EQUIVALENCE (CASFBYT,ASFBYT)    !ASFBYT is equivalent to ASFINF
+	DATA SYSID/'?','A','B','C','D','E'/
+C
+	INTEGER*4  BUF(CDLEN)
+C
+	COUNT=0
+	N=0
+C
+	CALL FASTSET(0,LIST,NUMAGT)
+	CALL FASTSET(0,ERRLIST,NUMAGT)
+	CALL FASTSET(0,BUF,CDLEN)
+C
+	CALL CLRSCR(5) ! CLEARS THE SCREEN
+	TYPE*,IAM(),'*************************************************************'
+	TYPE*,IAM(),'***                PROGRAMA  SETAGTMXT_PROC               ***'
+	TYPE*,IAM(),'*************************************************************'
+C	
+	CALL FIND_AVAILABLE_LUN(LUN,ST) ! FINDS AN AVAILABLE LOGICAL UNIT
+	IF (ST.NE.0) THEN
+		TYPE*,IAM(),'ERROR GETTING LOGICAL UNIT TO OPEN FILE'
+		CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+C
+	TYPE*,IAM(),' A iniciar activacao da flag AGTMXT dos terminais online'
+	WRITE (REPNAME,908) DAYCDC ! BUILD REPORT NAME
+C
+	OPEN(LUN,FILE=REPNAME,STATUS='NEW')
+C
+!	*********** HEADER BUILDING - BEGIN *************
+	VDAT(VCDC)=DAYCDC
+	CALL LCDATE(VDAT)
+	CALL FIGWEK(DAYCDC,WEEK,YEAR)
+C
+	SYS=P(SYSNAM)+1
+	IF(SYS.LT.1.OR.SYS.GT.6) SYS=1
+C
+	CALL ICLOCK(1,CTIM)
+	CALL GDATE(CDAT(2),CDAT(3),CDAT(1))
+	IF(CDAT(1).LT.77) THEN
+	  CDAT(1) = CDAT(1) + 2000
+	ELSE
+	  CDAT(1) = CDAT(1) + 1900
+	ENDIF
+C
+	WRITE(LUN,900) CTIM
+	WRITE(LUN,901) CDAT(3),CDAT(2),CDAT(1),HEAD,(VDAT(K),K=9,13),VDAT(VCDC),SYSID(SYS)
+!	********* HEADER BUILDING - END ********
+C
+	WRITE(LUN,899)
+	CALL OPENASF(ASF)
+	TYPE*,IAM(),' A ler o ficheiro ASF ...'
+	DO 101 TERNBR=1,NUMAGT
+		CALL READASF(TERNBR,ASFREC,ST)
+		IF(ST.NE.0) THEN
+			CLOSE(LUN)
+			TYPE*,'ASF.FIL READ ERROR ',ST,' TERMINAL ',LIST(I)
+			CALL CLOSASF
+			CALL GSTOP(GEXIT_FATAL)
+		ENDIF
+C
+		BITMAP=AGTTAB(AGTTYP,TERNBR)
+		IF(TSBIT(BITMAP,AGTTON)) THEN ! IF IS AN ONLINE TERMINAL
+			IF(AGTSAP(TERNBR) .NE. PORTALSAP) THEN ! SKIP X25 PORTAL TERMINALS
+				IF(.NOT. TSBIT(BITMAP,AGTMXT)) THEN ! IF ONLINE TERMINAL IS NOT MXS TERMINAL
+					COUNT=COUNT+1
+					LIST(COUNT)=TERNBR
+					WRITE(LUN,FMT=906) (ASFBYT(I),I=SAGNO,EAGNO),TERNBR,(ASFBYT(J),J=SNAME,ENAME)
+				ENDIF
+			ENDIF
+		ENDIF
+C
+101	CONTINUE
+	CALL CLOSASF
+C
+	J=0
+	K=0
+	IF(COUNT.GT.0) THEN ! ONLINE TERMINALS WITH AGTMXT UNSET FOUND
+		TYPE*,IAM(),' Foram encontrados terminais que nao sao do tipo MXS!'
+		CALL INPYESNO(' Alterar terminais para o tipo MXS? [Y/N]',FLAG,ST)
+C
+		IF(ST.EQ.-1) THEN
+			CLOSE(LUN)
+			CALL CLOSASF
+			CALL GSTOP(GEXIT_OPABORT)
+		ENDIF
+C
+		IF(FLAG.EQ.1) THEN
+!		*********  BEGIN - SET AGTMXT  ************
+			TYPE*,IAM(),' A processar... Por favor aguarde ...'
+			CALL OPENASF(ASF)
+			DO 102 I=1,COUNT ! LIST(I) => TERMINAL NUMBER WITH AGTMXT UNSET
+				CALL READASF(LIST(I),ASFREC,ST)
+C
+				IF(ST.NE.0) THEN
+					ERRLIST(J+1)=LIST(I)
+					J=J+1
+					TYPE*,'ASF.FIL READ ERROR ',ST,' TERMINAL ',LIST(I)
+					GOTO 102
+				ENDIF
+C
+				BITMAP=AGTTAB(AGTTYP,LIST(I))
+				CALL BSET(BITMAP,AGTMXT) ! SET AGTMXT
+!
+! SENDS A COMMAND TO SET THE AGTMXT FLAG
+! COMMAND BUFFER FORMAT
+!
+! WORD                CONTENTS
+!   1                 COMMAND NUMBER
+!   2                 COMMAND NEW VALUE
+!   3                 COMMAND TYPE
+!   4                 COMMAND LINE
+!   5                 COMMAND TERMINAL
+!   6                 COMMAND SOURCE
+!   7                 COMMAND AGENT
+!   8                 COMMAND DATA 1
+!   9                 COMMAND DATA 2
+!  10                 COMMAND DATA 3
+!  11                 COMMAND DATA 4
+!  12                 COMMAND DATA 5
+				BUF(1)=3
+				BUF(2)=BITMAP
+				BUF(3)=TCAGT
+				BUF(5)=LIST(I) ! TERMINAL NUMBER TO DEFINE AS MXS TERMINAL
+				CALL QUECMD(BUF,ST)
+				IF(ST.NE.0) THEN
+					ERRLIST(J+1)=LIST(I)
+					J=J+1
+					TYPE*,' QUEUE COMMAND BUFFER ERROR ',ST,' TERMINAL ',LIST(I)
+					GOTO 102
+				ENDIF
+				CALL XWAIT(2,1,ST) ! WAITS 2 MILLISECONDS
+				K=K+1 ! COUNTS THE OK CHANGES
+C
+102		CONTINUE
+			CALL CLOSASF
+			TYPE*,IAM(),' Processo de activacao da flag AGTMXT terminado'
+!		*********  END - TERMINAL AGTMXT  ************
+		ENDIF
+C
+		IF (FLAG.EQ.2) THEN
+			TYPE*,IAM(),' Processo de activacao da flag AGTMXT nao efectuado'
+		ENDIF
+C
+		IF (FLAG.EQ.3) THEN
+			TYPE*,IAM(),' Processo de activacao da flag AGTMXT cancelado'
+			CALL CLOSASF
+			CLOSE(LUN,STATUS='DELETE')
+			GOTO 105
+		ENDIF
+C
+	ELSE
+		TYPE*,IAM(),' Nao foram encontrados terminais online para processar'
+	ENDIF
+C
+	WRITE(LUN, FMT=903) COUNT ! NUMBER OF TERMINALS FOUND WITH THE AGTMXT FLAG UNSET
+	WRITE(LUN, FMT=904) K,COUNT ! NUMBER OF TERMINALS WHOSE AGTMXT FLAG WAS SET SUCCESSFULLY
+	WRITE(LUN, FMT=909)
+	CLOSE(LUN)
+C
+!	CREATE A ERROR FILE IF THERE ARE TERMINALS WITH AGTMXT FLAG UNSET
+	IF(J.GT.0) THEN
+		CALL FIND_AVAILABLE_LUN(LUN,ST) ! FINDS AN AVAILABLE LOGICAL UNIT
+		IF (ST.NE.0) THEN
+			TYPE*,IAM(),'ERROR GETTING LOGICAL UNIT TO OPEN FILE'
+			CALL GSTOP(GEXIT_FATAL)
+		ENDIF
+		WRITE (ERREPNAME,910) DAYCDC ! BUILDS REPORT NAME
+		OPEN(LUN,FILE=ERREPNAME,STATUS='NEW')
+C
+		WRITE(LUN,900) CTIM
+		WRITE(LUN,911) CDAT(3),CDAT(2),CDAT(1),HEAD2,(VDAT(K),K=9,13),
+     *           VDAT(VCDC),SYSID(SYS)
+C
+		WRITE(LUN, FMT=905)	J ! NUMBER OF TERMINALS WHOSE AGTMXT FLAG WAS NOT SET
+		WRITE(LUN,899)
+C
+		CALL OPENASF(ASF)
+		DO 104 I=1,J
+			CALL READASF(ERRLIST(I),ASFREC,ST)
+			IF(ST.NE.0) THEN
+				CLOSE(LUN)
+				TYPE*,'ASF.FIL READ ERROR ',ST,' TERMINAL ',ERRLIST(I)
+				TYPE*,IAM(),' Relatorio de Erro incompleto: ',ERREPNAME
+				CALL CLOSASF
+				CALL GSTOP(GEXIT_FATAL)
+			ENDIF
+			WRITE(LUN,FMT=907) (ASFBYT(K),K=SAGNO,EAGNO),ERRLIST(I),(ASFBYT(K),K=SNAME,ENAME)
+104	CONTINUE
+		WRITE(LUN,FMT=912)
+		CLOSE(LUN)
+		CALL CLOSASF
+		TYPE*,IAM(),' Relatorio de Erro: ',ERREPNAME
+	ENDIF
+C
+	TYPE*,IAM(),' Relatorio: ',REPNAME
+105	TYPE*,IAM(),' A sair do processo ...'
+	CALL GSTOP(GEXIT_SUCCESS)
+C
+C FORMAT STATEMENTS
+C
+899	FORMAT(132('-'),/,1X,'AGTNUM',4X,'TERM',3X,'MXS TERM?',3X,'NOME',/,132('-'))
+900	FORMAT(33X,
+     *  'S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A',
+     *	       13X,2A4)
+901	FORMAT(2X,I2.2,'.',I2.2,'.',I4.4,26X,A,18X,5A2,1X,'CDC ',I4,
+     *	/,2X,'     ',116X,'SYS',A5)
+902	FORMAT(/,132('-'))
+903	FORMAT(/,1X,'FORAM ENCONTRADOS < ',I5.1,' > TERMINAIS ONLINE QUE NAO SAO DO TIPO MXS (FLAG AGTMXT IGUAL A ZERO)')
+904	FORMAT(/,132('-'),/,1X,'TERMINAIS DEFINIDOS COMO MXS APOS PROCESSAMENTO: < ',I4.1,' > EM < ',I4.1,' >',/,132('-'),/)
+905	FORMAT(/,1X,'TERMINAIS NAO DEFINIDOS COMO MXS APOS PROCESSAMENTO: < ',I4.1,' >')
+906	FORMAT(1X,<LAGNO>A1,2X,I5.5,3X,'   NAO   ',3X,<LNAME>A1)
+907	FORMAT(1X,<LAGNO>A1,2X,I5.5,3X,'   NAO   ',3X,<LNAME>A1)
+908	FORMAT('RELAT_TERMINAIS_NOT_MXS_',I4,'.REP')
+909	FORMAT(//,52X,'F I M  D O  R E L A T O R I O')
+910	FORMAT('RELAT_TERMINAIS_NOT_MXS_',I4,'.ERR')
+911	FORMAT(2X,I2.2,'.',I2.2,'.',I4.4,19X,A,11X,5A2,1X,'CDC ',I4,
+     *	/,2X,'     ',116X,'SYS',A5)
+912	FORMAT(//,45X,'F I M  D O  R E L A T O R I O  D E  E R R O')
+C
+ 	END

@@ -1,0 +1,22 @@
+    LPL.HLP                GTECH Distributed Network
+                            Pool Flags Snapshot Help           Page 1 of 1
+ 
+    LPL is the pools flags snapshot which is available for Lotto 7/39,
+    Viking Lotto, and Vakio.
+
+    The information displayed includes:
+ 
+    game          - game name
+    pool volume   - volume name for pool file
+    type          - game type
+    index         - game index
+    draw #        - draw number
+    pool #        - number of pools
+    total         - total number of bet
+    pools status  - status for logging to pool file   
+    ltovr         - index to the overflow table for bet combinations.
+
+
+
+
+

@@ -1,0 +1,133 @@
+C
+C SUBROUTINE SPTSHARE
+C $Log:   GXAFXT:[GOLS]SPTSHARE.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:16:22   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   12 Oct 1993 18:47:24   HXK
+C  DO NOT CALL OFFCMB IF NUMBER OF MISSES IS ZERO.
+C  
+C     Rev 1.0   21 Jan 1993 17:42:16   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - sptshare.for **
+C
+C SPTSHARE.FOR
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C     SPTCHARE.FTN
+C     ------------
+C
+C V.01 WS 8-AUG-89, RELEASE FOR SWEDEN
+C
+C
+C     SPTSHARE(FDB,MISS,WIN,TOTAL,GAME)   ;GET # OF SHARES BET
+C     IN:
+C     FDB   - FDB OF POOL FILE
+C     MISS  - # OF MISSES
+C     WIN   - BASE TO COMPARE AGAINST
+C     GAME  - GAME #
+C     OUT:
+C     TOTAL - TOTAL # OF BETS WAGERED FOR THIS "WIN"
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SPTSHARE(FDB,MISS,WIN,TOTAL,GAME)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:POOLLTO.DEF'
+	INCLUDE 'INCLIB:POOLSEE.DEF'
+C
+	INTEGER*4 WIN(*)
+	INTEGER*4 FDB(7)
+	INTEGER*4 OTHER(2,4) /2,4, 1,4, 0,0, 1,2/
+	INTEGER*4 LOCAL_WIN(16)
+	INTEGER*4 TO_SUBSTITUTE(16)
+	INTEGER*4 OVR, DUMMY, ST, OFFSET, NEXT_OFF, COLUMN, NEXT_ROW
+	INTEGER*4 NEXT, MISS_COMBINATIONS, NEXT_COMBINATION
+	INTEGER*4 NR_OF_COMBINATIONS, FASTBIN, NUMROWS, GAME
+	INTEGER*4 TOTAL, MISS
+C
+	TOTAL=0
+	NUMROWS=LTPOOLBET(GAME)        !NUMBER OF ROWS IN BET
+	IF (NUMROWS.GT.16.OR.NUMROWS.LE.0) RETURN
+C
+C     NUMBER OF DIFFERENT COMBINATIONS TO GENERATE
+C     (MISSES IN THE SAME ROW ACCOUNTED AS 1)
+C
+	NR_OF_COMBINATIONS=FASTBIN(NUMROWS,MISS)
+C
+	DO 200, NEXT_COMBINATION=1,NR_OF_COMBINATIONS
+C
+C        GENERATE COMBINATION
+C
+	   IF(MISS.NE.0) CALL OFFCMB(TO_SUBSTITUTE,NEXT_COMBINATION,MISS)
+C
+C     FIND # OF POSSIBLE MISSES
+C
+	   MISS_COMBINATIONS=2**MISS
+C
+C     FOR ALL MISSES TRY TO GENERATE ALL COMBINATIONS
+C
+	   DO 150, NEXT=1,MISS_COMBINATIONS
+	      CALL FASTMOV(WIN,LOCAL_WIN,NUMROWS)
+	      DO 140, NEXT_ROW=1,MISS
+C
+C              MISS COULD BE IN 1 OF 2 REMANING COLUMNS
+C
+	         COLUMN=1
+	         IF (NTSBIT(NEXT,32-NEXT_ROW)) COLUMN=2
+C
+C              ROW # TO SUBSTITUTE
+C
+	         NEXT_OFF=TO_SUBSTITUTE(NEXT_ROW)
+C
+C              UPDATE NEXT ROW
+C
+	         LOCAL_WIN(NEXT_OFF)=OTHER(COLUMN,LOCAL_WIN(NEXT_OFF))
+140	      CONTINUE
+C
+C           GET BET OFFSET
+C
+	      CALL SPTOFF1(LOCAL_WIN,NUMROWS,OFFSET)
+C
+C           AND UPDATE IN POOLS
+C
+	      CALL ABL(OFFSET,SORTQ,ST)
+	      IF (ST.NE.0) THEN
+	         CALL CMBSORT(FDB,TOTAL,DUMMY,GAME)
+	         CALL ABL(OFFSET,SORTQ,ST)
+	      ENDIF
+150	   CONTINUE
+200	CONTINUE
+C
+	CALL CMBSORT(FDB,TOTAL,DUMMY,GAME)
+C
+C     UPDATE OVERFLOWS
+C
+	CALL SPTOVR(FDB,MISS,WIN,OVR,GAME,NUMROWS)
+	TOTAL=TOTAL+OVR
+	RETURN
+	END

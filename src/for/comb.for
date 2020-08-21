@@ -1,0 +1,48 @@
+C
+C SUBROUTINE COMB
+C $Log:   GXAFXT:[GOLS]COMB.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:41:36   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 15:59:16   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - poolshr.for **
+C
+C====================================================================
+C     GENERATE COMBINATIONS FOR BET-2 OUT OF BET, BET-1 OUT OF BET
+C     AND 2 OUT OF M
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE COMB(IND2,IND1,MISSIND,M,BET)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INTEGER*4 J, I, NEXT, BET, M
+	INTEGER*4 IND2(BET-2,*)
+C
+	INTEGER*4 IND1(BET-1,*)
+	INTEGER*4 MISSIND(2,*)
+C
+	NEXT=1
+	DO 10, I=1,M-1
+	DO 10, J=I+1,M
+	  MISSIND(1,NEXT)=I
+	  MISSIND(2,NEXT)=J
+	  NEXT=NEXT+1
+10	CONTINUE
+C
+C     FIND INDEXES FOR ALL MATCHING COMBINATIONS
+C     THIS CODE WORKS, DO NOT ASK HOW
+C
+	CALL GETCMB(IND2,BET,BET-2)
+	CALL GETCMB(IND1,BET,BET-1)
+C
+	RETURN
+	END

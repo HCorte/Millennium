@@ -1,0 +1,44 @@
+C
+C LIBRARY MESSAGET HEADER
+C
+C SUBSTITUTION FOR MESSAGEQ HEADER
+C
+C V01 17-MAR-09 TRG RELEASED FOR SCML
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C
+      STRUCTURE /QUEUE_MESSAGEQ/
+       BYTE        MSI(500)
+       BYTE        MSO(500)
+       INTEGER*4   TER, AGT, BUF, CDC, MSQ, ILN, OLN
+      END STRUCTURE
+
+      STRUCTURE /GAM_SAL_STRUCT/
+       BYTE        GTYP
+       BYTE        GIND
+       BYTE        DUMMY(2)
+       INTEGER*4   CNT
+       INTEGER*4   AMT
+      END STRUCTURE
+
+      RECORD /QUEUE_MESSAGEQ/ INP_MESSAGEQ(100)
+      INTEGER*4               INP_MESSAGEQ_CNT
+      INTEGER*4               EURSERIALNUM
+      
+
+      COMMON /CQUEUE_MESSAGEQ/ INP_MESSAGEQ, INP_MESSAGEQ_CNT, EURSERIALNUM
+      
+      

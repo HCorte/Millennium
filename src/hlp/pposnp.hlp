@@ -1,0 +1,22 @@
+    PPO.HLP                GTECH Distributed Network
+                           Todays Couple Snapshot Help         Page 1 of 1
+ 
+    The PPO snapshot contains event information for the Todays Couple game.
+
+    The information displayed includes:
+ 
+    game name     - today couple (Paivan Pari)
+    game sales    - the dates on which the event was available for playing
+                    for example 20.11 - 21.11 indicates the event was open
+                    for play on the 20th and 21st of November inclusive
+    date          - system date and system time
+    system        - letter id of the system and configuration information 
+                    example primary or secondary
+    results are   - status of the results for the event ( eg final)         
+    rank          - rank of each participant in the event
+    name          - the name of the event appears on in the next column
+    odds          - what the actual odds were
+    amount bet    - total amount bet on each participant
+
+
+

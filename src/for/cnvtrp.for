@@ -1,0 +1,277 @@
+C  GXSRC:CNVDKK.FOR
+C
+C V01 03-MAY-1999 UXN INITIAL RELEASE.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXTEND
+        PROGRAM CNVTRP
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:DTRREC.DEF'
+        INCLUDE 'INCLIB:DTRREC_OLD.DEF'
+C
+C
+        INTEGER*4   DRAW, LEN, I4LEN, LASTDR, EXT
+        INTEGER*4   ST, I, J, K, AGT, OLD_FDB(7), FDB(7)
+        CHARACTER*20 CXNAME,CXNAME2
+        INTEGER*4    I4NAME(5),I4NAME2(5),YESNO
+        EQUIVALENCE  (I4NAME,CXNAME)
+        EQUIVALENCE  (I4NAME2,CXNAME2)
+	INTEGER*4   POOL_FILE(NUMTRP)/NUMTRP*0/
+	LOGICAL     FLAG
+C
+	CHARACTER*4 EXTENSION(2,2) /'.FIL','.OLD','.NEW','.FIL'/	
+        INTEGER*4   MAXREC_CNV   ! # of records to convert
+C
+        INTEGER*4   FILE_SIZE           ! NEW FILE SIZE
+        CHARACTER*20 NEW_FILE,OLD_FILE
+        INTEGER*4    I4NEW_FILE(5),I4OLD_FILE(5)
+        EQUIVALENCE (NEW_FILE,I4NEW_FILE)
+        EQUIVALENCE (OLD_FILE,I4OLD_FILE)
+        INTEGER*4   SIZE
+C
+        CALL COPYRITE
+C
+        NEW_FILE = 'FILE:TR1F.NEW'
+        OLD_FILE = 'FILE:TR1F.FIL'
+C
+        CALL OPENX(1,OLD_FILE,4,0,0,ST)
+        CALL VAXGETFSIZ(1,SIZE)
+        CLOSE(1)
+C
+        MAXREC_CNV = SIZE/(ODTRSEC/2)
+        FILE_SIZE  = MAXREC_CNV*DTRSEC/2
+        TYPE*,IAM(),'Old file size = ', MAXREC_CNV*ODTRSEC/2
+        TYPE*,IAM(),'New file size = ', MAXREC_CNV*DTRSEC/2
+        TYPE*,IAM()
+        TYPE*,IAM(),'Number of records to convert >',MAXREC_CNV
+        TYPE*,IAM()
+        CALL PRMYESNO('Are you sure you want to convert TR%F.FIL ',YESNO)
+        IF(YESNO.NE.1) CALL GSTOP(GEXIT_OPABORT)
+C
+C Create new TR%F.NEW and TRV%F.NEW
+C	
+	DO I=1,NUMTRP
+	   WRITE(CXNAME,900) I,'.NEW'
+           CALL NEWFIL(1,CXNAME,FILE_SIZE,.FALSE.,ST)
+           IF(ST.NE.0) CALL GSTOP(GEXIT_FATAL)
+	   WRITE(CXNAME,901) I,'.NEW'
+           CALL NEWFIL(1,CXNAME,FILE_SIZE,.FALSE.,ST)
+	   IF(ST.NE.0) CALL GSTOP(GEXIT_FATAL)
+	ENDDO
+C
+C Convert all files.
+C
+	DO I=1,NUMTRP
+	   WRITE(CXNAME,900)  I,'.FIL'
+	   WRITE(CXNAME2,900) I,'.NEW'
+	   CALL CONVERT(I4NAME,I4NAME2)
+	   WRITE(CXNAME,901)  I,'.FIL'
+	   WRITE(CXNAME2,901) I,'.NEW'
+	   CALL CONVERT(I4NAME,I4NAME2)
+	ENDDO
+C
+C Rename *.FIL to *.OLD and *.NEW to *.FIL
+C
+	DO J=1,2
+	  DO I=1,NUMTRP
+	     WRITE(CXNAME,900)   I,EXTENSION(1,J)
+	     WRITE(OLD_FILE,900) I,EXTENSION(2,J)
+	     WRITE(6,910) IAM(),CXNAME,OLD_FILE
+	     CALL LIB$RENAME_FILE(CXNAME,OLD_FILE)
+C
+	     WRITE(CXNAME,901)   I,EXTENSION(1,J)
+	     WRITE(OLD_FILE,901) I,EXTENSION(2,J)
+	     WRITE(6,910) IAM(),CXNAME,OLD_FILE
+	     CALL LIB$RENAME_FILE(CXNAME,OLD_FILE)
+	  ENDDO
+	ENDDO
+	CALL GSTOP(GEXIT_SUCCESS)
+900     FORMAT('FILE:TR',I1,'F',A4,T20)
+901     FORMAT('FILE:TRV',I1,'F',A4,T20)
+910	FORMAT(1X,A,'Renaming ',A,' to ',A)
+	END
+C
+C SUBROUTINE TO CONVERT GAME FILES...
+C	   
+	SUBROUTINE  CONVERT(INP_FILE,OUT_FILE)
+	IMPLICIT NONE
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:DTRREC.DEF'
+        INCLUDE 'INCLIB:DTRREC_OLD.DEF'
+C
+	INTEGER*4    INP_FILE(5),OUT_FILE(5)
+	INTEGER*4    ST,K,I,J, REC
+	INTEGER*4    INP_FDB(7)
+	INTEGER*4    OUT_FDB(7)
+        INTEGER*4    TMP1(3,MAXTRPTI)
+        INTEGER*4    TMP2(3,MAXTRPTI)
+        INTEGER*4    TOT_WIN
+C
+	WRITE(6,900) IAM(),(INP_FILE(K),K=1,5)
+C
+C OPEN INPUT FILE
+C
+        CALL OPENW(3,INP_FILE,0,0,0,ST)
+        CALL IOINIT(INP_FDB,3,ODTRSEC*256)
+        IF(ST.NE.0) CALL FILERR(INP_FILE,1,ST,0)
+C
+C OPEN OUTPUT FILE
+C	
+        CALL OPENW(4,OUT_FILE,0,0,0,ST)
+        CALL IOINIT(OUT_FDB,4,DTRSEC*256)
+        IF(ST.NE.0) CALL FILERR(OUT_FILE,1,ST,0)
+C
+C FILE CONVERSION
+C
+C
+C NOTE: BE SURE THAT ALL THE FIELDS ARE INTEGER*4 !!! OTHERWISE
+C USING FASTMOV() WILL GIVE WRONG RESULTS!!!
+C
+	REC = 0
+	DO WHILE(.TRUE.)
+	   REC = REC + 1
+	   CALL READW(INP_FDB,REC,ODTRREC,ST)
+	   IF(ST.EQ.144) GOTO 10 ! END-OF-FILE
+	   IF(ST.NE.0) CALL FILERR(INP_FILE,2,ST,REC)
+C
+	   CALL FASTSET(0,DTRREC,DTRLEN)
+C
+	   DTRSTS = ODTRSTS
+	   DTRWEK = ODTRWEK
+	   DTRDAT = ODTRDAT
+	   DTRDRW = ODTRDRW
+	   DTRBSD = ODTRBSD
+	   DTRESD = ODTRESD
+	   DTRPUP = ODTRPUP
+	   DTRUPD = ODTRUPD
+	   DTRCTM = ODTRCTM
+	   DTRTIM = ODTRTIM
+	   DTRSER = ODTRSER
+	   CALL FASTMOV(ODTRSAL,DTRSAL,NUMTOT)
+	   DTRPAD = ODTRPAD
+	   DTRPRG = ODTRPRG	
+	   DTRPRF = ODTRPRF
+	   DTRREF = ODTRREF
+	   DTRERF = ODTRERF 
+	   DTRTER = ODTRTER
+	   DTRWON = ODTRWON
+	   CALL FASTMOV(ODTRPOL,DTRPOL,2)
+	   DTRTPL = ODTRTPL
+	   DTRTBK = ODTRTBK
+	   CALL FASTMOV(ODTRBRK,DTRBRK,2)
+	   DTRABW = ODTRABW
+	   CALL FASTMOV(ODTRODS,DTRODS,MAXTRPTI)
+C
+	   DO I=1,4
+	      TMP1(1,I) = ODTRWIN(I,1)
+	      TMP1(2,I) = ODTRWIN(I,2)
+	      TMP1(3,I) = ODTRWIN(I,3)
+	      TMP2(1,I) = ODTRHLD(I,1)
+	      TMP2(2,I) = ODTRHLD(I,2)
+	      TMP2(3,I) = ODTRHLD(I,3)
+	   ENDDO
+C
+C Converting winning numbers into winning combinations
+C
+	   TOT_WIN = 0
+	   DO 120 I=1,4
+	      IF(TMP1(1,I).LE.0) GOTO 120
+	      IF(ODTREST(2).EQ.GAMNUL) THEN
+	         TOT_WIN = TOT_WIN + 1
+		 DTRWIN(1,TOT_WIN) = TMP1(1,I)
+                 DTRWIN(2,TOT_WIN) = 0
+                 DTRWIN(3,TOT_WIN) = 0
+		 DTRHLD(1,TOT_WIN) = TMP2(1,I)
+                 DTRHLD(2,TOT_WIN) = 0
+                 DTRHLD(3,TOT_WIN) = 0
+		 GOTO 120
+              ENDIF
+	      DO 110 J=1,4
+	         IF(TMP1(2,J).LE.0) GOTO 120
+		 IF(ODTREST(3).EQ.GAMNUL) THEN
+                    TOT_WIN = TOT_WIN + 1
+                    DTRWIN(1,TOT_WIN) = TMP1(1,I)
+                    DTRWIN(2,TOT_WIN) = TMP1(2,J)
+                    DTRWIN(3,TOT_WIN) = 0
+                    DTRHLD(1,TOT_WIN) = TMP2(1,I)
+                    DTRHLD(2,TOT_WIN) = TMP2(2,J)
+                    DTRHLD(3,TOT_WIN) = 0
+                    GOTO 110
+                 ENDIF
+	         DO K=1,4
+		    IF(TMP1(3,K).LE.0) GOTO 110
+                    TOT_WIN = TOT_WIN + 1
+                    DTRWIN(1,TOT_WIN) = TMP1(1,I)
+                    DTRWIN(2,TOT_WIN) = TMP1(2,J)
+                    DTRWIN(3,TOT_WIN) = TMP1(3,K)
+                    DTRHLD(1,TOT_WIN) = TMP2(1,I)
+                    DTRHLD(2,TOT_WIN) = TMP2(2,J)
+                    DTRHLD(3,TOT_WIN) = TMP2(3,K)
+		 ENDDO
+110          CONTINUE
+120        CONTINUE
+           DTRCMB = TOT_WIN
+           IF(DTRCMB.GT.1) WRITE(6,910) IAM(),DTRDRW,DTRCMB
+C
+	   DTRTAX = ODTRTAX
+	   CALL FASTMOV(ODTROTX,DTROTX,NUMTOT)
+	   CALL FASTMOV(ODTRMID,DTRMID,NUMTOT)
+	   CALL FASTMOV(ODTRUTX,DTRUTX,NUMTOT)
+	   CALL FASTMOV(ODTRHST,DTRHST,MAXTRPTI)
+	   CALL FASTMOV(ODTRORM,DTRORM,NUMTOT)
+	   CALL FASTMOV(ODTRMNM,DTRMNM,(TRPENM_LEN/4))
+	   CALL FASTMOV(ODTRENM,DTRENM,(TRPENM_LEN/4)*3)
+	   CALL FASTMOV(ODTRDES,DTRDES,(TRPDES_LEN/4)*3)
+	   DO I=1,3
+	      DO J=1,OMAXTRPRW
+	         CALL FASTMOV(ODTRNMS(1,J,I),DTRNMS(1,J,I),(TRPNMS_LEN/4))	
+	         DTRSTA(J,I) = ODTRSTA(J,I)
+	         DTRSBR(J,I) = ODTRSBR(J,I)
+	      ENDDO
+	      DTREST(I) = ODTREST(I)
+	      DTREVD(I) = ODTREVD(I)
+	      DTREVT(I) = ODTREVT(I)
+	   ENDDO
+	   DTRREV = ODTRREV
+	   CALL FASTMOV(ODTRPFN,DTRPFN,5)
+	   DTRPRC = ODTRPRC
+	   DTRSPR = ODTRSPR
+	   CALL FASTMOV(ODTRRWS,DTRRWS,3)
+	   CALL FASTMOV(ODTRWCP,DTRWCP,MAXTRPTI)
+	   CALL FASTMOV(ODTRWBT,DTRWBT,NUMTOT*MAXTRPTI)
+	   CALL FASTMOV(ODTRWRO,DTRWRO,NUMTOT*2)
+	   CALL FASTMOV(ODTRWRA,DTRWRA,NUMTOT*2)
+	   CALL FASTMOV(ODTRWPO,DTRWPO,NUMTOT*2)
+	   CALL FASTMOV(ODTRWPA,DTRWPA,NUMTOT*2)
+	   CALL FASTMOV(ODTRWPR,DTRWPR,NUMTOT*2)
+C
+	   CALL WRITEW(OUT_FDB,REC,DTRREC,ST)
+	   IF(ST.NE.0) CALL FILERR(OUT_FILE,3,ST,REC)
+	ENDDO
+10	CONTINUE
+	TYPE*,IAM(),REC-1,' records converted in total.'	
+	CALL CLOSEFIL(INP_FDB)
+	CALL CLOSEFIL(OUT_FDB)
+900	FORMAT(1X,A,'Starting to convert ',5A4)
+910     FORMAT(1x,A,'Draw # ',I4,' has ', I2,' winning combinations.')
+	END

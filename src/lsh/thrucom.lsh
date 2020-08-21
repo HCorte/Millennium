@@ -1,0 +1,18 @@
+$! GXSRC:THRUCOM.LSH
+$! 
+$! $Log:   GXAFXT:[GOLS]THRUCOM.LSV  $
+$! 
+$!    Rev 1.0   17 Apr 1996 15:33:30   HXK
+$! Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+$! 
+$!    Rev 1.1   14 Apr 1994 13:49:06   SYSTEM
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Apr 1994 9:57:50   SYSTEM
+$! Initial revision.
+$! 
+$ LINK 'P1' /EXE=TSKLIB:GXTHRUCOM.ESH/SHAREABLE - 
+OBJLIB:THRUCOM,-
+SYS$INPUT/OPTION
+SYMBOL_VECTOR=(THRUCOM=PSECT)
+PSECT_ATTR=THRUCOM,SHR,WRT

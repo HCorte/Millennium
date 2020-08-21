@@ -1,0 +1,328 @@
+C
+C PROGRAM X2BADADR
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFIP:[GOLS]X2BADADR.FOV                                 $
+C  $Date::   26 Mar 1997 17:13:52                                         $
+C  $Revision::   1.1                                                      $
+C  $Author::   RXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2badadr.for;1 **
+C
+C X2BADADR.FOR
+C
+C V02 12-DEC-94 GPR Integrate UK changes into X2X Baseline
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C This program will produce a report which lists all
+C unknown address which have attempted to establish
+C communications with the Host.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM X2BADADR
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+C
+	INTEGER*4   LOGREC(LMUREC)              !Log record
+	INTEGER*4   ST                          !File status
+	INTEGER*4   SER                         !Serial number
+	INTEGER*4   LINCNT   /60/               !Line counter
+	INTEGER*4   PAGE     /0/                !Page counter
+	INTEGER*4   BADCNT   /0/                !Bad address counter
+C
+C	***** Start V02 changes *****
+C
+	INTEGER*4   LEN_RECORD			!Length record
+	INTEGER*4   ADDRESS1			!Part 1 of address (field 1)
+	INTEGER*4   ADDRESS2			!Part 2 of address (field 2)
+	INTEGER*4   REC_STN_NR			!Received station nr (field 3) 
+	INTEGER*4   DB_STN_NR			!station nr in database (field 4)
+	PARAMETER   (LEN_RECORD=4)
+	PARAMETER   (ADDRESS1=1)
+	PARAMETER   (ADDRESS2=2)
+	PARAMETER   (REC_STN_NR=3)
+	PARAMETER   (DB_STN_NR=4)
+	INTEGER*4   BADADDRESS(LEN_RECORD,X2X_STATIONS)	!Array containing bad addresses
+	INTEGER*4   NEWARRAY			!pointer to last sorted address
+						!that is unique in this range
+        INTEGER*4   INTSTR(2)			!Input BCD value
+        INTEGER*4   QVAL(2)			!Work BCD value
+	INTEGER*4   STATION
+	INTEGER*4   BINSRC_STN
+	INTEGER*4   DB_ADDR_LENGTH		!Address length stored in DB
+C
+C	***** End V02 changes *****
+C
+	INTEGER*4   MIN, HR, SEC, NOCHECK0, I, ERR
+C
+	LOGICAL     EOF /.FALSE./               !End of file
+	CHARACTER   CSFNAMES(MAXFIL)*20         !System file names
+        CHARACTER*16 ASCADDRESS						  !V02
+        CHARACTER*16 DB_ADDRESS						  !V02
+C
+	EQUIVALENCE (SFNAMES,CSFNAMES)
+C
+	COMMON /NOCHECK0/ NOCHECK0
+	NOCHECK0=13
+C
+	CALL COPYRITE
+C
+	TYPE *
+	TYPE *,'<<<<< X2BADADR  Bad GVT ID  Report V01 >>>>>'
+	TYPE *
+C	CALL INPNUM('Enter number of report copies ',COPY,0,20,EXT)
+C	IF(EXT.LT.0) CALL GSTOP(GEXIT_OPABORT)
+C
+C OPEN THE TMF FILE
+C
+	CALL OPENW(PTMF,SFNAMES(1,PTMF),4,0,0,ST)
+	IF(ST.NE.0) THEN
+	  CALL OS32ER(5,CSFNAMES(PTMF),'OPENX',ST,0)
+	  CALL GPAUSE
+	ENDIF
+	CALL TOPEN(PTMF)
+C
+C OPEN THE REPORT FILE.
+C
+	OPEN(6,FILE='X2BADADR.REP',RECL=132,
+     *	       STATUS='NEW',     IOSTAT=ST)				  !V02
+	IF(ST.NE.0) THEN
+	  CALL OS32ER(5,'X2BADADR.REP','OPEN',ST,0)
+	  CALL GPAUSE
+	ENDIF
+C
+C LOOP AND READ THE TM FILE
+C
+	TYPE*,'Scaning the TM for all transactions'
+100	CONTINUE
+	  CALL READTMF(LOGREC,SER,EOF)
+	  IF(EOF) GOTO 1000
+	  CALL LOGTRA(TRABUF,LOGREC)
+C
+C ONLY PROCESS BAD ADDRESSES.
+C
+	  IF(TRABUF(TSTAT).NE.GOOD)  GOTO 100
+	  IF(TRABUF(TERR).NE.NOER)   GOTO 100
+	  IF(TRABUF(TTYP).NE.TSPE)   GOTO 100
+	  IF(TRABUF(TSFUN).NE.TSX2X) GOTO 100
+	  IF(TRABUF(TXLAY).NE.X2X_TRATYP_FE) GOTO 100
+	  IF(TRABUF(TXPTL).NE.X2ERR_BADADR)  GOTO 100
+C
+C CONVERT TO REAL TIME.
+C
+	  SEC = TRABUF(TTIM)
+	  HR=SEC/3600
+	  MIN=(SEC-HR*3600)/60
+	  SEC=SEC-(HR*3600+MIN*60)
+C
+C	  ***** Start V02 changes *****
+C
+	  BADCNT=BADCNT+1
+C	  CALL NHTOA(ASCADDRESS,1,12,TRABUF(TXFDAD1),ERR)
+	  INTSTR(1) = TRABUF(TXFDAD1)
+	  INTSTR(2) = TRABUF(TXFDAD2)
+C
+C SWAP BYTES OF TRABUF(TXFDAD1) AND TRABUF(TXFDAD2), NECESSARY FOR SORTING
+C
+          CALL MOVBYTN(INTSTR(1),1,QVAL(1),1,4)
+          CALL MOVBYTN(INTSTR(2),1,QVAL(2),1,8-4)
+C	  CALL X2QSHFT(QVAL,-(64-12*4))
+	  BADADDRESS(ADDRESS1,BADCNT) = QVAL(1)
+	  BADADDRESS(ADDRESS2,BADCNT) = QVAL(2)
+	  BADADDRESS(REC_STN_NR,BADCNT) = TRABUF(TXSTN)
+	  BADADDRESS(DB_STN_NR,BADCNT) = TRABUF(TXSTN)
+C
+C ARRAY IS COMPLETELY FILLED UP: SORT ARRAY, DROP ENTRIES HAVING SAME
+C X2X ADDRESS AND SET NEW MAXIMUM (NEWARRAY) ACCORDINGLY
+C
+	  IF (BADCNT .EQ. X2X_STATIONS) THEN
+	    CALL I4XSORT(BADADDRESS,LEN_RECORD,
+     *	      X2X_STATIONS,ADDRESS1,ADDRESS2,REC_STN_NR)
+	    NEWARRAY = 1
+	    DO I=1,X2X_STATIONS
+	        IF (BADADDRESS(ADDRESS1,NEWARRAY) .NE. 
+     *		    BADADDRESS(ADDRESS1,I) .OR.
+     *		    BADADDRESS(ADDRESS2,NEWARRAY) .NE. 
+     *		    BADADDRESS(ADDRESS2,I) .OR.
+     *		    BADADDRESS(REC_STN_NR,NEWARRAY) .NE.
+     *		    BADADDRESS(REC_STN_NR,I)) THEN
+		      NEWARRAY = NEWARRAY+1
+		      BADADDRESS(ADDRESS1,NEWARRAY) = BADADDRESS(ADDRESS1,I)
+		      BADADDRESS(ADDRESS2,NEWARRAY) = BADADDRESS(ADDRESS2,I)
+		      BADADDRESS(REC_STN_NR,NEWARRAY) = 
+     *			  BADADDRESS(REC_STN_NR,I)
+		ENDIF
+	    END DO
+	    BADCNT = NEWARRAY
+	  ENDIF
+	  GOTO 100
+C
+C SCAN COMPLETE.
+C
+1000	CONTINUE
+C
+C PERFORM A LAST SORT
+C
+	IF (BADCNT.NE.0) THEN
+	   CALL I4XSORT(BADADDRESS,LEN_RECORD,
+     *	      BADCNT,ADDRESS1,ADDRESS2,REC_STN_NR)
+	   NEWARRAY = 1
+	   DO I=1,BADCNT
+	        IF (BADADDRESS(ADDRESS1,NEWARRAY) .NE. 
+     *		    BADADDRESS(ADDRESS1,I) .OR.
+     *		    BADADDRESS(ADDRESS2,NEWARRAY) .NE. 
+     *		    BADADDRESS(ADDRESS2,I) .OR.
+     *		    BADADDRESS(REC_STN_NR,NEWARRAY) .NE.
+     *		    BADADDRESS(REC_STN_NR,I)) THEN
+		      NEWARRAY = NEWARRAY+1
+		      BADADDRESS(ADDRESS1,NEWARRAY) = BADADDRESS(ADDRESS1,I)
+		      BADADDRESS(ADDRESS2,NEWARRAY) = BADADDRESS(ADDRESS2,I)
+		      BADADDRESS(REC_STN_NR,NEWARRAY) = 
+     *		         BADADDRESS(REC_STN_NR,I)
+		ENDIF
+	   END DO
+	   BADCNT = NEWARRAY
+	ENDIF
+C
+C
+C DISPLAY BAD ADDRESS.
+C
+	TYPE *,'Scan complete'
+	TYPE *,'Number of different bad addresses encountered:  ',BADCNT
+C
+	DO I=1,BADCNT
+C
+C PRINT A NEW PAGE IF NECESSARY.
+C
+	    IF(LINCNT.GT.55) THEN
+	       CALL TITLE(' UNKNOWN GVT ID REPORT',
+     *	               'GVTBADID',1,6,PAGE,DAYCDC)
+	       WRITE(6,9000)
+	       WRITE(6,9002)
+	       WRITE(6,9005)
+	       LINCNT=5
+	    ENDIF
+C
+   	    LINCNT=LINCNT+1
+C
+	    CALL HTOA(ASCADDRESS,1,16,BADADDRESS(ADDRESS1,I),ERR)
+C
+C
+	    CALL SEARCH_STN_NR(ASCADDRESS,STATION)
+	    BADADDRESS(DB_STN_NR,I) = STATION
+C
+	    IF (BADADDRESS(REC_STN_NR,I).EQ.0 .OR.
+     *		BADADDRESS(REC_STN_NR,I).EQ.65535) THEN
+		DB_ADDRESS = '------------'
+	    ELSE
+	    	DB_ADDRESS='                '
+		DB_ADDR_LENGTH = X2XS_ADRESS_LEN(BADADDRESS(REC_STN_NR,I))
+	        CALL HTOA(DB_ADDRESS,1,DB_ADDR_LENGTH ,
+     *	      X2XS_ADRESS(1,BADADDRESS(REC_STN_NR,I)),ERR)
+	    ENDIF
+C
+C          CALL MOVBYTN(BADADDRESS(1,I),1,QVAL(1),1,4)
+C         CALL MOVBYTN(BADADDRESS(2,I),1,QVAL(2),1,8-4)
+C
+        CALL X2QSHFT(BADADDRESS(1,I),-(64-12*4))
+C
+	    CALL X2BINSRC(12,BADADDRESS(1,I),BINSRC_STN,ERR)
+C
+	    WRITE(6,9010) ASCADDRESS
+	END DO
+C
+	CALL USRCLOS1(6)
+	CALL USRCLOS1(PTMF)
+C	CALL SPOOL('X2BADADR.REP',COPY,ST)
+C
+C     =================== Format Statements ====================
+C
+9000	FORMAT(/,'  GVT ADDRESS IN MESSAGE')
+9002	FORMAT('  ======================')
+9005	FORMAT(' ')
+9010	FORMAT(5X,A12)
+	END
+
+C
+C ***************** SEARCH_STN_NR() ************************
+C SEARCHES THE STATION NR CORRESPONDING THE X2X-ADDRESS
+C
+	SUBROUTINE SEARCH_STN_NR(NET_ADDRESS,STATION)
+	IMPLICIT NONE
+
+C	INCLUDE 'INCLIB:X2XPRM.DEF'
+C	INCLUDE 'INCLIB:SYSPARAM.DEF'
+C	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+C
+	INTEGER*4 STN,STATION,I,ERR
+	INTEGER*4 NEW_LENGTH
+	CHARACTER*16 NET_ADDRESS
+	CHARACTER*16 NEW_NET_ADDRESS
+	CHARACTER*16 STN_ADDRESS
+	CHARACTER*1 NET_ADDRESS_ARR(16)
+	CHARACTER*1 STN_ADDRESS_ARR(16)
+	EQUIVALENCE(NET_ADDRESS_ARR,NEW_NET_ADDRESS)
+	EQUIVALENCE(STN_ADDRESS_ARR,STN_ADDRESS)
+C
+	NEW_NET_ADDRESS = NET_ADDRESS
+C
+C
+	DO 1000,STN=1,X2X_STATIONS
+	    IF (X2XS_ADRESS_LEN(STN).EQ.0) GOTO 1000
+C
+	    NEW_LENGTH = X2XS_ADRESS_LEN(STN)
+	    CALL HTOA(STN_ADDRESS,1,
+     *	     NEW_LENGTH ,X2XS_ADRESS(1,STN),ERR)
+C
+C	    TYPE *,X2XS_ADRESS(1,STN),X2XS_ADRESS_LEN(STN)
+C	    WRITE (5,9100),(STN_ADDRESS_ARR(I),I=1,16)
+C	    WRITE (5,9100),(NET_ADDRESS_ARR(I),I=1,16)
+C
+	    DO I=1,X2XS_ADRESS_LEN(STN)
+		IF (NET_ADDRESS_ARR(I).NE.STN_ADDRESS_ARR(I)) GOTO 1000
+	    END DO
+C
+	    STATION = STN
+	    RETURN
+C
+1000	CONTINUE
+	STATION =-1
+	
+	RETURN
+
+9000	FORMAT('BYTE :',I2,3X,Z2.2)
+9100	FORMAT(16(X,Z2.2))
+	END
+C
+C	***** End V02 changes *****
+C

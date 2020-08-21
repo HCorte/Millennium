@@ -1,0 +1,176 @@
+C V02 24-04-2002 MENT EXCHANGE DB & CR COLUMNS AND SORT BY AGTNUM
+C V01 27-06-2001 ANG INITIAL RELEASE FOR PORTUGAL
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1995 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+        PROGRAM LSTCRDB
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:AGTCOM.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+        INCLUDE 'INCLIB:RECAGT.DEF'
+        INCLUDE 'INCLIB:DATBUF.DEF'
+
+	INTEGER*4    REPLUN,ST,I,PAGE,LINCNT,CDCINI,CDCFIM
+	INTEGER*4    I4REPNAM(5),CRAMT(2),DBAMT(2),TOTCR(2),TOTDB(2)
+	INTEGER*2    DATEINI(DATLEN),DATEFIM(DATLEN)
+        INTEGER*4    FLAG
+	INTEGER*4    SORT(NUMAGT),SRTCNT, REC, XREC	! FOR SORT
+
+	CHARACTER*20 REPNAM/'SYSX:AJUSTES.REP    '/
+	CHARACTER*8  CAGT_NO   !FUNCTION
+	CHARACTER*7  CDAGT
+	CHARACTER*55 AGTNAM
+
+	EQUIVALENCE (REPNAM,I4REPNAM)
+	    
+        CALL COPYRITE
+
+	TYPE*,IAM(),'>>>>> LIST DEBITS AND CREDITS PER AGENT'
+
+C
+C SORT BY AGENT NUMBER
+C
+        CALL SRTFLD(1,1,SORT,SRTCNT)
+
+        CALL OPENASF(ASF)
+
+	CALL FIND_AVAILABLE_LUN(REPLUN,ST)
+	IF (ST.NE.0) THEN
+	    CALL FILERR(I4REPNAM,0,ST,0)
+	    CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+
+	CALL ROPEN(REPNAM,REPLUN,ST)
+	IF (ST.NE.0) THEN
+	    CALL FILERR(I4REPNAM,1,ST,0)
+	    CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+
+	CALL TITLE('RELATORIO FINANCEIRO DE CRED./DEB.','LSTCRDB',1,REPLUN,PAGE,DAYCDC)
+	WRITE(REPLUN,50) 
+
+	CDCFIM = DAYCDC
+	DATEFIM(5) = CDCFIM
+	CALL CDATE(DATEFIM)
+
+	CDCINI = DAYCDC - 1
+	DATEINI(5) = CDCINI
+	CALL CDATE(DATEINI)
+
+	DO WHILE(DATEINI(VDOW).NE.SUNDAY)
+	    CDCINI = CDCINI - 1	
+	    DATEINI(5) = CDCINI
+	    CALL CDATE(DATEINI)
+	ENDDO
+	
+	DO WHILE(FLAG.NE.1)
+	   WRITE(6,10) IAM(),DATEINI(VDAY),DATEINI(VMON),DATEINI(VYEAR)+2000,
+     *                 DATEFIM(VDAY),DATEFIM(VMON),DATEFIM(VYEAR)+2000
+
+	   CALL INPYESNO('Periodo correto? [S]/[N]: ',FLAG)
+	   IF (FLAG.EQ.3) CALL GSTOP(GEXIT_FATAL)
+	
+	   IF (FLAG.EQ.2) THEN
+	      CALL INPNUM('Entre cdc inicial: ',CDCINI,1,99999,ST)
+	      IF (ST.NE.0) CALL GSTOP(GEXIT_OPABORT)
+
+	      CALL INPNUM('Entre cdc final: '  ,CDCFIM,1,99999,ST)
+	      IF (ST.NE.0) CALL GSTOP(GEXIT_OPABORT)
+
+	      DATEFIM(5) = CDCFIM
+	      CALL CDATE(DATEFIM)
+
+	      DATEINI(5) = CDCINI
+	      CALL CDATE(DATEINI)
+	   ENDIF
+
+	ENDDO
+
+	TOTCR(1) = 0
+	TOTCR(2) = 0
+	TOTDB(1) = 0
+	TOTDB(2) = 0
+
+	TYPE*,IAM(),'Pesquisando ASF...aguarde'
+
+	DO REC=1,SRTCNT
+
+	    XREC = SORT(REC)
+
+	    CRAMT(1) = 0
+	    CRAMT(2) = 0
+	    DBAMT(1) = 0
+	    DBAMT(2) = 0
+
+	    CALL READASF(XREC,ASFREC,ST)
+	    IF (MOD(XREC,1000).EQ.0) WRITE(6,5) IAM(),XREC
+
+	    IF (ST.NE.0) THEN
+		CALL FILERR(SFNAMES(1,ASF),2,ST,XREC)
+	    ELSE
+		DO I=1,15
+		   IF (ASFLGR(LGRCDC,I).GE.CDCINI.AND.ASFLGR(LGRCDC,I).LE.CDCFIM) THEN
+
+                      IF (ASFLGR(LGRAMTU,I).LT.0) THEN
+		         CALL ADDI8I8(CRAMT,ASFLGR(LGRAMTU,I),BETUNIT)
+		         CALL ADDI8I8(TOTCR,ASFLGR(LGRAMTU,I),BETUNIT)
+		      ELSE
+		         CALL ADDI8I8(DBAMT,ASFLGR(LGRAMTU,I),BETUNIT)
+		         CALL ADDI8I8(TOTDB,ASFLGR(LGRAMTU,I),BETUNIT)
+		      ENDIF
+
+	           ENDIF
+		ENDDO
+
+		IF (LINCNT.GT.52) THEN
+	            CALL TITLE('RELATORIO FINANCEIRO DE CRED./DEB.','LSTCRDB',1,REPLUN,PAGE,DAYCDC)
+	            WRITE(REPLUN,50) 
+		    LINCNT = 0
+		ENDIF
+
+		IF (CRAMT(1).NE.0.OR.DBAMT(1).NE.0) THEN
+
+		    CALL MOVBYT(%REF(ASFBYT), SAGNO, %REF(CDAGT), 1, EAGNO-SAGNO+1)
+		    CALL MOVBYT(%REF(ASFBYT), SNAME, %REF(AGTNAM), 1, ENAME-SNAME+1)
+
+		    WRITE(REPLUN,100) CAGT_NO(CDAGT),
+     *                                AGTNAM,
+     *                                CSMONYI8(DBAMT,10,BETUNIT),
+     *                                CSMONYI8(CRAMT,10,BETUNIT)
+
+		    LINCNT = LINCNT + 1
+		ENDIF
+	    ENDIF
+	ENDDO !ENDDO REC=1,SRTCNT
+
+	WRITE(REPLUN,150) CSMONYI8(TOTDB,10,BETUNIT), CSMONYI8(TOTCR,10,BETUNIT) 
+
+	CALL CLOSASF
+	CLOSE(REPLUN)	
+
+	CALL GSTOP(GEXIT_SUCCESS)
+
+5	FORMAT(1X,A,I6,' registros lidos')
+10	FORMAT(1X,A,'Perido de pesquisa: ',I2.2,'/',I2.2,'/',I4,' ate ',I2.2,'/',I2.2,'/',I4)
+50	FORMAT(132('='),/,T3,'MEDIADOR',T14,'NOME',T78,'DEBITO',T92,'CREDITO',/,132('='))
+100	FORMAT(2X,A8,3X,A55,5X,A10,5X,A10)
+150	FORMAT(//,T60,'TOTAIS',T74,A10,T89,A10)
+	END

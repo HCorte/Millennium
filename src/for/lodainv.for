@@ -1,0 +1,450 @@
+C
+C V04 13-DEC-2010 MAC EMPTY FILE ALLOWED
+C V03 03-DEC-2010 MAC CHECKINH FOR "Z" REMOVED
+C V02 03-SEP-2010 MAC RFSS0145 - ASFIV FILE ADDED, ASF IS NOT UPDATED
+C V01 17-APR-2010 FRP Initial Release for Portugal ePassive
+C
+C LOAD PASSIVE ACCOUNT INVOICE INTERFACE FILE FROM SCML ORACLE SYSTEM AND UPDATE ASF.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2010 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+      PROGRAM LODAINV
+      IMPLICIT NONE
+C
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:SYSEXTRN.DEF'
+      INCLUDE 'INCLIB:GLOBAL.DEF'
+      INCLUDE 'INCLIB:CONCOM.DEF'
+      INCLUDE 'INCLIB:ORCCOM.DEF'
+C
+      INTEGER*4 ST,IND
+      INTEGER*4 YEAR,MONTH,DAY
+      INTEGER*4 IGEN_DAT,GENDAT_POS
+      CHARACTER CGEN_DAT*8
+      LOGICAL*1 ISTHERE,WRITE_ACCINV
+C
+      COMMON /ACCINV/ WRITE_ACCINV
+C
+      TYPE*,IAM()
+      TYPE*,IAM(),'**********************************************************'
+      TYPE*,IAM(),'PROCESS PASSIVE ACCOUNT INVOICE FILE (ORCINV_AAAAMMDD.ASC)'
+      TYPE*,IAM(),'**********************************************************'
+      TYPE*,IAM()
+C
+C Check if System Is Up
+      CALL CHCKDIS(ST)
+      IF(ST .EQ. 0) THEN
+        TYPE*,IAM()
+        TYPE*,IAM(),'System is ACTIVE!'
+        TYPE*,IAM()
+        CALL GSTOP(GEXIT_FATAL)
+      ENDIF
+C
+C Ask Generation Date
+      CALL INPNUM('Enter File Generation Date (AAAAMMDD): ',IGEN_DAT,1,99999999,ST)
+      IF(ST .LT. 0) CALL GSTOP(GEXIT_OPABORT)
+C
+      CGEN_DAT = ITOC(IGEN_DAT,IND)
+C
+      GENDAT_POS = 1
+      CALL GET_VALUE(GENDAT_POS,4,YEAR,CGEN_DAT)
+      IF(YEAR .LT. 2010) THEN
+        TYPE*,IAM(),'YEAR LOWER THAN 2010'
+        CALL GSTOP(GEXIT_FATAL)
+      ENDIF
+C
+      GENDAT_POS = 5
+      CALL GET_VALUE(GENDAT_POS,2,MONTH,CGEN_DAT)
+      IF(MONTH .LT. 1 .OR. MONTH .GT. 12) THEN
+        TYPE*,IAM(),'MONTH LOWER THAN 1 OR HIGHER THAN 12'
+        CALL GSTOP(GEXIT_FATAL)
+      ENDIF
+C
+      GENDAT_POS = 7
+      CALL GET_VALUE(GENDAT_POS,2,DAY,CGEN_DAT)
+      IF(DAY .LT. 1 .OR. DAY .GT. 31) THEN
+        TYPE*,IAM(),'DAY LOWER THAN 1 OR HIGHER THAN 31'
+        CALL GSTOP(GEXIT_FATAL)
+      ENDIF
+C
+C Inquire for Oracle File
+      WRITE(ORCNAM,100) CGEN_DAT
+      INQUIRE(FILE=ORCNAM,EXIST=ISTHERE)
+      IF(.NOT. ISTHERE) THEN
+        TYPE*,IAM(),'ERROR: FILE ',ORCNAM,' NOT FOUND'
+        CALL GSTOP(GEXIT_FATAL)
+      ENDIF
+C
+C Open Oracle File
+      CALL OPEN_ORC_FILE
+C
+C Open Agents invoice File
+      CALL OPEN_ASFIV                                       !V02
+C
+C Open Log File
+      WRITE(LOGNAM,200) CGEN_DAT
+      CALL OPEN_LOG_FILE
+C
+C Load Oracle File
+      WRITE_ACCINV = .FALSE.
+      CALL LOAD_ORC_FILE
+      IF(ORC_ERR_CNT .NE. 0) THEN
+        TYPE*,IAM()
+        TYPE*,IAM(),ORC_ERR_CNT,' ERRORS FOUND'
+        TYPE*,IAM(),'SEE LOG FILE - ',LOGNAM
+        TYPE*,IAM(),'FILE WILL NOT BE PROCESSED'
+        TYPE*,IAM()
+        CALL GSTOP(GEXIT_FATAL)
+      ENDIF
+C
+C Rewind Oracle File
+      REWIND(ORCLUN)
+C
+C Load Oracle File
+      WRITE_ACCINV = .TRUE.
+      CALL LOAD_ORC_FILE
+C
+C Close Oracle File
+      CLOSE(ORCLUN)
+C
+C Close Agents Invoice File
+      CALL CLOSEFIL(ASFIVFDB)                                !V02
+C
+C Close Log File
+      CLOSE(LOGLUN)
+C
+C Formats
+100   FORMAT('SYSX:ORCINV_',A8,'.ASC')
+200   FORMAT('SYSX:ORCINV_',A8,'.LOG')
+C
+C End
+      CALL GSTOP(GEXIT_SUCCESS)
+      END
+C
+C*************************
+C SUBROUTINE LOAD_ORC_FILE
+C*************************
+C LOAD ORACLE INTERFACE FILE
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+      SUBROUTINE LOAD_ORC_FILE
+      IMPLICIT NONE
+C
+      INCLUDE 'INCLIB:STANDARD.DEF'
+      INCLUDE 'INCLIB:ORCCOM.DEF'
+C
+      INTEGER*4 ST
+C
+      ORC_LIN_CNT = 0
+      ORC_ERR_CNT = 0
+      ORC_ERR_STR = ' '
+C
+      CALL LOAD_ORC_HEADER(ST)
+      IF(ST .EQ. EOF) RETURN
+C
+      CALL LOAD_ORC_BODY_TRAILER(ST)
+      IF(ST .EQ. EOF) RETURN
+C
+      RETURN
+      END
+C
+C***************************
+C SUBROUTINE LOAD_ORC_HEADER
+C***************************
+C READ ORACLE INTERFACE FILE HEADER RECORD
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+      SUBROUTINE LOAD_ORC_HEADER(ST)
+      IMPLICIT NONE
+C
+      INCLUDE 'INCLIB:SYSEXTRN.DEF'
+      INCLUDE 'INCLIB:STANDARD.DEF'
+      INCLUDE 'INCLIB:ORCCOM.DEF'
+C
+      INTEGER*4 ST
+      INTEGER*4 POS
+      CHARACTER REC_TYPE*2
+C
+      CALL READ_ORC_FILE(ST)
+      IF(ST .EQ. EOF) THEN
+        ORC_ERR_STR = IAM()//' INVALID EOF. SHOULD BE A HEADER RECORD'
+        CALL WRITE_LOG_FILE
+        RETURN
+      ENDIF
+C
+      POS=1
+C
+      CALL GET_REC_TYPE(POS,REC_TYPE)
+      IF(REC_TYPE .NE. 'HP') THEN
+        ORC_ERR_STR = IAM()//' HEADER RECORD INVALID. SHOULD BE TYPE HP'
+        CALL WRITE_LOG_FILE
+      ENDIF
+C
+      CALL GET_GEN_DATE(POS)
+      IF(ORC_GEN_DAT .NE. ORCNAM(13:20)) THEN
+        ORC_ERR_STR = IAM()//' GENDATE NOT EQUAL TO GENDATE IN FILE NAME'
+        CALL WRITE_LOG_FILE
+      ENDIF
+C
+      RETURN
+      END
+C
+C*********************************
+C SUBROUTINE LOAD_ORC_BODY_TRAILER
+C*********************************
+C READ ORACLE INTERFACE FILE BODY AND TRAILER RECORDS
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+      SUBROUTINE LOAD_ORC_BODY_TRAILER(ST)
+      IMPLICIT NONE
+C
+      INCLUDE 'INCLIB:SYSEXTRN.DEF'
+      INCLUDE 'INCLIB:STANDARD.DEF'
+      INCLUDE 'INCLIB:ORCCOM.DEF'
+C
+      INTEGER*4 ST,POS
+      CHARACTER REC_TYPE*2
+      LOGICAL*1 IS_TRAILER
+C
+C Initialize FIRM and SHOP for all Agents
+      CALL INI_FIRM_SHOP
+C
+C Read Oracle File
+      ST = 0
+      ORC_TOT_REC_01 = 0
+      IS_TRAILER = .FALSE.
+C
+      DO WHILE(ST .EQ. 0)
+C
+        CALL READ_ORC_FILE(ST)
+        IF(ST .EQ. EOF) THEN
+C*V04*          IF(ORC_TOT_REC_01 .EQ. 0) THEN
+C*V04*            ORC_ERR_STR = IAM()//' INVALID EOF. SHOULD BE A RECORD 01'
+C*V04*            CALL WRITE_LOG_FILE
+C*V04*          ENDIF
+          IF(IS_TRAILER .EQ. .FALSE.) THEN
+            ORC_ERR_STR = IAM()//' INVALID EOF. SHOULD BE A TRAILER RECORD'
+            CALL WRITE_LOG_FILE
+          ENDIF
+          RETURN
+        ENDIF
+C
+        POS=1
+C
+        CALL GET_REC_TYPE(POS,REC_TYPE)
+C
+        IF(REC_TYPE .EQ. '01') THEN
+          ORC_TOT_REC_01 = ORC_TOT_REC_01+1
+          CALL GET_REC_01(POS)
+C
+        ELSEIF(REC_TYPE .EQ. 'TP') THEN
+          IS_TRAILER = .TRUE.
+          CALL GET_VALUE(POS,8,ORC_TOT_LIN,ORC_REC)
+          IF(ORC_TOT_LIN .NE. ORC_LIN_CNT) THEN
+            ORC_ERR_STR = IAM()//' TOTRECS IN TRAILER NOT EQUAL TO TOTRECS IN FILE'
+            CALL WRITE_LOG_FILE
+          ENDIF
+C
+        ELSE
+          ORC_ERR_STR = IAM()//' INVALID RECORD. SHOULD BE TYPE 01 OR TYPE TP'
+          CALL WRITE_LOG_FILE
+        ENDIF
+C
+      ENDDO
+C
+      RETURN
+      END
+C
+C**********************
+C SUBROUTINE GET_REC_01
+C**********************
+C GET ORACLE INTERFACE FILE BODY RECORD '01'
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+      SUBROUTINE GET_REC_01(POS)                                    !V02...
+      IMPLICIT NONE
+C
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:SYSEXTRN.DEF'
+      INCLUDE 'INCLIB:GLOBAL.DEF'
+      INCLUDE 'INCLIB:ORCCOM.DEF'
+      INCLUDE 'INCLIB:AGTCOM.DEF'
+      INCLUDE 'INCLIB:AGTINF.DEF'
+      INCLUDE 'INCLIB:RECAGT.DEF'
+      INCLUDE 'INCLIB:CONCOM.DEF'                                !V02
+      INCLUDE 'INCLIB:RECAGTIV.DEF'                              !V02
+C
+      INTEGER*4 POS
+      INTEGER*4 ST,IND
+      INTEGER*4 XAGT,MXAGT,TER
+      LOGICAL*1 WRITE_ACCINV
+C
+      INTEGER*4 SFIRM_LEN/1/
+      CHARACTER SFIRM*1
+      BYTE      BFIRM
+      EQUIVALENCE(SFIRM,BFIRM)
+C
+      INTEGER*4 SSHOP_LEN/1/
+      CHARACTER SSHOP*1
+      BYTE      BSHOP
+      EQUIVALENCE(SSHOP,BSHOP)
+C
+      COMMON /ACCINV/ WRITE_ACCINV
+C
+      ASFIVRT = 1
+C
+C Week of Invoicing
+      CALL GET_VALUE(POS,2,ASFIVWEEK,ORC_REC)
+      IF(ASFIVWEEK .LT. 1 .OR.ASFIVWEEK .GT. PMAXWEK) THEN
+        ORC_ERR_STR = IAM()//' INVALID EXTRACTION WEEK. SHOULD BE UP TO '//ITOC(PMAXWEK,IND)
+        CALL WRITE_LOG_FILE
+      ENDIF
+C
+C Year of Invoicing
+      CALL GET_VALUE(POS,4,ASFIVYEAR,ORC_REC)
+      IF(ASFIVYEAR .LT. 2010) THEN
+        ORC_ERR_STR = IAM()//' INVALID EXTRACTION YEAR. SHOULD START FROM 2010'
+        CALL WRITE_LOG_FILE
+      ENDIF
+C
+C Agent
+      CALL GET_VALUE(POS,7,XAGT,ORC_REC)
+C
+      MXAGT = 9999999
+      IF(XAGT .LE. 0 .OR. XAGT .GT. MXAGT) THEN
+        ORC_ERR_STR = IAM()//' INVALID AGENT NUMBER. SHOULD BE UP TO '//ITOC(MXAGT,IND)
+        CALL WRITE_LOG_FILE
+      ENDIF
+C
+      TER = 0
+      DO IND = 1,NUMAGT
+        IF(XAGT .EQ. AGTTAB(AGTNUM,IND)) THEN
+          TER = IND
+          GOTO 1000
+        ENDIF
+      ENDDO
+C
+      IF(TER .LE. 0) THEN
+        ORC_ERR_STR = IAM()//' INVALID AGENT NUMBER. TERMINAL NUMBER NOT FOUND'
+        CALL WRITE_LOG_FILE
+      ENDIF
+C
+1000  CONTINUE
+C
+      ASFIVAGT=TER
+C
+C Sign of Accounting for Firm
+      SFIRM = ORC_REC(POS:(POS+SFIRM_LEN-1))
+      POS = POS+SFIRM_LEN
+C
+      IF(SFIRM .NE. 'D' .AND. SFIRM .NE. 'C' .AND. SFIRM .NE. 'Z') THEN
+        ORC_ERR_STR = IAM()//' INVALID SIGN FOR FIRM. SHOULD BE D, C OR Z'
+        CALL WRITE_LOG_FILE
+      ENDIF
+C
+      CHR_F_SGN(1)=SFIRM
+C
+C Firm data
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_INVAMT,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_TRAMT,ORC_REC)
+      CALL GET_VALUE(POS, 8,ASFIV_F_CNT_ON_SAL,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_AMT_ON_SAL,ORC_REC)
+      CALL GET_VALUE(POS, 8,ASFIV_F_CNT_OF_SAL,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_AMT_OF_SAL,ORC_REC)
+      CALL GET_VALUE(POS, 8,ASFIV_F_CNT_RET_D,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_AMT_RET,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_ON_COM,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_OF_COM,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_LST_BAL,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_PAID,ORC_REC)
+      CALL GET_VALUE(POS, 8,ASFIV_F_ACC_PAID,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_AMT_PAID,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_F_AMT_DIF,ORC_REC)
+      CALL GET_VALUE(POS, 8,ASFIV_F_CNT_RET_A,ORC_REC)
+      CALL GET_VALUE(POS, 7,ASFIV_F_CODE,ORC_REC)
+C
+C Sign of Accounting for Shop
+      SSHOP = ORC_REC(POS:(POS+SSHOP_LEN-1))
+      POS = POS+SSHOP_LEN
+C
+      IF(SSHOP .NE. 'D' .AND. SSHOP .NE. 'C' .AND. SSHOP .NE. 'Z') THEN
+        ORC_ERR_STR = IAM()//' INVALID SIGN FOR SHOP. SHOULD BE D, C OR Z'
+        CALL WRITE_LOG_FILE
+      ENDIF
+C
+      CH_S_SGN(1)=SSHOP
+C
+C Shop data
+      CALL GET_VALUE_SGN(POS,11,ASFIV_S_INVAMT,ORC_REC)
+      CALL GET_VALUE(POS, 8,ASFIV_S_CNT_ON_SAL,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_S_AMT_ON_SAL,ORC_REC)
+      CALL GET_VALUE(POS, 8,ASFIV_S_CNT_OF_SAL,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_S_AMT_OF_SAL,ORC_REC)
+      CALL GET_VALUE(POS, 8,ASFIV_S_CNT_RET_D,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_S_AMT_RET,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_S_ON_COM,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_S_OF_COM,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_S_LST_BAL,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_S_PAID,ORC_REC)
+      CALL GET_VALUE(POS, 8,ASFIV_S_ACC_PAID,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_S_AMT_PAID,ORC_REC)
+      CALL GET_VALUE_SGN(POS,11,ASFIV_S_AMT_DIF,ORC_REC)
+      CALL GET_VALUE(POS, 8,ASFIV_S_CNT_RET_A,ORC_REC)
+      CALL GET_VALUE(POS, 2,ASFIV_S_CODE,ORC_REC)
+C
+C Write Agents Invoice File                                       !V02...
+      IF(WRITE_ACCINV .EQ. .TRUE. .AND. ORC_ERR_CNT .EQ. 0) THEN
+        CALL WRITEW(ASFIVFDB,TER,ASFIVREC,ST)
+        IF(ST.NE.0) CALL FILERR(SFNAMES(1,ASFIV),3,ST,TER)
+      ENDIF                                                       !...V02
+C
+      RETURN
+      END
+C
+C*************************
+C SUBROUTINE INI_FRIM_SHOP
+C*************************
+C INITIALIZE FIRM AND SHOP FOR ALL AGENTS
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+      SUBROUTINE INI_FIRM_SHOP
+      IMPLICIT NONE
+C
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:SYSEXTRN.DEF'
+      INCLUDE 'INCLIB:GLOBAL.DEF'
+      INCLUDE 'INCLIB:ORCCOM.DEF'
+      INCLUDE 'INCLIB:AGTCOM.DEF'
+      INCLUDE 'INCLIB:AGTINF.DEF'
+      INCLUDE 'INCLIB:RECAGT.DEF'
+      INCLUDE 'INCLIB:CONCOM.DEF'                                !V02
+      INCLUDE 'INCLIB:RECAGTIV.DEF'                              !V02
+C
+      INTEGER*4 ST,TER
+      LOGICAL*1 WRITE_ACCINV
+C
+      COMMON /ACCINV/ WRITE_ACCINV
+C
+      IF(WRITE_ACCINV .EQ. .TRUE. .AND. ORC_ERR_CNT .EQ. 0) THEN
+        DO TER = 1,NUMAGT
+          CALL FASTSET(0,ASFIVREC,ASFIVLEN)                      !V02...
+          CHR_F_SGN(1) = 'Z'                                     !V04
+          CH_S_SGN(1)  = 'Z'                                     !V04
+          CALL WRITEW(ASFIVFDB,TER,ASFIVREC,ST)
+          IF(ST.NE.0) CALL FILERR(SFNAMES(1,ASFIV),3,ST,TER)     !...V02
+        ENDDO
+      ENDIF
+C
+      RETURN
+      END

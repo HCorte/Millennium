@@ -1,0 +1,608 @@
+C
+C V03 24-JAN-2011 RXK IF command split
+C V02 16-DEC-2003 FRP Modify for Batch2 Totobola Changes.
+C V01 03-MAY-2001 ANG  INITIAL RELEASE FOR PORTUGAL
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+C=======OPTIONS /CHECK=NOOVERFLOW
+        PROGRAM AUDITRPT
+        IMPLICIT NONE
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:STANDARD.DEF'
+
+	INTEGER*4    INTERVAL(3,2)
+	INTEGER*4    OPT,ST,I
+	CHARACTER*27 MENUSTR(3)
+        
+
+	DATA MENUSTR/' - Juri do Concurso:    >= ',' - Funcionario da SCML: >= ',' - Funcionario da SCML: >= '/
+
+	COMMON /AUDITCOM/ INTERVAL
+C
+C VALOR DFAULT
+C
+	INTERVAL(1,1) = 45000  !JURI DO CONCURSO
+	INTERVAL(2,1) = 10000  !SCML-1 INICIAL
+	INTERVAL(2,2) = 44999  !SCML-1 FINAL
+	INTERVAL(3,1) = 0      !SCML-2 INICIAL
+	INTERVAL(3,2) = 9999   !SCML-2 FINAL
+
+        CALL COPYRITX(6)        
+
+	DO WHILE(.TRUE.)        
+           CALL CLRSCR(6)
+
+	   TYPE*,IAM(),'>>>>> AUDITRPT <<<<<'
+
+	   DO I=1,3
+	      IF (INTERVAL(I,2).GT.0) THEN
+		 WRITE(6,11) IAM(),I,MENUSTR(I),CMONY(INTERVAL(I,1),10,BETUNIT),CMONY(INTERVAL(I,2),10,BETUNIT)
+	      ELSE
+                 WRITE(6,10) IAM(),I,MENUSTR(I),CMONY(INTERVAL(I,1),10,BETUNIT)
+	      ENDIF
+	   ENDDO
+	   WRITE(6,13) IAM()
+	   WRITE(6,12) IAM()
+
+C	   WRITE(6,10) IAM(),CMONY(INTERVAL(1,1),10,BETUNIT)
+C	   WRITE(6,11) IAM(),2,CMONY(INTERVAL(2,1),10,BETUNIT),CMONY(INTERVAL(2,2),10,BETUNIT)
+C	   WRITE(6,11) IAM(),3,CMONY(INTERVAL(3,1),10,BETUNIT),CMONY(INTERVAL(3,2),10,BETUNIT)
+
+	   CALL INPNUM('Entre com a opcao [E-sair]: ',OPT,1,5,ST)
+	   IF (ST.NE.0) CALL GSTOP(GEXIT_SUCCESS)
+
+	   IF (OPT.GE.1.AND.OPT.LE.4) CALL GEN_RPT(OPT)
+	   IF (OPT.EQ.5) CALL ALT_VALOR()
+
+	ENDDO
+
+	CALL GSTOP(GEXIT_SUCCESS)
+C10	FORMAT(1X,A,I1,' - Juri do Concurso:    >= ',A10)
+C11	FORMAT(1X,A,I1,' - Funcionario da SCML: >= ',A10,' e <= ',A10)
+10	FORMAT(1X,A,I1,A27,A10)
+11	FORMAT(1X,A,I1,A27,A10,' e <= ',A10)
+
+13	FORMAT(1X,A,'4 - Bilhetes premiados')
+12	FORMAT(1X,A,'5 - Alterar intervalos')
+	END
+
+C***************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE GEN_RPT(OPT)
+        IMPLICIT NONE
+C***************************************
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:AGTCOM.DEF'
+        INCLUDE 'INCLIB:DESVAL.DEF'
+        INCLUDE 'INCLIB:VDETAIL.DEF'
+        INCLUDE 'INCLIB:VALFIL.DEF'
+        INCLUDE 'INCLIB:PRMHSH.DEF'
+        INCLUDE 'INCLIB:DATBUF.DEF'
+        INCLUDE 'INCLIB:STANDARD.DEF'
+
+        INTEGER*4 TUBSIZ
+        PARAMETER (TUBSIZ=I4BUCSIZ*7)
+        INTEGER*4 VLFBUF(TUBSIZ)
+
+	INTEGER*4    MAXDIV
+	PARAMETER(MAXDIV = 6)
+
+	INTEGER*2    DATE(DATLEN)
+        INTEGER*4    INTERVAL(3,2)
+	INTEGER*4    DRW(MAXGAM)
+	INTEGER*4    OPT,ST,GNUM,VLFLUN,REPLUN,PAGE,LINCNT
+	INTEGER*4    I,K,J,AUXDRW,WEEK,YEAR,GAM,SZ,YESNO
+	INTEGER*4    KIKCLAS,GAMSHR(MAXDIV),SCDC,SSER,SCHK,AGT,GAMSHV(MAXGAM,MAXDIV)
+	INTEGER*4    AMT,GTYP,KIKNUM,GIDX,GAMCLAS(MAXGAM,MAXDIV),NUMDIVS(MAXGAM)
+	INTEGER*4    TOTPRZ,GWEEK(MAXGAM),GYEAR(MAXGAM)
+        INTEGER*4    TOTGAMSHR(MAXGAM, MAXDIV)  ! TOTAL SHARES BY GAME
+        INTEGER*4    TOTSHR(MAXDIV)             ! TOTAL SHARES BY DIVISION
+        INTEGER*4    KIKGNUM                    ! JOKER GAME NUMBER
+C
+	CHARACTER*12 REPNAM
+	CHARACTER*24 STRCLAS(MAXGAM)
+	CHARACTER*43 STR
+	CHARACTER*8  IAGT_NO   !FUNCTION
+        CHARACTER*31 MSGTITLE  ! MESSAGE TO DISPLAY IN REPORT TITLE       
+        
+	LOGICAL PRINT,FOUND,ACTGAM(MAXGAM)
+
+	DATA REPNAM /'AUDITRPT.REP'/
+
+        COMMON /AUDITCOM/ INTERVAL
+
+        PAGE = 0
+	TOTPRZ = 0
+        MSGTITLE = 'SISTEMA DE AUDITORIA DE PREMIOS'
+	CALL FASTSET(0, TOTGAMSHR, MAXGAM * MAXDIV)
+	CALL FASTSET(0, DRW, MAXGAM)
+        KIKGNUM = GTNTAB(TKIK, 1)
+
+	DO I=1,MAXGAM
+	    GTYP = GNTTAB(GAMTYP,I)
+	    GIDX = GNTTAB(GAMIDX,I)
+            ACTGAM(I) = .FALSE.
+            IF (GTYP.NE.TPAS.AND.GIDX.GT.0) THEN
+              IF(DAYDRW(I).GT.0) THEN  !current draw configured
+	        AUXDRW = DAYDRW(I) - 1
+		IF(AUXDRW.LE.0 .AND. DAYHDR(I).GT.0) AUXDRW = DAYHDR(I) !just in case is the 1st draw
+              ELSE
+                IF(DAYHDR(I).GT.0) THEN  !game is configured
+	          AUXDRW = DAYHDR(I)  !last draw done
+                ELSE
+                  AUXDRW = 0
+                ENDIF
+              ENDIF
+	      DRW(I) = AUXDRW	    
+	    ENDIF
+            IF(GTYP .GE. 1 .AND. GTYP .LE. MAXTYP) THEN
+              IF(GIDX .GE. 1 .AND. GIDX .LE. MAXIND) THEN
+                ACTGAM(I) = .TRUE.
+              ENDIF
+            ENDIF
+	ENDDO
+
+	DO WHILE (.TRUE.)
+	    CALL CLRSCR(6)
+	    CALL FASTSET(0,GWEEK,MAXGAM)
+	    CALL FASTSET(0,GYEAR,MAXGAM)
+	    TYPE*,IAM(),' JOGOS SELECIONADOS PARA GERAR RELATORIO'
+	    DO I=1,MAXGAM
+	       GTYP = GNTTAB(GAMTYP,I)
+	       GIDX = GNTTAB(GAMIDX,I)
+	       IF (GTYP.NE.TPAS.AND.DRW(I).GT.0.AND.GIDX.GT.0) THEN
+	          CALL GETWEK(DRW(I),I,WEEK,YEAR,ST)
+		  GWEEK(I) = WEEK
+		  GYEAR(I) = YEAR
+	          WRITE(6,1) IAM(),I,(GLNAMES(K,I),K=1,4),DRW(I),WEEK,YEAR
+	       ENDIF
+	    ENDDO
+	    CALL INPNUM('Se desejar, entre o jogo para mudar concurso: [C-continua]',GAM,1,MAXGAM,ST)
+	    IF (ST.EQ.-5) THEN
+                EXIT
+	    ELSEIF (ST.EQ.-1) THEN
+		CALL GSTOP(GEXIT_OPABORT)
+            ELSEIF (ST.EQ.0) THEN
+                CALL INPNUM('Entre o concurso [0-Excluir]: ',AUXDRW,0,999999,ST)
+		IF (ST.NE.0) CALL GSTOP(GEXIT_OPABORT)
+		DRW(GAM) = AUXDRW
+		CALL CLRSCR(6)
+	    ENDIF      
+	ENDDO
+
+	CALL GET_SHV(DRW,GAMSHV,NUMDIVS)
+
+	IF (OPT.EQ.4) THEN
+	  DO I=1,MAXGAM
+	    IF (DRW(I).GT.0) THEN
+		DO K=1,NUMDIVS(I)
+		    GAMCLAS(I,K) = 1
+		ENDDO
+	    ENDIF
+	  ENDDO
+
+	  DO WHILE (.TRUE.)
+	    CALL CLRSCR(6)
+	    TYPE*,IAM(),' CLASSES SELECIONADAS PARA GERAR RELATORIO'
+	    DO I=1,MAXGAM
+	       J=0
+	       STRCLAS(I) = '                        '
+               IF (DRW(I).GT.0) THEN
+                 DO K=1,NUMDIVS(I)
+                    IF (GAMCLAS(I,K).EQ.1) THEN
+			J = J + 1
+			STRCLAS(I)(J:J) = ITOC(K,SZ)
+			J = J + 1
+			STRCLAS(I)(J:J) = ' '
+		    ENDIF
+                 ENDDO
+	         WRITE(6,21) IAM(),I,(GLNAMES(K,I),K=1,4),STRCLAS(I)
+               ENDIF
+            ENDDO
+            CALL INPNUM('Se desejar, entre o jogo para mudar as classes: [C-continua]',GAM,1,MAXGAM,ST)
+            IF (ST.EQ.-5) THEN
+                EXIT
+            ELSEIF (ST.EQ.-1) THEN
+                CALL GSTOP(GEXIT_OPABORT)
+            ELSEIF (ST.EQ.0) THEN
+                DO I=1,NUMDIVS(GAM)
+	           WRITE(STR,22) I 
+                   CALL PRMYESNO(STR,YESNO)
+		   IF (YESNO.EQ.1) GAMCLAS(GAM,I)=1
+		   IF (YESNO.EQ.2) GAMCLAS(GAM,I)=0
+		   IF (YESNO.EQ.3) CALL GSTOP(GEXIT_OPABORT)
+	        ENDDO
+            ENDIF
+	  ENDDO
+	ENDIF
+C
+C OPEN VLF FILE
+C
+	CALL FIND_AVAILABLE_LUN(VLFLUN,ST)
+	IF (ST.NE.0) THEN
+            CALL FILERR(SFNAMES(1,VLF),0,ST,0)
+	    CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+
+	CALL IOPEN(SFNAMES(1,VLF),VLFLUN,VFLEN*2,VFSCDC,VFSSER*2-1,ST)
+        IF(ST.NE.0) CALL FILERR(SFNAMES(1,VLF),1,ST,0)
+        CALL ITUBSIZE(VLFLUN,TUBSIZ)
+C
+C OPEN REPORT FILE
+C
+	CALL FIND_AVAILABLE_LUN(REPLUN,ST)
+	IF (ST.NE.0) THEN
+	    TYPE*,IAM(),'ERROR GETTING LOGICAL UNIT FOR ',REPNAM
+	    CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+
+	OPEN(REPLUN,
+     *       FILE   = REPNAM,
+     *       STATUS = 'UNKNOWN',
+     *       IOSTAT = ST)
+
+	IF (ST.NE.0) THEN
+	    TYPE*,IAM(),'ERROR OPENNING REPORT ',REPNAM,' STATUS = ',ST
+	    CALL GSTOP(GEXIT_FATAL)  
+        ENDIF   
+C
+C WRITE SELECTED GAMES
+C
+	CALL TITLE(MSGTITLE, 'AUDITRPT', 1, REPLUN, PAGE, DAYCDC)
+	WRITE(REPLUN,24)
+	DO I=1,MAXGAM
+	    IF (DRW(I).GT.0) THEN
+		IF (OPT.NE.4) THEN
+		   WRITE(REPLUN,25) (GLNAMES(K,I),K=1,4),DRW(I),GWEEK(I),GYEAR(I),'TODAS                   '
+                ELSE
+		   WRITE(REPLUN,25) (GLNAMES(K,I),K=1,4),DRW(I),GWEEK(I),GYEAR(I),STRCLAS(I)
+		ENDIF
+	    ENDIF
+	ENDDO		
+
+C
+C GENERATE REPORT
+C
+	CALL TITLE(MSGTITLE, 'AUDITRPT', 1, REPLUN, PAGE, DAYCDC)
+	IF (OPT.NE.4) THEN
+	    IF (INTERVAL(OPT,2).GT.0) THEN
+	        WRITE(REPLUN,10) CMONY(INTERVAL(OPT,1),10,BETUNIT),CMONY(INTERVAL(OPT,2),10,BETUNIT)
+            ELSE
+	        WRITE(REPLUN,11) CMONY(INTERVAL(OPT,1),10,BETUNIT)
+            ENDIF
+        ELSE
+	    WRITE(REPLUN,9)
+	ENDIF
+	WRITE(REPLUN,12)
+
+	LINCNT = 8
+C
+C PRESQUISANDO VLF
+C
+	TYPE*,IAM(),'Pesquisando registros no arquivo de premios'
+	CALL ISREAD(V4BUF,VLFLUN,VLFBUF,ST)
+        IF(ST.NE.0.AND.ST.NE.ERREND) THEN
+           CALL FILERR(SFNAMES(1,VLF),2,ST,0)
+        ELSEIF (ST.EQ.0) THEN
+           CALL LOGVAL(VALREC,V4BUF)
+           CALL DLOGVAL(VALREC,VDETAIL)
+	ENDIF
+
+	DO WHILE (ST.EQ.0)
+	   GNUM    = VALREC(VGAM)
+	   KIKNUM  = KGNTAB(GNUM) 
+	   PRINT   = .FALSE.
+	   FOUND   = .FALSE.
+	   KIKCLAS = 0
+	   AMT     = 0
+	   CALL FASTSET(0,GAMSHR,MAXDIV)
+	    
+	   DO I=1,VALREC(VPZOFF)
+	       IF (VDETAIL(VKIK,I).EQ.1) THEN
+		  IF (VDETAIL(VDRW,I).EQ.DRW(KIKNUM)) THEN
+		      KIKCLAS = VDETAIL(VDIV,I)
+                      AMT = AMT + ( VDETAIL(VSHR,I) * GAMSHV(KIKNUM,VDETAIL(VDIV,I)) )
+	              FOUND = .TRUE.
+                  ENDIF
+
+	       ELSEIF (VDETAIL(VDRW,I).EQ.DRW(GNUM)) THEN
+		  GAMSHR(VDETAIL(VDIV,I)) = VDETAIL(VSHR,I)
+		  AMT = AMT + ( VDETAIL(VSHR,I) * GAMSHV(GNUM,VDETAIL(VDIV,I)) )
+		  FOUND = .TRUE.
+	       ENDIF
+ 	   ENDDO
+
+C
+	   IF (OPT.EQ.4.AND.
+     *         (VALREC(VSTAT).EQ.VNOPRZ.OR.VALREC(VSTAT).EQ.VUNCSH.OR.VALREC(VSTAT).EQ.VPRPAY)) THEN
+	      IF (FOUND) THEN
+C
+C CHECK FOR PRICIPAL GAME
+C
+		  DO I=1,NUMDIVS(GNUM)
+		     IF (GAMSHR(I).GT.0.AND.GAMCLAS(GNUM,I).EQ.1) PRINT = .TRUE.
+		  ENDDO
+C
+C CHECK FOR KIKER
+C
+		  IF (KIKNUM.GT.0) THEN
+                   IF (DRW(KIKNUM).GT.0) THEN
+		     DO I=1,NUMDIVS(KIKNUM)
+		        IF (KIKCLAS.EQ.I.AND.GAMCLAS(KIKNUM,I).EQ.1) PRINT = .TRUE.
+		     ENDDO
+                   ENDIF
+                  ENDIF
+              ENDIF
+
+	   ELSEIF ((OPT.GE.1.AND.OPT.LE.3).AND.(VALREC(VSTAT).EQ.VUNCSH.OR.VALREC(VSTAT).EQ.VPRPAY)) THEN
+	      IF (AMT.GT.0) THEN
+	         IF (INTERVAL(OPT,2).GT.0) THEN
+		    IF (AMT.GE.INTERVAL(OPT,1).AND.AMT.LE.INTERVAL(OPT,2)) PRINT = .TRUE.
+	         ELSE
+		    IF (AMT.GE.INTERVAL(OPT,1)) PRINT = .TRUE.
+	         ENDIF
+	      ENDIF
+           ENDIF
+
+           IF (PRINT) THEN
+C
+C ACCUMULATE TOTALS 
+C
+	      TOTPRZ = TOTPRZ + 1
+
+              DATE(VCDC)=VALREC(VSCDC)
+              CALL CDATE(DATE)
+              SCDC=DATE(VJUL)
+
+	      AGT = AGTTAB(AGTNUM,VALREC(VSTER))
+	      CALL OUTGEN(VALREC(VSCDC),VALREC(VSSER),SSER,SCHK)
+	      LINCNT = LINCNT + 1
+	      IF (LINCNT.GT.52) THEN
+	         CALL TITLE(MSGTITLE, 'AUDITRPT', 1, REPLUN, PAGE, DAYCDC)
+	         IF (OPT.NE.4) THEN
+	            IF (INTERVAL(OPT,2).GT.0) THEN
+	               WRITE(REPLUN,10) CMONY(INTERVAL(OPT,1),10,BETUNIT),CMONY(INTERVAL(OPT,2),10,BETUNIT)
+                    ELSE
+	               WRITE(REPLUN,11) CMONY(INTERVAL(OPT,1),10,BETUNIT)
+                    ENDIF
+                 ELSE
+	            WRITE(REPLUN,9)
+      	         ENDIF
+        	 WRITE(REPLUN,12)
+	         LINCNT = 8
+	      ENDIF
+
+	      WRITE(REPLUN,14) IAGT_NO(AGT),
+     *                         SCDC,
+     *                         SSER,
+     *                         SCHK,
+     *                         (GLNAMES(I,GNUM),I=1,4),
+     *                         VALREC(VSCDC),
+     *                         (GAMSHR(I),I=1,MAXDIV),
+     *                         KIKCLAS
+C
+             ! SET TOTAL SHARES BY GAME
+             DO I = 1, MAXDIV
+               TOTGAMSHR(GNUM, I) = TOTGAMSHR(GNUM, I) + GAMSHR(I)
+             ENDDO
+             IF(KIKCLAS .NE. 0) THEN
+               TOTGAMSHR(KIKGNUM, KIKCLAS) = TOTGAMSHR(KIKGNUM, KIKCLAS) + 1
+             ENDIF
+	   ENDIF	 
+
+	   CALL ISREAD(V4BUF,VLFLUN,VLFBUF,ST)
+           IF(ST.NE.0.AND.ST.NE.ERREND) THEN
+              CALL FILERR(SFNAMES(1,VLF),2,ST,0)
+	      CALL GSTOP(GEXIT_FATAL)
+           ELSEIF (ST.EQ.0) THEN
+              CALL LOGVAL(VALREC,V4BUF)
+              CALL DLOGVAL(VALREC,VDETAIL)
+           ENDIF
+	ENDDO
+
+	IF (LINCNT.GT.52) THEN
+	   CALL TITLE(MSGTITLE, 'AUDITRPT', 1, REPLUN, PAGE, DAYCDC)
+	   IF (OPT.NE.4) THEN
+	      IF (INTERVAL(OPT,2).GT.0) THEN
+	          WRITE(REPLUN,10) CMONY(INTERVAL(OPT,1),10,BETUNIT),CMONY(INTERVAL(OPT,2),10,BETUNIT)
+              ELSE
+	          WRITE(REPLUN,11) CMONY(INTERVAL(OPT,1),10,BETUNIT)
+              ENDIF
+           ELSE
+	      WRITE(REPLUN,9)
+      	   ENDIF
+        ENDIF
+	WRITE(REPLUN, 23) TOTPRZ
+C
+C PRINT TOTAL SHARES BY GAME ( HEADER TABLE )
+C
+	CALL TITLE(MSGTITLE, 'AUDITRPT', 1, REPLUN, PAGE, DAYCDC)
+        WRITE(REPLUN, 26)
+        WRITE(REPLUN, 27)
+        WRITE(REPLUN, 28)
+        WRITE(REPLUN, 29)
+        WRITE(REPLUN, 30) (I, I = 1, MAXDIV)
+        WRITE(REPLUN, 27)
+C
+C PRINT TOTAL SHARES BY GAME
+C
+        CALL FASTSET(0, TOTSHR, MAXDIV)
+        DO 1000 GNUM = 1, MAXGAM
+          IF(ACTGAM(GNUM) .EQ. .FALSE.) GOTO 1000
+	  WRITE(REPLUN, 31) (GLNAMES(I, GNUM), I = 1, 4),
+     *                      (TOTGAMSHR(GNUM, I), I = 1, MAXDIV)
+          DO I = 1, MAXDIV
+            TOTSHR(I) = TOTSHR(I) + TOTGAMSHR(GNUM, I)
+          ENDDO
+1000    CONTINUE
+        WRITE(REPLUN, 27)
+        WRITE(REPLUN, 32) (TOTSHR(I), I = 1, MAXDIV)
+        WRITE(REPLUN, 27)
+C
+C CLOSE FILES
+C
+	CALL ICLOSE(VLFLUN,VLFBUF,ST)
+        IF(ST.NE.0) CALL FILERR(SFNAMES(1,VLF),4,ST,0)
+	CLOSE(REPLUN)
+
+	RETURN
+1	FORMAT(1X,A,I2,' - ',4A4,' concurso interno: ',I4,' semana/ano: ',I3.3,'/',I4)
+9       FORMAT(35X,'LISTA DE PREMIADOS ANTES DO CALCULO DOS VALORES PARA PREMIOS',/,132('='))
+10	FORMAT(40X,'LISTA DE ALTOS PREMIADOS DE ',A10,' A ',A10,/,132('='))
+11	FORMAT(41X,'LISTA DE ALTOS PREMIADOS DE ',A10,' A INFINITO',/,132('='))
+12	FORMAT(T4,'REVENDEDOR',T19,'NRO SERIAL',T36,'JOGO',T54,'CDC',T71,'P R E M I O S',T101,'JOKER',/,
+     *         T62,'1.    2.    3.    4.    5.    6.      CLASSES',/,132('='),/)
+13	FORMAT(T5,A7,T19,I10,T32,I7.7,T42,4A4,T61,A44)
+14	FORMAT(T5,A8,T17,I3,'-',I8.8,'-',I3.3,T36,4A4,T53,I4,T61,6(I3,3X),T103,I2)
+21	FORMAT(1X,A,I2,' - ',4A4,' classes: ',A24)
+22	FORMAT(' Mostrar ganhadores para classe ',I2,' ?[S/N]: ')
+23	FORMAT(///,15X,38('-'),/,15X,
+     *         'TOTAL DE REGISTOS LISTADOS: ',I10,/,
+     *         15X,38('-'), ////)
+24	FORMAT(132('='),///,T11,'JOGOS SELECIONADOS PARA O RELATORIO',/,T11,35('-'),//,
+     *         T11,'JOGO',T29,'CONC.INTERNO',T46,'SEMANA/ANO',T61,'CLASSES DE PREMIO',/)
+25	FORMAT(T11,4A4,T33,I4.4,T47,I3.3,'/',I4,T61,A24)
+26      FORMAT(X, 131('='), ///)
+27      FORMAT(20X, '|', 100('-'), '|')
+28      FORMAT(20X, '| ', 21X, '|', 26X, 'T O T A I S  P R E M I O S', 25X, '|')
+29      FORMAT(20X, '| ', 7X, 'JOGOS', 9X, '|', 77('-'), '|')
+30      FORMAT(20X, '| ', 21X, '|', <MAXDIV>(5X, I1.1, '.', 5X, '|'))
+31      FORMAT(20X, '| ', 4A4, 5X, '|', <MAXDIV>(X, I10, X, '|'))
+32      FORMAT(20X, '| ', 7X, 'TOTAIS', 8X, '|', <MAXDIV>(X, I10, X, '|'))
+	END
+
+C***************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE ALT_VALOR()
+        IMPLICIT NONE
+C***************************************
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+
+	INTEGER*4    INTERVAL(3,2)
+	INTEGER*4    OPT,ST
+
+	COMMON /AUDITCOM/ INTERVAL
+
+	CALL INPNUM('Entre com intervalo a alterar [1-3]: ',OPT,1,3,ST)
+	IF (ST.NE.0) CALL GSTOP(GEXIT_SUCCESS)
+
+	CALL INPMONY('Entre com o valor inicial: ',INTERVAL(OPT,1),BETUNIT,ST)
+	IF (ST.NE.0) CALL GSTOP(GEXIT_SUCCESS)
+
+	CALL INPMONY('Entre com o valor final [0-sem limite]: ',INTERVAL(OPT,2),BETUNIT,ST)
+	IF (ST.NE.0) CALL GSTOP(GEXIT_SUCCESS)
+
+	RETURN
+	END
+
+C***************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE GET_SHV(DRW,GAMSHV,NUMDIVS)
+        IMPLICIT NONE
+C***************************************
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:DLTREC.DEF'
+        INCLUDE 'INCLIB:DKKREC.DEF'
+        INCLUDE 'INCLIB:DSPREC.DEF'
+        INCLUDE 'INCLIB:DTGREC.DEF'
+
+	INTEGER*4 MAXDIV
+	PARAMETER(MAXDIV = 6)
+
+	INTEGER*4 ST,GAMSHV(MAXGAM,MAXDIV),DRW(MAXGAM),NUMDIVS(MAXGAM)
+	INTEGER*4 GLUN,FDB(7),GNUM,DIV,GTYP
+
+	CALL FASTSET(0,GAMSHV,MAXGAM*MAXDIV)
+	CALL FASTSET(0,NUMDIVS,MAXGAM)
+	DO GNUM=1,MAXGAM
+	   GTYP=GNTTAB(GAMTYP,GNUM)
+           IF (DRW(GNUM).GT.0.AND.GTYP.NE.TPAS) THEN
+              CALL FIND_AVAILABLE_LUN(GLUN,ST)
+              IF (ST.NE.0) THEN
+                  TYPE*,IAM(),'ERROR GETTING LOGICAL UNIT FOR GAME: ',GNUM
+                  CALL GPAUSE()
+		  CALL GSTOP(GEXIT_FATAL)
+              ENDIF 
+              CALL OPENW(GLUN,GFNAMES(1,GNUM),4,0,0,ST)
+
+	      IF (GTYP.EQ.TLTO) THEN
+                 CALL IOINIT(FDB,GLUN,DLTSEC*256)
+              ELSEIF (GTYP.EQ.TSPT) THEN
+                 CALL IOINIT(FDB,GLUN,DSPSEC*256)
+              ELSEIF (GTYP.EQ.TKIK) THEN
+                 CALL IOINIT(FDB,GLUN,DKKSEC*256)
+              ELSEIF (GTYP.EQ.TTGL) THEN
+                 CALL IOINIT(FDB,GLUN,DTGSEC*256)
+              ENDIF
+              IF(ST.NE.0) THEN
+                CALL FILERR(GFNAMES(1,GNUM),1,ST,0)
+		CALL GSTOP(GEXIT_FATAL)
+              ENDIF
+
+              IF (GTYP.EQ.TLTO) THEN
+                 CALL READW(FDB,DRW(GNUM),DLTREC,ST)
+                 DO DIV=1,DLTDIV
+                   GAMSHV(GNUM,DIV) = DLTSHV(DIV,1)
+                 ENDDO
+		 NUMDIVS(GNUM) = DLTDIV
+              ELSEIF (GTYP.EQ.TSPT) THEN
+                 CALL READW(FDB,DRW(GNUM),DSPREC,ST)
+                 DO DIV=1,DSPDIV
+                   GAMSHV(GNUM,DIV) = DSPSHV(DIV)
+                 ENDDO
+		 NUMDIVS(GNUM) = DSPDIV
+              ELSEIF (GTYP.EQ.TKIK) THEN
+                 CALL READW(FDB,DRW(GNUM),DKKREC,ST)
+                 DO DIV=1,DKKDIV
+                   GAMSHV(GNUM,DIV) = DKKSHV(DIV)
+                 ENDDO
+		 NUMDIVS(GNUM) = DKKDIV
+              ELSEIF (GTYP.EQ.TTGL) THEN
+                 CALL READW(FDB,DRW(GNUM),DTGREC,ST)
+                 DO DIV=1,DTGDIV
+                   GAMSHV(GNUM,DIV) = DTGSHV(DIV)
+                 ENDDO
+		 NUMDIVS(GNUM) = DTGDIV
+              ENDIF
+              IF(ST.NE.0) THEN
+                CALL FILERR(GFNAMES(1,GNUM),2,ST,DRW(GNUM))
+              ENDIF
+              CALL CLOSEFIL(FDB)
+	   ENDIF
+	ENDDO
+
+	RETURN
+	END

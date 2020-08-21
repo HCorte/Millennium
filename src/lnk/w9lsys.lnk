@@ -1,0 +1,23 @@
+$! GXSRC:W9LSYS.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]W9LSYS.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:58:34   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 14:05:54   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:52:38   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:W9LSYS.EXE -
+OBJLIB:W9LSYS,-
+LSYSCHK,-
+SYSDIV,-
+SYSPRICE,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

@@ -1,0 +1,3 @@
+$ link 'p1' /exec=gxtsk:date_to_cdc.exe -
+objlib:date_to_cdc.obj,-
+stdlib:normlib/lib

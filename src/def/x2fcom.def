@@ -1,0 +1,100 @@
+C
+C X2FCOM.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2FCOM.DEV                                   $
+C  $Date::   17 Apr 1996 16:16:32                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 05-DEC-94 SCD Integrate UK changes into X2X Baseline
+C V01 01-DEC-91 XXX RELEASED FOR VAX (NETHLANDS)
+C
+C NOTE: FOR ASYNC COMMUNICATION TRACE BUFFER LAYOUT IS AS
+C FOLLOWS:
+C
+C BYTES 1-10      (SEE X2PTL.DEF FOR LAYOUT)
+C BYTES 11-12     MESSAGE LENGTH (AS STORED IN X2X.FIL)
+C BYTES 13-16     SERIAL NUMBER
+C BYTES 17-???    PROCOM(INPTAB) OR PROCOM(OUTTAB)
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 X2FRLUN, X2FWLUN
+	PARAMETER(X2FRLUN=10)                        !READ LUN
+	PARAMETER(X2FWLUN=11)                        !WRITE LUN
+C
+CV02	INTEGER*4 X2PBLKR(7)                         !READ SIDE PBLK
+CV02	INTEGER*4 X2PBLKW(7)                         !WRITE SIDE PBLK
+C
+	INTEGER*4 X2FRSIZ, X2FBSIZ
+	PARAMETER(X2FRSIZ=64)                        !RECORD SIZE IN WORDS
+	PARAMETER(X2FBSIZ=100)                       !BLOCK SIZE IN RECORDS
+C
+	INTEGER*4 X2FBNUM, X2FBSTA, X2FSCLN, X2FSDTY, X2FBDTA
+	PARAMETER(X2FBNUM=-1)                        !BLK NUMBER OFFSET
+	PARAMETER(X2FBSTA=0)                         !BLK STATUS OFFSET
+	   PARAMETER(X2FSCLN=0)                       !WRITTEN
+	   PARAMETER(X2FSDTY=1)                       !NOT YET
+	PARAMETER(X2FBDTA=1)                         !BLK DATA OFFSET
+C
+	INTEGER*4 X2FBUF(-1:X2FRSIZ*X2FBSIZ)         !WRITE BUFFER
+C
+	INTEGER*4 X2F_FREE(14)			     !V02
+	COMMON /X2FCOM/
+     *	 X2FBUF,X2F_FREE
+CV02     *	 X2PBLKR,
+CV02     *	 X2PBLKW
+C
+C XLOG RECORD DESCRIPTION SECTION
+C
+	INTEGER*4 XLOG_IDX, XLOG_SER, XLOG_CDC, XLOG_TIM
+	PARAMETER(XLOG_IDX=1)                        !THIS INDEX
+	PARAMETER(XLOG_SER=2)                        !XREF SERIAL
+	PARAMETER(XLOG_CDC=3)                        !CDC
+	PARAMETER(XLOG_TIM=4)                        !TIME STAMP
+C
+	INTEGER*4 XLOG_STN, XLOG_TER, XLOG_SAP, XLOG_LAY
+	PARAMETER(XLOG_STN=5)                        !STATION
+	PARAMETER(XLOG_TER=6)                        !TERMINAL
+	PARAMETER(XLOG_SAP=7)                        !SAP
+	PARAMETER(XLOG_LAY=8)                        !LAYER
+C
+	INTEGER*4 XLOG_PTL, XLOG_BAK, XLOG_MLEN
+	PARAMETER(XLOG_PTL=9)                        !PTL
+	PARAMETER(XLOG_BAK=10)                       !BACKWARD PTL POINTER
+	PARAMETER(XLOG_MLEN=11)                      !MES LEN
+C
+	INTEGER*4 XLOG_MES, XLOG_DIR, XLOG_DIR_IN, XLOG_DIR_OUT
+	PARAMETER(XLOG_MES=12)                       !COPY OF THE MESSAGE
+	PARAMETER(XLOG_DIR=X2FRSIZ)                  !DIRECTION
+	   PARAMETER(XLOG_DIR_IN=0)                       !DIRECTION IN
+	   PARAMETER(XLOG_DIR_OUT=1)                      !DIRECTION OUT
+C
+C
+	INTEGER*4	 FRST_X2FCOM(2)
+	EQUIVALENCE	(FRST_X2FCOM, X2FBUF)
+	INTEGER*4	 LAST_X2FCOM
+CV02	EQUIVALENCE	(LAST_X2FCOM, X2PBLKW(7))
+	EQUIVALENCE	(LAST_X2FCOM, X2F_FREE)
+C
+	VOLATILE /X2FCOM/
+C

@@ -1,0 +1,23 @@
+C
+C V02 06-JUN-2005 FRP Modify for IPS Distribution.
+C V01 08-JUN-2000 UXN Separated from GTNAMES.DEF
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        REAL*8 ITNAMES(0:NUMCRS)
+        DATA   ITNAMES/'Establis','Issues  ','Sts Chg ','Qta Rpt ',
+     *                 'Inv Rpt ','Fin Rpt ','Ordering','Gam Prms',
+     *                 'Set Rpt ','Sign On ','Sign Off','FSE Son ',
+     *                 'Confirm ','Cashes  ','Activat ','Game Tbl',
+     *                 '????????'/
+	COMMON /ITNAMES/ ITNAMES

@@ -1,0 +1,174 @@
+C RECREP.DEF                                                                    
+C
+C V16 02-FEB-2000 OXK REPFRE & REPSEC changed (Vakio changes)
+C V15 09-SEP-1998 RXK Structure change, Kicker direction and QP type added  
+C V14 17 Apr 1996 HXK Release of Finland for X.25, Telephone Betting, 
+C			Instant Pass Thru Phase 1
+C V13 24 Jul 1995 PXB Changed top ten coupon to be dimensioned by game index. 
+C			This change has increased the length of this file.
+C V12 17 Jul 1995 PXB Add top ten coupon for ravi game. Use free sapce.
+C V11 17 Aug 1993 HXN Added NUMPPP to GAMLEN.
+C V10 21 Jun 1993 HXN UPDATE REPSEC=11953. BECAUSE NUMLTO=4 INSTEAD OF 2.
+C V09 03 May 1993 STUART Restored Baseline version
+C V08 28 Apr 1993 HUY Adapt REPSEC, from Concurrent sector size=256, 
+C			to VAX block size=512
+C V07 27 Apr 1993 HUY Initial revision.
+C V06 27-APR-1993 HHN INITIAL RELEASE FOR VAX
+C V05 24-FEB-1992 HJK ALLOW FULL FREE SYSTEMS > 256                 
+C V04 22-NOV-1991 STC CHANGED FOR DOUBLE JOKERI                   
+C V03 17-OCT-1990 MTK CHANGED FOR KENO GAME                     
+C V02 15-FEB-1990 MGM  REARRANGED RAVI SECTION                  
+C V01 26-SEP-1989 MGM  INITIAL RELEASE FOR FINLAND                
+C                                         
+C OFFLINE RECORD DESCRIPTION FOR STORING INFORMATION USED TO          
+C PRODUCE OFFLINE COUPON DISTRIBUTION STATISTICS REPORTS.             
+C THIS FILE IS UPDATED DURING STOPSYS FROM TMFREP.                
+C                                         
+C NOTE! - GAMLEN IS NUMBER OF LOTTO GAMES + NUMBER OF SPORT GAMES               
+C         TO INDEX INTO THESE ARAYS USE:                                        
+C                                 LOTTO - GAMIND                                
+C                                 SPORT - NUMLTO + GAMIND                       
+C                                 KICKER(ONLY) - NUMLTO + NUMSPT + GAMIND
+C                                                                               
+C OREPUPD                                        LAST CDC RECORD WAS UPDATED
+C OREPPRG                                        LAST CDC RECORD WAS PURGED 
+C OREPBEG                                        REPORT BEGINNING  CDC      
+C OREPEND                                        REPORT ENDING CDC          
+C OREPN1W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY)  1 WEEK CUPONS           
+C OREPN2W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY)  2 WEEK CUPONS           
+C OREPN3W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY)  3 WEEK CUPONS           
+C OREPN5W (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY)  5 WEEK CUPONS           
+C OREPNAW (MAXCMB,GAMLEN,SYSTYPS,QPTYPS,MAXDAY) 10 WEEK CUPONS           
+C
+C OREPT1W (JOKLEN,MAXDAY)                        1 WEEK CUPONS TOTAL        
+C OREPT2W (JOKLEN,MAXDAY)                        2 WEEK CUPONS TOTAL         
+C OREPT3W (JOKLEN,MAXDAY)                        3 WEEK CUPONS TOTAL         
+C OREPT5W (JOKLEN,MAXDAY)                        5 WEEK CUPONS TOTAL         
+C OREPTAW (JOKLEN,MAXDAY)                       10 WEEK CUPONS TOTAL         
+C
+C                                               TOTAL WORDS             
+C OREPFRE ()                                     FREE SPACE                  
+C                                               -------------------------------
+C                                                     TOTAL           
+C 
+C                                                                               
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++            
+C This item is the property of GTECH Corporation, W.Greenwich, Rhode            
+C Island, and contains confidential and trade secret information. It            
+C may not be transferred from the custody or control of GTECH except            
+C as authorized in writing by an officer of GTECH. Neither this item            
+C nor the information it contains may be used, transferred,                     
+C reproduced, published, or disclosed, in whole or in part, and                 
+C directly or indirectly, except as expressly authorized by an                  
+C officer of GTECH, pursuant to written agreement.                              
+C                                                                               
+C Copyright 2000 GTECH Corporation. All rights reserved.                        
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++            
+C                                                                               
+C
+
+      INTEGER*4 OGAMLEN, OJOKLEN
+      PARAMETER (OGAMLEN=NUMLTO+NUMSPT+NUMKIK)        != 4+2+1 = 7
+      PARAMETER (OJOKLEN=NUMLTO+NUMSPT+NUMKIK) != 4+2+1+2 = 9 
+
+      INTEGER*4 OMAXDAY,OMAXVCP,OSYSTYPS,OQPTYPS
+      PARAMETER (OMAXDAY=7)              !MAX NUMBER OF DAYS IN A WEEK      
+      PARAMETER (OMAXVCP=10)             !MAX NUMBER OF TOP COUPONS DISPLAYED
+      PARAMETER (OSYSTYPS=3)             !NUMBER OF SYSTEM TYPES IN REPORT FILE
+                                        !(1-NOSYS,2-FULLSYS,3-REDUCED SYS)
+      PARAMETER (OQPTYPS=3)              !QUICK PICK TYPES
+                                        !(1-QP NO,2-QP YES,3-QP WEIGHTED)
+C FOR SPORTS
+C STORE SIMPLE BETS (NOSYS) WITH OFFSETS 1-MAXBRD 
+C STORE FULL SYSTEM (FULLSYS) BETS WITH OFFSETS 1-256
+C STORE BIG FULL SYSTEMS (> 256) BEHIND REGULAR FULL SYSTEM BETS (257-333)
+C REDUCED SYSTEM (REDSYS) OFFSETS ARE FROM 21 (LOWEST REDUCED SYSTEM NUMBER)
+C UNTIL SPGSYS+21
+C                                                                               
+      INTEGER*4 OMAXCMB
+      PARAMETER (OMAXCMB=256+BIGSYS)     !MAX SPORT COMBIN=256+77=333 
+C                                    
+      COMMON/ORPTCOM/                                                            
+     *          OREPPRG,OREPUPD,                                                  
+     *          OREPBEG,OREPEND,
+     *          OREPN1W (OMAXCMB,OGAMLEN,OSYSTYPS,OQPTYPS,OMAXDAY),
+     *          OREPN2W (OMAXCMB,OGAMLEN,OSYSTYPS,OQPTYPS,OMAXDAY),
+     *          OREPN3W (OMAXCMB,OGAMLEN,OSYSTYPS,OQPTYPS,OMAXDAY),
+     *          OREPN5W (OMAXCMB,OGAMLEN,OSYSTYPS,OQPTYPS,OMAXDAY),
+     *          OREPNAW (OMAXCMB,OGAMLEN,OSYSTYPS,OQPTYPS,OMAXDAY)
+
+
+      COMMON/ORPTCOM/                           
+     *          OREPT1W (OJOKLEN,OMAXDAY),
+     *          OREPT2W (OJOKLEN,OMAXDAY),
+     *          OREPT3W (OJOKLEN,OMAXDAY),
+     *          OREPT5W (OJOKLEN,OMAXDAY),
+     *          OREPTAW (OJOKLEN,OMAXDAY)
+
+
+	        INTEGER*4 OREPPRG_OFF,OREPUPD_OFF,OREPBEG_OFF,OREPEND_OFF
+		INTEGER*4 OREPN1W_OFF, OREPN2W_OFF, OREPN3W_OFF, OREPN5W_OFF
+		INTEGER*4 OREPNAW_OFF
+		INTEGER*4 OREPT1W_OFF, OREPT2W_OFF, OREPT3W_OFF, OREPT5W_OFF
+		INTEGER*4 OREPTAW_OFF, OREPFRE_OFF
+		
+		PARAMETER(OREPPRG_OFF=1)
+		PARAMETER(OREPUPD_OFF=OREPPRG_OFF+1)
+		PARAMETER(OREPBEG_OFF=OREPUPD_OFF+1)
+		PARAMETER(OREPEND_OFF=OREPBEG_OFF+1)
+		PARAMETER(OREPN1W_OFF=OREPEND_OFF+1)
+		PARAMETER(OREPN2W_OFF=OREPN1W_OFF+
+     *                    (OMAXCMB*OGAMLEN*OSYSTYPS*OQPTYPS*OMAXDAY))
+		PARAMETER(OREPN3W_OFF=OREPN2W_OFF+
+     *                    (OMAXCMB*OGAMLEN*OSYSTYPS*OQPTYPS*OMAXDAY))
+		PARAMETER(OREPN5W_OFF=OREPN5W_OFF+
+     *                    (OMAXCMB*OGAMLEN*OSYSTYPS*OQPTYPS*OMAXDAY))
+		PARAMETER(OREPNAW_OFF=OREPNAW_OFF+
+     *                    (OMAXCMB*OGAMLEN*OSYSTYPS*OQPTYPS*OMAXDAY))
+		PARAMETER(OREPT1W_OFF=OREPNAW_OFF+
+     *                    (OMAXCMB*OGAMLEN*OSYSTYPS*OQPTYPS*OMAXDAY))
+		PARAMETER(OREPT2W_OFF=OREPT1W_OFF+OJOKLEN*OMAXDAY)
+		PARAMETER(OREPT3W_OFF=OREPT2W_OFF+OJOKLEN*OMAXDAY)
+		PARAMETER(OREPT5W_OFF=OREPT3W_OFF+OJOKLEN*OMAXDAY)
+		PARAMETER(OREPTAW_OFF=OREPT5W_OFF+OJOKLEN*OMAXDAY)
+		PARAMETER(OREPFRE_OFF=OREPTAW_OFF+OJOKLEN*OMAXDAY)
+
+                INTEGER*4 RECOREPLEN
+                PARAMETER(RECOREPLEN = OREPFRE_OFF-1)
+C
+                INTEGER*4 IRECOREPSEC
+                PARAMETER(IRECOREPSEC = RECOREPLEN/128 + 1)
+C
+                INTEGER*4 RECOREPSEC
+                PARAMETER(RECOREPSEC = IRECOREPSEC*2)
+C
+                INTEGER*4 RECOREPFRESIZ
+                PARAMETER(RECOREPFRESIZ = RECOREPSEC * 64 - RECOREPLEN)
+
+      COMMON/ORPTCOM/                                                            
+     *          OREPFRE (RECOREPFRESIZ)
+
+      INTEGER*4 OREPPRG ,OREPUPD,
+     *          OREPBEG ,OREPEND,                                 
+     *          OREPN1W ,
+     *          OREPN2W ,
+     *          OREPN3W ,
+     *          OREPN5W ,
+     *          OREPNAW ,
+     *          OREPT1W ,
+     *          OREPT2W ,
+     *          OREPT3W ,
+     *          OREPT5W ,
+     *          OREPTAW ,
+     *          OREPFRE 
+
+
+      INTEGER*4 OREPSEC
+      PARAMETER (OREPSEC=RECOREPSEC)
+      INTEGER*4 OREPREC(OREPSEC*64)                                               
+                                                                                
+      EQUIVALENCE(OREPREC,OREPPRG)                                                
+
+      VOLATILE /ORPTCOM/
+
+C                                                                               

@@ -1,0 +1,85 @@
+C PRMLVL.DEF
+C $Log:   GXAFXT:[GOLS]PRMLVL.DEV  $
+C  
+C     Rev 1.1   19 May 1996 17:39:30   HXK
+C  Wojtek's security (password) changes
+C  
+C     Rev 1.0   21 Jan 1993 18:50:02   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	COMMON/GRPCOM/ LEVELS,USENBR
+	COMMON/USERCOM/ SONFDB,USEREC
+C
+	INTEGER*4 LEVELS(16),USENBR, SONFDB(7)
+C
+C The following are the names of the functions
+C
+	CHARACTER*8 FUNCNAME(24)
+	DATA FUNCNAME/'VISION  ','HASF    ','USERPASS','CHLEVEL ',
+     *	              'PRZNUM  ','GETCHK  ','UNMESS  ','COMMIS  ',
+     *	              'DISCOUNT','ANNUITY ','BLDLT1  ','DRAWING ',
+     *	              'DELAGT  ','AGTPAY  ','MODAGT  ','PRZENT  ',
+     *	              'CROSSOVR','OTHER   ','        ','        ',
+     *	              '        ','        ','        ','        '/
+        COMMON /FUNCNAME/ FUNCNAME
+C
+C The following are terminal group   PRESENTLY NOT USED
+C
+	CHARACTER*4 TGROUP(24)
+	DATA TGROUP/'SYS ','CON ','CONA','B320','B322','B324',
+     *	            'B326','B328','B32A','B32C','B32E','B330',
+     *	            'B332','B334','B336','B338','B33A','B33C',
+     *	            'B33E','B340','B342','B344','B346','B348'/
+        COMMON /TGROUP/ TGROUP
+C
+C The following are security levels and groups
+C
+	INTEGER*4  SUPERUSE, OPSMANAG, OPERATIO, HOTLINE, LDIRECT
+	INTEGER*4  GDIRECT, MARKETIN, TECHNIC, SPECIAL1, SPECIAL2
+	INTEGER*4  SPECIAL3, SPECIAL4, SPECIAL5, SPECIAL6, SECURITY
+	INTEGER*4  NOLEVELS
+	PARAMETER (SUPERUSE=15)            !SUPER USER
+	PARAMETER (OPSMANAG=14)            !OPERATIONS MANAGER
+	PARAMETER (OPERATIO=13)            !OPERATIONS STAFF
+	PARAMETER (HOTLINE=12)             !HOTLINE STAFF
+	PARAMETER (LDIRECT=11)             !LOTTERY DIRECTOR
+	PARAMETER (GDIRECT=10)             !GTECH DIRECTOR
+	PARAMETER (MARKETIN=9)             !MARKETING STAFF
+	PARAMETER (TECHNIC=8)              !TECHNICIANS
+	PARAMETER (SPECIAL1=7)             !RESERVED
+	PARAMETER (SPECIAL2=6)             !RESERVED
+	PARAMETER (SPECIAL3=5)             !RESERVED
+	PARAMETER (SPECIAL4=4)             !RESERVED
+	PARAMETER (SPECIAL5=3)             !RESERVED
+	PARAMETER (SPECIAL6=2)             !RESERVED
+	PARAMETER (SECURITY=1)             !SECURITY MANAGER
+	PARAMETER (NOLEVELS=0)             !NO LEVELS
+C
+C
+C Program indexes into definition arrays
+C
+	INTEGER*4  VINDEX, HINDEX, UINDEX, LINDEX, OINDEX 
+C
+	PARAMETER (VINDEX=1)          !Vision index
+	PARAMETER (HINDEX=2)          !Hasf index
+	PARAMETER (UINDEX=3)          !Userpass index
+	PARAMETER (LINDEX=4)          !Level change index
+	PARAMETER (OINDEX=5 )         !Other - changed to work only for above

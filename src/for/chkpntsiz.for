@@ -1,0 +1,285 @@
+C
+C PROGRAM CHKPNTSIZ
+C
+C CHKPNTSIZ.FOR
+C
+C V20 01-JAN-2010 FJG ePASSIVE
+C V19 05-JAN-2001 CS  PASCOM added
+C V18 29-NOV-2000 UXN TGLCOM ADDED.
+C V17 05-JUN-2000 OXK SSOCOM added
+C V16 26-NOV-1999 OXK TSPCOM added
+C V15 13-OCT-1999 RXK World Tour added
+C V14 13-MAY-1999 UXN SUPER TRIPLE ADDED.
+C V13 17-APR-1996 HXK Release of Finland for X.25, Telephone Betting, 
+C                     Instant Pass Thru Phase 1
+C V12 10-NOV-1995 HXK Further changes for Double, Couple
+C V11 24-APR-1995 HXK Merge of V5 development with March 10th 1995 bible
+C V10 22-FEB-1995 HXK yabba dabba doo
+C V09 21-FEB-1995 HXK Generalised for n games (PXB)
+C V08 15-OCT-1994 HXK Adding /developing Bingo (15.Oct.94)
+C V07 20-DEC-1993 HXK set BEGCSB to 1 initially.
+C V06 20-DEC-1993 HXK ADDED CSB COUNTER AS WELL.
+C V05 24-AUG-1993 GXA Added SCNCOM and S234COM.
+C V04 10-JUL-1993 GXA Released for Finland Dec Conversion / Oddset.
+C V03 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V02 09-FEB-1995 PXN ADDED TABLES FOR GENERIC POPULAR LIST
+C V01 03-OCT-1991 TKO Initial release
+C
+C This is a utility routine to calculate the sizes needed for CHKCOM and
+C checkpoint files.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++C
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM CHKPNTSIZ
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:CHKPNT.DEF'
+	INCLUDE 'INCLIB:LTOCOM.DEF'
+	INCLUDE 'INCLIB:TGLCOM.DEF'
+	INCLUDE 'INCLIB:SPTCOM.DEF'
+	INCLUDE 'INCLIB:KIKCOM.DEF'
+C	INCLUDE 'INCLIB:NBRCOM.DEF'
+C====== INCLUDE 'INCLIB:SCRCOM.DEF'
+C====== INCLUDE 'INCLIB:WITCOM.DEF'
+C====== INCLUDE 'INCLIB:BNGCOM.DEF'
+C====== INCLUDE 'INCLIB:TSLCOM.DEF'
+C====== INCLUDE 'INCLIB:DBLCOM.DEF'
+C====== INCLUDE 'INCLIB:CPLCOM.DEF'
+C====== INCLUDE 'INCLIB:TRPCOM.DEF'
+C====== INCLUDE 'INCLIB:TROCOM.DEF'
+C====== INCLUDE 'INCLIB:STRCOM.DEF'
+C====== INCLUDE 'INCLIB:STROCOM.DEF'
+C====== INCLUDE 'INCLIB:SSCCOM.DEF'
+C====== INCLUDE 'INCLIB:SSPCOM.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+C====== INCLUDE 'INCLIB:SLOCOM.DEF'
+C	INCLUDE 'INCLIB:POLCOM.DEF'
+	INCLUDE 'INCLIB:POOLLTO.DEF'
+C====== INCLUDE 'INCLIB:STACOM.DEF'
+C====== INCLUDE 'INCLIB:HASHMEM.DEF'
+C====== INCLUDE 'INCLIB:SSOCOM.DEF'
+        INCLUDE 'INCLIB:PASCOM.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'        
+C
+	INTEGER*4   BEGSEC, SECPERBLK, HDRLEN, NUMSEC
+	INTEGER*4   TOTGAMSEC, TOTPOLSEC
+        INTEGER*4   BEGCSB
+        INTEGER*4   ERO
+        INTEGER*4   TMP
+        INTEGER*4   SZ0
+        INTEGER*4   SZ1
+        INTEGER*4   SZ2                
+C        
+	INTEGER*4   NOFTLSIG
+	EXTERNAL    NOFTLSIG        
+C
+	CALL COPYRITE
+C
+        TYPE*,IAM()
+        TYPE*,IAM(),'<<<<<    CHECKPOINT CALCULATION AND REGENERATION    >>>>>'
+        TYPE*,IAM()                
+C
+	BEGSEC    = 1				! BEGINNING SECTOR #
+	SECPERBLK = (CHKSEC*256)/SECSIZE	! # OF SECTORS PER BLOCK
+C
+        BEGCSB    = 1                           ! BEGINNING CSB
+C
+C	Header is 1 block
+C
+	HDRLEN = SECPERBLK
+C
+	NUMSEC = HDRLEN
+	TYPE*,IAM(),NUMSEC,' sectors for header starting at ',BEGSEC
+	BEGSEC = BEGSEC + NUMSEC
+C
+	NUMSEC = CONCSB*SECPERBLK
+	TYPE*,IAM(),NUMSEC,' sectors for CONCOM starting at ',BEGSEC
+	BEGSEC = BEGSEC + NUMSEC
+        BEGCSB = BEGCSB + CONCSB
+C
+	NUMSEC = AGTCSB*SECPERBLK
+	TYPE*,IAM(),NUMSEC,' sectors for AGTCOM starting at ',BEGSEC
+	BEGSEC = BEGSEC + NUMSEC
+        BEGCSB = BEGCSB + AGTCSB
+C
+C       NUMSEC = SLOCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for SLOCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + SLOCSB
+C
+	NUMSEC = LTOCSB*SECPERBLK
+	TYPE*,IAM(),NUMSEC,' sectors for LTOCOM starting at ',BEGSEC
+	BEGSEC = BEGSEC + NUMSEC
+        BEGCSB = BEGCSB + LTOCSB
+C
+	NUMSEC = SPTCSB*SECPERBLK
+	TYPE*,IAM(),NUMSEC,' sectors for SPTCOM starting at ',BEGSEC
+	BEGSEC = BEGSEC + NUMSEC
+        BEGCSB = BEGCSB + SPTCSB
+C
+	NUMSEC = TGLCSB*SECPERBLK
+	TYPE*,IAM(),NUMSEC,' sectors for TGLCOM starting at ',BEGSEC
+	BEGSEC = BEGSEC + NUMSEC
+        BEGCSB = BEGCSB + TGLCSB
+C
+	NUMSEC = KIKCSB*SECPERBLK
+	TYPE*,IAM(),NUMSEC,' sectors for KIKCOM starting at ',BEGSEC
+	BEGSEC = BEGSEC + NUMSEC
+        BEGCSB = BEGCSB + KIKCSB
+C
+C	NUMSEC = NBRCSB*SECPERBLK
+C	TYPE*,IAM(),NUMSEC,' sectors for NBRCOM starting at ',BEGSEC
+C	BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + NBRCSB
+C
+C       NUMSEC = SCRCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for SCRCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + SCRCSB
+C
+C       NUMSEC = WITCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for WITCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + WITCSB
+C
+C       NUMSEC = TSLCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for TSLCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + TSLCSB
+C
+C       NUMSEC = BNGCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for BNGCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + BNGCSB
+C
+C       NUMSEC = DBLCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for DBLCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + DBLCSB
+C
+C       NUMSEC = CPLCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for CPLCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + CPLCSB
+C
+C	NUMSEC = POLCSB*SECPERBLK
+C	TYPE*,IAM(),NUMSEC,' sectors for POLCOM starting at ',BEGSEC
+C	BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + POLCSB
+C
+C       NUMSEC = SSCCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for SSCCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + SSCCSB
+C
+C       NUMSEC = SSPCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for SSPCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + SSPCSB
+C
+C       NUMSEC = TRPCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for TRPCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + TRPCSB
+C
+C       NUMSEC = TROCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for TROCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + TROCSB
+C
+C       NUMSEC = STACSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for STACOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + STACSB
+C
+C       NUMSEC = STRCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for STRCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + STRCSB
+C
+C       NUMSEC = STROCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for STROCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + STROCSB
+C
+C       NUMSEC = TSPCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for TSPCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + TSPCSB
+C
+C       NUMSEC = SSOCOMCSB*SECPERBLK
+C       TYPE*,IAM(),NUMSEC,' sectors for SSOCOM starting at ',BEGSEC
+C       BEGSEC = BEGSEC + NUMSEC
+C       BEGCSB = BEGCSB + SSOCOMCSB
+C
+        NUMSEC = PASCSB*SECPERBLK
+        TYPE*,IAM(),NUMSEC,' sectors for PASCOM starting at ',BEGSEC
+        BEGSEC = BEGSEC + NUMSEC
+        BEGCSB = BEGCSB + PASCSB
+C
+	TOTGAMSEC = BEGSEC - 1
+	NUMSEC = LTOSEC*(LTNUMPAG+1)
+	TOTPOLSEC = (NUMSEC+1)/2
+	TYPE*,IAM()
+	TYPE*,IAM(),TOTGAMSEC,' **** total sectors for CHK1, CHK3'
+	TYPE*,IAM(),HDRLEN + TOTPOLSEC,' **** total sectors for CHK2, CHK4'
+	TYPE*,IAM(),TOTGAMSEC + TOTPOLSEC,' **** total sectors for CHK0'
+        TYPE*,IAM()
+        TYPE*,IAM(),BEGCSB,' **** total CSB for all commons'
+        SZ0 = ((TOTGAMSEC+TOTPOLSEC+10000)/10000)*10000
+        SZ1 = ((TOTGAMSEC+10000)/10000)*10000
+        SZ2 = ((HDRLEN + TOTPOLSEC + 10000)/10000)*10000
+C
+	CALL LIB$ESTABLISH(NOFTLSIG)
+	CALL GETSCONF(SCFREC,ERO)
+	IF(ERO.NE.0) CALL GSTOP(GEXIT_FATAL)		
+C
+        TYPE*,IAM()
+	TYPE*,IAM(),'Now the program will recreate the following files:'
+	TYPE*,IAM()
+	WRITE(5,900) IAM(),(SCFSFN(TMP,CP0),TMP=1,5),SZ0,TOTGAMSEC+TOTPOLSEC
+	WRITE(5,900) IAM(),(SCFSFN(TMP,CP1),TMP=1,5),SZ1,TOTGAMSEC
+	WRITE(5,900) IAM(),(SCFSFN(TMP,CP2),TMP=1,5),SZ2,HDRLEN + TOTPOLSEC
+	WRITE(5,900) IAM(),(SCFSFN(TMP,CP3),TMP=1,5),SZ1,TOTGAMSEC
+	WRITE(5,900) IAM(),(SCFSFN(TMP,CP4),TMP=1,5),SZ2,HDRLEN + TOTPOLSEC
+	TYPE*,IAM()	
+C					
+	CALL PRMYESNO('Do you want to continue [Y/N] ?',ERO)
+	IF(ERO.NE.1) CALL GSTOP(GEXIT_OPABORT)	
+C
+	TYPE*,IAM()
+	CALL CREATE_FILE(SCFSFN(1,CP0),SZ0,ERO)
+	IF(ERO.NE.0) CALL GSTOP(GEXIT_FATAL)	
+	CALL CREATE_FILE(SCFSFN(1,CP1),SZ1,ERO)
+	IF(ERO.NE.0) CALL GSTOP(GEXIT_FATAL)	
+	CALL CREATE_FILE(SCFSFN(1,CP2),SZ2,ERO)
+	IF(ERO.NE.0) CALL GSTOP(GEXIT_FATAL)	
+	CALL CREATE_FILE(SCFSFN(1,CP3),SZ1,ERO)
+	IF(ERO.NE.0) CALL GSTOP(GEXIT_FATAL)	
+	CALL CREATE_FILE(SCFSFN(1,CP4),SZ2,ERO)
+	IF(ERO.NE.0) CALL GSTOP(GEXIT_FATAL)	
+	TYPE*,IAM()	
+C
+900     FORMAT(X,A,'File: ',5A4,' new size: ',I10,' (',I10,')')
+	END

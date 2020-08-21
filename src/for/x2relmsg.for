@@ -1,0 +1,313 @@
+C
+C SUBROUTINE X2RELMSG
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2RELMSG.FOV                                 $
+C  $Date::   30 May 1996  9:28:22                                         $
+C  $Revision::   1.3                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C ** Source - x2xrel.for **
+C
+C 
+C X2RELMSG.FOR
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C 
+C     SUBROUTINE:
+C        X2RELMSG(BUFFER,STATION,TYPE,PROCESS,STATUS) 
+C
+C     PURPOSE:
+C        PROCESS RELAY MESSAGES
+C
+C     INPUT:
+C       BUFFER       -     BUFFER MESSAGE
+C       STATION      -     STATION NUMBER
+C       PROCESS      -     PROCESS NUMBER
+C       TYPE         -     MESSAGE TYPE
+C                    
+C     OUTPUT:
+C       STATUS       -     -1  ERROR RELEASE BUFFER 
+C                           0  SEND TO PROCESSING TASK
+C                           1  CLEAR THE CALL   
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C 
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+C
+	SUBROUTINE X2RELMSG(BUFFER,STATION,TYPE,PROCESS,STATUS)
+C
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:X2XREL.DEF'
+	INCLUDE 'INCLIB:X2STMES.DEF'
+C 
+	INTEGER*2 BUFFER(*)
+	INTEGER*4 RETRY_OFF, MASK, RELAY_FLAGS, TEMP, FLAGS, GROUP
+	INTEGER*4 RELAY_FORMAT, I, STATUS, PROCESS, TYPE, STATION
+C 
+	IF(IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0) THEN
+      	  TYPE 900,' X2RELMSG, STATION TYPE  BUFFER:',STATION,TYPE,
+     *	            (BUFFER(I),I=1,10)
+900       FORMAT(1H ,A,2I6,10(1H,Z4))
+        ENDIF
+C
+	STATUS=-1
+C
+C       EXTRACT THE STATION DATA MESSAGE TYPE
+C       IGNORE ALL DATA TYPES OTHER THAN RELAY
+C       AND RELAY ACKNOWLEDGEMENTS
+C
+	CALL ILBYTE(RELAY_FORMAT,BUFFER,X2STMES_DATATYPE-1)
+C 
+	IF(RELAY_FORMAT.NE.X2STMES_DATATYPE_RELAY .AND.
+     *     RELAY_FORMAT.NE.X2STMES_DATATYPE_RELAY_ACK) THEN
+          STATUS = -1
+          RETURN
+        ENDIF
+C 
+C      GET THE PROCESS NUMBER / MUST BE VALID
+C
+	CALL ILBYTE(PROCESS,BUFFER,X2STMES_RELAY_ID-1)
+	IF(PROCESS.LE.0.OR.PROCESS.GT.X2X_RELAY_APPS) THEN
+          STATUS = -1
+          RETURN
+        ENDIF
+C 
+C       STATION ID USED BY RELAY APPLICATION TO CONTAIN
+C       PROCESS #/TIMES TO SEND/LOAD/SEGMENT INFORMATION
+C
+	IF (RELAY_FORMAT.EQ.X2STMES_DATATYPE_RELAY_ACK) THEN
+	   CALL MOV4TOI4(X2XR_STATION_ID(1,STATION,PROCESS),BUFFER,
+     *	                 X2STMES_RELAY_ID-1)
+	   CALL MOV4TOI4(X2XR_STATION_ID(2,STATION,PROCESS),BUFFER,
+     *	                 X2STMES_RELAY_ID+3)
+	ENDIF
+C 
+	GROUP=X2XS_GROUP(STATION)
+C
+        IF(IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0) THEN
+      	  TYPE *,'PROCESS,STATUS,GROUP,RELAY_FORMAT ',PROCESS,
+     *	          X2XR_APP_STATUS(PROCESS),GROUP,RELAY_FORMAT
+          TYPE *,'TIMOUT ',X2XR_STATION_TIMOUT(STATION,PROCESS)
+        ENDIF
+C
+C       A MESSAGE WAS RECIEVED BUT THE PROCESS IS IDLE
+C
+	IF (X2XR_APP_STATUS(PROCESS).EQ.X2XR_APPS_IDLE) THEN
+C
+C          BUILD RELAY MESSAGE
+C      
+	   CALL X2RSTNMS(BUFFER,STATION,PROCESS) 
+	   FLAGS=X2XR_APP_FLAGS(PROCESS)+X2XR_APP_DATA_DEST(PROCESS)
+	   FLAGS=IOR(FLAGS,X2STMES_RELAYF_EB)     !END RELAY
+	   FLAGS=IOR(FLAGS,X2STMES_RELAYF_PE)     !ENABLE POLL
+	   TEMP=IEOR(X2STMES_RELAYF_AR,'0000FFFF'X)
+	   FLAGS=IAND(FLAGS,TEMP)
+	   CALL I4TOBUF2(FLAGS,BUFFER,X2STMES_RELAY_FLAGS-1)
+	   X2XR_NON_ACTIVE_CNT(PROCESS)=X2XR_NON_ACTIVE_CNT(PROCESS)+1
+	   IF (IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0)
+     *	      TYPE 910,'RETURN IDLE,BUFFER ',(BUFFER(I),I=1,10)
+ 910	   FORMAT(1H ,A,10(1X,Z4))
+	   STATUS=0   
+	   RETURN
+C
+C       PROCESS IS NOT DEFINED
+C
+	ELSEIF (X2XR_APP_STATUS(PROCESS).EQ.X2XR_APPS_NOT_DEF) THEN
+	   IF (IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0)
+     *	   TYPE *,'NOT DEFINED PROCESS, RETURN '
+	   STATUS=-1
+	   RETURN
+C
+C=====================================================================
+C       CHAINED RELAYS
+C       CHECK FOR POSSIBLE ANOMALIES
+C=====================================================================
+C
+        ELSEIF (X2XR_APP_ATRIBUTE(PROCESS).EQ.X2XR_APPA_CHAIN) THEN
+            IF( GROUP .LE. 0) THEN
+              IF(IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0)
+     *           TYPE *,'STATION NOT IN RELAY GROUP, RETURN '
+              STATUS = -1
+              RETURN
+C 
+C           ACK FROM A WRONG GROUP
+C
+            ELSEIF(X2XR_GROUP_ACTIVE(GROUP,PROCESS).EQ.0 ) THEN
+                IF(IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0)
+     *             TYPE *,'STATION NOT IN RELAY GROUP, RETURN '
+                STATUS = -1
+                RETURN
+C
+C           ACK FROM A STATION THAT IS NOT A HEAD OF THE GROUP    
+C           THEN SET DEFAULT AND _EB , _NF FLAGS
+C
+            ELSEIF(X2XR_SEND_STATION(GROUP,PROCESS).NE.STATION) THEN
+C
+C               BUILD RELAY MESSAGE 
+C
+                CALL X2RSTNMS(BUFFER,STATION,PROCESS)
+                FLAGS=X2XR_APP_FLAGS(PROCESS)
+     *                + X2XR_APP_DATA_DEST(PROCESS)
+                FLAGS = IOR(FLAGS,X2STMES_RELAYF_EB)      ! EoBcast
+                FLAGS = IOR(FLAGS,X2STMES_RELAYF_NF)      ! NoForward
+                TEMP=IEOR(X2STMES_RELAYF_AR,'0000FFFF'X)  ! no _AR
+                FLAGS=IAND(FLAGS,TEMP)
+                CALL I4TOBUF2(FLAGS,BUFFER,X2STMES_RELAY_FLAGS-1)
+                IF (IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0) THEN
+                   TYPE *, 'X2XRELmsg:  ACK FROM WRONG STATION ',FLAGS
+                   TYPE 910,'BUFFER: ',(BUFFER(I),I=1,10)
+                ENDIF
+                STATUS=0    
+                RETURN                                                
+            ENDIF
+         ENDIF
+C 
+C       PROCESS MESSAGE FOR ACTIVE PROCESS
+C       
+C 
+	MASK=IAND(RELAY_FLAGS,X2STMES_RELAYF_DS_MASK)
+C
+        IF(RELAY_FORMAT.EQ.X2STMES_DATATYPE_RELAY_ACK) THEN
+C
+          CALL MOV2TOI4(RELAY_FLAGS,BUFFER,X2STMES_RELAY_FLAGS-1)
+          IF (IAND(RELAY_FLAGS,X2STMES_RELAYF_EB).NE.0) THEN   
+            CALL X2RHALT(STATION,PROCESS)
+            STATUS = -1
+            RETURN
+          ENDIF
+C
+	  MASK=IAND(RELAY_FLAGS,X2STMES_RELAYF_ACK_MASK)
+C
+C         SET TIMEOUTS FOR WAIT ACK MESSAGE 
+C
+	  IF(MASK.EQ.X2STMES_RELAYF_DS_WAIT) THEN
+            X2XR_STATION_TIMOUT(STATION,PROCESS)=X2X_LOOP_TIME+
+     *           X2XR_WAIT_TIMOUT(PROCESS)
+C
+            IF (IAND(RELAY_FLAGS,X2STMES_RELAYF_EB).NE.0) THEN   ! V03
+              CALL X2RHALT(STATION,PROCESS)
+              STATUS=-2
+              IF (IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0)
+     *          TYPE *,'X2XRELmsg: WAIT with _EB from stn, return '
+            ELSE
+              X2XR_STATION_TIMOUT(STATION,PROCESS)=X2X_LOOP_TIME+
+     *          X2XR_WAIT_TIMOUT(PROCESS)
+              STATUS=1                  ! V01 WACK - CLEAR SVC      V01
+C
+              IF (IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0) THEN
+                TYPE *,'X2XREL: last stn_id before clear ',
+     *                  X2XR_LAST_STATION_ID(1,STATION,PROCESS),
+     *                  X2XR_LAST_STATION_ID(2,STATION,PROCESS)
+                TYPE *,'X2XRELmsg: WAIT FROM STATION, return '
+              ENDIF
+            ENDIF
+            RETURN
+	  ENDIF
+C
+C*       SET TIMEOUTS FOR WAIT MESSAGE, TERMINATE RELAY ON _EB
+C
+C
+        ELSEIF (MASK.EQ.X2STMES_RELAYF_DS_ACK .AND. !ACK FROM STATION
+     *    RELAY_FORMAT.EQ.X2STMES_DATATYPE_RELAY_ACK) THEN
+C
+          IF (IAND(RELAY_FLAGS,X2STMES_RELAYF_EB).NE.0) THEN
+            CALL X2RHALT(STATION,PROCESS)
+            STATUS=-2
+            RETURN
+          ENDIF
+C
+        ENDIF
+C*
+        IF (GROUP.LE.0) GOTO 999
+	IF (TYPE.EQ.TYPX2X_RELAY_TIMOUT .AND.
+     *      X2XR_SEND_STATION(GROUP,PROCESS).EQ.STATION .AND.
+     *      X2XR_STATION_TIMOUT(STATION,PROCESS).GT.
+     *      X2XR_WAIT_TIMOUT(PROCESS)*100) THEN
+          X2XR_STATION_TIMOUT(STATION,PROCESS)=0
+          STATUS=1                  ! V01 WACK - CLEAR SVC      V01
+C
+          IF (IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0) THEN
+            TYPE *,'timeout too long: last stn_id before clear ',
+     *              X2XR_LAST_STATION_ID(1,STATION,PROCESS),
+     *              X2XR_LAST_STATION_ID(2,STATION,PROCESS)
+            TYPE *,'X2XRELmsg: wait too long timeout, return '
+          ENDIF
+          RETURN
+        ENDIF
+C
+999     CONTINUE        
+C
+C       IF NOT A TIMEOUT THEN RESTORE RETRY COUNT BACK TO MAXIMUM
+C 
+	IF (TYPE.NE.TYPX2X_RELAY_TIMOUT) THEN
+	   RETRY_OFF = X2X_STATIONS*(PROCESS-1)+STATION
+	   CALL ISBYTE(X2XR_MAX_RETRY(PROCESS),IX2XR_RETRY_CNT,
+     *	               RETRY_OFF-1)
+	ENDIF
+C 
+C       SET PROCESS FLAGS IN THE BUFFER
+C 
+        X2XR_STATION_TIMOUT(STATION,PROCESS)=X2X_LOOP_TIME+
+     *                                   X2XR_SEND_TIMOUT(PROCESS)
+	FLAGS = X2XR_APP_FLAGS(PROCESS)+X2XR_APP_DATA_DEST(PROCESS)
+C
+	IF (X2XR_APP_DATA_MSGNUM(PROCESS).GT.0 .OR. 
+     *	   X2XR_APP_DATA_LEN(PROCESS).NE.0) THEN 
+	   FLAGS=IOR(FLAGS,X2STMES_RELAYF_EB)
+	   FLAGS=IOR(FLAGS,X2STMES_RELAYF_PE)
+	ENDIF
+C
+C       SET FLAGS IN BUFFER
+C
+	CALL I4TOBUF2(FLAGS,BUFFER,X2STMES_RELAY_FLAGS-1)
+C 
+C       GENERATE TIMEOUT FOR STATION IF PROCESS IS A CHAINED RELAY THEN
+C       DO NOT GENERATE TIMEOUT ANY STATION THAT BROKE OUT OF RELAY CHAIN
+C 
+	IF(X2XR_APP_ATRIBUTE(PROCESS).EQ.X2XR_APPA_CHAIN) THEN
+	   IF (GROUP.LE.0) THEN
+	      X2XR_STATION_TIMOUT(STATION,PROCESS)=0
+	   ELSE
+	      IF (X2XR_SEND_STATION(GROUP,PROCESS).NE.STATION) THEN
+	          X2XR_STATION_TIMOUT(STATION,PROCESS)=0
+	      ENDIF
+	   ENDIF
+	ELSE
+	  X2XR_STATION_TIMOUT(STATION,PROCESS) = 
+     *         X2X_LOOP_TIME + X2XR_SEND_TIMOUT(PROCESS)
+        ENDIF
+C 
+	X2XR_ACTIVITY_CNT(PROCESS)=X2XR_ACTIVITY_CNT(PROCESS) + 1
+C
+C       BUILD RELAY MESSAGE 
+C
+	CALL X2RSTNMS(BUFFER,STATION,PROCESS)   
+	IF(IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0)
+     *	   TYPE *,'TIMOUT ',X2XR_STATION_TIMOUT(STATION,PROCESS)
+	STATUS=0
+C 
+	RETURN
+	END

@@ -1,0 +1,760 @@
+C PROGRAM LIABLE
+C
+C LIABLE.FOR
+C
+C V27 05-FEB-2001 EPH Work with cash values only (not OP values)
+C V26 29-NOV-2000 UXN TTGL ADDED.
+C V25 08-JUN-2000 UXN GAMTAB not used for VLIABLE
+C V24 13-OCT-1999 RXK World Tour added.
+C V23 26-MAY-1999 UXN Modifications for oddset games (fractions).
+C V22 14-MAY-1999 UXN Super Triple added.
+C V21 05-AUG-1998 RXK Changed to dispaly 2 kickers
+C V20 30-JAN-1996 RXK Rfss 246, Liability reports for the Today's Couple and 
+C                     the Super Double merged into WLIABLE.for
+C V19 20-DEC-1995 HXK Various fixes as part of the Double / Couple installation
+C V18 15-DEC-1995 PXB Changes for double and couple games
+C V17 25-NOV-1994 PXB Added bingo.
+C V16 23-NOV-1994 PXB No changes made.
+C V15 18-JAN-1994 HXK FIXED TYPO.
+C V14 18-JAN-1994 HXK CHANGED FOR SCORE, WINNERSTIP REFUNDS.
+C V13 05-NOV-1993 GXA Separate Refunds and Winnings on Toto Select, 
+C                     (one type per detail!).
+C V12 03-NOV-1993 HXK CHANGE FOR PITKA
+C V11 07-OCT-1993 GXA Corrected all games for purged detailes (partial purging).
+C V10 17-SEP-1993 SXH Added bank winners, fixed bug with Joker 2
+C V09 23-JUN-1993 HXK ADDED SPEDE GAME
+C V08 23-JUN-1993 SXH Added RAVI (V65)
+C V07 07-JUN-1993 SXH take account of fractioning and double joker
+C V06 04-JUN-1993 SXH Initila Release for Finland
+C V05 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V04 07-APR-1992 GCAN ADDED WINNERS TIP GAME.
+C V03 31-JAN-1992 GCAN ATTEMPTED TO FIX JOKER AMOUNTS.
+C                      DO NOT ADD JOKER IF MAIN GAME IS JOKER.
+C V02 12-NOV-1991 MTK  INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C
+C PROGRAM TO GENERATE LIABILITY REPORTS FROM VLF AND GAME FILES
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	PROGRAM LIABLE
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:BNGCOM.DEF'
+	INCLUDE 'INCLIB:KIKCOM.DEF'
+	INCLUDE 'INCLIB:DESVAL.DEF'
+	INCLUDE 'INCLIB:VALFIL.DEF'
+	INCLUDE 'INCLIB:HSHCOM.DEF'
+	INCLUDE 'INCLIB:VDETAIL.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+C
+	INTEGER*4  TUBSIZ                   !
+	PARAMETER (TUBSIZ=I4BUCSIZ*7)       
+        INTEGER*4  MDRAWS                   !
+	PARAMETER (MDRAWS=400)		    !NOTE IF THIS IS CHANGED
+C					    !ALSO CHANGE *LIABLE.FOR
+C
+C
+	INTEGER*2  DAT(LDATE_LEN) /LDATE_LEN*0/    !
+	INTEGER*4  VLFBUF(TUBSIZ)                  !
+	INTEGER*4  LPAY(LTGDIV,2,MDRAWS,NUMLTO)    !
+	INTEGER*4  LLIB(LTGDIV,2,MDRAWS,NUMLTO)    !
+	INTEGER*4  SPAY(SPGDIV,MDRAWS,NUMSPT)      !
+	INTEGER*4  SLIB(SPGDIV,MDRAWS,NUMSPT)      !
+	INTEGER*4  TGPAY(TGGDIV,MDRAWS,NUMTGL)      !
+	INTEGER*4  TGLIB(TGGDIV,MDRAWS,NUMTGL)      !
+	INTEGER*4  KPAY(KIGDIV,MDRAWS,NUMKIK)    !
+	INTEGER*4  KLIB(KIGDIV,MDRAWS,NUMKIK)    !
+        INTEGER*4  KSUB
+        INTEGER*4  NPAY(NBGPOL,2,MDRAWS,NUMNBR)    !
+        INTEGER*4  NLIB(NBGPOL,2,MDRAWS,NUMNBR)    !
+        INTEGER*4  RPAY(MDRAWS,2,NUMSCR)             !1=NORMAL PAY, 2=REFUNDS
+        INTEGER*4  RLIB(MDRAWS,2,NUMSCR)             !1=NORMAL PAY, 2=REFUNDS
+        INTEGER*4  WPAY(MDRAWS,2,NUMWIT)             !1=NORMAL PAY, 2=REFUNDS
+        INTEGER*4  WLIB(MDRAWS,2,NUMWIT)             !1=NORMAL PAY, 2=REFUNDS
+
+        INTEGER*4  TPAY(MDRAWS,2,NUMTSL)           !1=NORMAL PAY, 2=REFUNDS
+        INTEGER*4  TLIB(MDRAWS,2,NUMTSL)           !1=NORMAL PAY, 2=REFUNDS
+
+	INTEGER*4  GAMTAB(2,MAXGAM)                !
+
+	INTEGER*4  BLIB(BGODIV+1,MDRAWS,NUMBGO)
+	INTEGER*4  BPAY(BGODIV+1,MDRAWS,NUMBGO)
+        INTEGER*4  BSUB
+C
+        INTEGER*4  DPAY(MDRAWS,2,NUMDBL)       !1=NORMAL PAY, 2=REFUNDS
+        INTEGER*4  DLIB(MDRAWS,2,NUMDBL)       !1=NORMAL PAY, 2=REFUNDS
+
+        INTEGER*4  CPAY(MDRAWS,2,NUMCPL)       !1=NORMAL PAY, 2=REFUNDS
+        INTEGER*4  CLIB(MDRAWS,2,NUMCPL)       !1=NORMAL PAY, 2=REFUNDS
+C
+        INTEGER*4  SSPAY(MDRAWS,2,NUMSSC)       !1=NORMAL PAY, 2=REFUNDS
+        INTEGER*4  SSLIB(MDRAWS,2,NUMSSC)       !1=NORMAL PAY, 2=REFUNDS
+C
+        INTEGER*4  TRPAY(MDRAWS,2,NUMTRP)       !1=NORMAL PAY, 2=REFUNDS
+        INTEGER*4  TRLIB(MDRAWS,2,NUMTRP)       !1=NORMAL PAY, 2=REFUNDS
+C
+        INTEGER*4  STPAY(MDRAWS,2,NUMSTR)       !1=NORMAL PAY, 2=REFUNDS
+        INTEGER*4  STLIB(MDRAWS,2,NUMSTR)       !1=NORMAL PAY, 2=REFUNDS
+C
+	INTEGER*4  SHR                             !
+	INTEGER*4  REF				   !Refund Flag from Details.
+	INTEGER*4  DIV                             !
+	INTEGER*4  DRWIND                          !
+	INTEGER*4  I                               !
+	INTEGER*4  FRCS                            !
+	INTEGER*4  GIND                            !
+	INTEGER*4  GAM                             !
+	INTEGER*4  K                               !
+	INTEGER*4  CDC                             !
+	INTEGER*4  KGAM                            !
+	INTEGER*4  ST                              !
+	INTEGER*4  BNS                             !
+	INTEGER*4  KGIND                           !
+C
+	LOGICAL   KICKERWIN  /.FALSE./
+	LOGICAL   CASHED  /.FALSE./
+C
+        ! START OF CODE
+
+	CALL COPYRITE
+
+	CDC = DAYCDC
+	IF(DAYSTS.NE.DSCLOS) THEN
+	    TYPE*,IAM(),' Invalid daysts > ',DAYSTS
+	    CALL GPAUSE
+	ENDIF
+
+	DAT(5)=CDC
+	CALL LCDATE(DAT)
+	WRITE(5,900) IAM(),(DAT(K),K=7,13)
+C
+	CALL FASTSET(0,LPAY,LTGDIV*MDRAWS*NUMLTO*2)
+	CALL FASTSET(0,LLIB,LTGDIV*MDRAWS*NUMLTO*2)
+	CALL FASTSET(0,SPAY,SPGDIV*MDRAWS*NUMSPT)
+	CALL FASTSET(0,SLIB,SPGDIV*MDRAWS*NUMSPT)
+	CALL FASTSET(0,TGPAY,TGGDIV*MDRAWS*NUMTGL)
+	CALL FASTSET(0,TGLIB,TGGDIV*MDRAWS*NUMTGL)
+	CALL FASTSET(0,KPAY,KIGDIV*MDRAWS*NUMKIK)
+	CALL FASTSET(0,KLIB,KIGDIV*MDRAWS*NUMKIK)
+        CALL FASTSET(0,NPAY,NBGPOL*MDRAWS*NUMNBR*2)
+        CALL FASTSET(0,NLIB,NBGPOL*MDRAWS*NUMNBR*2)
+        CALL FASTSET(0,RPAY,MDRAWS*2*NUMSCR)
+        CALL FASTSET(0,RLIB,MDRAWS*2*NUMSCR)
+        CALL FASTSET(0,WPAY,MDRAWS*2*NUMWIT)
+        CALL FASTSET(0,WLIB,MDRAWS*2*NUMWIT)
+        CALL FASTSET(0,DPAY,MDRAWS*2*NUMDBL)
+        CALL FASTSET(0,DLIB,MDRAWS*2*NUMDBL)
+        CALL FASTSET(0,CPAY,MDRAWS*2*NUMCPL)
+        CALL FASTSET(0,CLIB,MDRAWS*2*NUMCPL)
+        CALL FASTSET(0,SSPAY,MDRAWS*2*NUMSSC)
+        CALL FASTSET(0,SSLIB,MDRAWS*2*NUMSSC)
+        CALL FASTSET(0,TRPAY,MDRAWS*2*NUMTRP)
+        CALL FASTSET(0,TRLIB,MDRAWS*2*NUMTRP)
+        CALL FASTSET(0,STPAY,MDRAWS*2*NUMSTR)
+        CALL FASTSET(0,STLIB,MDRAWS*2*NUMSTR)
+        CALL FASTSET(0,TPAY,MDRAWS*2*NUMTSL)
+        CALL FASTSET(0,TLIB,MDRAWS*2*NUMTSL)
+
+	CALL FASTSET(0,GAMTAB,2*MAXGAM)
+C
+C OPEN VALIDATION FILE FOR SEQUENTIAL READ
+C
+	CALL IOPEN(SFNAMES(1,VLF),VLF,VFLEN*2,VFSCDC,VFSSER*2-1,ST)
+	IF(ST.NE.0) CALL FILERR(SFNAMES(1,VLF),1,ST,0)
+	CALL ITUBSIZE(VLF,TUBSIZ)
+C
+C SCAN VLF FILE FOR TODAYS VALIDATIONS
+C
+100	CONTINUE
+	CALL ISREAD(V4BUF,VLF,VLFBUF,ST)
+	IF(ST.EQ.ERREND) THEN
+	    CALL ICLOSE(VLF,VLFBUF,ST)
+	    GOTO 11000
+	ENDIF
+	IF(ST.NE.0) CALL FILERR(SFNAMES(1,VLF),2,ST,0)
+C
+C
+	CALL LOGVAL(VALREC,V4BUF)
+        IF(VALREC(VSTAT).EQ.VHOLD  .OR. VALREC(VSTAT).EQ.VUNCSH .OR.
+     *     VALREC(VSTAT).EQ.VNOPAY .OR. VALREC(VSTAT).EQ.VNOPRZ .OR.
+     *     VALREC(VSTAT).EQ.VCLAM  .OR. VALREC(VSTAT).EQ.VCLAMX .OR.
+     *     VALREC(VSTAT).EQ.VPRPAY .OR. VALREC(VSTAT).EQ.VPPNPZ .OR.
+     *	   VALREC(VSTAT).EQ.VPOST) THEN
+	    CASHED = .FALSE.
+	ELSE
+            IF(VALREC(VCCDC).NE.CDC) GOTO 100
+            IF(VALREC(VSTAT).NE.VCASH .AND. VALREC(VSTAT).NE.VCASHX .AND.
+     *         VALREC(VSTAT).NE.VBANK) GOTO 100
+	    GAM  = VALREC(VGAM)
+	    KGAM = VALREC(VKGME)
+	    GAMTAB(1,GAM) = GAMTAB(1,GAM) + VALREC(VPAMT) + VALREC(VRAMT)
+	    GAMTAB(2,GAM) = GAMTAB(2,GAM) + VALREC(VTAMT)
+	    IF(KGAM.NE.0.AND.GAM.NE.KGAM) THEN		!GAM.NE.KGAM
+                GAMTAB(1,KGAM) = GAMTAB(1,KGAM) + VALREC(VKPAMT)
+                GAMTAB(2,KGAM) = GAMTAB(2,KGAM) + VALREC(VKTAMT)
+	    ENDIF
+            CASHED = .TRUE.
+	ENDIF
+C
+C
+	KICKERWIN = .FALSE.
+	GAM    = VALREC(VGAM)
+	GIND   = VALREC(VGIND)
+	KGAM   = VALREC(VKGME)
+        FRCS   = VALREC(VFRAC)
+        IF(FRCS.EQ.0) FRCS = MAXFRC(GAM)
+	IF(FRCS.EQ.0) FRCS = 1
+
+	CALL DLOGVAL(VALREC,VDETAIL)
+
+	IF(VALREC(VGTYP).EQ.TLTO) GOTO 1000
+	IF(VALREC(VGTYP).EQ.TSPT) GOTO 2000
+	IF(VALREC(VGTYP).EQ.TNBR) GOTO 3000
+	IF(VALREC(VGTYP).EQ.TKIK) GOTO 4000
+	IF(VALREC(VGTYP).EQ.TSCR) GOTO 6000
+	IF(VALREC(VGTYP).EQ.TWIT) GOTO 7000
+	IF(VALREC(VGTYP).EQ.TTSL) GOTO 8000
+	IF(VALREC(VGTYP).EQ.TTGL) GOTO 9000
+        IF(VALREC(VGTYP).EQ.TBNG) GOTO 10100
+        IF(VALREC(VGTYP).EQ.TDBL) GOTO 10200
+        IF(VALREC(VGTYP).EQ.TCPL) GOTO 10300
+        IF(VALREC(VGTYP).EQ.TSSC) GOTO 10400
+        IF(VALREC(VGTYP).EQ.TTRP) GOTO 10500
+        IF(VALREC(VGTYP).EQ.TSTR) GOTO 10600
+	GOTO 100
+C
+C UPDATE LOTTO GAME PAYOFF AND LIABILITY DATA
+C
+1000	CONTINUE
+	DO 1010 I = 1, VALREC(VPZOFF)
+	    IF(VDETAIL(VDRW,I).EQ.0) GOTO 1010
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 1010
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 1010     !V27
+            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+                KICKERWIN=.TRUE.
+                GOTO 1010
+            ENDIF
+
+	    DRWIND = DAYHDR(GAM)-VDETAIL(VDRW,I) + 1
+	    IF (DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+	        WRITE(5,901) IAM(),GTNAMES(TLTO),GIND,DRWIND
+	        GOTO 1010
+	    ENDIF
+
+	    DIV = VDETAIL(VDIV,I)
+	    SHR = VDETAIL(VSHR,I)
+	    BNS = VDETAIL(VBDR,I)+1
+	    IF(CASHED) THEN
+	        LPAY(DIV,BNS,DRWIND,GIND)=LPAY(DIV,BNS,DRWIND,GIND)+SHR*FRCS
+	    ELSE
+	        LLIB(DIV,BNS,DRWIND,GIND)=LLIB(DIV,BNS,DRWIND,GIND)+SHR*FRCS
+	    ENDIF
+1010	CONTINUE
+	IF(KICKERWIN) GOTO 4000
+	GOTO 100
+C
+C UPDATE SPORTS GAME PAYOFF AND LIABILITY DATA
+C
+2000	CONTINUE
+        DO 2010 I=1,VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 2010
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 2010
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 2010     !V27
+            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+                KICKERWIN=.TRUE.
+                GOTO 2010
+            ENDIF
+
+            DRWIND=DAYHDR(GAM)-VDETAIL(VDRW,I)+1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TSPT),GIND,DRWIND
+                GOTO 2010
+            ENDIF
+
+            DIV = VDETAIL(VDIV,I)
+            SHR = VDETAIL(VSHR,I)
+            IF(CASHED) THEN
+                SPAY(DIV,DRWIND,GIND)=SPAY(DIV,DRWIND,GIND)+SHR*FRCS
+            ELSE
+                SLIB(DIV,DRWIND,GIND)=SLIB(DIV,DRWIND,GIND)+SHR*FRCS
+            ENDIF
+2010    CONTINUE
+        IF(KICKERWIN) GOTO 4000
+        GOTO 100
+C
+C UPDATE NUMBERS GAME PAYOFF AND LIABILITY DATA
+C
+3000    CONTINUE
+        DO 3010 I=1,VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 3010
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 3010
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 3010     !V27
+            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+                KICKERWIN=.TRUE.
+                GOTO 3010
+            ENDIF
+
+            DRWIND=DAYHDR(GAM)-VDETAIL(VDRW,I)+1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TNBR),GIND,DRWIND
+                GOTO 3010
+            ENDIF
+
+            DIV = VDETAIL(VDIV,I)
+            SHR = VDETAIL(VSHR,I)
+            BNS = VDETAIL(VBDR,I)+1
+            IF(CASHED) THEN
+                NPAY(DIV,BNS,DRWIND,GIND)=NPAY(DIV,BNS,DRWIND,GIND)+SHR*FRCS
+            ELSE
+                NLIB(DIV,BNS,DRWIND,GIND)=NLIB(DIV,BNS,DRWIND,GIND)+SHR*FRCS
+            ENDIF
+3010    CONTINUE
+        IF(KICKERWIN) GOTO 4000
+        GOTO 100
+C
+C UPDATE KICKER GAME PAYOFF AND LIABILITY DATA
+C
+4000	CONTINUE
+        IF(KGAM.EQ.0) GOTO 100    
+	KGIND = GNTTAB(GAMIDX,KGAM)
+        DO 4010 I = 1, VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 4010
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 4010
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 4010     !V27
+	    IF(VDETAIL(VKIK,I).EQ.0 .AND. VDETAIL(VKI2,I).EQ.0) GOTO 4010
+
+            DRWIND=DAYHDR(KGAM)-VDETAIL(VDRW,I)+1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TKIK),KGIND,DRWIND
+                GOTO 4010
+            ENDIF
+
+            DIV = VDETAIL(VDIV,I)
+            SHR = VDETAIL(VSHR,I)
+	    KSUB = VDETAIL(VSUB,I)
+            IF(CASHED) THEN
+                KPAY(DIV,DRWIND,KGIND)=KPAY(DIV,DRWIND,KGIND)+SHR*FRCS
+            ELSE
+                KLIB(DIV,DRWIND,KGIND)=KLIB(DIV,DRWIND,KGIND)+SHR*FRCS
+            ENDIF
+4010    CONTINUE
+        GOTO 100
+C
+C UPDATE SCORE GAME PAYOFF AND LIABILITY DATA
+C
+6000    CONTINUE
+        DO 6010 I = 1,VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 6010
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 6010
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 6010     !V27
+            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+                KICKERWIN = .TRUE.
+                GOTO 6010
+            ENDIF
+
+            DRWIND = DAYHDR(GAM) - VDETAIL(VDRW,I) + 1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TSCR),GIND,DRWIND
+                GOTO 6010
+            ENDIF
+
+            SHR = VDETAIL(VSHR,I)
+            REF = VDETAIL(VREF,I)
+            IF(CASHED) THEN
+               IF(REF.EQ.0) THEN
+                   RPAY(DRWIND,1,GIND) = RPAY(DRWIND,1,GIND) + SHR
+               ELSE
+                   RPAY(DRWIND,2,GIND) = RPAY(DRWIND,2,GIND) + SHR
+               ENDIF
+            ELSE
+               IF(REF.EQ.0) THEN
+                  RLIB(DRWIND,1,GIND) = RLIB(DRWIND,1,GIND) + SHR
+               ELSE
+                  RLIB(DRWIND,2,GIND) = RLIB(DRWIND,2,GIND) + SHR
+               ENDIF
+            ENDIF
+6010    CONTINUE
+        IF(KICKERWIN) GOTO 4000
+        GOTO 100
+C
+C UPDATE WINNERS TIP GAME PAYOFF AND LIABILITY DATA
+C
+7000    CONTINUE
+        DO 7010 I = 1,VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 7010
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 7010
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 7010     !V27
+            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+                KICKERWIN = .TRUE.
+                GOTO 7010
+            ENDIF
+
+            DRWIND = DAYHDR(GAM) - VDETAIL(VDRW,I) + 1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TWIT),GIND,DRWIND
+                GOTO 7010
+            ENDIF
+
+            SHR = VDETAIL(VSHR,I)
+            REF = VDETAIL(VREF,I)
+            IF(CASHED) THEN
+               IF(REF.EQ.0) THEN
+                  WPAY(DRWIND,1,GIND) = WPAY(DRWIND,1,GIND) + SHR
+               ELSE
+                  WPAY(DRWIND,2,GIND) = WPAY(DRWIND,2,GIND) + SHR
+               ENDIF
+            ELSE
+               IF(REF.EQ.0) THEN
+                  WLIB(DRWIND,1,GIND) = WLIB(DRWIND,1,GIND) + SHR
+               ELSE
+                  WLIB(DRWIND,2,GIND) = WLIB(DRWIND,2,GIND) + SHR
+               ENDIF
+            ENDIF
+7010    CONTINUE
+        IF(KICKERWIN) GOTO 4000
+        GOTO 100
+C
+C UPDATE TOTO SELECT GAME PAYOFF AND LIABILITY DATA
+C
+8000    CONTINUE
+        DO 8010 I = 1,VALREC(VPZOFF)
+        IF(VDETAIL(VDRW,I).EQ.0) GOTO 8010
+	IF(VDETAIL(VPRG,I).EQ.1) GOTO 8010
+        IF(VDETAIL(VOP,I).EQ.1)  GOTO 8010     !V27
+        IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+            KICKERWIN = .TRUE.
+            GOTO 8010
+        ENDIF
+
+        DRWIND = DAYHDR(GAM) - VDETAIL(VDRW,I) + 1
+        IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+            WRITE(5,901) IAM(),GTNAMES(TTSL),GIND,DRWIND
+            GOTO 8010
+        ENDIF
+
+        SHR = VDETAIL(VSHR,I)
+	REF = VDETAIL(VREF,I)
+        IF(CASHED) THEN
+	   IF(REF.EQ.0) THEN
+	      TPAY(DRWIND,1,GIND) = TPAY(DRWIND,1,GIND) + SHR
+	   ELSE
+	      TPAY(DRWIND,2,GIND) = TPAY(DRWIND,2,GIND) + SHR
+	   ENDIF
+        ELSE
+	   IF(REF.EQ.0) THEN
+	      TLIB(DRWIND,1,GIND) = TLIB(DRWIND,1,GIND) + SHR
+	   ELSE
+	      TLIB(DRWIND,2,GIND) = TLIB(DRWIND,2,GIND) + SHR
+	   ENDIF
+        ENDIF
+8010    CONTINUE
+        IF(KICKERWIN) GOTO 4000
+        GOTO 100
+C
+C
+C UPDATE SPORTS GAME PAYOFF AND LIABILITY DATA
+C
+9000	CONTINUE
+        DO 9010 I=1,VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 9010
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 9010
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 9010     !V27
+            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+                KICKERWIN=.TRUE.
+                GOTO 9010
+            ENDIF
+
+            DRWIND=DAYHDR(GAM)-VDETAIL(VDRW,I)+1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TTGL),GIND,DRWIND
+                GOTO 9010
+            ENDIF
+
+            DIV = VDETAIL(VDIV,I)
+            SHR = VDETAIL(VSHR,I)
+            IF(CASHED) THEN
+                TGPAY(DIV,DRWIND,GIND)=TGPAY(DIV,DRWIND,GIND)+SHR*FRCS
+            ELSE
+                TGLIB(DIV,DRWIND,GIND)=TGLIB(DIV,DRWIND,GIND)+SHR*FRCS
+            ENDIF
+9010    CONTINUE
+        IF(KICKERWIN) GOTO 4000
+        GOTO 100
+C BINGO
+C
+10100    CONTINUE
+
+         DO 10110 I=1,VALREC(VPZOFF)
+
+            IF(VDETAIL(VDRW,I) .EQ. 0) GOTO 10110
+
+	    IF(VDETAIL(VPRG,I) .EQ. 1) GOTO 10110
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 10110     !V27
+
+            IF(VDETAIL(VKIK,I) .NE. 0 .OR. VDETAIL(VKI2,I) .NE. 0) THEN
+                KICKERWIN = .TRUE.
+                GOTO 10110
+            ENDIF
+
+            DRWIND = DAYHDR(GAM) - VDETAIL(VDRW,I) + 1
+
+            IF(DRWIND .LT. 1 .OR. DRWIND .GT. MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TBNG),GIND,DRWIND
+                GOTO 10110
+            ENDIF
+
+            BSUB = VDETAIL(VSUB,I)
+
+            DIV = VDETAIL(VDIV,I)
+
+            !---- If old Bingo game then
+            !---- Find out which sub game we are using and if it is fullhouse
+            !---- then add 3 to the division number because in the array
+            !---- the AB game are divisions 1-3 and fullhouse are 4-9.
+
+            IF (VDETAIL(VDRW,I).LE.BNGLOB(GIND).AND.BSUB .EQ. BGOFHS) 
+     *          DIV = DIV + 3
+
+            SHR = VDETAIL(VSHR,I)
+
+            IF (CASHED) THEN
+                BPAY(DIV,DRWIND,GIND) = BPAY(DIV,DRWIND,GIND) + SHR * FRCS
+            ELSE
+                BLIB(DIV,DRWIND,GIND) = BLIB(DIV,DRWIND,GIND) + SHR * FRCS
+            END IF
+
+10110    CONTINUE
+
+         IF(KICKERWIN) GOTO 4000
+         GOTO 100
+C
+C UPDATE SUPER DOUBLE GAME PAYOFF AND LIABILITY DATA
+C
+10200   CONTINUE
+        DO 10210 I = 1,VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 10210
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 10210
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 10210     !V27
+C            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+C                KICKERWIN = .TRUE.
+C                GOTO 10210
+C            ENDIF
+
+            DRWIND = DAYHDR(GAM) - VDETAIL(VDRW,I) + 1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TDBL),GIND,DRWIND
+                GOTO 10210
+            ENDIF
+
+            SHR = VDETAIL(VSHR,I)
+            REF = VDETAIL(VREF,I)
+            IF(CASHED) THEN
+               IF(REF.EQ.0) THEN
+                  DPAY(DRWIND,1,GIND) = DPAY(DRWIND,1,GIND) + SHR
+               ELSE
+                  DPAY(DRWIND,2,GIND) = DPAY(DRWIND,2,GIND) + SHR
+               ENDIF
+            ELSE
+               IF(REF.EQ.0) THEN
+                  DLIB(DRWIND,1,GIND) = DLIB(DRWIND,1,GIND) + SHR
+               ELSE
+                  DLIB(DRWIND,2,GIND) = DLIB(DRWIND,2,GIND) + SHR
+               ENDIF
+            ENDIF
+10210   CONTINUE
+C       IF(KICKERWIN) GOTO 4000
+        GOTO 100
+C
+C UPDATE SUPER DOUBLE GAME PAYOFF AND LIABILITY DATA
+C
+10300   CONTINUE
+        DO 10310 I = 1,VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 10310
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 10310
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 10310     !V27
+C            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+C                KICKERWIN = .TRUE.
+C                GOTO 10310
+C            ENDIF
+
+            DRWIND = DAYHDR(GAM) - VDETAIL(VDRW,I) + 1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TCPL),GIND,DRWIND
+                GOTO 10310
+            ENDIF
+
+            SHR = VDETAIL(VSHR,I)
+            REF = VDETAIL(VREF,I)
+            IF(CASHED) THEN
+               IF(REF.EQ.0) THEN
+                  CPAY(DRWIND,1,GIND) = CPAY(DRWIND,1,GIND) + SHR
+               ELSE
+                  CPAY(DRWIND,2,GIND) = CPAY(DRWIND,2,GIND) + SHR
+               ENDIF
+            ELSE
+               IF(REF.EQ.0) THEN
+                  CLIB(DRWIND,1,GIND) = CLIB(DRWIND,1,GIND) + SHR
+               ELSE
+                  CLIB(DRWIND,2,GIND) = CLIB(DRWIND,2,GIND) + SHR
+               ENDIF
+            ENDIF
+10310   CONTINUE
+C       IF(KICKERWIN) GOTO 4000
+	GOTO 100
+C
+C UPDATE SUPER SCORE GAME PAYOFF AND LIABILITY DATA
+C
+10400   CONTINUE
+        DO 10410 I = 1,VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 10410
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 10410
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 10410     !V27
+C            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+C                KICKERWIN = .TRUE.
+C                GOTO 10410
+C            ENDIF
+
+            DRWIND = DAYHDR(GAM) - VDETAIL(VDRW,I) + 1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TSSC),GIND,DRWIND
+                GOTO 10410
+            ENDIF
+
+            SHR = VDETAIL(VSHR,I)
+            REF = VDETAIL(VREF,I)
+            IF(CASHED) THEN
+               IF(REF.EQ.0) THEN
+                  SSPAY(DRWIND,1,GIND) = SSPAY(DRWIND,1,GIND) + SHR
+               ELSE
+                  SSPAY(DRWIND,2,GIND) = SSPAY(DRWIND,2,GIND) + SHR
+               ENDIF
+            ELSE
+               IF(REF.EQ.0) THEN
+                  SSLIB(DRWIND,1,GIND) = SSLIB(DRWIND,1,GIND) + SHR
+               ELSE
+                  SSLIB(DRWIND,2,GIND) = SSLIB(DRWIND,2,GIND) + SHR
+               ENDIF
+            ENDIF
+10410   CONTINUE
+C       IF(KICKERWIN) GOTO 4000
+	GOTO 100
+C
+C UPDATE TODAYS TRIO GAME PAYOFF AND LIABILITY DATA
+C
+10500   CONTINUE
+        DO 10510 I = 1,VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 10510
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 10510
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 10510     !V27
+C            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+C                KICKERWIN = .TRUE.
+C                GOTO 10510
+C            ENDIF
+
+            DRWIND = DAYHDR(GAM) - VDETAIL(VDRW,I) + 1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TTRP),GIND,DRWIND
+                GOTO 10510
+            ENDIF
+
+            SHR = VDETAIL(VSHR,I)
+            REF = VDETAIL(VREF,I)
+            IF(CASHED) THEN
+               IF(REF.EQ.0) THEN
+                  TRPAY(DRWIND,1,GIND) = TRPAY(DRWIND,1,GIND) + SHR
+               ELSE
+                  TRPAY(DRWIND,2,GIND) = TRPAY(DRWIND,2,GIND) + SHR
+               ENDIF
+            ELSE
+               IF(REF.EQ.0) THEN
+                  TRLIB(DRWIND,1,GIND) = TRLIB(DRWIND,1,GIND) + SHR
+               ELSE
+                  TRLIB(DRWIND,2,GIND) = TRLIB(DRWIND,2,GIND) + SHR
+               ENDIF
+            ENDIF
+10510   CONTINUE
+C       IF(KICKERWIN) GOTO 4000
+        GOTO 100
+C
+C UPDATE SUPER TRIPLE GAME PAYOFF AND LIABILITY DATA
+C
+10600   CONTINUE
+        DO 10610 I = 1,VALREC(VPZOFF)
+            IF(VDETAIL(VDRW,I).EQ.0) GOTO 10610
+	    IF(VDETAIL(VPRG,I).EQ.1) GOTO 10610
+            IF(VDETAIL(VOP,I).EQ.1)  GOTO 10610     !V27
+C            IF(VDETAIL(VKIK,I).NE.0 .OR. VDETAIL(VKI2,I).NE.0) THEN
+C                KICKERWIN = .TRUE.
+C                GOTO 10610
+C            ENDIF
+
+            DRWIND = DAYHDR(GAM) - VDETAIL(VDRW,I) + 1
+            IF(DRWIND.LT.1.OR.DRWIND.GT.MDRAWS) THEN
+                WRITE(5,901) IAM(),GTNAMES(TSTR),GIND,DRWIND
+                GOTO 10610
+            ENDIF
+
+            SHR = VDETAIL(VSHR,I)
+            REF = VDETAIL(VREF,I)
+            IF(CASHED) THEN
+               IF(REF.EQ.0) THEN
+                  STPAY(DRWIND,1,GIND) = STPAY(DRWIND,1,GIND) + SHR
+               ELSE
+                  STPAY(DRWIND,2,GIND) = STPAY(DRWIND,2,GIND) + SHR
+               ENDIF
+            ELSE
+               IF(REF.EQ.0) THEN
+                  STLIB(DRWIND,1,GIND) = STLIB(DRWIND,1,GIND) + SHR
+               ELSE
+                  STLIB(DRWIND,2,GIND) = STLIB(DRWIND,2,GIND) + SHR
+               ENDIF
+            ENDIF
+10610   CONTINUE
+C       IF(KICKERWIN) GOTO 4000
+        GOTO 100
+C
+C
+C LIABILITY REPORTS GENERATION
+C
+11000	CONTINUE
+	CALL LLIABLE(LLIB, LPAY)
+	CALL SLIABLE(SLIB, SPAY)
+	CALL TGLIABLE(TGLIB, TGPAY)
+	CALL NLIABLE(NLIB,NPAY,GAMTAB)
+	CALL KLIABLE(KLIB, KPAY)
+        CALL RLIABLE(RLIB,RPAY,SSLIB,SSPAY,GAMTAB)
+        CALL WLIABLE(WLIB,WPAY,DLIB,DPAY,CLIB,CPAY,TRLIB,TRPAY,
+     *               STLIB,STPAY)
+        CALL TLIABLE(TLIB,TPAY,GAMTAB)
+        CALL BLIABLE(BLIB,BPAY,GAMTAB)
+	CALL GSTOP(GEXIT_SUCCESS)
+C
+900	FORMAT(1X,A,' Processing liability data for ',7A2)
+901	FORMAT(1X,A,1X,A8,I1.1,' Liability table overflow index > ',I6)
+C
+	END

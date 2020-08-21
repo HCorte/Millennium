@@ -1,0 +1,57 @@
+C SSOCOM.DEF
+C
+C V01 05-JUN-2000 OXK Initial release.
+C
+C Superscore pool overflow common layout
+C 
+C This overflow common contains entrys of Superscore pools control table
+C
+C SSOCOMCMB(NUMSSC)		1024	tabel of combination numbers
+C SSOCOMAMT(NUMSSC)		1024	table of combination amounts
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4 SSOCOMNUM                        !number of entries
+        PARAMETER(SSOCOMNUM=1024)
+C
+        INTEGER*4 SSOCOMCMB_OFF,SSOCOMAMT_OFF, SSOCOMFRE_OFF
+C
+        PARAMETER(SSOCOMCMB_OFF  = 1 )
+        PARAMETER(SSOCOMAMT_OFF  = SSOCOMCMB_OFF + SSOCOMNUM*NUMSSC )
+        PARAMETER(SSOCOMFRE_OFF  = SSOCOMAMT_OFF + SSOCOMNUM*NUMSSC )
+C
+        INTEGER*4 SSOCOMSEC_SIZE, SSOCOMSEC_NUM, SSOCOMLEN
+        PARAMETER(SSOCOMSEC_SIZE = 2048)
+        PARAMETER(SSOCOMSEC_NUM = NINT(FLOAT((SSOCOMFRE_OFF-2)/
+     *                         SSOCOMSEC_SIZE)+.5))
+        PARAMETER(SSOCOMLEN = SSOCOMSEC_SIZE * SSOCOMSEC_NUM)
+C
+        INTEGER*4 SSOCOMCMB(SSOCOMNUM,NUMSSC)
+        INTEGER*4 SSOCOMAMT(SSOCOMNUM,NUMSSC)
+C
+        COMMON /SSOCOM/ SSOCOMCMB,SSOCOMAMT
+C
+C EQUIVALENCE FOR CHECKPOINT
+C
+        INTEGER*4 SSOCOMBLK,SSOCOMCSB
+        PARAMETER(SSOCOMCSB = SSOCOMSEC_NUM)
+        DIMENSION SSOCOMBLK(2048,SSOCOMCSB)
+        EQUIVALENCE(SSOCOMBLK(1,1),SSOCOMCMB(1,1))
+C
+        VOLATILE /SSOCOM/
+C
+        INTEGER*4        FRST_SSOCOM(2)
+        EQUIVALENCE     (FRST_SSOCOM, SSOCOMBLK(1,1))
+        INTEGER*4        LAST_SSOCOM
+        EQUIVALENCE     (LAST_SSOCOM, SSOCOMBLK(2048,SSOCOMCSB))

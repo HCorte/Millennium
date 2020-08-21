@@ -1,0 +1,74 @@
+C
+C LANFRLEN.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]LANFRLEN.DEV                                 $
+C  $Date::   17 Apr 1996 13:47:06                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C V01 10-JUL-89 MBK ORIGINAL RELEASE
+C
+C FRAME LENGTHS
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 FRMLEN(MAXFRAME)
+C
+	INTEGER*4 LFREQ, LFCONF, LCREQ, LCCONF, LDREQ
+	INTEGER*4 LDCONF, LCLEAR, LDATA, LPREQ, LPCONF
+	PARAMETER (LFREQ=HDRTOT-MACHDLEN+6)                  !FREQ
+	PARAMETER (LFCONF=HDRTOT-MACHDLEN+7)                 !FCONF
+	PARAMETER (LCREQ=HDRTOT-MACHDLEN+3)                  !CREQ
+	PARAMETER (LCCONF=HDRTOT-MACHDLEN+3)                 !CCONF
+	PARAMETER (LDREQ=HDRTOT-MACHDLEN+0)                  !DREQ
+	PARAMETER (LDCONF=HDRTOT-MACHDLEN+0)                 !DCONF
+	PARAMETER (LCLEAR=HDRTOT-MACHDLEN+0)                 !CLEAR
+	PARAMETER (LDATA=0)                                  !DATA
+	PARAMETER (LPREQ=HDRTOT-MACHDLEN+6)                  !PREQ
+	PARAMETER (LPCONF=HDRTOT-MACHDLEN+6)                 !PCONF
+C
+	DATA FRMLEN / LFREQ,                  !FREQ
+     *	              LFCONF,                 !FCONF
+     *	              LCREQ,                  !CREQ
+     *	              LCCONF,                 !CCONF
+     *	              LDREQ,                  !DREQ
+     *	              LDCONF,                 !DCONF
+     *	              LCLEAR,                 !CLEAR
+     *	              LDATA,                  !DATA
+     *	              LPREQ,                  !PREQ
+     *	              LPCONF/                 !PCONF

@@ -1,0 +1,1791 @@
+C DESLOG.DEF
+C  
+C V31 22-NOV-2010 MAC LUCKY NUMBER
+C V30 25-MAR-2009 MMO SEPARATED EXTERNAL SERIAL/CHECK DIGITS JOKER/EM.
+C V29 10-MAR-2009 MMO ADDED KICKER/EM SERIAL.
+C V28 06-JUN-2005 FRP Modify for IPS Distribution.
+C V27 15-JAN-2001 EPH Included value in OP's in validation FOR GAME AND KICKER
+C V26 13-DEC-2000 CS  INCLUDED VALIDATION BODY TO PORTUGAL.
+C V25 06-OCT-2000 UXN ALphaIPS release.
+C V24 01-FEB-2000 UXN Fractions changed.
+C V23 13-OCT-1999 RXK World Tour game added.
+C V22 10-MAY-1999 UXN TRIPLE CHANGED TO TRIO. Log record changed to 
+C                     Todays Trio, Todays Couple, Super Double.
+C                     Super Triple added.
+C V21 18-MAR-1999 RXK Gtyp+gind are in 5+3 bits
+C V20 11-FEB-1997 RXK IMNU=instant supply message, IORD=instant games names 
+C                     request message
+C V19 06-FEB-1997 RXK Instant validation section changed 
+C V18 17-APR-1996 HXK Release of Finland for X.25, Telephone Betting, 
+C                     Instant Pass Thru Phase 1
+C V17 04-JAN-1996 HXK Added TWWCOUPID for Voittaja coupon
+C V16 06-NOV-1995 PXB Super double and Todays Couple added.
+C V15 29-MAY-1995 HXK Added extra info for RAVI changes
+C V14 09-MAY-1995 PXB Added Rank Flag and coupon type id for RAVI 
+C                     (see Ravi Body section). Also note that 65 is game type 
+C                     9, game index 1, game number 5 V5 is game type 9, 
+C                     game index 2, game number 21
+C V13 19-OCT-1994 HXK Set Bingo record size = 2
+C V12 18-OCT-1994 HXK Switched columns and rows in Bingo A,B to speed up 
+C                     transactions, no longer build redundant rows, diags 
+C                     and corners. Added extra detail.
+C V11 02-OCT-1994 HXK Added Bingo transaction record.
+C                     Bingo Game Type = 12
+C V10 17-DEC-1993 HXK CLARIFIED BYTE ORDER IN ODDSET GAMES.
+C V09 23-AUG-1993 GXA Rearanged Toto Select Log record inorder to make room 
+C                     for TWAMT (needed for system bets).
+C V08 26-JUL-1993 GXA Added System Type and Number to Toto Select one board 
+C                     bets.
+C V07 16-JUL-1993 GXA Added SUB ERROR field to transaction header.
+C                     Removed Discount Amt filed from LOTTO, SPORTS, SPEDE 
+C                     and RAVI Wagers, due to need to store larger amounts 
+C                     for Free systems.
+C V06 20-MAY-1993 GXA Adjusted some cash terminal variables to fall on even 
+C                     I2 boundarys.
+C V05 14-MAY-1993 GXA Added Toto Select QP flags by board.
+C V04 12-MAY-1993 GXA Released for Finland Dec Conversion / Oddset.
+C V03 03-MAY-1993 STUART Restored Baseline version
+C V02 31-MAR-1993 HUY Initial release for Vax.
+C V01 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C V03 19-AUG-92 GCAN ADDED KICKER TO TOTO SELECT WAGERS.
+C V02 07-OCT-91 MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX  RELEASED FOR VAX
+C
+C On the VAX, a multi-byte numeric field (such as an I*4 or I*2 number) is
+C stored with the least significant byte of the number in the first byte in
+C memory.  Thus, the I*4 value 12345678(hex) would appear on a tape as:
+C 78-56-34-12.  Multi-byte numeric fields of this type are indicated below by
+C the statement "LSB first".  If the most significant byte appears first (like
+C Concurrent), the statment "MSB first" will appear.
+C
+C
+C
+C
+C >>>>>>>>>>>>>>>>>>>>>>>>>>>> HEADER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+C
+C               (byte # within word)     3  2  1  0
+C SERIAL #   -  4 BYTES         WORD 1  XX XX XX XX     ** LSB first
+C
+C DATE       -  2 BYTES         WORD 2  -- -- XX XX     ** LSB first
+C TER #      -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C AGENT #    -  3 BYTES         WORD 3  -- XX XX XX     ** LSB first
+C REAL # FRAC-  1 BYTE                  XX -- -- -- 
+C
+C TIME       -  3 BYTES         WORD 4  -- XX XX XX     ** LSB first
+C TER STATS  -  1 BYTE                  XX -- -- --
+C
+C CHKSUM     -  2 BYTES         WORD 5  -- -- XX XX
+C ERROR #    -  1 BYTE                  -- XX -- --
+C GAME #     -  7 BITS                  ZX -- -- --     BITS 0...6, MASK='7F'X
+C 5P3FLG     -  1 BIT                   Z- -- -- --     BIT  7, MASK='80'X
+C   ATTENSION! IF GAMTYPE+GAMINDX IS 4+4 BITS THEN 5P3FLG=0
+C              IF GAMTYPE+GAMINDX IS 5+3 BITS THEN 5P3FLG=1
+C
+C STATUS     -  1 BYTE          WORD 6  -- -- -- XX
+C TTYPE      -  4 BITS                  -- -- X- --
+C TRANS NUM  -  4 BITS                  -- -- -X --
+C SIZE       -  4 BITS                  -- X- -- --
+C FILE/INTF  -  4 BITS                  -- -X -- --
+C GAMTYPE    -  4+5P3FLG BITS           XZ -- -- --     4 OR 5 BITS  
+C GAMINDX    -  4-5P3FLG BITS           -Z -- -- --     4 OR 3 BITS
+C
+C TKTID      -  7 BITS          WORD 7  -- -- -- ZX BITS 0..6, MASK='7F'X
+C FRCFLG     -  1 BIT                   -- -- -- ZX BIT 7,     MASK='80'X
+C # FRACTIONS-  1 BYTE                  -- -- XX --
+C SUB ERROR  -  1 BYTE                  -- XX -- --   
+C DATE SOLD  -  1 BYTE                  XX -- -- --
+C (OFFSET)
+C
+C>>>>>>>>>>>>>>>>>>>>>>>> LOTTO / SPORTS <<<<<<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK  -  4 BYTES         WORD 8                  ** LSB first **
+C
+C AMT BET    -  4 BYTES         WORD 9  XX XX XX XX     ** LSB first **
+C
+C START DRAW -  2 BYTES         WORD 10 -- -- XX XX     ** LSB first
+C CASH TER   -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C QP FLAGS   -  2 BYTES         WORD 11 -- -- XX XX     ** LSB first
+C SIMPLE BETS-  2 BYTES                 XX XX -- --     ** LSB first
+C
+C SYSTEM #   -  1 BYTE          WORD 12 -- -- -- XX
+C VALSTS     -  1 BYTE                  -- -- XX --
+C DURATION   -  1 BYTE                  -- XX -- --
+C SYSTYPE    -  1 BYTE                  XX -- -- --
+C
+C # OF MARKS -  1 BYTE          WORD 13 -- -- -- XX
+C BIT FLAGS  -  1 BYTE                  -- -- XX --
+C CDC OFFSET -  1 BYTE                  -- XX -- --     ** EXCH TKT XREF FOR **
+C                                                       ** STATE AUDITORS    **
+C MAX # FRAC -  1 BYTE                  XX -- -- --
+C
+C BANK ID    -  3 BYTES         WORD 14 -- XX XX XX     ** LSB FIRST **
+C WEIGHTED QP(USED FOR VAKIO ONLY)      XX -- -- --
+C
+C BANK #     -  4 BYTES         WORD 15 XX XX XX XX     ** LSB FIRST **
+C
+C SELS/ROW   -  1 BYTE          WORD 16 -- -- -- XX
+C # BOARDS   -  4 BITS                  -- -- -X --   !V31
+C LUCKY NBR  -  4 BITS                  -- -- X- --   !V31 FOR LOTTO
+C TWSPFRG    -  4 BITS                  -- -- X- --   !V31 FOR SPORT
+C TKT CHARGE -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C
+C >>>>>>>>>>>>>> LOTTO/SPORTS CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C KICKER1 #  -  3 BYTES         WORD 17 -- XX XX XX     ** LSB FIRST **
+C KICKER1 DIRECTION - 1 BYTE            XX -- -- --     
+C
+C KICKER2 #  -  3 BYTES         WORD 18 -- XX XX XX     ** LSB FIRST **
+C KICKER2 DIRECTION - 1 BYTE            XX -- -- --     
+C
+C KICKER AMT -  2 BYTES         WORD 19 -- -- XX XX     ** LSB FIRST **
+C KICKER GME -  1 BYTE                  -- XX -- --
+C KICKER DUR -  1 BYTE                  XX -- -- --
+C
+C KICKER BEG -  2 BYTES         WORD 20 -- -- XX XX     ** LSB FIRST **
+C FREE       -  2 BYTES                 XX XX -- --
+C
+C BET DATA    - 44 BYTES        WORD 21-31              ** MSB FIRST **
+C
+C
+C FREE SPACE  - 2 BYTS          WORD 32 -- XX XX XX
+C
+C REC TYPE    - 1 BYTE                  XX -- -- --
+C
+C
+C
+C >>>>>>>>>>>>>> LOTTO/SPORTS CONTINUATION RECORD 2 <<<<<<<<<<<<<<<<<
+C
+C BET DATA    - 60 BYTES        WORD 33-47              ** MSB first
+C
+C FREE SPACE  -  3 BYTES        WORD 48 -- XX XX XX
+C REC TYPE    -  1 BYTE                 XX -- -- --
+C
+C
+C
+C
+C
+C >>>>>>>>>>>>>>>>>>>>>>>>>>> KICKER BODY <<<<<<<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK  -  4 BYTES         WORD 8  XX XX XX XX     ** LSB first **
+C
+C AMT BET    -  2 BYTES         WORD 9  -- -- XX XX     ** LSB first **
+C DISC AMT   -  2 BYTES                 XX XX -- --     ** LSB first **
+C
+C START DRAW -  2 BYTES         WORD 10 -- -- XX XX     ** LSB first **
+C CASH TER   -  2 BYTES                 XX XX -- --     ** LSB first **
+C
+C KICKER1 #  -  3 BYTES         WORD 11 -- XX XX XX     ** LSB FIRST **
+C KICKER1 DIRECTION - 1 BYTE            XX -- -- -- 
+C
+C KICKER2 #  -  3 BYTES         WORD 12 -- XX XX XX     ** LSB FIRST **
+C KICKER2 DIRECTION - 1 BYTE            XX -- -- -- 
+C
+C DURATION   -  1 BYTE          WORD 13 -- -- -- XX
+C VALID STS  -  1 BYTE                  -- -- XX --
+C BIT FLAGS  -  1 BYTE                  -- XX -- --
+C TKT CHARGE -  1 BYTE                  XX -- -- --
+C
+C BANK ID    -  3 BYTES         WORD 14 -- XX XX XX     ** LSB FIRST **
+C # OF BOARDS - 1 BYTE                  XX -- -- --
+C
+C BANK #     -  4 BYTES         WORD 15 XX XX XX XX     ** LSB FIRST **
+C
+C QP FLAGS    - 2 BYTES         WORD 16 -- -- XX XX
+C SYSTEM TYPE - 1 BYTE                  -- XX -- --
+C REC TYPE    - 1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>  KICKER CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C
+C NOSYSTEM KICKER 
+C
+C KICKER3 #  -  3 BYTES         WORD 17 -- XX XX XX     ** LSB FIRST **
+C KICKER3 DIRECTION - 1 BYTE            XX -- -- -- 
+C
+C KICKER4 #  -  3 BYTES         WORD 18 -- XX XX XX     ** LSB FIRST **
+C KICKER4 DIRECTION - 1 BYTE            XX -- -- -- 
+C
+C KICKER5 #  -  3 BYTES         WORD 19 -- XX XX XX     ** LSB FIRST **
+C KICKER5 DIRECTION - 1 BYTE            XX -- -- -- 
+C
+C KICKER6 #  -  3 BYTES         WORD 20 -- XX XX XX     ** LSB FIRST **
+C KICKER6 DIRECTION - 1 BYTE            XX -- -- -- 
+C
+C KICKER7 #  -  3 BYTES         WORD 21 -- XX XX XX     ** LSB FIRST **
+C KICKER7 DIRECTION - 1 BYTE            XX -- -- -- 
+C
+C KICKER8 #  -  3 BYTES         WORD 22 -- XX XX XX     ** LSB FIRST **
+C KICKER8 DIRECTION - 1 BYTE            XX -- -- -- 
+C
+C KICKER9 #  -  3 BYTES         WORD 23 -- XX XX XX     ** LSB FIRST **
+C KICKER9 DIRECTION - 1 BYTE            XX -- -- -- 
+C
+C KICKER10 #  -  3 BYTES        WORD 24 -- XX XX XX     ** LSB FIRST **
+C KICKER10 DIRECTION - 1 BYTE           XX -- -- -- 
+C
+C
+C FULLSYSTEM KICKER 
+C
+C SYSTEM NUMBER    - 2 BYTES    WORD 25 -- -- XX XX  
+C SYSTEM DIRECTION -  1 BYTE            -- XX -- --
+C FREE SPACE  -  1 BYTE                 XX -- -- --
+C
+C BTM OF #1 POSITIONS - 1 BYTE  WORD 26 -- -- -- XX
+C BTM OF #2 POSITIONS - 1 BYTE          -- -- XX --
+C BTM OF #3 POSITIONS - 1 BYTE          -- XX -- --
+C BTM OF #4 POSITIONS - 1 BYTE          XX -- -- -- 
+C
+C BTM OF #5 POSITIONS - 1 BYTE  WORD 27 -- -- -- XX
+C BTM OF #6 POSITIONS - 1 BYTE          -- -- XX --
+C BTM OF #7 POSITIONS - 1 BYTE          -- XX -- --
+C BTM OF #8 POSITIONS - 1 BYTE          XX -- -- --
+C
+C BTM OF #9 POSITIONS - 1 BYTE  WORD 28 -- -- -- XX
+C BTM OF #0 POSITIONS - 1 BYTE          -- -- XX --
+C FREE SPACE  -  2 BYTES                XX XX -- --
+C
+C SERIAL EM      - 3 BYTES      WORD 29 -- XX XX XX     ** LSB first **
+C CHECK DIGIT EM - 1 BYTES              XX -- -- --
+C
+C FREE SPACE  - 8 BYTES         WORDS 30-31
+C
+C FREE SPACE  -  3 BYTES        WORD 32 -- XX XX XX  
+C
+C REC TYPE    -  1 BYTE                 XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>>>>>>>>>>>>> NUMBERS BODY <<<<<<<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK  -  4 BYTES         WORD 8                  ** LSB first
+C
+C AMT BET    -  2 BYTES         WORD 9  -- -- XX XX     ** LSB first
+C DISC AMT   -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C START DRAW -  2 BYTES         WORD 10 -- -- XX XX     ** LSB first
+C CASH TER   -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C NBR BET1   -  2 BYTES         WORD 11 -- -- XX XX     ** LSB first
+C NBR BET2   -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C NBR BET3   -  2 BYTES         WORD 12 -- -- XX XX     ** LSB first
+C AMT BET1   -  2 BYTES                 XX XX -- --     ** LSB first 
+C
+C AMT BET2   -  2 BYTES         WORD 13 -- -- XX XX     ** LSB first
+C AMT BET3   -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C POL BET1   -  1 BYTE          WORD 14 -- -- -- XX
+C POL BET2   -  1 BYTE                  -- -- XX --
+C POL BET3   -  1 BYTE                  -- XX -- --
+C FREE       -  1 BYTE                  XX -- -- --
+C
+C BIT FLAGS  -  1 BYTE          WORD 15 -- -- -- XX
+C NBGTYPE    -  1 BYTE                  -- -- XX --
+C VALSTS     -  1 BYTE                  -- XX -- --
+C DURATION   -  1 BYTE                  XX -- -- --
+C
+C #BETS      -  1 BYTE          WORD 16 -- -- -- XX
+C TKT CHARGE -  1 BYTE                  -- -- XX --
+C QP FLAGS   -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C
+C
+C
+C >>>>>>>>>>>>>>>>>> NUMBERS CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C NBR BET 4  -  2 BYTES         WORD 17 -- -- XX XX     ** LSB first
+C NBR BET 5  -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C NBR BET 6  -  2 BYTES         WORD 18 -- -- XX XX     ** LSB first
+C NBR BET 7  -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C NBR BET 8  -  2 BYTES         WORD 19 -- -- XX XX     ** LSB first
+C NBR BET 9  -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C NBR BET 10 -  2 BYTES         WORD 20 -- -- XX XX     ** LSB FIRST
+C AMT BET 4  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C AMT BET 5  -  2 BYTES         WORD 21 -- -- XX XX     ** LSB first
+C AMT BET 6  -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C AMT BET 7  -  2 BYTES         WORD 22 -- -- XX XX     ** LSB first
+C AMT BET 8  -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C AMT BET 9  -  2 BYTES         WORD 23 -- -- XX XX     ** LSB first
+C AMT BET 10 -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C POL BET 4  -  1 BYTE          WORD 24 -- -- -- XX
+C POL BET 5  -  1 BYTE                  -- -- XX --
+C POL BET 6  -  1 BYTE                  -- XX -- --
+C POL BET 7  -  1 BYTE                  XX -- -- --
+C
+C POL BET 8  -  1 BYTE          WORD 25 -- -- -- XX
+C POL BET 9  -  1 BYTE                  -- -- XX --
+C POL BET 10 -  1 BYTE                  -- XX -- --
+C FREE SPACE -  1 BYTE                  XX -- -- --
+C
+C FREE SPACE -  2 BYTES         WORD 26 XX XX -- --
+C QP FLAGS   -  2 BYTES                 -- -- XX XX
+C
+C FREE SPACE - 20 BYTES         WORD 27-31
+C 
+C FREE SPACE -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C >>>>>>>>>>>>>>>>>>>>>>>>> SCORE WAGER BODY <<<<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK  -  4 BYTES         WORD  8 XX XX XX XX     ** LSB FIRST **
+C 
+C DISC. AMT  -  2 BYTES         WORD  9 -- -- XX XX     ** LSB FIRST **
+C START DRW  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET 1 AMT  -  2 BYTES         WORD 10 -- -- XX XX     ** LSB FIRST **
+C BET 2 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET 3 AMT  -  2 BYTES         WORD 11 -- -- XX XX     ** LSB FIRST **
+C BET 1 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST **
+C
+C BET 2 DATA -  2 BYTES         WORD 12 -- -- XX XX     ** MSB FIRST **
+C BET 3 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST **
+C
+C BANK ID    -  3 BYTES         WORD 13 -- XX XX XX     ** LSB FIRST **
+C # OF BETS  -  1 BYTE                  XX -- -- --
+C
+C BANK #     -  4 BYTES         WORD 14 XX XX XX XX     ** LSB FIRST **
+C
+C SYS TYPE   -  1 BYTE          WORD 15 -- -- -- XX
+C SYSTEM #   -  1 BYTE                  -- -- XX --                      
+C VALSTS     -  1 BYTE                  -- XX -- --
+C BIT FLAGS  -  1 BYTE                  XX -- -- --
+C
+C CASH TER   -  2 BYTES         WORD 16 -- -- XX XX     ** LSB FIRST **
+C TKT CHARGE -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>>>>>>> SCORE CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C
+C BET 4 AMT  -  2 BYTES         WORD 17 -- -- XX XX     ** LSB FIRST
+C BET 5 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET 6 AMT  -  2 BYTES         WORD 18 -- -- XX XX     ** LSB FIRST
+C BET 7 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET 8 AMT  -  2 BYTES         WORD 19 -- -- XX XX     ** LSB FIRST
+C BET 9 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET10 AMT  -  2 BYTES         WORD 20 -- -- XX XX     ** LSB FIRST
+C BET 4 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C 
+C BET 5 DATA -  2 BYTES         WORD 21 -- -- XX XX     ** MSB FIRST
+C BET 6 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C BET 7 DATA -  2 BYTES         WORD 22 -- -- XX XX     ** MSB FIRST
+C BET 8 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C BET 9 DATA -  2 BYTES         WORD 23 -- -- XX XX     ** MSB FIRST
+C BET10 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C FREE SPACE - 32 BYTES         WORDS 24-31
+C
+C FREE SPACE -  3 BYTES         WORD 32 -- XX XX XX 
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C
+C >>>>>>>>>>>>>>>>>>>>> WINNERS TIP WAGER BODY <<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK  -  4 BYTES         WORD  8 XX XX XX XX     ** LSB FIRST **
+C
+C DISC. AMT  -  2 BYTES         WORD  9 -- -- XX XX     ** LSB FIRST **
+C START DRW  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET 1 AMT  -  2 BYTES         WORD 10 -- -- XX XX     ** LSB FIRST **
+C BET 2 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET 3 AMT  -  2 BYTES         WORD 11 -- -- XX XX     ** LSB FIRST **
+C BET 1 ROW  -  1 BYTE                  -- XX -- --                      
+C BET 2 ROW  -  1 BYTE                  XX -- -- --
+C
+C BANK ID    -  3 BYTES         WORD 12 -- XX XX XX     ** LSB FIRST **
+C BET 3 ROW  -  1 BYTE                  XX -- -- --
+C
+C BANK #     -  4 BYTES         WORD 13 XX XX XX XX     ** LSB FIRST **
+C
+C COUPON ID  -  1 BYTE          WORD 14 -- -- -- XX     ** LSB FIRST **
+C FREE SPACE -  1 BYTE                  -- -- XX --
+C # OF BETS  -  1 BYTE                  -- XX -- --
+C SYSTYPE    -  1 BYTE                  XX -- -- --
+C
+C SYSTEM #   -  1 BYTE          WORD 15 -- -- -- XX     ** LSB FIRST **
+C VALSTS     -  1 BYTE                  -- -- XX --
+C CASH TER   -  2 BYTES                 XX XX -- -- 
+C
+C BIT FLAGS  -  1 BYTE          WORD 16 -- -- -- XX
+C TKT CHARGE -  1 BYTE                  -- -- XX --
+C FREE SPACE -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>> WINNERS TIP CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C BET 4 AMT  -  2 BYTES         WORD 17 -- -- XX XX     ** LSB FIRST **
+C BET 5 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET 6 AMT  -  2 BYTES         WORD 18 -- -- XX XX     ** LSB FIRST **
+C BET 7 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET 8 AMT  -  2 BYTES         WORD 19 -- -- XX XX     ** LSB FIRST **
+C BET 9 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET10 AMT  -  2 BYTES         WORD 20 -- -- XX XX     ** LSB FIRST **
+C BET 4 ROW  -  1 BYTE                  -- XX -- --
+C BET 5 ROW  -  1 BYTE                  XX -- -- --
+C
+C BET 6 ROW  -  1 BYTE          WORD 21 -- -- -- XX
+C BET 7 ROW  -  1 BYTE                  -- -- XX --
+C BET 8 ROW  -  1 BYTE                  -- XX -- --
+C BET 9 ROW  -  1 BYTE                  XX -- -- --
+C
+C BET10 ROW  -  1 BYTE          WORD 22 -- -- -- XX
+C FREE SPACE -  3 BYTES                 XX XX XX --
+C
+C FREE SPACE - 36 BYTES         WORDS 23-31
+C
+C FREE SPACE -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>>>>>>>>> TOTO SELECT WAGER BODY <<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK  -  4 BYTES         WORD  8 XX XX XX XX     ** LSB FIRST
+C
+C DISC. AMT  -  2 BYTES         WORD  9 -- -- XX XX     ** LSB FIRST
+C START DRW  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET AMT 1  -  2 BYTES         WORD 10 -- -- XX XX     ** LSB FIRST **  
+C TKT CHARGE -  1 BYTE                  -- XX -- --
+C FREE SPACE -  1 BYTE                  XX -- -- --     
+C
+C ROW DATA 1 - 12 BYTES         WORD 11-13              ** MSB FIRST **
+C 
+C AMT BET    -  4 BYTES         WORD 14 XX XX XX XX     ** LSB FIRST **
+C
+C VALSTS     -  1 BYTE          WORD 15 -- -- -- XX     
+C SYS #      -  1 BYTE                  -- -- XX --
+C BIT FLAGS  -  1 BYTE                  -- XX -- --     
+C SYS TYP    -  1 BYTE                  XX -- -- --     
+C
+C CASH TER   -  2 BYTES         WORD 16 -- -- XX XX     ** LSB FIRST **
+C # BOARDS   -  4 BITS                  -- -X -- --   
+C # ROWS 1   -  4 BITS                  -- X- -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>> TOTO SELECT CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<
+C
+C BET AMT 2  -  2 BYTES         WORD 17 -- -- XX XX     ** LSB FIRST **
+C FREE SPACE -  1 BYTE                  -- XX -- --
+C FREE SPACE -  1 BYTE                  XX -- -- --
+C
+C ROW DATA 2 - 12 BYTES         WORDS 18-20
+C
+C # ROWS 2   -  1 BYTE          WORD 21 -- -- -- XX
+C SYSTYPE    -  1 BYTE                  -- -- XX --
+C SYSTEM #   -  1 BYTE                  -- XX -- --
+C FREE SPACE -  1 BYTE                  XX -- -- --
+C
+C BET AMT 3  -  2 BYTES         WORD 22 -- -- XX XX     ** LSB FIRST **
+C FREE SPACE -  2 BYTES                 XX XX -- --
+C
+C ROW DATA 3 - 12 BYTES         WORDS 23-25
+C
+C # ROWS 3   -  1 BYTE          WORD 26 -- -- -- XX
+C FREE SPACE -  3 BYTES                 XX XX XX --
+C
+C FREE SPACE - 16 BYTES         WORDS 27-30
+C
+C BANK #     -  4 BYTES         WORD 31 XX XX XX XX     ** LSB FIRST **
+C
+C BANK ID    -  3 BYTES         WORD 32 -- XX XX XX     ** LSB FIRST **
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C
+C>>>>>>>>>>>>>>>>>>>>>>>>  BINGO  BODY <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK  -  4 BYTES         WORD 8                  ** LSB first **
+C
+C AMT BET    -  4 BYTES         WORD 9  XX XX XX XX     ** LSB first **
+C
+C START DRAW -  2 BYTES         WORD 10 -- -- XX XX     ** LSB first
+C CASH TER   -  2 BYTES                 XX XX -- --     ** LSB first
+C
+C QP FLAGS   -  2 BYTES         WORD 11 -- -- XX XX     ** LSB first
+C SIMPLE BETS-  2 BYTES                 XX XX -- --     ** LSB first
+C
+C SYSTEM #   -  1 BYTE          WORD 12 -- -- -- XX
+C VALSTS     -  1 BYTE                  -- -- XX --
+C DURATION   -  1 BYTE                  -- XX -- --
+C SYSTYPE    -  1 BYTE                  XX -- -- --
+C
+C # OF MARKS -  1 BYTE          WORD 13 -- -- -- XX
+C BIT FLAGS  -  1 BYTE                  -- -- XX --
+C CDC OFFSET -  1 BYTE                  -- XX -- --     ** EXCH XREF (UNUSED)
+C MAX # FRAC -  1 BYTE                  XX -- -- --
+C
+C BANK ID    -  3 BYTES         WORD 14 -- XX XX XX     ** LSB FIRST **
+C FREE SPACE -  1 BYTE                  XX -- -- --
+C
+C BANK #     -  4 BYTES         WORD 15 XX XX XX XX     ** LSB FIRST **
+C
+C SELS/ROW   -  1 BYTE          WORD 16 -- -- -- XX
+C # BOARDS   -  1 BYTE                  -- -- XX --
+C TKT CHARGE -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C
+C >>>>>>>>>>>>>> BINGO CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C Bingo Fullhouse. The board is stored in 5 bitmaps, two bytes for each column,
+C e.g. 30 bytes for all 3 boards.
+C Example: column 5,10,11,13,14  will be stored as '3610'X,
+C                19,22,23,27,30                 as '48C8'X, 
+C                31,35,42,43,44                 as '3811'X  e.t.c.
+C                                                       
+C
+C FH1         - 10 BYTES        WORD 17 -- -- XX XX     ** COL1 BITMAP **
+C                                    17 XX XX -- --     ** COL2 BITMAP **
+C                               WORD 18 -- -- XX XX     ** COL3 BITMAP **
+C                                    18 XX XX -- --     ** COL4 BITMAP **
+C                               WORD 19 -- -- XX XX     ** COL5 BITMAP **
+C
+C FH2         - 10 BYTES        WORD 19 XX XX -- --     ** COL1 BITMAP **
+C                               WORD 20 -- -- XX XX     ** COL2 BITMAP **
+C                                    20 XX XX -- --     ** COL3 BITMAP **
+C                               WORD 21 -- -- XX XX     ** COL4 BITMAP **
+C                                    21 XX XX -- --     ** COL5 BITMAP **
+C
+C FH3         - 10 BYTES        WORD 22 -- -- XX XX     ** COL1 BITMAP **
+C                                    22 XX XX -- --     ** COL2 BITMAP **
+C                               WORD 23 -- -- XX XX     ** COL3 BITMAP **
+C                                    23 XX XX -- --     ** COL4 BITMAP **
+C                               WORD 24 -- -- XX XX     ** COL5 BITMAP **
+C
+C FREE SPACE  -  2 BYTES        WORD 24 XX XX -- --
+C
+C BINGO SEED  -  4 BYTES        WORD 25 XX XX XX XX     ** LSB first
+C
+C LUCKY NUM   -  4 BYTES        WORD 26 XX XX XX XX     ** LSB first
+C
+C LUCKY BASE  -  2 BYTES        WORD 27 -- -- XX XX     ** LSB first
+C FREE SPACE  -  2 BYTES                XX XX -- --
+C
+C FREE SPACE  -  16 BYTES       WORDS 28-31
+C
+C FREE SPACE  -  3 BYTES        WORD 32 -- XX XX XX
+C REC TYPE    -  1 BYTE                 XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>>>>>>>>>>>> SUPER DOUBLE WAGER BODY <<<<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK  -  4 BYTES         WORD  8 XX XX XX XX     ** LSB FIRST **
+C
+C COUPON ID  -  1 BYTES         WORD  9 -- -- -- XX     ** LSB FIRST **
+C FREE SPACE -  1 BYTE                  -- -- XX --
+C START DRW  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET 1 AMT  -  2 BYTES         WORD 10 -- -- XX XX     ** LSB FIRST **
+C BET 2 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET 3 AMT  -  2 BYTES         WORD 11 -- -- XX XX     ** LSB FIRST **
+C BET 1 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST **
+C
+C BET 2 DATA -  2 BYTES         WORD 12 -- -- XX XX     ** MSB FIRST **
+C BET 3 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST **
+C
+C BANK ID    -  3 BYTES         WORD 13 -- XX XX XX     ** LSB FIRST **
+C # OF BETS  -  1 BYTE                  XX -- -- --
+C
+C BANK #     -  4 BYTES         WORD 14 XX XX XX XX     ** LSB FIRST **
+C
+C SYS TYPE   -  1 BYTE          WORD 15 -- -- -- XX
+C SYSTEM #   -  1 BYTE                  -- -- XX --
+C VALSTS     -  1 BYTE                  -- XX -- --
+C BIT FLAGS  -  1 BYTE                  XX -- -- --
+C
+C CASH TER   -  2 BYTES         WORD 16 -- -- XX XX     ** LSB FIRST **
+C TKT CHARGE -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>>>>>>> SUPER DOUBLE CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C
+C BET 4 AMT  -  2 BYTES         WORD 17 -- -- XX XX     ** LSB FIRST
+C BET 5 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET 6 AMT  -  2 BYTES         WORD 18 -- -- XX XX     ** LSB FIRST
+C BET 7 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET 8 AMT  -  2 BYTES         WORD 19 -- -- XX XX     ** LSB FIRST
+C BET 9 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET10 AMT  -  2 BYTES         WORD 20 -- -- XX XX     ** LSB FIRST
+C BET 4 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C BET 5 DATA -  2 BYTES         WORD 21 -- -- XX XX     ** MSB FIRST
+C BET 6 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C BET 7 DATA -  2 BYTES         WORD 22 -- -- XX XX     ** MSB FIRST
+C BET 8 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C BET 9 DATA -  2 BYTES         WORD 23 -- -- XX XX     ** MSB FIRST
+C BET10 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C BET11 AMT  -  2 BYTES         WORD 24 -- -- XX XX     ** LSB FIRST
+C BET12 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET11 DATA -  2 BYTES         WORD 25 -- -- XX XX     ** LSB FIRST
+C BET12 DATA -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C FREE SPACE - 32 BYTES         WORDS 26-31
+C
+C FREE SPACE -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C
+C >>>>>>>>>>>>>>>>>>>>>>>>>  TODAY'S COUPLE WAGER BODY <<<<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK  -  4 BYTES         WORD  8 XX XX XX XX     ** LSB FIRST **
+C
+C COUPON ID  -  1 BYTES         WORD  9 -- -- -- XX     ** LSB FIRST **
+C FREE SPACE -  1 BYTE                  -- -- XX --
+C START DRW  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET 1 AMT  -  2 BYTES         WORD 10 -- -- XX XX     ** LSB FIRST **
+C BET 2 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET 3 AMT  -  2 BYTES         WORD 11 -- -- XX XX     ** LSB FIRST **
+C BET 1 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST **
+C
+C BET 2 DATA -  2 BYTES         WORD 12 -- -- XX XX     ** MSB FIRST **
+C BET 3 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST **
+C
+C BANK ID    -  3 BYTES         WORD 13 -- XX XX XX     ** LSB FIRST **
+C # OF BETS  -  1 BYTE                  XX -- -- --
+C
+C BANK #     -  4 BYTES         WORD 14 XX XX XX XX     ** LSB FIRST **
+C
+C SYS TYPE   -  1 BYTE          WORD 15 -- -- -- XX
+C SYSTEM #   -  1 BYTE                  -- -- XX --
+C VALSTS     -  1 BYTE                  -- XX -- --
+C BIT FLAGS  -  1 BYTE                  XX -- -- --
+C
+C CASH TER   -  2 BYTES         WORD 16 -- -- XX XX     ** LSB FIRST **
+C TKT CHARGE -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>>>>>>> TODAY'S COUPLE CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C
+C BET 4 AMT  -  2 BYTES         WORD 17 -- -- XX XX     ** LSB FIRST
+C BET 5 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET 6 AMT  -  2 BYTES         WORD 18 -- -- XX XX     ** LSB FIRST
+C BET 7 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET 8 AMT  -  2 BYTES         WORD 19 -- -- XX XX     ** LSB FIRST
+C BET 9 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET10 AMT  -  2 BYTES         WORD 20 -- -- XX XX     ** LSB FIRST
+C BET 4 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C BET 5 DATA -  2 BYTES         WORD 21 -- -- XX XX     ** MSB FIRST
+C BET 6 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C BET 7 DATA -  2 BYTES         WORD 22 -- -- XX XX     ** MSB FIRST
+C BET 8 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C BET 9 DATA -  2 BYTES         WORD 23 -- -- XX XX     ** MSB FIRST
+C BET10 DATA -  2 BYTES                 XX XX -- --     ** MSB FIRST
+C
+C BET11 AMT  -  2 BYTES         WORD 24 -- -- XX XX     ** LSB FIRST
+C BET12 AMT  -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C BET11 DATA -  2 BYTES         WORD 25 -- -- XX XX     ** LSB FIRST
+C BET12 DATA -  2 BYTES                 XX XX -- --     ** LSB FIRST
+C
+C FREE SPACE - 32 BYTES         WORDS 26-31
+C
+C FREE SPACE -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C >>>>>>>>>>>>>>>>>>>>> SUPERSCORE WAGER BODY <<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK    -  4 BYTES         WORD  8 XX XX XX XX     ** LSB FIRST **
+C
+C DISC. AMT    -  2 BYTES         WORD  9 -- -- XX XX     ** LSB FIRST **
+C DRAW         -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET AMOUNT   -  3 BYTES         WORD 10 -- XX XX XX     ** LSB FIRST **
+C SYSTYPE      -  1 BYTE                  XX -- -- --
+C
+C # OF HOME MARKS 1 - 4 BITS      WORD 11 -- -- -- X-
+C # OF AWAY MARKS 1 - 4 BITS              -- -- -- -X
+C # OF HOME MARKS 2 - 4 BITS              -- -- X- --
+C # OF AWAY MARKS 2 - 4 BITS              -- -- -X --
+C # OF HOME MARKS 3 - 4 BITS              -- X- -- --
+C # OF AWAY MARKS 3 - 4 BITS              -- -X -- --
+C BET DATA 1   -  1 BYTE                  XX -- -- --
+C
+C BET DATA 2   -  1 BYTE          WORD 12 -- -- -- XX
+C BET DATA 3   -  1 BYTE                  -- -- XX -- 
+C BET DATA 4   -  1 BYTE                  -- XX -- -- 
+C BET DATA 5   -  1 BYTE                  XX -- -- -- 
+
+C BET DATA 6   -  1 BYTE          WORD 13 -- -- -- XX
+C VALSTS       -  1 BYTE                  -- -- XX --
+C CASH TER     -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BANK ID      -  3 BYTES         WORD 14 -- XX XX XX     ** LSB FIRST ** 
+C FREE SPACE   -  1 BYTE                  XX -- -- --
+C
+C BANK #       -  4 BYTES         WORD 15 XX XX XX XX     ** LSB FIRST **
+C
+C BIT FLAGS    -  1 BYTE          WORD 16 -- -- -- XX
+C TKT CHARGE   -  1 BYTE                  -- -- XX --
+C COUPON ID    -  1 BYTE                  -- XX -- -- 
+C REC TYPE     -  1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>> SUPERSCORE CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C SYSTEM NUMBER-  4 BYTES         WORD 17 XX XX XX XX     ** LSB FIRST **
+C
+C BET DATA 7   -  1 BYTE          WORD 18 -- -- -- XX  
+C BET DATA 8   -  1 BYTE                  -- -- XX --
+C BET DATA 9   -  1 BYTE                  -- XX -- --  
+C BET DATA 10  -  1 BYTE                  XX -- -- --
+C
+C BET DATA 11  -  1 BYTE          WORD 19 -- -- -- XX  
+C BET DATA 12  -  1 BYTE                  -- -- XX --
+C BET DATA 13  -  1 BYTE                  -- XX -- --  
+C BET DATA 14  -  1 BYTE                  XX -- -- --
+C
+C BET DATA 15  -  1 BYTE          WORD 20 -- -- -- XX  
+C BET DATA 16  -  1 BYTE                  -- -- XX --
+C BET DATA 17  -  1 BYTE                  -- XX -- --  
+C BET DATA 18  -  1 BYTE                  XX -- -- --
+C
+C BET DATA 19  -  1 BYTE          WORD 21 -- -- -- XX  
+C BET DATA 20  -  1 BYTE                  -- -- XX --
+C BET DATA 21  -  1 BYTE                  -- XX -- --  
+C BET DATA 22  -  1 BYTE                  XX -- -- --
+C
+C BET DATA 23  -  1 BYTE          WORD 22 -- -- -- XX  
+C BET DATA 24  -  1 BYTE                  -- -- XX --
+C BET DATA 25  -  1 BYTE                  -- XX -- --  
+C BET DATA 26  -  1 BYTE                  XX -- -- --
+
+C BET DATA 27  -  1 BYTE          WORD 23 -- -- -- XX  
+C BET DATA 28  -  1 BYTE                  -- -- XX --
+C BET DATA 29  -  1 BYTE                  -- XX -- --  
+C BET DATA 30  -  1 BYTE                  XX -- -- --
+C
+C FREE SPACE   - 32 BYTES         WORDS 24-31
+C
+C FREE SPACE   -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE     -  1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>>>>>>>> TODAYS TRIO WAGER BODY <<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK    -  4 BYTES         WORD  8 XX XX XX XX     ** LSB FIRST **
+C
+C DISC. AMT    -  2 BYTES         WORD  9 -- -- XX XX     ** LSB FIRST **
+C DRAW         -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET AMOUNT   -  3 BYTES         WORD 10 -- XX XX XX     ** LSB FIRST **
+C SYSTYPE      -  1 BYTE                  XX -- -- --
+C
+C # OF MARKS A -  1 BYTE          WORD 11 -- -- -- XX
+C # OF MARKS B -  1 BYTE                  -- -- XX --
+C # OF MARKS C -  1 BYTE                  -- XX -- --
+C BET DATA 1   -  1 BYTE                  XX -- -- --
+C
+C BET DATA 2   -  1 BYTE          WORD 12 -- -- -- XX
+C BET DATA 3   -  1 BYTE                  -- -- XX -- 
+C CASH TER     -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BANK ID      -  3 BYTES         WORD 13 -- XX XX XX     ** LSB FIRST **
+C VALSTS       -  1 BYTE                  XX -- -- --
+C
+C BANK #       -  4 BYTES         WORD 14 XX XX XX XX     ** LSB FIRST **
+C
+C SYSTEM NUMBER-  2 BYTES         WORD 15 -- -- XX XX     ** LSB FIRST ** 
+C FREE SPACE   -  2 BYTES         WORD 15 XX XX -- --
+C
+C BIT FLAGS    -  1 BYTE          WORD 16 -- -- -- XX
+C TKT CHARGE   -  1 BYTE                  -- -- XX --
+C COUPON ID    -  1 BYTE                  -- XX -- -- 
+C REC TYPE     -  1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>> TODAYS TRIO CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C BET DATA 4   -  1 BYTE          WORD 17 -- -- -- XX  
+C BET DATA 5   -  1 BYTE                  -- -- XX --
+C BET DATA 6   -  1 BYTE                  -- XX -- --  
+C BET DATA 7   -  1 BYTE                  XX -- -- --
+C
+C BET DATA 8   -  1 BYTE          WORD 18 -- -- -- XX  
+C BET DATA 9   -  1 BYTE                  -- -- XX --
+C BET DATA 10  -  1 BYTE                  -- XX -- --  
+C BET DATA 11  -  1 BYTE                  XX -- -- --
+C
+C BET DATA 12  -  1 BYTE          WORD 19 -- -- -- XX  
+C BET DATA 13  -  1 BYTE                  -- -- XX --
+C BET DATA 14  -  1 BYTE                  -- XX -- --  
+C BET DATA 15  -  1 BYTE                  XX -- -- --
+C
+C BET DATA 16  -  1 BYTE          WORD 20 -- -- -- XX  
+C BET DATA 17  -  1 BYTE                  -- -- XX --
+C BET DATA 18  -  1 BYTE                  -- XX -- --  
+C BET DATA 19  -  1 BYTE                  XX -- -- --
+C
+C BET DATA 20  -  1 BYTE          WORD 21 -- -- -- XX  
+C BET DATA 21  -  1 BYTE                  -- -- XX --
+C BET DATA 22  -  1 BYTE                  -- XX -- --  
+C BET DATA 23  -  1 BYTE                  XX -- -- --
+C
+C BET DATA 24  -  1 BYTE          WORD 22 -- -- -- XX  
+C BET DATA 25  -  1 BYTE                  -- -- XX --
+C BET DATA 26  -  1 BYTE                  -- XX -- --  
+C BET DATA 27  -  1 BYTE                  XX -- -- --
+C
+C FREE SPACE   - 36 BYTES         WORDS 23-31
+C
+C FREE SPACE   -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE     -  1 BYTE                  XX -- -- --
+C
+C
+C
+C >>>>>>>>>>>>>>>>>>>>> SUPER TRIPLE WAGER BODY <<<<<<<<<<<<<<<<<<<<<
+C
+C
+C BACK LINK    -  4 BYTES         WORD  8 XX XX XX XX     ** LSB FIRST **
+C
+C DISC. AMT    -  2 BYTES         WORD  9 -- -- XX XX     ** LSB FIRST **
+C DRAW         -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BET AMOUNT   -  3 BYTES         WORD 10 -- XX XX XX     ** LSB FIRST **
+C SYSTYPE      -  1 BYTE                  XX -- -- --
+C
+C # OF MARKS 1 -  1 BYTE          WORD 11 -- -- -- XX
+C # OF MARKS 2 -  1 BYTE                  -- -- XX --
+C # OF MARKS 3 -  1 BYTE                  -- XX -- --
+C BET DATA 1   -  1 BYTE                  XX -- -- --
+C
+C BET DATA 2   -  1 BYTE          WORD 12 -- -- -- XX
+C BET DATA 3   -  1 BYTE                  -- -- XX -- 
+C CASH TER     -  2 BYTES                 XX XX -- --     ** LSB FIRST **
+C
+C BANK ID      -  3 BYTES         WORD 13 -- XX XX XX     ** LSB FIRST **
+C VALSTS       -  1 BYTE                  XX -- -- --
+C
+C BANK #       -  4 BYTES         WORD 14 XX XX XX XX     ** LSB FIRST **
+C
+C SYSTEM NUMBER-  2 BYTES         WORD 15 -- -- XX XX     ** LSB FIRST ** 
+C FREE SPACE   -  2 BYTES         WORD 15 XX XX -- --
+C
+C BIT FLAGS    -  1 BYTE          WORD 16 -- -- -- XX
+C TKT CHARGE   -  1 BYTE                  -- -- XX --
+C COUPON ID    -  1 BYTE                  -- XX -- -- 
+C REC TYPE     -  1 BYTE                  XX -- -- --
+C
+C
+C >>>>>>>>>>>>>> SUPER TRIPLE CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<<
+C
+C BET DATA 4   -  1 BYTE          WORD 17 -- -- -- XX  
+C BET DATA 5   -  1 BYTE                  -- -- XX --
+C BET DATA 6   -  1 BYTE                  -- XX -- --  
+C BET DATA 7   -  1 BYTE                  XX -- -- --
+C
+C BET DATA 8   -  1 BYTE          WORD 18 -- -- -- XX  
+C BET DATA 9   -  1 BYTE                  -- -- XX --
+C BET DATA 10  -  1 BYTE                  -- XX -- --  
+C BET DATA 11  -  1 BYTE                  XX -- -- --
+C
+C BET DATA 12  -  1 BYTE          WORD 19 -- -- -- XX  
+C BET DATA 13  -  1 BYTE                  -- -- XX --
+C BET DATA 14  -  1 BYTE                  -- XX -- --  
+C BET DATA 15  -  1 BYTE                  XX -- -- --
+C
+C BET DATA 16  -  1 BYTE          WORD 20 -- -- -- XX  
+C BET DATA 17  -  1 BYTE                  -- -- XX --
+C BET DATA 18  -  1 BYTE                  -- XX -- --  
+C FREE SPACE   -  1 BYTE                  XX -- -- --
+C
+C FREE SPACE   - 44 BYTES         WORDS 21-31
+C
+C FREE SPACE   -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE     -  1 BYTE                  XX -- -- --
+C
+C >>>>>>>>>>>>>>>>>>>>>>>>>> VALIDATION BODY <<<<<<<<<<<<<<<<<<<<<<<
+C
+C BET SERIAL  -  4 BYTES        WORD 8                  ** LSB first **
+C
+C EXCH SERIAL -  4 BYTES        WORD 9                  ** LSB first **
+C
+C AMOUNT PAY  -  4 BYTES        WORD 10                 ** LSB first **
+C
+C KICKER PAY  -  4 BYTES        WORD 11                 ** LSB first **
+C
+C REFUND AMT  -  4 BYTES        WORD 12                 ** LSB first **
+C
+C WAGER CDC   -  2 BYTES        WORD 13 -- -- XX XX     ** LSB first **
+C WINSEL CDC  -  2 BYTES                XX XX -- --     ** LSB first **
+C
+C WINS.CDC KIK-  2 BYTES        WORD 14 -- -- XX XX     ** LSB FIRST **
+C FREE SPACE  -  2 BYTES                XX XX -- --
+C
+C WAGER TER   -  2 BYTES        WORD 15 -- -- XX XX     ** LSB first **
+C FREE SPACE  -  1 BYTE                 -- XX -- --
+C VAL TYPE    -  1 BYTE                 XX -- -- --
+C
+C VAL CODE    -  1 BYTE         WORD 16 -- -- -- XX
+C KICK GME #  -  1 BYTE                 -- -- XX --
+C VAL STATUS  -  1 BYTE                 -- XX -- --
+C REC TYPE    -  1 BYTE                 XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>>>>>>> VALIDATION CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<
+C
+C
+C BANK ID     -  3 BYTES        WORD 17 -- XX XX XX     ** LSB FIRST **
+C FREE SPACE  -  1 BYTE                 XX -- -- --
+C
+C BANK #      -  4 BYTES        WORD 18 XX XX XX XX     ** LSB FIRST **
+C
+C GAM OP AMT  -  4 BYTES        WORD 19 XX XX XX XX     !V27
+C KIK OP AMT  -  4 BYTES        WORD 20 XX XX XX XX     !V27
+C
+C FREE SPACE  - 40 BYTES        WORD 21-31              !V27
+C
+C FREE SPACE  -  3 BYTES        WORD 32 -- XX XX XX
+C REC TYPE    -  1 BYTE                 XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>>>>>>>>>>> PASSIVE VALIDATION BODY <<<<<<<<<<<<<<<<<<<<<<<<<<
+C >>>>>>>>>>>>>>>>>>>>>> PASSIVE UNSOLD TICKETS BODY <<<<<<<<<<<<<<<<<<<<<<<<
+C
+C # TICKETS   -  1 BYTE         WORD 8  X- -- -- --     TPTCK
+C RETURN TYPE                            X              TPRETYP
+C LOT NUMBER  -  3 BYTES                -- XX XX XX     TPNUM1
+C
+C KEY NUMBER  -  4 BYTES        WORD 9  XX XX XX XX     TPKEY1
+C
+C AMOUNT PAY  -  4 BYTES        WORD 10 XX XX XX XX     TPPAY1
+C
+C EMISSION    -  2 BYTES        WORD 11 -- -- XX XX     TPEMIS1
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER1
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN1
+C LOT NUMBER  -  3 BYTES        WORD 12 -- XX XX XX     TPNUM2
+C FREE        -  1 BYTE                 XX -- -- --     FREE
+C
+C KEY NUMBER  -  4 BYTES        WORD 13 XX XX XX XX     TPKEY2
+C
+C AMOUNT PAY  -  4 BYTES        WORD 14 XX XX XX XX     TPPAY2
+C
+C EMISSION    -  2 BYTES        WORD 15 -- -- XX XX     TPEMIS2
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER2
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN2
+C
+C OFFLINE TER -  2 BYTE         WORD 16 -- -- XX XX     TPOFFTER
+C VAL STATUS  -  4 BITS                 -- -X -- --     TPSTS1
+C VAL STATUS  -  4 BITS                 -- X- -- --     TPSTS2
+C REC TYP     -  1 BYTES                XX -- -- --
+C
+C
+C---------------- PASSIVE CONTINUATION RECORD 1 ---------------
+C
+C KEY NUMBER  -  4 BYTES        WORD 17 XX XX XX XX     TPKEY3
+C
+C AMOUNT PAY  -  4 BYTES        WORD 18 XX XX XX XX     TPPAY3
+C
+C EMISSION    -  2 BYTES        WORD 19 -- -- XX XX     TPEMIS3
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER3
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN3
+C KEY NUMBER  -  4 BYTES        WORD 20 XX XX XX XX     TPKEY4
+C
+C AMOUNT PAY  -  4 BYTES        WORD 21 XX XX XX XX     TPPAY4
+C
+C EMISSION    -  2 BYTES        WORD 22 -- -- XX XX     TPEMIS4
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER4
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN4
+C KEY NUMBER  -  4 BYTES        WORD 23 XX XX XX XX     TPKEY5
+C
+C AMOUNT PAY  -  4 BYTES        WORD 24 XX XX XX XX     TPPAY5
+C
+C EMISSION    -  2 BYTES        WORD 25 -- -- XX XX     TPEMIS5
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER5
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN5
+C KEY NUMBER  -  4 BYTES        WORD 26 XX XX XX XX     TPKEY6
+C
+C AMOUNT PAY  -  4 BYTES        WORD 27 XX XX XX XX     TPPAY6
+C
+C EMISSION    -  2 BYTES        WORD 28 -- -- XX XX     TPEMIS6
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER6
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN6
+C LOT NUMBER  -  3 BYTES        WORD 29 -- XX XX XX     TPNUM3
+C VAL STATUS  -  4 BITS                 -X -- -- --     TPSTS3
+C VAL STATUS  -  4 BITS                 X- -- -- --     TPSTS4
+C
+C LOT NUMBER  -  3 BYTES        WORD 30 -- XX XX XX     TPNUM4
+C VAL STATUS  -  4 BITS                 -X -- -- --     TPSTS5
+C VAL STATUS  -  4 BITS                 X- -- -- --     TPSTS6
+C
+C LOT NUMBER  -  3 BYTES        WORD 30 -- XX XX XX     TPNUM4
+C VAL STATUS  -  4 BITS                 -X -- -- --     TPSTS5
+C VAL STATUS  -  4 BITS                 X- -- -- --     TPSTS6
+C
+C LOT NUMBER  -  3 BYTES        WORD 31 -- XX XX XX     TPNUM5
+C FREE SPACE  -  1 BYTE                 XX -- -- --
+C
+C LOT NUMBER  -  3 BYTES        WORD 32 -- XX XX XX     TPNUM6
+C REC TYPE    -  1 BYTE                 XX -- -- --
+C
+C
+C---------------- PASSIVE CONTINUATION RECORD 2 ---------------
+C
+C KEY NUMBER  -  4 BYTES        WORD 33 XX XX XX XX     TPKEY7
+C
+C AMOUNT PAY  -  4 BYTES        WORD 34 XX XX XX XX     TPPAY7
+C
+C EMISSION    -  2 BYTES        WORD 35 -- -- XX XX     TPEMIS7
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER7
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN7
+C KEY NUMBER  -  4 BYTES        WORD 36 XX XX XX XX     TPKEY8
+C
+C AMOUNT PAY  -  4 BYTES        WORD 37 XX XX XX XX     TPPAY8
+C
+C EMISSION    -  2 BYTES        WORD 38 -- -- XX XX     TPEMIS8
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER8
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN8
+C KEY NUMBER  -  4 BYTES        WORD 39 XX XX XX XX     TPKEY9
+C
+C AMOUNT PAY  -  4 BYTES        WORD 40 XX XX XX XX     TPPAY9
+C
+C EMISSION    -  2 BYTES        WORD 41 -- -- XX XX     TPEMIS9
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER9
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN9
+C KEY NUMBER  -  4 BYTES        WORD 42 XX XX XX XX     TPKEY10
+C
+C AMOUNT PAY  -  4 BYTES        WORD 43 XX XX XX XX     TPPAY10
+C
+C EMISSION    -  2 BYTES        WORD 41 -- -- XX XX     TPEMIS9
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER9
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN9
+C KEY NUMBER  -  4 BYTES        WORD 42 XX XX XX XX     TPKEY10
+C
+C AMOUNT PAY  -  4 BYTES        WORD 43 XX XX XX XX     TPPAY10
+C
+C EMISSION    -  2 BYTES        WORD 44 -- -- XX XX     TPEMIS10
+C SERIE       -  1 BYTE                 -- XX -- --     TPSER10
+C TENTH       -  1 BYTE                 XX -- -- --     TPTEN10
+C LOT NUMBER  -  3 BYTES        WORD 45 -- XX XX XX     TPNUM7
+C VAL STATUS  -  4 BITS                 -X -- -- --     TPSTS7
+C VAL STATUS  -  4 BITS                 X- -- -- --     TPSTS8
+C
+C LOT NUMBER  -  3 BYTES        WORD 46 -- XX XX XX     TPNUM8
+C VAL STATUS  -  4 BITS                 -X -- -- --     TPSTS9
+C VAL STATUS  -  4 BITS                 X- -- -- --     TPSTS10
+C
+C LOT NUMBER  -  3 BYTES        WORD 47 -- XX XX XX     TPNUM9
+C FREE SPACE  -  1 BYTE                 XX -- -- --
+C
+C LOT NUMBER  -  3 BYTES        WORD 48 -- XX XX XX     TPNUM10
+C REC TYPE    -  1 BYTE                 XX -- -- --
+C
+C
+C >>>>>>>>>>>>>>>>>>>>>>>>>> INSTANTS BODY - all instant types <<<<<<<<<<<<<<<<
+C
+C CROSS REF# -  4 BYTES         WORD 7  XX XX XX XX     TIXRF
+C
+C .......................... INSTANT VALIDATION TYPE ....................
+C                                (TITYP = IVAL)
+C
+C VALID.MODE -  2 BYTES         WORD 8  -- -- XX XX     TIVALM
+C PAY MODE   -  2 BYTES                 XX XX -- --     TIVALT
+C
+C ENVELOPE ID-  4 BYTES         WORD 9  XX XX XX XX     TIVENV
+C
+C VAL AGENT# -  3 BYTES         WORD 10 -- XX XX XX     TIVAGT
+C VAL TYPE   -  1 BYTES                 XX -- -- --     TIVTYP
+C
+C 1 STATUS   -  1 BYTE          WORD 11 -- -- -- XX     TISTS1
+C 1 PACK #   -  3 BYTES                 XX XX XX --     TIPCK1
+C               
+C 1 VIRN #   -  4 BYTES         WORD 12  XX XX XX XX    TIVRN1
+C
+C 1 LATEX    -  2 BYTE          WORD 13 -- -- XX XX     TILTX1
+C 1 GAME #   -1.5 BYTES                 -X XX -- --     TIGAM1
+C 1 PACK STS - .5 BYTE                  X- -- -- --     TIPCKSTS1
+C                                            
+C 1 GVT TIME -  2 BYTES         WORD 14 -- -- XX XX     TITIM1 
+C 1 GVT CDC  -  2 BYTES                 XX XX -- --     TICDC1
+C
+C 1 PRIZE    -  4 BYTE          WORD 15 XX XX XX XX     TIPRZ1
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C # OF VAL   - .5 BYTE                  -- -X -- --     TIBCH
+C TKT IND    - .5 BYTE                  -- X- -- --     TIIND
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C-------------- INSTANT VALIDATION CONTINUATION RECORD 1 ----------------
+C
+C 2 STATUS   -  1 BYTE          WORD 17 -- -- -- XX     TISTS1
+C 2 PACK #   -  3 BYTES                 XX XX XX --     TIPCK1 
+C               
+C 2 VIRN #   -  4 BYTES         WORD 18 XX XX XX XX     TIVRN1 
+C
+C 2 LATEX    -  2 BYTE          WORD 19 -- -- XX XX     TILTX1
+C 2 GAME #   -1.5 BYTES                 -X XX -- --     TIGAM1
+C 2 PACK STS - .5 BYTE                  X- -- -- --     TIPCKSTS1
+C
+C 2 GVT TIME -  2 BYTES         WORD 20 -- -- XX XX     TITIM1 
+C 2 GVT CDC  -  2 BYTES                 XX XX -- --     TICDC1
+C
+C 2 PRIZE    -  4 BYTE          WORD 21 XX XX XX XX     TIPRZ1
+C
+C 3 STATUS   -  1 BYTE          WORD 22 -- -- -- XX     TISTS1 
+C 3 PACK #   -  3 BYTES                 XX XX XX --     TIPCK1 
+C               
+C 3 VIRN #   -  4 BYTES         WORD 23 XX XX XX XX     TIVRN1 
+C
+C 3 LATEX    -  2 BYTES         WORD 24 -- -- XX XX     TILTX1 
+C 3 GAME #   -1.5 BYTES                 -X XX -- --     TIGAM1
+C 3 PACK STS - .5 BYTE                  X- -- -- --     TIPCKSTS1
+C
+C 3 GVT TIME -  2 BYTES         WORD 25 -- -- XX XX     TITIM1 
+C 3 GVT CDC  -  2 BYTES                 XX XX -- --     TICDC1
+C
+C 3 PRIZE    -  4 BYTES         WORD 26 XX XX XX XX     TIPRZ1
+C
+C 4 STATUS   -  1 BYTE          WORD 27 -- -- -- XX     TISTS1 
+C 4 PACK #   -  3 BYTES                 XX XX XX --     TIPCK1 
+C               
+C 4 VIRN #   -  4 BYTES         WORD 28 XX XX XX XX     TIVRN1 
+C
+C 4 LATEX    -  2 BYTES         WORD 29 -- -- XX XX     TILTX1 
+C 4 GAME #   -1.5 BYTES                 -X XX -- --     TIGAM1
+C 4 PACK STS - .5 BYTE                  X- -- -- --     TIPCKSTS1
+C
+C 4 GVT TIME -  2 BYTES         WORD 30 -- -- XX XX     TITIM1 
+C 4 GVT CDC  -  2 BYTES                 XX XX -- --     TICDC1
+C
+C 4 PRIZE    -  4 BYTES         WORD 31 XX XX XX XX     TIPRZ1
+C
+C FREE       -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C-------------- INSTANT VALIDATION CONTINUATION RECORD 2 ----------------
+C
+C 5 STATUS   -  1 BYTE          WORD 33 -- -- -- XX     TISTS1 
+C 5 PACK #   -  3 BYTES                 XX XX XX --     TIPCK1 
+C               
+C 5 VIRN #   -  4 BYTES         WORD 34 XX XX XX XX     TIVRN1 
+C
+C 5 LATEX    -  2 BYTES         WORD 35 -- -- XX XX     TILTX1 
+C 5 GAME #   -1.5 BYTES                 -X XX -- --     TIGAM1
+C 5 PACK STS - .5 BYTE                  X- -- -- --     TIPCKSTS1
+C
+C 5 GVT TIME -  2 BYTES         WORD 36 -- -- XX XX     TITIM1 
+C 5 GVT CDC  -  2 BYTES                 XX XX -- --     TICDC1
+C
+C 5 PRIZE    -  4 BYTES         WORD 37 XX XX XX XX     TIPRZ1
+C
+C 6 STATUS   -  1 BYTE          WORD 38 -- -- -- XX     TISTS1 
+C 6 PACK #   -  3 BYTES                 XX XX XX --     TIPCK1 
+C               
+C 6 VIRN #   -  4 BYTES         WORD 39 XX XX XX XX     TIVRN1 
+C
+C 6 LATEX    -  2 BYTES         WORD 40 -- -- XX XX     TILTX1 
+C 6 GAME #   -1.5 BYTES                 -X XX -- --     TIGAM1
+C 6 PACK STS - .5 BYTE                  X- -- -- --     TIPCKSTS1
+C
+C 6 GVT TIME -  2 BYTES         WORD 41 -- -- XX XX     TITIM1 
+C 6 GVT CDC  -  2 BYTES                 XX XX -- --     TICDC1
+C
+C 6 PRIZE    -  4 BYTES         WORD 42 XX XX XX XX     TIPRZ1
+C
+C 7 STATUS   -  1 BYTE          WORD 43 -- -- -- XX     TISTS1 
+C 7 PACK #   -  3 BYTES                 XX XX XX --     TIPCK1 
+C               
+C 7 VIRN #   -  4 BYTES         WORD 44 XX XX XX XX     TIVRN1 
+C
+C 7 LATEX    -  2 BYTES         WORD 45 -- -- XX XX     TILTX1 
+C 7 GAME #   -1.5 BYTES                 -X XX -- --     TIGAM1
+C 7 PACK STS - .5 BYTE                  X- -- -- --     TIPCKSTS1
+C
+C 7 GVT TIME -  2 BYTES         WORD 46 -- -- XX XX     TITIM1 
+C 7 GVT CDC  -  2 BYTES                 XX XX -- --     TICDC1
+C
+C 7 PRIZE    -  4 BYTE          WORD 47 XX XX XX XX     TIPRZ1
+C
+C FREE       -  3 BYTES         WORD 48 -- XX XX XX
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C .......................... INSTANT ISSUANCE REQUEST TYPE ....................
+C                                (TITYP = IISS)
+C
+C CONCESSIONNAIRE # -  4 BYTES  WORD 8  XX XX XX XX     TIREP
+C
+C FREE SPACE        -  4 BYTES  WORD 9  -- -- -- --
+C
+C NO OF BOOKS       -  1 BYTE   WORD 10 -- -- -- XX     TINUM
+C FREE SPACE        -  3 BYTES          XX XX XX
+C
+C 1 GAME NO         -  2 BYTES  WORD 11 -- -- XX XX     TIGAM
+C 1 FREE SPACE      -  2 BYTES          XX XX -- --
+C
+C 1 BOOK NO         -  3 BYTES  WORD 12 -- XX XX XX     TIPCK
+C 1 BOOK RESULT     -  1 BYTE           XX -- -- --     TIRES
+C
+C 2 GAME NO         -  2 BYTES  WORD 13 -- -- XX XX     TIGAM
+C 2 FREE SPACE      -  2 BYTES          XX XX -- --
+C
+C 2 BOOK NO         -  3 BYTES  WORD 14 -- XX XX XX     TIPCK
+C 2 BOOK RESULT     -  1 BYTE           XX -- -- --     TIRES
+C
+C 3 GAME NO         -  2 BYTES  WORD 15 -- -- XX XX     TIGAM
+C 3 FREE SPACE      -  2 BYTES          XX XX -- --
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C-------------- INSTANT ISSUANCE CONTINUATION RECORD 1 ----------------
+C
+C 3 BOOK NO         -  3 BYTES  WORD 17 -- XX XX XX     TIPCK
+C 3 BOOK RESULT     -  1 BYTE           XX -- -- --     TIRES
+C
+C 4 GAME NO         -  2 BYTES  WORD 18 -- -- XX XX     TIGAM
+C 4 FREE SPACE      -  2 BYTES          XX XX -- --
+C
+C 4 BOOK NO         -  3 BYTES  WORD 19 -- XX XX XX     TIPCK
+C 4 BOOK RESULT     -  1 BYTE           XX -- -- --     TIRES
+C
+C 5 GAME NO         -  2 BYTES  WORD 20 -- -- XX XX     TIGAM
+C 5 FREE SPACE      -  2 BYTES          XX XX -- --
+C
+C 5 BOOK NO         -  3 BYTES  WORD 21 -- XX XX XX     TIPCK
+C 5 BOOK RESULT     -  1 BYTE           XX -- -- --     TIRES
+C
+C 6 GAME NO         -  2 BYTES  WORD 22 -- -- XX XX     TIGAM
+C 6 FREE SPACE      -  2 BYTES          XX XX -- --
+C
+C 6 BOOK NO         -  3 BYTES  WORD 23 -- XX XX XX     TIPCK
+C 6 BOOK RESULT     -  1 BYTE           XX -- -- --     TIRES
+C
+C 7 GAME NO         -  2 BYTES  WORD 24 -- -- XX XX     TIGAM
+C 7 FREE SPACE      -  2 BYTES          XX XX -- --
+C
+C 7 BOOK NO         -  3 BYTES  WORD 25 -- XX XX XX     TIPCK
+C 7 BOOK RESULT     -  1 BYTE           XX -- -- --     TIRES
+C
+C 8 GAME NO         -  2 BYTES  WORD 26 -- -- XX XX     TIGAM
+C 8 FREE SPACE      -  2 BYTES          XX XX -- --
+C
+C 8 BOOK NO         -  3 BYTES  WORD 27 -- XX XX XX     TIPCK
+C 8 BOOK RESULT     -  1 BYTE           XX -- -- --     TIRES
+C
+C 9 GAME NO         -  2 BYTES  WORD 28 -- -- XX XX     TIGAM
+C 9 FREE SPACE      -  2 BYTES          XX XX -- --
+C
+C 9 BOOK NO         -  3 BYTES  WORD 29 -- XX XX XX     TIPCK
+C 9 BOOK RESULT     -  1 BYTE           XX -- -- --     TIRES
+C
+C 10 GAME NO        -  2 BYTES  WORD 30 -- -- XX XX     TIGAM
+C 10 FREE SPACE     -  2 BYTES          XX XX -- --
+C
+C 10 BOOK NO        -  3 BYTES  WORD 31 -- XX XX XX     TIPCK
+C 10 BOOK RESULT    -  1 BYTE           XX -- -- --     TIRES
+C
+C FREE       -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C .......................... INSTANT LOT REQUEST TYPE ....................
+C                                (TITYP = ILOT)
+C
+C CONCESSIONNAIRE # -  4 BYTES  WORD 8  XX XX XX XX     TLREP
+C
+C CLASS #    -  1 BYTE          WORD 9  -- -- -- XX     TLCLS   
+C FREE       -  1 BYTE                  -- -- XX --
+C GAME #     -  1 BYTE                  XX XX -- --     TLGAM
+C
+C START SEQ# -  2 BYTES         WORD 10 -- -- XX XX     TLSTR
+C END SEQ#   -  2 BYTES                 XX XX -- --     TLEND
+C
+C PACK #     -  3 BYTES         WORD 11 -- XX XX XX     TLPCK
+C FREE       -  1 BYTES                 XX -- -- --
+C
+C AMOUNT     -  4 BYTES         WORD 12 XX XX XX XX     TLAMT
+C
+C COMM       -  4 BYTES         WORD 13 XX XX XX XX     TLCOM
+C
+C FREE SPACE -  4 BYTES         WORD 14
+C
+C FREE SPACE -  4 BYTES         WORD 15
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C .......................... INSTANT CAR REQUEST TYPE ....................
+C                                (TITYP = ICAR)
+C
+C CONCESSIONNAIRE # -  4 BYTES  WORD 8  XX XX XX XX     TCREP
+C
+C CLASS #    -  1 BYTE          WORD 9  -- -- -- XX     TCCLS   
+C FREE       -  1 BYTE                  -- -- XX --
+C GAME #     -  1 BYTE                  XX XX -- --     TCGAM
+C
+C CARTON #   -  4 BYTES         WORD 10 XX XX XX XX     TCCAR
+C
+C START PACK#-  4 BYTES         WORD 11 XX XX XX XX     TCSTA
+C
+C END PACK#  -  4 BYTES         WORD 12 XX XX XX XX     TCEND
+C
+C PACK COUNT -  4 BYTES         WORD 13 XX XX XX XX     TCCNT
+C
+C FREE SPACE -  4 BYTES         WORD 14
+C
+C FREE SPACE -  4 BYTES         WORD 15
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C ................ INSTANT QUOTA, INVENTORY and Settled Books REPORT TYPE ....
+C                        (TITYP = IQTA or IINV or ISET)
+C
+C RPT GAME   -  1 BYTE          WORD 8  -- -- -- XX     TRGAM
+C RPT CLASS  -  1 BYTE                  -- -- XX --     TRCLS
+C RPT NXT GM -  2 BYTE                  XX XX -- --     TRNXT1
+C
+C RPT NXT PCK-  4 BYTES         WORD 9  XX XX XX XX     TRNXT2
+C
+C FREE SPACE - 24 BYTES         WORD 10-15
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C ................ INSTANT FINANCIAL REPORT TYPE ....................
+C                         (TITYP = IFIN)
+C
+C RPT CLASS  -  1 BYTE          WORD 8  -- -- -- XX     TRTYP
+C RPT SUBCLS -  1 BYTE                  -- -- XX --     TRSUB
+C FREE SPACE -  2 BYTES                 XX XX -- --
+C
+C CHAIN #    -  4 BYTES         WORD 9  XX XX XX XX     TRCHN
+C
+C NEXT AGT   -  4 BYTES         WORD 10 XX XX XX XX     TRCON
+C
+C NEXT GAM   -  4 BYTES         WORD 11 XX XX XX XX     TRCON1
+C
+C NEXT GAM   -  4 BYTES         WORD 12 XX XX XX XX     TRCON2
+C
+C NEXT GAM   -  4 BYTES         WORD 13 XX XX XX XX     TRCON3
+C
+C FREE SPACE -  8 BYTES         WORD 14-15
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C ................ INSTANT GAME NAMES REQUEST TYPE ....................
+C                        (TITYP = IORD)
+C
+C GAME #     -  2 BYTES         WORD 8  -- -- XX XX     TGPGAM
+C NXT GAME # -  2 BYTES                 XX XX -- --     TGPNXT
+C
+C FREE SPACE - 28 BYTES         WORD 9-15
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  2 BYTES                 XX XX -- --
+C
+C ................ INSTANT SUPPLY REQUEST TYPE ....................
+C                       (TITYP = IMNU)
+C
+C ORDER NUM  -  4 BYTES         WORD 8  XX XX XX XX     TSORD
+C
+C RESULT INF -  4 BYTES         WORD 9  XX XX XX XX     TSINF
+C
+C GAM&QUANT 1-  3 BYTES         WORD 10 XX XX XX --     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT 2-  3 BYTES         WORD 10 -- -- -- XX     TSGAM, TSQTY, TSSTK
+C                               WORD 11 XX XX -- --
+C
+C GAM&QUANT 3-  3 BYTES         WORD 11 -- -- XX XX     TSGAM, TSQTY, TSSTK
+C                               WORD 12 XX -- -- --
+C
+C GAM&QUANT 4-  3 BYTES         WORD 12 -- XX XX XX     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT 5-  3 BYTES         WORD 13 XX XX XX --     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT 6-  3 BYTES         WORD 13 -- -- -- XX     TSGAM, TSQTY, TSSTK
+C                               WORD 14 XX XX -- --
+C
+C GAM&QUANT 7-  3 BYTES         WORD 14 -- -- XX XX     TSGAM, TSQTY, TSSTK
+C                               WORD 15 XX -- -- --
+C
+C GAM&QUANT 8-  3 BYTES         WORD 15 -- XX XX XX     TSGAM, TSQTY, TSSTK
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C # IN BATCH -  1 BYTE                  -- XX -- --     TIBCH
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C-------------- INSTANT SUPPLY CONTINUATION RECORD 1 ----------------
+C
+C GAM&QUANT 9-  3 BYTES         WORD 17 XX XX XX --     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT10-  3 BYTES         WORD 17 -- -- -- XX     TSGAM, TSQTY, TSSTK
+C                               WORD 18 XX XX -- --
+C
+C GAM&QUANT11-  3 BYTES         WORD 18 -- -- XX XX     TSGAM, TSQTY, TSSTK
+C                               WORD 19 XX -- -- --
+C
+C GAM&QUANT12-  3 BYTES         WORD 19 -- XX XX XX     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT13-  3 BYTES         WORD 20 XX XX XX --     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT14-  3 BYTES         WORD 20 -- -- -- XX     TSGAM, TSQTY, TSSTK
+C                               WORD 21 XX XX -- --
+C
+C GAM&QUANT15-  3 BYTES         WORD 21 -- -- XX XX     TSGAM, TSQTY, TSSTK
+C                               WORD 22 XX -- -- --
+C
+C GAM&QUANT16-  3 BYTES         WORD 22 -- XX XX XX     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT17-  3 BYTES         WORD 23 XX XX XX --     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT18-  3 BYTES         WORD 23 -- -- -- XX     TSGAM, TSQTY, TSSTK
+C                               WORD 24 XX XX -- --
+C
+C GAM&QUANT19-  3 BYTES         WORD 24 -- -- XX XX     TSGAM, TSQTY, TSSTK
+C                               WORD 25 XX -- -- --
+C
+C GAM&QUANT20-  3 BYTES         WORD 25 -- XX XX XX     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT21-  3 BYTES         WORD 26 XX XX XX --     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT22-  3 BYTES         WORD 26 -- -- -- XX     TSGAM, TSQTY, TSSTK
+C                               WORD 27 XX XX -- --
+C
+C GAM&QUANT23-  3 BYTES         WORD 27 -- -- XX XX     TSGAM, TSQTY, TSSTK
+C                               WORD 28 XX -- -- --
+C
+C GAM&QUANT24-  3 BYTES         WORD 28 -- XX XX XX     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT25-  3 BYTES         WORD 29 XX XX XX --     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT26-  3 BYTES         WORD 29 -- -- -- XX     TSGAM, TSQTY, TSSTK
+C                               WORD 30 XX XX -- --
+C
+C GAM&QUANT27-  3 BYTES         WORD 30 -- -- XX XX     TSGAM, TSQTY, TSSTK
+C                               WORD 31 XX -- -- --
+C
+C GAM&QUANT28-  3 BYTES         WORD 31 -- XX XX XX     TSGAM, TSQTY, TSSTK
+C
+C FREE       -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C-------------- INSTANT SUPPLY CONTINUATION RECORD 2 ----------------
+C
+C GAM&QUANT29-  3 BYTES         WORD 33 XX XX XX --     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT30-  3 BYTES         WORD 33 -- -- -- XX     TSGAM, TSQTY, TSSTK
+C                               WORD 34 XX XX -- --
+C
+C GAM&QUANT31-  3 BYTES         WORD 34 -- -- XX XX     TSGAM, TSQTY, TSSTK
+C                               WORD 35 XX -- -- --
+C
+C GAM&QUANT32-  3 BYTES         WORD 35 -- XX XX XX     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT33-  3 BYTES         WORD 36 XX XX XX --     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT34-  3 BYTES         WORD 36 -- -- -- XX     TSGAM, TSQTY, TSSTK
+C                               WORD 37 XX XX -- --
+C
+C GAM&QUANT35-  3 BYTES         WORD 37 -- -- XX XX     TSGAM, TSQTY, TSSTK
+C                               WORD 38 XX -- -- --
+C
+C GAM&QUANT36-  3 BYTES         WORD 38 -- XX XX XX     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT37-  3 BYTES         WORD 39 XX XX XX --     TSGAM, TSQTY, TSSTK
+C
+C GAM&QUANT38-  3 BYTES         WORD 39 -- -- -- XX     TSGAM, TSQTY, TSSTK
+C                               WORD 40 XX XX -- --
+C
+C GAM&QUANT39-  3 BYTES         WORD 40 -- -- XX XX     TSGAM, TSQTY, TSSTK
+C                               WORD 41 XX -- -- --
+C
+C GAM&QUANT40-  3 BYTES         WORD 41 -- XX XX XX     TSGAM, TSQTY, TSSTK
+C
+C FREE SPACE - 24 BYTES         WORD 42-47
+C
+C FREE       -  3 BYTES         WORD 48 -- XX XX XX
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C ................ INSTANT ORDER CONFIRMATION TYPE ....................
+C                       (TITYP = ICNF)
+C
+C INVOICE 1  -  2 BYTES         WORD 8  -- -- XX XX     TIINV1
+C INVOICE 2  -  2 BYTES                 XX XX -- --     TIINV2
+C
+C INVOICE 3  -  4 BYTES         WORD 9  XX XX XX XX     TIINV3
+C
+C FREE SPACE - 24 BYTES         WORD 10-15
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C ................ INSTANT ORDER-PACK ACTIVATION TYPE ....................
+C                       (TITYP = ICNF)
+C
+C INVOICE 1  -  2 BYTES         WORD 8  -- -- XX XX     TOINV1
+C INVOICE 2  -  2 BYTES                 XX XX -- --     TOINV2
+C
+C INVOICE 3  -  4 BYTES         WORD 9  XX XX XX XX     TOINV3
+C
+C FREE SPACE - 24 BYTES         WORD 10-15
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C ................ INSTANT SIGN ON/OFF TYPE (and Installation)..
+C                       (TITYP = ISON or ISOF or INSTALL_SON)
+C
+C OLD STATUS -  4 BYTES         WORD 8  XX XX XX XX     TIOLD
+C
+C NEW STATUS -  4 BYTES         WORD 9  XX XX XX XX     TINEW
+C
+C PASS OFF   -  4 BYTES         WORD 10 XX XX XX XX     TISGN
+C
+C GVT ID     -  4 BYTES         WORD 11 XX XX XX XX     TIGVT1
+C
+C GVT ID     -  4 BYTES         WORD 12 XX XX XX XX     TIGVT2
+C
+C REAL STN   -  4 BYTES         WORD 13 XX XX XX XX     TIGVT3
+C
+C CLASS      -  1 BYTE          WORD 14 -- -- -- XX     TICLS
+C ACTION     -  1 BYTE                  -- -- XX --     TIACT
+C INSTALL STATUS -  1 BYTE              -- XX -- --     TISTS
+C FREE       -  1 BYTE                  XX -- -- --
+C
+C STATION #  -  4 BYTES         WORD 15 XX XX XX XX     TISTN
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C ................ INSTANT ESTABLISHMENT TYPE .................
+C                       (TITYP = IEST)
+C
+C SOFTWAR REV-  4 BYTES         WORD 8  XX XX XX XX     TISFT
+C
+C Reset Time -  3 BYTES         WORD 9  -- XX XX XX     TIRSTTIM
+C Reset Flag -  1 BYTE          WORD 9  XX -- -- --     TIRSTFLG
+C
+C Phone # - 1- 12 BYTES         WORD 10 XX XX XX XX     TIPHONE1_1
+C                               WORD 11 XX XX XX XX     TIPHONE1_2
+C                               WORD 12 XX XX XX XX     TIPHONE1_3
+C
+C Phone # - 2- 12 BYTES         WORD 13 XX XX XX XX     TIPHONE2_1
+C                               WORD 14 XX XX XX XX     TIPHONE2_2
+C                               WORD 15 XX XX XX XX     TIPHONE2_3
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C Checksum Flag 1 Byte                  -- XX -- --     TICHKSUM
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C-------------- INSTANT ESTABLISHMENT CONTINUATION RECORD 1 ----------------
+C
+C Minutes CB -  2 Bytes         WORD 17 -- -- XX XX     TIMINCB
+C FREE       -  2 BYTES                 XX XX -- --
+C
+C FREE       -  4 BYTES         WORD 18 XX XX XX XX
+C FREE       -  4 BYTES         WORD 19 XX XX XX XX
+C FREE       -  4 BYTES         WORD 20 XX XX XX XX
+C FREE       -  4 BYTES         WORD 21 XX XX XX XX
+C FREE       -  4 BYTES         WORD 22 XX XX XX XX
+C FREE       -  4 BYTES         WORD 23 XX XX XX XX
+C FREE       -  4 BYTES         WORD 24 XX XX XX XX
+C FREE       -  4 BYTES         WORD 25 XX XX XX XX
+C FREE       -  4 BYTES         WORD 26 XX XX XX XX
+C FREE       -  4 BYTES         WORD 27 XX XX XX XX
+C FREE       -  4 BYTES         WORD 28 XX XX XX XX
+C FREE       -  4 BYTES         WORD 29 XX XX XX XX
+C FREE       -  4 BYTES         WORD 30 XX XX XX XX
+C FREE       -  4 BYTES         WORD 31 XX XX XX XX
+C
+C FREE       -  3 BYTES         WORD 32 -- XX XX XX
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C ................ INSTANT GAME TABLE TYPE.................
+C                       (TITYP = IGTB)
+C
+C CLASS      -  4 BYTES         WORD 8  XX XX XX XX     TIGMC
+C
+C GAME NBR 1 -  4 BYTES         WORD 9  XX XX XX XX     TIGMN
+C GAME NBR 2 -  4 BYTES         WORD 10 XX XX XX XX     TIGMN+1
+C GAME NBR 3 -  4 BYTES         WORD 11 XX XX XX XX     TIGMN+2
+C GAME NBR 4 -  4 BYTES         WORD 12 XX XX XX XX     TIGMN+3
+C GAME NBR 5 -  4 BYTES         WORD 13 XX XX XX XX     TIGMN+4
+C FREE       -  4 BYTES         WORD 14 XX XX XX XX     
+C FREE       -  4 BYTES         WORD 15 XX XX XX XX     
+C
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C >>>>>>>>>>>>>>>> INSTANT FSE SIGN-ON/OFF <<<<<<<<<<<<<<<<<<<<<
+C                        (TITYP = IFSESON)
+C
+C TYPE       -  1 BYTE          WORD 8  -- -- -- XX     TIFSETYP
+C RESULT     -  1 BYTE                  -- -- XX --     TIFSERSLT
+C OFFICE     -  2 BYTES                 XX XX -- --     TIFSEOFF
+C
+C FSE #      -  4 BYTES         WORD 9  XX XX XX XX     TIFSEREP
+C
+C CLASS      -  2 BYTES         WORD 10 -- -- XX XX     TIFSECLS
+C FREE                                  XX XX -- --
+C
+C FREE SPACE - WORD 11 - 15
+C
+C TYPE       -  1 BYTE          WORD 16 -- -- -- XX     TITYP
+C STATUS     -  1 BYTE                  -- -- XX --     TIERR
+C FREE       -  1 BYTE                  -- XX -- --
+C REC TYPE   -  1 BYTE                  XX -- -- --
+C
+C
+C
+C >>>>>>>>>>>>>>>>> SPECIAL FUNCTION BODY (NOT X2X) <<<<<<<<<<<<<<<<
+C
+C OLD VALUE   -  4 BYTES        WORD 8                  ** LSB first
+C NEW VALUE   -  4 BYTES        WORD 9                  ** LSB first
+C SPESRV DATA - 24 BYTES        WORD 10-15
+C
+C FUNC. CODE  -  2 BYTES        WORD 16 -- -- XX XX     ** LSB first
+C SIGNON CNT  -  1 BYTE                 -- XX -- --
+C REC TYPE    -  1 BYTE                 XX -- -- --
+C
+C
+C
+C >>>>>>>>>>>>>> SPECIAL FUNCTION CONTINUATION RECORD 1 <<<<<<<<<<<<<<<<
+C 
+C SPESRV DATA - 60 BYTES        WORDS 17-31
+C FREE SPACE  -  3 BYTES        WORD  32 -- XX XX XX
+C REC TYPE    -  1 BYTE                  XX -- -- --
+C
+C
+C
+C >>>>>>>>>>>>>>>>>>>>> SPECIAL FUNCTION BODY (X2X) <<<<<<<<<<<<<<<<<
+C
+C (COMPLEX)
+C
+C
+C
+C
+C
+C >>>>>>>>>>>>>>>>>>>>>>>>>>>>> COMMAND BODY <<<<<<<<<<<<<<<<<<<<<<<<
+C
+C OLD VALUE   -  4 BYTES        WORD 8                  ** LSB first
+C NEW VALUE   -  4 BYTES        WORD 9                  ** LSB first
+C CMD DATA    - 16 BYTES        WORD 10-13
+C CMD SOURCE  -  4 BYTES        WORD 14                 ** LSB first
+C
+C CMD LINE    -  2 BYTES        WORD 15 -- -- XX XX     ** LSB first
+C CMD TER     -  2 BYTES                XX XX -- --     ** LSB first
+C
+C CMD NUM     -  2 BYTES        WORD 16 -- -- XX XX     ** LSB first
+C CMD GAME    -  1 BYTE                 -- XX -- --
+C REC TYPE    -  1 BYTE                 XX -- -- --
+C
+C
+C
+C >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+C
+C              
+C TRANSACTION RECORD TYPE OFFSETS
+C
+        INTEGER*4  LREC1, LREC2, LREC3
+        PARAMETER (LREC1=64)     !BYTE
+        PARAMETER (LREC2=128)    !BYTE
+        PARAMETER (LREC3=192)    !BYTE
+C
+C HEADER OFFSETS 
+C
+        INTEGER*4  LSER, LCDC
+        PARAMETER (LSER = 1)       !INTEGER*4
+        PARAMETER (LCDC = 3)       !INTEGER*2 OFFSET FOR HASH FILES
+C
+C DESLOG.DEF
+C

@@ -1,0 +1,23 @@
+$! NETCOM.LSH
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]NETCOM.LSV                                   $
+$! $Date::   17 Apr 1996 14:09:52                                         $
+$! $Revision::   1.0                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! V02 23-APR-91 JWE RELEASED FRO MARY
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$! 
+LINK'P1' -
+/EXE=TSKLIB:GXNETCOM.ESH -
+/SHAREABLE -
+OBJLIB:NETCOM,-
+SYS$INPUT/OPTION
+SYMBOL_VECTOR=(NETCOM=PSECT)
+PSECT_ATTR=NETCOM,SHR,WRT
+SYMBOL_VECTOR=(DN_EVERYTHING=PSECT)
+PSECT_ATTR=DN_EVERYTHING,SHR,WRT

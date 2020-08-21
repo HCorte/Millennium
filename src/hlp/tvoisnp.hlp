@@ -1,0 +1,22 @@
+    TVOI.HLP                GTECH Distributed Network
+                           Voittaja Snapshot Help             Page 1 of 1
+ 
+    The TVOI snapshot reflets the current count and amount of system sales
+    cancellations, cashes and refunds for all Voittaja games.   
+    
+    The information displayed includes:
+ 
+    type/indes     - game type and game index
+    sales          - sales for each game
+    cancels        - amount of wagers cancelled for each game
+    cashes/refunds - total amount of cashes/refunds per game
+    totals         - total sales, cancels, cashes and refunds for all 
+                     Voittaja games.
+
+
+
+
+
+
+
+

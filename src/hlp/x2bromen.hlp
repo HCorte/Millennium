@@ -1,0 +1,87 @@
+                          GTECH Distributed Network
+                     Relay Application Configuration Help          Page 1 of 4
+ 
+      A broadcast record is one which contains all of the specific parameters
+      which are customized and exclusive for a specific relay application.
+      The X2X system is configured to handle up to 16 relay applications,
+      where a relay application is one which is used to relay information
+      to a list of defined stations or terminals (ie. downloads, odds
+      updates, etc).
+ 
+      Adding A Relay Application
+      ==========================
+      To add a relay broadcast record to the Distributed Network,
+      enter "1" (for Add Application), and press return.  The program will
+      then prompt for the application number. If the application already
+      exists, an error message will be displayed, and you will be prompted
+      for relay application information.
+ 
+ 
+ 
+ 
+ 
+                        GTECH Distributed Network
+                     Relay Application Configuration Help          Page 2 of 4
+ 
+      Adding a Relay Application (cont'd)
+      ===================================
+      If the application does not exist, the Add a Record screen
+      will be displayed, requiring the configuration to be input.
+      The program will display the valid data ranges for each field, and
+      if an invalid value is input, an error message will be displayed,
+      and you will be required to input the parameter again. NOTE: if
+      you enter "E" while adding, the menu will be displayed and the ADD
+      will not be performed!
+ 
+      Modifying a Relay Application
+      =============================
+      To modify an application, enter "2" (for Modify Application),
+      and press return.  The program will then prompt for the application
+      number. If the record does not exist, an error message will be
+      displayed, and you will be prompted for another application.
+      If the configuration exists, the Modify a Application configuration
+ 
+ 
+                          GTECH Distributed Network
+                     Relay Application Configuration Help          Page 3 of 4
+ 
+      will be displayed, and the current configuration of the application
+      will be output.
+ 
+      To modify a parameter, choose the number of the field that you wish
+      to update, (located on the immediate left of the displayed parameter),
+      and press return. The program will then display a prompt informing
+      of the valid data range of the field.  Enter the desired value and
+      press return.  If the input value does not fall within the range, or
+      does not match a specific input value, an error message will be
+      displayed, and you must re-enter the field value. Once a correct value
+      has been entered, the screen will refresh and the new parameter value
+      will be displayed.  When all desired parameters have been modified,
+      enter "E" and the associated files will be updated, and the Menu will
+      be displayed.  NOTE: If you enter "E" when being prompted for a value,
+      you will return to the menu without updating the data files!
+ 
+ 
+ 
+ 
+                          GTECH Distributed Network
+                     Relay Application Configuration Help          Page 4 of 4
+ 
+      Deleting an Application
+      =======================
+      This option will allow a relay application configuration to be deleted.
+      To delete an application, enter "3" and press return.  Enter the
+      application number, and if it exists, the Delete an Application
+      screen will be displayed. If the record does not exist, an error message
+      will be displayed, and you must re-enter the number.  Once the Delete
+      Screen has been displayed, look at the configuration information to
+      ensure that this is the correct record.  If you wish to delete
+      it, enter "Y" and press return, and a message will be displayed
+      informing that the record was deleted.  If you no not wish to
+      delete the record, enter "N" and the station will not be deleted.
+ 
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,24 @@
+$! BLDX2X.LNK
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]BLDX2X.LNV                                   $
+$! $Date::   14 Jul 1996 20:34:18                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$!
+LINK'P1' -
+/EXE=TSKLIB:BLDX2X.EXE -
+OBJLIB:BLDX2X,-
+X2CHKMOD,-
+X2FILNAM,-
+X2CHKEXT, -
+X2XHLP,-
+STDLIB:NORMLIB/LIB, -
+$!OBJLIB:PSECT.OPT/OPTION, -
+SYS$INPUT/OPTION,-
+OBJLIB:PSECT.OPT/OPTION

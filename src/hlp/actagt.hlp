@@ -1,0 +1,22 @@
+ ACT.HLP                  GTECH Distributed Network
+                          Active Agents Snapshot Help         Page 1 of 1
+ 
+    The ACT snapshot displays information on Agents who are either active 
+    (signed-on)or inactive(signed-off).
+    
+    The following information is displayed:
+    
+    Agents signed - the number of agents currently signed on to the
+    on              network.                            
+    date          - the current system date 
+    time          - the current system time
+    system id     - Primary, Secondary or Spare
+    Base time     - start time of the system and first terminal activity
+    serial        - internal serial number for wagering transactions
+    ter           - terminal identification number
+    status        - status of individual terminals (on/off, active/idle)
+
+
+
+
+

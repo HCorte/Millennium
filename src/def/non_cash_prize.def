@@ -1,0 +1,37 @@
+C  GXSRC:NON_CASH_PRIZE.DEF
+C
+C V02 15-OCT-2000 UXN AlphaIPS release.
+C V01 19-JUN-1998 NXA Initial revision.
+C  
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+      CHARACTER NCP_PRZ_DESC*20         ! Prize Description
+      CHARACTER NCP_GAME_NAME*20        ! Game Name
+      CHARACTER NCP_FF_NAME*30          ! Fulfilment House Name
+      CHARACTER NCP_FF_ADDR1*30         ! Fulfilment House Address
+      CHARACTER NCP_FF_ADDR2*20         ! Fulfilment House Town
+      CHARACTER NCP_FF_ADDR3*20         ! Fulfilment House County
+      CHARACTER NCP_FF_ADDR4*8          ! Fulfilment House Postcode
+      CHARACTER NCP_FF_PHONE*15         ! Fulfilment House Phone
+
+      COMMON   /NON_CASH_PRIZE/
+     *          NCP_PRZ_DESC,
+     *          NCP_GAME_NAME,
+     *          NCP_FF_NAME,
+     *          NCP_FF_ADDR1,
+     *          NCP_FF_ADDR2,
+     *          NCP_FF_ADDR3,
+     *          NCP_FF_ADDR4,
+     *          NCP_FF_PHONE

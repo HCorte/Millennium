@@ -1,0 +1,134 @@
+C
+C SUBROUTINE CMDSSC
+C
+C
+C V03 04-OCT-2000 UXN GLOBAL RFSS #91. CLRSUM ADDED
+C V02 28-JUL-1998 RXK Avoided to get 0 for revision # (byte 0) if updating
+C V01 XX-XXX-XXXX RXK Initial release.  
+C
+C SUBROUTINE TO PROCESS SUPERSCORE GAME COMMANDS
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE CMDSSC(TRABUF,MESS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:SSCCOM.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+C
+	INTEGER*4   MESS(EDLEN)
+	INTEGER*4   CMDNUM, GNUM, GIND, I, TEMP
+	INTEGER*4   GAMMAP(2)
+	INTEGER*2   I2TEMP(2)
+        BYTE      I1TEMP(4)
+        EQUIVALENCE (TEMP,I2TEMP,I1TEMP)
+C
+C
+C
+	CMDNUM=TRABUF(TCMNUM)
+	GOTO (10,20,30,40,50,60,70,80,90,100) CMDNUM
+	GOTO 1000
+C
+C CHANGE SUPERSCORE GAME STATUS
+C
+10	CONTINUE
+	GIND=TRABUF(TCMDT1)
+	TRABUF(TCMOLD)=SSCSTS(GIND)
+	SSCSTS(GIND)=TRABUF(TCMNEW)
+	IF(TRABUF(TCMNEW).EQ.GAMBFD) THEN
+	  SSCCTM(GIND)=TRABUF(TTIM)
+	  CALL BSET(SSCTIM(GIND),1)
+	  CALL CLRSUM
+	ENDIF
+	TEMP=SSCREV(GIND)
+	I2TEMP(1)=I2TEMP(1)+7
+        IF(I1TEMP(1).EQ.0) I1TEMP(1)=1
+	SSCREV(GIND)=TEMP
+	DO 11 I=1,NUMAGT
+	   AGTHTB(ACHKSM,I)=-1
+11	CONTINUE
+	MESS(2)=TECMD
+	MESS(3)=3
+	MESS(6)=GIND
+	MESS(9)=TRABUF(TCMOLD)
+	MESS(10)=TRABUF(TCMNEW)
+	RETURN
+C
+C CHANGE GAME CLOSING TIME
+C
+20	CONTINUE
+        GIND = TRABUF(TCMDT1)
+        TRABUF(TCMOLD) = SSCTIM(GIND)
+        SSCTIM(GIND) = TRABUF(TCMNEW)
+        MESS(2) = TECMD
+        MESS(3) = 12
+        MESS(6) = GIND
+        MESS(9) = 0
+        MESS(10)= TRABUF(TCMOLD)
+        MESS(11)= TRABUF(TCMNEW)
+        RETURN
+C
+C CHANGE GAME CLOSING DATE (CHECK IF TODAY, IF NOT SET TIME BIT)
+C
+30	CONTINUE
+        GIND = TRABUF(TCMDT1)
+        TRABUF(TCMOLD) = SSCDAT(GIND)
+        SSCDAT(GIND) = TRABUF(TCMNEW)
+        IF(SSCTIM(GIND).GE.'40000000'X) THEN
+           SSCTIM(GIND) = SSCTIM(GIND) - '40000000'X
+        ENDIF
+        IF(SSCSTS(GIND).NE.GAMOPN.OR.
+     *     SSCTIM(GIND).EQ.0.OR.
+     *     SSCDAT(GIND).NE.DAYCDC) THEN
+           SSCTIM(GIND) = SSCTIM(GIND) + '40000000'X
+        ENDIF
+        MESS(2) = TECMD
+        MESS(3) = 18
+        MESS(6) = GIND
+        MESS(9) = 0
+        MESS(10)= TRABUF(TCMOLD)
+        MESS(11)= TRABUF(TCMNEW)
+        GAMMAP(1) = 0
+        GAMMAP(2) = 0
+        GNUM = GTNTAB(TSSC,GIND)
+        CALL BSET(GAMMAP,GNUM)
+        CALL SUBCNTRL(GAMMAP,0)
+        RETURN
+C
+C PUT NEXT SUPERSCORE COMMAND HERE
+C
+40	CONTINUE
+50	CONTINUE
+60	CONTINUE
+70	CONTINUE
+80	CONTINUE
+90	CONTINUE
+100	CONTINUE
+C
+C INVALID COMMAND NUMBER
+C
+1000	CONTINUE
+	TRABUF(TSTAT)=REJT
+	TRABUF(TERR)=INVL
+	MESS(2)=TECMD
+	MESS(3)=1
+	MESS(4)=TRABUF(TCMTYP)
+	MESS(5)=TRABUF(TCMNUM)
+	RETURN
+	END

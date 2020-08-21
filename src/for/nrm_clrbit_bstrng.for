@@ -1,0 +1,39 @@
+C
+C SUBROUTINE CLRBIT_BSTRNG
+C $Log:   GXAFXT:[GOLS]CLRBIT_BSTRNG.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:36:48   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 15:54:28   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_bitsubs.for **
+C
+C
+C
+C **** CLRBIT_BSTRNG - CLEAR A BIT COUNTING FROM LEFT IN A BYTE ARRAY.
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE CLRBIT_BSTRNG (BYTARY, BITNUM)
+	IMPLICIT NONE
+C
+C
+	BYTE	    BYTARY(0:*)
+C
+	INTEGER*4   BITTAB(0:7)
+	INTEGER*4   BITNUM
+	INTEGER*4   BYT
+	INTEGER*4   NDX
+	INTEGER*4   I4TEMP
+	DATA	    BITTAB/ '7F'X,'BF'X,'DF'X,'EF'X,'F7'X,'FB'X,'FD'X,'FE'X /
+C
+	BYT = ISHFT(BITNUM,-3)
+	NDX = IAND(BITNUM,'07'X)
+	I4TEMP = ZEXT(BYTARY(BYT))
+	I4TEMP = IAND(I4TEMP,BITTAB(NDX))
+	BYTARY(BYT) = I4TEMP
+	RETURN
+	END

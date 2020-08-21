@@ -1,0 +1,114 @@
+C
+C      MAAUDIT.DEF
+C
+C      V01 24-NOV-2016 SCML INITIAL RELEASE
+C
+C      THIS FILE CONTAINS SOME CONFIGURATION DATA OF THE PROGRAM
+C      DEFINED BY THE SOURCE FILE MAAUDIT.FOR.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C      THIS ITEM IS THE PROPERTY OF SCML.
+C
+C      COPYRIGHT 2016 SCML. ALL RIGHTS RESERVED.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+       INTEGER*4 OFF                                                            !NO LOGGING
+       PARAMETER (OFF=1)
+       INTEGER*4 FATAL                                                          !FATAL
+       PARAMETER (FATAL=2)
+       INTEGER*4 ERROR                                                          !ERROR
+       PARAMETER (ERROR=3)
+       INTEGER*4 WARN                                                           !WARNING
+       PARAMETER (WARN=4)
+       INTEGER*4 INFO                                                           !INFO
+       PARAMETER(INFO=5)
+       INTEGER*4 DEBUG                                                          !DEBUG
+       PARAMETER (DEBUG=6)
+       INTEGER*4 ALL                                                            !ALL
+       PARAMETER (ALL=7)
+
+       CHARACTER*5 LTAGS(7)                                                     !LOG LEVEL TAG NAME
+       DATA LTAGS/'OFF  ',
+     *            'FATAL',
+     *            'ERROR',
+     *            'WARN ',
+     *            'INFO ',
+     *            'DEBUG',
+     *            'ALL  '/
+C
+       INTEGER*4 HLEVEL                                                         !HIGH LOG LEVEL
+       PARAMETER (HLEVEL=FATAL)
+       INTEGER*4 LLEVEL                                                         !LOW LOG LEVEL
+       PARAMETER (LLEVEL=ALL)
+C
+       INTEGER*4 LOGLEVEL
+       PARAMETER (LOGLEVEL=INFO)                                                !LOG LEVEL
+C
+       CHARACTER*8 LOGNAME/'MAAUDIT_'/                                          !LOG FILE NAME PREFIX
+       CHARACTER*4 LOGEXT/'.LOG'/                                               !LOG FILE EXTENSION
+C
+       CHARACTER*8 OUTFILEPREF/'MAAUDIT_'/                                      !OUTPUT FILE NAME PREFIX
+       CHARACTER*4 OUTFILEEXT/'.ASC'/                                           !OUTPUT FILE EXTENSION
+       CHARACTER*8 TMPFILEPREF/'MAAUDIT_'/                                      !TEMPORARY FILE NAME PREFIX
+       CHARACTER*4 TMPFILEEXT/'.TMP'/                                           !TEMPORARY FILE EXTENSION
+C
+       CHARACTER*2 RECTYP_HP
+       PARAMETER   (RECTYP_HP = 'HP')                                           !RECORD TYPE VALUE FOR HEADER
+       CHARACTER*2 RECTYP_01
+       PARAMETER   (RECTYP_01 = '01')                                           !RECORD TYPE VALUE FOR PLACARD WAGER TRANSACTION
+       CHARACTER*2 RECTYP_02
+       PARAMETER   (RECTYP_02 = '02')                                           !RECORD TYPE VALUE FOR PLACARD CANCELLATION TRANSACTION
+       CHARACTER*2 RECTYP_TP
+       PARAMETER   (RECTYP_TP = 'TP')                                           !RECORD TYPE VALUE FOR TRAILER
+C
+C=======================================================================
+C      TRANSACTION COUNTERS
+C=======================================================================
+       INTEGER*4   TC                                                           !TOTAL
+       INTEGER*4   TCWAG                                                        !WAGER
+       INTEGER*4   TCEUR                                                        !EURO TOTAL
+       INTEGER*4     TCEURWAG                                                   !EURO WAGER
+       INTEGER*4     TCEURCAN                                                   !EURO CANCELLATION
+       INTEGER*4     TCEURVAL                                                   !EURO VALIDATION
+       INTEGER*4     TCEURERR                                                   !EURO ERROR
+       INTEGER*4   TCIGS                                                        !IGS TOTAL
+       INTEGER*4     TCIGSWAG                                                   !IGS WAG
+       INTEGER*4     TCIGSCAN                                                   !IGS CAN
+       INTEGER*4     TCIGSVAL                                                   !IGS VAL
+       INTEGER*4     TCIGSPAY                                                   !IGS PAY
+       INTEGER*4     TCIGSREP                                                   !IGS REP
+       INTEGER*4   TCCAN                                                        !CANCELLATION
+       INTEGER*4   TCVAL                                                        !VALIDATION
+       INTEGER*4   TCSPC                                                        !SPECIAL
+       INTEGER*4   TCCMD                                                        !COMMANDS
+       INTEGER*4   TCIPS                                                        !IPS
+       INTEGER*4   TCINC                                                        !INTERNAL CANCELLATION
+       INTEGER*4   TCCLA                                                        !CLAIM
+       INTEGER*4   TCREF                                                        !REFUND
+       INTEGER*4   TCGUI                                                        !GUI
+       INTEGER*4   TCDEVLOT                                                     !LOTTERY DEVOLUTION
+       INTEGER*4   TCUNKNOWN                                                    !UNKNOWN
+       COMMON /TRXCDATA/ TC,
+     *                   TCWAG,
+     *                   TCEUR,
+     *                   TCEURWAG,
+     *                   TCEURCAN,
+     *                   TCEURVAL,
+     *                   TCEURERR,
+     *                   TCIGS,
+     *                   TCIGSWAG,
+     *                   TCIGSCAN,
+     *                   TCIGSVAL,
+     *                   TCIGSPAY,
+     *                   TCIGSREP,
+     *                   TCCAN,
+     *                   TCVAL,
+     *                   TCSPC,
+     *                   TCCMD,
+     *                   TCIPS,
+     *                   TCINC,
+     *                   TCCLA,
+     *                   TCREF,
+     *                   TCGUI,
+     *                   TCDEVLOT,
+     *                   TCUNKNOWN

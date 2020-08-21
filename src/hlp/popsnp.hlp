@@ -1,0 +1,22 @@
+    POP.HLP                GTECH Distributed Network
+                         Ravi Popularity Snapshot Help         Page 1 of 1
+ 
+    The POP snapshot contains information on popular screening for the 
+    horse racing games Ravi V5 and Ravi V65 
+
+    The information displayed includes:
+ 
+    Game Name     - Ravi 65 and Ravi V5
+    draw          - draw number
+    racec winners - either the most popular horse, or if the race has been      
+                    completed, the winning horse
+    popular       - horses displayed in popularity order for each race
+    status     
+    scratches     - an X indicates horses that have been scratched from a
+                    race
+    total pool    - total pool value for the draw
+    win invest    - total winning investment
+    winning bets  - winning bets count
+    dividend/bet  - an analysis of the dividend amount for each bet
+
+

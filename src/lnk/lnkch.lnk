@@ -1,0 +1,60 @@
+$!*** LINKER FILE LNKCH ***
+$!
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]LNKCH.LNV                                    $
+$! $Date::   14 Jul 1996 20:45:08                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$! 
+$!*** Pre-Baseline Source - lnkch.lnk ***
+$!
+$! X2X Upgrade: 26-FEB-96 wsm Replaced GXMSGCOM.ESH w/ GXCTMCOM.ESH for Finland.
+$! V04 27-JUL-95 PJS REMOVED THE FOLLOWING:
+$!                   DN_AP_STATUS, DN_BUILD_BUFFER, DN_FREEBUF, IODONE,
+$!                   NET_DN_BUFNO, QUECNT, SYSIO, TRACE.
+$! V03 14-JAN-94 PJS SORTED & CLEANED UP.
+$! V02 22-APR-91 JWE FIX "%LINK-W-NUDFSYMS, 4 UNDEFINED SYMBOLS:"
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!This item is the property of GTECH Corporation, Providence, Rhode Island,
+$!and contains confidential and trade secret information. It may not be
+$!transferred from the custody or control of GTECH except as authorized in
+$!writing by an officer of GTECH. Neither this item nor the information it
+$!contains may be used, transferred, reproduced, published, or disclosed,
+$!in whole or in part, and directly or indirectly, except as expressly
+$!authorized by an officer of GTECH, pursuant to written agreement.
+$!
+$!Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:LNKCH.EXE -
+OBJLIB:LNKCH, -
+EXTRABUF, -
+FREEBUF, -
+GAMECMD, -
+LNK_CMDNET, -
+MODUL, -
+NET_CHKQUEUE, -
+NOTIFY1, -
+QUECMD, -
+SETMAS, -
+SNDNET, -
+SNDNETC, -
+TSNDNET, -
+TSTCHG2, -
+CHKQCOR,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE, -
+TSKLIB:GXCPLCOM.ESH/SHAREABLE, -
+TSKLIB:GXCTLCOM.ESH/SHAREABLE, -
+TSKLIB:GXLANCOM.ESH/SHAREABLE, -
+TSKLIB:GXCTMCOM.ESH/SHAREABLE, -
+TSKLIB:GXNETCOM.ESH/SHAREABLE, -
+TSKLIB:GXX2XCOM.ESH/SHAREABLE

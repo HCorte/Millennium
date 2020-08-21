@@ -1,0 +1,22 @@
+    FLW.HLP                GTECH Distributed Network
+                            Data Flow Snapshot Help           Page 1 of 1
+ 
+    The data flow snapshot displays information about the data flow 
+    between systems.
+
+    The information displayed includes:
+ 
+    system ID     - system ID in letter code and number
+    *BACKup ID    - backup system ID in letter code and number
+    primary ID    - primary system ID in letter code and number
+    system        - last received time for systems A, B, C and D
+    response time
+    since last    - time when the last broadcast was received by central  
+    diag back       for systems A, B, C and D
+    since last I/O- time of the last input/output on systems A, B, C and D
+    recovery stage- recovery information sent by broadcast logic
+    transaction   - serial number of transactions sent to systems A, B, C
+    sent            and D
+    net *DIAg     - time interval between broadcasts
+    interval time
+    *MAX Response - maximum wait time for broadcast response.

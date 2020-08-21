@@ -1,0 +1,17 @@
+$! GXSRC:SETTKF.LNK
+$!
+$! $Log:   GXAFIP:[GOLS]SETTKF.LNV  $
+$! 
+$!    Rev 1.0   19 Feb 1997 18:28:18   RXK
+$! Initial revision.
+$! 
+$!    Rev 1.0   28 Jan 1997 18:18:28   RXK
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=GXUTL:SETTKF.EXE -
+OBJLIB:SETTKF,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

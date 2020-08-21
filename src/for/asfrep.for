@@ -1,0 +1,113 @@
+C ASFREP - 
+C   THIS PROGRAM GENERATES THE FOLLOWING OUTPUT FILES - 
+C   	AGTACT.REP    
+C	CARACT.REP
+C	INVRPT.REP	(only if INVOICE_DAY in STOPCOM is .TRUE.)
+C	ADJRPT.REP	(only if INVOICE_DAY in STOPCOM is .TRUE.)
+C	CARRPT.REP	(only if INVOICE_DAY in STOPCOM is .TRUE.)
+C
+C V02 21-FEB-2000 OXK INVTOIPS not used anymore
+C V01 10-NOV-1997 UXN INITIAL RELEASE.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM ASFREP
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:RECAGT.DEF'
+	INCLUDE 'INCLIB:STOPCOM.DEF'
+	INCLUDE 'INCLIB:ASFREP.DEF'
+C
+	INTEGER*4   LOC_CARTAB(NUMAGT)
+	INTEGER*4   LOC_TERM(NUMAGT)
+	CHARACTER   CZERO/Z0/
+C
+	INTEGER*4   REC,ST,I
+C
+	CALL COPYRITE
+	CALL SNIF_AND_WRKSET
+C
+C OPEN ASF FILE
+C
+	CALL OPENASF(1)
+C
+C CHECK THAT AGENT COMMON IS UPDATED...
+C
+	IF(AGT_LOOKUP_CNT.LE.0) THEN
+	    TYPE*,IAM(),'ASFREP - AGENT COMMON IS NOT UPDATED...'
+	    CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+C
+C BUILD TERMINAL LOOKUP TABLE TO GET AGENT CARTEL TABLE
+C
+	DO I=1,AGT_LOOKUP_CNT
+	   LOC_CARTAB(I)=AGTCAR(AGT_LOOKUP_TER(I))
+C	   LOC_TERM(I)  =AGT_LOOKUP_TER(I)
+	ENDDO
+C
+C SORT AGENT TABLES BY DISTRIBUTION LINE, RECEPTION CENTER AND AGENT NUMBER
+C
+        CALL SRTFLD2(I, LOC_TERM)
+C
+C INITIALIZE REPORTS.
+C
+	CALL AGTACT_BEGIN
+	CALL CARACT_BEGIN
+	IF(INVOICE_DAY) THEN
+	  CALL INVRPT_BEGIN
+	  CALL ADJRPT_BEGIN
+C***	  CALL CARRPT_BEGIN
+	ENDIF
+C
+	DO REC = 1,AGT_LOOKUP_CNT
+	  IF(MOD(REC,1000).EQ.0) TYPE*,IAM(),REC,' active agents processed...'
+	  XREC = LOC_TERM(REC)
+	  CALL READASF(XREC,ASFREC,ST)
+	  DO I=1,512
+	    IF(ASFBYT(I).EQ.CZERO) ASFBYT(I) = ' '
+	  ENDDO
+	  CALL AGTACT_UPDATE	
+	  IF(INVOICE_DAY) THEN
+	    CALL INVRPT_UPDATE
+	    CALL ADJRPT_UPDATE
+	  ENDIF	  
+C	  XREC = LOC_TERM(REC)
+C	  CALL READASF(XREC,ASFREC,ST)
+	  CALL CARACT_UPDATE
+C	  IF(INVOICE_DAY) THEN
+C***	    CALL CARRPT_UPDATE
+C	  ENDIF
+	ENDDO
+C
+C CLOSE REPORTS.
+C
+	CALL CLOSASF 
+C
+	CALL AGTACT_END
+	CALL CARACT_END
+	IF(INVOICE_DAY) THEN
+	  CALL INVRPT_END   
+	  CALL ADJRPT_END
+C***	  CALL CARRPT_END
+	ENDIF
+	TYPE*,IAM(),AGT_LOOKUP_CNT,' active agents processed in total...'
+	CALL GSTOP(GEXIT_SUCCESS)
+	END

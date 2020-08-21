@@ -1,0 +1,21 @@
+    BUF.HLP                GTECH Distributed Network
+			 Buffer Summary Snapshot Help      Page 1 of 1
+ 
+    The Buffer snapshot displays information about the buffers.  
+
+    The information displayed includes:
+ 
+    buffer   - buffer number
+    terminal - terminal currently showing on the screen
+    serial   - serial number of the transaction showing in the buffer
+    length   - length of the transaction showing
+    trcode   - transaction code
+
+
+
+
+
+
+
+
+

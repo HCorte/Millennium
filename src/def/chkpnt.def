@@ -1,0 +1,62 @@
+C CHKPNT.DEF
+C  
+C V05 07-FEB-2011 RXK COMMON FOR CHKHEADER, DUMMY_CHKHEADER COMMENTED OUT
+C V04 15-JUN-2000 OXK DUMMY_CHKHEADER added to remove compiler errors
+C v03 17 Apr 1996 HXK Release of Finland for X.25, Telephone Betting, 
+C			Instant Pass Thru Phase 1
+C V02 21 Jan 1993 DAB Initial Release
+C			Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C			DEC Baseline
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C FORTRAN CHECKPOINT DESCRIPTION.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 CHKHEADER(2048)    !ID TABLE, ONLY 1-ST OFFSETS USED
+        COMMON // CHKHEADER 
+C	INTEGER*4 DUMMY_CHKHEADER(2048)
+C	EQUIVALENCE (CHKHEADER,DUMMY_CHKHEADER)
+C
+	INTEGER*4  CHKPNTDAY, CHKPNTSER, CHKPNTBAL
+	PARAMETER (CHKPNTDAY=1)      !CDC DATE
+	PARAMETER (CHKPNTSER=2)      !CHECKPOINT SERIAL #
+	PARAMETER (CHKPNTBAL=3)      !LAST SERIAL # IN BALANCE
+C
+	INTEGER*4  CHKPNTTYP, CHKPNTREG, CHKPNTLTO, CHKGAMLEN
+	PARAMETER (CHKPNTTYP=4)      !CHEKPOINT TYPE (REGULAR/LOTTO)
+	    PARAMETER (CHKPNTREG=1)  !REGULAR COMMONS
+	    PARAMETER (CHKPNTLTO=2)  !LOTTO POOLS COMMONS
+	PARAMETER (CHKGAMLEN=5)      !LENGTH OF CHECKPOINTED GAME DATA
+C
+C
+	INTEGER*4  CHKTOT, CHKSEC
+	PARAMETER (CHKTOT=4)      !NUMBER OF CHECKPOINT FILES
+	PARAMETER (CHKSEC=32)     !CHECKPOINT FILE SIZE IN CONCUR SECTORS
+C
+C     COMMON BLOCKS ARE READ INTO COMMON_BUFFER
+C     IN BIG BLOCKS, SO CHECKPOINT IS SHORTER
+C
+        INTEGER*4  CHKPNTBUFLEN
+        PARAMETER (CHKPNTBUFLEN=32768)       !BUFFER LENGTH
+        INTEGER*4 CHKPNTBUF(CHKPNTBUFLEN)   !BIG BUFFER TO KEEP DATA
+C
+	COMMON /CHKPNT/ CHKPNTBUF
+C
+C
+	INTEGER*4	 FRST_CHKPNT(2)
+	EQUIVALENCE	(FRST_CHKPNT, CHKPNTBUF)
+	INTEGER*4	 LAST_CHKPNT
+	EQUIVALENCE	(LAST_CHKPNT, CHKPNTBUF(CHKPNTBUFLEN))
+C

@@ -1,0 +1,17 @@
+$! GXSRC:CLRFIL.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]CLRFIL.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:37:10   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 12:50:56   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:37:44   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:CLRFIL.EXE -
+OBJLIB:CLRFIL,-
+STDLIB:NORMLIB/LIB

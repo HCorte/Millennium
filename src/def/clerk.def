@@ -1,0 +1,79 @@
+C CLERK.DEF
+C $Log:   GXAFXT:[GOLS]CLERK.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:34:58   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.2   14 Jun 1993 20:07:58   HXK
+C  BUG FIX
+C  
+C     Rev 1.1   14 Jun 1993 19:54:30   HXK
+C  added Miscellaneous and Special sales tables.
+C  parameterised record.
+C  
+C     Rev 1.0   21 Jan 1993 18:41:02   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 07-OCT-91 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C THIS FILE DEFINES THE ACCOUNTING FOR CLERKS BY TERMINAL.
+C
+C CLERK FILE RECORD DESCRIPTION
+C
+C     CLRKHED(120)                 CLERK RECORD HEADER          
+C     CLRKDAY(AGAMLEN,MAXGAM,8)    TERMINAL GAME SALES TABLE   
+C     CLRKSPE(ASPELEN,MAXGAM,8)    SPECIAL SALES TABLE
+C     CLRKMIS(AMISLEN,2,8)         MISCELLANEOUS SALES TABLE
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  CLRKSER                  !LAST SERIAL # UPDATED WITH
+	PARAMETER (CLRKSER=1)
+
+        INTEGER*4  CLRKHED_OFF, CLRKDAY_OFF, CLRKSPE_OFF
+        INTEGER*4  CLRKMIS_OFF, CLRKFRE_OFF
+        PARAMETER (CLRKHED_OFF=1)
+        PARAMETER (CLRKDAY_OFF=CLRKHED_OFF+120)
+        PARAMETER (CLRKSPE_OFF=CLRKDAY_OFF+AGAMLEN*MAXGAM*8)
+        PARAMETER (CLRKMIS_OFF=CLRKSPE_OFF+ASPELEN*MAXGAM*8)
+        PARAMETER (CLRKFRE_OFF=CLRKMIS_OFF+AMISLEN*2*8)
+
+C
+C CALCULATE FREE SPACE BASED ON MACHINE DEPENDENT SECTOR SIZES.
+C SHOULD ALLWAYS ADD UP TO A EVEN SECTOR SIZE BYTES (VAX 512).
+C NOTE! IN CALCULATIONS, FRE_OFF-2 IS DONE TO TAKE CARE OF WHEN THE DATA SIZE
+C       ENDS ON A EVEN SECTOR SIZE.
+C
+        INTEGER*4 CLRKSEC_VAX, CLRKSEC_NUM
+        PARAMETER (CLRKSEC_VAX = SECSIZE/4)
+        PARAMETER (CLRKSEC_NUM = NINT(FLOAT((CLRKFRE_OFF-2)/
+     *                                      CLRKSEC_VAX)+.5))
+
+        INTEGER*4 CLRKLEN, CLRKSEC
+        PARAMETER (CLRKLEN = CLRKSEC_VAX*CLRKSEC_NUM)      !EVEN SEC SIZE
+        PARAMETER (CLRKSEC = CLRKLEN / 64)
+
+	INTEGER*4 CLRKREC(CLRKLEN)          !RECORD
+	INTEGER*4 CLRKHED(120)              !CLERK HEADER
+	INTEGER*4 CLRKDAY(AGAMLEN,MAXGAM,8) !CLERK GAME SALES
+        INTEGER*4 CLRKSPE(ASPELEN,MAXGAM,8) !CLERK SPECIAL SALES
+        INTEGER*4 CLRKMIS(AMISLEN,2,8)      !CLERK MISCELLANEOUS SALES
+
+	EQUIVALENCE(CLRKREC(CLRKHED_OFF),CLRKHED(1))
+	EQUIVALENCE(CLRKREC(CLRKDAY_OFF),CLRKDAY(1,1,1))
+        EQUIVALENCE(CLRKREC(CLRKSPE_OFF),CLRKSPE(1,1,1))
+        EQUIVALENCE(CLRKREC(CLRKMIS_OFF),CLRKMIS(1,1,1))

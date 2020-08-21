@@ -1,0 +1,22 @@
+    SLI.HLP                GTECH Distributed Network
+                         Pitka Liability Snapshot Help         Page 1 of 1
+ 
+    The SLI snapshot contains liability information for the Pitka game.
+
+    Information displayed includes:
+
+    event code    - Pitka draw number
+    game name     - Pitka   
+    dates         - dates when the sales are opened for the event
+    category      - information for each system category - threes, fours
+                    fives and sixes
+    total sales   - sales amount for each system bet type
+    payout        - validation amount for each system bet type
+    payout %      - percentage paid for each system bet type
+
+
+
+
+
+
+

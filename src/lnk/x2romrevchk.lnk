@@ -1,0 +1,29 @@
+$! GXSRC:X2ROMREVCHK.LNK
+$! 
+$! $Log:   GXAFXT:[GOLS]X2ROMREVCHK.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 22:10:26   HXK
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Jul 1996 22:09:18   HXK
+$! Initial revision.
+$! 
+$! X2ROMREVCHK.LNK
+$!
+$!*************************** START X2X PVCS HEADER ****************************
+$!
+$!  $Logfile::   GXAFXT:[GOLS]X2ROMREVCHK.LNV                              $
+$!  $Date::   14 Jul 1996 22:10:26                                         $
+$!  $Revision::   1.1                                                      $
+$!  $Author::   HXK                                                        $
+$!
+$!**************************** END X2X PVCS HEADER *****************************
+$!
+$! V01 13-SEP-95 SCD RELEASED FOR VAX
+$!
+LINK'P1' -
+/EXE=TSKLIB:X2ROMREVCHK.EXE -
+OBJLIB:X2ROMREVCHK,-
+READ_ROM_REV,-
+STDLIB:NORMLIB/LIB,-
+OBJLIB:PSECT.OPT/OPTION

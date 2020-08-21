@@ -1,0 +1,104 @@
+C SUBROUTINE SSSPOOL
+C  
+C V02 05-JUN-2000 OXK SSOCOM ADDED
+C V01 XX-XXX-1997 RXK INITIAL RELEASE
+C
+C SUBROUTINE TO DUMP SUPERSCORE POOL TO DISK
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SSSPOOL(GIND)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:SSCCOM.DEF'
+        INCLUDE 'INCLIB:SSPCOM.DEF'
+        INCLUDE 'INCLIB:SSFREC.DEF'
+        INCLUDE 'INCLIB:SSOCOM.DEF'
+        INCLUDE 'INCLIB:SSOREC.DEF'
+C
+C
+	INTEGER*4 FDB(7)
+	INTEGER*4 GIND, ST
+C
+C OPEN POOL FILE AND READ FIRST RECORD
+C
+10	CONTINUE
+	CALL OPENQW(4,SSCPFN(1,GIND),4,0,0,ST)
+	CALL IOQINIT(FDB,4,SSFSEC*256)
+	IF(ST.NE.0) THEN
+	   CALL FILERR(SSCPFN(1,GIND),1,ST,0)
+	   GOTO 10
+	ENDIF
+C
+	CALL READQW(FDB,1,SSFREC,ST)
+	IF(ST.NE.0) THEN
+	   CALL FILERR(SSCPFN(1,GIND),2,ST,1)
+	   CALL CLOSEQFIL(FDB)
+	   CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+C
+C SAVE POOL ARRAYS TO FILE
+C
+        SSFLAMT = SSPLAMT(GIND) 
+        SSFFEL  = SSPFEL(GIND) 
+        SSFLEL  = SSPLEL(GIND) 
+        SSFTNUM = SSPTNUM(GIND)
+        SSFONUM = SSPONUM(GIND)
+        SSFCMB  = SSPCMB(GIND)
+        SSFDCMB = SSPDCMB(GIND)
+        SSFNBA  = SSPNBA(GIND)
+        SSFNBU  = SSPNBU(GIND)
+        CALL FASTMOV(SSPMAIN(1,0,GIND),SSFMAIN,SSGPOL)
+	CALL FASTMOV(SSPCAMT(1,0,GIND),SSFCAMT,SSGPOL)
+	CALL FASTMOV(SSPTOPC(1,1,GIND),SSFTOPC,SSGTPS*SSGTOP)
+C
+C WRITE POOLS TO FILE
+C
+	CALL WRITEQW(FDB,1,SSFREC,ST)
+	IF(ST.NE.0) THEN
+	   CALL FILERR(SSCPFN(1,GIND),3,ST,1)
+	   CALL CLOSEFIL(FDB)
+	   CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+	CALL CLOSEQFIL(FDB)
+
+C
+C WRITE OVERFLOW DATA TO FILE
+C
+	CALL OPENW(4,SSCPOF(1,GIND),4,0,0,ST)
+	IF(ST.NE.0) THEN
+           CALL FILERR(SSCPOF(1,GIND),3,ST,1)
+           CALL CLOSEFIL(FDB)
+           CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+	CALL IOINIT(FDB,4,SSOSEC*256)
+C
+	CALL FASTMOV(SSOCOMCMB(1,GIND),SSOCMB,SSONUM)
+	CALL FASTMOV(SSOCOMAMT(1,GIND),SSOAMT,SSONUM)
+C
+        CALL WRITEW(FDB,1,SSOREC,ST)
+	IF(ST.NE.0) THEN
+           CALL FILERR(SSCPOF(1,GIND),3,ST,1)
+           CALL CLOSEFIL(FDB)
+           CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+	CALL CLOSEFIL(FDB)
+C
+	RETURN
+	END

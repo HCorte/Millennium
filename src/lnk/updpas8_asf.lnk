@@ -1,0 +1,16 @@
+$!
+$! UPDPAS8_ASF.LNK
+$!
+$! V01  13-SEP-2016 SCML  M16 PROJECT
+$!
+$!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! Copyright 2016 SCML Corporation. All rights reserved.
+$!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+$ LINK 'P1' -
+/EXE=GXUTL:UPDPAS8_ASF.EXE -
+OBJLIB:UPDPAS8_ASF,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION, -
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

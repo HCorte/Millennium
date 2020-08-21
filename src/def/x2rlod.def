@@ -1,0 +1,63 @@
+C
+C X2RLOD.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2RLOD.DEV                                   $
+C  $Date::   17 Apr 1996 16:31:46                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 05-DEC-94 SCD Integrate UK changes into X2X Baseline
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+CV02        INTEGER*4 FULL,
+CV02     *            SOFT_SEL,
+CV02     *            RESTART_SEL,
+CV02     *            FULL_NO_MCP
+CV02        INTEGER*4 X2BRO_NO_RESET_MCP,
+CV02     *            X2BRO_NO_RESET_SEL,
+CV02     *            X2BRO_NO_RESET_FULL
+CV02          PARAMETER (FULL               = -URESET)     !ULTIMATE RESET
+CV02          PARAMETER (SOFT_SEL           = -SRESET)     !SOFT RESET
+CV02          PARAMETER (RESTART_SEL        = -RRESET)     !RESTART RESET
+CV02          PARAMETER (FULL_NO_MCP        = -HRESET)     !HARD RESET
+CV02          PARAMETER (X2BRO_NO_RESET_MCP = -10) ! NO RESET UNLESS MCP CHANGED
+CV02          PARAMETER (X2BRO_NO_RESET_SEL = -11) ! NO RESET - SELECTIVE BCAST
+CV02          PARAMETER (X2BRO_NO_RESET_FULL= -12) ! NO RESET - FULL TERM LOAD
+C
+CV02        INTEGER*4 BRDCST_TYPE(X2X_RELAY_APPS)
+CV02        INTEGER*4 FIRSTLOAD(X2X_RELAY_APPS)
+CV02        INTEGER*4 LASTLOAD(X2X_RELAY_APPS)
+C
+CV02        COMMON /X2RLOC/BRDCST_TYPE,FIRSTLOAD,LASTLOAD
+C
+
+        INTEGER*4 X2RLOD_FULL, X2RLOD_SOFT_SEL, X2RLOD_SOFT_FULL	!V02
+	INTEGER*4 X2RLOD_HARD_FULL					!V02
+        INTEGER*4 X2RLOD_NO_RESET_SEL, X2RLOD_NO_RESET_FULL		!V02
+          PARAMETER (X2RLOD_FULL         = -1)     !ULTIMATE RESET - V02
+          PARAMETER (X2RLOD_SOFT_SEL     = -2)     !SOFT RESET, SELECTIVE - V02
+	  PARAMETER (X2RLOD_HARD_FULL	 = -3)     !HARD RESET, FULL - V02
+	  PARAMETER (X2RLOD_SOFT_FULL    = -4)	       !SOFT RESET FULL LOAD - V02
+          PARAMETER (X2RLOD_NO_RESET_SEL = -5) ! NO RESET - SELECTIVE BCAST - V02
+          PARAMETER (X2RLOD_NO_RESET_FULL= -6) ! NO RESET - FULL TERM LOAD - V02
