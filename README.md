@@ -1,4 +1,4 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+**In here are some basic examples and explanations**
 
 When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
 
@@ -6,16 +6,15 @@ When you're done, you can delete the content in this README and update the file 
 
 ---
 
-## Edit a file
+## Compile and Link a files of a project
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+First step is to compile indevidual each source file (.f or .for).
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+1. The command as follow **FORTRAN SWAP** no need to explicit say SWAP.FOR or SWAP.F  thats because the **FORTRAN** command will aumoticaly seahc for file with the extension **F or FOR** .
+2. Compile its dependecies **FORTRAN ISWAP** and **FORTRAN LOGGER**
+2. Now to Link a file or files for starter link one file as example **LINK SWAP** thats
+the same as **LINK/EXE=SWAP SWAP** or **LINK SWAP** first and in the first step COMPILE its **implicit that the extension is OBJ in LINK process** to note that the **flag EXE=SWAP** means the generated output file that a executable file will be name SWAP explicitly if its not defined as in the second command that is implicit gets the same name of the OBJ file.
+3. In case its a Main file that haves multiples dependecies it will be **LINK/EXE=SWAP SWAP, ISWAP, LOGGER** the SWAP exe file generated will include its dependecies of ISWAP and LOGGER
 
 ---
 
