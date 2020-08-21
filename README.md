@@ -6,7 +6,7 @@ When you're done, you can delete the content in this README and update the file 
 
 ---
 
-## Compile and Link a files of a project
+## Compile and Link all files of a project
 
 First step is to compile indevidual each source file (.f or .for).
 
@@ -18,30 +18,33 @@ the same as **LINK/EXE=SWAP SWAP** or **LINK SWAP** first and in the first step 
 
 ---
 
-## Create a file
+## How to Debug a Fortran Project
 
-Next, you’ll add a new file to this repository.
+The following steps are for a generic debug but also for a Millennium debug
+**To debug a project the compilation and linkage will have a flag of debug**
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+1. To compile a file now is **FORTRAN/DEBUG/NOOPTIMIZE SWAP** or **FORTRAN/DEBUG/NOOPTIMIZE SWAP.FOR** 
+2. To link all files of a project are now **LINK/DEBUG/EXE=SWAP SWAP,ISWAP,LOGGER** or **LINK/DEBUG/EXE=SWAP.EXE SWAP.OBJ,ISWAP.OBJ,LOGGER.OBJ**
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+## Now the steps needed for in Millenium Project to be Compiled and Linked
+
+3. To compile a file in *Millenium Fortran* its needed to run symbol DFOR (DFOR == "@DSS$GTECH:DSS_FOR * ") 
+    3.1 To get its value was use the dcl: *sh symb dfor* 
+    3.2 The @ at start means it a **COMMAND PROCEDURE** thats DSS_FOR that its extension is .COM that is implicit when running a *@COMMAND PROCEDURE* 
+    3.3 DSS$GTECH is a **Logical Name** that ist value is obtain by the following dcl: sh log DSS$GTECH
+    Its value is: "DSS$GTECH" = "SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT.DSS]" (LNM$SYSTEM_TABLE)
+4. To LINK a file in *Millenium Fortran* its needed to run symbol DLNK (DLNK == "@DSS$GTECH:DSS_LNK") 
+    4.1 To get its value was use the dcl: *sh symb dlnk*
+    3.2 The @ at start means it a **COMMAND PROCEDURE** thats DSS_LNK that its extension is .COM that is implicit when running a *@COMMAND PROCEDURE* 
+    3.3 DSS$GTECH is a **Logical Name** that ist value is obtain by the following dcl: sh log DSS$GTECH
+    Its value is: "DSS$GTECH" = "SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT.DSS]" (LNM$SYSTEM_TABLE)
+5. *COMMAND PROCEDURE* is nothing more then a dcl script (command lines that run in sequence) at 
+
+## Now the steps needed for in Millenium Project to be Compiled and Linked in Debug Mode
+
+1. The same steps above the only diference will a v2 of its **COMMAND PROCEDURES** that will be
+DSS_FORV2 and DSS_LNKV2 that have some changes where a extra parameter to indicate if its in debug mode or not
 
 ---
 
-## Clone a repository
-
-
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
-
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
-
 Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
-
-teste
