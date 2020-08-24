@@ -1,0 +1,198 @@
+                          GTECH Distibuted Network
+                              Main Menu Help                      Page 1 of 9
+ 
+ 
+      This menu is the gateway into the X2X Distributed Network
+      Database.  This database contains all information necessary
+      to: configure global network parameters, set up network and
+      local ports, setup terminal configurations, and setup station
+      configurations.
+                                                              Digital
+                                                              ______
+                              Network   Local    Ethernet    |      |
+                      Modems   Ports    Ports    LANS -------|      |
+       @ A B C D E F -------   DCE    _  DTE  __      | -----|      |--
+       --------------|     |---------| |-----|  |-----| |    |______|  |
+       --------------|     |---------| |-----|__|-----|-|              |DECNET
+       --------------|     |---------| |      __      | |     Digital  |
+       --------------|     |---------| |-----|  |-----| |     ______   |
+       --------------|     |---------|_|-----|__|-----|-|    |      |--
+       @ A B C D E F -------        Matrix  GTX386    | -----|      |
+                                    Switch            -------|      |
+                                                             |______|
+                          GTECH Distibuted Network
+                              Main Menu Help                      Page 2 of 9
+ 
+      ==== Option ====    =========== Description ===============
+      1. Update Global    This option allows the X2X network global
+                          parameters to be modified.
+      2. Update Network   This option allows network ports (ports
+         Ports            orginating from the X.21 cloud and connecting
+                          to the matrix switch) to be added, modified,
+                          and deleted.
+      3. Update Local     This option allows local ports (ports
+         Ports            orginating from the matrix switch and connecting
+                          to the Front Ends) to be added, modified,
+                          and deleted.
+      4. Update Report    This option allows report codes (statistical
+         Codes            reporting codes) to be added,
+                          modified, and deleted.
+      5. Update Report    This option allows report classes (logical groupings
+         Class            of report codes) to be added, modified, and
+                          deleted.
+ 
+ 
+                          GTECH Distibuted Network
+                              Main Menu Help                      Page 3 of 9
+ 
+      6. Update Station   This option allows station classes (specific
+         Class            parameters related to stations) to be added,
+                          modified, and deleted.  Maintaining station
+                          classes requires less input for station
+                          configurations
+      7. Update Station   This option allows the station port configuration
+         Port Config      parameters to be added, modified, and deleted.
+                          The port configuration informs the station
+                          which ports and terminals the station is to
+                          communicate with.
+      8. Update Terminal  This option allows terminal configuration
+         Configuration    information to be added, modified, and deleted.
+                          The terminal configuration is utilized to
+                          setup the parameters of a terminal relative to
+                          a specific station.
+ 
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                              Main Menu Help                      Page 4 of 9
+ 
+      9. Update Station   This options allows station configuration
+         Configuration    information to be added, modified, and deleted.
+                          The station configuration contains necessary
+                          information required to communicate, including
+                          the report class and station class.
+     10. Relay Broadcast  This option allows specific relay applications
+         Configuration    to be configured for performing relay functions.
+     11. Relay Group      This option allows relay groups to be described
+         Configuration    to provide a meaning full description.
+     12. Auto Build from  This option allows for automatic generation
+         ASF              of station, station port, and terminal
+                          configurations based on information stored in
+                          the Agent Sales File.
+     13. TITN Parameters  This option allows the X.25 TITN parameters to
+                          be configured and customized for networks
+                          utilizing X.25.
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                              Main Menu Help                      Page 5 of 9
+ 
+ 
+     14. Perform Edit     This function scans all of the X2X Database
+         Checks           files and performs edit checks to determine
+                          if any bad information has been input.  This
+                          function must be performed after any modifications
+                          have been made.  This function is also responsible
+                          for building commands allowing the Gaming System
+                          to update memory and the necessary files.
+ 
+     15. VISION           This function allows the VISION subsystem to
+                          be executed, allowing monitoring of all system
+                          components.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                              Main Menu Help                      Page 6 of 9
+ 
+     16. HASF             This function allows entry into the Agent
+                          Sales File update system.  This option is
+                          included to allow updates necessary for the
+                          Auto Build Function.
+ 
+     17. Release Record   This function will scan through all of the X2X
+         Locks            files and will release any outstanding record
+                          locks.
+ 
+     18. Auto Delete      This function will delete a terminal from the
+         Terminals        X2X database, and will also clear the X2X
+                          parameters from the ASF.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                              Main Menu Help                      Page 7 of 9
+ 
+        Procedures for Updating Stations
+        ================================
+ 
+                              -----------
+                              | Station |        Station Software layer
+                              -----------
+                               /       \
+                             /           \
+                         --------     --------
+                         | Port |     | Port |    Physical Port on Station
+                         --------     --------
+ 
+            /----/----/----/             \----\----\----\     Defined Terminals
+           /    /    /    /               \    \    \    \    on each port
+          /    /    /    /                 \    \    \    \
+        <Ter><Ter><Ter><Ter>               <Ter><Ter><Ter><Ter>
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                              Main Menu Help                      Page 8 of 9
+ 
+        The station/terminal configuration is a tree structure, starting
+        with the station as the parent node, having one or more ports,
+        with each port having one or more terminals.
+ 
+        The recommended method for adding stations and terminals is via
+        the autobuild facility.  The autobuild facility ensures that the
+        ASF file is updated, and will help to eliminate configuration
+        errors.
+ 
+        It is also possible to manually update station, station port,
+        and terminal configurations.  Once configurations have been
+        created using autobuild, it will be necessary to use the
+        manual method of modifing configurations to customize parameters.
+ 
+ 
+ 
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                              Main Menu Help                      Page 9 of 9
+ 
+        To manually create configurations, the recommended method is
+        to first create all related terminals (option 8), then create
+        the station port configuration (option 7), and then to create the
+        station configuration (option 9).  To manually update or customize
+        configurations, use the modify functions from the associated menus.
+ 
+        After updating or creating configurations, ALWAYS ensure that
+        the Perform Edit Checks (option 11) is performed to ensure of
+        the integrity of the database.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

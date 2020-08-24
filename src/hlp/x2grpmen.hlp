@@ -1,0 +1,88 @@
+                          GTECH Distributed Network
+                       Relay Group Configuration Help            Page 1 of 4
+ 
+      A relay group is a set of up to 16 stations which have the ability
+      to relay messages to other stations in the group.  When the
+      station obtains its configuration, it also requests a relay
+      configuration.  This configuration informs the station which
+      stations exist in its relay chain, from its position in the
+      chain to the last station.  When a relay message is received by
+      the station, it will attempt to relay the message to the first
+      station in its relay list.  If it can not connect to the station,
+      it will attempt to call the next station on the list.
+ 
+      GTECH recommends that the stations which make up the relay list
+      are grouped by some geographical location (ie. postal code).
+      Doing this will provide a means to report on stations based on physical
+      clustering.  It is reasonable to assume that most stations in a
+      common area will utilize the same communications path, and if there
+      is a failure in this common path, the relay group could be used to
+      illustrate this.
+ 
+ 
+                          GTECH Distributed Network
+                       Relay Group Configuration Help            Page 2 of 4
+ 
+      This menu provides a mean of assigning a description to a relay
+      group.  Normally, this description would identify the location of
+      the relay chain, but it can be used to contain any desired text.
+ 
+      Adding A Group Description
+      ==========================
+      To add a group description record to the Distributed Network,
+      enter "1" (for Add Group), and press return.  The program will
+      then prompt for the group number. If the group already
+      exists, an error message will be displayed, and
+      you will be prompted to re-enter the relay group number.
+      If the group does not exist, the Add a Group screen
+      will be displayed, requiring the group to be input.
+      The program will display the valid data ranges for each field, and
+      if an invalid value is input, an error message will be displayed,
+      and you will be required to input the parameter again. NOTE: if
+      you enter "E" while adding, the menu will be displayed and the ADD
+      will not be performed!
+ 
+                        GTECH Distributed Network
+                       Relay Group Configuration Help            Page 3 of 4
+ 
+      Modifying A Group Description
+      =============================
+      To modify a group description, enter "2" (for Modify Group),
+      and press return.  The program will then prompt for the group
+      number. If the record does not exist, an error message will be
+      displayed, and you will be prompted for another group.
+      If the group exists, the Modify a Group screen
+      will be displayed, and the current description of the group
+      will be output.
+ 
+      To modify a parameter, choose the number of the field that you wish
+      to update, (located on the immediate left of the displayed parameter),
+      and press return. The program will then display a prompt informing
+      of the valid data range of the field.  Enter the desired value and
+      press return.  If the input value does not fall within the range, or
+      does not match a specific input value, an error message will be
+      displayed, and you must re-enter the field value. Once a correct value
+ 
+ 
+                        GTECH Distributed Network
+                       Relay Group Configuration Help            Page 4 of 4
+ 
+      has been entered, the screen will refresh and the new parameter value
+      will be displayed.  When all desired parameters have been modified,
+      enter "E" and the associated files will be updated, and the Menu will
+      be displayed.  NOTE: If you enter "E" when being prompted for a value,
+      you will return to the menu without updating the data files!
+ 
+      Deleting a Group Description
+      ============================
+      This option will allow a group description to be deleted.
+      To delete a group, enter "3" and press return.  Enter the
+      group number, and if it exists, the Delete a Group
+      screen will be displayed. If the record does not exist, an
+      error message will be displayed, and you must re-enter the number.
+      Once the Delete Screen has been displayed, look at the group
+      information to ensure that this is the correct record.  If you wish
+      to delete it, enter "Y" and press return, and a message will be
+      displayed informing that the record was deleted.  If you no not
+      wish to delete the record, enter "N" and the group will not be deleted.
+ 

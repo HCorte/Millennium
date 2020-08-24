@@ -1,0 +1,154 @@
+C TNAMES.DEF
+C
+C V22 13-MAR-2014 SCML Placard Project
+C V21 03-DEC-2013 SCML Added support for new accounting report platform
+C V20 18-MAY-2011 RXK  Added name EPAN for f-n TPASAD (PASSIVE ACCOUNTING NEW)
+C V19 06-JAN-2011 FJG  MILLENNIUM MXSRV
+C V18 15-MAR-2010 RXK  Name for ePassive reservation error EPNR added
+C V17 06-JUN-2005 FRP  Modify for IPS Distribution.
+C V16 10-OCT-2000 UXN  FSE SIGN-ON ADDED.
+C V15 12-JUN-2000 UXN  COMMON statement added.
+C V14 13-FEB-1997 RXK  IMNU=instant supply message, IORD=instant games 
+C                      names request message
+C V13 11-FEB-1997 RXK  Names BCRS,TRIN,BTRN added
+C V12 28-JAN-1997 HXK  LOTGEN changes for IPS
+C V11 21-MAY-1996 HXK  Modifications for Pass Thru, Sign On game block txn
+C V10 11-DEC-1994 HXK  Change for Total key and Liability limits for Pitka
+C V09 15-SEP-1993 GXA  Added to SPFUN, Sports Team Name List & Segmented 
+C                      Invoice Report.
+C V08 25-AUG-1993 GXA  It helps if you change the riht TFILE.
+C V07 25-AUG-1993 GXA  Changed TFILE to REAL*8.
+C V06 25-AUG-1993 GXA  Added TFILE Statuses.
+C V05 29-APR-1993 GABO R Released for Finland Dec Conversion / Oddset
+C V04 21-JAN-1993 DAB  Initial Release
+C                      Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                      DEC Baseline
+C V03 18-MAY-1992 GCAN ADDED SPESCIAL FUNCTION ODDS REQUEST PARAM.
+C V02 07-OCT-1991 MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C TRANSACTION FIELD NAMES/VALUES
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1995 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C
+C       EURO MIL PROJECT - TTYPE(0:11) AND NEW TTYPE ' EUR'
+C V22 - PLACARD PROJECT - TTYPE(0:12) AND NEW TTYPE ' IGS'
+      INTEGER*4 TTYPE(0:12)
+      DATA TTYPE/'    ',' WAG',' CAN',' INC',
+     *           ' VAL',' RET',' REF',' SPE',
+     *           ' CMD',' CRS',' PTH',' EUR',
+     *           ' IGS'/
+      COMMON /TTYPE/ TTYPE
+C
+      INTEGER*4 STAT(0:11)
+      DATA STAT/'NUSD','GOOD','VOID','INCA',
+     *          'EXCH','CASH','REJT','XCHD',
+     *          'XCSH','CLAM','XCLM','FRAC'/
+      COMMON /STAT/ STAT
+C
+C
+      INTEGER*4 ERROR(0:255)
+      DATA ERROR/'NOER','INVL','SYNT','SUPR',
+     *           'NTON','SDOR','SDRW','LIAB',
+     *           'NDRW','DES ','RNIN','TBAD',
+     *           'VSEC','CBAD','BSTS','RETY',
+     *           'VINQ','XERR','GREV','NFRA',
+     *           'AFRA','UNFR','INCR','NOCR',
+     *           'BDAY','WMEC','SFDC','????',
+     *           '????','????','WINH','CLOS',
+     *           'ODEX','BCRS','TRIN','BTRN',
+     *           'BPSW','EPNR','EPIO','BNIF', 216 * '????'/
+      COMMON /ERROR/ ERROR
+C
+C
+      INTEGER*4 VALST(0:17)
+      DATA VALST/'NWIN','UCSH','CASH','CSHX',
+     *           'VDEL','VCAN','HOLD','NOPY',
+     *           'NOPZ','POST','CLAM','CLMX',
+     *           'PPAY','NPPP','PPPO','BANK',
+     *           'SBNK','SBNM'/
+      COMMON /VALST/ VALST
+C
+C
+      INTEGER*4 SPFUN(0:51)                     !MXSRV
+      DATA SPFUN/'    ','SON ','SOFF','LOAD',
+     *           'KEY ','SREP','GREP','RPNT',
+     *           'HASF','SLOW','NEWS','JPOT',
+     *           'X2SF','LBCK','TSTC','FLTS',
+     *           'WIN4','BDS#','TKTR','CNTL',
+     *           'TEXT','ORDR','SERV','ODSR',
+     *           'POLL','MISC','ISAL','PCSH',
+     *           'FRIN','FRAC','IVAL','UFRC',
+     *           'PLST','EPAC','EPAN','MKTM',
+     *           'SLST','IREP','TOTK','GBLO',
+     *           'ISSK','ISUB','FPT ','PATH',
+     *           'CHKW','TDLV','TPAS','CDTX',
+
+C----+------------------------------------------------------------------
+C V21| Added support for new accounting report platform
+C----+------------------------------------------------------------------
+     *           'AUPD','ANAM','TXML','BREP'/   !MXSRV
+C----+------------------------------------------------------------------
+C V21| Added support for new accounting report platform
+C----+------------------------------------------------------------------
+        COMMON /SPFUN/ SPFUN
+C
+C
+      INTEGER*4 SYTYP(0:4)
+      DATA SYTYP/'NONE','FULL','REDU','USYS',
+     *           'CSYS'/
+        COMMON /SYTYP/ SYTYP
+C
+C
+      INTEGER*4 P3NAMES(0:10)
+      DATA P3NAMES/'    ','F2ST','B2ST','S2ST','3STR','6BOX',
+     *             '3BOX','6S/B','3S/B','6CMB','3CMB'/
+C
+      COMMON /P3NAMES/ P3NAMES
+C
+      INTEGER*4 P4NAMES(0:16)
+      DATA P4NAMES/'    ','F2ST','B2ST','M2ST','4STR','24BX',
+     *             '12BX','6BOX','4BOX','24SB','12SB','6S/B',
+     *             '4S/B','24CB','12CB','6CMB','4CMB'/
+C
+      COMMON /P4NAMES/ P4NAMES
+C
+      CHARACTER*7 NGTYPE(2)
+      DATA NGTYPE/'3 digit','4 digit'/
+C
+      COMMON /NGTYPE/ NGTYPE
+C
+      REAL*8    TFILE(0:5)
+      DATA TFILE/'NONE    ','EARLY   ','LATE    ','CARRY   ',
+     *           'CPOST   ','CDEAD   '/
+C
+      COMMON /TFILE/ TFILE
+
+      INTEGER*4 ITYPE(0:15)
+      DATA      ITYPE/'IEST','IISS','ISTS','IQTA',
+     *                'IINV','IFIN','IORD','GPAR',
+     *                'ISET','ISON','ISOF','FSES',
+     *                'ICNF','IVAL','OACT','IGTB'/
+      COMMON/ITYPE/ ITYPE
+C
+      CHARACTER*13 IGSTTYPE(0:4)
+      DATA      IGSTTYPE/'APOSTA       ','CANCELAMENTO ','VALIDACAO    ',
+     *                  'PAGAMENTO    ','RELATORIO    '/
+      COMMON/IGSTTYPE/ IGSTTYPE
+C
+C END TNAMES.DEF
+C

@@ -1,0 +1,22 @@
+$! GXSRC:X2BLDGRP.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]X2BLDGRP.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:59:56   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 14:10:24   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:53:34   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:X2BLDGRP.EXE -
+OBJLIB:X2BLDGRP,-
+X2FILNAM,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXX2XCOM.ESH/SHAREABLE

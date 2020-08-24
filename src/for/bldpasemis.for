@@ -1,0 +1,2040 @@
+C
+C BLDPASEMIS.FOR (Change the # of version on variable VERSAO)
+C
+C V04 08-FEV-2013 SCML Display of draw short description added
+C                      Update of draw short description added
+C                      Changed 'La data ...' by 'A data ...'
+C V03 17-FEB-2011 RXK COMPILATION WARNING OF OCCURED OVERFLOW AVOIDED
+C V02 01-JAN-2010 FJG ePASSIVE
+C V01 12-DEC-00 CS  INITIAL RELEASE FOR PORTUGAL
+C
+C PROGRAM WILL DISPLAY/UPDATE PASSIVE LOTTERY EMISSION FILE
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+      SUBROUTINE BLDPASEMIS(PB, KEYB, DISP1, DISP2, DISP3)
+      IMPLICIT NONE
+
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:GTECHSMG.DEF'
+C
+C PARAMETERS
+C
+      INTEGER PB,			      ! PASTEBOARD
+     *        KEYB,			      ! VIRTUAL KEYBOARD
+     *        DISP1,			      ! header frame window
+     *        DISP2,			      ! output data frame window
+     *        DISP3			      ! message frame window
+C
+C LOCAL VARIABLES
+C
+      INTEGER*4	      TAMMENU
+      PARAMETER	      (TAMMENU = 5)
+
+      CHARACTER*28    MYMENU(TAMMENU) /'[     MOSTRAR EXTRACAO     ]',
+     *                                 '[ DEFINIR/ALTERAR EXTRACAO ]',
+     *                                 '[    LISTAR EXTRACOES      ]',
+     *                                 '[       UTILITARIOS        ]',
+     *                                 '[          SAIR            ]'/
+
+      CHARACTER*78  cMSG
+
+      INTEGER DISPMENU			      ! INITIAL MENU
+
+      INTEGER DEFAULT/1/
+      INTEGER*4 ST,MENUOPT			      
+
+      cMSG = 'LOTARIA NACIONAL DE BILHETES'
+      ST   = SMG$PUT_CHARS (DISP1, cMSG, 1, 12, SMG$M_ERASE_LINE)
+C
+C CREATES MENU 
+C
+      ST = SMG$ERASE_DISPLAY(DISP2)
+      ST = SMG$CREATE_VIRTUAL_DISPLAY(11, 30, DISPMENU)
+      ST = SMG$CREATE_MENU(DISPMENU, MYMENU, SMG$K_VERTICAL, 
+     *			   SMG$M_DOUBLE_SPACE, 2, SMG$M_REVERSE)
+
+      ST = SMG$SET_CURSOR_MODE (PB, SMG$M_CURSOR_ON )
+      ST = SMG$ERASE_DISPLAY (DISP3)
+	
+      MENUOPT = 0
+      DO WHILE(MENUOPT.NE.TAMMENU)
+      	cMSG = '    Use setas para movimentar cursor e <ENTER> para selecionar '
+      	ST = SMG$PUT_CHARS (DISP3, cMSG, 1,1)
+	ST = SMG$SET_CURSOR_MODE(PB, SMG$M_CURSOR_ON)
+
+      	ST = SMG$PASTE_VIRTUAL_DISPLAY(DISPMENU, PB, 7, 25)
+      	ST = SMG$SELECT_FROM_MENU(KEYB, DISPMENU, MENUOPT, 
+     *				       DEFAULT,,,,,,SMG$M_BOLD)
+	ST = SMG$SET_CURSOR_MODE(PB, SMG$M_CURSOR_OFF)
+      	ST = SMG$UNPASTE_VIRTUAL_DISPLAY (DISPMENU,PB)
+
+        ST = SMG$PASTE_VIRTUAL_DISPLAY (DISP2, PB,  5, 2)
+
+	ST = SMG$ERASE_DISPLAY(DISP2)
+	ST = SMG$ERASE_DISPLAY(DISP3)
+
+	IF(MENUOPT.EQ.1) THEN		
+	  CALL DISP_EMIS(DISP2,DISP3,KEYB,PB)
+	ELSEIF(MENUOPT.EQ.2) THEN
+	  CALL UPD_EMIS(DISP2,DISP3,KEYB,PB)
+	  ST = SMG$ERASE_DISPLAY(DISP2)
+	ELSEIF(MENUOPT.EQ.3) THEN
+	  CALL EMIS_DSP(DISP2,DISP3,KEYB,PB)
+	ELSEIF(MENUOPT.EQ.4) THEN
+	  CALL EMIS_UTIL(DISP2,DISP3,KEYB,PB)
+	ENDIF
+      ENDDO 
+
+      RETURN
+      END
+
+C******************************************************************
+C SUBROUTINE DISP_EMIS(DISPLAY INFORMATION FOR SPECIFIED EMISSION)
+C******************************************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE DISP_EMIS(DISP2,DISP3,KEYB,PB)
+	IMPLICIT NONE
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:GTECHSMG.DEF'
+	INCLUDE 'INCLIB:PASNAM.DEF'
+
+	CHARACTER*77 CMSG,CTIT
+	CHARACTER*14 CPL
+
+	INTEGER	    KEYB,DISP2,DISP3,PB
+	INTEGER*4   EMIS,UNIT,ST,FDB(7),DIVS,GNUM,GIND
+	INTEGER*4   TOTSHR, LINHA
+C------- V04 -----------------------------------------------------------
+	INTEGER*4   I
+C------- V04 -----------------------------------------------------------
+
+	INTEGER*8   TOTSHV
+C
+C FUNCTION
+C
+	INTEGER*4   PAS_ROUND_VALUE
+
+	GIND = 0
+	CMSG = ' Digite o tipo da extraccao (1-Classica 2-Popular): '
+	ST = SMG$PUT_CHARS (DISP2, CMSG, 4, 4)
+	CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,GIND,4,68,2,1,NUMPAS,ST)
+
+	IF(ST.EQ.-2) RETURN
+
+	GNUM  = GTNTAB(TPAS,GIND)
+
+	IF (GNUM.LE.0) THEN
+	    CMSG = 'Jogo nao ativo'
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+            ST = SMG$ERASE_DISPLAY(DISP2)
+	    RETURN
+	ENDIF
+
+	CTIT = 
+     *		   'DIVISAO          GANHADORES          PREMIO       TIPO'
+
+	CALL GET_EMISNO(EMIS,DISP2,DISP3,KEYB,PB,GNUM)
+
+	IF(EMIS.NE.0) THEN
+C
+C	  FIND UNIT FOR FILE
+C
+	  CALL FIND_AVAILABLE_LUN(UNIT,ST)
+	  IF(ST.NE.0) THEN
+	    CMSG = ' Nao ha handler disponivel para abrir o arquivo. '
+     *            //'Tecle <Return>'
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	  ELSE
+	    CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+	    IF(ST.NE.0) THEN
+		WRITE (CMSG,50) GFNAMES(1,GNUM)
+	        CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	    ELSE
+		CALL IOINIT(FDB,UNIT,DPASEC*256)
+		CALL READW(FDB,(EMIS-PAS_DRW_OFFSET),DPAREC,ST)
+		IF(ST.NE.0) THEN
+		    WRITE (CMSG,60) GFNAMES(1,GNUM)
+	            CALL SHOW_ERR(KEYB, DISP3, CMSG)
+		ELSE
+C 
+C FIRST SCREEN
+C
+		    WRITE (CMSG,100) DPAEMIS
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 2, 2)
+
+		    WRITE (CMSG,150) DPASTS
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 3, 2)
+
+		    WRITE (CMSG,200) DPANUMTCK
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 4, 2)
+
+		    WRITE (CMSG,250) DPANUMSER
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 5, 2)
+
+		    WRITE (CMSG,300) CMONY(DPAPRC, 6,VALUNIT)
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 6, 2)
+
+		    WRITE (CMSG,350) DPANOFFRA
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 7, 2)
+
+		    WRITE (CMSG,400) DPAESD
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 8, 2)
+
+		    WRITE (CMSG,450) DPAPLAN
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 9, 2)
+
+		    WRITE (CMSG,500) DPAPRGCDC
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 10, 2)
+
+		    WRITE (CMSG,550) CMONY(DPAREDAMT,8,VALUNIT)
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 11, 2)
+
+		    WRITE (CMSG,600) DPADIV
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 12, 2)
+
+		    IF (DPAEMT.LE.0) THEN
+                        CPL = '--------------'
+	            ELSE
+		        CPL = NAMPLANTYP(DPAEMT)
+		    ENDIF
+		    WRITE (CMSG,650) CPL
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 13, 2)
+
+		    WRITE (CMSG,660) DPAMAXDAYPAY
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 14, 2)
+		    
+C------- V04 -----------------------------------------------------------
+		    WRITE (CMSG,670) (DPALITDRW(I),I=1,6)
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, 15, 2)
+C------- V04 -----------------------------------------------------------
+
+		    CMSG = ' Qualquer tecla prossegue'
+		    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+C
+C SECOND SCREEN
+C
+		    ST = SMG$ERASE_DISPLAY(DISP2)
+
+		    TOTSHR  = 0
+		    TOTSHV  = 0
+		    LINHA   = 3
+                    IF (DPAEXSHV(1).GT.0) THEN
+		        CMSG = 'SERIE NAO SORTEADA'
+		        ST = SMG$PUT_CHARS (DISP2, CMSG, 1, 25)
+		        ST = SMG$PUT_CHARS (DISP2, CTIT, 2, 2)
+		        DO DIVS=1,PAGEDV
+			   IF (DPAEXSHV(DIVS).NE.0) THEN
+			      WRITE(CMSG,900) DIVS,DPAEXSHR(DIVS),
+     *				              CMONY(PAS_ROUND_VALUE(DPAEXSHV(DIVS)),12,VALUNIT),
+     *                                        NAMPRZTYP(DPATYP(DIVS))
+			      ST = SMG$PUT_CHARS (DISP2, CMSG, LINHA, 2)
+			      LINHA   = LINHA   + 1
+	                   ENDIF
+	                ENDDO
+		        CMSG = ' Qualquer tecla prossegue'
+		        CALL SHOW_ERR(KEYB, DISP3, CMSG)
+		    ENDIF
+
+		    LINHA   = 3
+		    ST = SMG$ERASE_DISPLAY(DISP2)
+		    ST = SMG$PUT_CHARS (DISP2, CTIT, 1, 2)
+
+		    DO DIVS=1,MIN(14,DPADIV)
+			WRITE(CMSG,900) DIVS,DPASHR(DIVS),
+     *				        CMONY(PAS_ROUND_VALUE(DPASHV(DIVS)),12,VALUNIT),
+     *                                  NAMPRZTYP(DPATYP(DIVS))
+			ST = SMG$PUT_CHARS (DISP2, CMSG, LINHA, 2)
+C
+C			ADD VALUES TO TOTAL
+C
+			LINHA   = LINHA   + 1
+			TOTSHR  = TOTSHR  + DPASHR(DIVS)
+			TOTSHV  = TOTSHV  + (DPASHV(DIVS)*DPASHR(DIVS))
+		    ENDDO
+C
+C THIRD SCREEN, IF NECESSARY
+C
+		    IF(DPADIV.GT.14) THEN
+			CMSG = ' Qualquer tecla prossegue'
+			CALL SHOW_ERR(KEYB, DISP3, CMSG)
+
+			ST = SMG$ERASE_DISPLAY(DISP2)
+			ST = SMG$PUT_CHARS (DISP2, CTIT, 1, 2)
+
+			LINHA = 3
+			DO DIVS=15,MIN(PAGDIV,DPADIV)
+			    WRITE(CMSG,900) DIVS,DPASHR(DIVS),
+     *				        CMONY(PAS_ROUND_VALUE(DPASHV(DIVS)),12,VALUNIT),
+     *                                  NAMPRZTYP(DPATYP(DIVS))
+			    ST = SMG$PUT_CHARS (DISP2, CMSG, LINHA, 2)
+C
+C			    ADD VALUES TO TOTAL
+C
+			    LINHA   = LINHA   + 1
+			    TOTSHR  = TOTSHR  + DPASHR(DIVS)
+			    TOTSHV  = TOTSHV  + (DPASHV(DIVS)*DPASHR(DIVS))
+			ENDDO
+		    ENDIF
+C
+C ADD EXTRA SHARES AND SHARES VALUES
+C
+		    DO DIVS=1,PAGEDV
+                       IF (DPAEXSHR(DIVS).GT.0) THEN
+                           TOTSHR = TOTSHR + DPAEXSHR(DIVS)			
+                           TOTSHV = TOTSHV + (DPAEXSHV(DIVS)*DPAEXSHR(DIVS))			
+		       ENDIF
+		    ENDDO
+C
+C		    SHOW TOTAL LINE
+C
+		    ST = SMG$PUT_CHARS (DISP2, '-----------', LINHA, 21)
+		    ST = SMG$PUT_CHARS (DISP2, '-----------', LINHA, 36)
+		    ST = SMG$PUT_CHARS (DISP2, 'TOTAL', LINHA+1, 1)
+
+		    WRITE(CMSG,950) TOTSHR,
+     *				    CMONY(PAS_ROUND_VALUE(TOTSHV),13,VALUNIT)
+
+		    ST = SMG$PUT_CHARS (DISP2, CMSG, LINHA+1, 19)
+
+		    CMSG = ' Qualquer tecla prossegue'
+		    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+		    ST = SMG$ERASE_DISPLAY(DISP2)
+		ENDIF
+	    ENDIF
+	  ENDIF
+	ENDIF
+
+	CALL CLOSEFIL(FDB)
+	RETURN
+C
+C FORMAT STATEMENTS
+C
+50	FORMAT(' Erro de abertura no arquivo ',5A4,
+     *	       ' Qualquer tecla p/ continuar')
+60	FORMAT(' Erro de leitura no arquivo ',5A4,
+     *	       ' Qualquer tecla p/ continuar')
+
+100	FORMAT(' EXTRACAO NUMERO                      ',I6)
+150	FORMAT(' STATUS:                              ',I6)
+200	FORMAT(' QUANTIDADE DE BILHETES POR SERIE:    ',I6)
+250	FORMAT(' QUANTIDADE DE SERIES POR SERIE:      ',I6)
+300	FORMAT(' PRECO DE CADA FRACAO:                ',A6)
+350	FORMAT(' NUMERO DE FRACOES DO BILHETE:        ',I6)
+400	FORMAT(' CDC DE ENCERRAMENTO DA EXTRACAO:     ',I6)
+450	FORMAT(' PLANO DE EXTRACAO:                   ',I6)
+500	FORMAT(' DATA DE PRESCRICAO DA EXTRACAO:      ',I6)
+550	FORMAT(' VALOR MAXIMO PARA PGTO. NO MEDIADOR: ',A8)
+600	FORMAT(' NUMERO DE DIVISOES:                  ',I6)
+650	FORMAT(' TIPO DE EMISSAO:                     ',A14)
+660	FORMAT(' NRO. DE DIAS PARA PGTO. NO MEDIADOR: ',I6)
+670	FORMAT(' DESCRICAO DA EXTRACAO:               ',6A4)
+900	FORMAT(1X,I3,15X,I6,6X,A12,5X,14A)
+950	FORMAT(I8,5X,A13)
+	END
+
+C****************************************************************
+C SUBROUTINE UPD_EMIS (UPDATE INFORMATION FOR SPECIFIED EMISSION)
+C****************************************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE UPD_EMIS(DISP2,DISP3,KEYB,PB)
+	IMPLICIT NONE
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+	INCLUDE 'INCLIB:DPPREC.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:GTECHSMG.DEF'
+
+	CHARACTER*5  CONFIRM(2)/' SIM ', ' NAO '/
+	CHARACTER*5  OPTION  /' SIM '/  
+	CHARACTER*77 CMSG
+
+	INTEGER KEYB,DISP2,DISP3,DISP4,PB
+
+	INTEGER*4 EMIS,UNIT,UNIT2,ST,FDB(7),FDB2(7),IOPT
+	INTEGER*4 GNUM,GIND
+
+C------- V04 -----------------------------------------------------------
+	INTEGER*4 I
+	INTEGER*4 ILITDRW(6)
+	CHARACTER*24 CLITDRW
+	EQUIVALENCE(ILITDRW,CLITDRW)
+C------- V04 -----------------------------------------------------------
+
+	GIND = 0
+	CMSG = ' Digite o tipo de extraccao (1-Classica 2-Popular): '
+	ST = SMG$PUT_CHARS (DISP2, CMSG, 4, 4)
+	CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,GIND,4,68,2,1,NUMPAS,ST)
+
+	IF(ST.EQ.-2) RETURN
+
+	GNUM  = GTNTAB(TPAS,GIND)
+
+	IF (GNUM.LE.0) THEN
+	    CMSG = 'Jogo nao ativo'
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+            ST = SMG$ERASE_DISPLAY(DISP2)
+	    RETURN
+	ENDIF
+
+	UNIT  = 90
+	UNIT2 = 91
+C
+	CALL GET_EMISNO(EMIS,DISP2,DISP3,KEYB,PB,GNUM)
+	IF (EMIS.LE.0) RETURN
+C
+C OPEN FILE
+C
+	CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+	IF(ST.NE.0) THEN
+	    WRITE (CMSG,50) GFNAMES(1,GNUM)
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	ELSE
+	    CALL IOINIT(FDB,UNIT,DPASEC*256)
+	    CALL READW(FDB,(EMIS-PAS_DRW_OFFSET),DPAREC,ST)
+	    IF(ST.NE.0) THEN
+		WRITE (CMSG,60) GFNAMES(1,GNUM)
+		CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	    ELSE
+C
+C RECEIVE INFORMATION
+C
+		IF(DPASTS.LT.GAMOPN) DPASTS = GAMINF
+		DPAEMIS = EMIS 
+
+		IF(DPASTS.LT.GFINAL) THEN
+		  CMSG = ' Digite a quantidade de series por extraccao'
+		  ST = SMG$PUT_CHARS (DISP2, CMSG, 4, 4)
+		  CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,DPANUMSER,
+     *				  4,68,2,1,99,ST)
+		  IF(ST.EQ.-2) RETURN
+
+		  ST = SMG$ERASE_DISPLAY(DISP3)
+		  CMSG = ' Digite o numero do plano de extraccao associado'
+		  ST = SMG$PUT_CHARS (DISP2, CMSG, 6, 4)
+		  CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,DPAPLAN,
+     *				  6,64,4,1,9999,ST)
+		  IF(ST.EQ.-2) RETURN
+		  
+		  ST = SMG$ERASE_DISPLAY(DISP3)
+		  CMSG = ' Digite o dia de inicio de vendas'
+		  ST = SMG$PUT_CHARS (DISP2, CMSG, 8, 4)
+		  CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,DPABSD,
+     *				  8,64,4,1,9999,ST)
+		  IF(ST.EQ.-2) RETURN		  
+
+C------- V04 -----------------------------------------------------------
+		  ST = SMG$ERASE_DISPLAY(DISP3)
+		  CMSG = ' Digite a descricao da extracao'
+		  ST = SMG$PUT_CHARS (DISP2, CMSG, 10, 4)
+		  WRITE(CLITDRW,'(6A4)') (DPALITDRW(I),I=1,6)
+		  CALL SMG_INPTEXT(PB,KEYB,DISP2,DISP3,CLITDRW,
+     *                 1,10,49,24,1,ST)
+		  IF(ST.EQ.-2) RETURN
+		  CALL FASTMOV(ILITDRW,DPALITDRW,6)
+C------- V04 -----------------------------------------------------------
+
+		ENDIF
+C
+C ENTER PASSIVE PURGE CONFIGURATION
+C
+                CALL GET_PURGE_DAYS(PB, KEYB, DISP2, DISP3, DPAREC, ST)
+		IF(ST .EQ. -2) RETURN
+
+C
+C	CDC OF LAST CHANGE
+C
+		DPACHGCDC = DAYCDC
+		CMSG = ' Deseja actualizar os dados desta extracao ?'
+		
+C------- V04 -----------------------------------------------------------
+!		ST = SMG$PUT_CHARS (DISP2, CMSG, 14, 4)
+		ST = SMG$PUT_CHARS (DISP2, CMSG, 15, 4)
+C------- V04 -----------------------------------------------------------
+
+C
+C CREATES YES/NO MENU DISPLAY - DISPCONF 
+C
+		ST = SMG$CREATE_VIRTUAL_DISPLAY(1, 15, DISP4)
+		ST = SMG$CREATE_MENU(DISP4, CONFIRM,
+     *				     SMG$K_HORIZONTAL,,, SMG$M_REVERSE)
+
+C------- V04 -----------------------------------------------------------
+!		ST = SMG$PASTE_VIRTUAL_DISPLAY(DISP4, PB, 18, 61)
+		ST = SMG$PASTE_VIRTUAL_DISPLAY(DISP4, PB, 19, 61)
+C------- V04 -----------------------------------------------------------
+
+		ST = SMG$SELECT_FROM_MENU(KEYB, DISP4, IOPT, 2,
+     *					  ,,,, OPTION, SMG$M_BOLD)
+		ST = SMG$SET_CURSOR_MODE(PB, SMG$M_CURSOR_OFF)
+		ST = SMG$UNPASTE_VIRTUAL_DISPLAY(DISP4, PB)
+		ST = SMG$DELETE_VIRTUAL_DISPLAY (DISP4,PB)
+
+		IF(IOPT.NE.1) RETURN
+C
+C COPY PLAN INFORMATION TO THIS FILE
+C
+		IF(DPASTS.LT.GFINAL) THEN
+		  CMSG = ' BUSCANDO DADOS DO PLANO DE EXTRACAO ASSOCIADO'
+		  ST = SMG$PUT_CHARS (DISP3, CMSG, 1,1)
+
+		  CALL OPENW(UNIT2,SFNAMES(1,PPF),4,0,0,ST)
+		  IF(ST.NE.0) THEN
+		    CMSG = ' Erro de abertura no arquivo de planos; Qualquer tecla prossegue'
+		    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+		    RETURN
+		  ELSE
+		    CALL IOINIT(FDB2,UNIT2,DPPSEC*256)
+		    CALL READW(FDB2,DPAPLAN,DPPREC,ST)
+		    CALL CLOSEFIL(FDB2)
+		    IF(ST.NE.0) THEN
+			CMSG = ' Erro de leitura no arquivo de planos; Qualquer tecla prossegue'
+			CALL SHOW_ERR(KEYB, DISP3, CMSG)
+			RETURN
+		    ELSE
+C
+C CHECK IF WE HAVE A VALID PLAN
+C
+			IF(DPPNUMTCK.EQ.0 .OR. DPPDIV.EQ.0) THEN
+			    CMSG = ' Plano nao cadastrado. Qualquer tecla prossegue'
+			    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+			    RETURN
+			ENDIF
+
+			DPAPRC    = DPPPRC
+			DPADIV    = DPPDIV
+			DPANUMTCK = DPPNUMTCK
+			DPANOFFRA = DPPNOFFRA
+			DPAEMT    = DPPPLT
+			CALL FASTMOV(DPPSHR,DPASHR,PAGDIV)
+			CALL FASTMOV(DPPSHV,DPASHV,PAGDIV*2)
+			CALL FASTMOV(DPPEXSHR,DPAEXSHR,PAGEDV)
+			CALL FASTMOV(DPPEXSHV,DPAEXSHV,PAGEDV*2)
+			CALL FASTMOV(DPPTYP,DPATYP,PAGDIV)
+			CALL FASTMOV(DPPDIG,DPADIG,PAGDIV)
+			CALL FASTMOV(DPPIDNUM,DPAIDNUM,PAGDIV)
+			CALL FASTMOV(DPPWNUM,DPAWNUM,PAGDIV)
+
+		    ENDIF
+		  ENDIF
+		ENDIF
+C
+C WRITE IT TO FILE
+C
+		CMSG = ' ACTUALIZANDO DADOS DA EXTRACAO'
+		ST = SMG$PUT_CHARS (DISP3, CMSG, 1,1)
+
+		CALL WRITEW(FDB,EMIS,DPAREC,ST)
+		IF(ST.NE.0) THEN
+		    WRITE(CMSG,70) GFNAMES(1,GNUM)
+		    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+		ENDIF
+		ST = SMG$ERASE_DISPLAY(DISP2)
+		ST = SMG$ERASE_DISPLAY(DISP3)
+	    ENDIF
+	ENDIF
+
+	CALL CLOSEFIL(FDB)
+	RETURN
+C
+C FORMAT STATEMENTS
+C
+50	FORMAT(' Erro de abertura no arquivo ',5A4,
+     *	       ' Qualquer tecla p/ continuar')
+60	FORMAT(' Erro de leitura no arquivo ',5A4,
+     *	       ' Qualquer tecla p/ continuar')
+70	FORMAT(' Erro de escrita no arquivo ',5A4,
+     *	       ' Qualquer tecla p/ continuar')
+
+100	FORMAT(I6)
+200	FORMAT(I2)
+300	FORMAT(' Divisao ',I2.2,' - Qtde.Ganhadores             ',
+     *	       'Valor Premio')       
+400	FORMAT(I10)
+500	FORMAT(I5)
+	END
+
+C**********************************************
+C SUBROUTINE DSP_ALLEMIS(DISPLAY ALL EMISSIONS)
+C**********************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE DSP_ALLEMIS(DISP2,DISP3,KEYB,PB)
+	IMPLICIT NONE
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:GTECHSMG.DEF'
+C
+C	PARAMETERS
+C
+	INTEGER		DISP2,DISP3,PB,KEYB
+C
+C	LOCAL VARIABLES
+C
+	LOGICAL		EOF
+	INTEGER		IST, KEY
+	CHARACTER*80	CMSG, CMSG1, CMSG2
+
+	INTEGER*4	MAXLIN
+	PARAMETER	(MAXLIN=16)
+
+	INTEGER*4	UNIT, ST, LINHA, EMIS, FDB(7), GIND, GNUM, WEEK, YEAR
+C
+C
+	KEY  = 0
+
+	IST = SMG$ERASE_DISPLAY(DISP2)
+
+	GIND = 0
+	CMSG = ' Digite o tipo de extraccao (1-Classica 2-Popular): '
+	ST = SMG$PUT_CHARS (DISP2, CMSG, 4, 4)
+	CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,GIND,4,68,2,1,NUMPAS,ST)
+
+	IF(ST.EQ.-2) RETURN
+
+	GNUM  = GTNTAB(TPAS,GIND)
+
+	IF (GNUM.LE.0) THEN
+	    CMSG = 'Jogo nao ativo'
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+            ST = SMG$ERASE_DISPLAY(DISP2)
+	    RETURN
+	ENDIF
+
+	IST = SMG$ERASE_DISPLAY(DISP2)
+
+	CMSG2 = ' Extracao|Status|Plano|CDC Inicial|CDC Final|'
+     *        //'Qtde. Bilhetes|Qtd. Ser|Sem/Ano '
+	IST = SMG$PUT_CHARS (DISP2, CMSG2, 1, 1,, SMG$M_REVERSE)
+
+	CMSG1 = 'Lendo Extraccoes Registadas. Aguarde...'
+      	IST = SMG$PUT_CHARS (DISP3, CMSG1, 1, 1, SMG$M_ERASE_LINE)
+C
+C	FIND UNIT FOR FILE
+C
+	CALL FIND_AVAILABLE_LUN(UNIT,ST)
+	IF (ST.NE.0) THEN
+	   CMSG = ' Nao ha handler disponivel para abrir o arquivo. '
+     *          //'Tecle <Return>'
+	ELSE
+	   CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+	   IF (ST.NE.0) THEN
+	      CMSG = ' Erro de abertura no arquivo de extracoes. '
+     *             //'Tecle <Return>'
+	   ELSE
+	      CALL IOINIT(FDB,UNIT,DPASEC*256)
+	      EMIS  = 1
+	      LINHA = 3
+	      EOF   = .TRUE.
+
+	      DO WHILE(EOF)
+	   	 CALL READW(FDB,(EMIS-PAS_DRW_OFFSET),DPAREC,ST)
+		 IF(ST.NE.0) THEN
+		   EOF = .FALSE.
+
+		   IF(ST.EQ.144) THEN
+		     CMSG = 'Tecle <Return> para Finalizar.'
+		   ELSE
+		     CMSG = ' Erro de leitura no arquivo de extracoes. '
+     *                    //'Tecle <Return>.'
+		   ENDIF
+		 ELSE
+C
+C		   CHECK DPAREC
+C
+		   IF(DPAEMIS.GT.0 .AND. DPAEMIS.LT.PAS_DRW_OFFSET+1000) THEN
+C
+		     CALL GETPASDRW(DPADRAW,WEEK,YEAR)
+		     WRITE(CMSG,100) DPAEMIS, DPASTS, DPAPLAN,
+     *                               DPABSD, DPAESD, DPANUMTCK, DPANUMSER, WEEK,YEAR
+	             IST = SMG$PUT_CHARS (DISP2, CMSG, LINHA, 4)
+		     LINHA = LINHA + 1
+
+		     IF (LINHA.GT.MAXLIN) THEN
+		        CMSG = 'Tecle <Return> para Proximo Ecran ou <Next>'
+     *                       //'para Sair'
+			IST = SMG$PUT_CHARS (DISP3, CMSG, 1, 1,
+     *                                        SMG$M_ERASE_LINE)
+		        IST = SMG$READ_KEYSTROKE(KEYB, KEY, , DISP3)
+			IF (KEY.EQ.iNEXT_KEY) THEN
+			   EOF = .FALSE.
+			ELSE
+		           LINHA = 3
+
+		           IST = SMG$ERASE_DISPLAY(DISP2)
+
+	                   IST = SMG$PUT_CHARS (DISP2, CMSG2, 1, 1,,
+     *                                          SMG$M_REVERSE)
+			   IST = SMG$PUT_CHARS (DISP3, CMSG1, 1, 1,
+     *                                          SMG$M_ERASE_LINE)
+			ENDIF
+		     ENDIF
+		   ENDIF
+		   EMIS = EMIS + 1
+		 ENDIF
+	      ENDDO
+	      CALL CLOSEFIL(FDB)
+	   ENDIF
+	ENDIF
+C
+	IF (KEY.NE.iNEXT_KEY) THEN
+	  IST = SMG$PUT_CHARS (DISP3, CMSG, 1, 1, SMG$M_ERASE_LINE)
+
+	  IST = SMG$RING_BELL(DISP3, 2)
+	  IST = SMG$READ_KEYSTROKE(KEYB, KEY, , DISP3)
+	ENDIF
+
+	IST = SMG$ERASE_DISPLAY(DISP2)
+	IST = SMG$ERASE_DISPLAY(DISP3)
+
+	RETURN
+C
+C FORMAT STATEMENTS
+C
+100	FORMAT(I4,5X,I1,4X,I4,5X,I4,7X,I4,7X,I6,10X,I2,3X,I2.2,'/',I4)
+	END
+
+C******************************************************
+C SUBROUTINE DSP_LST5EMIS(DISPLAY THE LAST 5 EMISSIONS)
+C CREATION DATE: 25-03-2008
+C******************************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE DSP_LST5EMIS(DISP2,DISP3,KEYB,PB)
+	IMPLICIT NONE
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:GTECHSMG.DEF'
+C
+C	PARAMETERS
+C
+	INTEGER		DISP2,DISP3,PB,KEYB
+C
+C	LOCAL VARIABLES
+C
+	LOGICAL		EOF
+	INTEGER		IST, KEY
+	CHARACTER*80	CMSG, CMSG1, CMSG2
+	
+	INTEGER*4	MAXLIN
+	PARAMETER	(MAXLIN=16)
+
+	INTEGER*4	UNIT, ST, LINHA, EMIS, FDB(7), GIND, GNUM, WEEK, YEAR
+	INTEGER*4   I ! created in 2008/03/26
+	INTEGER*4   NUMEMIS ! created in 2008/03/26
+	PARAMETER   (NUMEMIS=5) ! created in 2008/03/26
+	CHARACTER*80    LSTEMIS(0:NUMEMIS-1) ! created in 2008/03/26
+C
+C
+	KEY  = 0
+    
+	IST = SMG$ERASE_DISPLAY(DISP2)
+
+	GIND = 0
+	CMSG = ' Digite o tipo de extraccao (1-Classica 2-Popular): '
+	ST = SMG$PUT_CHARS (DISP2, CMSG, 4, 4)
+	CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,GIND,4,68,2,1,NUMPAS,ST)
+
+	IF(ST.EQ.-2) RETURN
+
+	GNUM  = GTNTAB(TPAS,GIND)
+
+	IF (GNUM.LE.0) THEN
+	    CMSG = 'Jogo nao ativo'
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+            ST = SMG$ERASE_DISPLAY(DISP2)
+	    RETURN
+	ENDIF
+
+	IST = SMG$ERASE_DISPLAY(DISP2)
+
+	CMSG2 = ' Extracao|Status|Plano|CDC Inicial|CDC Final|'
+     *        //'Qtde. Bilhetes|Qtd. Ser|Sem/Ano '
+	IST = SMG$PUT_CHARS (DISP2, CMSG2, 1, 1,, SMG$M_REVERSE)
+
+	CMSG1 = 'Lendo Extracoes Registadas. Aguarde...'
+      	IST = SMG$PUT_CHARS (DISP3, CMSG1, 1, 1, SMG$M_ERASE_LINE)
+C
+C	FIND UNIT FOR FILE
+C
+	CALL FIND_AVAILABLE_LUN(UNIT,ST)
+	IF (ST.NE.0) THEN
+	   CMSG = ' Nao ha handler disponivel para abrir o arquivo. '
+     *          //'Tecle <Return>'
+	ELSE
+	   CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+	   IF (ST.NE.0) THEN
+	      CMSG = ' Erro de abertura no arquivo de extracoes. '
+     *             //'Tecle <Return>'
+	   ELSE
+	      CALL IOINIT(FDB,UNIT,DPASEC*256)
+	      EMIS  = 1
+	      LINHA = 3
+	      EOF   = .TRUE.
+	      
+C         RESETS THE LST5EMIS
+		  DO 14 I = 0, NUMEMIS-1
+		  	LSTEMIS(I) = 'X'
+14		  CONTINUE
+
+	      DO WHILE(EOF)
+	   	 CALL READW(FDB,(EMIS-PAS_DRW_OFFSET),DPAREC,ST)
+		 IF(ST.NE.0) THEN
+		   EOF = .FALSE.
+
+		   IF(ST.EQ.144) THEN
+		     CMSG = 'Tecle <Return> para Finalizar.'
+		   ELSE
+		     CMSG = ' Erro de leitura no arquivo de extracoes. '
+     *                    //'Tecle <Return>.'
+		   ENDIF
+		 ELSE
+C
+C		   CHECK DPAREC
+C
+		   IF(DPAEMIS.GT.0 .AND. DPAEMIS.LT.PAS_DRW_OFFSET+1000) THEN
+C
+		     CALL GETPASDRW(DPADRAW,WEEK,YEAR)
+		     WRITE(CMSG,100) DPAEMIS, DPASTS, DPAPLAN,
+     *                               DPABSD, DPAESD, DPANUMTCK, DPANUMSER, WEEK,YEAR
+C            SHIFTS THE FIRST (NUMEMIS-1) EMISSIONS BY 1 OF EMISSIONS WINDOW
+			 DO 16 I = 0, NUMEMIS-2
+			 	LSTEMIS(I) = LSTEMIS(I+1)
+16			 CONTINUE
+			 LSTEMIS(NUMEMIS-1) = CMSG ! NEW EMISSION
+		   ENDIF
+		   EMIS = EMIS + 1
+		 ENDIF
+	      ENDDO
+	      
+C         WRITES THE LAST 5 EMISSIONS TO THE SCREEN (VIRTUAL DISPLAY)
+		  DO 17 I = 0, NUMEMIS-1
+	      IF(LSTEMIS(I).NE.'X') THEN
+	      	IST = SMG$PUT_CHARS (DISP2, LSTEMIS(I), LINHA, 4)
+	      	LINHA = LINHA + 1
+	      ENDIF
+17 		  CONTINUE
+	      
+	      CALL CLOSEFIL(FDB)
+	   ENDIF
+	ENDIF
+C
+	IF (KEY.NE.iNEXT_KEY) THEN
+	  IST = SMG$PUT_CHARS (DISP3, CMSG, 1, 1, SMG$M_ERASE_LINE)
+
+	  IST = SMG$RING_BELL(DISP3, 2)
+	  IST = SMG$READ_KEYSTROKE(KEYB, KEY, , DISP3)
+	ENDIF
+
+	IST = SMG$ERASE_DISPLAY(DISP2)
+	IST = SMG$ERASE_DISPLAY(DISP3)
+
+	RETURN
+C
+C FORMAT STATEMENTS
+C
+100	FORMAT(I4,5X,I1,4X,I4,5X,I4,7X,I4,7X,I6,10X,I2,3X,I2.2,'/',I4)
+	END
+
+C*******************************************
+C***** SUBROUTINE WITH DISPLAY EMISSION MENU
+C***** CREATION DATE: 25-03-2008
+C*******************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+      SUBROUTINE EMIS_DSP(DISP2, DISP3, KEYB, PB)
+      IMPLICIT NONE
+
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:GTECHSMG.DEF'
+C
+C PARAMETERS
+C
+      INTEGER PB,			      ! PASTEBOARD
+     *        KEYB,			      ! VIRTUAL KEYBOARD
+     *        DISP2,			      ! output data frame window
+     *        DISP3			      ! message frame window
+C
+C LOCAL VARIABLES
+C
+      INTEGER*4	      TAMMENU
+      PARAMETER	      (TAMMENU = 3)
+
+      CHARACTER*28    MYMENU(TAMMENU) /'[LISTAR TODAS AS EXTRACOES ]',
+     *                                 '[LISTAR ULTIMAS 5 EXTRACOES]',
+     *                                 '[          SAIR            ]'/
+
+      CHARACTER*78  cMSG
+
+      INTEGER DISPMENU			      ! INITIAL MENU
+
+      INTEGER DEFAULT/1/
+      INTEGER*4 ST,MENUOPT			      
+
+C
+C CREATES MENU 
+C
+      ST = SMG$ERASE_DISPLAY(DISP2)
+      ST = SMG$CREATE_VIRTUAL_DISPLAY(11, 30, DISPMENU)
+      ST = SMG$CREATE_MENU(DISPMENU, MYMENU, SMG$K_VERTICAL, 
+     *			   SMG$M_DOUBLE_SPACE, 2, SMG$M_REVERSE)
+
+      ST = SMG$SET_CURSOR_MODE (PB, SMG$M_CURSOR_ON )
+      ST = SMG$ERASE_DISPLAY (DISP3)
+	
+      MENUOPT = 0
+      DO WHILE(MENUOPT.NE.TAMMENU)
+
+	ST = SMG$ERASE_DISPLAY(DISP2)
+	ST = SMG$ERASE_DISPLAY(DISP3)
+
+      	cMSG = '    Use setas para movimentar cursor e <ENTER> para selecionar '
+      	ST = SMG$PUT_CHARS (DISP3, cMSG, 1,1)
+	ST = SMG$SET_CURSOR_MODE(PB, SMG$M_CURSOR_ON)
+
+      	ST = SMG$PASTE_VIRTUAL_DISPLAY(DISPMENU, PB, 7, 25)
+      	ST = SMG$SELECT_FROM_MENU(KEYB, DISPMENU, MENUOPT, 
+     *				       DEFAULT,,,,,,SMG$M_BOLD)
+	ST = SMG$SET_CURSOR_MODE(PB, SMG$M_CURSOR_OFF)
+      	ST = SMG$UNPASTE_VIRTUAL_DISPLAY (DISPMENU,PB)
+
+        ST = SMG$PASTE_VIRTUAL_DISPLAY (DISP2, PB,  5, 2)
+
+	IF(MENUOPT.EQ.1) THEN		
+	  CALL DSP_ALLEMIS(DISP2,DISP3,KEYB,PB)
+	ELSEIF(MENUOPT.EQ.2) THEN
+	  CALL DSP_LST5EMIS(DISP2,DISP3,KEYB,PB)
+	ENDIF
+      ENDDO 
+
+      RETURN
+      END
+
+C************************************
+C***** SUBROUTINE WITH UTILITIES MENU
+C************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+      SUBROUTINE EMIS_UTIL(DISP2, DISP3, KEYB, PB)
+      IMPLICIT NONE
+
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:GTECHSMG.DEF'
+C
+C PARAMETERS
+C
+      INTEGER PB,			      ! PASTEBOARD
+     *        KEYB,			      ! VIRTUAL KEYBOARD
+     *        DISP2,			      ! output data frame window
+     *        DISP3			      ! message frame window
+C
+C LOCAL VARIABLES
+C
+      INTEGER*4	      TAMMENU
+      PARAMETER	      (TAMMENU = 2)
+
+      CHARACTER*28    MYMENU(TAMMENU) /'[ MOSTRA BILHETE RETORNADO ]',
+     *                                 '[          SAIR            ]'/
+
+      CHARACTER*78  cMSG
+
+      INTEGER DISPMENU			      ! INITIAL MENU
+
+      INTEGER DEFAULT/1/
+      INTEGER*4 ST,MENUOPT			      
+
+C
+C CREATES MENU 
+C
+      ST = SMG$ERASE_DISPLAY(DISP2)
+      ST = SMG$CREATE_VIRTUAL_DISPLAY(11, 30, DISPMENU)
+      ST = SMG$CREATE_MENU(DISPMENU, MYMENU, SMG$K_VERTICAL, 
+     *			   SMG$M_DOUBLE_SPACE, 2, SMG$M_REVERSE)
+
+      ST = SMG$SET_CURSOR_MODE (PB, SMG$M_CURSOR_ON )
+      ST = SMG$ERASE_DISPLAY (DISP3)
+	
+      MENUOPT = 0
+      DO WHILE(MENUOPT.NE.TAMMENU)
+
+	ST = SMG$ERASE_DISPLAY(DISP2)
+	ST = SMG$ERASE_DISPLAY(DISP3)
+
+      	cMSG = '    Use setas para movimentar cursor e <ENTER> para selecionar '
+      	ST = SMG$PUT_CHARS (DISP3, cMSG, 1,1)
+	ST = SMG$SET_CURSOR_MODE(PB, SMG$M_CURSOR_ON)
+
+      	ST = SMG$PASTE_VIRTUAL_DISPLAY(DISPMENU, PB, 7, 25)
+      	ST = SMG$SELECT_FROM_MENU(KEYB, DISPMENU, MENUOPT, 
+     *				       DEFAULT,,,,,,SMG$M_BOLD)
+	ST = SMG$SET_CURSOR_MODE(PB, SMG$M_CURSOR_OFF)
+      	ST = SMG$UNPASTE_VIRTUAL_DISPLAY (DISPMENU,PB)
+
+        ST = SMG$PASTE_VIRTUAL_DISPLAY (DISP2, PB,  5, 2)
+
+C	IF(MENUOPT.EQ.1) THEN		
+C	  CALL R_TAPEPAS(DISP2,DISP3,KEYB)
+C	ELSEIF(MENUOPT.EQ.2) THEN
+C	  CALL SHOW_UTKT(DISP2,DISP3,KEYB,PB)
+C	ENDIF
+	IF(MENUOPT.EQ.1) THEN		
+	  CALL SHOW_UTKT(DISP2,DISP3,KEYB,PB)
+	ENDIF
+      ENDDO 
+
+      RETURN
+      END
+
+C**********************************
+C SUBROUTINE TO SHOW UNSOLD TICKETS
+C**********************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SHOW_UTKT(DISP2,DISP3,KEYB,PB)
+	IMPLICIT NONE
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:GTECHSMG.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+
+	! CONSTANT DEFINITIONS
+	INTEGER*4   LINE, COLUMN, TAMSER, TAMTIC, TAMTEN, TICINI, TICFIN
+	INTEGER*4   TENINI, SERINI
+
+	PARAMETER   (COLUMN = 34)
+	PARAMETER   (TAMSER = 2)
+	PARAMETER   (TAMTIC = 5)
+	PARAMETER   (TAMTEN = 2)
+	PARAMETER   (SERINI = 1)
+	PARAMETER   (TICINI = 0)
+	PARAMETER   (TICFIN = 99999)
+	PARAMETER   (TENINI = 1)
+
+	! LOCAL VARIABLES
+	LOGICAL		STUTKT
+
+	CHARACTER*77	CMSG
+
+	INTEGER		KEYB,DISP2,DISP3,PB
+
+	INTEGER*4	GNUM, GIND, STATUS
+	INTEGER*4	EMINUM, SERNUM, TICNUM, TENNUM, CDCINI, CDCFIN
+
+	LINE = 4
+
+	STATUS = SMG$ERASE_DISPLAY(DISP2)
+
+	GIND = 0
+	CMSG = ' Digite o tipo de extraccao (1-Classica 2-Popular): '
+	STATUS = SMG$PUT_CHARS (DISP2, CMSG, 4, 4)
+	CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,GIND,4,68,2,1,NUMPAS,STATUS)
+
+	IF(STATUS.EQ.-2) RETURN
+
+	GNUM  = GTNTAB(TPAS,GIND)
+	IF (GNUM.LE.0) THEN
+	    CMSG = 'Jogo nao ativo'
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+            STATUS = SMG$ERASE_DISPLAY(DISP2)
+	    RETURN
+	ENDIF
+
+	CALL GET_EMISNO(EMINUM,DISP2,DISP3,KEYB,PB,GNUM)
+	IF (EMINUM.LE.0) RETURN
+
+	STATUS = SMG$ERASE_DISPLAY(DISP2)
+
+	CMSG = ' Entre com os dados do bilhete retornado :'
+	STATUS = SMG$PUT_CHARS (DISP2, CMSG, LINE-2, 4,, SMG$M_BOLD)
+
+C	CMSG = ' Digite a extraccao desejada : '
+C	STATUS = SMG$PUT_CHARS (DISP2, CMSG, LINE, 4)
+C	CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,EMINUM,
+C    *					  LINE,COLUMN,4,PAS_DRW_OFFSET+1,
+C   *						 PAS_DRW_OFFSET+1000,STATUS)
+C	IF(STATUS.EQ.-2) RETURN
+
+	CMSG = ' Digite a serie desejada    : '
+	STATUS = SMG$PUT_CHARS (DISP2, CMSG, LINE+1, 4)
+	CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,SERNUM,
+     *				  LINE+1,COLUMN,TAMSER,SERINI,NEWMAXSER,STATUS) ! (PLCS)
+	IF(STATUS.EQ.-2) RETURN
+
+	CMSG = ' Digite o bilhete desejado  : '
+	STATUS = SMG$PUT_CHARS (DISP2, CMSG, LINE+2, 4)
+	CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,TICNUM,
+     *				  LINE+2,COLUMN,TAMTIC,TICINI,TICFIN,STATUS)
+	IF(STATUS.EQ.-2) RETURN
+
+	CMSG = ' Digite a fraccao desejada   : '
+	STATUS = SMG$PUT_CHARS (DISP2, CMSG, LINE+3, 4)
+	CALL SMG_INPNUM(PB,KEYB,DISP2,DISP3,TENNUM,
+     *				  LINE+3,COLUMN,TAMTEN,TENINI,NOFFRA,STATUS)
+	IF(STATUS.EQ.-2) RETURN
+
+	! GET BEGIN AND END SALES DATE
+	CALL GET_EMISSION(EMINUM, GIND, CDCINI, CDCFIN,
+     *					  STATUS, DISP3, KEYB)
+C**	IF(STATUS.NE.0) RETURN
+
+	! GET UNSOLD TICKET INFORMATION
+	CALL GET_DATA_UTKT(LINE+5,   GIND, TICNUM, SERNUM, TENNUM, CDCINI,
+     *			   CDCFIN, STUTKT, STATUS,  DISP3, KEYB, DISP2)
+	IF(STATUS.NE.0) RETURN
+
+	! CHECK IF UNSOLD TICKET WAS FOUND
+	IF (.NOT. STUTKT) THEN
+
+	  CMSG = ' Bilhete nao encontrado, Qualquer tecla prossgue ...'
+	  CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	  RETURN
+	ENDIF
+
+	RETURN
+	END
+
+C********************************************************
+C SUBROUTINE GET_EMISNO (PROMPT USER FOR EMISSION NUMBER)
+C********************************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GET_EMISNO(IEMIS,DISP2,DISP3,IKEYB,PB,GNUM)
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:GTECHSMG.DEF'
+C 
+C LOCAL VARIABLES
+C
+	CHARACTER*55 CMSG
+
+	INTEGER IKEYB,DISP2,DISP3,IST,PB,ST
+
+	INTEGER*4 IEMIS
+	INTEGER*4 YEAR,WEEK,GNUM
+	INTEGER*4 GETDRW             !FUNTION
+
+	IEMIS = 0
+	WEEK  = 0
+	YEAR  = 0
+
+	IST = SMG$SET_CURSOR_MODE(PB, SMG$M_CURSOR_OFF)
+
+      	CMSG = ' Entre com a extraccao: '    
+      	IST = SMG$PUT_CHARS(DISP2, CMSG, 6, 4)
+
+      	CMSG = ' / '    
+      	IST = SMG$PUT_CHARS(DISP2, CMSG, 6, 66)
+
+      	CMSG = ' Digite extraccao ou <NEXT> para sair '
+      	IST = SMG$PUT_CHARS (DISP3, CMSG, 1,1)
+
+	CALL SMG_INPNUM(PB,IKEYB,DISP2,DISP3,YEAR,6,57,4,2000,2100,ST)
+
+	CALL SMG_INPNUM(PB,IKEYB,DISP2,DISP3,WEEK,6,68,2,1,53,ST)
+
+	IEMIS = GETDRW(YEAR,WEEK,GNUM)
+
+	IF (IEMIS.LE.0) THEN
+	   CALL FIND_DRWNUM(YEAR,WEEK,GNUM,DISP3,IKEYB,IEMIS)	
+	ENDIF
+
+	IST = SMG$ERASE_DISPLAY(DISP2)
+
+	RETURN
+	END
+
+C********************************************
+C SUBROUTINE TO GET EMISSION DATA INFORMATION
+C********************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GET_EMISSION(EMINUM, INDPAS, CDCINI, CDCFIN, STATUS,
+     *							 DISP3, KEYB)
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+        INCLUDE 'INCLIB:GTECHSMG.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PASCOM.DEF'
+
+	! PARAMETERS
+	INTEGER	    KEYB  ,  DISP3
+	INTEGER*4   EMINUM, INDPAS, CDCINI, CDCFIN
+
+	! LOCAL VARIABLES
+        CHARACTER*78  cMSG
+
+	INTEGER*4     FDB(7)
+	INTEGER*4     GAMNUM, UNIT, STATUS
+
+	! CHECK IF CURRNET EMISSION HAD WINNER SELECTION
+	IF (EMINUM .EQ. PASEMIS(CURDRW,INDPAS)) THEN
+
+	  ! GET BEGIN AND END SALES DATE
+	  CDCINI = PASBSD(CURDRW,INDPAS)
+	  CDCFIN = PASESD(CURDRW,INDPAS)
+	ELSE
+
+	  ! GET AN AVAILABLE LUN
+	  CALL FIND_AVAILABLE_LUN(UNIT, STATUS)
+	  IF(STATUS .NE. 0) THEN
+
+	    CMSG   = 'Erro obtendo lun para leitura de arquivo, tecle algo...'
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	    RETURN
+	  ENDIF
+
+	  ! OPEN GAME FILE
+	  GAMNUM = GTNTAB(TPAS, INDPAS)
+	  CALL OPENW(UNIT,GFNAMES(1,GAMNUM),4,0,0,STATUS)
+	  IF(STATUS .NE. 0) THEN
+	    CMSG   = 'Erro na abertura do arquivo de emissoes, tecle algo...'
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	    RETURN
+	  ENDIF
+	  
+	  ! READ GAME FILE
+	  CALL IOINIT(FDB,UNIT,DPASEC*256)
+	  CALL READW(FDB,(EMINUM-PAS_DRW_OFFSET),DPAREC,STATUS)
+	  IF(STATUS .NE. 0) THEN
+	    CMSG   = 'Erro na leitura do arquivo de emissoes, tecle algo...'
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	    RETURN
+	  ENDIF
+
+	  CALL CLOSEFIL(FDB)
+
+	  ! GET BEGIN AND END SALES DATE
+	  CDCINI = DPABSD
+	  CDCFIN = DPAESD
+	ENDIF
+
+	RETURN
+	END
+
+C**************************************
+C***** SUBROUTINE TO READ UNSOLD TICKET
+C**************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GET_DATA_UTKT(LINE,INDPAS,DIGBIL,DIGSER,DIGTEN,CDCINI, 
+     *				 CDCFIN,STUTKT,STATUS, DISP3, KEYB, DISP2)
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:SYSDEFINE.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:DESLOG.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:TNAMES.DEF'
+        INCLUDE 'INCLIB:GTECHSMG.DEF'
+	INCLUDE 'INCLIB:PASCOM.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+
+	! PARAMETERS
+	LOGICAL   STUTKT
+
+	INTEGER	    KEYB  ,  DISP3, DISP2
+
+	INTEGER*4 INDPAS, DIGBIL, DIGSER, DIGTEN, STATUS
+	INTEGER*4 CDCINI, CDCFIN, LINE
+
+	! LOCAL VARIABLES
+	LOGICAL*1    ISTHER
+
+	CHARACTER*20 FILNAM		    ! PASSIVE LOTTERY FILE NAME
+	CHARACTER*12 STRDAT
+        CHARACTER*78 cMSG
+
+	BYTE        I1TEMP(4)
+
+	INTEGER*2   AUXDAT(12)
+
+	INTEGER*4   INTNAM(5), TFDB(7), TMFBUF(8192)
+	INTEGER*4   GAMNUM, CDCNUM, INDTCK
+	INTEGER*4   NUMTIC, NUMSER, TYPE, BLOCK, EOF, IND, NUMEMI
+	INTEGER*4   LENGTH, TICSTS, NUMTEN
+
+	INTEGER*8   TEMP
+
+	EQUIVALENCE (TEMP  , I1TEMP)
+	EQUIVALENCE (FILNAM, INTNAM)
+
+	! INITILALIZE STATUS
+	STUTKT = .FALSE.
+
+	! GET GAME NUMBER
+	GAMNUM = GTNTAB(TPAS, INDPAS)
+
+	! READ DRAW FILES
+	DO CDCNUM=CDCINI, CDCFIN
+
+	  ! GET NAME FILE
+	  WRITE(FILNAM,100) GSNAMES(GAMNUM), CDCNUM
+
+	  ! VERIFY IF FILE EXISTS
+	  INQUIRE(FILE=FILNAM, EXIST=ISTHER)
+
+	  IF (.NOT. ISTHER) THEN
+	    STATUS = -1
+	    CMSG   = 'Falta de arquivo de jogo desta extraccao, tecle algo...'
+	    CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	    RETURN
+	  ENDIF
+
+	  CALL OPENW(PTMF, INTNAM, 5, 0, 0, STATUS)
+	  IF(STATUS .EQ. 0) THEN
+	    
+	    CALL IOINIT(TFDB,PTMF,128*256)
+
+	    BLOCK  = 0
+	    EOF    = 0
+	    IND    = 8192
+
+	    DO WHILE(EOF.LE.1000)
+	      IF(IND.GT.8157) THEN
+		BLOCK=BLOCK+1
+C		IND=LHDR+1
+	        IND=1
+		CALL READW(TFDB,BLOCK,TMFBUF,STATUS)
+		IF(STATUS.NE.0) RETURN
+	      ENDIF
+
+	      IF(TMFBUF(IND).EQ.0) THEN
+		EOF=EOF+1
+		IND=IND+LREC
+	      ELSE
+		EOF=0
+C		TEMP=TMFBUF(IND+LREC-1)
+C		TYPE=I1TEMP(4)
+                CALL ILBYTE(TYPE,TMFBUF(IND),LREC1-1)
+		IF(TYPE.NE.LONE.AND.TYPE.NE.LREG) THEN
+		  CMSG   = 'Erro na decodificacao do registo, tecle algo...'
+		  CALL SHOW_ERR(KEYB, DISP3, CMSG)
+		  IND=IND+LREC
+		ELSE
+		  LENGTH=LREC
+		  IF(TYPE.EQ.LONE) THEN
+C		    TEMP=TMFBUF(IND+LREC*2-1)
+C		    TYPE=I1TEMP(4)
+	            CALL ILBYTE(TYPE,TMFBUF(IND),LREC2-1)
+		    IF(TYPE.EQ.LEND) LENGTH=LREC*2
+		    IF(TYPE.EQ.LTWO) LENGTH=LREC*3
+		  ENDIF
+		    CALL LOGTRA(TRABUF,TMFBUF(IND))
+		    IND=IND+LENGTH
+
+		    ! TEST IF IT IS A UNSOLD TICKET
+		    IF((TRABUF(TSTAT) .EQ. VOID) .AND.
+     *		       (TRABUF(TTYP)  .EQ. TWAG) .AND.
+     *		       (TRABUF(TERR)  .EQ. NOER)) THEN
+
+		      ! LOOP OF TICKETS
+		      DO INDTCK = 1, TRABUF(TPTCK)
+
+			NUMEMI = TRABUF(TPEMIS1 + OFFTRA*(INDTCK-1))
+			NUMTIC = TRABUF(TPNUM1  + OFFTRA*(INDTCK-1))
+			NUMSER = TRABUF(TPSER1  + OFFTRA*(INDTCK-1))
+			NUMTEN = TRABUF(TPTEN1  + OFFTRA*(INDTCK-1))
+			TICSTS = TRABUF(TPSTS1  + OFFTRA*(INDTCK-1))
+
+			! IF THIS TEN IS A UNSOLD TICKET
+			IF ( (NUMTIC .EQ. DIGBIL) .AND.
+     *			     (NUMSER .EQ. DIGSER) .AND.
+     *			     (NUMTEN .EQ. DIGTEN) .AND.
+     *			     (TICSTS .EQ. RETURND .OR. TICSTS .EQ. RETAFDR) ) THEN
+
+			  STUTKT = .TRUE.
+
+			  CMSG =
+     *			      '  CDC   DATA    AGENTE   TERMINAL EXTRACAO BILHETE SERIE FRACAO' 
+			  STATUS = SMG$PUT_CHARS (DISP2, CMSG, LINE, 4)
+			  LINE = LINE + 1
+
+			  AUXDAT(5) = TRABUF(TCDC)
+			  CALL CDATE(AUXDAT)
+			  WRITE(STRDAT, 200)AUXDAT(VDAY), AUXDAT(VMON),
+     *					      AUXDAT(VYEAR)
+
+			  WRITE(CMSG,300)TRABUF(TCDC), STRDAT, TRABUF(TAGT), TRABUF(TTER),
+     *				         NUMEMI, NUMTIC, NUMSER, NUMTEN
+
+			  STATUS = SMG$PUT_CHARS(DISP2, CMSG, LINE, 4)
+			  LINE   = LINE + 1
+	  
+			  CMSG = ' Bilhete encontrado, Qualquer tecla prossgue ...'
+			  CALL SHOW_ERR(KEYB, DISP3, CMSG)
+
+			ENDIF		! IF THIS TEN IS A UNSOLD TICKET
+
+		      ENDDO		! LOOP OF TICKETS
+
+		    ENDIF		! TEST IF IT IS A UNSOLD TICKET
+
+		  ENDIF		! IF(TYPE.NE.LONE.AND.TYPE.NE.LREG) THEN
+
+		ENDIF			! IF(TMFBUF(IND).EQ.0) THEN
+
+	      ENDDO			! WHILE NOT EOF
+
+	      CALL CLOSEFIL(TFDB)	! CLOSE DRAW FILE
+	
+	    ENDIF			! IF NO OPEN ERROR
+
+	ENDDO				! LOOP OF DRAW FILES
+
+	RETURN
+100	FORMAT('DRAW:',A4,I4.4,'.FIL')
+200	FORMAT(I2.2,'-',I2.2,'-',I2.2)
+300	FORMAT(1X, I4, 1X, A8, 1X, I9.9, 3X, I5, 3X, I5, 4X, I5, 4X, I2,
+     *	       2X, I4)
+	END
+
+C**************************************
+C***** SUBROUTINE TO READ PASSIVE TAPE
+C**************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE R_TAPEPAS(DISP2, DISP3, KEYB)
+	IMPLICIT NONE
+
+ 	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:SYSDEFINE.DEF'
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:GTECHSMG.DEF'
+C
+C PARAMETERS
+C
+      INTEGER	      ST,
+     *		      KEYB,		! VIRTUAL KEYBOARD
+     *		      DISP2,		! output data frame window
+     *		      DISP3		! message frame window
+C
+C LOCAL VARIABLES
+C
+	INTEGER*4       NUMFILES
+	PARAMETER       (NUMFILES=4)
+
+	INTEGER*4	iMAX_IBMBLK
+        PARAMETER       (iMAX_IBMBLK  = 8192)! luky! maximum length of tape block (IBM)
+C
+	INTEGER*4       F_UNIT(NUMFILES)
+C
+	CHARACTER*1     VREGISTRO(1000)
+	CHARACTER*1000  REGISTRO
+	INTEGER*4       I4REG(250)
+        CHARACTER*50    NOMEARQ
+	INTEGER*4       TAMREG, BLOCO, RECCOUNT,IO_STATUS
+	INTEGER*4       EXTRACAO,IND,KEY
+	CHARACTER       BILHETE*6,SERIE*2,FRACAO*2
+	CHARACTER       BILHETEANT*6,SERIEANT*2
+	EQUIVALENCE     (VREGISTRO,REGISTRO,I4REG)
+
+      	CHARACTER*8     DEVTAPE
+	CHARACTER*70	CMSG
+	INTEGER*4	FDB(7)
+	INTEGER*4	GAMNUM, STATUS
+	DATA		TAMREG/26/,BLOCO/16380/
+	DATA		NOMEARQ/'CARY:PAS****.DAT'/
+C
+C
+C
+        ST = SMG$ERASE_DISPLAY(DISP2)
+	WRITE(CMSG,80) TAMREG
+        ST = SMG$Put_Chars (DISP2, CMSG, 4, 5)
+
+	WRITE(CMSG,90) BLOCO
+        ST = SMG$Put_Chars (DISP2, CMSG, 5, 5)
+
+	CMSG = 'ATUALIZANDO O FICHEIRO DE EMISSOES.'
+        ST = SMG$Put_Chars (DISP2, CMSG, 7, 5)
+C
+C	FIND UNIT FOR ALL FILE
+C
+	DO IND = 1, NUMFILES
+	   CALL FIND_AVAILABLE_LUN(F_UNIT(IND),ST)
+	   IF (ST.NE.0) THEN
+	      CMSG = ' Nao ha handler disponivel para abrir os arquivos.'
+     *             //'<Return> p/ Sair'
+	      CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	      RETURN
+	   ENDIF
+	ENDDO
+C
+C	TAPE MOUNT
+C
+	KEY = 0
+	DEVTAPE = 'MAG3:'
+        DO WHILE(KEY .NE. iNEXT_KEY)
+
+           CMSG = 'Coloque a Fita na unidade, Espere a Montagem e '
+     *          //'Tecle <Return>'
+	   CALL SHOW_ERR(KEYB, DISP3, CMSG)
+
+           CMSG = ' INICIALIZANDO EM ... E MONTANDO A FITA. AGUARDE ...'
+           ST = SMG$Put_Chars (DISP3, CMSG, 1, 3, SMG$M_ERASE_LINE, SMG$M_BOLD)
+
+	   CALL MY_TAPMOUNT(DEVTAPE, 6250, ST)
+           DO WHILE( (ST .EQ. -1) .AND. (KEY .NE. iNEXT_KEY) )
+              CMSG = 'AGUARDE MONTAGEM DA FITA NA UNIDADE E TECLE'
+     *               //' <Return> ou <Next> p/ SAIR.'
+	      CALL SHOW_ERR(KEYB, DISP3, CMSG)
+
+              IF (KEY .NE. iNEXT_KEY) THEN
+                 CMSG = ' INICIALIZANDO EM .... E MONTANDO A FITA. AGUARDE ...'
+cluky                 iST = SMG$Put_Chars (iDISP3, cMSG, 1, 3,
+cluky     *                                SMG$M_ERASE_LINE, SMG$M_BOLD)
+cluky	         CALL MY_TAPMOUNT(DEVTAPE, 6250, iST)
+              ENDIF
+           ENDDO
+	ENDDO
+C
+C OPEN PASSIVE GAME FILE
+C
+	GAMNUM = GTNTAB(TPAS, 1)
+	CALL OPENW(F_UNIT(1),GFNAMES(1,GAMNUM),4,0,0,STATUS)
+	IF (STATUS .NE. 0) THEN
+	   WRITE (CMSG,50) GFNAMES(1,GAMNUM)
+	   CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	   RETURN
+	ENDIF
+
+	CALL IOINIT(FDB,F_UNIT(1),DPASEC*256)
+C
+C	OPEN TAPE FILE
+C
+C	Calculate the max block length
+C
+cluky        TAMBLK = (MAX_IBMBLK / TAMREG) * TAMREG
+
+cluky	CALL TAPOPEN(TAPFDB, DEVTAPE, ST)
+cluky        CALL TAPINT (TAPFDB, 0, TAMBLK)
+
+        ! Rewind tape
+cluky	CALL XREWIND(TAPFDB, iST)
+
+C	OPEN(F_UNIT(2),FILE='MAG3:',FORM='FORMATTED',ORGANIZATION='SEQUENTIAL',
+C     *  ACCESS='SEQUENTIAL',RECL=TAMREG,BLOCKSIZE=BLOCO,STATUS='OLD',
+C     *  RECORDTYPE='FIXED')
+
+C        READ(F_UNIT(2),15,END=200) REGISTRO
+
+cluky        CALL RTAPEW (TAPFDB, TAPWRD, ST_READ)
+cluky        IF (ST_WRITE .NE. 0) GOTO 200
+
+	CALL ASCBIN(I4REG,1,4,EXTRACAO,STATUS)
+C
+	WRITE(CMSG,40) EXTRACAO
+        ST = SMG$Put_Chars (DISP2, CMSG, 7, 40)
+C
+C UPDATE PASSIVE GAME FILE
+C
+	CALL READW(FDB,(EXTRACAO-PAS_DRW_OFFSET),DPAREC,STATUS)
+	IF (STATUS .NE. 0) THEN
+	   CALL USRCLOS1(F_UNIT(1))
+	   CLOSE(F_UNIT(2))
+
+	   WRITE (CMSG,60) GFNAMES(1,GAMNUM)
+	   CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	   RETURN
+	ENDIF
+C
+C CHECK IF DRAW ALREADY INITIALIZED
+C
+	IF (DPASTS.LT.GAMINF) THEN
+	   CALL USRCLOS1(F_UNIT(1))
+	   CLOSE(F_UNIT(2))
+
+	   WRITE (CMSG,30) EXTRACAO
+	   CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	   RETURN
+	ENDIF
+C
+C CHECK IF DRAW ALREADY PROCESSED
+C
+	IF (DPASTS.GT.GAMOPN) THEN
+	   CALL USRCLOS1(F_UNIT(1))
+	   CLOSE(F_UNIT(2))
+
+	   WRITE (CMSG,20) EXTRACAO
+	   CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	   RETURN
+	ENDIF
+C
+C SET GAME STATUS TO OPEN
+C
+	DPASTS = GAMOPN
+	CALL WRITEW(FDB,(EXTRACAO-PAS_DRW_OFFSET),DPAREC,STATUS)
+	IF (STATUS .NE. 0) THEN
+	   CALL USRCLOS1(F_UNIT(1))
+	   CLOSE(F_UNIT(2))
+
+	   WRITE (CMSG,70) GFNAMES(1,GAMNUM)
+	   CALL SHOW_ERR(KEYB, DISP3, CMSG)
+	   RETURN
+	ENDIF
+C
+C	OPEN ASCII FILE
+C
+	WRITE(NOMEARQ(9:12),10) REGISTRO(1:4)
+10	FORMAT(A4)
+
+	OPEN(F_UNIT(3), FILE=NOMEARQ, FORM='FORMATTED', ORGANIZATION='SEQUENTIAL',
+     *  ACCESS='SEQUENTIAL', RECL=TAMREG-2, STATUS='NEW',
+     *  RECORDTYPE='FIXED')
+
+	WRITE(F_UNIT(3),23,ERR=200,IOSTAT=IO_STATUS) REGISTRO(1:TAMREG)
+	RECCOUNT = 1
+	SERIEANT=REGISTRO(12:13)
+
+	OPEN(F_UNIT(4), FILE='TAPEPAS.DAT', ORGANIZATION='SEQUENTIAL',
+     *  ACCESS='SEQUENTIAL', STATUS='UNKNOWN')
+
+	WRITE(F_UNIT(4),11,ERR=200,IOSTAT=IO_STATUS) NOMEARQ
+11	FORMAT(1X,A16)
+	
+100	CONTINUE    !READ LOOP
+           READ(F_UNIT(2),15,END=200) REGISTRO
+15	   FORMAT(A<TAMREG>)
+
+	   WRITE(F_UNIT(3),23,ERR=200,IOSTAT=IO_STATUS) REGISTRO(1:TAMREG)
+23	   FORMAT(A<TAMREG-2>)
+
+           RECCOUNT   = RECCOUNT + 1
+	   WRITE(CMSG,05) RECCOUNT
+           ST = SMG$Put_Chars (DISP3, CMSG, 1, 1, SMG$M_ERASE_LINE)
+C
+	   BILHETEANT = BILHETE
+	   BILHETE    = REGISTRO(6:11)
+	   SERIE      = REGISTRO(12:13)
+	   FRACAO     = REGISTRO(14:15)
+
+	   IF (SERIEANT.NE.SERIE) THEN
+	      WRITE(CMSG,06) BILHETEANT, SERIEANT
+              ST = SMG$Put_Chars (DISP2, CMSG, 9, 5, SMG$M_ERASE_LINE)
+	      SERIEANT = SERIE
+	   ENDIF
+
+	   IF (BILHETE(3:6).EQ.'0000'.AND.FRACAO.EQ.'01')THEN
+	      WRITE(CMSG,06) BILHETE, SERIE
+              ST = SMG$Put_Chars (DISP2, CMSG, 9, 5, SMG$M_ERASE_LINE)
+	   ENDIF
+	   GOTO 100
+
+200	CONTINUE    !END READ LOOP
+
+	IF  (BILHETE(3:6).NE.'0000') THEN
+	    WRITE(CMSG,06) BILHETE, SERIE
+            ST = SMG$Put_Chars (DISP2, CMSG, 9, 5, SMG$M_ERASE_LINE)
+	ENDIF
+
+	WRITE(CMSG,04) RECCOUNT
+	CALL SHOW_ERR(KEYB, DISP3, CMSG)
+
+	CALL USRCLOS1(F_UNIT(1))
+	DO  IND = 2, NUMFILES
+	    CLOSE(F_UNIT(IND))
+	ENDDO
+
+cluky        CALL XREWIND (iTAPFDB, iST)		  ! Rewind tape
+cluky        CALL TAPCLOS (iTAPFDB, iST)		  ! Close tape
+
+	RETURN
+C
+C FORMAT STATEMENTS
+C
+04      FORMAT(' Total de Registos na Fita ', I7.7, '<Return> p/ Sair')
+05	FORMAT(' Quantidade de Registros Lidos da Fita . .:' , I7.7)
+06	FORMAT(' BILHETE NUMERO ', A6, ' SERIE',A2)
+20	FORMAT(' Extracao', I4, ' Ja Encerrada. <Return> p/ SAIR')
+30	FORMAT(' Extracao', I4, ' NAO Configurada. <Return> p/ SAIR')
+40	FORMAT(' PROCESSANDO EXTRACAO . . .:', I4)
+50	FORMAT(' Erro de abertura no arquivo ' ,5A4, ' <Return> p/ SAIR')
+60	FORMAT(' Erro de leitura no arquivo '  ,5A4, ' <Return> p/ SAIR')
+70	FORMAT(' Erro de escrita no arquivo '  ,5A4, ' <Return> p/ SAIR')
+80	FORMAT(' Tamanho do Registro . . . :'  ,I2.2)
+90	FORMAT(' Tamanho do Bloco . . . . .:'  ,I5.5)
+	END
+C
+C	SUBROUTINE TO SHOW ERROR AND WAIT A KEY
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE  SHOW_ERR(KEYB, DISP, MSG)
+	IMPLICIT NONE
+C
+C	FUNCTION PARAMETERS
+C
+        INCLUDE 'INCLIB:GTECHSMG.DEF'
+
+	INTEGER	    KEYB,		      ! VIRTUAL KEYBOARD
+     *		    DISP	              ! header frame window
+
+	CHARACTER   MSG*(*)
+C
+C	LOCAL VARIABLES
+C
+	INTEGER	    KEY, ST
+
+	ST = SMG$PUT_CHARS (DISP, MSG, 1, 1, SMG$M_ERASE_LINE, SMG$M_BOLD)
+	ST = SMG$RING_BELL(DISP, 2)
+	ST = SMG$READ_KEYSTROKE(KEYB, KEY, , DISP)
+
+	RETURN
+	END
+C*********************************************************************
+C
+C *** MY_TAPMOUNT  MOUNT A TAPE AS TAPMOUNT FUNCTION (NRM_TAPEIO.FOR)
+C
+C*********************************************************************
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE MY_TAPMOUNT (DEVNAM, DENSITY, STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE	    'INCLIB:SYSPARAM.DEF'
+	INCLUDE	    'INCLIB:SYSEXTRN.DEF'
+	INCLUDE	    '($SYSSRVNAM)'
+	INCLUDE	    '($MNTDEF)'
+C
+	CHARACTER   DEVNAM*(*)
+	INTEGER*4   DENSITY
+	INTEGER*4   STATUS
+C
+	INTEGER*4   ST
+C
+C
+C The following structure is used to pass itemlist elements to SYS$MOUNT
+C
+	STRUCTURE /MOUNT_STRUC/
+	  INTEGER*2	BUFLEN		    !LENGTH OF BUFFER
+	  INTEGER*2	ITMCOD		    !ITEM CODE
+	  INTEGER*4	BUFADR		    !BUFFER ADDRESS
+	  INTEGER*4	RLNADR		    !RETURN LENGTH ADDRESS (NOT USED)
+	END STRUCTURE
+C
+	RECORD	/MOUNT_STRUC/ ITEMLIST(10)  !UP TO 10 DIFFERENT ITEMS
+C
+	INTEGER*4	BLOCKSIZE	    !BLOCKSIZE BUFFER
+	INTEGER*4	DENSBUF		    !DENSITY BUFFER
+	INTEGER*4	FLAGS		    !MOUNTING FLAGS
+C
+	INTEGER*4	NOFTLSIG
+	EXTERNAL	NOFTLSIG
+C
+C
+	CALL LIB$ESTABLISH(NOFTLSIG)	    !No fatal errors
+C
+C Set default values for mounting
+C
+	IF(DENSITY.EQ.0)THEN
+	  DENSBUF = 6250
+	ELSE IF(DENSITY.EQ.6250)THEN
+	  DENSBUF = 6250
+	ELSE IF(DENSITY.EQ.1600)THEN
+	  DENSBUF = 1600
+	ELSE
+	  STATUS = -1
+	  RETURN
+	ENDIF
+C
+	BLOCKSIZE = 65532		    !(MAX ALLOWED BY OS)
+        FLAGS     = MNT$M_NOMNTVER          ! /NOMOUNT_VERIFY
+	FLAGS=FLAGS+MNT$M_FOREIGN	    ! /FOREIGN
+     *             +MNT$M_NOASSIST	    ! /NOASSIST
+     *		   +MNT$M_MULTI_VOL	    ! /MULTI_VOLUME
+     *             +MNT$M_TAPE_DATA_WRITE   ! /CACHE=TAPE_DATA
+C
+C Set all item codes and other information
+C
+	ITEMLIST(1).BUFLEN = 4
+	ITEMLIST(1).ITMCOD = MNT$_BLOCKSIZE	!MAXIMUM BLOCK SIZE
+	ITEMLIST(1).BUFADR = %LOC(BLOCKSIZE)
+C
+	ITEMLIST(2).BUFLEN = 4
+	ITEMLIST(2).ITMCOD = MNT$_DENSITY	!TAPE DENSITY
+	ITEMLIST(2).BUFADR = %LOC(DENSBUF)
+C
+	ITEMLIST(3).BUFLEN = LEN(DEVNAM)
+	ITEMLIST(3).ITMCOD = MNT$_DEVNAM	!NAME OF DEVICE
+	ITEMLIST(3).BUFADR = %LOC(DEVNAM)
+C
+	ITEMLIST(4).BUFLEN = 4
+	ITEMLIST(4).ITMCOD = MNT$_FLAGS		!CONTROL FLAGS
+	ITEMLIST(4).BUFADR = %LOC(FLAGS)
+C
+	ITEMLIST(5).BUFLEN = 0
+	ITEMLIST(5).ITMCOD = 0			!END OF LIST
+C
+C Mount the tape
+C
+	ST = SYS$MOUNT(ITEMLIST)
+	IF(.NOT.ST) THEN
+	  STATUS = -1
+        ELSE
+	  STATUS = 0
+	ENDIF
+C
+	RETURN
+	END
+
+C
+C****************************************************************************
+C
+C *** MY_TAPDISMT      DISMOUNT A TAPE AS TAPDISMT ROUTINE (NRM_TAPEIO.FOR)
+C
+C****************************************************************************
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE MY_TAPDISMT (DEVNAM, STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE	    'INCLIB:SYSPARAM.DEF'
+	INCLUDE	    'INCLIB:SYSEXTRN.DEF'
+	INCLUDE	    '($SYSSRVNAM)'
+	INCLUDE	    '($DMTDEF)'
+C
+	CHARACTER   DEVNAM*(*)
+	INTEGER*4   STATUS
+C
+	INTEGER*4   ST
+C
+	INTEGER*4	NOFTLSIG
+	EXTERNAL	NOFTLSIG
+C
+C
+	CALL LIB$ESTABLISH(NOFTLSIG)	    !No fatal errors
+C
+	ST = SYS$DISMOU( DEVNAM, %VAL(DMT$M_UNLOAD) )
+	IF(.NOT.ST) THEN
+	  STATUS = -1
+        ELSE
+	  STATUS = 0
+	ENDIF
+C
+	RETURN
+	END
+
+C************************************************************************
+C SUBROUTINE TO SEARCH EMISSION NUMBER IN GAME FILE, IF IS NOT IN MEMORY
+C************************************************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE FIND_DRWNUM(INYEAR,INWEEK,GNUM,DISP3,KEYB,IEMIS)
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+        INCLUDE 'INCLIB:GTECHSMG.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PASCOM.DEF'
+
+        CHARACTER*55 CMSG
+
+        INTEGER KEYB,DISP3,ST
+
+        INTEGER*4 IEMIS,FDB(7),DRW,GIND,UNIT
+        INTEGER*4 YEAR,WEEK,GNUM,INWEEK,INYEAR
+
+	GIND = GNTTAB(GAMIDX,GNUM)
+	IF (GIND.LE.0) THEN
+	    IEMIS = 0
+	    RETURN
+	ENDIF
+
+        CALL FIND_AVAILABLE_LUN(UNIT,ST)
+        IF(ST.NE.0) THEN
+           CMSG = ' Nao ha handler disponivel para abrir o arquivo. '
+     *            //'Tecle <Return>'
+           CALL SHOW_ERR(KEYB, DISP3, CMSG)
+        ELSE
+           CALL OPENW(UNIT,GFNAMES(1,GNUM),4,0,0,ST)
+           IF(ST.NE.0) THEN
+               WRITE (CMSG,50) GFNAMES(1,GNUM)
+               CALL SHOW_ERR(KEYB, DISP3, CMSG)
+           ELSE
+               CALL IOINIT(FDB,UNIT,DPASEC*256)
+	       DRW = 1
+	       DO WHILE (ST.EQ.0) 
+                  CALL READW(FDB,(DRW-PAS_DRW_OFFSET),DPAREC,ST)
+                  IF(ST.NE.0.AND.ST.NE.144) THEN
+                     WRITE (CMSG,60) GFNAMES(1,GNUM)
+                     CALL SHOW_ERR(KEYB, DISP3, CMSG)
+                  ELSE
+		     CALL GETPASDRW(DPADRAW,WEEK,YEAR)
+
+		     IF (INWEEK.EQ.WEEK.AND.INYEAR.EQ.YEAR) THEN
+			IEMIS = DRW
+			CALL CLOSEFIL(FDB)
+			RETURN
+		     ELSE
+			DRW = DRW + 1
+		     ENDIF
+	          ENDIF
+               ENDDO
+           ENDIF
+	ENDIF
+
+	RETURN
+
+50      FORMAT(' Erro de abertura no arquivo ',5A4,
+     *         ' Qualquer tecla p/ continuar')
+60      FORMAT(' Erro de leitura no arquivo ',5A4,
+     *         ' Qualquer tecla p/ continuar')
+
+	END
+
+
+C ******************************************************************************
+C
+C     SUBROUTINE: GET_PURGE_DAYS
+C     AUTHOR    : J.H.R
+C     VERSION   : 01            DATE: 30 / 11 / 2001
+C
+C ******************************************************************************
+C
+C PROCEDURE TO CHANGE PASSIVE PURGE DAYS CONFIGURATION
+C
+C=======OPTIONS /CHECK = NOOVERFLOW /EXT
+      SUBROUTINE GET_PURGE_DAYS(PB, KEYB, DISP2, DISP3, DRWREC, FSTS)
+      IMPLICIT NONE
+C
+C INCLUDES DEFINITION TO CHANGE PASSIVE PURGE CONFIGURATION
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+	INCLUDE 'INCLIB:GTECHSMG.DEF'
+C
+C PARAMETERS DEFINITION TO CHANGE PASSIVE PURGE CONFIGURATION 
+C
+      INTEGER * 4 PB		         ! PASTEBOARD
+      INTEGER * 4 KEYB			 ! VIRTUAL KEYBOARD
+      INTEGER * 4 DISP2			 ! OUTPUT DATA FRAME WINDOW
+      INTEGER * 4 DISP3			 ! MESSAGE FRAME WINDOW
+      INTEGER * 4 DRWREC                 ! DRAWING REGISTER
+      INTEGER * 4 FSTS                   ! FUNCTION STATUS
+C
+C VARIABLES DEFINITION TO CHANGE PASSIVE PURGE CONFIGURATION
+C
+      INTEGER * 4 LIM                    ! IMPUT LIMIT VALUE
+      INTEGER * 4 POS                    ! POSITION TO DISPLAY
+      INTEGER * 4 USRVAL                 ! USER ENTER VALUE
+C
+      CHARACTER * 80  MSGUSR             ! MESSAGE TO USER
+C
+C MOVE ALL INFORMATION TO DPAREC REGISTER ( PASSIVE WORKING REGISTER )
+C
+1000  CONTINUE
+      CALL FASTMOV(DRWREC, DPAREC, DPALEN)
+C
+C INITIATE VARIABLES TO CHANGE PASSIVE PURGE CONFIGURATION
+C
+      FSTS = 0       
+      POS = 4
+C------- V04 -----------------------------------------------------------
+!      IF(DPASTS .LT. GFINAL) POS = 10 
+      IF(DPASTS .LT. GFINAL) POS = 12
+C------- V04 -----------------------------------------------------------
+C
+C DISPLAY MESSAGE TO USER ( ENTER NUMBER OF DAY TO PAY BY AGENTS )
+C
+      FSTS = SMG$ERASE_DISPLAY(DISP3)
+      MSGUSR = ' Digite o numero de dias para pagamento nos mediadores'
+      FSTS = SMG$PUT_CHARS(DISP2, MSGUSR, POS, 4)
+C
+C GET USER VALUE ( ENTER NUMBER OF DAY TO PAY BY AGENTS )
+C
+      USRVAL = DPAMAXDAYPAY
+      CALL SMG_INPNUM(PB, KEYB, DISP2, DISP3, USRVAL, POS, 68, 2, 1, 99, FSTS)
+      DPAMAXDAYPAY = USRVAL
+      IF(FSTS .EQ. -2) RETURN
+C
+C IF EMISION IS NOT CLOSED QUE CAN NOT CONFIGURE LAST PAY DAY ( SO EXIT )
+C
+      IF(DPASTS .LT. GFINAL) THEN
+        CALL FASTMOV(DPAREC, DRWREC, DPALEN)
+        RETURN
+      ENDIF
+C
+C DISPLAY MESSAGE TO USER ( ENTER LAST CDC PAY DAY )
+C
+      POS = POS + 2
+      FSTS = SMG$ERASE_DISPLAY(DISP3)
+      MSGUSR = ' Digite a data de prescricao da extracao ( CDC )'
+      FSTS = SMG$PUT_CHARS(DISP2, MSGUSR, POS, 4)
+C
+C GET USER VALUE ( ENTER LAST CDC PAY DAY )
+C
+      USRVAL = 0
+      LIM = 99999
+      CALL SMG_INPNUM(PB, KEYB, DISP2, DISP3, USRVAL, POS, 62, 5, 1, LIM, FSTS)
+      DPAPRGCDC = USRVAL
+      IF(FSTS .EQ. -2) RETURN
+C
+C CHECK IF USER CONFIGURATION IT'S COHERENT
+C
+      WRITE(MSGUSR, 100)
+      IF(DPAESD + DPAMAXDAYPAY .GT. DPAPRGCDC) THEN
+        CALL SHOW_ERR(KEYB, DISP3, MSGUSR)
+        FSTS = SMG$ERASE_DISPLAY(DISP2)
+        GOTO 1000
+      ENDIF
+C
+C CHECK IF LAST DAY TO PAY IS GREATER THAN WINNER SELECCTION DAY
+C
+      WRITE(MSGUSR, 200)
+      IF(DPAESD .GE. DPAPRGCDC) THEN
+        CALL SHOW_ERR(KEYB, DISP3, MSGUSR)
+        FSTS = SMG$ERASE_DISPLAY(DISP2)
+        GOTO 1000
+      ENDIF
+C
+C MOVE ALL INFORMATION CHANGED TO DRAWING REGISTER 
+C
+      CALL FASTMOV(DPAREC, DRWREC, DPALEN)
+C
+C FORMATS DEFINITION TO CHANGE PASSIVE PURGE CONFIGURATION
+C
+C------- V04 -----------------------------------------------------------
+!100   FORMAT(2X, 'La data de prescricao do mediador e maior que a '
+!     *        'de prescricao da extracao')
+!200   FORMAT(2X, 'La data de encerramento da extracao e maior que a '
+!     *        'de prescricao da extracao')
+100   FORMAT(2X, 'A data de prescricao do mediador e maior que a '
+     *        'de prescricao da extracao')
+200   FORMAT(2X, 'A data de encerramento da extracao e maior que a '
+     *        'de prescricao da extracao')
+C------- V04 -----------------------------------------------------------
+C
+C THIS IS THE END TO CHANGE PASSIVE PURGE CONFIGURATION
+C
+      END
+
+

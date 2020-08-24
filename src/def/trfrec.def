@@ -1,0 +1,56 @@
+C TRFREC.DEF
+C  
+C V02 10-MAY-1999 UXN TRIPLE changed to TRIO. TRFLEN changed from 9216
+C                     to 11776.
+C V01 XX-XXX-XXXX RXK Initial release.
+C
+C TODAYS TRIO POOLS FILE RECORD DESCRIPTION
+C
+C
+C     TRFLAMT                             1   ;LOWEST COMBINATION AMOUNT
+C     TRFFEL                              1   ;LINK TO FIRST COMBINATION
+C     TRFLEL                              1   ;LINK TO LAST COMBINATION
+C     TRFTNUM                             1   ;NUMBER OF COMBINATIONS PLAYED
+C     TRFODDS(2,TRGPOL)               11664   ;COMBINATION'S LINKS AND AMOUNT
+C     TRFFREE                               
+C                            TOTAL    11776 I*4 ( = 23 512B VAX SECTORS)
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expretrly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4 TRFLEN,TRFSEC
+	PARAMETER (TRFLEN=11776)        !LENGTH IN FULL WORDS
+	PARAMETER (TRFSEC=TRFLEN/64)   !LENGTH IN SECTORS
+C
+        INTEGER*4 TRFREC(TRFLEN)       !RECORD
+C
+        INTEGER*4 TRFLAMT,TRFFEL,TRFLEL,TRFTNUM
+        INTEGER*4 TRFODDS(2,TRGPOL)
+        INTEGER*2 TRFODDS2(4,TRGPOL)
+	EQUIVALENCE(TRFODDS,TRFODDS2)
+C
+        INTEGER*4 TRFLAMT_OFF, TRFFEL_OFF, TRFLEL_OFF, TRFTNUM_OFF
+        INTEGER*4 TRFODDS_OFF
+
+        PARAMETER (TRFLAMT_OFF = 1)
+        PARAMETER (TRFFEL_OFF  = TRFLAMT_OFF + 1 )
+        PARAMETER (TRFLEL_OFF  = TRFFEL_OFF  + 1 )
+	PARAMETER (TRFTNUM_OFF = TRFLEL_OFF  + 1 )
+        PARAMETER (TRFODDS_OFF = TRFTNUM_OFF + 1 )
+     
+        EQUIVALENCE (TRFLAMT,TRFREC(TRFLAMT_OFF))       
+        EQUIVALENCE (TRFFEL, TRFREC(TRFFEL_OFF ))       
+        EQUIVALENCE (TRFLEL, TRFREC(TRFLEL_OFF ))       
+        EQUIVALENCE (TRFTNUM,TRFREC(TRFTNUM_OFF))       
+        EQUIVALENCE (TRFODDS,TRFREC(TRFODDS_OFF))       
+

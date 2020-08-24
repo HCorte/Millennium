@@ -1,0 +1,60 @@
+C
+C SUBROUTINE GETENT
+C $Log:   GXAFXT:[GOLS]GETENT.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:19:38   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:25:16   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - sptsys.for **
+C
+C
+C
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GETENT(NUM,COL,ST)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INTEGER*4   ST, COL, NUM
+	CHARACTER*3 ENTRY
+	CHARACTER*7 STRING
+C
+C
+	ST=0
+10	CONTINUE
+	WRITE (STRING,910) COL
+910	FORMAT(' ROW ',I2.2)
+	CALL WIMG(5,STRING)
+	READ(5,900) ENTRY
+	IF(ENTRY.EQ.'E  ') THEN
+	  ST=-1
+	  RETURN
+	ENDIF
+	IF(ENTRY.EQ.'R   ') THEN
+	  ST=-2
+	  RETURN
+	ENDIF
+	NUM=0
+	IF(ENTRY.EQ.'1  ') NUM=1
+	IF(ENTRY.EQ.'2  ') NUM=2
+	IF(ENTRY.EQ.'3  ') NUM=4
+	IF(ENTRY.EQ.'12 ') NUM=3
+	IF(ENTRY.EQ.'23 ') NUM=6
+	IF(ENTRY.EQ.'13 ') NUM=5
+	IF(ENTRY.EQ.'123') NUM=7
+	IF(NUM.EQ.0) THEN
+	  TYPE*,'Invalid entry   '
+	  NUM=1
+	  GOTO 10
+	ENDIF
+	RETURN
+900	FORMAT(A3)
+	END

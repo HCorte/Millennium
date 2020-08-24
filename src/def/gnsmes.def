@@ -1,0 +1,383 @@
+* GNSMES.DXX
+C $Log:   GXAFXT:[GOLS]GNSMES.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:27:10   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:44:26   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+*
+* V01 01-AUG-90 XXX RELEASED FOR VAX
+*
+* GNSMES.DEF
+*
+* V01 04-JUN-90 MRM INITIAL RELEASE.
+*
+* This DEF file describes the message formats which
+* are utilized to communicate between central and a
+* PC running TCP/IP.
+*
+* ================== UPLINE HEADER ======================
+*
+*
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+* This item is the property of GTECH Corporation, Providence, Rhode
+* Island, and contains confidential and trade secret information. It
+* may not be transferred from the custody or control of GTECH except
+* as authorized in writing by an officer of GTECH. Neither this item
+* nor the information it contains may be used, transferred,
+* reproduced, published, or disclosed, in whole or in part, and
+* directly or indirectly, except as expressly authorized by an
+* officer of GTECH, pursuant to written agreement.
+*
+* Copyright 1990 GTECH Corporation. All rights reserved.
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*
+	INTEGER*4   GNHDRMES_PROTID
+	PARAMETER  (GNHDRMES_PROTID=1)              !Protocol ID
+	  INTEGER*4  GNHDRMES_PROTID_VAL
+	  PARAMETER (GNHDRMES_PROTID_VAL=1)          !Current protocol
+	INTEGER*4   GNHDRMES_MESTYP
+	PARAMETER  (GNHDRMES_MESTYP=2)              !Message type
+	  INTEGER*4  GNHDRMES_MESTYP_CONN
+	  PARAMETER (GNHDRMES_MESTYP_CONN=1)          !Connection
+	  INTEGER*4  GNHDRMES_MESTYP_NETPORT
+	  PARAMETER (GNHDRMES_MESTYP_NETPORT=2)       !Network ports
+	  INTEGER*4  GNHDRMES_MESTYP_GLOBAL
+	  PARAMETER (GNHDRMES_MESTYP_GLOBAL=3)        !Global
+	  INTEGER*4  GNHDRMES_MESTYP_FE
+	  PARAMETER (GNHDRMES_MESTYP_FE=4)            !Front End
+	  INTEGER*4  GNHDRMES_MESTYP_FESUM
+	  PARAMETER (GNHDRMES_MESTYP_FESUM=5)         !Front End summary
+	  INTEGER*4  GNHDRMES_MESTYP_FEAVG
+	  PARAMETER (GNHDRMES_MESTYP_FEAVG=6)         !Front End average
+	  INTEGER*4  GNHDRMES_MESTYP_FECAP
+	  PARAMETER (GNHDRMES_MESTYP_FECAP=7)         !Front End capacity
+	  INTEGER*4  GNHDRMES_MESTYP_GRP
+	  PARAMETER (GNHDRMES_MESTYP_GRP=8)           !Group
+	  INTEGER*4  GNHDRMES_MESTYP_GRPDET
+	  PARAMETER (GNHDRMES_MESTYP_GRPDET=9)        !Group detail
+	  INTEGER*4  GNHDRMES_MESTYP_GRPSTS
+	  PARAMETER (GNHDRMES_MESTYP_GRPSTS=10)       !Group information
+	  INTEGER*4  GNHDRMES_MESTYP_DELTIM
+	  PARAMETER (GNHDRMES_MESTYP_DELTIM=11)       !Delay by time
+	  INTEGER*4  GNHDRMES_MESTYP_DELTER
+	  PARAMETER (GNHDRMES_MESTYP_DELTER=12)       !Delay by terminal
+	  INTEGER*4  GNHDRMES_MESTYP_LAN
+	  PARAMETER (GNHDRMES_MESTYP_LAN=13)          !LAN
+	INTEGER*4   GNHDRMES_SUBTYP
+	PARAMETER  (GNHDRMES_SUBTYP=4)              !Subtype (type dependant)
+	INTEGER*4   GNHDRMES_MESLEN
+	PARAMETER  (GNHDRMES_MESLEN=5)              !Length of message in bytes
+	INTEGER*4   GNHDRMES_MSGID
+	PARAMETER  (GNHDRMES_MSGID=7)               !PC message id
+	INTEGER*4   GNHDRMES_OFF1
+	PARAMETER  (GNHDRMES_OFF1=9)                !Selection offset 1
+	INTEGER*4   GNHDRMES_CNT1
+	PARAMETER  (GNHDRMES_CNT1=11)               !Number of parameters
+	INTEGER*4   GNHDRMES_TYP1
+	PARAMETER  (GNHDRMES_TYP1=12)               !Type of parameters
+	  INTEGER*4   GNHDRMES_TYP_RANGE
+	  PARAMETER  (GNHDRMES_TYP_RANGE=1)           !Range request
+	  INTEGER*4   GNHDRMES_TYP_SPECIFIC
+	  PARAMETER  (GNHDRMES_TYP_SPECIFIC=2)        !Specific data
+	  INTEGER*4   GNHDRMES_TYP_ALL
+	  PARAMETER  (GNHDRMES_TYP_ALL=3)             !All data
+	INTEGER*4   GNHDRMES_OFF2
+	PARAMETER  (GNHDRMES_OFF2=13)               !Selection offset 2
+	INTEGER*4   GNHDRMES_CNT2
+	PARAMETER  (GNHDRMES_CNT2=15)               !Number of parameters
+	INTEGER*4   GNHDRMES_TYP2
+	PARAMETER  (GNHDRMES_TYP2=16)               !Type of parameters
+	INTEGER*4   GNHDRMES_OFF3
+	PARAMETER  (GNHDRMES_OFF3=17)               !Selection offset 3
+	INTEGER*4   GNHDRMES_CNT3
+	PARAMETER  (GNHDRMES_CNT3=19)               !Number of parameters
+	INTEGER*4   GNHDRMES_TYP3
+	PARAMETER  (GNHDRMES_TYP3=20)               !Type of parameters
+	INTEGER*4   GNHDRMES_OFF4
+	PARAMETER  (GNHDRMES_OFF4=21)               !Selection offset 4
+	INTEGER*4   GNHDRMES_CNT4
+	PARAMETER  (GNHDRMES_CNT4=23)               !Number of parameters
+	INTEGER*4   GNHDRMES_TYP4
+	PARAMETER  (GNHDRMES_TYP4=24)               !Type of parameters
+*
+	INTEGER*4   GNHDRMES_MAXCNT                 !Max qualif parameters
+	PARAMETER  (GNHDRMES_MAXCNT=20)
+*
+* ================== DOWNLINE HEADER ======================
+*
+	INTEGER*4   GNDWNMES_PROTID
+	PARAMETER  (GNDWNMES_PROTID=1)              !Protocol ID
+	INTEGER*4   GNDWNMES_MESTYP
+	PARAMETER  (GNDWNMES_MESTYP=2)              !Message type (as above)
+	INTEGER*4   GNDWNMES_SUBTYP
+	PARAMETER  (GNDWNMES_SUBTYP=4)              !Subtype (type dependant)
+	INTEGER*4   GNDWNMES_MESLEN
+	PARAMETER  (GNDWNMES_MESLEN=5)              !Length of message in bytes
+	INTEGER*4   GNDWNMES_MSGID
+	PARAMETER  (GNDWNMES_MSGID=7)               !PC message id
+	INTEGER*4   GNDWNMES_SEQNUM
+	PARAMETER  (GNDWNMES_SEQNUM=9)              !Message sequence number
+	INTEGER*4   GNDWNMES_DATOFF
+	PARAMETER  (GNDWNMES_DATOFF=11)             !Data offset
+	INTEGER*4   GNDWNMES_TIME
+	PARAMETER  (GNDWNMES_TIME=13)               !Current system time
+	INTEGER*4   GNDWNMES_FLAGS
+	PARAMETER  (GNDWNMES_FLAGS=17)              !Last message flag
+	  INTEGER*4  GNDWNMES_FLAGS_END
+	  PARAMETER (GNDWNMES_FLAGS_END='01'X)        !No more data
+	  INTEGER*4  GNDWNMES_FLAGS_DATA
+	  PARAMETER (GNDWNMES_FLAGS_DATA='02'X)       !Message contains data
+	INTEGER*4   GNDWNMES_CMDSTS
+	PARAMETER  (GNDWNMES_CMDSTS=18)             !Command/status code
+	  INTEGER*4  GNDWNMES_CMDSTS_CMD
+	  PARAMETER (GNDWNMES_CMDSTS_CMD=1)           !Command
+	  INTEGER*4  GNDWNMES_CMDSTS_SYSSTAT
+	  PARAMETER (GNDWNMES_CMDSTS_SYSSTAT=2)       !System status
+	INTEGER*4   GNDWNMES_CMDDTA
+	PARAMETER  (GNDWNMES_CMDDTA=19)             !Command/status qualifer
+	  INTEGER*4  GNDWNMES_CMDDTA_INVALID
+	  PARAMETER (GNDWNMES_CMDDTA_INVALID=255)     !Invalid message
+*
+* ================== CONNECTION MESSAGE ======================
+*
+	INTEGER*4   GNCONMES_NUMBER
+	PARAMETER  (GNCONMES_NUMBER=1)              !Connection number
+	INTEGER*4   GNCONMES_SSAP
+	PARAMETER  (GNCONMES_SSAP=5)                !Source SAP
+	INTEGER*4   GNCONMES_DSAP
+	PARAMETER  (GNCONMES_DSAP=6)                !Destination SAP
+	INTEGER*4   GNCONMES_LAN
+	PARAMETER  (GNCONMES_LAN=7)                 !LAN
+	INTEGER*4   GNCONMES_STATE
+	PARAMETER  (GNCONMES_STATE=8)               !Connection state
+*
+* ================== NETWORK PORT MESSAGE ======================
+*
+	INTEGER*4   GNNETPRT_PORT
+	PARAMETER  (GNNETPRT_PORT=1)                !Port number
+	INTEGER*4   GNNETPRT_TYPE
+	PARAMETER  (GNNETPRT_TYPE=3)                !Front end type
+	INTEGER*4   GNNETPRT_SAP
+	PARAMETER  (GNNETPRT_SAP=4)                 !SAP number
+	INTEGER*4   GNNETPRT_FE
+	PARAMETER  (GNNETPRT_FE=6)                  !Front end number
+	INTEGER*4   GNNETPRT_FEPRT
+	PARAMETER  (GNNETPRT_FEPRT=7)               !Front end port
+	INTEGER*4   GNNETPRT_TIME
+	PARAMETER  (GNNETPRT_TIME=8)                !Time instance
+	INTEGER*4   GNNETPRT_STATUS
+	PARAMETER  (GNNETPRT_STATUS=12)             !Port status
+	INTEGER*4   GNNETPRT_CAPCONF
+	PARAMETER  (GNNETPRT_CAPCONF=13)            !Configured capacity
+	INTEGER*4   GNNETPRT_CAPDAY
+	PARAMETER  (GNNETPRT_CAPDAY=15)             !Max capacity used (day)
+	INTEGER*4   GNNETPRT_CAPCUR
+	PARAMETER  (GNNETPRT_CAPCUR=17)             !Current capacity
+	INTEGER*4   GNNETPRT_NETDIS
+	PARAMETER  (GNNETPRT_NETDIS=19)             !Network disconnections
+	INTEGER*4   GNNETPRT_STATS
+	PARAMETER  (GNNETPRT_STATS=35)              !Port statistics
+	INTEGER*4   GNNETPRT_USETIM
+	PARAMETER  (GNNETPRT_USETIM=51)             !Utilization time
+	INTEGER*4   GNNETPRT_AVLTIM
+	PARAMETER  (GNNETPRT_AVLTIM=55)             !Time available
+	INTEGER*4   GNNETPRT_DELAY
+	PARAMETER  (GNNETPRT_DELAY=59)              !Transaction delay
+*
+* ================== GLOBAL MESSAGE ======================
+*
+	INTEGER*4   GNGBLMES_NUMSTN
+	PARAMETER  (GNGBLMES_NUMSTN=1)              !Number config stations
+	INTEGER*4   GNGBLMES_ACTSTN
+	PARAMETER  (GNGBLMES_ACTSTN=3)              !Number active stations
+	INTEGER*4   GNGBLMES_ACTSAP
+	PARAMETER  (GNGBLMES_ACTSAP=5)              !Number active SAPs
+	INTEGER*4   GNGBLMES_GAMSAP
+	PARAMETER  (GNGBLMES_GAMSAP=7)              !Primary game SAP
+	INTEGER*4   GNGBLMES_GAMSTA
+	PARAMETER  (GNGBLMES_GAMSTA=8)              !Game state
+	INTEGER*4   GNGBLMES_NUMSYS
+	PARAMETER  (GNGBLMES_NUMSYS=9)              !Number of back ends
+	INTEGER*4   GNGBLMES_PRMID
+	PARAMETER  (GNGBLMES_PRMID=10)              !Primary system id
+	INTEGER*4   GNGBLMES_BAKID
+	PARAMETER  (GNGBLMES_BAKID=11)              !Backup system id
+	INTEGER*4   GNGBLMES_SPRID1
+	PARAMETER  (GNGBLMES_SPRID1=12)             !Spare system id
+	INTEGER*4   GNGBLMES_SPRID2
+	PARAMETER  (GNGBLMES_SPRID2=13)             !Spare system id
+	INTEGER*4   GNGBLMES_SPRID3
+	PARAMETER  (GNGBLMES_SPRID3=14)             !Spare system id
+	INTEGER*4   GNGBLMES_PRIMOD
+	PARAMETER  (GNGBLMES_PRIMOD=15)             !Primary system mode
+	INTEGER*4   GNGBLMES_BAKMOD
+	PARAMETER  (GNGBLMES_BAKMOD=16)             !Backup system mode
+	INTEGER*4   GNGBLMES_SPRMOD1
+	PARAMETER  (GNGBLMES_SPRMOD1=17)            !Spare system mode
+	INTEGER*4   GNGBLMES_SPRMOD2
+	PARAMETER  (GNGBLMES_SPRMOD2=18)            !Spare system mode
+	INTEGER*4   GNGBLMES_SPRMOD3
+	PARAMETER  (GNGBLMES_SPRMOD3=19)            !Spare system mode
+	INTEGER*4   GNGBLMES_LSTSER
+	PARAMETER  (GNGBLMES_LSTSER=20)             !Last serial number
+	INTEGER*4   GNGBLMES_NUMLAN
+	PARAMETER  (GNGBLMES_NUMLAN=24)             !# of ethernet LANS
+*
+* ================== FRONT END MESSAGE ======================
+*
+	INTEGER*4   GNFEMES_SAP
+	PARAMETER  (GNFEMES_SAP=1)                  !SAP number
+	INTEGER*4   GNFEMES_FE
+	PARAMETER  (GNFEMES_FE=2)                   !Front end
+	INTEGER*4   GNFEMES_STATE
+	PARAMETER  (GNFEMES_STATE=4)                !Front end state
+	INTEGER*4   GNFEMES_LSTACT
+	PARAMETER  (GNFEMES_LSTACT=5)               !Time last active
+	INTEGER*4   GNFEMES_HSTMES
+	PARAMETER  (GNFEMES_HSTMES=9)               !# of host messages
+	INTEGER*4   GNFEMES_STNMES
+	PARAMETER  (GNFEMES_STNMES=13)              !# of station messages
+	INTEGER*4   GNFEMES_SEQERR
+	PARAMETER  (GNFEMES_SEQERR=17)              !# of sequence errors
+	INTEGER*4   GNFEMES_TRNBLK
+	PARAMETER  (GNFEMES_TRNBLK=19)              !# of transport blocks
+	INTEGER*4   GNFEMES_LANDEL
+	PARAMETER  (GNFEMES_LANDEL=23)              !LAN delay
+	INTEGER*4   GNFEMES_CURCAP
+	PARAMETER  (GNFEMES_CURCAP=25)              !Current capacity
+	INTEGER*4   GNFEMES_FETYP
+	PARAMETER  (GNFEMES_FETYP=27)               !Front end type
+	INTEGER*4   GNFEMES_SITE
+	PARAMETER  (GNFEMES_SITE=28)                !Site number
+*
+* ================== FRONT END SUMMARY MESSAGE ===================
+*
+	INTEGER*4   GNFESUM_SAP
+	PARAMETER  (GNFESUM_SAP=1)                  !SAP number
+	INTEGER*4   GNFESUM_FE
+	PARAMETER  (GNFESUM_FE=2)                   !Front end
+	INTEGER*4   GNFESUM_SITE
+	PARAMETER  (GNFESUM_SITE=4)                 !Site number
+	INTEGER*4   GNFESUM_STATE
+	PARAMETER  (GNFESUM_STATE=5)                !Front end state
+	INTEGER*4   GNFESUM_TYPE
+	PARAMETER  (GNFESUM_TYPE=6)                 !Front end type
+	INTEGER*4   GNFESUM_LSTACT
+	PARAMETER  (GNFESUM_LSTACT=7)               !Time last active
+	INTEGER*4   GNFESUM_NUMBLK
+	PARAMETER  (GNFESUM_NUMBLK=11)              !# of transport blocks
+	INTEGER*4   GNFESUM_CNFCAP
+	PARAMETER  (GNFESUM_CNFCAP=15)              !Configured capacity
+	INTEGER*4   GNFESUM_DAYCAP
+	PARAMETER  (GNFESUM_DAYCAP=19)              !Max daily use capacity
+	INTEGER*4   GNFESUM_CURCAP
+	PARAMETER  (GNFESUM_CURCAP=23)              !Current capacity
+*
+* ================== FRONT END AVERAGE MESSAGE ===================
+*
+	INTEGER*4   GNFEAVG_SAP
+	PARAMETER  (GNFEAVG_SAP=1)                  !SAP number
+	INTEGER*4   GNFEAVG_FE
+	PARAMETER  (GNFEAVG_FE=2)                   !Front end
+	INTEGER*4   GNFEAVG_TIME
+	PARAMETER  (GNFEAVG_TIME=4)                 !Time instance
+	INTEGER*4   GNFEAVG_DAYCAP
+	PARAMETER  (GNFEAVG_DAYCAP=8)               !Avg max daily capacity
+	INTEGER*4   GNFEAVG_CURCAP
+	PARAMETER  (GNFEAVG_CURCAP=12)              !Avg current capacity
+*
+* ================== FRONT END CAPACITY MESSAGE ===================
+*
+	INTEGER*4   GNFECAP_SAP
+	PARAMETER  (GNFECAP_SAP=1)                  !SAP number
+	INTEGER*4   GNFECAP_FE
+	PARAMETER  (GNFECAP_FE=2)                   !Front end
+	INTEGER*4   GNFECAP_PORT
+	PARAMETER  (GNFECAP_PORT=4)                 !Port number
+	INTEGER*4   GNFECAP_CNFCAP
+	PARAMETER  (GNFECAP_CNFCAP=6)               !Max configured capacity
+	INTEGER*4   GNFECAP_DAYCAP
+	PARAMETER  (GNFECAP_DAYCAP=8)               !Max daily capacity
+	INTEGER*4   GNFECAP_CURCAP
+	PARAMETER  (GNFECAP_CURCAP=10)              !Current capacity
+*
+* ================== GROUP DESCRIPTION MESSAGE ===================
+*
+	INTEGER*4   GNGRPMES_NUMBER
+	PARAMETER  (GNGRPMES_NUMBER=1)              !Group number
+	INTEGER*4   GNGRPMES_DESC
+	PARAMETER  (GNGRPMES_DESC=3)                !Group description
+*
+* ================== GROUP DETAIL MESSAGE ===================
+*
+	INTEGER*4   GNGRPDET_NUMBER
+	PARAMETER  (GNGRPDET_NUMBER=1)              !Group number
+	INTEGER*4   GNGRPDET_NUMSTN
+	PARAMETER  (GNGRPDET_NUMSTN=3)              !# stations configured
+	INTEGER*4   GNGRPDET_ACTSTN
+	PARAMETER  (GNGRPDET_ACTSTN=5)              !# stations active
+	INTEGER*4   GNGRPDET_STNINF
+	PARAMETER  (GNGRPDET_STNINF=7)              !Station numbers
+*
+* ================== GROUP STATISTICS MESSAGE ===================
+*
+	INTEGER*4   GNGRPSTS_NUMBER
+	PARAMETER  (GNGRPSTS_NUMBER=1)              !Group number
+	INTEGER*4   GNGRPSTS_NUMSTN
+	PARAMETER  (GNGRPSTS_NUMSTN=3)              !# stations configured
+	INTEGER*4   GNGRPSTS_STSTYP
+	PARAMETER  (GNGRPSTS_STSTYP=5)              !Statistics type
+	  INTEGER*4   GNGRPSTS_STSTYP_INACT
+	  PARAMETER  (GNGRPSTS_STSTYP_INACT=1)        !Time inactive
+	  INTEGER*4   GNGRPSTS_STSTYP_NETDEL
+	  PARAMETER  (GNGRPSTS_STSTYP_NETDEL=2)       !Network delay
+	  INTEGER*4   GNGRPSTS_STSTYP_NUMRES
+	  PARAMETER  (GNGRPSTS_STSTYP_NUMRES=3)       !Number of resets
+	  INTEGER*4   GNGRPSTS_STSTYP_NETSAL
+	  PARAMETER  (GNGRPSTS_STSTYP_NETSAL=4)       !Net sales
+	  INTEGER*4   GNGRPSTS_STSTYP_SNDERR
+	  PARAMETER  (GNGRPSTS_STSTYP_SNDERR=5)       !Number of send errors
+	  INTEGER*4   GNGRPSTS_STSTYP_NUMRET
+	  PARAMETER  (GNGRPSTS_STSTYP_NUMRET=6)       !Number of retries
+	INTEGER*4   GNGRPSTS_STSINF
+	PARAMETER  (GNGRPSTS_STSINF=6)                !Station statistics
+*
+* ================== DELAY BY TIME MESSAGE ===================
+*
+	INTEGER*4   GNDELTIM_TIME
+	PARAMETER  (GNDELTIM_TIME=1)                !Time instance
+	INTEGER*4   GNDELTIM_MAXDEL
+	PARAMETER  (GNDELTIM_MAXDEL=4)              !Max station delay
+	INTEGER*4   GNDELTIM_AVGDEL
+	PARAMETER  (GNDELTIM_AVGDEL=7)              !Avg station delay
+*
+* ================== DELAY BY TERMINAL MESSAGE ===================
+*
+	INTEGER*4   GNDELTER_NUMTER
+	PARAMETER  (GNDELTER_NUMTER=1)              !# of terms in message
+	INTEGER*4   GNDELTER_TERNUM
+	PARAMETER  (GNDELTER_TERNUM=2)              !Length of term #
+	INTEGER*4   GNDELTER_DELAY
+	PARAMETER  (GNDELTER_DELAY=2)               !Length of delay
+*
+* ===================== LAN DELAY MESSAGE ======================
+*
+	INTEGER*4   GNLANMES_LAN
+	PARAMETER  (GNLANMES_LAN=1)                 !LAN number
+	INTEGER*4   GNLANMES_TIME
+	PARAMETER  (GNLANMES_TIME=2)                !Time instance
+	INTEGER*4   GNLANMES_MISFRM
+	PARAMETER  (GNLANMES_MISFRM=5)              !# of missed frames
+	INTEGER*4   GNLANMES_DELAY
+	PARAMETER  (GNLANMES_DELAY=7)               !LAN delay
+	INTEGER*4   GNLANMES_SNTFRM
+	PARAMETER  (GNLANMES_SNTFRM=9)              !# frames sent
+	INTEGER*4   GNLANMES_RCVFRM
+	PARAMETER  (GNLANMES_RCVFRM=13)             !# frames received
+*
+*
+*

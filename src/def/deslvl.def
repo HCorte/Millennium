@@ -1,0 +1,281 @@
+C DESLVL.DEF
+C
+C V11 12-OCT-2010 MAC ePASSIVE INVOICE SNP
+C V10 15-DEC-2000 CS  ADDED PASsnp AND PVLsnp TO PASSIVE
+C V09 15-MAY-2000 OXK MYMsnp, ICSsnp, GTCsnp, WINsnp added
+C V08 13-MAY-1999 UXN STRTIM CHANGED TO STARTIM. Super Triple added.
+C V07 19-MAY-1996 HXK Wojtek's security (password) changes
+C V06 05-MAR-1994 HXK ADDED TSMXLI
+C V05 25-FEB-1994 HXK PITKA LIABILITY LIMITATIONS CHANGE.
+C V04 17-FEB-1994 JXP Introduce P(tsmxodd)
+C V03 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V02 12-NOV-1991 MTK INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        COMMON /SECUREL/ LEVMEN(168,16)
+        INTEGER*2 LEVMEN
+C
+        INTEGER*4 CMDCNT, CMDCN1, HSFCNT, USRCNT, CHGCNT
+        INTEGER*4 SNPCNT, SNPCN1
+C
+        PARAMETER (SNPCNT=168)        !Vision
+        PARAMETER (CMDCNT=168)        !Commands
+        PARAMETER (HSFCNT=13)         !Hasf
+        PARAMETER (USRCNT=7)          !Userpass
+        PARAMETER (CHGCNT=5)          !Chglvl
+C
+C Vision snapshots
+C
+        CHARACTER*10 SNPNAM(SNPCNT)
+C
+        DATA (SNPNAM(SNPCN1),SNPCN1=1,42)
+     *              /'PRInt   ','MENU1   ','MENU2   ','STOp    ',
+     *               'MENU3   ','REF     ','COPy    ','MENU4   ',
+     *               'UNUSED  ','ACTagt  ','AGTsnp  ','INVsnp  ',
+     *               'HOTsnp  ','HELp    ','TSOdsnp ','SPName  ',
+     *               'TSPsnp  ','STGstat ','LOTto   ','TATsnp  ',
+     *               'ATTsnp  ','JOKer   ','TULos   ','VOIsnp  ',
+     *               'SELect  ','VAKsnp  ','GAMsnp  ','CLOse   ',
+     *               'SLIsnp  ','DATes   ','SCLosnp ','NBRsnp  ',
+     *               'STLstat ','RSCsnp  ','RWTsnp  ','TWDsnp  ',
+     *               'UNUSED  ','UNUSED  ','UNUSED  ','UNUSED  ',
+     *               'UNUSED  ','UNUSED  '/
+C
+        DATA (SNPNAM(SNPCN1),SNPCN1=43,84)
+     *              /'PRInt   ','MENU1   ','MENU2   ','STOp    ',
+     *               'MENU3   ','UNUSED  ','COPy    ','MENU4   ',
+     *               'UNUSED  ','PERform ','TYPsnp  ','SPEsnp  ',
+     *               'VALid   ','MESsnp  ','MISsnp  ','TCFsnp  ',
+     *               'TRAns   ','LPLsnp  ','WRFsnp  ','LOGsnp  ',
+     *               'COMsnp  ','NETsnp  ','QUEsnp  ','HRSsnp  ',
+     *               'SYStem  ','FLWsnp  ','GTNsnp  ','TSALes  ',
+     *               'BUFsnp  ','SALes   ','SPDen   ','V65snp  ',
+     *               'PASsnp  ','PVLsnp  ','OVRsnp  ','UNDsnp  ',
+     *               'UNUSED  ','UNUSED  ','UNUSED  ','UNUSED  ',
+     *               'UNUSED  ','UNUSED  '/
+C
+        DATA (SNPNAM(SNPCN1),SNPCN1=85,126)
+     *              /'PRInt   ','MENU1   ','MENU2   ','STOp    ',
+     *               'MENU3   ','UNUSED  ','COPy    ','MENU4   ',
+     *               'UNUSED  ','X2Comsnp','X2Delay ','LANsnp  ',
+     *               'CONsnp  ','ETHsnp  ','SAPsnp  ','PTLsnp  ',
+     *               'X2ALLSTn','X2ALLSAp','X2STNsnp','X2SAPsnp',
+     *               'X2STNPrt','X2NETsnp','X2Gblsnp','X2Relsnp',
+     *               'X2ALLRel','REQsnp  ','VKSTsnp ','VIKsnp  ',
+     *               'X2AGTsnp','BL1snp  ','BL2snp  ','TVOIsnp ',
+     *               'TTULsnp ','V05snp  ','UNUSED  ','UNUSED  ',
+     *               'UNUSED  ','UNUSED  ','UNUSED  ','UNUSED  ',
+     *               'UNUSED  ','UNUSED  '/
+C
+        DATA (SNPNAM(SNPCN1),SNPCN1=127,168)
+     *              /'PRInt   ','MENU1   ','MENU2   ','STOp    ',
+     *               'MENU3   ','UNUSED  ','COPy    ','MENU4   ',
+     *               'UNUSED  ','SKLsnp  ','PPLsnp  ','TSKsnp  ',
+     *               'TPRsnp  ','SKOsnp  ','PPOsnp  ','SERVSNP ',
+     *               'TCPSNP  ','INSSNP  ','DLLSNP  ','X2MONSNP',
+     *               'GTXSNP  ','TEBsnp  ','MVEsnp  ','PTRsnp  ',
+     *               'TMVSNP  ','TPTSNP  ','MVOsnp  ','PTOsnp  ',
+     *               'IVPSNP  ','TTRsnp  ','TROsnp  ','TRPsnp  ',    !V11
+     *               'MYMsnp  ','ICSsnp  ','GTCsnp  ','WINsnp  ',
+     *               'UNUSED  ','UNUSED  ','UNUSED  ','UNUSED  ',
+     *               'UNUSED  ','UNUSED  '/
+
+	COMMON /SNPNAM/ SNPNAM
+C
+C Vision commands
+C
+        CHARACTER*13 CMDNAM(CMDCNT)
+C
+        DATA (CMDNAM(CMDCN1),CMDCN1=1,45)
+     *          /'LOGBlo       ','TAPesw       ','DISKsw       ',
+     *           'CHKtim       ','CHKPnt       ','STAPesw      ',
+     *           'DPTtim       ','MAXTra       ','SYSSts       ',
+     *           'ROMrev       ','DESFlg       ','CANtim       ',
+     *           'WRNper       ','TVNupd       ','MAXMes       ',
+     *           'MESlog       ','ODSupd       ','JAKupd       ',
+     *           'MXSped       ','MAXSpt       ','SCNInt       ',
+     *           'VSCReen      ','WRNV65       ','MAXV65       ',
+     *           'CANDRW       ','TVTIME       ','WRNV5        ',
+     *           'MAXV5        ','SUPSPe       ','SUPFIl       ',
+     *           'SUPSUm       ','SUPPUd       ','SUPSYn       ',
+     *           'SUPCOm       ','SUPREM       ','SUPWAg glo   ',
+     *           'SUPWAg game  ','SUPCAn glo   ','SUPCAn game  ',
+     *           'SUPVAl glo   ','SUPVAl game  ','REDMAx       ',
+     *           'REDMIn       ','TSMXOD       ','TSPMin       '/
+C
+        DATA (CMDNAM(CMDCN1),CMDCN1=46,90)
+     *          /'TSLIab       ','TSLWrn       ','TSPPer       ',
+     *           'SUPTSp       ','TSTLim       ','TSLMax       ',
+     *           'TSMXLI       ','SUPREP       ','OFFline      ',
+     *           'MINimum      ','MOV1         ','MOV2         ',
+     *           'MOV3         ','MOV4         ','MOV5         ',
+     *           'ENAAsync     ','ENABsync     ','ENACsync     ',
+     *           'ENADsync     ','DIAg interval','MAXResponse  ',
+     *           'BROnum       ','TAKEover     ','TOFreez      ',
+     *           'BACKup id    ','SYNCwt       ','OPStst       ',
+     *           'PASnum       ','PRVter       ','CANtim       ',
+     *           'SUPWag glo   ','SUPWag loc   ','SUPCan glo   ',
+     *           'SUPCan loc   ','SUPVal glo   ','SUPVa loc    ',
+     *           'DESenc       ','SUPSpe       ','COMMis       ',
+     *           'TKTmes       ','SONsmrt      ','LANGuag      ',
+     *           'RAMset       ','REDMAX       ','NBR LIM2     '/
+C
+        DATA (CMDNAM(CMDCN1),CMDCN1=91,132)
+     *           /'NBR LIMS     ','NBR LIMB     ','Lotto JACK   ',
+     *            'Ravi JACK    ','NEXtrace     ','BL1 SUPER    ',
+     *            'FULlh        ','HIT24        ','TRIple       ',
+     *            'WORst        ','NUM1         ','NUM2         ',
+     *            'Voittaja opn ','Voittaja cls ','Voittaja can ',
+     *            'Super D  opn ','Super D  cls ','Super D  can ',
+     *            'Today C  opn ','Today C  cls ','Today C  can ',
+     *            'GAMe STate   ','FE Disconn   ','STN Disconn  ',
+     *            'DELivery ACK ','DELivery ERR ','XNETwork Sta ',
+     *            'AUTO stn sta ','DEFault CHk  ','STATE        ',
+     *            'DEbug flag   ','DEL ack      ','ERRor rep    ',
+     *            'POlling      ','XNET stats   ','AUTO poll    ',
+     *            'DIAL enable  ','TER          ','TERST        ',
+     *            'SOFT         ','PRT          ','HARD         '/
+        DATA (CMDNAM(CMDCN1),CMDCN1=133,168)
+     *           /'SUPINS       ','SUPFPT       ','FPTTIM       ',
+     *            'GVTREV       ','GVTID        ','GVTFLG       ',
+     *            'GVTRST       ','GVTDFL       ','MAXDWN       ',
+     *            'DWNTIM       ','STARTIM      ','ENDTIM       ',
+     *            'FLSTIM       ','HOTPHN       ','PRMSTR       ',
+     *            'Trio opn     ','Trio cls     ','Trio can     ',
+     *            'AGTXFR typ   ','AGTTBA typ   ','AGTTOI typ   ',
+     *            'SUPPth       ','TIMOUcln     ','DISPconn     ',
+     *            'PORTnr       ','GVTSup       ','GVTGpl       ',
+     *            'Triple opn   ','Triple cls   ','Triple can   ',
+     *            'UNUSED       ','UNUSED       ','UNUSED       ',
+     *            'UNUSED       ','UNUSED       ','UNUSED       '/
+	COMMON /CMDNAM/ CMDNAM
+C
+C Vision command numbers
+C
+        INTEGER*4 CMDNUM(CMDCNT)
+C
+        DATA (CMDNUM(CMDCN1),CMDCN1=1,45)
+     *              /01012,01013,01014,
+     *               01002,02001,01013,
+     *               01004,01003,01304,
+     *               01305,01307,01306,
+     *               01316,01341,01023,
+     *               01022,01312,01339,
+     *               01360,01328,01348,
+     *               01347,01355,01350,
+     *               01345,01363,01356,
+     *               01351,01047,01049,
+     *               01050,01052,01053,
+     *               01048,01366,01041,
+     *               01060,01042,01062,
+     *               01043,01064,02003,
+     *               02004,01365,01336/
+C
+        DATA (CMDNUM(CMDCN1),CMDCN1=46,90)
+     *              /01338,01342,01337,
+     *               01335,01343,01344,
+     *               01364,01058,02009,
+     *               02011,02010,02010,
+     *               02010,02010,02010,
+     *               04002,03002,03002,
+     *               03002,03003,03004,
+     *               03005,04001,04002,
+     *               04003,04006,06001,
+     *               06002,06009,06007,
+     *               06003,06004,06003,
+     *               06004,06003,06004,
+     *               06013,06018,06014,
+     *               06015,06016,06005,
+     *               06017,06006,11003/
+C
+        DATA (CMDNUM(CMDCN1),CMDCN1=91,132)
+     *              /11004,11005,07010,
+     *               17008,17006,19001,
+     *               19003,19004,19005,
+     *               19006,19007,19008,
+     *               15002,15002,15002,
+     *               20002,20002,20002,
+     *               21002,21002,21002,
+     *               10001,10001,10001,
+     *               10001,10001,10001,
+     *               10001,10001,10001,
+     *               10001,10001,10001,
+     *               10001,10001,10001,
+     *               10001,10001,10001,
+     *               10002,10004,10005/
+        DATA (CMDNUM(CMDCN1),CMDCN1=133,168)
+     *              /01372,01373,01374,
+     *               01375,06008,01376,
+     *               01379,01380,01383,
+     *               01384,01386,01387,
+     *               01388,01399,01381,
+     *               23002,23002,23002,
+     *               06010,06011,06012,
+     *               02020,02023,02021,
+     *               02022,01377,01378,
+     *               24002,24002,24002,
+     *                   0,    0,    0,
+     *                   0,    0,    0/
+	COMMON /CMDNUM/ CMDNUM
+C
+C Hasf selection 
+C
+        CHARACTER*15 HASFNAM(HSFCNT)
+C
+        DATA HASFNAM(1)/'Agent Identity '/
+        DATA HASFNAM(2)/'Agent Banking  '/
+        DATA HASFNAM(3)/'Agent Marketing'/
+        DATA HASFNAM(4)/'Agent Hotline  '/
+        DATA HASFNAM(5)/'Agent Gtrack   '/
+        DATA HASFNAM(6)/'Agent Comm.    '/
+        DATA HASFNAM(7)/'List Agt Id.   '/
+        DATA HASFNAM(8)/'List Agt Bank. '/
+        DATA HASFNAM(9)/'List Agt Market'/
+        DATA HASFNAM(10)/'List Agt Hotlin'/
+        DATA HASFNAM(11)/'List Agt Gtrack'/
+        DATA HASFNAM(12)/'List Agt Comm. '/
+        DATA HASFNAM(13)/'List Agt Money '/
+
+	COMMON /HASFNAM/ HASFNAM
+C
+C Userpass selection 
+C
+        CHARACTER*15 USENAM(USRCNT)
+C
+        DATA USENAM(1)/'Add User       '/
+        DATA USENAM(2)/'Modify User    '/
+        DATA USENAM(3)/'Delete User    '/
+        DATA USENAM(4)/'Display Users  '/
+        DATA USENAM(5)/'Print Users    '/
+        DATA USENAM(6)/'Inquire User   '/
+        DATA USENAM(7)/'Initialize User'/
+	
+	COMMON /USENAM/ USENAM
+C
+C Change level selection 
+C
+        CHARACTER*15 CHGNAM(CHGCNT)
+C
+        DATA CHGNAM(1)/'Add level      '/
+        DATA CHGNAM(2)/'Delete level   '/
+        DATA CHGNAM(3)/'Display level  '/
+        DATA CHGNAM(4)/'Display options'/
+        DATA CHGNAM(5)/'Initialize file'/
+	
+	COMMON /CHGNAM/ CHGNAM
+C

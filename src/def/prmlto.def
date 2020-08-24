@@ -1,0 +1,62 @@
+C PRMLTO.DEF
+C $Log:   GXAFXT:[GOLS]PRMLTO.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:30:54   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.3   10 May 1993 17:41:58   SXH
+C  Set LTGBON to 3
+C  
+C     Rev 1.2   30 Apr 1993 17:26:58   STUART
+C  Restored Baseline version
+C  
+C     Rev 1.1   30 Mar 1993 17:22:20   HUY
+C  Initial release for Vax.
+C
+C     Rev 1.0   21 Jan 1993 18:49:58   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V04 03-JAN-2011 HXK LOTTO2 CHANGES (TOTOLOTOQ/S COMBINED DRAW ID PARAMS)
+C V03 23-NOV-2010 MAC LUCKY NUMBER
+C V02 07-OCT-91 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C LOTTO GAME PARAMETERS
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2010 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 NUMLTO
+	PARAMETER(NUMLTO=4)            !NUMBER OF LOTTO GAMES
+C
+	INTEGER*4 LTGENT, LTGDIV, LTGNBR, LTGBON, LTGBET, LTGLUC    !V03
+	PARAMETER(LTGENT=25)           !NUMBER OF SALES ENTRIES
+	PARAMETER(LTGDIV=8)            !MAXIMUM NUMBER OF DIVISIONS
+	PARAMETER(LTGNBR=8)            !MAXIMUM WINNING NUMBERS DRAWN
+	PARAMETER(LTGBON=3)            !MAXIMUM BONUS NUMBERS DRAWN
+	PARAMETER(LTGBET=3)            !MAXIMUM NUMBER OF BET TYPES
+	PARAMETER(LTGLUC=15)           !MAXIMUM LUCKY NUMBER       !V03
+C
+C       ! Offsets used for TOTOLOTOQ/S COMBINED DRAW ID TABLE (CCCDRW)
+	INTEGER*4 LTGCCC_DRAW
+	INTEGER*4 LTGCCC_DCDC
+	INTEGER*4 LTGCCC_GNUM
+	INTEGER*4 LTGCCC_WEEK
+	PARAMETER(LTGCCC_DRAW=1)       ! draw offset
+	PARAMETER(LTGCCC_DCDC=2)       ! cdc offset
+	PARAMETER(LTGCCC_GNUM=3)       ! game num offset (vals: 1=Lot3, 2=Lot4)
+	PARAMETER(LTGCCC_WEEK=4)       ! week offset 

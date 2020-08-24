@@ -1,0 +1,44 @@
+ X2ALLREL.HLP             GTECH Distributed Network
+                   All Relay Applications Summary Snapshot      Page 1 of 2
+ 
+    This snapshot will list information on all Relay Applications
+    configured in the system.  A relay application is initially
+    configured in the BLDX2X subsystem, and is utilized to relay
+    information to stations (ie downloads, odds updates, etc).
+ 
+    Relay         - Relay application number
+    Status        - currecnt status of relay application
+                    0=not defined       1=idle      2=active
+    Attribute     - identifies the relay application type
+                    0=not defined           1=chain relay
+                    2=send to all relay     3=send to all broadcast
+                    4=station broadcast
+    Activity      - number of processes currently active for the relay
+    Request       - number of processes waiting to processed
+    Max Capacity  - maximum number of lines to utilize at one time
+    Send timeout  - time (in secs) to wait between sending
+    Wait timeout  - time (in secs) to wait when the station sends ACKW
+ 
+ 
+ X2ALLREL.HLP             GTECH Distributed Network
+                   All Relay Applications Summary Snapshot      Page 2 of 2
+ 
+    Activity      - count of activity performed by the application
+    Non Active    - number of times a request was encountered for an
+                    application which is no longer active.
+    Timeout cnt   - number of times a timeout was encountered
+    Queue cnt     - current number of buffers on the application queue.
+    Active groups - number of relay groups currently active in the
+                    relay application
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,22 @@
+                          GTECH Distibuted Network
+                      Station Configuration Update Help            Page 1 of 1
+ 
+      This help screen describes each of the fields associated with
+      updating Station Port Configurations.  For specific instructions
+      on how to use the Add and Modify screens, refer to the Station
+      Port Configuration Menu Help.
+ 
+      The following describes each of the station port configuration
+      parameters:
+ 
+      Station number - station number identification.
+      Port number    - number of the port on the station for which this
+                       configuration describes.
+      Terminal count - number of terminals configured on this port.
+      Def term       - these fields contain the drops for which the station
+                       is to poll. (Drops are toggled on or off).
+ 
+ 
+ 
+ 
+ 

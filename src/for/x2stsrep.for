@@ -1,0 +1,283 @@
+C
+C SUBROUTINE X2STSREP
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2STSREP.FOV                                 $
+C  $Date::   17 Apr 1996 16:37:38                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2stsrep.for;1 **
+C
+C X2STSREP.FOR
+C
+C V03 19-JUL-94 WS MULTINETWORK CHANGES - Integrate UK changes 
+C		   into X2X Baseline
+C V02 16-JAN-91 DAS CHANGED DISCONNECT MODE FROM UNCOND. TO DIS_DEFAULT
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C This subroutine handles statistics reports which have been
+C sent by the terminal.  This routine updates memory with
+C the information supplied, and will create a response message.
+C
+C Calling Sequence:
+C
+C     CALL X2STSREP(TRABUF,MESS,ORGMESS,LEN)
+C
+C Input parameters:
+C
+C     TRABUF      Int*4(TRALEN)   Transaction buffer
+C     ORGMESS     Int*4(*)        Message from station
+C
+C Output parameters:
+C
+C     MESS        Int*4(*)        Message to be sent to station.
+C     MESLEN      Int*2           Length of output message (bytes)
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2STSREP(TRABUF,MESS,ORGMESS,MESLEN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:X2STMES.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+C
+	INTEGER*2   MESLEN          !Output message length
+	INTEGER*4   ORGMESS(*)      !Station input message
+	INTEGER*4   MESS(*)         !Station output message
+	INTEGER*4   TEMP            !Work variable
+	INTEGER*4   STN             !Station number
+	INTEGER*4   OFFMES          !Offset of station message
+	INTEGER*4   OUTBYT          !Byte index of output message
+	INTEGER*4   STSOFF          !Offset of statistical data
+	INTEGER*4   NUM_BCST/0/	    !Number reported BCST connections
+	INTEGER*4   BITS/0/	    ! BCST connections bit-flags
+	INTEGER*4   CHANGED_BITS    ! BITS work variable
+	INTEGER*4   ADDR1(2),ADDR2(2)     ! DTE addr of stn connection 1 & 2.
+	INTEGER*4   LEN1/0/,LEN2/0/       ! DTE addr len of stn connection
+	INTEGER*4   TER, POLSTS, CONFIG, CHKVAL, STATUS, ACTTER
+	INTEGER*4   CNFTER, POLTIM, MAXTER, PORT, REPTYP, FLAGS, I
+	INTEGER*4   STATE
+        INTEGER*4   NEW_STATUS
+        INTEGER*4   OLD_STATUS
+C...    INTEGER*4   STATUS_CHG
+	CHARACTER   C1TEMP(4)*1     !Work variable
+	EQUIVALENCE (TEMP,C1TEMP)
+C
+C DETERMINE THE STARTING OFFSET OF THE STATION
+C MESSAGE IN THE MESSAGE FROM X2XMGR.
+C
+	CALL ILBYTE(OFFMES,ORGMESS,X2PRO_OFFSET-1)
+	STN=TRABUF(TXSTN)
+	TEMP=0
+	MESLEN=0
+	OUTBYT=0
+C
+C COPY THE INPUT MESSAGE HEADER TO THE OUTPUT MESSAGE.
+C
+	DO 100 I=OFFMES,OFFMES+X2STMES_HDRLEN
+	  OUTBYT=OUTBYT+1
+	  CALL ILBYTE(TEMP,ORGMESS,I-1)
+	  CALL ISBYTE(TEMP,MESS,OUTBYT-1)
+100	CONTINUE
+C
+C SET THE DATA TYPE, COMMAND CODE, AND STATION
+C CONFIGURATION CHECKSUM.
+C
+	CALL ISBYTE(X2STMES_DATATYPE_CMD_DOWN,MESS,
+     *	            X2STMES_DATATYPE-1)
+	CALL ISBYTE(X2STMES_NULL,MESS,X2STMES_CODE-1)
+	TEMP=0
+	C1TEMP(1)=X2XS_CONF(STN)
+	IF (X2XS_TYPE(STN).EQ.X2XST_BCST)  TEMP=0	!V03
+	CALL ISBYTE(TEMP,MESS,X2STMES_CONFCHK-1)
+C
+C SET THE OUTGOING FLAGS TO RESPONSE MODE,
+C SET DISCONNECT CONTROL TO DISCONNECT DEFAULT, AND
+C SET THE MESSAGE LENGTH TO ZERO.
+C
+C.......FLAGS=X2STMES_RE+X2STMES_DIS_UNC
+        FLAGS=X2STMES_RE+X2STMES_DIS_DEFAULT
+	CALL ISBYTE(FLAGS,MESS,X2STMES_FLAGS-1)
+	CALL I2TOBUF2(0,MESS,X2STMES_MESLEN-1)
+	MESLEN=X2STMES_HDRLEN
+C
+C EXTRACT THE REPORT TYPE.
+C
+	STSOFF=OFFMES-1+X2STMES_HDRLEN
+	CALL ILBYTE(REPTYP,ORGMESS,STSOFF+X2STMES_STSHDR_TYPE-1)
+	STSOFF=OFFMES-1+X2STMES_HDRLEN+X2STMES_STSHDR_HDRLEN
+C
+C
+	IF (IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0) THEN
+	   TYPE *,'BCST STAT:STN, Report type',STN,REPTYP
+	END IF
+C
+C RESPONSE HAS BEEN GENERATED, NOW UPDATE MEMORY WITH
+C INFORMATION SUPPLIED.
+C
+C IF STATISTICS TYPE IS PORT/TERMINAL STATUS.
+C
+	IF(REPTYP.EQ.X2STMES_STSTYP_PRTSTA) THEN
+	  CALL ILBYTE(PORT,ORGMESS,STSOFF+X2STMES_STSPRT_PORT-1)
+	  CALL ILBYTE(MAXTER,ORGMESS,STSOFF+X2STMES_STSPRT_MAXTER-1)
+	  CALL MOV2TOI4(POLTIM,ORGMESS,STSOFF+X2STMES_STSPRT_POLTIM-1)
+	  CALL ILBYTE(CNFTER,ORGMESS,STSOFF+X2STMES_STSPRT_CNFTER-1)
+	  CALL ILBYTE(ACTTER,ORGMESS,STSOFF+X2STMES_STSPRT_ACTTER-1)
+	  CALL ILBYTE(STATUS,ORGMESS,STSOFF+X2STMES_STSPRT_STATUS-1)
+	  PORT=PORT+1
+C
+C VALIDATE INFORMATION RECEIVED.
+C
+	  IF(CHKVAL(STN,1,X2X_STATIONS,' STATION NUMBER ').NE.0 .OR.
+     *	     CHKVAL(PORT,1,X2X_MAXPORT,' PORT NUMBER ').NE.0) THEN
+	    GOTO 8000
+	  ENDIF
+	  X2XS_STATS_INDEX(STN)=TRABUF(TXIDX)
+C
+C EXTRACT THE TERMINAL POLLING INFORMATION, BASED ON THE
+C NUMBER OF TERMINALS CONFIGURED.
+C
+	  IF(MAXTER.LE.0.OR.MAXTER.GT.X2X_MAXTERMS) MAXTER=X2X_MAXTERMS
+	  DO 200 I=1,MAXTER
+	    CALL ILBYTE(TEMP,ORGMESS,STSOFF+X2STMES_STSPRT_POLL-1+I-1)
+	    CONFIG=IAND(TEMP,'80'X)
+	    POLSTS=IAND(TEMP,'0F'X)
+	    TER=X2XS_TERMS(I,PORT,STN)
+	    IF(TER.LE.0) GOTO 200
+	    IF(CHKVAL(TER,1,X2X_TERMS,' TERM NUMBER ').NE.0) THEN
+	      GOTO 8000
+	    ENDIF
+	    CALL ILBYTE(STATE,IX2XT_STATE,TER-1)
+C
+C IF THE TERMINAL IS CONFIGURED, UPDATE THE STATUS.
+C
+	    IF(CONFIG.NE.0 .AND. STATE.NE.X2XTS_DISABLED) THEN
+              CALL ILBYTE(OLD_STATUS,IX2XT_STATE,TER-1)  !GET OLD STAT
+              IF(POLSTS.EQ.X2STMES_STSPRT_ACTIVE) THEN
+                NEW_STATUS=X2XTS_ACTIVE
+              ELSE IF(POLSTS.EQ.X2STMES_STSPRT_WAIT) THEN
+                NEW_STATUS=X2XTS_ACTIVE
+              ELSE IF(POLSTS.EQ.X2STMES_STSPRT_SLOW) THEN
+                NEW_STATUS=X2XTS_SLOW_POLL
+              ELSE IF(POLSTS.EQ.X2STMES_STSPRT_DEAD) THEN
+                NEW_STATUS=X2XTS_SLOW_POLL
+              ELSE
+                CALL OPS('INVALID POLL STATUS',POLSTS,0)
+                NEW_STATUS=OLD_STATUS
+              ENDIF
+              CALL ISBYTE(NEW_STATUS,IX2XT_STATE,TER-1)
+C............ IF (OLD_STATUS.NE.NEW_STATUS) THEN
+C............... IF (STATUS_CHG.NE.255) STATUS_CHG=STATUS_CHG+1
+C............ ENDIF
+	    ENDIF
+200	  CONTINUE
+C
+C LAST 5 CALLS STATISTICS.
+C
+	ELSEIF(REPTYP.EQ.X2STMES_STSTYP_LSTCALL) THEN
+	  X2XS_STATS_INDEX(STN)=TRABUF(TXIDX)
+C
+C X25 STATISTICS
+C
+C
+	ELSEIF (REPTYP.EQ.X2STMES_STSTYP_X25) THEN
+	  X2XS_STATS_INDEX(STN)=TRABUF(TXIDX)
+C
+C BCST STATISTICS
+C
+	ELSEIF (REPTYP.EQ.X2STMES_STSTYP_BCST) THEN
+	  X2XS_STATS_INDEX(STN)=TRABUF(TXIDX)
+C
+C   Reported BCST number and bitmap
+C
+	  CALL ILBYTE(NUM_BCST,ORGMESS,         	! num of stn connection
+     *      STSOFF+X2STMES_STSBCST_ADDR_NUM-1)
+	  CALL ILBYTE(BITS,ORGMESS,                     !stn conn map
+     *      STSOFF+X2STMES_STSBCST_ACTIVE_BITMAP-1)
+C
+C
+C  Reported BCST 1 addr
+C
+	  IF ( NUM_BCST .GE. 1 ) THEN
+		CALL ILBYTE(LEN1,MESS,			! conn 1 addrlen
+     *          STSOFF+X2STMES_STSBCST_ADRLEN-1)
+		CALL MOV4TOI4(ADDR1(1),ORGMESS,         ! Conn 1 addr
+     *          STSOFF+X2STMES_STSBCST_ADDR-1)
+		CALL MOV4TOI4(ADDR1(2),ORGMESS,         ! Conn 1 addr
+     *          STSOFF+X2STMES_STSBCST_ADDR+4-1)
+	  ELSE
+		LEN1 = -1
+		ADDR1(1) = 0
+		ADDR1(2) = 0
+	  ENDIF
+C
+C   Reported BCST 2 addr
+C
+	  IF ( NUM_BCST .GT. 1 ) THEN
+C   						      ! Conn 2 addrlen
+	      CALL MOV2TOI4(LEN2,MESS,		
+     *        STSOFF+X2STMES_STSBCST_AFLD_LEN+X2STMES_STSBCST_ADRLEN-1)
+	      CALL MOV4TOI4(ADDR2(1),ORGMESS,         ! Conn 2 addr
+     *        STSOFF+X2STMES_STSBCST_AFLD_LEN+X2STMES_STSBCST_ADDR-1)
+	      CALL MOV4TOI4(ADDR2(2),ORGMESS,         ! Conn 2 addr
+     *        STSOFF+X2STMES_STSBCST_AFLD_LEN+X2STMES_STSBCST_ADDR+4-1)
+	  ELSE
+		LEN2 = -1
+		ADDR2(1) = 0
+		ADDR2(2) = 0
+	  ENDIF
+C
+C  Check Host and Stn BCST conf for errors and warnings.     
+C
+ 	  CHANGED_BITS = IEOR(BITS,X2XS_BCST_ACTIVE_BITMAP(STN)) 
+C
+	  IF (IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0) THEN
+		TYPE *,'BCST STAT: STN, NUM, BITS, CHANGED_BITS: ',
+     * 		STN,NUM_BCST,BITS,CHANGED_BITS
+	  END IF
+	  IF (IAND(X2X_DEBUG,X2X_DEBUG_X2XREL).NE.0) THEN
+		TYPE 900,'BCST STAT: LEN/ADR:  ',
+     *   	LEN1,ADDR1(1),ADDR1(2),LEN2,ADDR2(1),ADDR2(2)
+900		FORMAT(1X,A,2(I4,1X,2Z8))
+	  END IF
+C
+C   Process BCST connection status report
+C
+	  CALL X2STSPRO(STN,NUM_BCST,BITS,LEN1,ADDR1,LEN2,ADDR2)
+C
+C
+C INVALID STATISTICS REPORT.
+C
+	ELSE
+	  CALL OPS('INVALID STATISTICAL TYPE ',TRABUF(TXSCC),0)
+	ENDIF
+C
+C PROGRAM EXIT.
+C
+8000	CONTINUE
+	RETURN
+	END

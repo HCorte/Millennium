@@ -1,0 +1,102 @@
+C
+C SUBROUTINE SNDTRA
+C $Log:   GXAFXT:[GOLS]SNDTRA.FOV  $
+C
+C V04 26-APR-2010 RXK For passive send to queue the log buffer.
+C
+C     Rev 1.3   27 DEC 2001 15:10:16   CS
+C  INCLUDED PASSIVE GAME FOR PORTUGAL
+C  
+C     Rev 1.0   17 Apr 1996 15:10:16   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   30 Aug 1993 23:46:26   GXA
+C  Added Bank ID, Number and Exchange serial # to queueu.
+C  
+C     Rev 1.0   21 Jan 1993 17:39:20   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - reprotra.for **
+C
+C
+C     SNDTRA(TRABUF,TASK)  - QUEUE TRANSACTION TO THE TASK
+C     IN - TRABUF - TRANSACTION BODY
+C          TASK   - TASK TO BE SEND TO
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SNDTRA(TRABUF,TASK)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+	INCLUDE 'INCLIB:QUECOM.DEF'
+C
+	INTEGER*4 QUEUE_ITEMS
+	PARAMETER(QUEUE_ITEMS = 11)
+C
+	INTEGER*4 DATA(QUEUE_ITEMS)
+	INTEGER*4 BUF, ST, WST, I, TASK
+C
+C
+	IF(TASK.EQ.VAL) THEN
+	   DATA(1) = TRABUF(TSER)
+	   DATA(2) = TRABUF(TTYP)
+	   DATA(3) = TRABUF(TTER)
+	   DATA(4) = TRABUF(TVSTS)
+	   DATA(5) = TRABUF(TVSER)
+	   DATA(6) = TRABUF(TVCDC)
+	   DATA(7) = TRABUF(TGAMTYP)
+	   DATA(8) = TRABUF(TFIL)
+	   DATA(9) = TRABUF(TVBNKID)
+	   DATA(10)= TRABUF(TVBNKNUM)
+	   DATA(11)= TRABUF(TVEXC)
+	   DO 20 I = 1,QUEUE_ITEMS
+10	      CONTINUE
+	      CALL ABL(DATA(I),REPVQUE,ST)
+	      IF(ST.NE.0) THEN
+	         CALL XWAIT(50,1,WST)
+	         GOTO 10
+	      ENDIF
+20	   CONTINUE
+           CALL RELSE(TSKNAM(TASK),ST)
+           RETURN
+        ENDIF
+
+30      CONTINUE
+        CALL GETBUF(BUF)
+        IF(BUF.LE.0) THEN
+           CALL XWAIT(50,1,ST)
+           GOTO 30
+        ENDIF
+
+        CALL TRALOG(TRABUF,PRO(WRKTAB,BUF))
+
+        IF(TASK.EQ.PST) THEN
+40         CONTINUE
+           CALL ABL(BUF,REPQUEPAS(1,RQPASPRO),WST)
+           IF(WST.NE.0) THEN
+              CALL XWAIT(50,1,ST)
+              GOTO 40
+           ENDIF
+        ELSEIF(TASK.EQ.PSV) THEN
+50         CONTINUE
+           CALL ABL(BUF,REPQUEPAS(1,RQPASVAL),WST)
+           IF(WST.NE.0) THEN
+              CALL XWAIT(50,1,ST)
+              GOTO 50
+           ENDIF
+        ELSE
+           CALL QUETRA(TASK,BUF)
+        ENDIF
+C
+        CALL RELSE(TSKNAM(TASK),ST) 
+
+        RETURN
+        END

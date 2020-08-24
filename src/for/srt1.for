@@ -1,0 +1,50 @@
+C
+C SUBROUTINE SRT1
+C $Log:   GXAFXT:[GOLS]SRT1.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:17:28   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:42:56   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - poolshr.for **
+C
+C====================================================================
+C     SORT N NUMBERS
+C     1-ST N-1 SORTED AND LAST 1 SORTED
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SRT1(TAB1,TAB2,BET)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:POOLLTO.DEF'
+	INTEGER*4 INDNEW, IND2, IND1, BET
+	INTEGER*4 TAB1(*)
+	INTEGER*4 TAB2(*)
+C
+	IND1=1
+	IND2=BET+1
+	INDNEW=1
+	TAB1(BET+2)=10000
+	TAB1(BET)=10000
+C
+10	CONTINUE
+	IF (INDNEW.EQ.BET+1) RETURN
+	TAB2(INDNEW)=TAB1(IND2)
+C
+	IF (TAB1(IND2).GT.TAB1(IND1)) THEN
+	  TAB2(INDNEW)=TAB1(IND1)
+	  INDNEW=INDNEW+1
+	  IND1=IND1+1
+	ELSE
+	  INDNEW=INDNEW+1
+	  IND2=IND2+1
+	ENDIF
+	GOTO 10
+	END

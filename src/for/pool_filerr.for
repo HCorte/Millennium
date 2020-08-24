@@ -1,0 +1,46 @@
+C
+C SUBROUTINE POOL_FILERR
+C $Log:   GXAFXT:[GOLS]POOL_FILERR.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:26:48   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:20:16   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - poolpro.for **
+C
+C
+C====================================================================
+C REPORT FILE ERROR
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE POOL_FILERR (FILE, MES_NUM, ST, REC)
+	IMPLICIT NONE
+C
+        INTEGER*4   FILE, MES_NUM, ST, REC
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+C
+	INTEGER*4   MESS(10)
+C
+	MESS(1)=POL
+	MESS(2)=TEGEN
+	MESS(3)=MES_NUM
+	MESS(4)=SFNAMES(1,FILE)
+	MESS(5)=SFNAMES(2,FILE)
+	MESS(6)=SFNAMES(3,FILE)
+	MESS(7)=SFNAMES(4,FILE)
+	MESS(8)=SFNAMES(5,FILE)
+	MESS(9)= ST
+	MESS(10)= REC
+	CALL QUEMES(MESS)
+C
+	END

@@ -1,0 +1,20 @@
+$! GXSRC:CNVSCF.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]CNVSCF.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:37:34   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   18 Dec 1995 13:04:58   JXP
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    18 Dec 1995 13:02:48   JXP
+$! Initial revision.
+$!
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:CNVDBL.EXE -
+OBJLIB:CNVDBL,-
+STDLIB:NORMLIB/LIB, -
+SYS$INPUT/OPTION,-
+OBJLIB:PSECT.OPT/OPTION

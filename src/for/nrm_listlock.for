@@ -1,0 +1,74 @@
+C
+C SUBROUTINE LISTLOCK
+C $Log:   GXAFXT:[GOLS]LISTLOCK.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:49:38   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:51:08   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_glist.for **
+C
+C
+C
+C LISTLOCK +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Lock entire list (top and bottom)
+C
+C LISTLOCK ----------------------------------------------------------
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE LISTLOCK ( LIST_ARRAY )
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE	'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLIST.DEF'
+C
+	INTEGER*4	LIST_ARRAY(*)
+C
+C DECLARE LOCAL VARIABLES
+C
+	INTEGER*4	ST
+C
+	EXTERNAL    LIB$BBSSI
+	INTEGER*4   LIB$BBSSI, K
+C
+C
+C
+100	CONTINUE
+	ST = LIB$BBSSI(GLIST_LOCK_BIT, LIST_ARRAY(GLIST_BOT_LOCK))
+	IF (ST) THEN
+	  DO 110 K = 1, GLIST_LOCK_DELAY_COUNT
+	    LIST_ARRAY( GLIST_BOT_LOCK_CNT) =
+     *      LIST_ARRAY( GLIST_BOT_LOCK_CNT) + 1
+C
+	    CALL XWAIT( GLIST_LOCK_DELAY_VALUE, 1, ST)
+	    IF( .NOT. BTEST(LIST_ARRAY(GLIST_BOT_LOCK),
+     *                                 GLIST_LOCK_BIT))GOTO 100
+110	  CONTINUE
+	  TYPE *,IAM(),'BOTTOM LOCK AT ',%LOC(LIST_ARRAY(GLIST_BOT_LOCK)),
+     *           ' LOCKED TOO LONG'
+	  GOTO 100
+	ENDIF
+C
+200	CONTINUE
+	ST = LIB$BBSSI(GLIST_LOCK_BIT, LIST_ARRAY(GLIST_TOP_LOCK))
+	IF (ST) THEN
+	  DO 210 K = 1, GLIST_LOCK_DELAY_COUNT
+	    LIST_ARRAY( GLIST_TOP_LOCK_CNT) =
+     *      LIST_ARRAY( GLIST_TOP_LOCK_CNT) + 1
+C
+	    CALL XWAIT( GLIST_LOCK_DELAY_VALUE, 1, ST)
+	    IF( .NOT. BTEST(LIST_ARRAY(GLIST_TOP_LOCK),
+     *                                 GLIST_LOCK_BIT))GOTO 200
+210	  CONTINUE
+	  TYPE *,IAM(),'TOP LOCK AT ',%LOC(LIST_ARRAY(GLIST_TOP_LOCK)),
+     *           ' LOCKED TOO LONG'
+	  GOTO 200
+	ENDIF
+C
+	RETURN
+	END

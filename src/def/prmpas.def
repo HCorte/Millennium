@@ -1,0 +1,194 @@
+C PRMPAS.DEF
+C
+C V05 14-DEC-2015 JHR/FRP CR13 SET 6 DRAWS TO SALE FOR PASSIVE GAMES
+C V04 13-MAY-2011 FJG PMAXNUMCLA to 99999
+C V03 01-JAN-2010 FJG ePASSIVE
+C V02 05-JAN-01 ANG ADDED PARAMETER FOR WINPAS
+C V01 11-DEC-00 CS  INITIAL RELEASE FOR PORTUGAL
+C
+C PASSIVE LOTTERY PARAMETERS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 NUMPAS
+	PARAMETER(NUMPAS=2)     !NUMBER OF PASSIVE LOTTERY OCCURENCES
+	
+	INTEGER*4 PAGEMI
+	PARAMETER(PAGEMI=50)	!MAXIMUM EMISSION AVAILABLE ON MEMORY ARRAY
+
+	INTEGER*4 PAGDIV
+	PARAMETER(PAGDIV=25)	!MAXIMUM NUMBER OF DIVISIONS
+
+	INTEGER*4 PAGEDV
+	PARAMETER(PAGEDV=10)	!MAXIMUM NUMBER OF EXTRA DIVISIONS
+
+	INTEGER*4 PAGNBR
+	PARAMETER(PAGNBR=20)	!MAXIMUM NUMBER OF WINNING NUMBERS DRAWN
+
+	INTEGER*4 MAXTCKS
+	PARAMETER(MAXTCKS=100000) !MAXIMUM NUMBER OF TICKETS PER EMISSION
+
+	INTEGER*4 MAXSER
+	PARAMETER(MAXSER=3)	  !MAXIMUM NUMBER OF SERIES OLD ! (PLCS)
+
+	INTEGER*4 NEWMAXSER
+	PARAMETER(NEWMAXSER=12)	  !MAXIMUM NUMBER OF SERIES NEW! (PLCS) change from 3 to 12
+
+	INTEGER*4 NOFFRA
+	PARAMETER(NOFFRA=20)	  !MAXIMUM NUMBER OF FRACTIONS
+
+	INTEGER*4 MAXNUMTCKS
+	PARAMETER (MAXNUMTCKS=10) !MAXIMUM # OF TICKETS/TRANSACTION
+
+	INTEGER*4 EM_ORD,EM_EXT,EM_ESP   !EMISSION TYPE
+	PARAMETER (EM_ORD = 1)           !ORDINARIA 
+	PARAMETER (EM_EXT = 2)           !EXTRAORDINARIA
+	PARAMETER (EM_ESP = 3)           !ESPECIAL
+
+	INTEGER*4 PR_APRX,PR_CENT,PR_SEQ,PR_DIG    !PRIZE TYPE
+	PARAMETER (PR_APRX = 1)           !APROXIMACAO
+	PARAMETER (PR_CENT = 2)           !CENTENA
+        PARAMETER (PR_SEQ  = 3)           !SEQUENCIA
+        PARAMETER (PR_DIG  = 4)           !DIGITOS
+
+	INTEGER*4 PSBCLA, PSBPOP          !PASSIVE SUBTYPE
+	PARAMETER (PSBCLA = 1)            !CLASSICA
+	PARAMETER (PSBPOP = 2)            !POPULAR
+C
+C RETURN TICKETS TYPE
+C
+	INTEGER*4 ALLTCK, BYFRAC, HALFTCK, QUARTCK
+	PARAMETER (ALLTCK = 1)		  !ALL TICKETS
+	PARAMETER (BYFRAC = 2)		  !BY FRACTION - EACH ONE)
+	PARAMETER (HALFTCK= 3)            !HALF TICKET
+	PARAMETER (QUARTCK= 4)		  !QUARTER TICKET
+C
+	CHARACTER STRTYP(NUMPAS)
+        COMMON / PRMPASCOM / STRTYP
+	DATA      STRTYP /'C','P'/	
+C
+	STRUCTURE /STCIDX/
+		INTEGER*4 ALGORITMO(NOFFRA,MAXSER)     ! VALIDATION NUMBER
+	        INTEGER*4 FILLER(4)                    ! USING IOINIT SUBROUTINE FOR PERFORMANCE (MIN 256 BYTS)
+	END STRUCTURE 
+C (PLCS)
+	STRUCTURE /NEWSTCIDX/
+		INTEGER*4 ALGORITMO(NOFFRA,NEWMAXSER)     ! VALIDATION NUMBER
+	        INTEGER*4 FILLER(4)                    ! USING IOINIT SUBROUTINE FOR PERFORMANCE (MIN 256 BYTS)
+	END STRUCTURE
+C (PLCS) 
+C
+!===============================================================================
+!       ePASSIVE
+!===============================================================================
+!
+!       Passive Operation Types
+!
+        integer*4  epasres
+        integer*4  epassal
+        integer*4  epasrel
+        integer*4  ppasret
+!       
+        parameter (epasres=1)         ! epassive reservation of number(s)
+        parameter (epassal=2)         ! epassive sale
+        parameter (epasrel=3)         ! epassive release of number(s)
+        parameter (ppasret=4)         ! ppassive ticket return
+!
+        integer*4  pmaxtic
+        integer*4  pmaxwek
+        integer*4  pmaxsal
+        integer*4  pmaxsercla,pmaxserpop
+        integer*4  pmaxfracla,pmaxfrapop
+        integer*4  pmaxnumcla,pmaxnumpop
+!        
+        parameter (pmaxtic=10)       ! Max tickets/fractions to provide in searches
+        parameter (pmaxwek=54)       ! Max weks per year
+        parameter (pmaxsal=6)        ! Max draws on sale per game
+        parameter (pmaxsercla=10)    ! Max sers Classica
+        parameter (pmaxserpop=1)     ! Max sers Popular
+        parameter (pmaxfracla=5)     ! Max fras Classica
+        parameter (pmaxfrapop=6)     ! Max fras Popular        
+        parameter (pmaxnumcla=99999) ! Max num Classica
+        parameter (pmaxnumpop=99999) ! Max num Popular        
+!-------status of the draws in the filter table
+        byte       pdrwnot,pdrwpur,pdrwval,pdrwwag,pdrwret,pdrwclo
+        byte       pdrwmin,pdrwmax,pdrwerr
+!        
+        parameter (pdrwmin=0)   ! Minimum value           
+        parameter (pdrwmax=6)   ! Maximum value           
+!        
+        parameter (pdrwnot=0)   ! Draw not available      
+        parameter (pdrwpur=1)   ! Draw is purged          
+        parameter (pdrwval=2)   ! Draw open for validations and returns
+        parameter (pdrwwag=3)   ! Draw open for sales and returns
+        parameter (pdrwret=4)   ! Draw open for returns
+        parameter (pdrwclo=5)   ! Draw closed
+        parameter (pdrwerr=6)   ! Draw error
+!-------status of the tickets in the filter table
+        byte       pbilmin, pbilmax, pbilnot
+        byte       pbilonl, pbilson, pbilcon, pbilwon, pbilxon
+        byte       pbiloff, pbilsof, pbilcof, pbilwof, pbilxof, pbilrof, pbilkof
+!        
+        parameter (pbilmin=-7)  ! Minimum value            
+        parameter (pbilmax=5)   ! Maximum value                    
+!        
+        parameter (pbilnot=0)   ! Not defined/available    
+        parameter (pbilonl=1)   ! Available for esale       
+        parameter (pbilson=2)   ! eSold                     
+        parameter (pbilcon=3)   ! Cancelled                
+        parameter (pbilwon=4)   ! Sold online and winner           
+        parameter (pbilxon=5)   ! Cancelled online and winner                   
+        parameter (pbiloff=-1)  ! Available for offsale
+        parameter (pbilsof=-2)  ! Sold offline             
+        parameter (pbilcof=-3)  ! Returned offline            
+        parameter (pbilwof=-4)  ! Sold offline and winner   
+        parameter (pbilxof=-5)  ! Returned offline and winner                           
+        parameter (pbilrof=-6)  ! Returned offline after draw
+        parameter (pbilkof=-7)  ! Returned offline after draw and winner
+!
+        integer*4  ioreaok
+        integer*4  ioreano
+        integer*4  iowriok
+        integer*4  iowrino
+        integer*4  ioermax        
+!       
+        parameter (ioreaok=1)         ! Read  OK
+        parameter (ioreano=2)         ! Read  NOK
+        parameter (iowriok=3)         ! Write OK
+        parameter (iowrino=4)         ! Write NOK
+        parameter (ioermax=4)         ! Maximum 
+!-------table with all the possible fractions for one number: billets
+        structure /stnumcla/                              ! Structure for fractions Classica
+          byte      billet(pmaxsercla,pmaxfracla)         ! 50 All fractions of a num
+          byte      forsal                                !  1 Fractions available sale          
+          byte      xxxfre                                !  1 Byte free
+          integer*2 stacnt                                !  2 Statistic counter
+          integer*2 rester                                !  2 Terminal reservator
+          integer*4 restim                                !  4 Seconds since reserved
+        end structure                                     ! 60 bytes
+!        
+        structure /stnumpop/                              ! Structure for fractions Classica
+          byte      billet(pmaxserpop,pmaxfrapop)         !  6 All fractions of a num
+          byte      forsal                                !  1 Fractions available sale          
+          byte      xxxfre                                !  1 Byte free          
+          integer*2 stacnt                                !  2 Statistic counter
+          integer*2 rester                                !  2 Terminal reservator
+          integer*4 restim                                !  4 Seconds since reserved
+        end structure                                     ! 16 bytes
+!===============================================================================
+!       ePASSIVE
+!===============================================================================
+C
+C END OF PRMPAS.DEF
+C

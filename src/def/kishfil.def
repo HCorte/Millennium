@@ -1,0 +1,50 @@
+C KISHFIL.DEF
+C
+C V01 22-DEC-2016 SCML INITIAL RELEASE
+C
+C STRUCTURE FOR GENERATING THE JOKER SHARE FILE
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Copyright 2016 SCML. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        STRUCTURE /STCKISHFIL/
+C         GENERAL DATA
+          INTEGER*4    KICTRFLG                                                 !FLAG FOR CONTROLLING IF THIS STRUCTURE HAS BEEN LOADED SUCCESSFULLY (1 - SUCCESS, 0 - FAILURE)
+          INTEGER*4    KISHFLUN                                                 !LUN FOR KICKER SHARE FILE
+          INTEGER*4    KIGNUM                                                   !KICKER GAME NUMBER
+          INTEGER*4    KIGTYP                                                   !KICKER GAME TYPE
+          INTEGER*4    KIGIND                                                   !KICKER GAME INDEX
+          CHARACTER*24 KISHFNAM                                                 !KICKER SHARE FILE NAME
+          INTEGER*4    KIDIV                                                    !TOTAL KICKER DIVISIONS
+C         HEADER DATA
+          INTEGER*4    KICCC                                                    !DRAW NUMBER
+          INTEGER*4    KIYEAR                                                   !DRAW YEAR
+          INTEGER*4    KITOTSALE                                                !TOTAL SALES AMOUNT
+          INTEGER*4    KITOTPOOL                                                !TOTAL SALES AMOUNT FOR PRIZE DISTRIBUTION
+          REAL*8       KIPREVJKT                                                !PREVIOUS JACKPOT AMOUNT
+          INTEGER*4    KITOTRESI                                                !TOTAL ROUNDING AMOUNT
+C         BODY DATA
+          INTEGER*4    KIDIVNUMB(KIGDIV)                                        !NUMBER OF EACH PRIZE DIVISION
+          CHARACTER*12 KIDIVNAME(KIGDIV)                                        !NAME OF EACH PRIZE DIVISION
+          REAL*8       KIDIVPOOL(KIGDIV)                                        !TOTAL POOL VALUE OF EACH PRIZE DIVISION
+          REAL*8       KIDIVPERC(KIGDIV)                                        !ASSIGNED PERCENTAGE OF EACH PRIZE DIVISION
+          INTEGER*4    KIDIVSHRQ(KIGDIV)                                        !TOTAL PRIZED BETS OF EACH PRIZE DIVISION
+          REAL*8       KIDIVSHRV(KIGDIV)                                        !SHARE AMOUNT VALUE OF EACH PRIZE DIVISION
+C         TRAILER DATA
+          CHARACTER*8  KICRFDAT                                                 !KICKER FILE CREATION DATE
+C
+          INTEGER*4    ALIGN                                                    !ALIGNMENT, FREE FOR USE
+        ENDSTRUCTURE
+C
+C KICKER SHARES FILE RECORD TYPES
+C
+       CHARACTER*2 KIRTYP_HDR /'01'/
+       CHARACTER*2 KIRTYP_BDY /'02'/
+       CHARACTER*2 KIRTYP_TRL /'09'/
+C
+C KICKER GAME INDEXES APLIABLE
+C
+       INTEGER*4 JOK1
+       PARAMETER (JOK1 = 1)                                                     !JOKER GAME INDEX
+

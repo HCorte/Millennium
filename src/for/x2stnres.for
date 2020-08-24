@@ -1,0 +1,140 @@
+C
+C SUBROUTINE X2STNRES
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2STNRES.FOV                                 $
+C  $Date::   17 Apr 1996 16:36:44                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2stnres.for;1 **
+C
+C X2STNRES.FOR
+C
+C V03 29-DEC-94 WJK MOVE UNSOLICITED STATION CONNECT AND DISCONNECT FROM GLOBAL
+C                   TO STATION CLASS
+C V02 05-APR-94 GPR USE X2X_I4_STATION TO DETERMINE STATION AND TERNUM
+C V01 01-DEC-91 XXX RELEASED FOR VAX (NETHERLANDS)
+C
+C SEND SOFT RESET TO STATION WITHOUT ISSUING A COMMAND
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2STNRES(STN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:X2STMES.DEF'
+	INCLUDE 'INCLIB:X2FEMES.DEF'
+C
+	INTEGER*4 PROBUF
+	INTEGER*4 STN
+	INTEGER*4 TER
+	INTEGER*4 OFF
+	INTEGER*4 ST
+C
+C FIND VALID TERMINAL FOR THIS STATION
+C
+	CALL VALIDTER(STN,TER)
+	IF(TER.LE.0) GOTO 8000
+C
+C GET A PROCOM BUFFER.
+C
+	CALL GETBUF(PROBUF)
+	IF(PROBUF.LE.0) GOTO 8000
+C
+C FILL UP PROCOM BUFFER.
+C
+
+C	***** Start V02 changes *****
+
+	IF (X2X_I4_STATION) THEN
+	   PRO(TERNUM,PROBUF)=TER
+	   PRO(LINENO,PROBUF)=STN
+        ELSE
+	   HPRO(TERNUM,PROBUF)=TER
+	   HPRO(LINENO,PROBUF)=STN
+        ENDIF
+
+C	***** End V02 changes *****
+
+	HPRO(PRCSRC,PROBUF)=X2X_COM
+	HPRO(PRCDST,PROBUF)=0
+	HPRO(TRCODE,PROBUF)=TYPX2X_PRO
+	HPRO(QUENUM,PROBUF)=QIN
+	HPRO(MSGNUM,PROBUF)=0
+	HPRO(INPLEN,PROBUF)=30
+	HPRO(X2X_LINK,PROBUF)=0
+	HPRO(X2X_DEST,PROBUF)=X2DEST_FE+X2DEST_STATION+
+     *	                      X2DEST_TRANSPORT
+	HPRO(X2X_CONNCTL_OVR,PROBUF)=256*
+     *	      (X2X_UNSOLICIT_FE_CONNECT*16+X2X_UNSOLICIT_FE_DISCONNECT)
+C V03 *	      +(X2X_UNSOLICIT_STATION_CONNECT*16+
+C V03 *	       X2X_UNSOLICIT_STATION_DISCONNEC )
+     *        +(X2XC_UNSO_STN_CON(X2XS_STNCLS(STN))*16+                 ! V03
+     *         X2XC_UNSO_STN_DIS(X2XS_STNCLS(STN)) )                    ! V03
+C
+C BUILD THE PTL HEADER PORTION.
+C
+	CALL I4TOBUF2(X2X_MESTYP_CMD,PRO(INPTAB,PROBUF),
+     *	              X2PRO_MESTYP-1)
+	CALL ISBYTE(X2X_TRATYP_GLO,PRO(INPTAB,PROBUF),X2PRO_TRATYP-1)
+	CALL I4TOBUF2(TER,PRO(INPTAB,PROBUF),X2PRO_TERMINAL-1)
+	CALL I4TOBUF2(STN,PRO(INPTAB,PROBUF),X2PRO_STATION-1)
+	CALL ISBYTE(0,PRO(INPTAB,PROBUF),X2PRO_SSAP-1)
+	CALL ISBYTE(X2PRO_OFFSET+1,PRO(INPTAB,PROBUF),X2PRO_OFFSET-1)
+C
+C BUILD THE STATION MESSAGE PORTION. (TYPE INDEPENDANT).
+C
+	OFF=X2PRO_OFFSET
+	CALL ISBYTE(X2STMES_PROTID_VAL,PRO(INPTAB,PROBUF),
+     *	            OFF+X2STMES_PROTID-1)
+	CALL ISBYTE(0,PRO(INPTAB,PROBUF),OFF+X2STMES_CONFCHK-1)
+	CALL I4TOBUF2(STN,PRO(INPTAB,PROBUF),
+     *	              OFF+X2STMES_STATION_NO-1)
+	CALL ISBYTE(X2STMES_UNS,PRO(INPTAB,PROBUF),
+     *	            OFF+X2STMES_FLAGS-1)
+	CALL ISBYTE(X2STMES_HDRLEN,PRO(INPTAB,PROBUF),
+     *	            OFF+X2STMES_MESLEN-1)
+C
+C BUILD THE MESSAGE BUFFER FOR THE STATION SOFT RESET COMMAND.
+C
+	CALL ISBYTE(X2ERR_GLO_STN_RES_SOFT,PRO(INPTAB,PROBUF),
+     *	            X2PRO_STATUS-1)
+	CALL ISBYTE(X2STMES_DATATYPE_CMD_UP,PRO(INPTAB,PROBUF),
+     *	            OFF+X2STMES_DATATYPE-1)
+	CALL ISBYTE(X2STMES_SOFT_RESET,PRO(INPTAB,PROBUF),
+     *	            OFF+X2STMES_CODE-1)
+	HPRO(X2X_DELIVER_OVR,PROBUF)=X2FEMES_FLAGS_ER+
+     *	                             X2FEMES_FLAGS_DA
+C
+C QUE TO SYSTEM
+C
+	CALL QUEINP(PROBUF,ST)
+C
+8000	CONTINUE
+	RETURN
+	END

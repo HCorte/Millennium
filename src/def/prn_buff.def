@@ -1,0 +1,56 @@
+C PRN_BUFF.DEF
+C
+C V01 23-MAR-2001 EPH RELEASED FOR PORTUGAL
+C
+C STRUCTURE TO CONTROL PRINT BUFFERING FOR OP FORMATTING 
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2001 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C         
+C THIS STRUCTURE WILL BE USED BY PROGRAMS WHO HAVE TO PRINT OPS
+C FORMATTED ON A FILE
+C
+C THIS IS USED TO CONTROL BUFFERING
+C
+C MAINTAINS UP TO 3 OP INFORMATION.
+C
+C
+	STRUCTURE /PRN_BUFF_STRU/
+          
+           INTEGER*4     LUN            ! LOGICAL UNIT TO WRITE BUFFER
+	   INTEGER*4     POINT          ! POINTS TO THE LAST POSITION USED (1 -> 3)
+	   INTEGER*4     AGENT (3)      ! AGENT NUMBER FOR THE OP (THIS IS 3 CAUSE I NEED TO KNOW NEXT AGENT TO PUT *)
+	   CHARACTER*70  LINOP (2,17)   ! CONTAINS THE OP FORMATTED (UP TO 2 OPS OF 17 LINES EACH)
+	   INTEGER*4     OPS_ON_PAGE    ! HOW MANY OPS HAVE BEEN PRINTED ON A PAGE UP TO THE MOMENT (MAXIMUM = 6) 
+
+	END STRUCTURE
+
+	STRUCTURE /PRN_LABEL_STRU/
+          
+           INTEGER * 4 IDFIL_LBL          ! IDENTIFICATION FILE TO PRINT LABLES
+           INTEGER * 4 IDFIL_ASF          ! IDENTIFICATION FILE TO READ ASF
+	   INTEGER * 4 POINT              ! LAST POSITION USED (1 -> 4)
+           INTEGER * 4 AGENT(4)           ! AGENT NUMBER
+           INTEGER * 4 LSTAGTPRNT         ! LAS AGENT PRINTED  
+C
+           CHARACTER * 4   LSTBNKPRNT     ! LAST BANK PRINTED
+	   CHARACTER * 35  LINLBL (4, 9)  ! CONTAINS THE LABLES FORMATTED 
+C
+           LOGICAL PRINT                  ! PRINT LABEL INFORMATION
+
+	END STRUCTURE
+
+	RECORD /PRN_BUFF_STRU/  PRN_BUFF
+	RECORD /PRN_LABEL_STRU/ PRNT_LABEL
+
+	COMMON /PRN_BUFF_COMMON/ PRN_BUFF, PRNT_LABEL

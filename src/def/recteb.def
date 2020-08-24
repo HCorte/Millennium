@@ -1,0 +1,81 @@
+C  GXSRC:RECTEB.DEF
+C  
+C  $Log:   GXAFXT:[GOLS]RECTEB.DEV  $
+C  
+C     Rev 1.0   18 Dec 1996 12:23:08   HXK
+C  Initial revision.
+C  
+C     Rev 1.1   29 Nov 1996  1:09:24   WXW
+C  Applying PVCS header for automatic revision history
+C  
+C     Rev 1.0    29 Nov 1996 1:08:34   WXW
+C  Initial revision.
+C  
+C RECTEB.DEF
+C
+C V01 27-AUG-96 WXW INITAL RELEASE FOR FINLAND
+C
+C
+C TELEBETTING SALES FILE LAYOUT
+C
+C TEBCDC                           CURRENT CDC DATE                1
+C TEBTYP(AGAMLEN,MAXGAM)           DAILY ACTIVITY BY GAME        440
+C TEBFRE	                   FREE SPACE                     71
+C
+C                                  TOTAL                         512
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C RECORD OFFSET PARAMETERS
+C
+	INTEGER*4 TEBCDC_OFF
+	INTEGER*4 TEBTYP_OFF
+	INTEGER*4 TEBFRE_OFF
+
+	PARAMETER (TEBCDC_OFF = 1)			     !1
+	PARAMETER (TEBTYP_OFF = TEBCDC_OFF + 1)		     !2
+	PARAMETER (TEBFRE_OFF = TEBTYP_OFF + AGAMLEN*MAXGAM) !442
+C
+C CALCULATE FREE SPACE BASED ON MACHINE DEPENDENT SECTOR SIZES.
+C SHOULD ALLWAYS ADD UP TO A EVEN SECTOR SIZE BYTES (VAX 512).
+C NOTE! IN CALCULATIONS, FRE_OFF-2 IS DONE TO TAKE CARE OF WHEN THE DATA SIZE
+C       ENDS ON A EVEN SECTOR SIZE.
+C 
+        INTEGER*4 TEBLEN
+        PARAMETER(TEBLEN = TEBFRE_OFF-1)
+C
+        INTEGER*4 ITEBSEC
+        PARAMETER(ITEBSEC = TEBLEN/128 + 1)
+C
+        INTEGER*4 TEBSEC
+        PARAMETER(TEBSEC = ITEBSEC*2)
+C
+        INTEGER*4 TEBFRESIZ
+        PARAMETER(TEBFRESIZ = TEBSEC*64 - TEBLEN)
+C
+        INTEGER*4 TEBREC(TEBSEC*64)
+C
+	INTEGER*4 TEBCDC
+	INTEGER*4 TEBTYP(AGAMLEN,MAXGAM)
+        INTEGER*4 TEBFRE(TEBFRESIZ)
+C
+C
+	EQUIVALENCE (TEBCDC,TEBREC(TEBCDC_OFF))
+	EQUIVALENCE (TEBTYP(1,1),TEBREC(TEBTYP_OFF))
+        EQUIVALENCE (TEBFRE,TEBREC(TEBFRE_OFF))
+C
+C END RECTEB.DEF
+C

@@ -1,0 +1,196 @@
+C PRMDLL.DEF
+C
+C V17 15-FEB-2011 FRP MAXGAM from 10 to 50
+C V16 27-JAN-00 KW  Add two new variables for Altura ROM ID and terminal ID.
+C V15 13-JUN-2000 OXK GAMTXT as a COMMON
+C V14 13-JUL-1999 UXN DLLBEG changed to 1500
+C V13 11-MAY-1999 UXN MAXGAM changed to 60.
+C V12 27-FEB-1996 wsm Added TVNEWS,TXTBEG,GAMTXT,DLLBEG=1000 for Finland.
+C V11 15-sep-1995 DAS reorganized for background loads
+C V10 02-AUG-1995 DAS ADDED SFT_LIST AND GVT_LIST
+C V09 22-JUN-1995 SCD Fix MCP ROM REV and GVT SOFTLOADER REVs for 
+C		    COLORADO SPIFFANY & GVTs.
+C V08 01-JUN-1995 PJS COLORADO SPIFFANY & GVTs.
+C V07 20-MAR-1995 CDO CHANGE MCP ROM REV TO A9**
+C V06 27-DEC-1994 GPR DEFINE FCLTIN TO BE 4,8
+C V05 12-DEC-1994 DAS REMOVED MAX*** AND ACT** PARAMETERS TO DLLSIZ.DEF
+C V04 13-JUL-1992 NJA CHANGED ACTAPP TO 19 FROM 18.
+C V03 09-MAR-1992 DAS ADDED RRESET NUMBER                                
+C V02 01-FEB-1992 PJS MODIFIED TO INCLUDE GVT SOFTLOADER & APPLICATION.
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C DOWNLINE LOAD AND NEWS MESSAGE PARAMETERS
+C MSGCOM CONTAINS THE FOLLOWING MESSAGES.
+C
+C 001-009               USER AVAILABLE MESSAGES (NEWS, RESET)
+C 010-???               TERMINAL APPLICATION LOADS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        LOGICAL GVT_COMPRESSED_FORMAT   !GVT IS IN COMPRESSED FORMAT
+        PARAMETER (GVT_COMPRESSED_FORMAT=.FALSE.)
+C
+	INTEGER*4  HRESET, MNEWS, URESET, SRESET, RRESET
+        INTEGER*4  GVTNEWS,TVNEWS, TXTBEG, DLLBEG
+	PARAMETER (HRESET=1)	! HARD RESET MESSAGE
+	PARAMETER (MNEWS=2)	! NEWS MESSAGE ... ONLINE TERMINALS ONLY
+	PARAMETER (URESET=3)	! ULTIMATE RESET MESSAGE
+	PARAMETER (SRESET=4)	! SOFT RESET MESSAGE
+        PARAMETER (RRESET=5)    ! RESTART RESET MESSAGE
+	PARAMETER (GVTNEWS=7)   ! NEWS MESSAGE ... GTV TERMINALS ONLY
+        PARAMETER (TVNEWS=9)    ! NEWS MESSAGE FOR TV MONITOR
+        PARAMETER (TXTBEG=10)   ! BEGINNING OF TEXT MESSAGES
+	PARAMETER (DLLBEG=1500)	! DOWNLINE LOAD FILES BEGIN MESSAGE
+C
+C       CHANGES IN CODE REQUIRES THAT LOAD NAMES BE ZERO IF NOT
+C       DEFINED
+C
+	INTEGER*4 FCLTIN(MAXFCL),FCLNAM(MAXFCL)
+	DATA FCLTIN/Z00,Z00,Z00,Z00,Z00,				!V06
+     *	            Z00,Z00,Z00,Z00,Z00/
+	DATA FCLNAM/10*0/
+C
+        INTEGER*4 ACLNAM(MAXFCL)
+        DATA ACLNAM/10*0/
+C
+	INTEGER*4 MCPROM(MAXMCP),MCPNAM(MAXMCP)
+        DATA MCPROM/Z00000000,          !ROM ID A6**			
+     *              Z00000000,          !ROM ID A7**			!V06
+     *              Z00000000,          !ROM ID &C**			!V06
+     *              Z00000000,          !ROM ID &B**			!V06
+     *	            Z00000000,
+     *	            Z00000000,
+     *	            Z00000000,
+     *	            Z00000000,
+     *	            Z00000000,
+     *	            Z00000000/
+	DATA MCPNAM/10*0/
+C
+	INTEGER*2 SFTROM(MAXSFT)
+	INTEGER*4 SFTNAM(MAXSFT)
+	INTEGER*4 SFT_LIST(MAXSFT)
+C
+	DATA SFTROM/Z0000,		! ROM ID (T2DD) 128K DIAL GVT
+     *	            Z0000,		! ROM ID (T3AG) 128K ASYNC GVT
+     *	            Z0000,              ! ROM ID (T6BD) 384K (IOWA) DIAL GVT
+     *	            Z0000,              ! ROM ID (T3CG) 384K DIAL & ASYNC GVT
+     *	            Z0000,
+     *	            Z0000,
+     *	            Z0000,
+     *	            Z0000,
+     *	            Z0000,
+     *	            Z0000/
+	DATA SFTNAM/10*0/
+	DATA SFT_LIST/10*0/
+C
+	INTEGER*2 GVTROM(MAXGVT)
+	INTEGER*4 GVTNAM(MAXGVT)
+        INTEGER*4 GVT_LIST(MAXGVT)
+	DATA GVTROM/Z0000,		! ROM ID (T2DD) 128K DIAL GVT
+     *	            Z0000,		! ROM ID (T3AG) 128K ASYNC GVT
+     *	            Z0000,              ! ROM ID (T6BD) 384K (IOWA) DIAL GVT
+     *	            Z0000,              ! ROM ID (T3CG) 384K DIAL & ASYNC GVT
+     *	            Z0000,
+     *	            Z0000,
+     *	            Z0000,
+     *	            Z0000,
+     *	            Z0000,
+     *	            Z0000/
+	DATA GVTNAM/10*0/
+	DATA GVT_LIST/10*0/
+C
+C
+C       START OF GAME TEXT
+C
+        INTEGER*4 GAMTXT(MAXGAM)
+        DATA GAMTXT/020,040,060,080,100,
+     *            120,140,160,180,200,
+     *            220,240,260,280,300,
+     *            320,340,360,380,400,
+     *            420,440,460,480,500,
+     *            520,540,560,580,600,
+     *            620,640,660,680,700,
+     *            720,740,760,780,800,
+     *            820,840,860,880,900,
+     *            920,940,960,980,1000/
+
+	COMMON /GAMTXT/ GAMTXT
+
+C
+C	RECORD SIZES DEFINED FOR DIFFERENT LOADS
+C
+	INTEGER*4	APPCSIZ, APPISIZ,
+     *			GVTCSIZ, GVTISIZ,
+     *			MCPCSIZ, MCPISIZ,
+     *			SFTCSIZ, SFTISIZ,
+     *			ACLCSIZ, ACLISIZ
+	PARAMETER      (ACLCSIZ = 276)
+	PARAMETER      (ACLISIZ = (ACLCSIZ + 3) / 4)
+	PARAMETER      (APPCSIZ = 276)
+	PARAMETER      (APPISIZ = (APPCSIZ + 3) / 4)
+	PARAMETER      (GVTCSIZ = 268)
+	PARAMETER      (GVTISIZ = (GVTCSIZ + 3) / 4)
+	PARAMETER      (MCPCSIZ = 268)
+	PARAMETER      (MCPISIZ = (MCPCSIZ + 3) / 4)
+	PARAMETER      (SFTCSIZ = 263)
+	PARAMETER      (SFTISIZ = (SFTCSIZ + 3) / 4)
+C
+C	LENGTH OF SEG0 SEGMENTS
+C
+	INTEGER*4	FCLSEG0,
+     *                  GVTSEG0,
+     *                  MCPSEG0,
+     *                  SFTSEG0
+C
+        PARAMETER      (FCLSEG0 = 34)
+        PARAMETER      (GVTSEG0 = 20)
+        PARAMETER      (MCPSEG0 = 30) !!!18)
+        PARAMETER      (SFTSEG0 = 12)
+C
+C
+C       SUBTYPE FOR DOWNLOAD MESSAGES
+C
+        INTEGER*4 DLL_SUBTYP_LOOPBACK, DLL_SUBTYP_MCP,
+     *            DLL_SUBTYP_BGROUND_APP, DLL_SUBTYP_BGROUND_DRIVER,
+     *            DLL_SUBTYP_OLD_APP, DLL_SUBTYP_OLD_DRIVER,
+     *            DLL_SUBTYP_ACL, DLL_SUBTYP_LOAD_DONE
+C
+        PARAMETER (DLL_SUBTYP_MCP=1)
+        PARAMETER (DLL_SUBTYP_LOOPBACK=6)       !LOOPBACK TYPE MESSAGE
+C                                               !SUPPORTED BY MCP
+        PARAMETER (DLL_SUBTYP_ACL=8)            !ACL LOAD
+        PARAMETER (DLL_SUBTYP_BGROUND_APP=9)    !MCP SUPPORT FOR BACKGROUND -APP
+        PARAMETER (DLL_SUBTYP_BGROUND_DRIVER=10)!MCP SUPPORT FOR BACKGROUND-DRVR
+        PARAMETER (DLL_SUBTYP_LOAD_DONE=11)     !LOAD DONE AS IN UK !!!!!!!!!
+        PARAMETER (DLL_SUBTYP_OLD_APP=13)       !OLD STYLE, APPLICATION REQUEST
+        PARAMETER (DLL_SUBTYP_OLD_DRIVER=14)    !OLD STYLE, DRIVER REQUEST
+C
+C       TYPES FOR DOWNLOAD MESSAGES
+C
+        INTEGER*4 DLL_TYPE_TERMINAL, DLL_TYPE_GVT, DLL_TYPE_GVT_SOFTL
+        PARAMETER (DLL_TYPE_GVT_SOFTL=4)        !GVT SOFTLOADER
+        PARAMETER (DLL_TYPE_TERMINAL=5)         !LOTTERY TERMINAL DOWNLOAD
+        PARAMETER (DLL_TYPE_GVT=15)             !GVT APPLICATION LOAD
+C
+        INTEGER*4 DLL_SUBTYP_GVT_COMPRESSED
+        PARAMETER (DLL_SUBTYP_GVT_COMPRESSED=2)!COMPRESSED LOAD FOR GVT
+C
+
+        INTEGER*4 ALTURA_ROM, ALTURA_TIN        !V16
+        COMMON /PRMDLLCOM/ FCLTIN,FCLNAM,MCPROM,MCPNAM,ACLNAM,
+     *                     SFTROM,SFTNAM,SFT_LIST,GVTROM,GVTNAM,GVT_LIST,
+     *                     ALTURA_ROM, ALTURA_TIN           !V16
+ 

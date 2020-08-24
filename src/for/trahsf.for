@@ -1,0 +1,139 @@
+C
+C SUBROUTINE TRAHSF
+C $Log:   GXAFXT:[GOLS]TRAHSF.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:36:42   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   10 Jun 1993 19:09:14   HXK
+C  Changed AGTINF.DEF, AGTCOM.DEF includes.
+C  
+C     Rev 1.0   21 Jan 1993 17:52:48   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - trahsf.for **
+C
+C TRAHSF.FOR
+C
+C V02 12-MAR-91 JPJ INITIAL RELEASE FOR MARYLAND
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE TRAHSF(FDB,TASK,TRABUF)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+        INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:RECAGT.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INTEGER*4 MESS(EDLEN),FDB(7)
+	INTEGER*4 I, J, ST, CDC, INFODAT, DEL, AMT(2), TNUM, TER, TASK
+C
+C
+	TER =TRABUF(TSDT1)
+	TNUM=TRABUF(TSDT2)
+	AMT(1) =TRABUF(TSDT3)
+	AMT(2) =TRABUF(TSDT4)
+	DEL =TRABUF(TSDT5)
+	INFODAT = TRABUF(TSDT6)
+	CDC =TRABUF(TCDC)
+C
+C
+	CALL READW(FDB,TER,ASFREC,ST)
+	IF(ST.NE.0) THEN
+	  MESS(1)=TASK
+	  MESS(2)=TEGEN
+	  MESS(3)=4
+	  CALL FASTMOV(SFNAMES(1,ASF),MESS(4),5)
+	  MESS(9)=ST
+	  MESS(10)=TER
+	  CALL QUEMES(MESS)
+	  TRABUF(TERR)=INVL
+	  TRABUF(TSTAT)=REJT
+	  RETURN
+	ENDIF
+C
+C REMOVE ENTRY IF DELETE FLAG IS SET
+C
+	IF(DEL.NE.0) THEN
+	  DO 10 J=1,15
+	  IF(ASFLGR(LGRCOD,J).EQ.TNUM) GOTO 20
+10	  CONTINUE
+	  RETURN
+20	  CONTINUE
+	  DO 30 I=J,14
+	  ASFLGR(LGRCOD,I)=ASFLGR(LGRCOD,I+1)
+	  ASFLGR(LGRCDC,I)=ASFLGR(LGRCDC,I+1)
+	  ASFLGR(LGRAMTU,I)=ASFLGR(LGRAMTU,I+1)
+	  ASFLGR(LGRAMTP,I)=ASFLGR(LGRAMTP,I+1)
+	  ASFLGR(LGRINF,I)=ASFLGR(LGRINF,I+1)
+30	  CONTINUE
+	  ASFLGR(LGRCOD,15)=0
+	  ASFLGR(LGRCDC,15)=0
+	  ASFLGR(LGRAMTU,15)=0
+	  ASFLGR(LGRAMTP,15)=0
+	  ASFLGR(LGRINF,15)=0
+	  GOTO 100
+	ENDIF
+C
+C CHECK IF ENTRY IS ALREADY POSTED
+C
+	DO 40 I=1,15
+	IF(ASFLGR(LGRCOD,I).EQ.TNUM.AND.
+     *	   ASFLGR(LGRCDC,I).EQ.CDC.AND.
+     *	   ASFLGR(LGRINF,I).EQ.INFODAT.AND.
+     *	   ASFLGR(LGRAMTU,I).EQ.AMT(1).AND.
+     *     ASFLGR(LGRAMTP,I).EQ.AMT(2)) RETURN
+40	CONTINUE
+C
+C
+	DO 50 I=15,2,-1
+	ASFLGR(LGRCDC,I)=ASFLGR(LGRCDC,I-1)
+	ASFLGR(LGRCOD,I)=ASFLGR(LGRCOD,I-1)
+	ASFLGR(LGRAMTU,I)=ASFLGR(LGRAMTU,I-1)
+	ASFLGR(LGRAMTP,I)=ASFLGR(LGRAMTP,I-1)
+	ASFLGR(LGRINF,I)=ASFLGR(LGRINF,I-1)
+50	CONTINUE
+	ASFLGR(LGRCOD,1)=TNUM
+	ASFLGR(LGRCDC,1)=CDC
+	ASFLGR(LGRAMTU,1)=AMT(1)
+	ASFLGR(LGRAMTP,1)=AMT(2)
+	ASFLGR(LGRINF,1)=INFODAT
+100	CONTINUE
+C
+C
+	CALL WRITEW(FDB,TER,ASFREC,ST)
+	IF(ST.NE.0) THEN
+	  MESS(1)=TASK
+	  MESS(2)=TEGEN
+	  MESS(3)=5
+	  CALL FASTMOV(SFNAMES(1,ASF),MESS(4),5)
+	  MESS(9)=ST
+	  MESS(10)=TER
+	  CALL QUEMES(MESS)
+	  TRABUF(TERR)=INVL
+	  TRABUF(TSTAT)=REJT
+	  RETURN
+	ENDIF
+	RETURN
+	END

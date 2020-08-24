@@ -1,0 +1,44 @@
+    SKL.HLP                GTECH Distributed Network
+                           Super Double Snapshot Help         Page 1 of 2
+ 
+    The SKL snapshot contains sales information for the Super Double game.
+
+    The information displayed includes:
+ 
+    game name       - Super D (Super double)
+    event code      - number of the event
+    status          - status of the results   
+    row results     - row number and result for each double 
+    amount bet      - amount of money bet on the winning combination of 
+                      the event
+    odds/#winners   - the odds applicable for both rows 
+    beginning sales - day and date sales for the event commence
+    ending sales    - day and date sales for the event are closed
+    draw date       - day and date when the event draw takes place
+    total sales     - for the event
+    refunds paid    - total amount of refunds paid
+    net sales       - net sales amount
+
+ 
+    SKL.HLP                GTECH Distributed Network
+                           Super Double Snapshot Help         Page 2 of 2
+
+    winners share   - amount each winner will receive
+    winning amount  - total winning amount
+    rounding pot    - total amount of rounding pot
+    winning tax     - winning tax payable
+    winners paid    - amount of winners actually paid
+    paid refunds    - amount of refunds actually paid
+    amount purged   - amount of unclaimed winners that has been purged
+
+
+
+
+
+
+
+
+
+
+
+

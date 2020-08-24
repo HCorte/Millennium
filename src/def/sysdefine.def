@@ -1,0 +1,56 @@
+C SYSPARAM.DEF
+C
+C V03 16-APR-1991 KWP ADDED GEXIT DEFINITIONS
+C V02 12-APR-1991 TKO ADDED GLIST DEFINITIONS
+C V01 16-JUL-1990 XXX RELEASED FOR VAX
+C
+C This contains various definitions unique to a system type (e.g., VAX)
+C
+C
+C
+C QHEDSZ is the header size for each queue handled by GLIST routines
+C
+	INTEGER*4	 QHEDSZ
+	PARAMETER	(QHEDSZ = 16)
+C
+C The following error returns can be returned by the queueing routines.
+C
+C
+	INTEGER*4	 GLIST_STAT_FULL
+	PARAMETER	(GLIST_STAT_FULL = 1)	!List is full (ABL,ATL)
+C	
+	INTEGER*4	 GLIST_STAT_GOOD
+	PARAMETER	(GLIST_STAT_GOOD = 0)	!Success (all routines)
+ 
+C
+	INTEGER*4	 GLIST_STAT_EMPTY
+	PARAMETER	(GLIST_STAT_EMPTY = 2)	!List empty (RTL,RBL)
+C
+	INTEGER*4	 GLIST_STAT_LASTONE
+	PARAMETER	(GLIST_STAT_LASTONE = 1) !Success, this is the last
+C                                                 one on the list (RTL,RBL)
+C
+C
+C SECSIZE is the number of bytes in 1 VAX Disk Sector
+C
+	INTEGER*4	 SECSIZE
+	PARAMETER	(SECSIZE = 512)
+C
+C This file contains ALL EXIT codes that are used to STOP programs.
+C The subroutine GSTOP must contain a corresponding test message for
+C every EXIT code in this file. 
+C
+C All GTECH programs must use the subroutine GSTOP to STOP program
+C execution. This must be done from the mainline.
+C
+	INTEGER*4  MIN_GEXIT, MAX_GEXIT
+	PARAMETER (MIN_GEXIT = 1)	!LOWEST VALID GTECH EXIT NUMBER
+	PARAMETER (MAX_GEXIT = 5)	!HIGHEST VALID GTECH EXIT NUMBER
+C
+C THE FOLLOWING ARE THE VALID GTECH EXIT CODES
+C
+	INTEGER*4  GEXIT_SUCCESS, GEXIT_OPABORT, GEXIT_FATAL
+	PARAMETER (GEXIT_SUCCESS = 1)	!'SUCCESS'
+	PARAMETER (GEXIT_OPABORT = 3)	!'OPERATOR ABORT'
+	PARAMETER (GEXIT_FATAL   = 5)	!'FATAL ERROR'
+C

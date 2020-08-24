@@ -1,0 +1,392 @@
+C
+C *** SUBROUTINE MSC_TIMTRAP ***
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]MSC_TIMTRAP.FOV                              $
+C  $Date::   17 Apr 1996 14:08:28                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C  
+C *** Pre-Baseline Source - msc_timtrap.for ***
+C
+C V09 24-JAN-2011 RXK IF command split
+C V08 22-NOV-95 WJK REMOVE MSC_NET_PORT BECAUSE IT IS NO LONGER USED
+C V07 01-MAY-95 PJS CHANGED CALLS TO MLOG(STRING,ST) -> OPS(STRING,ST,ST)
+C V06 03-JUN-94 PJS MODIFIED SO THAT IF THE MATRIX SWITCH DOES NOT HAVE A
+C                   PORT DEFINED THEN SET THAT PORT EQUAL TO WHAT IS IN X2X.
+C V05 10-JAN-94 PJS RENAMED PARAMETER MAX_SWITCHES -> LIM_SWITCHES BECAUSE
+C                   THERE WAS A CONFLICT WITH MSCCOM.DEF.
+C V04 04-DEC-93 RRB REMOVED USE OF COMMAND RESPONSE PENDING FLAG. BAD HABIT.
+C V03 12-JAN-93 RRB IF COMMAND RESPONSE PENDING THEN ISSUE COMMAND POLL
+C                   ONLY. NO LONGER CHECK FOR PAGE FLAG 
+C                   (ADDED AS NEW STATUS).
+C V02 10-JUL-91 RRB WARN IF NEW LOCAL PORT ALREADY HAS NETWORK 
+C                   PORT ASSIGNMENT.
+C V01 13-FEB-91 RRB RELEASED FOR VAX
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Purpose:
+C	THIS SUBROUTINE WILL SERVICE TIMER TRAPS FOR THE TELENEX MATRIX
+C	SWITCH CONTROLLER MANAGEMENT FACILITY.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE MSC_TIMTRAP(TIMER_EVENT)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+C
+	INCLUDE 'INCLIB:MSCCOM.DEF'
+	INCLUDE 'INCLIB:MSCEVN.DEF'
+	INCLUDE 'INCLIB:MSCCMDS.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+C
+	INCLUDE '($IODEF)'
+        INCLUDE '($SSDEF)'
+        INCLUDE '($SYSSRVNAM)'
+C
+	INTEGER*4   TIMER_EVENT			!Trap type
+	INTEGER*4   LOCAL_PORT                  !Host Local Port Assignment
+	INTEGER*4   NET_PORT                    !Host Network port Assignment
+	INTEGER*4   FREEPORT                    !Available port on host
+CV08	INTEGER*4   MSC_NET_PORT
+        INTEGER*4   MSC_LOCAL_PORT 		!MSC ports
+	INTEGER*4   SAP                         !Front End ID    
+	INTEGER*4   SAP_PORT                    !Port on FE
+	INTEGER*4   PVC_CIRCUIT                 !Permanent Virtual Circuit
+	INTEGER*4   STN                         !Station Number
+	INTEGER*4   MSCPARMS(MSC_MAX_PARMS)     !Parameters for MSC command
+	INTEGER*4   SWITCH_COUNT                !Number of switches required
+	INTEGER*4   LIM_SWITCHES                
+	PARAMETER   (LIM_SWITCHES = 96)         !Max switches at a time
+	INTEGER*4   CBUF(CDLEN,LIM_SWITCHES)    !Host Command buffers
+	CHARACTER*1 CR/Z0D/                     !Carriage return character
+	CHARACTER*80 MSCCMD                     !MSC command string
+	INTEGER*4    IMSCCMD(20)                !MSC command string in I4
+	EQUIVALENCE  (MSCCMD,IMSCCMD)           !SAME, SAME
+	LOGICAL*4    COMM_ACTIVE                !If stations active
+	INTEGER*4    I4NUM                      !Decimal port # for MSC
+	CHARACTER*4  CHARNUM                    !ASCII Decimal port # for MSC
+	EQUIVALENCE  (I4NUM,CHARNUM)            !SAME, SAME
+	CHARACTER*12 PORT_NAME                  !Port name for MSC command
+	INTEGER*4    CONF_WAIT_CNT              !Cycles since last verification
+	INTEGER*4    NET_PORT_CHECK             !If net port already assigned
+	CHARACTER*65 STRING                     !For ops messages
+	CHARACTER*1  BELL/Z07/                  !For ops messages
+	LOGICAL      ANY_BAD_SWITCHES           !If warning needed
+	INTEGER*4    I, IND, ST, PASS, SWITCH   !Control variables
+C
+	MSC_TIMCNT(TIMER_EVENT) = MSC_TIMCNT(TIMER_EVENT) + 1
+C
+	MSCCMD = ' '
+C
+C CHECK IF COMM IS ACTIVE (AT LEAST ONE STATION BETTER BE ACTIVE)
+C
+	COMM_ACTIVE = .FALSE.
+	DO 100 I = 1,X2X_STATIONS
+	   IF(BX2XS_STATE(I).EQ.X2XS_INIT) THEN
+	      COMM_ACTIVE = .TRUE.
+	      GOTO 150
+	   ENDIF
+100     CONTINUE
+C
+150 	CONTINUE
+c
+C DETERMINE TIMER EVENT TYPE
+c
+	IF(TIMER_EVENT.EQ.MSC_POLL_EVENT) THEN
+D	   TYPE*,'MSC_TIMTRAP: RECEIVED POLL REQUEST TRAP'
+C
+C TIME TO POLL MSC
+C
+C GENERATE A GENERAL POLL WHICH WILL RETURN AN APPLICATION COMMAND
+C RESPONSE. IF THERE ARE NO APPLICATION RESPONSES OUTSTANDING THE
+C MSC WILL RETURN AN ALARM. IF NEITHER RESPONSE IS AVAILABLE THE MSC
+C SHOULD RETURN A STATUS RESPONSE.
+C
+           MSCCMD = GEN_POLL//CR
+C
+	   CALL MSC_QUECMD(IMSCCMD)
+C
+C CONFIGURATION CHECK EVENT
+C
+	ELSE IF(TIMER_EVENT.EQ.MSC_CONF_EVENT) THEN
+           IF(MSCSTS.EQ.MSC_ACTIVE) THEN
+D	      TYPE*,'MSC_TIMTRAP: RECEIVED CONFIGURATION REQUEST TRAP'
+C
+C IF WE HAVE RECENTLY RECEIVED HIS FULL CONFIGURATION THEN CHECK IT NOW
+C
+	      IF(MSC_CONF_FLAG.EQ.CONF_RECEIVED) THEN
+C
+C LOOP THRU LOCAL TO NETWORK CONFIGURATION TABLE IN X2XCOM TO FIND
+C ACTIVE CONNECTED PORTS. VERIFY AGAINST MSC CONFIGURATION AND ISSUE
+C CONNECT COMMANDS AS NEEDED.
+C
+ 		 SWITCH_COUNT = 0
+                 ANY_BAD_SWITCHES=.FALSE.
+	         DO 200 NET_PORT = 1,X2X_NETWORK_PORTS
+C
+C DON'T DO TOO MANY SWITCHES AT ONCE
+C
+	            IF(SWITCH_COUNT.GE.LIM_SWITCHES) GOTO 250
+C
+C IF THERE ARE NO STATIONS ASSIGNED TO THIS NETWORK PORT 
+C THEN DON'T BOTHER CHECKING CONFIGURATION.
+C
+	            DO 175 PVC_CIRCUIT = 0,X2XPN_NUMPVC(NET_PORT)
+                       STN = X2XPN_PVC_TO_STATION(NET_PORT,PVC_CIRCUIT)
+	               IF(STN.NE.0) GOTO 180
+175		    CONTINUE
+		    GOTO 200
+180		    CONTINUE		       
+C
+                    MSC_LOCAL_PORT = MSC_NETWORK_TO_LOCAL(NET_PORT)
+		    IF(MSC_LOCAL_PORT.LT.0.OR.MSC_LOCAL_PORT.GT.
+     *                 X2X_LOCAL_PORTS) MSC_LOCAL_PORT = 0
+C
+	            LOCAL_PORT = X2XPN_NETWORK_TO_LOCAL(NET_PORT)
+	            IF(LOCAL_PORT.LE.0.OR.LOCAL_PORT.GT.X2X_LOCAL_PORTS)
+     *		       LOCAL_PORT = 0
+C
+C V06 - IF THE MATRIX SWITCH DOES NOT HAVE A PORT DEFINED (I.E. <= 0) THEN
+C SET IT EQUAL TO THE PORT DEFINED IN X2X. JUST BECAUSE THE PORT IS
+C NOT DEFINED ON THE SWITCH, DOESN'T MEAN THAT WE DON'T WANT TO TALK
+C TO IT. THIS IS ESPECIALLY IMPORTANT FOR DIAL PORTS WHICH ARE NOT
+C SET UP ON THE MATRIX SWITCH.
+C
+		    IF (MSC_LOCAL_PORT .EQ. 0 .AND. LOCAL_PORT .NE. 0) THEN
+		      MSC_LOCAL_PORT = LOCAL_PORT
+		      MSC_NETWORK_TO_LOCAL(NET_PORT) = LOCAL_PORT
+		    ENDIF
+C END OF V06 CHANGE BLOCK
+C
+C VERIFY!
+C IF AUTO SWITCHING IS DISABLED THEN MATRIX SWITCH IS BOSS. USE MSC 
+C CONFIGURATION TO UPDATE X2X CONFIGURATION. OTHERWISE, X2X CONFIGURATION
+C IS BOSS SO TELL MSC TO UPDATE SWITCH CONFIGURATION.
+C
+		    IF(MSC_LOCAL_PORT.NE.LOCAL_PORT) THEN
+		       IF(MSC_AUTO_SWITCH.EQ.AUTO_SWITCH_DISABLED) THEN
+C
+C MAKE SURE THAT NEW LOCAL PORT IS DEFINED.
+C
+                          IF(MSC_LOCAL_PORT.NE.0) THEN
+                            IF(X2XPL_SAP(MSC_LOCAL_PORT).EQ.0.OR.
+     *                         X2XPL_SAP_PORT(MSC_LOCAL_PORT).EQ.0) THEN
+                               STRING = ' '
+                               WRITE(STRING,9010) MSC_LOCAL_PORT
+                               CALL OPS(STRING,ST,ST)
+                               ANY_BAD_SWITCHES=.TRUE.
+                               GOTO 200                 !SKIP SWITCH
+                            ENDIF
+                          ENDIF
+C
+C ALSO, CHECK TO SEE IF NEW LOCAL PORT ALREADY HAS NETWORK PORT ASSIGNMENT.
+C IF SO, WARN OPS.
+C
+			  NET_PORT_CHECK = 0
+			  IF(MSC_LOCAL_PORT.NE.0) NET_PORT_CHECK = 
+     *                     X2XPL_LOCAL_TO_NETWORK(MSC_LOCAL_PORT)
+                          IF(NET_PORT_CHECK.NE.0) THEN
+			     STRING = ' '
+	                     WRITE(STRING,9000) MSC_LOCAL_PORT,
+     *                                           NET_PORT_CHECK
+	                     CALL OPS(STRING,ST,ST)
+			     ANY_BAD_SWITCHES=.TRUE.
+			  ENDIF
+C
+C BUILD A HOST SWITCH COMMAND BUFFER FOR EACH ONE NEEDED.
+C
+			  SWITCH_COUNT = SWITCH_COUNT + 1
+	                  CALL FASTSET(0,CBUF(1,SWITCH_COUNT),CDLEN)
+	                  CBUF(1,SWITCH_COUNT) = CONNECT_PORT
+	                  CBUF(3,SWITCH_COUNT) = TCMSC
+                          CBUF(4,SWITCH_COUNT) = NET_PORT
+                          CBUF(6,SWITCH_COUNT) = 'MSCM'
+	                  CBUF(9,SWITCH_COUNT) = MSC_LOCAL_PORT
+	               ELSE
+C
+C ISSUE CONNECT COMMAND TO MSC IF NEEDED.
+C
+	                  MSCPARMS(1) = NET_PORT
+	                  MSCPARMS(2) = LOCAL_PORT
+	                  CALL BLDCMD(CONNECT_PORT,MSCPARMS,0)
+		       ENDIF
+		    ENDIF
+C
+C IF COMMUNICATIONS ACTIVE THEN MAKE SURE ALARM REPORTING IS ENABLED
+C FOR THIS PORT.
+C
+		    IF(LOCAL_PORT.EQ.0.OR.MSC_AUTO_SWITCH.EQ.
+     *                 AUTO_SWITCH_DISABLED) GOTO 200
+		    IF(COMM_ACTIVE.AND.MSC_ALARM_STATUS(LOCAL_PORT).NE.
+     *               MSCPA_ENABLED.AND.NET_PORT.NE.0) THEN	! V08
+C V08     *               .AND.MSC_NET_PORT.NE.0) THEN
+	               CALL BINASC(I4NUM,1,4,NET_PORT)
+		       IND = INDEX(CMSC_CONF_INFO(NET_PORT_ID),' ')
+		       IF(IND.LE.0) IND = LEN(CMSC_CONF_INFO(NET_PORT_ID))
+     *                                    + 1
+		       PORT_NAME=CMSC_CONF_INFO(NET_PORT_ID)(1:IND-1)//
+     *                           CHARNUM(2:4)
+		       MSCCMD = ENABLE_ALARM//PORT_NAME//CR
+		       CALL MSC_QUECMD(IMSCCMD)
+	            ENDIF
+200	         CONTINUE
+C
+250 		 CONTINUE 
+C
+		 IF(ANY_BAD_SWITCHES) THEN
+		    STRING='Check MSC Matrix Switch configuration '//
+     *                      BELL//BELL//BELL
+		    CALL OPS(STRING,ST,ST)
+	         ENDIF
+C
+C QUE HOST SWITCH COMMANDS
+C
+		 IF(MSC_AUTO_SWITCH.EQ.AUTO_SWITCH_DISABLED) THEN
+		    DO 275 SWITCH = 1,SWITCH_COUNT			
+	               CALL QUECMD(CBUF(1,SWITCH),ST)
+	               IF(ST.NE.0) 
+     *                    CALL OPS('Queue command error ',ST,ST)
+	               CALL XWAIT(10,1,ST)
+275                 CONTINUE
+	         ENDIF
+	         MSC_CONF_FLAG = CONF_VERIFIED
+	         CONF_WAIT_CNT = 0
+C
+C IF THERE IS NO CONFIGURATION CHECK OUTSTANDING
+C THEN SOLICIT CURRENT CONFIGURATION FROM THE MSC.
+C
+	      ELSE IF(MSC_CONF_FLAG.EQ.CONF_VERIFIED) THEN
+	         MSCCMD = GET_CONFIG//CR
+	         CALL MSC_QUECMD(IMSCCMD)
+	         MSC_CONF_FLAG = CONF_CHECK_PENDING
+C
+C DON'T WAIT TOO LONG FOR A CONFIGURATION RESPONSE FROM THE MSC.
+C (IF WE'VE WAITED LONGER THAT CONF_WAIT_LIMIT THEN RESET FLAG SO
+C WE REQUEST IT AGAIN.)
+C
+	      ELSE IF(MSC_CONF_FLAG.EQ.CONF_CHECK_PENDING.OR.
+     *         MSC_CONF_FLAG.EQ.CONF_REC_IN_PROG) THEN
+	         CONF_WAIT_CNT = CONF_WAIT_CNT + 1
+	         IF(CONF_WAIT_CNT.GT.CONF_WAIT_LIMIT) THEN
+	            MSC_CONF_FLAG = CONF_VERIFIED
+		    CONF_WAIT_CNT = 0
+                 ENDIF
+	      ENDIF
+	   ENDIF
+C
+C
+C CHECK FE STATISTICS FOR BAD PORTS
+C
+	ELSE IF(TIMER_EVENT.EQ.MSC_STAT_EVENT) THEN
+D	   TYPE*,'MSC_TIMTRAP: RECEIVED FE STATUS CHECK TRAP'
+	   IF(MSCSTS.EQ.MSC_ACTIVE.AND.COMM_ACTIVE) THEN
+	      DO 300 NET_PORT = 1,X2X_NETWORK_PORTS
+	         LOCAL_PORT = X2XPN_NETWORK_TO_LOCAL(NET_PORT)
+C
+C CHECK IF SHOULD BE CONNECTED
+C
+		 IF(LOCAL_PORT.EQ.0) GOTO 300
+C
+C IF AUTO SWITCHING IS DISABLED THEN JUST REPORT CHANGE IN STATUS (IF THERE
+C IS ONE) TO OPS THEN MOVE ON.
+C
+	         IF(MSC_AUTO_SWITCH.EQ.AUTO_SWITCH_DISABLED) THEN
+	            IF(X2XPL_STATE(LOCAL_PORT).NE.
+     *               MSC_SAVE_PORT_STATE(LOCAL_PORT)) THEN
+		       IF(X2XPL_STATE(LOCAL_PORT).EQ.X2XPS_DOWN) THEN
+		          SAP = X2XPL_SAP(LOCAL_PORT)
+		          SAP_PORT = X2XPL_SAP_PORT(LOCAL_PORT)
+		          CALL OPS('Bad port status SAP, SAP PORT',SAP,
+     *                              SAP_PORT)
+		       ENDIF
+		    ENDIF
+		    MSC_SAVE_PORT_STATE(LOCAL_PORT)=
+     *               X2XPL_STATE(LOCAL_PORT)
+	            GOTO 300
+		 ENDIF
+C
+C VERIFY GOOD PORT
+C
+	         IF(X2XPL_STATE(LOCAL_PORT).EQ.X2XPS_DOWN.AND.
+     *              X2XPL_LOCAL_TO_NETWORK(LOCAL_PORT).NE.0) THEN
+C
+C BAD PORT! FIND FREE PORT AND SWITCH.
+C DO NOT SWITCH PORTS FOR THIS NETWORK PORT MORE THAN MSC_SWITCH_LIMIT
+C
+	            IF(MSC_PORT_SWITCH_STATE(NET_PORT).NE.
+     *                 PORT_SWITCH_ENABLED) GOTO 300
+	            IF(MSC_SWITCH_CNT(NET_PORT).GE.MSC_SWITCH_LIMIT)
+     *               THEN
+	               CALL OPS('Switch limit exceeded for net port ',
+     *                 NET_PORT,NET_PORT)
+		       MSC_PORT_SWITCH_STATE(NET_PORT) =
+     *                    PORT_SWITCH_DISABLED
+	               GOTO 300
+	            ENDIF
+C
+C FIND AVAILABLE LOCAL PORT TO ASSIGN
+C
+	            CALL GETFREE(LOCAL_PORT,FREEPORT)
+	            IF(FREEPORT.LE.0.OR.FREEPORT.GT.X2X_LOCAL_PORTS)
+     *                THEN
+	               CALL OPS('UNABLE TO REASSIGN LOCAL PORT ',
+     *                 LOCAL_PORT,LOCAL_PORT)
+		       CALL OPS('NO FREE PORTS AVAILABLE',0,0)
+		       MSC_PORT_SWITCH_STATE(NET_PORT) =
+     *                    PORT_SWITCH_DISABLED
+		       GOTO 300
+	            ENDIF
+C
+C QUE SWITCH COMMAND TO CMDPRO
+C CHANGE NEW PORT STATE TO SWITCH IN PROGRESS SO WE DON'T MISTAKENLY
+C ASSIGN IT AGAIN.
+C
+                    X2XPL_STATE(FREEPORT) = X2XPS_SWITCH_IN_PROG
+		    CALL FASTSET(0,CBUF(1,1),CDLEN)
+	            CBUF(1,1) = CONNECT_PORT
+	            CBUF(3,1) = TCMSC
+                    CBUF(4,1) = NET_PORT
+                    CBUF(6,1) = 'MSCM'
+	            CBUF(9,1) = FREEPORT
+	            CALL QUECMD(CBUF,ST)
+	            IF(ST.NE.0) CALL OPS('Queue command error ',ST,ST)
+		 ENDIF
+300	      CONTINUE
+	   ENDIF 
+C
+C BOGUS TIMER TRAP
+C
+	ELSE
+	   CALL OPS('Invalid Timer event flag in MSC_TIMTRAP',
+     *               TIMER_EVENT,TIMER_EVENT)
+	ENDIF
+C
+C START ANOTHER TIMER TRAP
+C
+8000    CONTINUE
+	CALL MSC_START_TIME(TIMER_EVENT)
+	RETURN
+9000	FORMAT('WARNING!!!...Local port ',I3,
+     *         ' already connected to Net port ',I3)
+9010    FORMAT('Local port ',I3,' Not Defined in X2X Database')
+	END

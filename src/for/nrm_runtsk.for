@@ -1,0 +1,91 @@
+C
+C SUBROUTINE RUNTSK
+C $Log:   GXAFXT:[GOLS]RUNTSK.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:46:22   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:32:22   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_runtsk.for **
+C
+C RUNTSK.FOR
+C
+C V06 22-OCT-91 TKO Changed WSQUOTA and WSEXTENT to 90000.  Note that
+C                   we won't get more than in our auf file anyway.
+C V05 28-AUG-91 MP  'SYS$GETJPI' MAY RETURN 'SS$_SUSPENDED' STATUS
+C		    THAT SHOULD NOT BE TREATED AS NON-EXESTED PROCESS.
+C V04 01-AUG-91 MP  A.PROBLEM: IN FEW CASES PROCESS ACTIVATING TASK
+C		    COMPLAINS "NO STATUS FOUND FOR <process name>"
+C		    THE REASON FOUND: IF PROCESS TERMINATES VERY FAST, VMS
+C		    TELLS 'RUNTSK' ROUTINE THAT THERE IS NO PROCESS, BUT
+C		    THE TERMINATION MESSAGE MAY BE DELIVERED UP TO A SECOND
+C		    LATER (TIME DEPENDS ON THE SYSTEM LOAD).
+C		    SOLUTION: KEEP WAITING AFTER PRINTING A WARNING
+C		    B. INITIALIZED 'ITMCOD' WHEN OBTAINING PROCESS
+C		    STATUS
+C V03 15-MAY-91 MP  A. THERE IS A SHORT TIME FRAME BETWEEN CHECKING THE 
+C		    EXISTANCE OF THE MESSAGE IN THE TERMINATION MAILBOX
+C		    AND CHECKING THE STATUS OF THE SUBPROCESS. IF
+C		    SUBPROCESS TERMINATES DURING THIS TIME THE MESSAGE
+C		    'NO STATUS FOUND FOR <task_name>' WAS PRINTED.
+C		    THE CHANGE IS TO CONTINIOUSLY CHECK IMAGE NAME
+C		    OF THE STARTED PROCESS RIGHT AFTER IT'S CREATION.
+C		    IF PROCESS DOES NOT EXIST - READ MAILBOX.
+C		    IF IMAGE NAME IS A NULL STRING - CONTINUE CHECKING.
+C		    IF PROCESS EXISTS - RETURN SUCCESS.
+C		    B. CHANGED BASE PRIORITY TO 6.
+C V02 16-APR-91 MP  MADE RELIABLE IDENTIFICATION OF THE FACT
+C		    THAT THE (SUB)PROCESS HAS STARTED.
+C		    THIS ROUTINE AFTER CALL TO SYS$CREPRC
+C		    CHECK ONE OF TWO THINGS:
+C		    A. THAT PROCESS WITH ASSIGNED NAME IS IN THE SYSTEM -
+C			IN THIS CASE IT IS ASSUMED THAT THE (SUB)PROCESS
+C			STARTED WITHOUT A PROBLEM.
+C		    B. THERE IS A TERMINATION MESSAGE ON THE MAILBOX -
+C			IN THIS CASE AN ERROR MESSAGE IS DISPLAYED.
+C		    'XRUNTSK' ROUTINE CREATES A MAILBOX WITH THE NAME:
+C		    MBX_<PROCES_NAME>
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C RUNTSK(NAME) -
+C SUBROUTINE TO LOAD, START AND WAIT FOR TASK COMPLETION
+C NRUNTSK(NAME) -
+C ENTRY TO LOAD, START AND NOT WAIT FOR TASK COMPLETION
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C RUNTSK,RUNTASK -
+C	ACTIVATE THE SUBPROCESS UNDER THE NAME OF THE PROGRAM
+C	WITH THE PROJECT PREFIX AND WAIT FOR COMPLETEION
+C--------------------------------------------------------------------
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE RUNTSK(NAME)
+	IMPLICIT NONE
+C
+	BYTE	NAME(8)
+	LOGICAL WFLG
+C
+	ENTRY RUNTASK(NAME)
+	WFLG=.TRUE.
+C
+	CALL XRUNTSK(NAME,NAME,WFLG)
+	RETURN
+	END

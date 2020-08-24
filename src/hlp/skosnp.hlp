@@ -1,0 +1,22 @@
+    SKO.HLP                GTECH Distributed Network
+                           Super Double Snapshot Help         Page 1 of 1
+ 
+    The SKO snapshot contains draw information for participants in the 
+    Super Double game.
+
+    The information displayed includes:
+ 
+    game name     - Super D (super double)
+    event code    - number of the event
+    game status   - displays the status of the game (open, final)   
+    draw date     - date and name of the day when the draw will take
+                    place
+    rank          - of each couple placing first and second in the event 
+    odds          - the odds on each couple in the event
+    amount bet    - amount bet on each couple participating in the event
+
+
+
+
+
+

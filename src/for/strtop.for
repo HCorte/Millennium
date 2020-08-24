@@ -1,0 +1,314 @@
+C
+C V01 17-MAY-1999 UXN INITIAL RELEASE. PRODUCED FROM TRPTOP.FOR
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE STRTOP(TRABUF)  
+        IMPLICIT NONE
+
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:DESTRA.DEF'
+        INCLUDE 'INCLIB:STRCOM.DEF'
+        INCLUDE 'INCLIB:STROCOM.DEF'
+
+        INTEGER*4 UCID		      !unic combination identifier
+        INTEGER*4 MONY		      !bet amount per 1 cmb
+        INTEGER*4 SIGN		      !+1 if wager, -1 if cancel
+        INTEGER*4 GIND		      !game index
+
+	INTEGER*4 PUCID,NUCID	      !previous and next links for ucid,here
+				      !previous means "previous bigger amount" 			
+				      !and next means "next smaller amount" 			
+	INTEGER*4 LAST		      !the closest entry number in top table
+				      !with bigger amount than UCID
+	INTEGER*4 PREV,NEXT	      !previous and next links for LAST
+
+        INTEGER*4 I1,I2,I3
+        INTEGER*4 OFF1,OFF2,OFF3
+        INTEGER*4 ROW1,ROW2,ROW3
+
+        LOGICAL TABTOP		      !entry is on the top of the link table
+        LOGICAL BOTTOM		      !entry is on the bottom of the link table
+
+
+        GIND=TRABUF(TGAMIND)
+        MONY=TRABUF(TWAMT)
+        IF(TRABUF(TWSYST).EQ.FULSYS) MONY=MONY/TRABUF(TWSYSN)
+        SIGN=1
+        IF(TRABUF(TTYP).EQ.TCAN.OR.TRABUF(TTYP).EQ.TINC) SIGN=-1
+
+        OFF1=-1
+  	OFF2=OFF1+TRABUF(TWSTM1)
+  	OFF3=OFF2+TRABUF(TWSTM2)
+
+        DO 1030 I1=1,TRABUF(TWSTM1)
+           ROW1 = TRABUF(TWSTBET+OFF1+I1)
+
+           DO 1020 I2=1,TRABUF(TWSTM2)
+              ROW2 = TRABUF(TWSTBET+OFF2+I2)
+	      IF(ROW1.EQ.ROW2) GOTO 1020	   
+	      DO 1010 I3=1,TRABUF(TWSTM3)
+                 ROW3 = TRABUF(TWSTBET+OFF3+I3)
+	         IF(ROW1.EQ.ROW3) GOTO 1010	   
+	         IF(ROW2.EQ.ROW3) GOTO 1010	   
+		 UCID   = ROW1+(ROW2-1)*MAXSTRRW+(ROW3-1)*MAXSTRRW*MAXSTRRW
+C
+C MAINTENANCE OF TOP TABLE BEGINS
+C
+      	STRODDS(STRGAMT,UCID,GIND) = STRODDS(STRGAMT,UCID,GIND) + SIGN*MONY
+
+	IF(STRODDS2(STRGPEL,UCID,GIND).NE.0 .OR.
+     *	   STRODDS2(STRGNEL,UCID,GIND).NE.0) THEN
+C
+C UPDATE NECESSARY LINKS
+C IF WAGER THEN SEARCH FOR THE CLOSEST BIGGER AMOUNT IN BIGGER-DIRECTION
+C
+           IF(SIGN*MONY.GT.0) THEN  
+	      IF(UCID.EQ.STROFEL(GIND)) THEN
+		 GOTO 1000
+	      ELSEIF(STRODDS(STRGAMT,UCID,GIND).LE.
+     *		 STRODDS(STRGAMT,STRODDS2(STRGPEL,UCID,GIND),GIND)) THEN
+                 IF(UCID.EQ.STROLEL(GIND))
+     *		    STROLAMT(GIND) = STROLAMT(GIND) + MONY
+		 GOTO 1000 	
+	      ENDIF	
+              TABTOP=.FALSE.
+              BOTTOM=.FALSE. 
+              IF(UCID.EQ.STROLEL(GIND)) THEN
+     	         BOTTOM=.TRUE.
+ 	      ENDIF	 
+              LAST=STRODDS2(STRGPEL,UCID,GIND) 
+C
+C FIND THE CLOSEST BIGGER AMOUNT
+C
+130           CONTINUE
+	      IF(STRODDS(STRGAMT,UCID,GIND).GE.STRODDS(STRGAMT,LAST,GIND)) THEN
+                 IF(LAST.EQ.STROFEL(GIND)) THEN 
+                    TABTOP=.TRUE.
+                    GOTO 140
+                 ENDIF    
+                 LAST=STRODDS2(STRGPEL,LAST,GIND)
+                 GOTO 130
+              ENDIF
+C
+C UPDATE LINKS, IF NECESSARY UPDATE LINKS TO FIRST AND LAST ENTRY AND
+C LOWEST TOP COMBINATION AMOUNT ALSO
+C
+140           CONTINUE
+	      LAST=STRODDS2(STRGNEL,LAST,GIND)  
+              NEXT=STRODDS2(STRGNEL,LAST,GIND)
+              PREV=STRODDS2(STRGPEL,LAST,GIND)
+              PUCID=STRODDS2(STRGPEL,UCID,GIND)
+              NUCID=STRODDS2(STRGNEL,UCID,GIND)
+
+              IF(TABTOP.AND.BOTTOM)THEN
+                 STRODDS2(STRGNEL,PUCID,GIND)=NUCID
+                 STRODDS2(STRGPEL,UCID,GIND)=  0
+                 STRODDS2(STRGNEL,UCID,GIND)=PREV
+                 STRODDS2(STRGPEL,PREV,GIND)=UCID
+                 STROFEL(GIND)=UCID
+                 STROLEL(GIND)=PUCID
+                 STROLAMT(GIND)=STRODDS(STRGAMT,PUCID,GIND)
+
+              ELSEIF(TABTOP)THEN
+                 STRODDS2(STRGPEL,NUCID,GIND)=PUCID
+                 STRODDS2(STRGNEL,PUCID,GIND)=NUCID
+                 STRODDS2(STRGPEL,UCID,GIND)=  0
+                 STRODDS2(STRGNEL,UCID,GIND)=PREV
+                 STRODDS2(STRGPEL,PREV,GIND)=UCID
+                 STROFEL(GIND)=UCID
+
+              ELSEIF(BOTTOM)THEN
+                 STRODDS2(STRGNEL,PUCID,GIND)=NUCID
+                 STRODDS2(STRGNEL,UCID,GIND)=LAST
+                 STRODDS2(STRGPEL,UCID,GIND)=PREV
+                 STRODDS2(STRGPEL,LAST,GIND)=UCID
+                 STRODDS2(STRGNEL,PREV,GIND)=UCID
+                 STROLEL(GIND)=PUCID
+                 STROLAMT(GIND)=STRODDS(STRGAMT,PUCID,GIND)
+
+	      ELSE	
+                 STRODDS2(STRGNEL,PUCID,GIND)=NUCID               
+                 STRODDS2(STRGPEL,NUCID,GIND)=PUCID               
+                 STRODDS2(STRGPEL,UCID,GIND)=PREV
+	         STRODDS2(STRGNEL,UCID,GIND)=LAST
+	         STRODDS2(STRGPEL,LAST,GIND)=UCID
+	         STRODDS2(STRGNEL,PREV,GIND)=UCID  
+              ENDIF
+              GOTO 1000    !end for wager
+C
+C IF CANCELLATION THEN SEARCH FOR THE CLOSEST BIGGER AMOUNT IN SMALLER-DIRECTION
+C
+           ELSE
+              IF(STRODDS(STRGAMT,UCID,GIND).EQ.0) THEN
+		 IF(UCID.EQ.STROLEL(GIND)) THEN
+		    STROLEL(GIND)=STRODDS2(STRGPEL,UCID,GIND) 		    
+		    STROLAMT(GIND)=STRODDS(STRGAMT,STROLEL(GIND),GIND)
+		    STRODDS2(STRGNEL,STROLEL(GIND),GIND)=0
+     		    STRODDS2(STRGPEL,UCID,GIND)=0
+     		    STRODDS2(STRGNEL,UCID,GIND)=0
+		 ELSEIF(UCID.EQ.STROFEL(GIND)) THEN
+		    STROFEL(GIND)=STRODDS2(STRGNEL,UCID,GIND)
+		    STRODDS2(STRGPEL,STROFEL(GIND),GIND)=0
+		    STRODDS2(STRGPEL,UCID,GIND)=0
+                    STRODDS2(STRGNEL,UCID,GIND)=0
+		 ELSE
+		    STRODDS2(STRGPEL,STRODDS2(STRGNEL,UCID,GIND),GIND)=
+     *			   STRODDS2(STRGPEL,UCID,GIND)
+		    STRODDS2(STRGNEL,STRODDS2(STRGPEL,UCID,GIND),GIND)=
+     *			   STRODDS2(STRGNEL,UCID,GIND)
+     		    STRODDS2(STRGPEL,UCID,GIND)=0
+     		    STRODDS2(STRGNEL,UCID,GIND)=0
+		 ENDIF     
+                 STROTNUM(GIND) = STROTNUM(GIND) -1
+                 GOTO 1000
+              ENDIF
+              IF(UCID.EQ.STROLEL(GIND)) THEN
+		 STROLAMT(GIND)=STROLAMT(GIND)-MONY
+		 GOTO 1000
+	      ENDIF	 
+              IF(STRODDS(STRGAMT,UCID,GIND).GE.
+     *           STRODDS(STRGAMT,STRODDS2(STRGNEL,UCID,GIND),GIND)) THEN
+                 GOTO 1000
+              ENDIF
+	    
+              TABTOP=.FALSE.
+              BOTTOM=.FALSE. 
+              IF(UCID.EQ.STROFEL(GIND)) THEN
+                 TABTOP=.TRUE.
+              ENDIF
+              LAST=STRODDS2(STRGNEL,UCID,GIND) 
+C
+C FIND THE CLOSEST BIGGER AMOUNT
+C
+150           CONTINUE
+
+              IF(STRODDS(STRGAMT,UCID,GIND).GT.STRODDS(STRGAMT,LAST,GIND))THEN     
+                 LAST=STRODDS2(STRGPEL,LAST,GIND)
+                 GOTO 160
+              ELSE
+                 IF(LAST.EQ.STROLEL(GIND)) THEN
+                    BOTTOM=.TRUE.
+                    GOTO 160
+                 ENDIF
+                 LAST=STRODDS2(STRGNEL,LAST,GIND)
+                 GOTO 150
+              ENDIF
+CC
+C UPDATE LINKS, IF NECESSARY UPDATE LINKS TO FIRST AND LAST ENTRY AND
+C LOWEST TOP COMBINATION AMOUNT ALSO
+C
+160           CONTINUE
+
+              NEXT=STRODDS2(STRGNEL,LAST,GIND)
+              PREV=STRODDS2(STRGPEL,LAST,GIND)
+              PUCID=STRODDS2(STRGPEL,UCID,GIND)
+              NUCID=STRODDS2(STRGNEL,UCID,GIND)
+
+              IF(TABTOP.AND.BOTTOM)THEN
+                 STRODDS2(STRGPEL,NUCID,GIND)= 0
+	         STRODDS2(STRGNEL,LAST,GIND)=UCID
+                 STRODDS2(STRGNEL,UCID,GIND)=NEXT
+	         STRODDS2(STRGPEL,UCID,GIND)=LAST
+		 STROLEL(GIND)=UCID
+		 STROFEL(GIND)=NUCID
+      	         STROLAMT(GIND)=STRODDS(STRGAMT,UCID,GIND)   
+              ELSEIF(TABTOP)THEN
+                 STRODDS2(STRGPEL,NUCID,GIND)= 0
+                 STRODDS2(STRGPEL,UCID,GIND)=LAST
+	         STRODDS2(STRGNEL,UCID,GIND)=NEXT
+	         STRODDS2(STRGNEL,LAST,GIND)=UCID  
+	         STRODDS2(STRGPEL,NEXT,GIND)=UCID  
+		 STROFEL(GIND)=NUCID
+              ELSEIF(BOTTOM)THEN
+                 STRODDS2(STRGNEL,PUCID,GIND)=NUCID               
+                 STRODDS2(STRGPEL,NUCID,GIND)=PUCID               
+                 STRODDS2(STRGNEL,UCID,GIND)=NEXT
+	         STRODDS2(STRGPEL,UCID,GIND)=LAST
+	         STRODDS2(STRGNEL,LAST,GIND)=UCID
+		 STROLEL(GIND)=UCID
+      	         STROLAMT(GIND)=STRODDS(STRGAMT,UCID,GIND)
+	      ELSE	
+                 STRODDS2(STRGNEL,PUCID,GIND)=NUCID               
+                 STRODDS2(STRGPEL,NUCID,GIND)=PUCID               
+                 STRODDS2(STRGPEL,UCID,GIND)=LAST
+	         STRODDS2(STRGNEL,UCID,GIND)=NEXT
+	         STRODDS2(STRGPEL,NEXT,GIND)=UCID
+	         STRODDS2(STRGNEL,LAST,GIND)=UCID  
+              ENDIF
+              GOTO 1000    !end for cancellation
+           ENDIF          
+C
+C VERY FIRST ENTRY
+C 
+        ELSEIF(STROTNUM(GIND).EQ.0) THEN
+           STROTNUM(GIND)=1
+           STROFEL(GIND)=UCID
+           STROLEL(GIND)=UCID
+           STRODDS2(STRGPEL,UCID,GIND)=0
+           STRODDS2(STRGNEL,UCID,GIND)=0
+	   STROLAMT(GIND)=STRODDS(STRGAMT,UCID,GIND)
+C
+C NEXT NEW ENTRIES
+C
+        ELSEIF(STROTNUM(GIND).EQ.1.AND.UCID.EQ.STROLEL(GIND)) THEN
+	   STROLAMT(GIND)=STROLAMT(GIND)+SIGN*MONY
+           IF(STROLAMT(GIND).EQ.0) THEN
+     	      STRODDS2(STRGPEL,UCID,GIND)=0
+              STRODDS2(STRGNEL,UCID,GIND)=0
+              STROTNUM(GIND)=0
+           ENDIF
+	   GOTO 1000
+ 	ELSE
+           STROTNUM(GIND)=STROTNUM(GIND)+1
+           IF(STROLAMT(GIND).GE.STRODDS(STRGAMT,UCID,GIND)) THEN !new bottom value
+              STRODDS2(STRGNEL,UCID,GIND)=0
+              STRODDS2(STRGPEL,UCID,GIND)=STROLEL(GIND)
+	      STRODDS2(STRGNEL,STROLEL(GIND),GIND)=UCID	
+              STROLEL(GIND)=UCID
+	      STROLAMT(GIND)=STRODDS(STRGAMT,UCID,GIND)
+           ELSEIF(STRODDS(STRGAMT,UCID,GIND).GT.		      !new top value
+     *            STRODDS(STRGAMT,STROFEL(GIND),GIND)) THEN
+	      STRODDS2(STRGPEL,STROFEL(GIND),GIND)=UCID	
+              STRODDS2(STRGPEL,UCID,GIND)=0
+              STRODDS2(STRGNEL,UCID,GIND)=STROFEL(GIND)
+              STROFEL(GIND)=UCID
+           ELSE		                                      !middle value
+	      LAST=STROLEL(GIND)
+230	      CONTINUE
+              IF(STRODDS(STRGAMT,UCID,GIND).GT.STRODDS(STRGAMT,LAST,GIND)) THEN
+                 LAST=STRODDS2(STRGPEL,LAST,GIND)
+                 GOTO 230
+              ENDIF
+	      STRODDS2(STRGPEL,UCID,GIND)=LAST	
+	      STRODDS2(STRGNEL,UCID,GIND)=STRODDS2(STRGNEL,LAST,GIND)
+	      STRODDS2(STRGPEL,STRODDS2(STRGNEL,LAST,GIND),GIND)=UCID	      
+	      STRODDS2(STRGNEL,LAST,GIND)=UCID
+           ENDIF 
+        ENDIF
+C
+1000    CONTINUE
+
+1010    CONTINUE
+1020	CONTINUE
+1030	CONTINUE
+
+        RETURN
+
+        END
+

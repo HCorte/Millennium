@@ -1,0 +1,88 @@
+ NETSNP.HLP              GTECH Distributed Network
+                            Network Snapshot Help            Page 1 of 4
+ 
+
+    The Network snapshot displays information and changeable parareters    
+    used to monitor and control system network activity.   
+    
+    NOTE:       Changing TAKEover time, ENAAsync, ENABsync, ENACsysn and
+                ENADsync should only be performed under direct supervision
+    
+    The following information is displayed
+    
+
+    system id     - letter and numeric code identifying the system        
+                    (1=A, 2=B, 3=C, 4=D)
+    *BACKup id    - letter and numeric code identifying the backup system 
+                    (0=no hot backup, 1=A, 2=B, 3=C, 4=D)
+    primary id    - letter and numeric code identifying the primary system
+                    (1=A, 2=B, 3=C, 4=D)
+    *TAKEovertime - time in milliseconds before the hot backup system will
+                    takeover in a primary system failure situation 
+    
+    NETSNP.HLP          GTECH Distributed Network
+                           Network Snapshot Help            Page 2 of 4
+    
+    send cnt      - number of outstanding I/O being sent by the system
+    read cnt      - number of outstanding I/O being received by the system
+    activity      - activity status for systems A, B, C and D (no conn=
+    status.         the system has no connection, or the system lost the
+                    connection:  connect = the system is connected:  idle=
+                    the system never connected)
+    connection    - connection type for systems A, B, C and D (type=Not 
+    type:           Act - means this system is not active.  Secondry=this 
+                    particular system is not primary)
+    data transfer - data transfer mode for systems A, B, C, and D (normal
+                    =in sync, recover=recovering)
+    time from     - time in milliseconds since the last I/O on systems
+    last I/O:       A, B, C and D
+    I/O err       - number of I/O errors on systems A, B, C and D
+    Number of     - number of times systems A, B, C or D attempted to 
+    retries:        resend a block due to I/O errors.
+
+
+
+    NETSNP.HLP          GTECH Distributed Network
+                           Network Snapshot Help            Page 3 of 4
+
+
+    Serial sent/  - last transaction serial number sent or received on 
+    received        systems A,B, C or D
+    nxtser        - next available serial number
+    high to backup- last serial number hot backup received
+    last balance  - last serial number written during the last checkpoint    
+    cmdfrz        - non zero if command requiring system freeze is being
+                    processed
+    free          - free buffers in network queues free  
+    exec          - executive buffers in network queues
+    file          - file buffers in network queues
+    finish        - finished buffers in network queues                
+    rem           - remote buffers in network queues
+    extra         - extra buffers in network queues
+    recov         - recovered of buffers in network queues
+    ncmdfz        - network command freeze buffers in network queues
+    tounfr        - tounfr buffers in network queues
+
+
+    NETSNP.HLP           GTECH Distributed Network
+                            Network Snapshot Help            Page 4 of 4
+
+    *ENAAsync     - enable/disable resynchronization on system A 
+                    (0=enabled, 1=disabled)
+    *ENABsync     - enable/disable resynchronization on system B 
+                    (0=enabled, 1=disabled)
+    *ENACsync     - enable/disable resynchronization on system C 
+                    (0=enabled, 1=disabled)
+    *ENADsync     - enable/disable resynchronization on system D 
+                    (0=enabled, 1=disabled)
+    *ENAEsync     - enable/disable resynchronization on system E 
+                    (0=enabled, 1=disabled)
+    I/O's in      - Number of I/O between systems
+    progress
+    *SYNCwt       - wait time between attempted resyncs
+    *TOFreez      - Top amount of freeze time between resync commmands 
+    rettime       - retry time in milliseconds during resync
+    maxfreex      - maximum freeze time in milliseconds between resync
+
+
+

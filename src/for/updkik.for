@@ -1,0 +1,101 @@
+C
+C SUBROUTINE UPDKIK
+C
+C V03 16-JUL-1993 GXA Corrected check for DURIND criteria during assign.
+C V02 30-JUN-1993 GXA Added updating of AGTSPE for multi week stuff.
+C V01 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C
+C SUBROUTINE TO UPDATE KICKER DAILY/AGENT SALES
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE UPDKIK(TRABUF)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:KIKCOM.DEF'
+C
+	INTEGER*4 DURIND		!Duration Index into AGTSPE.
+	INTEGER*4 AMT		        !Amount of Bet.
+	INTEGER*4 GAME			!Game Number.
+	INTEGER*4 TER			!Terminal Number.
+	INTEGER*4 TYP			!Transaction Type.
+	INTEGER*4 GIND			!Game Index.
+	INTEGER*4 TEBKIK		!Telebetting agent
+C
+	LOGICAL CANCEL			!Wager Cancelation Flag.
+	PARAMETER(TEBKIK=4084)		!Telebetting Kicker agent number
+C
+C
+	CANCEL=.FALSE.
+	TYP=TRABUF(TTYP)
+	TER=TRABUF(TTER)
+	GAME=TRABUF(TWKGME)
+	GIND=GNTTAB(GAMIDX,GAME)
+	AMT=TRABUF(TWKAMT)*TRABUF(TWKDUR)
+	IF(TYP.EQ.TCAN.OR.TYP.EQ.TINC) CANCEL=.TRUE.
+C
+C GET DURATION INDEX INTO ASFSPE
+C
+	IF(TRABUF(TWDUR).GT.0.AND.TRABUF(TWDUR).LE.MAXMLTD_AVL) 
+     *	   DURIND = KIKMDS(TRABUF(TWDUR),GIND)
+	IF(DURIND.LT.1.OR.DURIND.GT.MAXMLTD_AVL) DURIND = 1
+C
+C
+10	CONTINUE
+	IF(LOKON(P(KIKFLG))) THEN
+20	  CONTINUE
+	  IF(P(KIKFLG).NE.0) GOTO 20
+	  GOTO 10
+	ENDIF
+C
+C
+	DAYTYP(TRACNT,TYP,GAME)=DAYTYP(TRACNT,TYP,GAME)+1
+	DAYTYP(DOLAMT,TYP,GAME)=DAYTYP(DOLAMT,TYP,GAME)+AMT
+	IF(CANCEL) THEN
+	   DAYTYP(TRACNT,TWAG,GAME)=DAYTYP(TRACNT,TWAG,GAME)-1
+	   DAYTYP(DOLAMT,TWAG,GAME)=DAYTYP(DOLAMT,TWAG,GAME)-AMT
+	   AGTSPE(DURIND,GAME,TER) =AGTSPE(DURIND,GAME,TER) -AMT
+	ELSE
+	   IF(BTEST(AGTTAB(AGTTYP,TER),AGTTBA)) THEN
+	     AGTGAM(GSCNT,GAME,TEBKIK)=AGTGAM(GSCNT,GAME,TEBKIK)+1
+	     AGTGAM(GSAMT,GAME,TEBKIK)=AGTGAM(GSAMT,GAME,TEBKIK)+AMT
+	     AGTSPE(DURIND,GAME,TEBKIK)=AGTSPE(DURIND,GAME,TEBKIK)+AMT
+	   ELSE
+	     AGTGAM(GSCNT,GAME,TER)=AGTGAM(GSCNT,GAME,TER)+1
+	     AGTGAM(GSAMT,GAME,TER)=AGTGAM(GSAMT,GAME,TER)+AMT
+	     AGTSPE(DURIND,GAME,TER)=AGTSPE(DURIND,GAME,TER)+AMT
+	   ENDIF
+	ENDIF
+C
+C ONLY UPDATE CANCELS IF IT IS A REAL CANCEL (NOT FOR INTERNAL CANCELS)
+C
+	IF(TYP.EQ.TCAN) THEN	   
+           AGTGAM(GCCNT,GAME,TER)=AGTGAM(GCCNT,GAME,TER)+1
+           AGTGAM(GCAMT,GAME,TER)=AGTGAM(GCAMT,GAME,TER)+AMT
+	ELSEIF(TYP.EQ.TINC) THEN
+	   AGTGAM(GSCNT,GAME,TER)=AGTGAM(GSCNT,GAME,TER)-1
+	   AGTGAM(GSAMT,GAME,TER)=AGTGAM(GSAMT,GAME,TER)-AMT
+	ENDIF
+C
+	CALL LOKOFF(P(KIKFLG))
+	RETURN
+	END

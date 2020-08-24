@@ -1,0 +1,22 @@
+                          GTECH Distibuted Network
+                           Report Code Delete Help                Page 1 of 1
+ 
+      The delete report code screen allows a code to be
+      deleted from the Distributed Network Database.  Before deleting
+      a code, you must be sure that you have entered the correct
+      code number.  The program will display all of the configuration
+      information for the input code number allowing you to confirm that
+      this is the desired code.  If you wish to delete the code, enter
+      "Y" and press return.  If you do not wish to delete the code, enter
+      "N".  It should be noted that a code can be deleted even though
+      other components of the network rely on this information.  This
+      error will be detected when the Perform Edit Check function is
+      executed.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

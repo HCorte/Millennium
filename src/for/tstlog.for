@@ -1,0 +1,1804 @@
+C
+C PROGRAM TSTLOG
+C
+C TSTLOG.FOR
+C
+C V23 31-MAR-2016 SCML M16 PROJECT
+C V22 31-MAY-2011 RXK CLEANED, NOT-USED GAMES SKIPPED
+C V21 19-MAY-2011 FJG Addequate for EVO
+C V20 13-DEC-2010 FJG Inclussion of TWLNKxxx and EM transactions
+C V19 22-NOV-2010 MAC LUCKY NUMBER
+C V18 14-APR-2010 RXK Changes for ePassive 
+C V17 16-MAR-2010 RXK ePassive added
+C V16 25-MAR-2009 MMO TAVAL9 removed.
+C V15 11-MAR-2009 MMO TAVAL8 removed.
+C V14 28-NOV-2003 FRP TAVAL7 removed.
+C V13 28-FEB-2000 RXK TAVAL1 removed.
+C V12 13-OCT-1999 RXK World Tour added.
+C V11 10-MAY-1999 UXN TRIPLE CHANGED TO TRIO.
+C V10 17-APR-1996 HXK Release of Finland for X.25, Telephone Betting, 
+C                     Instant Pass Thru Phase 1
+C V09 23-NOV-1995 PXB Couple and Double games added
+C V08 12-DEC-1994 HXK Change test value
+C V07 02-OCT-1994 HXK Added Bingo
+C V06 14-SEP-1993 GXA Added TCDC_SOLD to wager headers, removed tavailable2.
+C V05 17-JUL-1993 GXA Dimensioning of NOTUSD......
+C V04 17-JUL-1993 GXA Removed TAVAL1.
+C V03 17-JUL-1993 GXA Added TSUBERR field to wager header.
+C V02 26-MAY-1993 GXA Released for Finalnd Dec Conversion / Oddset.
+C V01 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        PROGRAM TSTLOG
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:DESTRA.DEF'
+        INCLUDE 'INCLIB:X2XPTL.DEF'
+        INCLUDE 'INCLIB:X2STMES.DEF'
+        INCLUDE 'INCLIB:X2FEMES.DEF'
+C
+        INTEGER*4 I4TEMP
+        INTEGER*2 I2TEMP(2)
+        BYTE      I1TEMP(4)
+        EQUIVALENCE (I4TEMP,I2TEMP,I1TEMP)
+        INTEGER*4 BUF(48),TBUF(TRALEN), I
+        INTEGER*4 NOKIK(11)
+        DATA NOKIK/TWKBEG,TWKEND,TWKDUR,TWKICK,TWKGME,TWKAMT,TWKFLG,
+     *             TWKICK2,TWKFLG2,TWKSEED,TWKSEED2/
+	INTEGER*4   NOTUSD_CNT
+	PARAMETER   (NOTUSD_CNT=4)
+	INTEGER*4   NOTUSD(NOTUSD_CNT)
+        DATA NOTUSD/TGAMIND,TCDC_SOLD,TFAMTFLG,TWADDFW/
+C
+C TEST LOTTO/SPORTS WAGER CONVERSION
+C
+C======================================================================
+C
+C TEST LOTTO WAGER CONVERSION (NO KICKER)
+C
+        TYPE*,'==============================================='
+        TYPE*,'TESTING LOTTO WAGER NO JOKER, NO MULTS.......'
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,11
+           TRABUF(NOKIK(I))=0
+        ENDDO
+C
+C WAGER HEADER
+C
+        TRABUF(TSTAT)=FRAC
+        TRABUF(TERR)=BDAY
+        TRABUF(TSUBERR)=GREV_KIKCTL + GREV_KIKTXT
+        TRABUF(TCDC)=9999
+        TRABUF(TCDC_SOLD)= 9990
+        TRABUF(TSER)=64123499
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TTER)=6000
+        TRABUF(TAGT)='00BBCCDD'X
+        TRABUF(TTRN)=15
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TLTO
+        TRABUF(TGAMIND)=2
+        TRABUF(TTSTCS)='FE'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TTKID) = 1
+        TRABUF(TCHK)='FD'X
+        TRABUF(TFRAC)=10
+        TRABUF(TSIZE)=3
+        TRABUF(TWBEG) = 1
+        TRABUF(TWEND) = 2
+        TRABUF(TWTKC)=40
+        TRABUF(TWAMT) = 10000
+        TRABUF(TWDUR) = 2
+        TRABUF(TWQPF)=1
+        TRABUF(TWCSER)=64000001
+        TRABUF(TWCTER)=6000
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET) = 12
+        TRABUF(TWSYST) = CHCSYS
+        TRABUF(TWSYSN) = 40
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999991
+        TRABUF(TWFFLG)=1
+        TRABUF(TWWEQP)=1
+        TRABUF(TWMFRAC)=10
+        TRABUF(TWTOT)=TRABUF(TWAMT)*TRABUF(TWDUR)+TRABUF(TWTKC)
+C
+C WAGER BODY
+C
+        DO I = TWBORD,TWBORD+15+15-1   !TWBEND
+           TRABUF(I) = I
+        ENDDO
+        TRABUF(TWLUCK)=11               !V19 
+        TRABUF(TWSIMP)=12
+        TRABUF(TWSRW) =13
+        TRABUF(TWMFLG)=1
+        TRABUF(TWCDCOFF)=100
+        TRABUF(TWNMRK)=7
+        CALL FASTSET(0,TRABUF(TWMULT),12)
+        CALL FASTSET(TRABUF(TWNMRK),TRABUF(TWNMRK+1),11)
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'LOTTO WAGER NO JOKER, NO MULTS DONE!'
+C
+C=======================================================================
+C
+C TEST LOTTO WAGER CONVERSION (WITH KICKER)
+C
+        TYPE*,'TESTING LOTTO WAGER AND JOKER, NO MULTS.......'
+C       
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+C
+C WAGER HEADER
+C
+        TRABUF(TSTAT)=FRAC
+        TRABUF(TERR)=BDAY
+        TRABUF(TSUBERR)=GREV_KIKCTL + GREV_KIKTXT
+        TRABUF(TCDC)=9999
+        TRABUF(TCDC_SOLD) = 9990
+        TRABUF(TSER)=64123499
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TTER)=6000
+        TRABUF(TAGT)='00BBCCDD'X
+        TRABUF(TTRN)=15
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TLTO
+        TRABUF(TGAMIND)=2
+        TRABUF(TTSTCS)='FE'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TTKID) = 1
+        TRABUF(TCHK)='FD'X
+        TRABUF(TFRAC)=10
+        TRABUF(TSIZE)=3
+        TRABUF(TWBEG) = 1
+        TRABUF(TWEND) = 2
+        TRABUF(TWTKC)=40
+        TRABUF(TWAMT) = 10000
+        TRABUF(TWDUR) = 2
+        TRABUF(TWKICK)=99999991
+        TRABUF(TWKICK2)=99999972
+        TRABUF(TWKFLG)=1
+        TRABUF(TWKFLG2)=1
+        TRABUF(TWKGME)=1
+        TRABUF(TWKAMT)=10000
+        TRABUF(TWKBEG)=1
+        TRABUF(TWKEND)=2
+        TRABUF(TWKDUR)=2
+        TRABUF(TWKSEED)=0
+        TRABUF(TWKSEED2)=0
+        TRABUF(TWQPF)=1
+        TRABUF(TWWEQP)=1
+        TRABUF(TWCSER)=64000001
+        TRABUF(TWCTER)=6000
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET) = 12
+        TRABUF(TWSYST) = CHCSYS
+        TRABUF(TWSYSN) = 40
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999991
+        TRABUF(TWFFLG)=1
+        TRABUF(TWMFRAC)=10
+        TRABUF(TWNMRK)=7
+        CALL FASTSET(0,TRABUF(TWMULT),12)
+        CALL FASTSET(TRABUF(TWNMRK),TRABUF(TWNMRK+1),11)
+        TRABUF(TWTOT)=TRABUF(TWAMT)*TRABUF(TWDUR)+
+     *                TRABUF(TWKAMT)*TRABUF(TWKDUR)+
+     *                TRABUF(TWTKC)
+        DO I = TWBORD,TWBORD+11+15-1   !TWBEND
+           TRABUF(I) = I
+        ENDDO
+        TRABUF(TWLUCK)=11
+        TRABUF(TWSIMP)=12
+        TRABUF(TWSRW) =13
+        TRABUF(TWMFLG)=0
+        TRABUF(TWCDCOFF)=100
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'LOTTO WAGER WITH JOKER AND NO MULTS DONE!'
+C
+C=====================================================================
+C
+C TESTING EPASSIVE WAGER BODY
+C
+        TYPE*,'================================================'
+        TYPE*,'TESTING EPASSIVE WAGER ......'
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,11
+           TRABUF(NOKIK(I))=0
+        ENDDO 
+C
+C WAGER HEADER
+C
+        TRABUF(TSTAT)=REJT
+        TRABUF(TERR)=BDAY
+        TRABUF(TSUBERR)=GREV_KIKCTL + GREV_KIKTXT
+        TRABUF(TCDC)=9999
+        TRABUF(TCDC_SOLD)= 9990
+        TRABUF(TSER)=64123499
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TTER)=6000
+        TRABUF(TAGT)='00BBCCDD'X
+        TRABUF(TTRN)=15
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TPAS
+        TRABUF(TGAMIND)=2
+        TRABUF(TTSTCS)='FE'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TTKID) = 1
+        TRABUF(TCHK)='FD'X
+        TRABUF(TFRAC)=0
+        TRABUF(TSIZE)=3
+        TRABUF(TWBEG) = 1
+        TRABUF(TWEND) = 1
+        TRABUF(TWTKC)=40
+        TRABUF(TWAMT) = 10000
+        TRABUF(TWDUR) = 1
+        TRABUF(TWQPF)=1
+        TRABUF(TWCSER)=64000001
+        TRABUF(TWCTER)=6000
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET) = 1
+        TRABUF(TWSYST) = 0
+        TRABUF(TWSYSN) = 0
+        !TRABUF(TWBNKID)=888881
+        !TRABUF(TWBNKNM)=99999991
+        TRABUF(TWFFLG)=0
+        TRABUF(TWWEQP)=0
+        TRABUF(TWMFRAC)=0
+        TRABUF(TWTOT)=TRABUF(TWAMT)*TRABUF(TWDUR)+TRABUF(TWTKC)
+C
+C EPASSIVE WAGER BODY, SALES
+C
+        TRABUF(TWEPOP)=2
+        TRABUF(TWEPWK)=52
+        TRABUF(TWEPYR)=25
+
+        TRABUF(TWEPSN)=12345
+        TRABUF(TWEPSS)=5
+        TRABUF(TWEPSF)=3
+        
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'EPASSIVE WAGER, SALES DONE!'
+        !TYPE*,'++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+C
+C EPASSIVE WAGER BODY, RESERVATION
+C
+        TRABUF(TWEND)=0      !not used
+        TRABUF(TWTOT)=0      !not used
+        TRABUF(TWEPSN)=0     !not used
+        TRABUF(TWEPSF)=0     !not used
+        TRABUF(TWEPSS)=0     !not used
+
+        TRABUF(TWEPOP)=1
+        TRABUF(TWEPSD)=612345
+        TRABUF(TWEPRM)=45
+        TRABUF(TWEPNE)=2
+        TRABUF(TWEPNR)=3
+
+        TRABUF(TWEPRES1) = 34567        
+        TRABUF(TWEPRES2) = 44567        
+        TRABUF(TWEPRES3) = 35567        
+
+        TRABUF(TWEPNFR1) = 7
+        TRABUF(TWEPNFR2) = 8
+        TRABUF(TWEPNFR3) = 9
+
+        TRABUF(TWEPSER1_1) = 10 
+        TRABUF(TWEPSER1_2) = 9
+        TRABUF(TWEPSER1_3) = 8
+        TRABUF(TWEPSER1_4) = 7
+        TRABUF(TWEPSER1_5) = 6
+        TRABUF(TWEPSER1_6) = 5
+        TRABUF(TWEPSER1_7) = 4
+        TRABUF(TWEPSER1_8) = 3
+        TRABUF(TWEPSER1_9) = 2
+        TRABUF(TWEPSER1_10) = 1
+
+        TRABUF(TWEPFRC1_1) = 9
+        TRABUF(TWEPFRC1_2) =8
+        TRABUF(TWEPFRC1_3) =7
+        TRABUF(TWEPFRC1_4) =6
+        TRABUF(TWEPFRC1_5) =5
+        TRABUF(TWEPFRC1_6) =4
+        TRABUF(TWEPFRC1_7) =3
+        TRABUF(TWEPFRC1_8) =2
+        TRABUF(TWEPFRC1_9) =1
+        TRABUF(TWEPFRC1_10) =10
+
+        TRABUF(TWEPSER2_1) = 10 
+        TRABUF(TWEPSER2_2) = 9
+        TRABUF(TWEPSER2_3) = 8
+        TRABUF(TWEPSER2_4) = 7
+        TRABUF(TWEPSER2_5) = 6
+        TRABUF(TWEPSER2_6) = 5
+        TRABUF(TWEPSER2_7) = 4
+        TRABUF(TWEPSER2_8) = 3
+        TRABUF(TWEPSER2_9) = 2
+        TRABUF(TWEPSER2_10) = 1
+
+        TRABUF(TWEPFRC2_1) = 9
+        TRABUF(TWEPFRC2_2) =8
+        TRABUF(TWEPFRC2_3) =7
+        TRABUF(TWEPFRC2_4) =6
+        TRABUF(TWEPFRC2_5) =5
+        TRABUF(TWEPFRC2_6) =4
+        TRABUF(TWEPFRC2_7) =3
+        TRABUF(TWEPFRC2_8) =2
+        TRABUF(TWEPFRC2_9) =1
+        TRABUF(TWEPFRC2_10) =10
+
+        TRABUF(TWEPSER3_1) = 10 
+        TRABUF(TWEPSER3_2) = 9
+        TRABUF(TWEPSER3_3) = 8
+        TRABUF(TWEPSER3_4) = 7
+        TRABUF(TWEPSER3_5) = 6
+        TRABUF(TWEPSER3_6) = 5
+        TRABUF(TWEPSER3_7) = 4
+        TRABUF(TWEPSER3_8) = 3
+        TRABUF(TWEPSER3_9) = 2
+        TRABUF(TWEPSER3_10) = 1
+
+        TRABUF(TWEPFRC3_1) = 9
+        TRABUF(TWEPFRC3_2) =8
+        TRABUF(TWEPFRC3_3) =7
+        TRABUF(TWEPFRC3_4) =6
+        TRABUF(TWEPFRC3_5) =5
+        TRABUF(TWEPFRC3_6) =4
+        TRABUF(TWEPFRC3_7) =3
+        TRABUF(TWEPFRC3_8) =2
+        TRABUF(TWEPFRC3_9) =1
+        TRABUF(TWEPFRC3_10) =10
+
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'EPASSIVE WAGER, RESERVATION DONE!'
+        !TYPE*,'+++++++++++++++++++++++++++++++++++++++++'
+C
+C============================================================================
+C
+C TEST KICKER WAGER CONVERSION
+C
+        TYPE*,'==============================================='
+        TYPE*,'TESTING JOKER WAGER.......'
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        TRABUF(TSTAT)=FRAC
+        TRABUF(TERR)=BDAY
+        TRABUF(TSUBERR)=GREV_KIKCTL + GREV_KIKTXT
+        TRABUF(TCDC)=9999
+        TRABUF(TCDC_SOLD)= 9990 
+        TRABUF(TSER)=64123499
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TTER)=6000
+        TRABUF(TAGT)='00BBCCDD'X
+        TRABUF(TTRN)=15
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAM)=MAXGAM
+        TRABUF(TGAMTYP)=TKIK
+        TRABUF(TGAMIND)=1
+        TRABUF(TTSTCS)='FE'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TTKID) = 1
+        TRABUF(TCHK)='FD'X
+        TRABUF(TFRAC)=10
+        TRABUF(TSIZE)=3
+        TRABUF(TWBEG) = 1
+        TRABUF(TWEND) = 2
+        TRABUF(TWTKC)=40
+        TRABUF(TWAMT) = 10000
+        TRABUF(TWDAMT)= 10001
+        TRABUF(TWDUR) = 2
+        TRABUF(TWKICK)=99999991
+        TRABUF(TWKICK2)=99999972
+        TRABUF(TWKFLG)=1
+        TRABUF(TWKFLG2)=1
+        TRABUF(TWKGME)=MAXGAM
+        TRABUF(TWKAMT)=10000
+        TRABUF(TWKBEG)=1
+        TRABUF(TWKEND)=2
+        TRABUF(TWKDUR)=2
+        TRABUF(TWQPF)=1
+        TRABUF(TWCSER)=64000001
+        TRABUF(TWCTER)=6000
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET) = 1
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999991
+        TRABUF(TWFFLG)=1
+        TRABUF(TWMFRAC)=0  !not used
+        TRABUF(TWTOT) = (TRABUF(TWAMT)*TRABUF(TWDUR)) + TRABUF(TWTKC)
+!V20++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
+        TRABUF(TWLNKSER) = 16777215 
+        TRABUF(TWLNKCHK) = 169
+!V20++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'JOKER WAGER DONE!'
+C
+C===========================================================================
+C
+C TEST NUMBERS WAGER CONVERSION
+C
+        GOTO 2400
+C
+C       CALL FASTSET(0,TRABUF,TRALEN)
+C       CALL FASTSET(0,TBUF,TRALEN)
+C       DO 230 I=1,TWNAMT10
+C       TRABUF(I)=I
+C230    CONTINUE
+C       DO 231 I=1,NOTUSD_CNT
+C       TRABUF(NOTUSD(I))=0
+C231    CONTINUE
+C        DO 2310 I=1,7
+C        TRABUF(NOKIK(I))=0
+C2310    CONTINUE
+C       TRABUF(TTYP)=TWAG
+C       TRABUF(TGAMTYP)=TNBR
+C       TRABUF(TTIM)='00112233'X
+C       TRABUF(TAGT)='00AABBCC'X
+C       TRABUF(TINTRA)=1
+C       TRABUF(TFIL)=4
+C       TRABUF(TWQPF)=15
+C       TRABUF(TSIZE)=2
+C       TRABUF(TWVSTS)=VHOLD
+C       TRABUF(TWTKC) = 0
+C       TRABUF(TWSYST)=0
+C       TRABUF(TWSYSN)=0
+C       TRABUF(TTKID) = 0
+C       TRABUF(TWNAND)=1
+C       TRABUF(TWQPF) = 0
+C       TRABUF(TWAMT) = 600
+C     *               TRABUF(TWNAMT1)+TRABUF(TWNAMT2)+
+C     *               TRABUF(TWNAMT3)+TRABUF(TWNAMT4)+
+C     *               TRABUF(TWNAMT5)+TRABUF(TWNAMT6)+
+C     *               TRABUF(TWNAMT7)+TRABUF(TWNAMT8)+
+C     *                TRABUF(TWNAMT9)+TRABUF(TWNAMT10)
+C       TRABUF(TWTOT)=TRABUF(TWAMT)*TRABUF(TWDUR)+TRABUF(TWTKC)
+C       TRABUF(TWEND)=TRABUF(TWBEG)+TRABUF(TWDUR)-1
+C       CALL TRALOG(TRABUF,BUF)
+C       CALL LOGTRA(TBUF,BUF)
+C       TYPE*,'NUMBERS WAGER'
+C       DO 240 I=1,TRALEN
+C       IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+C240    CONTINUE
+C
+C=========================================================================
+C
+C TEST SCORE WAGER CONVERSION
+C
+2400    CONTINUE
+        GOTO 2500
+C
+        TYPE*,'TESTING SCORE WAGER......'
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO 241 I=1,TWSAMT+TWSBLEN*TWSBMAX-1
+        TRABUF(I)=I
+241     CONTINUE
+        DO 2410 I=1,11
+        TRABUF(NOKIK(I))=0
+2410    CONTINUE
+        TRABUF(TINTRA)=1
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TSCR
+        TRABUF(TGAMIND)=6
+        TRABUF(TWQPF)=0
+        TRABUF(TTKID)=0
+        TRABUF(TSIZE)=2
+        TRABUF(TFIL)=1
+        TRABUF(TWBEG)=1
+        TRABUF(TWEND)=TRABUF(TWBEG)
+        TRABUF(TWDUR)=1
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999992
+        TRABUF(TWCSER)=123345678
+        TRABUF(TWCTER)=6000
+        TRABUF(TWTKC)=200
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET)=10
+        TRABUF(TWFFLG)=0
+        TRABUF(TWMFRAC)=0
+        TRABUF(TWAMT)=TRABUF(TWSAMT)+
+     *                TRABUF(TWSAMT+TWSBLEN)   +
+     *                TRABUF(TWSAMT+TWSBLEN*2) +
+     *                TRABUF(TWSAMT+TWSBLEN*3) +
+     *                TRABUF(TWSAMT+TWSBLEN*4) +
+     *                TRABUF(TWSAMT+TWSBLEN*5) +
+     *                TRABUF(TWSAMT+TWSBLEN*6) +
+     *                TRABUF(TWSAMT+TWSBLEN*7) +
+     *                TRABUF(TWSAMT+TWSBLEN*8) +
+     *                TRABUF(TWSAMT+TWSBLEN*9)
+        TRABUF(TWTOT) = TRABUF(TWAMT) * TRABUF(TWDUR) + TRABUF(TWTKC)
+C
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO 243 I=1,TRALEN
+        IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+243     CONTINUE
+        TYPE*,'SCORE WAGER DONE!'
+C
+C=====================================================================
+C
+C TEST WINNERS TIP WAGER CONVERSION
+C
+2500    CONTINUE
+        GOTO 2600
+C  
+        TYPE*,'TESTING WINNERS TIP WAGER......'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO 244 I=1,TWWAMT+TWWBLEN*TWWBMAX-1
+        TRABUF(I)=I
+244     CONTINUE
+        DO 2510 I=1,11
+        TRABUF(NOKIK(I))=0
+2510    CONTINUE
+        TRABUF(TINTRA)=1
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TWIT
+        TRABUF(TGAMIND)=6
+        TRABUF(TWQPF)=0
+        TRABUF(TTKID)=0
+        TRABUF(TSIZE)=2
+        TRABUF(TFIL)=1
+        TRABUF(TWBEG)=1
+        TRABUF(TWEND)=TRABUF(TWBEG)
+        TRABUF(TWDUR)=1
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999992
+        TRABUF(TWCSER)=123345678
+        TRABUF(TWCTER)=6000
+        TRABUF(TWTKC)=200
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET)=10
+        TRABUF(TWFFLG)=0
+        TRABUF(TWMFRAC)=0
+        TRABUF(TWAMT)=TRABUF(TWWAMT)+
+     *                TRABUF(TWWAMT+TWWBLEN)   +
+     *                TRABUF(TWWAMT+TWWBLEN*2) +
+     *                TRABUF(TWWAMT+TWWBLEN*3) +
+     *                TRABUF(TWWAMT+TWWBLEN*4) +
+     *                TRABUF(TWWAMT+TWWBLEN*5) +
+     *                TRABUF(TWWAMT+TWWBLEN*6) +
+     *                TRABUF(TWWAMT+TWWBLEN*7) +
+     *                TRABUF(TWWAMT+TWWBLEN*8) +
+     *                TRABUF(TWWAMT+TWWBLEN*9)
+        TRABUF(TWTOT) = TRABUF(TWAMT) * TRABUF(TWDUR) + TRABUF(TWTKC)
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO 246 I=1,TRALEN
+        IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+246     CONTINUE
+        TYPE*,'WINNERS TIP WAGER DONE!'
+C
+C=========================================================================
+C
+C TEST TOTO SELECT WAGER CONVERSION
+C
+2600    CONTINUE
+        GOTO 2700
+C 
+        TYPE*,'TESTING TOTO SELECT WAGER......'
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO 247 I=1,TWTSTS3+(TWTRMAX-1)*TWTBLEN
+        TRABUF(I)=I
+        IF(I.GT.TWBDTA) TRABUF(I)=MOD(I,15)+1
+247     CONTINUE
+        DO 2610 I=1,11
+        TRABUF(NOKIK(I))=0
+2610    CONTINUE
+        TRABUF(TINTRA)=1
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TTSL
+        TRABUF(TGAMIND)=1
+        TRABUF(TWQPF)=1
+        TRABUF(TTKID)=0
+        TRABUF(TSIZE)=3
+        TRABUF(TFIL)=1
+        TRABUF(TWBEG)=1
+        TRABUF(TWEND)=TRABUF(TWBEG)
+        TRABUF(TWDUR)=1
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999992
+        TRABUF(TWCSER)=123345678
+        TRABUF(TWCTER)=6000
+        TRABUF(TWTKC)=250
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET)=3
+        TRABUF(TWTSEL1)=6
+        TRABUF(TWTSEL2)=6
+        TRABUF(TWTSEL3)=6
+        TRABUF(TWFFLG)=0
+        TRABUF(TWMFRAC)=0
+        TRABUF(TWAMT)=TRABUF(TWTAMT1)+TRABUF(TWTAMT2)+
+     *                TRABUF(TWTAMT3)
+        TRABUF(TWTOT) = TRABUF(TWAMT) * TRABUF(TWDUR) + TRABUF(TWTKC)
+        TYPE*,'CALLING TRALOG'
+        CALL TRALOG(TRABUF,BUF)
+        TYPE*,'CALLING LOGTRA'
+        CALL LOGTRA(TBUF,BUF)
+        DO 249 I=1,TRALEN
+        IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+249     CONTINUE
+        TYPE*,'TOTO SELECT WAGER DONE!'
+C
+C========================================================================
+C
+C TEST BINGO WAGER CONVERSION (NO KICKER)
+C
+2700    CONTINUE
+        GOTO 2800
+C 
+        TYPE*,'TESTING BINGO WAGER '
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO 31110 I=1,11
+        TRABUF(NOKIK(I))=0
+31110   CONTINUE
+C
+C WAGER HEADER
+C
+        TRABUF(TSTAT)=FRAC
+        TRABUF(TERR)=BDAY
+        TRABUF(TSUBERR)=GREV_KIKCTL + GREV_KIKTXT
+        TRABUF(TCDC)=9999
+        TRABUF(TCDC_SOLD)=9990
+        TRABUF(TSER)=64123499
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TTER)=6000
+        TRABUF(TAGT)='00BBCCDD'X
+        TRABUF(TTRN)=15
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TBNG
+        TRABUF(TGAMIND)=2
+        TRABUF(TTSTCS)='FE'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TTKID) = 1
+        TRABUF(TCHK)='FD'X
+        TRABUF(TFRAC)=10
+        TRABUF(TSIZE)=3
+        TRABUF(TWBEG) = 1
+        TRABUF(TWEND) = 2
+        TRABUF(TWTKC)=40
+        TRABUF(TWAMT) = 10000
+        TRABUF(TWDUR) = 2
+        TRABUF(TWQPF)=1
+        TRABUF(TWCSER)=64000001
+        TRABUF(TWCTER)=6000
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET) = 12
+        TRABUF(TWSYST) = CHCSYS
+        TRABUF(TWSYSN) = 40
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999991
+        TRABUF(TWFFLG)=1
+        TRABUF(TWMFRAC)=10
+        TRABUF(TWTOT)=TRABUF(TWAMT)*TRABUF(TWDUR)+TRABUF(TWTKC)
+C
+C BINGO WAGER BODY
+C
+      
+        DO 3111 I = TWBBFH1,TWBBFH1+7
+           TRABUF(I) = I
+3111    CONTINUE
+        TRABUF(TWBSED)=2147483000
+        TRABUF(TWBBAS) =12
+        TRABUF(TWBLUK)=99999999
+
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO 3120 I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+3120    CONTINUE
+        TYPE*,'BINGO WAGER DONE'
+C
+C========================================================================
+C
+C---- Added by Paul Brannigan. - 08-11-1995.
+C---- DOUBLE + COUPLE project.
+
+C
+C TEST SUPER DOUBLE WAGER CONVERSION
+C
+2800    CONTINUE
+        GOTO 2900
+C    
+        TYPE*,'TESTING SUPER DOUBLE WAGER......'
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO 441 I=1,TWDBAMT+TWDBBLEN*TWDBBMAX-1
+        TRABUF(I)=I
+441     CONTINUE
+        DO 4410 I=1,11
+        TRABUF(NOKIK(I))=0
+4410    CONTINUE
+        TRABUF(TINTRA)=1
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TDBL
+        TRABUF(TGAMIND)=6
+        TRABUF(TWQPF)=0
+        TRABUF(TTKID)=0
+        TRABUF(TSIZE)=2
+        TRABUF(TFIL)=1
+        TRABUF(TWBEG)=1
+        TRABUF(TWEND)=TRABUF(TWBEG)
+        TRABUF(TWDUR)=1
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999992
+        TRABUF(TWCSER)=123345678
+        TRABUF(TWCTER)=6000
+        TRABUF(TWTKC)=200
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET)=10
+        TRABUF(TWFFLG)=0
+        TRABUF(TWMFRAC)=0
+        TRABUF(TWAMT)=TRABUF(TWDBAMT)+
+     *                TRABUF(TWDBAMT+TWDBBLEN)   +
+     *                TRABUF(TWDBAMT+TWDBBLEN*2) +
+     *                TRABUF(TWDBAMT+TWDBBLEN*3) +
+     *                TRABUF(TWDBAMT+TWDBBLEN*4) +
+     *                TRABUF(TWDBAMT+TWDBBLEN*5) +
+     *                TRABUF(TWDBAMT+TWDBBLEN*6) +
+     *                TRABUF(TWDBAMT+TWDBBLEN*7) +
+     *                TRABUF(TWDBAMT+TWDBBLEN*8) +
+     *                TRABUF(TWDBAMT+TWDBBLEN*9)
+        TRABUF(TWTOT) = TRABUF(TWAMT) * TRABUF(TWDUR) + TRABUF(TWTKC)
+C
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO 443 I=1,TRALEN
+        IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+443     CONTINUE
+        TYPE*,'SUPER DOUBLE WAGER DONE!'
+C
+C=========================================================================
+C
+C TEST TODAYS COUPLE WAGER CONVERSION
+C
+2900    CONTINUE
+        GOTO 3000
+C 
+        TYPE*,'TESTING TODAYS COUPLE WAGER......'
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO 451 I=1,TWCPAMT+TWCPBLEN*TWCPBMAX-1
+        TRABUF(I)=I
+451     CONTINUE
+        DO 4510 I=1,11
+        TRABUF(NOKIK(I))=0
+4510    CONTINUE
+        TRABUF(TINTRA)=1
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TCPL
+        TRABUF(TGAMIND)=6
+        TRABUF(TWQPF)=0
+        TRABUF(TTKID)=0
+        TRABUF(TSIZE)=2
+        TRABUF(TFIL)=1
+        TRABUF(TWBEG)=1
+        TRABUF(TWEND)=TRABUF(TWBEG)
+        TRABUF(TWDUR)=1
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999992
+        TRABUF(TWCSER)=123345678
+        TRABUF(TWCTER)=6000
+        TRABUF(TWTKC)=200
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET)=10
+        TRABUF(TWFFLG)=0
+        TRABUF(TWMFRAC)=0
+        TRABUF(TWAMT)=TRABUF(TWCPAMT)+
+     *                TRABUF(TWCPAMT+TWCPBLEN)   +
+     *                TRABUF(TWCPAMT+TWCPBLEN*2) +
+     *                TRABUF(TWCPAMT+TWCPBLEN*3) +
+     *                TRABUF(TWCPAMT+TWCPBLEN*4) +
+     *                TRABUF(TWCPAMT+TWCPBLEN*5) +
+     *                TRABUF(TWCPAMT+TWCPBLEN*6) +
+     *                TRABUF(TWCPAMT+TWCPBLEN*7) +
+     *                TRABUF(TWCPAMT+TWCPBLEN*8) +
+     *                TRABUF(TWCPAMT+TWCPBLEN*9)
+        TRABUF(TWTOT) = TRABUF(TWAMT) * TRABUF(TWDUR) + TRABUF(TWTKC)
+C
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO 453 I=1,TRALEN
+        IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+453     CONTINUE
+        TYPE*,'SUPER DOUBLE WAGER DONE!'
+C
+C====================================================================
+C
+C TEST TODAY'S TRIO WAGER CONVERSION
+C
+3000    CONTINUE
+        GOTO 3100
+C
+        TYPE*,'TESTING TODAY''S TRIO WAGER......'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO 464 I=1,TWTTCOUPID+3+TWTTBMAX
+        TRABUF(I)=I
+464     CONTINUE
+        DO 4610 I=1,11
+        TRABUF(NOKIK(I))=0
+4610    CONTINUE
+        TRABUF(TINTRA)=1
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TTRP
+        TRABUF(TGAMIND)=6
+        TRABUF(TWQPF)=0
+        TRABUF(TTKID)=0
+        TRABUF(TSIZE)=2
+        TRABUF(TFIL)=1
+        TRABUF(TWBEG)=1
+        TRABUF(TWEND)=TRABUF(TWBEG)
+        TRABUF(TWDUR)=1
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999992
+        TRABUF(TWCSER)=123345678
+        TRABUF(TWCTER)=6000
+        TRABUF(TWTKC)=200
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET)=10
+        TRABUF(TWFFLG)=0
+        TRABUF(TWMFRAC)=0
+        TRABUF(TWAMT)=TRABUF(TWWAMT)
+        TRABUF(TWTOT) = TRABUF(TWAMT) * TRABUF(TWDUR) + TRABUF(TWTKC)
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO 466 I=1,TRALEN
+        IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+466     CONTINUE
+        TYPE*,'TODAYS TRIO WAGER DONE!'
+C
+C========================================================================
+C
+C TEST SUPERSCORE WAGER CONVERSION
+C
+3100    CONTINUE
+        GOTO 3200
+C
+        TYPE*,'TESTING SUPERSCORE WAGER......'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO 474 I=TWSSBET,TWSSBET+30-1
+        TRABUF(I)=I
+474     CONTINUE
+        DO 4710 I=1,11
+        TRABUF(NOKIK(I))=0
+4710    CONTINUE
+        TRABUF(TINTRA)=1
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TSSC
+        TRABUF(TGAMIND)=6
+        TRABUF(TWQPF)=0
+        TRABUF(TTKID)=0
+        TRABUF(TSIZE)=2
+        TRABUF(TFIL)=1
+        TRABUF(TWBEG)=1
+        TRABUF(TWEND)=TRABUF(TWBEG)
+        TRABUF(TWDUR)=1
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999992
+        TRABUF(TWCSER)=123345678
+        TRABUF(TWCTER)=6000
+        TRABUF(TWTKC)=200
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET)=1
+        TRABUF(TWSYSN)=1
+        TRABUF(TWFFLG)=0
+        TRABUF(TWMFRAC)=0
+        TRABUF(TWAMT)=TRABUF(TWWAMT)
+        TRABUF(TWTOT) = TRABUF(TWAMT) * TRABUF(TWDUR) + TRABUF(TWTKC)
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO 476 I=1,TRALEN
+        IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+476     CONTINUE
+C        DO I=8,22
+C        I4TEMP=BUF(I)
+C        TYPE 21111, I,I1TEMP(4), I1TEMP(3), I1TEMP(2), I1TEMP(1)
+C21111   FORMAT(2X,'WORD=',I2,2X,4(Z3.2))
+C        ENDDO
+        TYPE*,'SUPERSCORE WAGER DONE!'
+C
+C========================================================================
+C
+C TEST SUPER TRIPLE WAGER CONVERSION
+C
+3200    CONTINUE
+        GOTO 3300
+C 
+        TYPE*,'TESTING SUPER TRIPLE WAGER......'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO 484 I=1,TWSTCOUPID+3+TWSTBMAX
+        TRABUF(I)=I
+484     CONTINUE
+        DO 4810 I=1,11
+        TRABUF(NOKIK(I))=0
+4810    CONTINUE
+        TRABUF(TCDC)=9999
+        TRABUF(TCDC_SOLD)=9990
+        TRABUF(TINTRA)=1
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TSTR
+        TRABUF(TGAMIND)=6
+        TRABUF(TWQPF)=0
+        TRABUF(TTKID)=0
+        TRABUF(TSIZE)=2
+        TRABUF(TFIL)=1
+        TRABUF(TWBEG)=1
+        TRABUF(TWEND)=TRABUF(TWBEG)
+        TRABUF(TWDUR)=1
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999992
+        TRABUF(TWCSER)=123345678
+        TRABUF(TWCTER)=6000
+        TRABUF(TWTKC)=200
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET)=10
+        TRABUF(TWFFLG)=0
+        TRABUF(TWMFRAC)=0
+        TRABUF(TWAMT)=TRABUF(TWWAMT)
+        TRABUF(TWTOT) = TRABUF(TWAMT) * TRABUF(TWDUR) + TRABUF(TWTKC)
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO 486 I=1,TRALEN
+        IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+486     CONTINUE
+        TYPE*,'SUPER TRIPLE WAGER DONE!'
+C
+C================================================================== 
+C
+C TEST KICKER WAGER SYSTEM BET CONVERSION 
+C
+3300    CONTINUE
+        GOTO 9000
+C
+        TYPE*,'TESTING JOKER WAGER (FULLSYS BET) '
+
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+C
+C WAGER HEADER
+C
+        TRABUF(TSTAT)=FRAC
+        TRABUF(TERR)=BDAY
+        TRABUF(TSUBERR)=GREV_KIKCTL + GREV_KIKTXT
+        TRABUF(TCDC)=9999
+        TRABUF(TCDC_SOLD)=9990
+        TRABUF(TSER)=64123499
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TTER)=6000
+        TRABUF(TAGT)='00BBCCDD'X
+        TRABUF(TTRN)=15
+        TRABUF(TTYP)=TWAG
+        TRABUF(TGAMTYP)=TKIK
+        TRABUF(TGAMIND)=2
+        TRABUF(TTSTCS)='FE'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TTKID) = 1
+        TRABUF(TCHK)='FD'X
+        TRABUF(TFRAC)=10
+        TRABUF(TSIZE)=3
+        TRABUF(TWBEG) = 1
+        TRABUF(TWEND) = 2
+        TRABUF(TWTKC)=40
+        TRABUF(TWAMT) = 10000
+        TRABUF(TWDUR) = 2
+        TRABUF(TWQPF)=1
+        TRABUF(TWCSER)=64000001
+        TRABUF(TWCTER)=6000
+        TRABUF(TWVSTS)=VSBNKM
+        TRABUF(TWNBET) = 1
+        TRABUF(TWSYST) = FULSYS
+        TRABUF(TWSYSN) = 40
+        TRABUF(TWBNKID)=888881
+        TRABUF(TWBNKNM)=99999991
+        TRABUF(TWFFLG)=1
+        TRABUF(TWMFRAC)=10
+        TRABUF(TWTOT)=TRABUF(TWAMT)*TRABUF(TWDUR)+TRABUF(TWTKC)
+!V20++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
+        TRABUF(TWLNKSER) = 16777214
+        TRABUF(TWLNKCHK) = 169
+!V20++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++         
+C
+C KICKER WAGER BODY
+C
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'JOKER SYSTEM WAGER DONE '
+C
+C========================================================================
+C
+C TEST SPECIAL FUNCTION
+C
+9000    CONTINUE
+
+        TYPE*,'==============================================='
+        TYPE*,'TESTING SPECIAL FUNCTIONS........'
+C
+C TSON, HEADER
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TSER)=64123499
+        TRABUF(TCDC)=9999
+        TRABUF(TTER)=12288
+        TRABUF(TAGT)='00BBCCDD'X
+        TRABUF(TNFRAC)=1 
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TTSTCS)='FE'X
+        TRABUF(TCHK)='FD'X
+        TRABUF(TERR)=BDAY
+        TRABUF(TGAM)=MAXGAM
+        TRABUF(TSTAT)=FRAC
+        TRABUF(TTYP)=TSPE
+        TRABUF(TTRN)=15
+        TRABUF(TSIZE)=2
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TGAMTYP)=MAXTYP
+        TRABUF(TTKID) = 1
+        TRABUF(TFRAC)=1
+        TRABUF(TSUBERR)=GREV_KIKCTL + GREV_KIKTXT
+        TRABUF(TCDC_SOLD)=9990
+C
+C TSON, BODY
+C
+        DO I=TSOLD,TSDT21    !NB! TSDT22 is not logged for TSON!
+           TRABUF(I)=I
+        ENDDO
+        TRABUF(TSFUN)=TSON
+        TRABUF(TSSGN)=1
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'SPECIAL FUNCTION (TSON) DONE!'
+C
+C TAGTINF, HEADER
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TSER)=64123499
+        TRABUF(TCDC)=9999
+        TRABUF(TTER)=12288
+        TRABUF(TAGT)='00BBCCDD'X
+        TRABUF(TNFRAC)=1 
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TTSTCS)='FE'X
+        TRABUF(TCHK)='FD'X
+        TRABUF(TERR)=BDAY
+        TRABUF(TGAM)=MAXGAM
+        TRABUF(TSTAT)=FRAC
+        TRABUF(TTYP)=TSPE
+        TRABUF(TTRN)=15
+        TRABUF(TSIZE)=3
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TGAMTYP)=MAXTYP
+        TRABUF(TTKID) = 1
+        TRABUF(TFRAC)=1
+        TRABUF(TSUBERR)=GREV_KIKCTL + GREV_KIKTXT
+        TRABUF(TCDC_SOLD)=9990
+C
+C TAGTINF, BODY
+C
+        DO I=TSDT1,TSDT1+38-1
+           TRABUF(I)=I
+        ENDDO
+        TRABUF(TSFUN)=TAGTINF
+        TRABUF(TSNEW)=38
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'SPECIAL FUNCTION (TAGTINF) DONE!'
+C
+C TMXL, HEADER
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TSER)=64123499
+        TRABUF(TCDC)=9999
+        TRABUF(TTER)=12288
+        TRABUF(TAGT)='00BBCCDD'X
+        TRABUF(TNFRAC)=1 
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TTSTCS)='FE'X
+        TRABUF(TCHK)='FD'X
+        TRABUF(TERR)=BDAY
+        TRABUF(TGAM)=MAXGAM
+        TRABUF(TSTAT)=FRAC
+        TRABUF(TTYP)=TSPE
+        TRABUF(TTRN)=15
+        TRABUF(TSIZE)=2
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TGAMTYP)=MAXTYP
+        TRABUF(TTKID) = 1
+        TRABUF(TFRAC)=1
+        TRABUF(TSUBERR)=GREV_KIKCTL + GREV_KIKTXT
+        TRABUF(TCDC_SOLD)=9990
+C
+C TMXL, BODY
+C
+        TRABUF(TSFUN)=TMXL
+        DO I=TMXL_RPCTAG,TMXL_RPCTAG+15  !30...45
+           TRABUF(I)=I
+        ENDDO
+        TRABUF(TMXL_ERCODE)=111
+        DO I=TMXL_DATA,TMXL_DATA+21      !47...68
+           TRABUF(I)=I
+        ENDDO 
+        TRABUF(TMXL_DATLEN)=250
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'SPECIAL FUNCTION (TMXL) DONE!'
+
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+C
+C=========================================================================
+C
+C TEST COMMAND CONVERSION
+C
+        TYPE*,'==============================================='
+        TYPE*,'TESTING COMMANDS........'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO 
+C
+C HEADER
+C
+        TRABUF(TSER)=64123499
+        TRABUF(TCDC)=9999
+        TRABUF(TTER)=12288
+        TRABUF(TAGT)='00BBCCDD'X
+        TRABUF(TNFRAC)=1 
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TTSTCS)='FE'X
+        TRABUF(TCHK)='FD'X
+        TRABUF(TERR)=BDAY
+        TRABUF(TGAM)=MAXGAM
+        TRABUF(TSTAT)=FRAC
+        TRABUF(TTYP)=TSPE
+        TRABUF(TTRN)=15
+        TRABUF(TSIZE)=2
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TGAMTYP)=MAXTYP
+        TRABUF(TTKID) = 1
+        TRABUF(TFRAC)=1
+        TRABUF(TSUBERR)=GREV_KIKCTL + GREV_KIKTXT
+        TRABUF(TCDC_SOLD)=9990
+C
+C BODY
+        DO I=TCMTYP,TCMDT5
+           TRABUF(I)=I
+        ENDDO
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'COMMANDS DONE!'
+C
+C===================================================================
+C
+C TEST VALIDATION CONVERSION
+C
+        TYPE*,'==============================================='
+        TYPE*,'TESTING PASSIVE BANK VALIDATION TRANSACTION......'
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,TVWCDC
+           TRABUF(I)=I
+        ENDDO
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO 
+        TRABUF(TGAMIND) = 2 
+        TRABUF(TTKID) = 0
+        TRABUF(TTYP)=TVAL
+        TRABUF(TGAMTYP)=TPAS
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TAGT)='00AABBCC'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TSIZE)=2
+        
+        TRABUF(TVEPVAL) = 1
+        TRABUF(TVEPWK) = 52
+        TRABUF(TVEPYR) = 35
+        TRABUF(TVEPTYP) = 5
+
+        TRABUF(TPTCK) = 1 
+        !TRABUF(TPRETYP)= 2
+        !TRABUF(TPDUMMY)= 3
+        TRABUF(TPOFFTER)= 1234
+        !TRABUF(TPFRCNT)= 5
+
+        TRABUF(TPNUM1)= 2345
+        TRABUF(TPKEY1)=1
+        TRABUF(TPPAY1) = 999999999
+        TRABUF(TPEMIS1)=567
+        TRABUF(TPSER1)=3
+        TRABUF(TPTEN1)=4
+        TRABUF(TPSTS1)=5
+
+        TRABUF(TVPLCARD) = 987654321
+        TRABUF(TVNIBBB) = 34567 
+        TRABUF(TVNIBBO) = 45678
+        TRABUF(TVNIBBA1) = 1234567890
+        TRABUF(TVNIBBA2) = 250
+        TRABUF(TVNIBCD) = 188
+
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+        TYPE*,'PASSIVE BANK VALIDATION TRANSACTION DONE!'
+        !TYPE*,'++++++++++++++++++++++++++++++++++++++++++++'
+C
+C PASSIVE BUNCH VALIDATION
+C
+        TYPE*,'=================================='
+        TYPE*,'TESTING PASSIVE OLD BUNCH VALIDATION TRANSACTION......'
+
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,TVSTS-1
+           TRABUF(I)=I
+        ENDDO
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TGAMIND) = 2 
+        TRABUF(TTKID) = 0
+        TRABUF(TTYP)=TVAL
+        TRABUF(TGAMTYP)=TPAS
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TAGT)='00AABBCC'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TSIZE)=3
+        TRABUF(TCDC)=9999
+        TRABUF(TCDC_SOLD)=9990
+
+        TRABUF(TVEPVAL) = 0
+        TRABUF(TVEPTYP) = 0
+        TRABUF(TPTCK) = 2 
+        !TRABUF(TPRETYP)= 2
+        !TRABUF(TPDUMMY)= 3
+        TRABUF(TPOFFTER)= 1234
+        !TRABUF(TPFRCNT)= 5
+
+        TRABUF(TPNUM1)= 2345
+        TRABUF(TPKEY1)=1
+        TRABUF(TPEMIS1)=567
+        TRABUF(TPSER1)=3
+        TRABUF(TPTEN1)=4
+        TRABUF(TPSTS1)=5
+
+        TRABUF(TPNUM2)= 12345
+        TRABUF(TPKEY3)=2
+        TRABUF(TPEMIS2)=167
+        TRABUF(TPSER2)=2
+        TRABUF(TPTEN2)=3
+        TRABUF(TPSTS2)=4
+
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO 
+        TYPE*,'PASSIVE OLD BUNCH VALIDATION TRANSACTION DONE!'
+        !TYPE*,'+++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+C
+C PASSIVE RETURNS
+C
+        TYPE*,'==============================================='
+        TYPE*,'TESTING PASSIVE RETURN TRANSACTION......'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,TVSTS-1
+           TRABUF(I)=I
+        ENDDO
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TGAMIND) = 2 
+        TRABUF(TTKID) = 0
+        TRABUF(TTYP)=TRET
+        TRABUF(TGAMTYP)=TPAS
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TAGT)='00AABBCC'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TSIZE)=3
+        
+        TRABUF(TPTCK) = 2 
+        TRABUF(TPRETYP)= 2
+        !TRABUF(TPDUMMY)= 3
+        TRABUF(TPOFFTER)= 1234
+        TRABUF(TPFRCNT)= 5
+
+        TRABUF(TPNUM1)= 2345
+        TRABUF(TPKEY1)=1
+        TRABUF(TPEMIS1)=567
+        TRABUF(TPSER1)=3
+        TRABUF(TPTEN1)=4
+        TRABUF(TPSTS1)=5
+
+        TRABUF(TPNUM2)= 12345
+        TRABUF(TPKEY3)=2
+        TRABUF(TPEMIS2)=167
+        TRABUF(TPSER2)=2
+        TRABUF(TPTEN2)=3
+        TRABUF(TPSTS2)=4
+
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO 
+        TYPE*,'PASSIVE RETURN TRANSACTION DONE!'
+        !TYPE*,'++++++++++++++++++++++++++++++++++'
+!===============================================================================        
+C
+C EM TRANSACTIONS
+C
+!+++++++WAGER+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        TYPE*,'==============================================='
+        TYPE*,'TESTING EM WAGER......'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+C-------INMGR-------------------------------------------------------------------
+        TRABUF(TTYP)      = TEUR
+        TRABUF(TSTAT)     = VOID
+        TRABUF(TERR)      = REJT
+        TRABUF(TCDC)      = 9999
+        TRABUF(TCDC_SOLD) = 9909
+        TRABUF(TTER)      = 69
+        TRABUF(TAGT)      = 6969
+        TRABUF(TINTRA)    = 1
+        TRABUF(TFIL)      = 0
+        TRABUF(TGAMIND)   = 1
+        TRABUF(TGAMTYP)   = TEUM
+        TRABUF(TGAM)      = 0
+        TRABUF(TTRN)      = 2
+!        TRABUF(TSIZE)     = 2
+        TRABUF(TSIZE)     = 3                                                   !V23
+        TRABUF(TCHK)      = 69
+        TRABUF(TTSTCS)    = 69
+        TRABUF(TEUTYP)    = TWAG
+        TRABUF(TEUWNBET)  = 1 
+        TRABUF(TEUWDUR)   = 1
+        TRABUF(TEUWQP)    = 1
+        TRABUF(TEUWNMK)   = 6
+        TRABUF(TEUWNST)   = 9
+C
+        TRABUF(TEUW_KIWFL)= 1                                                   !PARTICIPATING IN JOKER 1 FLAG                    !V23
+        TRABUF(TEUW_PLNIF)= 999999999                                           !PORTUGUESE PLAYER NIV                            !V23
+        TRABUF(TEUW_EUWCH)= 1                                                   !EM WAGERING CHANNEL                              !V23
+        TRABUF(TEUWDRWIND)= 2                                                   !DRAW INDICATOR (0 - NEXT DRAW, 1-7 MONDAY-SUNDAY !V23
+C
+        TRABUF(TEUWBOARD) = 9999
+C-------OUTMGR------------------------------------------------------------------
+        TRABUF(TSER)      = 696969
+        TRABUF(TTIM)      ='00112233'X                    
+        TRABUF(TEUMESSQ)  = 62
+        TRABUF(TEUSER)    = 63
+        TRABUF(TEUCHK)    = 64
+        TRABUF(TEUWOFS1)  = 65
+        TRABUF(TEUWOFS2)  = 66
+        TRABUF(TEUWBEGW)  = 67
+        TRABUF(TEUWBEGY)  = 68
+        TRABUF(TEUWENDW)  = 69
+        TRABUF(TEUWENDY)  = 70
+        TRABUF(TEUWTIMEH) = 71
+        TRABUF(TEUWTIMEM) = 72
+        TRABUF(TEUWTIMES) = 73
+C
+        TRABUF(TEUW_SMWFL)= 1                                                   !SM DATA PRESENT FLAG                  !V23
+        TRABUF(TEUW_SMWTB)= 5                                                   !SM TOTAL BETS                         !V23
+        TRABUF(TEUW_SMWSN)= 1234567                                             !SM EXTERNAL SERIAL NUMBER             !V23
+        TRABUF(TEUW_SMWCD)= 255                                                 !SM CHECK DIGITS                       !V23
+        TRABUF(TEUW_SMWDN)= 45                                                  !SM DRAW NUMBER                        !V23
+        TRABUF(TEUW_SMWDY)= 16                                                  !SM DRAW YEAR                          !V23
+        TRABUF(TEUW_SMWOF)= 4                                                   !OFFSET TO SM DRAW CDC DATE            !V23
+        TRABUF(TEUW_SMWB1)= '424344FF'X                                         !SM WAGER FIRST NUMBER (ALPHA PART)    !V23
+        TRABUF(TEUW_SMWB2)= 1                                                   !SM WAGER FIRST NUMBER (NUMERIC PART)  !V23
+        TRABUF(TEUW_SMWE1)= '454647FF'X                                         !SM WAGER LAST NUMBER (ALPHA PART)     !V23
+        TRABUF(TEUW_SMWE2)= 99999                                               !SM WAGER LAST NUMBER (NUMERIC PART)   !V23
+        TRABUF(TEUW_SHWFL)= 1                                                   !SoM WAGER DATA IS PRESENT             !V23
+        TRABUF(TEUW_SHWDN)= 99                                                  !SoM DRAW NUMBER                       !V23
+        TRABUF(TEUW_SHWDY)= 16                                                  !SoM DRAW YEAR                         !V23
+        TRABUF(TEUW_SHWOF)= 5                                                   !OFFSET TO SoM DRAW CDC DATE           !V23
+        TRABUF(TEUW_SHWTB)= 4                                                   !SoM TOTAL BETS                        !V23
+        TRABUF(TEUW_SHWB1)= '484950FF'X                                         !SoM WAGER FIRST NUMBER (ALPHA PART)   !V23
+        TRABUF(TEUW_SHWB2)= 12345                                               !SoM WAGER FIRST NUMBER (NUMERIC PART) !V23
+        TRABUF(TEUW_SHWE1) = '515253FF'X                                        !SoM WAGER LAST NUMBER (ALPHA PART)    !V23
+        TRABUF(TEUW_SHWE2) = 1                                                  !SoM WAGER LAST NUMBER (NUMERIC PART)  !V23
+C-------------------------------------------------------------------------------
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO 
+        TYPE*,'EM WAGER TRANSACTION DONE!'
+        !TYPE*,'==============================================='
+!+++++++CANCELLATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        TYPE*,'==============================================='
+        TYPE*,'TESTING EM CANCELLATION......'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+C-------INMGR-------------------------------------------------------------------
+        TRABUF(TTYP)      = TEUR
+        TRABUF(TSTAT)     = VOID
+        TRABUF(TERR)      = REJT
+        TRABUF(TCDC)      = 9999
+        TRABUF(TCDC_SOLD) = 9909
+        TRABUF(TTER)      = 69
+        TRABUF(TAGT)      = 6969
+        TRABUF(TFIL)      = 0
+        TRABUF(TGAMIND)   = 1
+        TRABUF(TGAMTYP)   = TEUM
+        TRABUF(TGAM)      = 0
+        TRABUF(TTRN)      = 2
+!        TRABUF(TSIZE)     = 3                                                  !V23
+        TRABUF(TSIZE)     = 2
+        TRABUF(TINTRA)    = 1 
+        TRABUF(TCHK)      = 69    
+        TRABUF(TTSTCS)    = 69       
+        TRABUF(TEUTYP)    = TCAN     
+        TRABUF(TEUCWJUL)  = 128
+        TRABUF(TEUCWSER)  = 696969
+        TRABUF(TEUCWCKD)  = 128
+C-------OUTMGR------------------------------------------------------------------
+        TRABUF(TSER)      = 696969
+        TRABUF(TTIM)      ='00112233'X                    
+        TRABUF(TEUMESSQ)  = 62   
+        TRABUF(TEUSER)    = 63
+        TRABUF(TEUCHK)    = 64
+        TRABUF(TEUCTIMEH) = 65
+        TRABUF(TEUCTIMEM) = 66
+        TRABUF(TEUCTIMES) = 67
+        TRABUF(TEUCST)    = 68
+        TRABUF(TEUCAM)    = 69
+C
+        TRABUF(TEUC_SMCFL) = 1                                                  !SM CANCELLATION DATA IS PRESENT         !V23
+        TRABUF(TEUC_SMWSN) = 7654321                                            !SM WAGER EXTERNAL SERIAL NUMBER         !V23
+        TRABUF(TEUC_SMWCD) = 128                                                !SM WAGER CHECK DIGITS                   !V23
+        TRABUF(TEUC_SMCSN) = 1                                                  !SM CANCELLATION EXTERNAL SERIAL NUMBER  !V23
+        TRABUF(TEUC_SMCCD) = 1                                                  !SM CANCELLATION CHECK DIGITS            !V23
+        TRABUF(TEUC_SMWCA) = 1250                                               !SM CANCEL AMOUNT (WAGER UNITS)          !V23
+        TRABUF(TEUC_SHCFL) = 1                                                  !SoM CANCELLATION FLAG                   !V23
+C-------------------------------------------------------------------------------
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO 
+        TYPE*,'EM CANCELLATION TRANSACTION DONE!'
+        !TYPE*,'==============================================='            
+!+++++++VALIDATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        TYPE*,'==============================================='
+        TYPE*,'TESTING EM VALIDATION......'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+C-------COMMON------------------------------------------------------------------
+        TRABUF(TSTAT)     = VOID                            !# 01
+        TRABUF(TERR)      = REJT                            !# 02
+        TRABUF(TCDC)      = 9999                            !# 03
+        TRABUF(TSER)      = 69696969                        !# 04
+        TRABUF(TTIM)      ='00112233'X                      !# 05
+        TRABUF(TTER)      = 69                              !# 06
+        TRABUF(TAGT)      = 6969                            !# 07
+        TRABUF(TTRN)      = 2                               !# 08
+        TRABUF(TTYP)      = TEUR                            !# 09
+        TRABUF(TGAM)      = 0                               !# 10
+        TRABUF(TGAMTYP)   = TEUM                            !# 11
+        TRABUF(TGAMIND)   = 1                               !# 12
+        TRABUF(TTSTCS)    = 69                              !# 13
+        TRABUF(TINTRA)    = 1                               !# 14
+        TRABUF(TFIL)      = 1                               !# 15
+        TRABUF(TTKID)     = 1                               !# 16
+        TRABUF(TCHK)      = 69                              !# 17
+        TRABUF(TFRAC)     = 1                               !# 18
+!        TRABUF(TSIZE)     = 3                               !# 19
+        TRABUF(TSIZE)     = 2                               !# 19               !V23
+        TRABUF(TSUBERR)   = 1                               !# 20
+        TRABUF(TCDC_SOLD) = 9999                            !# 21
+        TRABUF(TFAMTFLG)  = 1                               !# 22
+        TRABUF(TNFRAC)    = 1                               !# 23
+C-------SPECIFIC----------------------------------------------------------------
+        TRABUF(TEUTYP)    = TVAL                            !# 25
+        TRABUF(TEUSER)    = 69696969                        !# 26
+        TRABUF(TEUCHK)    = 128                             !# 27
+        TRABUF(TEUMESSQ)  = 1                               !# 28
+        TRABUF(TEUVSBT)   = 2                               !# 29
+        TRABUF(TEUVWJUL)  = 128                             !# 30
+        TRABUF(TEUVWSER)  = 69696969                        !# 31     
+        TRABUF(TEUVWCKD)  = 128                             !# 32
+        TRABUF(TEUVTIMEH) = 65                              !# 33
+        TRABUF(TEUVTIMEM) = 66                              !# 34
+        TRABUF(TEUVTIMES) = 67                              !# 35
+        TRABUF(TEUVST)    = 68                              !# 36
+        TRABUF(TEUVCAM)   = '10000000'X                     !# 37
+        TRABUF(TEUVRAM)   = '10000000'X                     !# 38
+        TRABUF(TEUVCAMH)  = 1                               !# 57
+        TRABUF(TEUVRAMH)  = 1                               !# 58
+C
+        TRABUF(TEUVPLIDTYP)= 1                                                  !PLAYER ID TYPE                              !V23
+        TRABUF(TEUVPLCARD) = 123456789                                          !PLAYER ID                                   !V23
+        TRABUF(TEUVNIBBB)  = 9999                                               !PLAYER NIB BRANCH (4 DIGITS)                !V23
+        TRABUF(TEUVNIBBO)  = 1234                                               !PLAYER NIB OFFICE (4 DIGITS)                !V23
+        TRABUF(TEUVNIBBA1) = 123456789                                          !PLAYER NIB ACCOUNT NUMBER PART 1 (9 DIGITS) !V23
+        TRABUF(TEUVNIBBA2) = 99                                                 !PLAYER NIB ACCOUNT NUMBER PART 2 (2 DIGITS) !V23
+        TRABUF(TEUVNIBCD)  = 99                                                 !PLAYER NIB CHECK DIGITS (2 DIGITS)          !V23
+C
+        TRABUF(TEUV_NIFFL) = 1                                                  !PLAYER NIF IS PRESENT               !V23
+        TRABUF(TEUV_PLNIF) = 123456789                                          !PLAYER NIF                          !V23
+        TRABUF(TEUV_NIFCF) = 1                                                  !PLAYER NIF CONFIRMATION IS REQUIRED !V23
+        TRABUF(TEUV_SHVFL) = 1                                                  !SoM WAS VALIDATED ALONG EM          !V23
+C-------------------------------------------------------------------------------
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO 
+        TYPE*,'EM VALIDATION TRANSACTION DONE!'
+        !TYPE*,'==============================================='        
+!===============================================================================                
+C
+C TEST PSDN CONVERSION - TRANSPORT LAYER.
+C
+        TYPE*,'==============================================='
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,TXTBTYP
+           TRABUF(I)=I
+        ENDDO
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TTKID) = 0
+        TRABUF(TTYP)=TSPE
+        TRABUF(TGAMTYP)=TLTO
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TAGT)='00AABBCC'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TSIZE)=1
+        TRABUF(TSFUN)=TSX2X
+        TRABUF(TXLAY)=X2X_TRATYP_XPORT
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        TYPE*,'TESTING SPESRV PSDN - TRANSPORT LAYER'
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+C
+C TEST SPESRV - FRONT END LAYER - COMMAND
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,TXFCC
+           TRABUF(I)=I
+        ENDDO
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TTKID) = 0
+        TRABUF(TTYP)=TSPE
+        TRABUF(TGAMTYP)=TLTO
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TAGT)='00AABBCC'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TSIZE)=1
+        TRABUF(TSFUN)=TSX2X
+        TRABUF(TXLAY)=X2X_TRATYP_FE
+        TRABUF(TXFMDUT)=X2FEMES_MESTYP_CMD
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        TYPE*,'TESTING SPESRV PSDN - FE COMMAND'
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+C
+C TEST SPESRV - FRONT END LAYER - ERROR
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,TXFDEC
+          TRABUF(I)=I
+        ENDDO
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TTKID) = 0
+        TRABUF(TTYP)=TSPE
+        TRABUF(TGAMTYP)=TLTO
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TAGT)='00AABBCC'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TSIZE)=1
+        TRABUF(TSFUN)=TSX2X
+        TRABUF(TXLAY)=X2X_TRATYP_FE
+        TRABUF(TXFMDUT)=X2FEMES_MESTYP_ERR
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        TYPE*,'TESTING SPESRV PSDN - FE ERROR'
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+C
+C TEST SPESRV - FRONT END LAYER - ALARM
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,TXFLMC
+           TRABUF(I)=I
+        ENDDO
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TTKID) = 0
+        TRABUF(TTYP)=TSPE
+        TRABUF(TGAMTYP)=TLTO
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TAGT)='00AABBCC'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TSIZE)=1
+        TRABUF(TSFUN)=TSX2X
+        TRABUF(TXLAY)=X2X_TRATYP_FE
+        TRABUF(TXFMDUT)=X2FEMES_MESTYP_ALARM
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        TYPE*,'TESTING SPESRV PSDN - FE ALARM'
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+C
+C TEST SPESRV - STATION LAYER - HELP
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,TXSSPHID
+           TRABUF(I)=I
+        ENDDO
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TTKID) = 0
+        TRABUF(TTYP)=TSPE
+        TRABUF(TGAMTYP)=TLTO
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TAGT)='00AABBCC'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TSIZE)=1
+        TRABUF(TSFUN)=TSX2X
+        TRABUF(TXLAY)=X2X_TRATYP_STTN
+        TRABUF(TXSSDTU)=X2STMES_DATATYPE_CMD_UP
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        TYPE*,'TESTING SPESRV PSDN - STATION HELP'
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+C
+C TEST SPESRV - STATION LAYER - COMMAND
+C
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+        DO I=1,TXSSNUM
+           TRABUF(I)=I
+        ENDDO
+        DO I=1,NOTUSD_CNT
+           TRABUF(NOTUSD(I))=0
+        ENDDO
+        TRABUF(TTKID) = 0
+        TRABUF(TTYP)=TSPE
+        TRABUF(TGAMTYP)=TLTO
+        TRABUF(TTIM)='00112233'X
+        TRABUF(TAGT)='00AABBCC'X
+        TRABUF(TINTRA)=1
+        TRABUF(TFIL)=4
+        TRABUF(TSIZE)=1
+        TRABUF(TSFUN)=TSX2X
+        TRABUF(TXLAY)=X2X_TRATYP_STTN
+        TRABUF(TXSSDTU)=X2STMES_DATATYPE_RESET
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)
+        TYPE*,'TESTING SPESRV PSDN - STATION COMMAND'
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO
+C
+        TYPE*,'==============================================='
+        CALL GSTOP(GEXIT_SUCCESS)
+        END

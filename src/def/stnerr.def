@@ -1,0 +1,163 @@
+C
+C STNERR.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]STNERR.DEV                                   $
+C  $Date::   17 Apr 1996 15:19:28                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C  B01  26-JUL-88  MRM  Initial Release
+C
+C     This DEF contains the parameter values utilized by the
+C     standard error message routine OS32ER.
+C
+C
+C     ERRTYP values.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*2       ERRREAD,            !FORTRAN Read
+     *	                ERRWRITE,           !FORTRAN Write
+     *	                ERROPEN,            !FORTRAN Open
+     *	                ERRCLOSE,           !FORTRAN Close
+     *	                ERRREADW,           !DISKIO read
+     *	                ERRREADIO,          !DISKIO read
+     *	                ERRREADL,           !DISKIO read
+     *	                ERRWRITEW,          !DISKIO write
+     *	                ERRWRITEIO,         !DISKIO write
+     *	                ERRWRITEQ,          !DISKIO write
+     *	                ERRWRITENW          !DISKIO write
+C
+	INTEGER*2       ERRRTAPEW,          !TAPEIO read
+     *	                ERRWTAPEW,          !TAPEIO write
+     *	                ERRWTAPEQ,          !TAPEIO write
+     *	                ERRWEOT,            !TAPEIO write
+     *	                ERRREWIND,          !TAPEIO command
+     *	                ERRBACK,            !TAPEIO command
+     *	                ERRFORWRD,          !TAPEIO command
+     *	                ERRBEOT,            !TAPEIO command
+     *	                ERRFEOT,            !TAPEIO command
+     *	                ERROPENX            !OPENW
+C
+	INTEGER*2       ERRCFILW,           !CFILW
+     *	                ERRDFILW,           !DFILW
+     *	                ERRRENAME           !RENAME
+C
+	INTEGER*2       ERRISREAD,          !Hash file routine
+     *	                ERRISWRIT,          !Hash file routine
+     *	                ERRIWRIBF,          !Hash file routine
+     *	                ERRIFLUSH,          !Hash file routine
+     *	                ERRREADHASH,        !Hash file routine
+     *	                ERRWRITHASH,        !Hash file routine
+     *	                ERRTUBWRITE,        !Hash file routine
+     *	                ERRIOPEN,           !Hash file routine
+     *	                ERRICLOSE,          !Hash file routine
+     *	                ERRICLOSB,          !Hash file routine
+     *	                ERROPENW,           !Hash file routine
+     *	                ERRUNKN             !Unknown type
+C
+C
+C     ERRTYP parameter values.
+C
+	PARAMETER      (ERRREAD     = 1)
+	PARAMETER      (ERRWRITE    = 2)
+	PARAMETER      (ERROPEN     = 3)
+	PARAMETER      (ERRCLOSE    = 4)
+	PARAMETER      (ERRREADW    = 5)
+	PARAMETER      (ERRREADIO   = 6)
+	PARAMETER      (ERRREADL    = 7)
+	PARAMETER      (ERRWRITEW   = 8)
+	PARAMETER      (ERRWRITEIO  = 9)
+	PARAMETER      (ERRWRITEQ   = 10)
+	PARAMETER      (ERRWRITENW  = 11)
+C
+	PARAMETER      (ERRRTAPEW   = 15)
+	PARAMETER      (ERRWTAPEW   = 16)
+	PARAMETER      (ERRWTAPEQ   = 17)
+	PARAMETER      (ERRWEOT     = 18)
+	PARAMETER      (ERRREWIND   = 19)
+	PARAMETER      (ERRBACK     = 20)
+	PARAMETER      (ERRFORWRD   = 21)
+	PARAMETER      (ERRBEOT     = 22)
+	PARAMETER      (ERRFEOT     = 23)
+	PARAMETER      (ERROPENX    = 24)
+C
+	PARAMETER      (ERRCFILW    = 25)
+	PARAMETER      (ERRDFILW    = 26)
+	PARAMETER      (ERRRENAME   = 27)
+C
+	PARAMETER      (ERRISREAD   = 28)
+	PARAMETER      (ERRISWRIT   = 29)
+	PARAMETER      (ERRIWRIBF   = 30)
+	PARAMETER      (ERRIFLUSH   = 31)
+	PARAMETER      (ERRREADHASH = 32)
+	PARAMETER      (ERRWRITHASH = 33)
+	PARAMETER      (ERRTUBWRITE = 34)
+	PARAMETER      (ERRIOPEN    = 35)
+	PARAMETER      (ERRICLOSE   = 36)
+	PARAMETER      (ERRICLOSB   = 37)
+	PARAMETER      (ERROPENW    = 38)
+	PARAMETER      (ERRUNKN     = 50)
+C
+	INTEGER*4	IICNT
+C
+C
+C     Display record number table.
+C
+	INTEGER*2       DISREC(50)  / 1,1,0,0,1,1,1,1,1,1,
+     *	                              1,0,0,0,1,1,1,0,0,0,
+     *	                              0,0,0,0,0,0,0,0,0,0,
+     *	                              0,0,0,0,0,0,0,0,0,0,
+     *	                              0,0,0,0,0,0,0,0,0,0/
+C
+	CHARACTER       TYPTBL(50)*10
+	DATA           (TYPTBL(IICNT),IICNT=1,30)
+C     *	                            /'READ      ','WRITE     ',
+C     *	                             'OPEN      ','CLOSE     ',
+     *	                            /'          ','          ',
+     *	                             '          ','          ',
+     *	                             'READW     ','READIO    ',
+     *	                             'READL     ','WRITEW    ',
+     *	                             'WRITEIO   ','WRITEQ    ',
+     *	                             'WRITENW   ','          ',
+     *	                             '          ','          ',
+     *	                             'RTAPEW    ','WTAPEW    ',
+     *	                             'WTAPEQ    ','WEOT      ',
+     *	                             'REWIND    ','BACK      ',
+     *	                             'FORWRD    ','BEOT      ',
+     *	                             'FEOT      ','OPENX     ',
+     *	                             'CFILX     ','DFILW     ',
+     *	                             'RENAME    ','ISREAD    ',
+     *	                             'ISWRIT    ','IWRIBF    '/
+C
+	DATA           (TYPTBL(IICNT),IICNT=31,50)
+     *	                            /'IFLUSH    ','READHASH  ',
+     *	                             'WRITHASH  ','TUBWRITE  ',
+     *	                             'IOPEN     ','ICLOSE    ',
+     *	                             'ICLOSB    ','OPENW     ',
+     *	                             '          ','          ',
+     *	                             '          ','          ',
+     *	                             '          ','          ',
+     *	                             '          ','          ',
+     *	                             '          ','          ',
+     *	                             '          ','UNKNOWN   '/
+C
+ 

@@ -1,0 +1,145 @@
+C V01 12-JUN-2001 ANG INITIAL RELEASE FOR PORTUGAL.
+C
+C PROGRAM TO RECONSTRUCT TMF FROM LOG TAPE(S).
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM LOGTMF
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+C
+	INTEGER*4 TFDB(7),DFDB(7),BUF(2048),HBUF(16,128)
+	INTEGER*4 BLOCK, TT, ANS, ST1
+	INTEGER*4 ST, NOCHECK0, TEMP
+	INTEGER*4 I4MTMNAM(5),CDC,SIZE
+C
+	INTEGER*2 DATE(LDATE_LEN),I2TEMP(2)
+C
+	EQUIVALENCE (TEMP,I2TEMP)
+	REAL*8 TAPTYP(3)
+	CHARACTER*20 TAPNAM
+	CHARACTER*20 MTMNAM/'                    '/ 
+	DATA TAPTYP/'  Logger','  Tmfdmp','  ??????'/
+	EQUIVALENCE(HBUF,BUF)
+	EQUIVALENCE(I4MTMNAM,MTMNAM)
+	COMMON/NOCHECK0/ NOCHECK0
+C
+	CALL COPYRITE
+C
+C
+C GET MTM NAME
+C
+	CALL INPNUM('Enter this MTMF cdc: ',CDC,1,9999,ST)
+	IF (ST.NE.0) CALL GSTOP(GEXIT_OPABORT)
+
+	WRITE(MTMNAM,10) CDC
+C
+C GET MTM SIZE
+C
+	CALL INPNUM('Enter this MTMF size: ',SIZE,100,9999999,ST)
+	IF (ST.NE.0) CALL GSTOP(GEXIT_OPABORT)
+C
+C CREATE MTM FILE
+C	
+	CALL CRTFIL(I4MTMNAM, SIZE, ST)
+	IF (ST.NE.0) THEN
+	    TYPE*,IAM(),'>>> ERROR CREATING FILE ',MTMNAM
+	    CALL GSTOP(GEXIT_FATAL)
+	ENDIF
+	NOCHECK0=-1
+C
+C OPEN TMF FILE FROM APPROPRIATE VOLUME
+C
+	CALL OPENW(1,I4MTMNAM,4,0,0,ST)
+	CALL IOINIT(DFDB,1,32*256)
+	IF(ST.NE.0) CALL FILERR(I4MTMNAM,1,ST,0)
+C
+C GET TAPE DRIVE NUMBER
+C AND INITIALIZE TAPE FDB
+C
+	CALL WIMG(5,'Enter tape drive name: ')
+	ACCEPT '(A)',TAPNAM
+	IF(TAPNAM.EQ.'E ')CALL GSTOP(GEXIT_SUCCESS)
+	CALL TAPOPEN(TFDB,TAPNAM,ST)
+	CALL TAPINT(TFDB,7,8192)
+	CALL XREWIND(TFDB,ST)
+C
+C START READING TAPE
+C
+30	CONTINUE
+	CALL RTAPEW(TFDB,BUF,ST)
+	IF(ST.NE.0) THEN
+	  CALL XREWIND(TFDB,ST1)
+	  WRITE(5,900) ST
+	  READ(5,901) ANS
+	  IF(ANS.EQ.'E') THEN
+	    CALL TAPCLOS(TFDB,ST)
+	    CALL USRCLOS1(     1)
+	    CALL GSTOP(GEXIT_SUCCESS)
+	  ENDIF
+	  CALL TAPINT(TFDB,7,8192)
+	  GOTO 30
+	ENDIF
+C
+C CHECK FOR HEADER RECORD
+C
+	IF(HBUF(2,1).EQ.-1) THEN
+	  TT=HBUF(3,1)+1
+	  IF(TT.LT.1.OR.TT.GT.2) TT=3
+	  TEMP=HBUF(1,2)
+	  DATE(VCDC)=TEMP
+	  CALL LCDATE(DATE)
+	  WRITE(5,903) TAPTYP(TT),DATE(VMON),DATE(VDAY),DATE(VYEAR2),
+     *	               DATE(VCDC)
+	  GOTO 30
+	ENDIF
+C
+C GET DISK BLOCK NUMBER
+C
+	BLOCK=BUF(2)
+C
+C
+	IF(BLOCK.LE.0) THEN
+	  WRITE(5,902) BLOCK
+	  CALL BELLS(2)
+	  GOTO 30
+	ENDIF
+C
+C WRITE RECORD TO DISK
+C
+	CALL WRITEW(DFDB,BLOCK,BUF,ST)
+	IF(ST.NE.0) THEN
+	  CALL FILERR(I4MTMNAM,3,ST,BLOCK)
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+C
+C READ NEXT TAPE RECORD
+C
+	GOTO 30
+C
+C
+10	FORMAT('MT',I4.4,'.FIL')
+900	FORMAT(' Tape read error ',Z8,/,
+     *	       ' Mount next tape and hit return ',/,
+     *	       ' Hit E if no more tapes')
+901	FORMAT(A1)
+902	FORMAT('   Bad block number from tape ',I8)
+903     FORMAT(1X,A8,' tape created ',I2.2,'/',I2.2,'/',I4.4,' cdc ',I4)
+	END

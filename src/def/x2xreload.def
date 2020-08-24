@@ -1,0 +1,175 @@
+C X2XRELOAD.DEF
+C
+C X2X Reload configuration file
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XRELOAD.DEV                                $
+C  $Date::   17 Apr 1996 16:44:56                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  V01 22-FEB-96 DAS INITIAL RELEASE
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XRELOAD_ENTRIES counter, the X2XRELOAD_FIELD, and
+C        the X2XRELOAD_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4   X2XRELOAD_REC(128)     !Record buffer
+        CHARACTER   X2XRELOAD_CREC*512     !Record buffer
+        EQUIVALENCE (X2XRELOAD_REC, X2XRELOAD_CREC)
+C
+        INTEGER*4   X2XRELOAD_SECT         !Number of sectors per rec
+        PARAMETER  (X2XRELOAD_SECT=2)
+        CHARACTER   X2XRELOAD_NAME*16      !Global Setup file name
+        DATA        X2XRELOAD_NAME /'X2XRELOAD.FIL'/
+	COMMON/X2XRELOAD_NAME/ X2XRELOAD_NAME
+        INTEGER*4   X2XRELOAD_FDB(7)       !File descriptor block
+        DATA        X2XRELOAD_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+        INTEGER*4   X2XRELOAD_MAX_TERMINALS_STARTED
+        INTEGER*4   X2XRELOAD_CURRENT_TERMINAL
+	INTEGER*4   X2XRELOAD_TARGET_VOLUME
+	INTEGER*4   X2XRELOAD_MAX_ACTIVE_STATION
+	INTEGER*4   X2XRELOAD_MAX_LOAD
+	INTEGER*4   X2XRELOAD_TERM_DELAY
+	INTEGER*4   X2XRELOAD_TIME_INTERVAL	
+	INTEGER*4   X2XRELOAD_MESSAGE_NO
+	INTEGER*4   X2XRELOAD_LENGTH
+	CHARACTER*160 X2XRELOAD_HEX_TAB
+C
+        INTEGER*4   X2XRELOAD_UPDATE
+        INTEGER*4   X2XRELOAD_FREE(74)
+
+        INTEGER*4   X2XRELOAD_BITMAP
+        INTEGER*4   X2XRELOAD_BITMAP2
+        INTEGER*4   X2XRELOAD_BITMAP3
+        INTEGER*4   X2XRELOAD_BITMAP4
+
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+        EQUIVALENCE (X2XRELOAD_REC(1),  X2XRELOAD_MAX_TERMINALS_STARTED)
+        EQUIVALENCE (X2XRELOAD_REC(2),  X2XRELOAD_CURRENT_TERMINAL)
+        EQUIVALENCE (X2XRELOAD_REC(3),  X2XRELOAD_TARGET_VOLUME)
+        EQUIVALENCE (X2XRELOAD_REC(4),  X2XRELOAD_MAX_ACTIVE_STATION)
+        EQUIVALENCE (X2XRELOAD_REC(5),  X2XRELOAD_MAX_LOAD)
+        EQUIVALENCE (X2XRELOAD_REC(6),  X2XRELOAD_TERM_DELAY)
+        EQUIVALENCE (X2XRELOAD_REC(7),  X2XRELOAD_TIME_INTERVAL)
+        EQUIVALENCE (X2XRELOAD_REC(8),  X2XRELOAD_MESSAGE_NO)
+	EQUIVALENCE (X2XRELOAD_REC(9),  X2XRELOAD_LENGTH)
+        EQUIVALENCE (X2XRELOAD_REC(10),  X2XRELOAD_HEX_TAB)
+C
+        EQUIVALENCE (X2XRELOAD_REC(50),  X2XRELOAD_UPDATE)
+        EQUIVALENCE (X2XRELOAD_REC(51),  X2XRELOAD_FREE)
+
+        EQUIVALENCE (X2XRELOAD_REC(125),X2XRELOAD_BITMAP)
+        EQUIVALENCE (X2XRELOAD_REC(126),X2XRELOAD_BITMAP2)
+        EQUIVALENCE (X2XRELOAD_REC(127),X2XRELOAD_BITMAP3)
+        EQUIVALENCE (X2XRELOAD_REC(128),X2XRELOAD_BITMAP4)
+
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XRELOAD_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+        INTEGER*4 X2XRELOAD_ENTRIES
+        PARAMETER (X2XRELOAD_ENTRIES=11)
+C
+        CHARACTER X2XRELOAD_FIELD(X2XRELOAD_ENTRIES)*30
+        DATA      X2XRELOAD_FIELD
+     *      /'Max. Terminals started per min',
+     *	     'Starting terminal',
+     *       'Target no. of transactions/min',
+     *       'Max. no. of active stations',
+     *       'Max. no. of active terminals',
+     *       'Terminal delay (msec)',
+     *       'Reload time interval (sec)',
+     *	     'Message No.',
+     *       'Message Length',
+     *       'Message',
+     *       'Last Updated    '/
+C
+C NOTE: A -1 IN THE BOT RANGE DESIGNATES A CHARACTER
+C       VARIABLE AND THE TOP RANGE INDICATES THE LENGTH,
+C       A -2 IN THE BOTTOM RANGE DESIGNATES BCD INPUT.
+C       A -3 IN THE BOTTOM RANGE DESIGNATES NON-EDITABLE FIELD.
+
+        INTEGER*4 X2XRELOAD_RANGE(2,X2XRELOAD_ENTRIES)
+        DATA      X2XRELOAD_RANGE
+     *	    /1,X2X_TERMS,0,X2X_TERMS,
+     *       1,100000,0,X2X_STATIONS,1,3500,0,60000,10,600,0,500,
+     *	     0,80,-2,160,0,0/
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+        INTEGER*4 X2XRELOAD_INDEX(X2XRELOAD_ENTRIES)
+        DATA      X2XRELOAD_INDEX
+     *      /1,	  2,   3,   4,
+     *       5,   6,   7,   8,
+     *       9,   10,  11/
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+        INTEGER*4 X2XRELOAD_VALUE(15,X2XRELOAD_ENTRIES)
+        DATA      X2XRELOAD_VALUE
+     *      /15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1/
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C THOSE ARE VARIABLES LOCAL TO X2RELOAD PROGRAM. THEY ARE NOT PLACED IN A 
+C SHAREABLE COMMON
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+        INTEGER*4 EVFALARM /-1/         !EVENT FLAG FOR ALARM
+        INTEGER*4 EVFSNDTRM  /-1/         !EVENT FLAG FOR SENDING TO ONE TERMINAL
+	LOGICAL PROC_STARTED /.FALSE./  !FLAG DENOTING IF PROCESS STARTED
+	INTEGER*4 MESSAGE_NO		!MESSAGE NUMBER TO SEND
+	INTEGER*4 MESSAGE_LEN		!MESSAGE LENGTH
+	INTEGER*4 DATA_BUFFER_LEN
+	PARAMETER(DATA_BUFFER_LEN=20)
+	INTEGER*4 DATA_BUFFER(DATA_BUFFER_LEN) /DATA_BUFFER_LEN*0/!MESSAGE SENT IF MESNUM 0
+	BYTE      B_DATA_BUFFER(4*DATA_BUFFER_LEN)
+	EQUIVALENCE(B_DATA_BUFFER,DATA_BUFFER)
+	INTEGER*4 RETRY_CNT		!RUN NO.
+	INTEGER*4 TO_RETRY		!NUMBER OF TIMES TO RETRY
+	LOGICAL IN_CONFIG_MENU /.FALSE./!IN CONFIGURATION MENU
+C	
+C COMMON THE RECORD BUFFER.
+C
+       VOLATILE /X2XRELOAD_COMMON/
+        COMMON /X2XRELOAD_COMMON/ X2XRELOAD_REC,   X2XRELOAD_FDB,
+     *                         X2XRELOAD_RANGE, X2XRELOAD_INDEX,
+     *                         X2XRELOAD_VALUE, 
+     *			       EVFALARM,EVFSNDTRM,PROC_STARTED,MESSAGE_NO,
+     *			       MESSAGE_LEN, IN_CONFIG_MENU,
+     *			       DATA_BUFFER, RETRY_CNT, TO_RETRY,
+     *                         X2XRELOAD_FIELD
+

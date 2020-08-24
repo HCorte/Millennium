@@ -1,0 +1,161 @@
+C
+C X2XNPC.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XNPC.DEV                                   $
+C  $Date::   17 Apr 1996 16:43:30                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V03 15-JUN-00 UXN COMMON/X2XNPC_NAME/ X2XNPC_NAME added.
+C V02 05-DEC-94 SCD Integrate UK changes into X2X Baseline
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C The DEF describes the variables which are contained in the
+C X2X Network Port configuration file.
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XNPC_ENTRIES counter, the X2XNPC_FIELD, and
+C        the X2XNPC_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   X2XNPC_REC(128)     !Record buffer
+	CHARACTER   X2XNPC_CREC*512     !Record buffer
+	EQUIVALENCE (X2XNPC_REC, X2XNPC_CREC)
+C
+	INTEGER*4   X2XNPC_SECT         !Number of sectors per rec
+	PARAMETER  (X2XNPC_SECT=2)
+	CHARACTER   X2XNPC_NAME*10      !Global Setup file name
+	DATA        X2XNPC_NAME /'X2XNPC.FIL'/
+	COMMON/X2XNPC_NAME/ X2XNPC_NAME
+	INTEGER*4   X2XNPC_FDB(7)       !File descriptor block
+	DATA        X2XNPC_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XNPC_PORT
+	INTEGER*4   X2XNPC_FAST
+	INTEGER*4   X2XNPC_DDIS
+	INTEGER*4   X2XNPC_RETCNT
+	INTEGER*4   X2XNPC_RETTIM
+	INTEGER*4   X2XNPC_ADDLEN
+	INTEGER*4   X2XNPC_ADDRES(2)
+	INTEGER*4   X2XNPC_ASSIGN
+	INTEGER*4   X2XNPC_CAPACITY
+	INTEGER*4   X2XNPC_STATE
+	INTEGER*4   X2XNPC_HUNTADR(2)
+	INTEGER*4   X2XNPC_REVCHRG
+	INTEGER*4   X2XNPC_TYPE
+	INTEGER*4   X2XNPC_NUMPVC
+	INTEGER*4   X2XNPC_UPDATE
+	INTEGER*4   X2XNPC_FREE(107)
+	INTEGER*4   X2XNPC_BITMAP
+	INTEGER*4   X2XNPC_BITMAP2
+	INTEGER*4   X2XNPC_BITMAP3
+	INTEGER*4   X2XNPC_BITMAP4
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+	EQUIVALENCE (X2XNPC_REC(1),  X2XNPC_PORT)
+	EQUIVALENCE (X2XNPC_REC(2),  X2XNPC_FAST)
+	EQUIVALENCE (X2XNPC_REC(3),  X2XNPC_DDIS)
+	EQUIVALENCE (X2XNPC_REC(4),  X2XNPC_RETCNT)
+	EQUIVALENCE (X2XNPC_REC(5),  X2XNPC_RETTIM)
+	EQUIVALENCE (X2XNPC_REC(6),  X2XNPC_ADDLEN)
+	EQUIVALENCE (X2XNPC_REC(7),  X2XNPC_ADDRES)
+	EQUIVALENCE (X2XNPC_REC(9),  X2XNPC_ASSIGN)
+	EQUIVALENCE (X2XNPC_REC(10), X2XNPC_CAPACITY)
+	EQUIVALENCE (X2XNPC_REC(11), X2XNPC_STATE)
+	EQUIVALENCE (X2XNPC_REC(12), X2XNPC_HUNTADR)
+	EQUIVALENCE (X2XNPC_REC(14), X2XNPC_REVCHRG)
+	EQUIVALENCE (X2XNPC_REC(15), X2XNPC_TYPE)
+	EQUIVALENCE (X2XNPC_REC(16), X2XNPC_NUMPVC)
+	EQUIVALENCE (X2XNPC_REC(17), X2XNPC_UPDATE)
+	EQUIVALENCE (X2XNPC_REC(18), X2XNPC_FREE)
+	EQUIVALENCE (X2XNPC_REC(125),X2XNPC_BITMAP)
+	EQUIVALENCE (X2XNPC_REC(126),X2XNPC_BITMAP2)
+	EQUIVALENCE (X2XNPC_REC(127),X2XNPC_BITMAP3)
+	EQUIVALENCE (X2XNPC_REC(128),X2XNPC_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XNPC_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XNPC_ENTRIES
+	PARAMETER (X2XNPC_ENTRIES=15)
+C
+	CHARACTER X2XNPC_FIELD(X2XNPC_ENTRIES)*15
+	DATA      X2XNPC_FIELD
+     *	    /'Network port   ','Fast Select    ','Def Disconnect ',
+     *	     'Retry Count    ','Retry Interval ','Address Length ',
+     *	     'Address        ','Incall enable  ','Port capacity  ',
+     *	     'Port state     ','Hunt address   ','Reverse charge ',
+     *	     'Port type      ','PVC Count      ','Last Updated   '/
+C
+C STORE THE VALID INPUT RANGE FOR EACH VARIABLE.
+C NOTE: A -1 IN THE FIRST RANGE DESIGNATES A CHARACTER
+C       VARIABLE, -2 INPUT REAL.
+C
+	INTEGER*4 X2XNPC_RANGE(2,X2XNPC_ENTRIES)
+	DATA      X2XNPC_RANGE
+     *	    /1,X2X_NETWORK_PORTS,   0,1,     0,15,
+     *	     0,20,    0,65535, 1,16,
+CV02 *	    -2,16,    0,1,     0,100,
+     *	    -2,16,    0,1,     0,256,					!V02
+     *	     0,3,    -2,16,    0,1,
+     *	     1,X2XPT_MAX_TYPE, 0,X2X_MAXPVC_CKTS,
+     *       0,0/
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XNPC_INDEX(X2XNPC_ENTRIES)
+	DATA      X2XNPC_INDEX
+     *	    /1,   2,   3,
+     *	     4,   5,   6,
+     *	     7,   9,  10,
+     *	    11,  12,  14,
+     *	    15,  16,  17/
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+	INTEGER*4 X2XNPC_VALUE(15,X2XNPC_ENTRIES)
+	DATA      X2XNPC_VALUE
+     *	    /15*-1, 15*-1, 0,7,8,9,10,11,12,13,14,15,5*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1/
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XNPC_COMMON/
+	COMMON /X2XNPC_COMMON/ X2XNPC_REC,   X2XNPC_FDB,
+     *	                       X2XNPC_RANGE, X2XNPC_INDEX,
+     *	                       X2XNPC_VALUE, X2XNPC_FIELD
+C
+C

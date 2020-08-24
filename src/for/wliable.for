@@ -1,0 +1,1623 @@
+C
+C SUBROUTINE WLIABLE
+C
+C WLIABLE.FOR
+C
+C V27 17-MAY-1997 UXN Super Triple added.
+C V26 25-MAR-1997 RXK Fix for 1st week of year 
+C V25 05-SEP-1996 RXK Rfss 286. Old draws which do not have outstanding 
+C                     money are not displayed  
+C V24 16-APR-1996 WXW Fix for RFSS 270 to print postponed, non-purged draws 
+C                     inbtween other, already purged draws.
+C V23 06-FEB-1996 RXK Rfss 246. All Winners Tip type games in same report
+C V22 18-AUG-1995 RXK Liabilities for purge period + 14 days
+C V21 08-AUG-1995 HXK Fixes for year + 2 weeks for Oddset liabilities (RXK)
+C V20 21-MAR-1995 HXK Fix for more than one year's worth of data
+C V19 30-JAN-1995 HXK Fix for incorrect year appearing on report
+C V18 13-JAN-1995 HXK Fix so that report will work the year round
+C V17 09-JAN-1995 HXK Fix for year round use
+C V16 12-DEC-1994 PXB Now passes correct values to balans file. 
+C V15 02-SEP-1994 HXK Merge of May,June RFSS batch 
+C V14 05-JUN-1994 HXK fixed draw won total
+C V13 25-MAY-1994 HXK FIXED ERROR IN REPORT NAMING.
+C V12 24-MAY-1994 JXP REWORKED FOR RFSS BATCH
+C V11 18-JAN-1994 HXK PUT IN REFUNDS.
+C V10 25-NOV-1993 SXH MORE BUG FIXES, INIT WONTOT ETC TO ZERO, 
+C                     UNCOMMENT BALWRI CALL
+C V09 21-NOV-1993 SXH FIX OVERFLOW
+C V08 05-NOV-1993 GXA Corrected Total won and Previously paid 
+C                     (Substract refunds).
+C V07 04-NOV-1993 HXK CHANGE FOR GRAND TOTALS -HXN.
+C V06 03-NOV-1993 HXK CHANGES FOR PITKA
+C V05 24-AUG-1993 SXH Fix for BALWRI CALL
+C V04 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V03 16-Nov-1993 HHN Stored total amounts in 2*I4 instead of I4
+C V02 12-NOV-1991 MTK INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C
+C SUBROUTINE TO GENERATE LIABILITY REPORTS FOR ALL
+C AVAILABLE WIT
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXTEND
+        SUBROUTINE WLIABLE(WLIB,WPAY,DLIB,DPAY,CLIB,CPAY,
+     *                     TRLIB,TRPAY,STLIB,STPAY)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:DWIREC.DEF'
+        INCLUDE 'INCLIB:DDBREC.DEF'
+        INCLUDE 'INCLIB:DCPREC.DEF'
+        INCLUDE 'INCLIB:DTRREC.DEF'
+        INCLUDE 'INCLIB:DSTREC.DEF'
+        INCLUDE 'INCLIB:GTNAMES.DEF'
+        INCLUDE 'INCLIB:DATBUF.DEF'
+C
+        INTEGER*4 MDRAW,RDRAW,RWEK,GDRAW,WEEK,DOW,YEAR,WRK_YEAR,CUR_YEAR
+        INTEGER*4 RYEAR
+        PARAMETER(MDRAW=400)
+        PARAMETER(RDRAW=365)
+        PARAMETER(RWEK=53)
+        PARAMETER(GDRAW=14) !want to bea ble to store more than 1 winsel perday
+        PARAMETER(RYEAR=3)
+
+C INPUT PARAMETERS
+C ----------------
+        INTEGER*4 WLIB(MDRAW,2,NUMWIT)
+        INTEGER*4 WPAY(MDRAW,2,NUMWIT)
+        INTEGER*4 DLIB(MDRAW,2,NUMDBL)
+        INTEGER*4 DPAY(MDRAW,2,NUMDBL)
+        INTEGER*4 CLIB(MDRAW,2,NUMCPL)
+        INTEGER*4 CPAY(MDRAW,2,NUMCPL)
+        INTEGER*4 TRLIB(MDRAW,2,NUMTRP)
+        INTEGER*4 TRPAY(MDRAW,2,NUMTRP)
+        INTEGER*4 STLIB(MDRAW,2,NUMSTR)
+        INTEGER*4 STPAY(MDRAW,2,NUMSTR)
+C
+C Week totals
+C ------------
+        INTEGER*4 WKWON(2) /2*0/, 
+     *            WKPAD(2) /2*0/, 
+     *            WKDAY(2) /2*0/, 
+     *            WKPRG(2) /2*0/, 
+     *            WKLIB(2) /2*0/
+
+        INTEGER*4 WKWONREF(2) /2*0/, 
+     *            WKPADREF(2) /2*0/, 
+     *            WKDAYREF(2) /2*0/, 
+     *            WKPRGREF(2) /2*0/, 
+     *            WKLIBREF(2) /2*0/
+
+        INTEGER*4 WKWONTOT(2) /2*0/, 
+     *            WKPADTOT(2) /2*0/, 
+     *            WKDAYTOT(2) /2*0/, 
+     *            WKPRGTOT(2) /2*0/, 
+     *            WKLIBTOT(2) /2*0/
+C
+C Grand totals
+C -------------
+        INTEGER*4 GRNWON(2) /2*0/, 
+     *            GRNPAD(2) /2*0/, 
+     *            GRNDAY(2) /2*0/, 
+     *            GRNPRG(2) /2*0/, 
+     *            GRNLIB(2) /2*0/
+
+        INTEGER*4 GRNWONREF(2) /2*0/,
+     *            GRNPADREF(2) /2*0/, 
+     *            GRNDAYREF(2) /2*0/, 
+     *            GRNPRGREF(2) /2*0/, 
+     *            GRNLIBREF(2) /2*0/ 
+
+        INTEGER*4 GRNWONTOT(2) /2*0/,
+     *            GRNPADTOT(2) /2*0/, 
+     *            GRNDAYTOT(2) /2*0/, 
+     *            GRNPRGTOT(2) /2*0/, 
+     *            GRNLIBTOT(2) /2*0/ 
+C
+C Winner Tip
+C -----------
+        INTEGER*4 DRAWNO(RWEK,NUMWIT,GDRAW,RYEAR) 
+
+        INTEGER*4 TOTWON(RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            TOTPAD(RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            TOTDAY(RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            TOTPRG(RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            TOTLIB(RWEK,NUMWIT,GDRAW,RYEAR) 
+
+        INTEGER*4 TOTWONREF(RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            TOTPADREF(RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            TOTDAYREF(RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            TOTPRGREF(RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            TOTLIBREF(RWEK,NUMWIT,GDRAW,RYEAR) 
+
+        INTEGER*4 WONTOT (2,RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            PADTOT (2,RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            DAYTOT (2,RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            PRGTOT (2,RWEK,NUMWIT,GDRAW,RYEAR) , 
+     *            LIBTOT (2,RWEK,NUMWIT,GDRAW,RYEAR) 
+
+        INTEGER*4 TWONTOT(2) /2*0/,        !TOTAL IS IN 2*I4
+     *            TPADTOT(2) /2*0/, 
+     *            TDAYTOT(2) /2*0/, 
+     *            TPRGTOT(2) /2*0/, 
+     *            TLIBTOT(2) /2*0/
+
+        REAL*8    R_GRNDAY(NUMWIT)
+        INTEGER*4 GNUM(NUMWIT)
+        INTEGER*4 DWIFDB(7)
+        INTEGER*4 TDWIFDB(NUMWIT,7)
+        LOGICAL*1 HAVE_DATA(RWEK)
+C
+C ------Super Double------
+C
+        INTEGER*4 DDRAWNO(RWEK,NUMDBL,GDRAW,RYEAR) 
+
+        INTEGER*4 DTOTWON(RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DTOTPAD(RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DTOTDAY(RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DTOTPRG(RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DTOTLIB(RWEK,NUMDBL,GDRAW,RYEAR) 
+
+        INTEGER*4 DTOTWONREF(RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DTOTPADREF(RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DTOTDAYREF(RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DTOTPRGREF(RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DTOTLIBREF(RWEK,NUMDBL,GDRAW,RYEAR) 
+
+        INTEGER*4 DWONTOT (2,RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DPADTOT (2,RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DDAYTOT (2,RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DPRGTOT (2,RWEK,NUMDBL,GDRAW,RYEAR) , 
+     *            DLIBTOT (2,RWEK,NUMDBL,GDRAW,RYEAR) 
+
+        INTEGER*4 DTWONTOT(2) /2*0/,        !TOTAL IS IN 2*I4
+     *            DTPADTOT(2) /2*0/, 
+     *            DTDAYTOT(2) /2*0/, 
+     *            DTPRGTOT(2) /2*0/, 
+     *            DTLIBTOT(2) /2*0/
+
+        REAL*8    DR_GRNDAY(NUMDBL)
+        INTEGER*4 DGNUM(NUMDBL)
+        INTEGER*4 DBLFDB(7)
+        INTEGER*4 TDBLFDB(NUMDBL,7)
+        LOGICAL*1 DHAVE_DATA(RWEK)
+C
+C-------Today's Couple-------
+C
+        INTEGER*4 CDRAWNO(RWEK,NUMCPL,GDRAW,RYEAR) 
+
+        INTEGER*4 CTOTWON(RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CTOTPAD(RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CTOTDAY(RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CTOTPRG(RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CTOTLIB(RWEK,NUMCPL,GDRAW,RYEAR) 
+
+        INTEGER*4 CTOTWONREF(RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CTOTPADREF(RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CTOTDAYREF(RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CTOTPRGREF(RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CTOTLIBREF(RWEK,NUMCPL,GDRAW,RYEAR) 
+
+        INTEGER*4 CWONTOT (2,RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CPADTOT (2,RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CDAYTOT (2,RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CPRGTOT (2,RWEK,NUMCPL,GDRAW,RYEAR) , 
+     *            CLIBTOT (2,RWEK,NUMCPL,GDRAW,RYEAR) 
+
+        INTEGER*4 CTWONTOT(2) /2*0/,        !TOTAL IS IN 2*I4
+     *            CTPADTOT(2) /2*0/, 
+     *            CTDAYTOT(2) /2*0/, 
+     *            CTPRGTOT(2) /2*0/, 
+     *            CTLIBTOT(2) /2*0/
+
+        REAL*8    CR_GRNDAY(NUMCPL)
+        INTEGER*4 CGNUM(NUMCPL)
+        INTEGER*4 CPLFDB(7)
+        INTEGER*4 TCPLFDB(NUMCPL,7)
+        LOGICAL*1 CHAVE_DATA(RWEK)
+C
+C
+C-------Today's Trio-------
+C
+        INTEGER*4 TRDRAWNO(RWEK,NUMTRP,GDRAW,RYEAR) 
+
+        INTEGER*4 TRTOTWON(RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRTOTPAD(RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRTOTDAY(RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRTOTPRG(RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRTOTLIB(RWEK,NUMTRP,GDRAW,RYEAR) 
+
+        INTEGER*4 TRTOTWONREF(RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRTOTPADREF(RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRTOTDAYREF(RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRTOTPRGREF(RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRTOTLIBREF(RWEK,NUMTRP,GDRAW,RYEAR) 
+
+        INTEGER*4 TRWONTOT (2,RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRPADTOT (2,RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRDAYTOT (2,RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRPRGTOT (2,RWEK,NUMTRP,GDRAW,RYEAR) , 
+     *            TRLIBTOT (2,RWEK,NUMTRP,GDRAW,RYEAR) 
+
+        INTEGER*4 TRTWONTOT(2) /2*0/,        !TOTAL IS IN 2*I4
+     *            TRTPADTOT(2) /2*0/, 
+     *            TRTDAYTOT(2) /2*0/, 
+     *            TRTPRGTOT(2) /2*0/, 
+     *            TRTLIBTOT(2) /2*0/
+
+        REAL*8    TR_GRNDAY(NUMTRP)
+        INTEGER*4 TRGNUM(NUMTRP)
+        INTEGER*4 TTRPFDB(7,NUMTRP)
+        LOGICAL*1 TRHAVE_DATA(RWEK)
+C
+C-------Super Triple-------
+C
+        INTEGER*4 STDRAWNO(RWEK,NUMSTR,GDRAW,RYEAR) 
+
+        INTEGER*4 STTOTWON(RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STTOTPAD(RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STTOTDAY(RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STTOTPRG(RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STTOTLIB(RWEK,NUMSTR,GDRAW,RYEAR) 
+
+        INTEGER*4 STTOTWONREF(RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STTOTPADREF(RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STTOTDAYREF(RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STTOTPRGREF(RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STTOTLIBREF(RWEK,NUMSTR,GDRAW,RYEAR) 
+
+        INTEGER*4 STWONTOT (2,RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STPADTOT (2,RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STDAYTOT (2,RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STPRGTOT (2,RWEK,NUMSTR,GDRAW,RYEAR) , 
+     *            STLIBTOT (2,RWEK,NUMSTR,GDRAW,RYEAR) 
+
+        INTEGER*4 STTWONTOT(2) /2*0/,        !TOTAL IS IN 2*I4
+     *            STTPADTOT(2) /2*0/, 
+     *            STTDAYTOT(2) /2*0/, 
+     *            STTPRGTOT(2) /2*0/, 
+     *            STTLIBTOT(2) /2*0/
+
+        REAL*8    ST_GRNDAY(NUMSTR)
+        INTEGER*4 STGNUM(NUMSTR)
+        INTEGER*4 TSTRFDB(7,NUMTRP)
+        LOGICAL*1 STHAVE_DATA(RWEK)
+C
+C -----
+C
+        INTEGER*4 DRAW, DRWIND, LINCNT, PAGE, ST, K
+        INTEGER*4 GIND, COPY, GTYP
+        INTEGER*4 REPLU/4/
+        INTEGER*4 X
+        INTEGER*4 RAPCODE
+        INTEGER*4 GAMESUMS(MAXGAM,NUMFIN,NUMTOT)
+        INTEGER*4 TOTSUMS(NO_BALSUMS)
+        INTEGER*4 WRK_GIND
+        INTEGER*4 MONTH
+	INTEGER*4 YEAR2
+        REAL*8    TOTREAL
+        INTEGER*2 DATE(LDATE_LEN) /LDATE_LEN*0/
+
+        CHARACTER REPHDR*40
+        CHARACTER REPNAM*12
+C
+C ----- 
+C
+        DATE(5) = DAYCDC
+        CALL LCDATE(DATE)
+        CUR_YEAR=DATE(VYEAR2)
+C
+C CLEAR TOTALS
+C -------------
+        PAGE=0
+        LINCNT=70
+        CALL FASTSET (0,GRNWON,2)
+        CALL FASTSET (0,GRNDAY,2)
+        CALL FASTSET (0,GRNLIB,2)
+        CALL FASTSET (0,GRNPRG,2)
+        CALL FASTSET (0,GRNPAD,2)
+
+        CALL FASTSET (0,GRNWONREF,2)
+        CALL FASTSET (0,GRNDAYREF,2)
+        CALL FASTSET (0,GRNLIBREF,2)
+        CALL FASTSET (0,GRNPRGREF,2)
+        CALL FASTSET (0,GRNPADREF,2)
+
+        CALL FASTSET (0,GRNWONTOT,2)
+        CALL FASTSET (0,GRNDAYTOT,2)
+        CALL FASTSET (0,GRNLIBTOT,2)
+        CALL FASTSET (0,GRNPRGTOT,2)
+        CALL FASTSET (0,GRNPADTOT,2)
+
+C
+C ------Winner Tip-----
+C
+        DO WRK_GIND = 1,NUMWIT
+          R_GRNDAY(WRK_GIND) = 0.0D0
+        END DO
+
+        DO GIND=1,NUMWIT
+           GNUM(GIND)=GTNTAB(TWIT,GIND)
+           IF(GNUM(GIND).LT.1) GOTO 100
+           GTYP=GNTTAB(GAMTYP,GNUM(GIND))
+           CALL OPENW(GIND+5,GFNAMES(1,GNUM(GIND)),4,0,0,ST)
+           DO X=1,7
+              DWIFDB(X)=0
+           END DO
+           CALL IOINIT(DWIFDB,GIND+5,DWISEC*256)
+           DO X=1,7
+             TDWIFDB(GIND,X)=DWIFDB(X)
+           END DO
+           IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM(GIND)),1,ST,0)
+100     CONTINUE
+        END DO
+C
+        WRITE(5,8000) IAM(),GTNAMES(GTYP)
+
+        COPY=0
+        WRITE (REPHDR,8001) GTNAMES(GTYP),(DATE(K),K=7,13)
+        WRITE (REPNAM,8002) 
+        CALL ROPEN(REPNAM,REPLU,ST)
+        IF(ST.NE.0) THEN
+           TYPE*,REPNAM,' report file open error > ',ST
+           CALL GPAUSE
+        ENDIF
+C
+        DO GIND=1,NUMWIT
+           IF(GNUM(GIND).LT.1) GOTO 310
+
+           DO DRWIND=1,RDRAW
+              DRAW=DAYHDR(GNUM(GIND))-DRWIND+1
+              IF(DRAW.LT.1) GOTO 310
+              DO X=1,7
+                 DWIFDB(X)=TDWIFDB(GIND,X)
+              END DO
+              CALL READW(DWIFDB,DRAW,DWIREC,ST)
+              DO X=1,7
+                 TDWIFDB(GIND,X)=DWIFDB(X)
+              END DO
+              IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM(GIND)),1,ST,DOW)
+              IF(DWIUPD.GT.DAYCDC) GOTO 300
+              IF(DWISTS.LT.GAMDON) GOTO 300
+              IF(DWIPUP.NE.0 .AND. (DWIPUP+14).LT.DAYCDC) GOTO 300
+              IF(DWIDAT.NE.0 .AND. (DWIDAT+380).LT.DAYCDC .AND.
+     *           DWIWON .EQ. DWIPAD ) GOTO 300
+
+              DATE(VCDC)=DWIDAT
+              CALL LCDATE(DATE)
+              IF(DWIDAT.LE.3100) THEN
+                 CALL FIGWEK(DWIDAT,WEEK,YEAR2)
+              ELSE
+                 CALL FIGWEK(DWIDAT-WEEK_OFFSET,WEEK,YEAR2)
+              ENDIF
+              DOW=DATE(VDOW)
+              MONTH=DATE(VMON)
+              YEAR=CUR_YEAR-YEAR2+1
+
+              YEAR = MAX(YEAR,1)
+              IF(DRAWNO(WEEK,GIND,DOW,YEAR).NE.0) DOW = DOW+7
+              DRAWNO(WEEK,GIND,DOW,YEAR)=DRAW
+
+              TOTWON(WEEK,GIND,DOW,YEAR)=0
+              TOTPAD(WEEK,GIND,DOW,YEAR)=0
+              TOTLIB(WEEK,GIND,DOW,YEAR)=0
+              TOTPRG(WEEK,GIND,DOW,YEAR)=0
+              TOTDAY(WEEK,GIND,DOW,YEAR)=0
+
+              TWONTOT(1)=0
+              TWONTOT(2)=0
+              TLIBTOT(1)=0
+              TLIBTOT(2)=0
+              TDAYTOT(1)=0
+              TDAYTOT(2)=0
+              TPADTOT(1)=0
+              TPADTOT(2)=0
+              TPRGTOT(1)=0
+              TPRGTOT(2)=0
+
+              TOTWON(WEEK,GIND,DOW,YEAR)    = DWIWON - DWIREF
+              TOTWONREF(WEEK,GIND,DOW,YEAR) = DWIREF  !TOTAL REFUND AMOUNT
+              CALL ADDI8I4 (TWONTOT,DWIWON,VALUNIT)
+
+              TOTLIB(WEEK,GIND,DOW,YEAR)    = WLIB(DRWIND,1,GIND) !OUTSTANDING
+              TOTLIBREF(WEEK,GIND,DOW,YEAR) = WLIB(DRWIND,2,GIND) !OUTSTDG REFUNDS
+              CALL ADDI8I4 (TLIBTOT,TOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (TLIBTOT,TOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              TOTPAD(WEEK,GIND,DOW,YEAR) = DWIPAD-DWIPRF  !PREVIOUSLY PAID
+              TOTPADREF(WEEK,GIND,DOW,YEAR) = DWIPRF  !PREVIOUSLY PAID REFUNDS
+
+              TOTDAY(WEEK,GIND,DOW,YEAR) = WPAY(DRWIND,1,GIND)  !PAID TODAY
+              TOTDAYREF(WEEK,GIND,DOW,YEAR) = WPAY(DRWIND,2,GIND) !PD TOD REFDS
+              CALL ADDI8I4 (TDAYTOT,TOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (TDAYTOT,TOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              IF(DAYCDC.EQ.DWIUPD) THEN
+              TOTPAD(WEEK,GIND,DOW,YEAR)=TOTPAD(WEEK,GIND,DOW,YEAR)-
+     *                                   TOTDAY(WEEK,GIND,DOW,YEAR)
+              TOTPADREF(WEEK,GIND,DOW,YEAR)=TOTPADREF(WEEK,GIND,DOW,YEAR)-
+     *                                      TOTDAYREF(WEEK,GIND,DOW,YEAR)
+              ENDIF
+              CALL ADDI8I4 (TPADTOT,TOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (TPADTOT,TOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              TOTPRG(WEEK,GIND,DOW,YEAR)  = TOTWON(WEEK,GIND,DOW,YEAR) -
+     *                          TOTLIB(WEEK,GIND,DOW,YEAR)-
+     *                          TOTPAD(WEEK,GIND,DOW,YEAR)-
+     *                          TOTDAY(WEEK,GIND,DOW,YEAR)
+              TOTPRGREF(WEEK,GIND,DOW,YEAR) = TOTWONREF(WEEK,GIND,DOW,YEAR) -
+     *                          TOTLIBREF(WEEK,GIND,DOW,YEAR) -
+     *                          TOTPADREF(WEEK,GIND,DOW,YEAR) -
+     *                          TOTDAYREF(WEEK,GIND,DOW,YEAR)
+              CALL ADDI8I4 (TPRGTOT,TOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (TPRGTOT,TOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              WONTOT(1,WEEK,GIND,DOW,YEAR)=TWONTOT(1)
+              WONTOT(2,WEEK,GIND,DOW,YEAR)=TWONTOT(2)
+
+              PADTOT(1,WEEK,GIND,DOW,YEAR)=TPADTOT(1)
+              PADTOT(2,WEEK,GIND,DOW,YEAR)=TPADTOT(2)
+
+              DAYTOT(1,WEEK,GIND,DOW,YEAR)=TDAYTOT(1)
+              DAYTOT(2,WEEK,GIND,DOW,YEAR)=TDAYTOT(2)
+
+              PRGTOT(1,WEEK,GIND,DOW,YEAR)=TPRGTOT(1)
+              PRGTOT(2,WEEK,GIND,DOW,YEAR)=TPRGTOT(2)
+
+              LIBTOT(1,WEEK,GIND,DOW,YEAR)=TLIBTOT(1)
+              LIBTOT(2,WEEK,GIND,DOW,YEAR)=TLIBTOT(2)
+C
+C CALCULATE GRAND TOTALS (add Winner Tip)
+C ---------------------------------------
+              CALL ADDI8I4 (GRNWON,TOTWON(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPAD,TOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNDAY,TOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPRG,TOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNLIB,TOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              CALL ADDI8I4 (GRNWONREF,TOTWONREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPADREF,TOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNDAYREF,TOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPRGREF,TOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNLIBREF,TOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              R_GRNDAY(GIND) = R_GRNDAY(GIND) + 
+     *                         DFLOAT (TOTDAY(WEEK,GIND,DOW,YEAR)) +
+     *                         DFLOAT (TOTDAYREF(WEEK,GIND,DOW,YEAR))
+
+              CALL ADDI8I8 (GRNWONTOT,TWONTOT,VALUNIT)
+              CALL ADDI8I8 (GRNPADTOT,TPADTOT,VALUNIT)
+              CALL ADDI8I8 (GRNDAYTOT,TDAYTOT,VALUNIT)
+              CALL ADDI8I8 (GRNPRGTOT,TPRGTOT,VALUNIT)
+              CALL ADDI8I8 (GRNLIBTOT,TLIBTOT,VALUNIT)
+
+300        CONTINUE
+           END DO
+
+310     CONTINUE
+        END DO
+
+        DO WRK_GIND = 1,NUMWIT
+          TOTREAL = R_GRNDAY(WRK_GIND)
+          RAPCODE = 80 + GNUM(WRK_GIND)
+          CALL BALWRI(RAPCODE,GAMESUMS,TOTSUMS,TOTREAL)
+        END DO
+C
+C ------Super Double------
+C
+        DO WRK_GIND = 1,NUMDBL
+          DR_GRNDAY(WRK_GIND) = 0.0D0
+        END DO
+C
+        DO GIND=1,NUMDBL
+           DGNUM(GIND)=GTNTAB(TDBL,GIND)
+           IF(DGNUM(GIND).LT.1) GOTO 1100
+           GTYP=GNTTAB(GAMTYP,DGNUM(GIND))
+           CALL OPENW(GIND+11,GFNAMES(1,DGNUM(GIND)),4,0,0,ST)
+           DO X=1,7
+              DBLFDB(X)=0
+           END DO
+           CALL IOINIT(DBLFDB,GIND+11,DDBSEC*256)
+           DO X=1,7
+             TDBLFDB(GIND,X)=DBLFDB(X)
+           END DO
+           IF(ST.NE.0) CALL FILERR(GFNAMES(1,DGNUM(GIND)),1,ST,0)
+1100     CONTINUE
+        END DO
+
+        DO GIND=1,NUMDBL
+           IF(DGNUM(GIND).LT.1) GOTO 1310
+
+           DO DRWIND=1,RDRAW
+              DRAW=DAYHDR(DGNUM(GIND))-DRWIND+1
+              IF(DRAW.LT.1) GOTO 1310
+              DO X=1,7
+                 DBLFDB(X)=TDBLFDB(GIND,X)
+              END DO
+              CALL READW(DBLFDB,DRAW,DDBREC,ST)
+              DO X=1,7
+                 TDBLFDB(GIND,X)=DBLFDB(X)
+              END DO
+              IF(ST.NE.0) CALL FILERR(GFNAMES(1,DGNUM(GIND)),1,ST,DOW)
+              IF(DDBUPD.GT.DAYCDC) GOTO 1300
+              IF(DDBSTS.LT.GAMDON) GOTO 1300
+              IF(DDBPUP.NE.0 .AND. (DDBPUP+14).LT.DAYCDC) GOTO 1300
+              IF(DDBDAT.NE.0 .AND. (DDBDAT+380).LT.DAYCDC .AND.
+     *           DDBWON .EQ. DDBPAD ) GOTO 1300
+
+              DATE(VCDC)=DDBDAT
+              CALL LCDATE(DATE)
+
+              IF(DDBDAT.LE.3100) THEN
+                 CALL FIGWEK(DDBDAT,WEEK,YEAR2)
+              ELSE
+                 CALL FIGWEK(DDBDAT-WEEK_OFFSET,WEEK,YEAR2)
+              ENDIF
+              DOW=DATE(VDOW)
+              MONTH=DATE(VMON)
+              YEAR=CUR_YEAR-YEAR2+1
+
+              YEAR=MAX(YEAR,1)
+              IF(DDRAWNO(WEEK,GIND,DOW,YEAR).NE.0) DOW = DOW+7
+              DDRAWNO(WEEK,GIND,DOW,YEAR)=DRAW
+
+              DTOTWON(WEEK,GIND,DOW,YEAR)=0
+              DTOTPAD(WEEK,GIND,DOW,YEAR)=0
+              DTOTLIB(WEEK,GIND,DOW,YEAR)=0
+              DTOTPRG(WEEK,GIND,DOW,YEAR)=0
+              DTOTDAY(WEEK,GIND,DOW,YEAR)=0
+
+              DTWONTOT(1)=0
+              DTWONTOT(2)=0
+              DTLIBTOT(1)=0
+              DTLIBTOT(2)=0
+              DTDAYTOT(1)=0
+              DTDAYTOT(2)=0
+              DTPADTOT(1)=0
+              DTPADTOT(2)=0
+              DTPRGTOT(1)=0
+              DTPRGTOT(2)=0
+
+              DTOTWON(WEEK,GIND,DOW,YEAR)    = DDBWON - DDBREF
+              DTOTWONREF(WEEK,GIND,DOW,YEAR) = DDBREF  !TOTAL REFUND AMOUNT
+              CALL ADDI8I4 (DTWONTOT,DDBWON,VALUNIT)
+
+              DTOTLIB(WEEK,GIND,DOW,YEAR)    = DLIB(DRWIND,1,GIND) !OUTSTANDING
+              DTOTLIBREF(WEEK,GIND,DOW,YEAR) = DLIB(DRWIND,2,GIND) !OUTSTDG REFUNDS
+              CALL ADDI8I4 (DTLIBTOT,DTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (DTLIBTOT,DTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              DTOTPAD(WEEK,GIND,DOW,YEAR) = DDBPAD-DDBPRF  !PREVIOUSLY PAID
+              DTOTPADREF(WEEK,GIND,DOW,YEAR) = DDBPRF  !PREVIOUSLY PAID REFUNDS
+
+              DTOTDAY(WEEK,GIND,DOW,YEAR) = DPAY(DRWIND,1,GIND)  !PAID TODAY
+              DTOTDAYREF(WEEK,GIND,DOW,YEAR) = DPAY(DRWIND,2,GIND) !PD TOD REFDS
+              CALL ADDI8I4 (DTDAYTOT,DTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (DTDAYTOT,DTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              IF(DAYCDC.EQ.DDBUPD) THEN
+              DTOTPAD(WEEK,GIND,DOW,YEAR)=DTOTPAD(WEEK,GIND,DOW,YEAR)-
+     *                                   DTOTDAY(WEEK,GIND,DOW,YEAR)
+              DTOTPADREF(WEEK,GIND,DOW,YEAR)=DTOTPADREF(WEEK,GIND,DOW,YEAR)-
+     *                                      DTOTDAYREF(WEEK,GIND,DOW,YEAR)
+              ENDIF
+              CALL ADDI8I4 (DTPADTOT,DTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (DTPADTOT,DTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              DTOTPRG(WEEK,GIND,DOW,YEAR)  = DTOTWON(WEEK,GIND,DOW,YEAR) -
+     *                          DTOTLIB(WEEK,GIND,DOW,YEAR)-
+     *                          DTOTPAD(WEEK,GIND,DOW,YEAR)-
+     *                          DTOTDAY(WEEK,GIND,DOW,YEAR)
+              DTOTPRGREF(WEEK,GIND,DOW,YEAR) = DTOTWONREF(WEEK,GIND,DOW,YEAR) -
+     *                          DTOTLIBREF(WEEK,GIND,DOW,YEAR) -
+     *                          DTOTPADREF(WEEK,GIND,DOW,YEAR) -
+     *                          DTOTDAYREF(WEEK,GIND,DOW,YEAR)
+              CALL ADDI8I4 (DTPRGTOT,DTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (DTPRGTOT,DTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              DWONTOT(1,WEEK,GIND,DOW,YEAR)=DTWONTOT(1)
+              DWONTOT(2,WEEK,GIND,DOW,YEAR)=DTWONTOT(2)
+
+              DPADTOT(1,WEEK,GIND,DOW,YEAR)=DTPADTOT(1)
+              DPADTOT(2,WEEK,GIND,DOW,YEAR)=DTPADTOT(2)
+
+              DDAYTOT(1,WEEK,GIND,DOW,YEAR)=DTDAYTOT(1)
+              DDAYTOT(2,WEEK,GIND,DOW,YEAR)=DTDAYTOT(2)
+
+              DPRGTOT(1,WEEK,GIND,DOW,YEAR)=DTPRGTOT(1)
+              DPRGTOT(2,WEEK,GIND,DOW,YEAR)=DTPRGTOT(2)
+
+              DLIBTOT(1,WEEK,GIND,DOW,YEAR)=DTLIBTOT(1)
+              DLIBTOT(2,WEEK,GIND,DOW,YEAR)=DTLIBTOT(2)
+C
+C CALCULATE GRAND TOTALS (add Super Double)
+C -----------------------------------------
+              CALL ADDI8I4 (GRNWON,DTOTWON(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPAD,DTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNDAY,DTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPRG,DTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNLIB,DTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              CALL ADDI8I4 (GRNWONREF,DTOTWONREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPADREF,DTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNDAYREF,DTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPRGREF,DTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNLIBREF,DTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              DR_GRNDAY(GIND) = DR_GRNDAY(GIND) + 
+     *                         DFLOAT (DTOTDAY(WEEK,GIND,DOW,YEAR)) +
+     *                         DFLOAT (DTOTDAYREF(WEEK,GIND,DOW,YEAR))
+
+              CALL ADDI8I8 (GRNWONTOT,DTWONTOT,VALUNIT)
+              CALL ADDI8I8 (GRNPADTOT,DTPADTOT,VALUNIT)
+              CALL ADDI8I8 (GRNDAYTOT,DTDAYTOT,VALUNIT)
+              CALL ADDI8I8 (GRNPRGTOT,DTPRGTOT,VALUNIT)
+              CALL ADDI8I8 (GRNLIBTOT,DTLIBTOT,VALUNIT)
+
+1300        CONTINUE
+           END DO
+
+1310     CONTINUE
+        END DO
+
+        DO WRK_GIND = 1,NUMDBL
+          TOTREAL = DR_GRNDAY(WRK_GIND)
+          RAPCODE = 80 + DGNUM(WRK_GIND)
+          CALL BALWRI(RAPCODE,GAMESUMS,TOTSUMS,TOTREAL)
+        END DO
+C
+C ------Today's Couple------
+C
+        DO 2100 GIND=1,NUMCPL
+           CGNUM(GIND)=GTNTAB(TCPL,GIND)
+           IF(CGNUM(GIND).LT.1) GOTO 2100
+           GTYP=GNTTAB(GAMTYP,CGNUM(GIND))
+           CALL OPENW(GIND+17,GFNAMES(1,CGNUM(GIND)),4,0,0,ST)
+           DO X=1,7
+              CPLFDB(X)=0
+           END DO
+           CALL IOINIT(CPLFDB,GIND+17,DCPSEC*256)
+           DO X=1,7
+             TCPLFDB(GIND,X)=CPLFDB(X)
+           END DO
+           IF(ST.NE.0) CALL FILERR(GFNAMES(1,CGNUM(GIND)),1,ST,0)
+2100     CONTINUE
+
+        DO WRK_GIND = 1,NUMCPL
+          R_GRNDAY(WRK_GIND) = 0.0D0
+        END DO
+
+        DO GIND=1,NUMCPL
+           IF(CGNUM(GIND).LT.1) GOTO 2310
+
+           DO DRWIND=1,RDRAW
+              DRAW=DAYHDR(CGNUM(GIND))-DRWIND+1
+              IF(DRAW.LT.1) GOTO 2310
+              DO X=1,7
+                 CPLFDB(X)=TCPLFDB(GIND,X)
+              END DO
+              CALL READW(CPLFDB,DRAW,DCPREC,ST)
+              DO X=1,7
+                 TCPLFDB(GIND,X)=CPLFDB(X)
+              END DO
+              IF(ST.NE.0) CALL FILERR(GFNAMES(1,CGNUM(GIND)),1,ST,DOW)
+              IF(DCPUPD.GT.DAYCDC) GOTO 2300
+              IF(DCPSTS.LT.GAMDON) GOTO 2300
+              IF(DCPPUP.NE.0 .AND. (DCPPUP+14).LT.DAYCDC) GOTO 2300
+              IF(DCPDAT.NE.0 .AND. (DCPDAT+380).LT.DAYCDC .AND.
+     *           DCPWON .EQ. DCPPAD ) GOTO 2300
+
+              DATE(VCDC)=DCPDAT
+              CALL LCDATE(DATE)
+              IF(DCPDAT.LE.3100) THEN
+                 CALL FIGWEK(DCPDAT,WEEK,YEAR2)
+              ELSE
+                 CALL FIGWEK(DCPDAT-WEEK_OFFSET,WEEK,YEAR2)
+              ENDIF 
+              DOW=DATE(VDOW)
+              MONTH=DATE(VMON)
+              YEAR=CUR_YEAR-YEAR2+1
+
+              YEAR=MAX(YEAR,1)
+              IF(CDRAWNO(WEEK,GIND,DOW,YEAR).NE.0) DOW = DOW+7
+              CDRAWNO(WEEK,GIND,DOW,YEAR)=DRAW
+
+              CTOTWON(WEEK,GIND,DOW,YEAR)=0
+              CTOTPAD(WEEK,GIND,DOW,YEAR)=0
+              CTOTLIB(WEEK,GIND,DOW,YEAR)=0
+              CTOTPRG(WEEK,GIND,DOW,YEAR)=0
+              CTOTDAY(WEEK,GIND,DOW,YEAR)=0
+
+              CTWONTOT(1)=0
+              CTWONTOT(2)=0
+              CTLIBTOT(1)=0
+              CTLIBTOT(2)=0
+              CTDAYTOT(1)=0
+              CTDAYTOT(2)=0
+              CTPADTOT(1)=0
+              CTPADTOT(2)=0
+              CTPRGTOT(1)=0
+              CTPRGTOT(2)=0
+
+              CTOTWON(WEEK,GIND,DOW,YEAR)    = DCPWON - DCPREF
+              CTOTWONREF(WEEK,GIND,DOW,YEAR) = DCPREF  !TOTAL REFUND AMOUNT
+              CALL ADDI8I4 (CTWONTOT,DCPWON,VALUNIT)
+
+              CTOTLIB(WEEK,GIND,DOW,YEAR)    = CLIB(DRWIND,1,GIND) !OUTSTANDING
+              CTOTLIBREF(WEEK,GIND,DOW,YEAR) = CLIB(DRWIND,2,GIND) !OUTSTDG REFUNDS
+              CALL ADDI8I4 (CTLIBTOT,CTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (CTLIBTOT,CTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              CTOTPAD(WEEK,GIND,DOW,YEAR) = DCPPAD-DCPPRF  !PREVIOUSLY PAID
+              CTOTPADREF(WEEK,GIND,DOW,YEAR) = DCPPRF  !PREVIOUSLY PAID REFUNDS
+
+              CTOTDAY(WEEK,GIND,DOW,YEAR) = CPAY(DRWIND,1,GIND)  !PAID TODAY
+              CTOTDAYREF(WEEK,GIND,DOW,YEAR) = CPAY(DRWIND,2,GIND) !PD TOD REFDS
+              CALL ADDI8I4 (CTDAYTOT,CTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (CTDAYTOT,CTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              IF(DAYCDC.EQ.DCPUPD) THEN
+              CTOTPAD(WEEK,GIND,DOW,YEAR)=CTOTPAD(WEEK,GIND,DOW,YEAR)-
+     *                                   CTOTDAY(WEEK,GIND,DOW,YEAR)
+              CTOTPADREF(WEEK,GIND,DOW,YEAR)=CTOTPADREF(WEEK,GIND,DOW,YEAR)-
+     *                                      CTOTDAYREF(WEEK,GIND,DOW,YEAR)
+              ENDIF
+              CALL ADDI8I4 (CTPADTOT,CTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (CTPADTOT,CTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              CTOTPRG(WEEK,GIND,DOW,YEAR)  = CTOTWON(WEEK,GIND,DOW,YEAR) -
+     *                          CTOTLIB(WEEK,GIND,DOW,YEAR)-
+     *                          CTOTPAD(WEEK,GIND,DOW,YEAR)-
+     *                          CTOTDAY(WEEK,GIND,DOW,YEAR)
+              CTOTPRGREF(WEEK,GIND,DOW,YEAR) = CTOTWONREF(WEEK,GIND,DOW,YEAR) -
+     *                          CTOTLIBREF(WEEK,GIND,DOW,YEAR) -
+     *                          CTOTPADREF(WEEK,GIND,DOW,YEAR) -
+     *                          CTOTDAYREF(WEEK,GIND,DOW,YEAR)
+              CALL ADDI8I4 (CTPRGTOT,CTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (CTPRGTOT,CTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              CWONTOT(1,WEEK,GIND,DOW,YEAR)=CTWONTOT(1)
+              CWONTOT(2,WEEK,GIND,DOW,YEAR)=CTWONTOT(2)
+
+              CPADTOT(1,WEEK,GIND,DOW,YEAR)=CTPADTOT(1)
+              CPADTOT(2,WEEK,GIND,DOW,YEAR)=CTPADTOT(2)
+
+              CDAYTOT(1,WEEK,GIND,DOW,YEAR)=CTDAYTOT(1)
+              CDAYTOT(2,WEEK,GIND,DOW,YEAR)=CTDAYTOT(2)
+
+              CPRGTOT(1,WEEK,GIND,DOW,YEAR)=CTPRGTOT(1)
+              CPRGTOT(2,WEEK,GIND,DOW,YEAR)=CTPRGTOT(2)
+
+              CLIBTOT(1,WEEK,GIND,DOW,YEAR)=CTLIBTOT(1)
+              CLIBTOT(2,WEEK,GIND,DOW,YEAR)=CTLIBTOT(2)
+C
+C CALCULATE GRAND TOTALS (add Today's Couple)
+C --------------------------------------------
+              CALL ADDI8I4 (GRNWON,CTOTWON(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPAD,CTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNDAY,CTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPRG,CTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNLIB,CTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              CALL ADDI8I4 (GRNWONREF,CTOTWONREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPADREF,CTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNDAYREF,CTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPRGREF,CTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNLIBREF,CTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              CR_GRNDAY(GIND) = CR_GRNDAY(GIND) + 
+     *                         DFLOAT (CTOTDAY(WEEK,GIND,DOW,YEAR)) +
+     *                         DFLOAT (CTOTDAYREF(WEEK,GIND,DOW,YEAR))
+
+              CALL ADDI8I8 (GRNWONTOT,CTWONTOT,VALUNIT)
+              CALL ADDI8I8 (GRNPADTOT,CTPADTOT,VALUNIT)
+              CALL ADDI8I8 (GRNDAYTOT,CTDAYTOT,VALUNIT)
+              CALL ADDI8I8 (GRNPRGTOT,CTPRGTOT,VALUNIT)
+              CALL ADDI8I8 (GRNLIBTOT,CTLIBTOT,VALUNIT)
+
+2300        CONTINUE
+           END DO
+
+2310     CONTINUE
+        END DO
+
+        DO WRK_GIND = 1,NUMCPL
+          TOTREAL = CR_GRNDAY(WRK_GIND)
+          RAPCODE = 80 + CGNUM(WRK_GIND)
+          CALL BALWRI(RAPCODE,GAMESUMS,TOTSUMS,TOTREAL)
+        END DO
+C
+C
+C ------Today's Trio------
+C
+        DO 3100 GIND=1,NUMTRP
+           TRGNUM(GIND)=GTNTAB(TTRP,GIND)
+           IF(TRGNUM(GIND).LT.1) GOTO 3100
+           GTYP=GNTTAB(GAMTYP,TRGNUM(GIND))
+           CALL OPENW(GIND+27,GFNAMES(1,TRGNUM(GIND)),4,0,0,ST)
+           CALL IOINIT(TTRPFDB(1,GIND),GIND+27,DTRSEC*256)
+           IF(ST.NE.0) CALL FILERR(GFNAMES(1,TRGNUM(GIND)),1,ST,0)
+3100     CONTINUE
+
+        DO WRK_GIND = 1,NUMTRP
+          TR_GRNDAY(WRK_GIND) = 0.0D0
+        END DO
+
+        DO 3300 GIND=1,NUMTRP
+           IF(TRGNUM(GIND).LT.1) GOTO 3300
+
+           DO 3310 DRWIND=1,RDRAW
+              DRAW=DAYHDR(TRGNUM(GIND))-DRWIND+1
+              IF(DRAW.LT.1) GOTO 3310
+              CALL READW(TTRPFDB(1,GIND),DRAW,DTRREC,ST)
+              IF(ST.NE.0) CALL FILERR(GFNAMES(1,TRGNUM(GIND)),1,ST,DOW)
+              IF(DTRUPD.GT.DAYCDC) GOTO 3310
+              IF(DTRSTS.LT.GAMDON) GOTO 3310
+              IF(DTRPUP.NE.0 .AND. (DTRPUP+14).LT.DAYCDC) GOTO 3310
+              IF(DTRDAT.NE.0 .AND. (DTRDAT+380).LT.DAYCDC .AND.
+     *           DTRWON .EQ. DTRPAD ) GOTO 3310
+
+              DATE(VCDC)=DTRDAT
+              CALL LCDATE(DATE)
+              IF(DTRDAT.LE.3100) THEN 
+                 CALL FIGWEK(DTRDAT,WEEK,YEAR2)
+              ELSE
+                 CALL FIGWEK(DTRDAT-WEEK_OFFSET,WEEK,YEAR2)
+              ENDIF
+              DOW=DATE(VDOW)
+              YEAR=CUR_YEAR-YEAR2+1
+
+              YEAR = MAX(YEAR,1)
+              IF(TRDRAWNO(WEEK,GIND,DOW,YEAR).NE.0) DOW = DOW+7
+              TRDRAWNO(WEEK,GIND,DOW,YEAR)=DRAW
+
+              TRTOTWON(WEEK,GIND,DOW,YEAR)=0
+              TRTOTPAD(WEEK,GIND,DOW,YEAR)=0
+              TRTOTLIB(WEEK,GIND,DOW,YEAR)=0
+              TRTOTPRG(WEEK,GIND,DOW,YEAR)=0
+              TRTOTDAY(WEEK,GIND,DOW,YEAR)=0
+
+              TRTWONTOT(1)=0
+              TRTWONTOT(2)=0
+              TRTLIBTOT(1)=0
+              TRTLIBTOT(2)=0
+              TRTDAYTOT(1)=0
+              TRTDAYTOT(2)=0
+              TRTPADTOT(1)=0
+              TRTPADTOT(2)=0
+              TRTPRGTOT(1)=0
+              TRTPRGTOT(2)=0
+
+              TRTOTWON(WEEK,GIND,DOW,YEAR)    = DTRWON - DTRREF
+              TRTOTWONREF(WEEK,GIND,DOW,YEAR) = DTRREF  !TOTAL REFUND AMOUNT
+              CALL ADDI8I4 (TRTWONTOT,DTRWON,VALUNIT)
+
+              TRTOTLIB(WEEK,GIND,DOW,YEAR)    = TRLIB(DRWIND,1,GIND) !OUTSTANDING
+              TRTOTLIBREF(WEEK,GIND,DOW,YEAR) = TRLIB(DRWIND,2,GIND) !OUTSTDG REFUNDS
+              CALL ADDI8I4 (TRTLIBTOT,TRTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (TRTLIBTOT,TRTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              TRTOTPAD(WEEK,GIND,DOW,YEAR) = DTRPAD-DTRPRF  !PREVIOUSLY PAID
+              TRTOTPADREF(WEEK,GIND,DOW,YEAR) = DTRPRF  !PREVIOUSLY PAID REFUNDS
+
+              TRTOTDAY(WEEK,GIND,DOW,YEAR) = TRPAY(DRWIND,1,GIND)  !PAID TODAY
+              TRTOTDAYREF(WEEK,GIND,DOW,YEAR) = TRPAY(DRWIND,2,GIND) !PD TOD REFDS
+              CALL ADDI8I4 (TRTDAYTOT,TRTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (TRTDAYTOT,TRTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              IF(DAYCDC.EQ.DTRUPD) THEN
+              TRTOTPAD(WEEK,GIND,DOW,YEAR)=TRTOTPAD(WEEK,GIND,DOW,YEAR)-
+     *                                   TRTOTDAY(WEEK,GIND,DOW,YEAR)
+              TRTOTPADREF(WEEK,GIND,DOW,YEAR)=TRTOTPADREF(WEEK,GIND,DOW,YEAR)-
+     *                                      TRTOTDAYREF(WEEK,GIND,DOW,YEAR)
+              ENDIF
+              CALL ADDI8I4 (TRTPADTOT,TRTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (TRTPADTOT,TRTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              TRTOTPRG(WEEK,GIND,DOW,YEAR)  = TRTOTWON(WEEK,GIND,DOW,YEAR) -
+     *                          TRTOTLIB(WEEK,GIND,DOW,YEAR)-
+     *                          TRTOTPAD(WEEK,GIND,DOW,YEAR)-
+     *                          TRTOTDAY(WEEK,GIND,DOW,YEAR)
+              TRTOTPRGREF(WEEK,GIND,DOW,YEAR) = TRTOTWONREF(WEEK,GIND,DOW,YEAR) -
+     *                          TRTOTLIBREF(WEEK,GIND,DOW,YEAR) -
+     *                          TRTOTPADREF(WEEK,GIND,DOW,YEAR) -
+     *                          TRTOTDAYREF(WEEK,GIND,DOW,YEAR)
+              CALL ADDI8I4 (TRTPRGTOT,TRTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (TRTPRGTOT,TRTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              TRWONTOT(1,WEEK,GIND,DOW,YEAR)=TRTWONTOT(1)
+              TRWONTOT(2,WEEK,GIND,DOW,YEAR)=TRTWONTOT(2)
+
+              TRPADTOT(1,WEEK,GIND,DOW,YEAR)=TRTPADTOT(1)
+              TRPADTOT(2,WEEK,GIND,DOW,YEAR)=TRTPADTOT(2)
+
+              TRDAYTOT(1,WEEK,GIND,DOW,YEAR)=TRTDAYTOT(1)
+              TRDAYTOT(2,WEEK,GIND,DOW,YEAR)=TRTDAYTOT(2)
+
+              TRPRGTOT(1,WEEK,GIND,DOW,YEAR)=TRTPRGTOT(1)
+              TRPRGTOT(2,WEEK,GIND,DOW,YEAR)=TRTPRGTOT(2)
+
+              TRLIBTOT(1,WEEK,GIND,DOW,YEAR)=TRTLIBTOT(1)
+              TRLIBTOT(2,WEEK,GIND,DOW,YEAR)=TRTLIBTOT(2)
+C
+C CALCULATE GRAND TOTALS (add Today's Trio)
+C --------------------------------------------
+              CALL ADDI8I4 (GRNWON,TRTOTWON(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPAD,TRTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNDAY,TRTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPRG,TRTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNLIB,TRTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              CALL ADDI8I4 (GRNWONREF,TRTOTWONREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPADREF,TRTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNDAYREF,TRTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPRGREF,TRTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNLIBREF,TRTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              TR_GRNDAY(GIND) = TR_GRNDAY(GIND) + 
+     *                         DFLOAT (TRTOTDAY(WEEK,GIND,DOW,YEAR)) +
+     *                         DFLOAT (TRTOTDAYREF(WEEK,GIND,DOW,YEAR))
+
+              CALL ADDI8I8 (GRNWONTOT,TRTWONTOT,VALUNIT)
+              CALL ADDI8I8 (GRNPADTOT,TRTPADTOT,VALUNIT)
+              CALL ADDI8I8 (GRNDAYTOT,TRTDAYTOT,VALUNIT)
+              CALL ADDI8I8 (GRNPRGTOT,TRTPRGTOT,VALUNIT)
+              CALL ADDI8I8 (GRNLIBTOT,TRTLIBTOT,VALUNIT)
+
+3310        CONTINUE
+3300     CONTINUE
+
+        DO WRK_GIND = 1,NUMTRP
+          TOTREAL = TR_GRNDAY(WRK_GIND)
+          RAPCODE = 80 + TRGNUM(WRK_GIND)
+          CALL BALWRI(RAPCODE,GAMESUMS,TOTSUMS,TOTREAL)
+        END DO
+C
+C
+C ------Super Triple------
+C
+        DO 4100 GIND=1,NUMSTR
+           STGNUM(GIND)=GTNTAB(TSTR,GIND)
+           IF(STGNUM(GIND).LT.1) GOTO 4100
+           GTYP=GNTTAB(GAMTYP,STGNUM(GIND))
+           CALL OPENW(GIND+37,GFNAMES(1,STGNUM(GIND)),4,0,0,ST)
+           CALL IOINIT(TSTRFDB(1,GIND),GIND+37,DSTSEC*256)
+           IF(ST.NE.0) CALL FILERR(GFNAMES(1,STGNUM(GIND)),1,ST,0)
+4100     CONTINUE
+
+        DO WRK_GIND = 1,NUMSTR
+          ST_GRNDAY(WRK_GIND) = 0.0D0
+        END DO
+
+        DO 4300 GIND=1,NUMSTR
+           IF(STGNUM(GIND).LT.1) GOTO 4300
+
+           DO 4310 DRWIND=1,RDRAW
+              DRAW=DAYHDR(STGNUM(GIND))-DRWIND+1
+              IF(DRAW.LT.1) GOTO 4310
+              CALL READW(TSTRFDB(1,GIND),DRAW,DSTREC,ST)
+              IF(ST.NE.0) CALL FILERR(GFNAMES(1,STGNUM(GIND)),1,ST,DOW)
+              IF(DSTUPD.GT.DAYCDC) GOTO 4310
+              IF(DSTSTS.LT.GAMDON) GOTO 4310
+              IF(DSTPUP.NE.0 .AND. (DSTPUP+14).LT.DAYCDC) GOTO 4310
+              IF(DSTDAT.NE.0 .AND. (DSTDAT+380).LT.DAYCDC .AND.
+     *           DSTWON .EQ. DSTPAD ) GOTO 4310
+
+              DATE(VCDC)=DSTDAT
+              CALL LCDATE(DATE)
+              CALL FIGWEK(DSTDAT-WEEK_OFFSET,WEEK,YEAR2)
+              DOW=DATE(VDOW)
+              YEAR=CUR_YEAR-YEAR2+1
+
+              YEAR = MAX(YEAR,1)
+              IF(STDRAWNO(WEEK,GIND,DOW,YEAR).NE.0) DOW = DOW+7
+              STDRAWNO(WEEK,GIND,DOW,YEAR)=DRAW
+
+              STTOTWON(WEEK,GIND,DOW,YEAR)=0
+              STTOTPAD(WEEK,GIND,DOW,YEAR)=0
+              STTOTLIB(WEEK,GIND,DOW,YEAR)=0
+              STTOTPRG(WEEK,GIND,DOW,YEAR)=0
+              STTOTDAY(WEEK,GIND,DOW,YEAR)=0
+
+              STTWONTOT(1)=0
+              STTWONTOT(2)=0
+              STTLIBTOT(1)=0
+              STTLIBTOT(2)=0
+              STTDAYTOT(1)=0
+              STTDAYTOT(2)=0
+              STTPADTOT(1)=0
+              STTPADTOT(2)=0
+              STTPRGTOT(1)=0
+              STTPRGTOT(2)=0
+
+              STTOTWON(WEEK,GIND,DOW,YEAR)    = DSTWON - DSTREF
+              STTOTWONREF(WEEK,GIND,DOW,YEAR) = DSTREF  !TOTAL REFUND AMOUNT
+              CALL ADDI8I4 (STTWONTOT,DSTWON,VALUNIT)
+
+              STTOTLIB(WEEK,GIND,DOW,YEAR)    = STLIB(DRWIND,1,GIND) !OUTSTANDING
+              STTOTLIBREF(WEEK,GIND,DOW,YEAR) = STLIB(DRWIND,2,GIND) !OUTSTDG REFUNDS
+              CALL ADDI8I4 (STTLIBTOT,STTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (STTLIBTOT,STTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              STTOTPAD(WEEK,GIND,DOW,YEAR) = DSTPAD-DSTPRF  !PREVIOUSLY PAID
+              STTOTPADREF(WEEK,GIND,DOW,YEAR) = DSTPRF  !PREVIOUSLY PAID REFUNDS
+
+              STTOTDAY(WEEK,GIND,DOW,YEAR) = STPAY(DRWIND,1,GIND)  !PAID TODAY
+              STTOTDAYREF(WEEK,GIND,DOW,YEAR) = STPAY(DRWIND,2,GIND) !PD TOD REFDS
+              CALL ADDI8I4 (STTDAYTOT,STTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (STTDAYTOT,STTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              IF(DAYCDC.EQ.DSTUPD) THEN
+              STTOTPAD(WEEK,GIND,DOW,YEAR)=STTOTPAD(WEEK,GIND,DOW,YEAR)-
+     *                                   STTOTDAY(WEEK,GIND,DOW,YEAR)
+              STTOTPADREF(WEEK,GIND,DOW,YEAR)=STTOTPADREF(WEEK,GIND,DOW,YEAR)-
+     *                                      STTOTDAYREF(WEEK,GIND,DOW,YEAR)
+              ENDIF
+              CALL ADDI8I4 (STTPADTOT,STTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (STTPADTOT,STTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              STTOTPRG(WEEK,GIND,DOW,YEAR)  = STTOTWON(WEEK,GIND,DOW,YEAR) -
+     *                          STTOTLIB(WEEK,GIND,DOW,YEAR)-
+     *                          STTOTPAD(WEEK,GIND,DOW,YEAR)-
+     *                          STTOTDAY(WEEK,GIND,DOW,YEAR)
+              STTOTPRGREF(WEEK,GIND,DOW,YEAR) = STTOTWONREF(WEEK,GIND,DOW,YEAR) -
+     *                          STTOTLIBREF(WEEK,GIND,DOW,YEAR) -
+     *                          STTOTPADREF(WEEK,GIND,DOW,YEAR) -
+     *                          STTOTDAYREF(WEEK,GIND,DOW,YEAR)
+              CALL ADDI8I4 (STTPRGTOT,STTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (STTPRGTOT,STTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              STWONTOT(1,WEEK,GIND,DOW,YEAR)=STTWONTOT(1)
+              STWONTOT(2,WEEK,GIND,DOW,YEAR)=STTWONTOT(2)
+
+              STPADTOT(1,WEEK,GIND,DOW,YEAR)=STTPADTOT(1)
+              STPADTOT(2,WEEK,GIND,DOW,YEAR)=STTPADTOT(2)
+
+              STDAYTOT(1,WEEK,GIND,DOW,YEAR)=STTDAYTOT(1)
+              STDAYTOT(2,WEEK,GIND,DOW,YEAR)=STTDAYTOT(2)
+
+              STPRGTOT(1,WEEK,GIND,DOW,YEAR)=STTPRGTOT(1)
+              STPRGTOT(2,WEEK,GIND,DOW,YEAR)=STTPRGTOT(2)
+
+              STLIBTOT(1,WEEK,GIND,DOW,YEAR)=STTLIBTOT(1)
+              STLIBTOT(2,WEEK,GIND,DOW,YEAR)=STTLIBTOT(2)
+C
+C CALCULATE GRAND TOTALS (add Super Triple)
+C --------------------------------------------
+              CALL ADDI8I4 (GRNWON,STTOTWON(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPAD,STTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNDAY,STTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPRG,STTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNLIB,STTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              CALL ADDI8I4 (GRNWONREF,STTOTWONREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPADREF,STTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNDAYREF,STTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNPRGREF,STTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+              CALL ADDI8I4 (GRNLIBREF,STTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+              ST_GRNDAY(GIND) = ST_GRNDAY(GIND) + 
+     *                         DFLOAT (STTOTDAY(WEEK,GIND,DOW,YEAR)) +
+     *                         DFLOAT (STTOTDAYREF(WEEK,GIND,DOW,YEAR))
+
+              CALL ADDI8I8 (GRNWONTOT,STTWONTOT,VALUNIT)
+              CALL ADDI8I8 (GRNPADTOT,STTPADTOT,VALUNIT)
+              CALL ADDI8I8 (GRNDAYTOT,STTDAYTOT,VALUNIT)
+              CALL ADDI8I8 (GRNPRGTOT,STTPRGTOT,VALUNIT)
+              CALL ADDI8I8 (GRNLIBTOT,STTLIBTOT,VALUNIT)
+
+4310        CONTINUE
+4300     CONTINUE
+
+        DO WRK_GIND = 1,NUMSTR
+          TOTREAL = ST_GRNDAY(WRK_GIND)
+          RAPCODE = 80 + STGNUM(WRK_GIND)
+          CALL BALWRI(RAPCODE,GAMESUMS,TOTSUMS,TOTREAL)
+        END DO
+C
+C ------Print section---
+C ------Winner Tip------
+C
+        DO 1000 YEAR = RYEAR,1,-1
+        WEEK = 0
+320     CONTINUE
+           WEEK = WEEK + 1
+           WRK_YEAR = (CUR_YEAR-YEAR)+1
+C
+           HAVE_DATA(WEEK)=.FALSE. 
+           DO GIND=1,NUMWIT
+              IF(GNUM(GIND).LT.1) GOTO 410
+              DO DOW=1,GDRAW
+                IF(DRAWNO(WEEK,GIND,DOW,YEAR).LE.0) GOTO 400
+                LINCNT=LINCNT+10
+                IF(LINCNT.GT.LINSPP) THEN
+                    CALL TITLE(REPHDR,REPNAM,GIND,REPLU,PAGE,DAYCDC)
+                    WRITE(REPLU,9000)
+                    LINCNT=7
+                ENDIF
+                IF(HAVE_DATA(WEEK).EQ..FALSE.) THEN
+                   WRITE(REPLU,9005) WEEK,WRK_YEAR
+                   HAVE_DATA(WEEK)=.TRUE. 
+                   LINCNT=LINCNT+2
+                END IF
+                WRITE(REPLU,9006) (GLNAMES(K,GNUM(GIND)),K=1,4)
+                WRITE(REPLU,9001) DRAWNO(WEEK,GIND,DOW,YEAR)
+                TWONTOT(1)=WONTOT(1,WEEK,GIND,DOW,YEAR)
+                TWONTOT(2)=WONTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7002)CSMONY(TOTWON(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(TOTWONREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8(TWONTOT,13,VALUNIT)
+                TPADTOT(1)=PADTOT(1,WEEK,GIND,DOW,YEAR)
+                TPADTOT(2)=PADTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7003)CSMONY(TOTPAD(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(TOTPADREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (TPADTOT,13,VALUNIT)
+                TDAYTOT(1)=DAYTOT(1,WEEK,GIND,DOW,YEAR)
+                TDAYTOT(2)=DAYTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7004)CSMONY(TOTDAY(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(TOTDAYREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (TDAYTOT,13,VALUNIT)
+                TPRGTOT(1)=PRGTOT(1,WEEK,GIND,DOW,YEAR)
+                TPRGTOT(2)=PRGTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7005)CSMONY(TOTPRG(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(TOTPRGREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (TPRGTOT,13,VALUNIT)
+                TLIBTOT(1)=LIBTOT(1,WEEK,GIND,DOW,YEAR)
+                TLIBTOT(2)=LIBTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7006)CSMONY(TOTLIB(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(TOTLIBREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (TLIBTOT,13,VALUNIT)
+C
+C CALCULATE WEEK TOTALS (add Winner Tip)
+C ---------------------------------------
+                CALL ADDI8I4 (WKWON,TOTWON(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPAD,TOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKDAY,TOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPRG,TOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKLIB,TOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+                CALL ADDI8I4 (WKWONREF,TOTWONREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPADREF,TOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKDAYREF,TOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPRGREF,TOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKLIBREF,TOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+                CALL ADDI8I8 (WKWONTOT,TWONTOT,VALUNIT)
+                CALL ADDI8I8 (WKPADTOT,TPADTOT,VALUNIT)
+                CALL ADDI8I8 (WKDAYTOT,TDAYTOT,VALUNIT)
+                CALL ADDI8I8 (WKPRGTOT,TPRGTOT,VALUNIT)
+                CALL ADDI8I8 (WKLIBTOT,TLIBTOT,VALUNIT)
+400           CONTINUE
+              END DO
+410        CONTINUE
+           END DO
+C
+C ------Super Double------
+C
+           DHAVE_DATA(WEEK)=.FALSE. 
+           DO GIND=1,NUMDBL
+              IF(DGNUM(GIND).LT.1) GOTO 1410
+              DO DOW=1,GDRAW
+                IF(DDRAWNO(WEEK,GIND,DOW,YEAR).LE.0) GOTO 1400
+                LINCNT=LINCNT+10
+                IF(LINCNT.GT.LINSPP) THEN
+                    CALL TITLE(REPHDR,REPNAM,GIND,REPLU,PAGE,DAYCDC)
+                    WRITE(REPLU,9000)
+                    LINCNT=7
+                ENDIF
+                IF(DHAVE_DATA(WEEK).EQ..FALSE.) THEN
+                   WRITE(REPLU,9005) WEEK,WRK_YEAR
+                   DHAVE_DATA(WEEK)=.TRUE. 
+                   LINCNT=LINCNT+2
+                END IF
+                WRITE(REPLU,9006) (GLNAMES(K,DGNUM(GIND)),K=1,4)
+                WRITE(REPLU,9001) DDRAWNO(WEEK,GIND,DOW,YEAR)
+                DTWONTOT(1)=DWONTOT(1,WEEK,GIND,DOW,YEAR)
+                DTWONTOT(2)=DWONTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7002)CSMONY(DTOTWON(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(DTOTWONREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8(DTWONTOT,13,VALUNIT)
+                DTPADTOT(1)=DPADTOT(1,WEEK,GIND,DOW,YEAR)
+                DTPADTOT(2)=DPADTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7003)CSMONY(DTOTPAD(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(DTOTPADREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (DTPADTOT,13,VALUNIT)
+                DTDAYTOT(1)=DDAYTOT(1,WEEK,GIND,DOW,YEAR)
+                DTDAYTOT(2)=DDAYTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7004)CSMONY(DTOTDAY(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(DTOTDAYREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (DTDAYTOT,13,VALUNIT)
+                DTPRGTOT(1)=DPRGTOT(1,WEEK,GIND,DOW,YEAR)
+                DTPRGTOT(2)=DPRGTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7005)CSMONY(DTOTPRG(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(DTOTPRGREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (DTPRGTOT,13,VALUNIT)
+                DTLIBTOT(1)=DLIBTOT(1,WEEK,GIND,DOW,YEAR)
+                DTLIBTOT(2)=DLIBTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7006)CSMONY(DTOTLIB(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(DTOTLIBREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (DTLIBTOT,13,VALUNIT)
+C
+C  CALCULATE WEEK TOTALS (add Super Double)
+C  ----------------------------------------
+                CALL ADDI8I4 (WKWON,DTOTWON(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPAD,DTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKDAY,DTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPRG,DTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKLIB,DTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+                CALL ADDI8I4 (WKWONREF,DTOTWONREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPADREF,DTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKDAYREF,DTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPRGREF,DTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKLIBREF,DTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+                CALL ADDI8I8 (WKWONTOT,DTWONTOT,VALUNIT)
+                CALL ADDI8I8 (WKPADTOT,DTPADTOT,VALUNIT)
+                CALL ADDI8I8 (WKDAYTOT,DTDAYTOT,VALUNIT)
+                CALL ADDI8I8 (WKPRGTOT,DTPRGTOT,VALUNIT)
+                CALL ADDI8I8 (WKLIBTOT,DTLIBTOT,VALUNIT)
+1400           CONTINUE
+              END DO
+1410        CONTINUE
+           END DO
+C
+C Write Today's Couple
+C ----------------------
+C
+           CHAVE_DATA(WEEK)=.FALSE. 
+           DO GIND=1,NUMCPL
+              IF(CGNUM(GIND).LT.1) GOTO 2410
+              DO DOW=1,GDRAW
+                IF(CDRAWNO(WEEK,GIND,DOW,YEAR).LE.0) GOTO 2400
+                LINCNT=LINCNT+10
+                IF(LINCNT.GT.LINSPP) THEN
+                    CALL TITLE(REPHDR,REPNAM,GIND,REPLU,PAGE,DAYCDC)
+                    WRITE(REPLU,9000)
+                    LINCNT=7
+                ENDIF
+                IF(CHAVE_DATA(WEEK).EQ..FALSE.) THEN
+                   WRITE(REPLU,9005) WEEK,WRK_YEAR
+                   CHAVE_DATA(WEEK)=.TRUE. 
+                   LINCNT=LINCNT+2
+                END IF
+                WRITE(REPLU,9006) (GLNAMES(K,CGNUM(GIND)),K=1,4)
+                WRITE(REPLU,9001) CDRAWNO(WEEK,GIND,DOW,YEAR)
+                CTWONTOT(1)=CWONTOT(1,WEEK,GIND,DOW,YEAR)
+                CTWONTOT(2)=CWONTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7002)CSMONY(CTOTWON(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(CTOTWONREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8(CTWONTOT,13,VALUNIT)
+                CTPADTOT(1)=CPADTOT(1,WEEK,GIND,DOW,YEAR)
+                CTPADTOT(2)=CPADTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7003)CSMONY(CTOTPAD(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(CTOTPADREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (CTPADTOT,13,VALUNIT)
+                CTDAYTOT(1)=CDAYTOT(1,WEEK,GIND,DOW,YEAR)
+                CTDAYTOT(2)=CDAYTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7004)CSMONY(CTOTDAY(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(CTOTDAYREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (CTDAYTOT,13,VALUNIT)
+                CTPRGTOT(1)=CPRGTOT(1,WEEK,GIND,DOW,YEAR)
+                CTPRGTOT(2)=CPRGTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7005)CSMONY(CTOTPRG(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(CTOTPRGREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (CTPRGTOT,13,VALUNIT)
+                CTLIBTOT(1)=CLIBTOT(1,WEEK,GIND,DOW,YEAR)
+                CTLIBTOT(2)=CLIBTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7006)CSMONY(CTOTLIB(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(CTOTLIBREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (CTLIBTOT,13,VALUNIT)
+C
+C CALCULATE WEEK TOTALS (add Today's Couple)
+C -------------------------------------------
+                CALL ADDI8I4 (WKWON,CTOTWON(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPAD,CTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKDAY,CTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPRG,CTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKLIB,CTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+                CALL ADDI8I4 (WKWONREF,CTOTWONREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPADREF,CTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKDAYREF,CTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPRGREF,CTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKLIBREF,CTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+                CALL ADDI8I8 (WKWONTOT,CTWONTOT,VALUNIT)
+                CALL ADDI8I8 (WKPADTOT,CTPADTOT,VALUNIT)
+                CALL ADDI8I8 (WKDAYTOT,CTDAYTOT,VALUNIT)
+                CALL ADDI8I8 (WKPRGTOT,CTPRGTOT,VALUNIT)
+                CALL ADDI8I8 (WKLIBTOT,CTLIBTOT,VALUNIT)
+2400           CONTINUE
+              END DO
+2410        CONTINUE
+           END DO
+C
+C Write Today's Trio
+C ----------------------
+C
+           TRHAVE_DATA(WEEK)=.FALSE. 
+           DO 3400 GIND=1,NUMTRP
+              IF(TRGNUM(GIND).LT.1) GOTO 3400
+              DO 3410 DOW=1,GDRAW
+                IF(TRDRAWNO(WEEK,GIND,DOW,YEAR).LE.0) GOTO 3410
+                LINCNT=LINCNT+10
+                IF(LINCNT.GT.LINSPP) THEN
+                    CALL TITLE(REPHDR,REPNAM,GIND,REPLU,PAGE,DAYCDC)
+                    WRITE(REPLU,9000)
+                    LINCNT=7
+                ENDIF
+                IF(TRHAVE_DATA(WEEK).EQ..FALSE.) THEN
+                   WRITE(REPLU,9005) WEEK,WRK_YEAR
+                   TRHAVE_DATA(WEEK)=.TRUE. 
+                   LINCNT=LINCNT+2
+                END IF
+                WRITE(REPLU,9006) (GLNAMES(K,TRGNUM(GIND)),K=1,4)
+                WRITE(REPLU,9001) TRDRAWNO(WEEK,GIND,DOW,YEAR)
+                TRTWONTOT(1)=TRWONTOT(1,WEEK,GIND,DOW,YEAR)
+                TRTWONTOT(2)=TRWONTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7002)CSMONY(TRTOTWON(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(TRTOTWONREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8(TRTWONTOT,13,VALUNIT)
+                TRTPADTOT(1)=TRPADTOT(1,WEEK,GIND,DOW,YEAR)
+                TRTPADTOT(2)=TRPADTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7003)CSMONY(TRTOTPAD(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(TRTOTPADREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (TRTPADTOT,13,VALUNIT)
+                TRTDAYTOT(1)=TRDAYTOT(1,WEEK,GIND,DOW,YEAR)
+                TRTDAYTOT(2)=TRDAYTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7004)CSMONY(TRTOTDAY(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(TRTOTDAYREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (TRTDAYTOT,13,VALUNIT)
+                TRTPRGTOT(1)=TRPRGTOT(1,WEEK,GIND,DOW,YEAR)
+                TRTPRGTOT(2)=TRPRGTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7005)CSMONY(TRTOTPRG(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(TRTOTPRGREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (TRTPRGTOT,13,VALUNIT)
+                TRTLIBTOT(1)=TRLIBTOT(1,WEEK,GIND,DOW,YEAR)
+                TRTLIBTOT(2)=TRLIBTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7006)CSMONY(TRTOTLIB(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(TRTOTLIBREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (TRTLIBTOT,13,VALUNIT)
+C
+C CALCULATE WEEK TOTALS (add Today's Trio)
+C -------------------------------------------
+                CALL ADDI8I4 (WKWON,TRTOTWON(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPAD,TRTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKDAY,TRTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPRG,TRTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKLIB,TRTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+                CALL ADDI8I4 (WKWONREF,TRTOTWONREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPADREF,TRTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKDAYREF,TRTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPRGREF,TRTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKLIBREF,TRTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+                CALL ADDI8I8 (WKWONTOT,TRTWONTOT,VALUNIT)
+                CALL ADDI8I8 (WKPADTOT,TRTPADTOT,VALUNIT)
+                CALL ADDI8I8 (WKDAYTOT,TRTDAYTOT,VALUNIT)
+                CALL ADDI8I8 (WKPRGTOT,TRTPRGTOT,VALUNIT)
+                CALL ADDI8I8 (WKLIBTOT,TRTLIBTOT,VALUNIT)
+3410           CONTINUE
+3400        CONTINUE
+C
+C Write Super Triple
+C ----------------------
+C
+           STHAVE_DATA(WEEK)=.FALSE. 
+           DO 4400 GIND=1,NUMSTR
+              IF(STGNUM(GIND).LT.1) GOTO 4400
+              DO 4410 DOW=1,GDRAW
+                IF(STDRAWNO(WEEK,GIND,DOW,YEAR).LE.0) GOTO 4410
+                LINCNT=LINCNT+10
+                IF(LINCNT.GT.LINSPP) THEN
+                    CALL TITLE(REPHDR,REPNAM,GIND,REPLU,PAGE,DAYCDC)
+                    WRITE(REPLU,9000)
+                    LINCNT=7
+                ENDIF
+                IF(STHAVE_DATA(WEEK).EQ..FALSE.) THEN
+                   WRITE(REPLU,9005) WEEK,WRK_YEAR
+                   STHAVE_DATA(WEEK)=.TRUE. 
+                   LINCNT=LINCNT+2
+                END IF
+                WRITE(REPLU,9006) (GLNAMES(K,STGNUM(GIND)),K=1,4)
+                WRITE(REPLU,9001) STDRAWNO(WEEK,GIND,DOW,YEAR)
+                STTWONTOT(1)=STWONTOT(1,WEEK,GIND,DOW,YEAR)
+                STTWONTOT(2)=STWONTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7002)CSMONY(STTOTWON(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(STTOTWONREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8(STTWONTOT,13,VALUNIT)
+                STTPADTOT(1)=STPADTOT(1,WEEK,GIND,DOW,YEAR)
+                STTPADTOT(2)=STPADTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7003)CSMONY(STTOTPAD(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(STTOTPADREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (STTPADTOT,13,VALUNIT)
+                STTDAYTOT(1)=STDAYTOT(1,WEEK,GIND,DOW,YEAR)
+                STTDAYTOT(2)=STDAYTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7004)CSMONY(STTOTDAY(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(STTOTDAYREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (STTDAYTOT,13,VALUNIT)
+                STTPRGTOT(1)=STPRGTOT(1,WEEK,GIND,DOW,YEAR)
+                STTPRGTOT(2)=STPRGTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7005)CSMONY(STTOTPRG(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(STTOTPRGREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (STTPRGTOT,13,VALUNIT)
+                STTLIBTOT(1)=STLIBTOT(1,WEEK,GIND,DOW,YEAR)
+                STTLIBTOT(2)=STLIBTOT(2,WEEK,GIND,DOW,YEAR)
+                WRITE(REPLU,7006)CSMONY(STTOTLIB(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONY(STTOTLIBREF(WEEK,GIND,DOW,YEAR),13,VALUNIT),
+     *                   CSMONYI8 (STTLIBTOT,13,VALUNIT)
+C
+C CALCULATE WEEK TOTALS (add Super Triple)
+C -------------------------------------------
+                CALL ADDI8I4 (WKWON,STTOTWON(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPAD,STTOTPAD(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKDAY,STTOTDAY(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPRG,STTOTPRG(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKLIB,STTOTLIB(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+                CALL ADDI8I4 (WKWONREF,STTOTWONREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPADREF,STTOTPADREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKDAYREF,STTOTDAYREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKPRGREF,STTOTPRGREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+                CALL ADDI8I4 (WKLIBREF,STTOTLIBREF(WEEK,GIND,DOW,YEAR),VALUNIT)
+
+                CALL ADDI8I8 (WKWONTOT,STTWONTOT,VALUNIT)
+                CALL ADDI8I8 (WKPADTOT,STTPADTOT,VALUNIT)
+                CALL ADDI8I8 (WKDAYTOT,STTDAYTOT,VALUNIT)
+                CALL ADDI8I8 (WKPRGTOT,STTPRGTOT,VALUNIT)
+                CALL ADDI8I8 (WKLIBTOT,STTLIBTOT,VALUNIT)
+4410           CONTINUE
+4400        CONTINUE
+C
+C ----- Write week totals ----
+C
+           IF (HAVE_DATA(WEEK).OR.DHAVE_DATA(WEEK).OR.CHAVE_DATA(WEEK).OR.
+     *         TRHAVE_DATA(WEEK).OR.STHAVE_DATA(WEEK))
+     *        THEN
+              LINCNT=LINCNT+9
+              IF(LINCNT.GT.LINSPP) THEN
+                 CALL TITLE(REPHDR,REPNAM,GIND,REPLU,PAGE,DAYCDC)
+                 WRITE(REPLU,9000)
+                 LINCNT=7
+              ENDIF
+              WRITE(REPLU,7001) WEEK
+              WRITE(REPLU,7002)CSMONYI8(WKWON,13,VALUNIT),
+     *                   CSMONYI8(WKWONREF,13,VALUNIT),
+     *                   CSMONYI8(WKWONTOT,13,VALUNIT)
+              WRITE(REPLU,7003)CSMONYI8(WKPAD,13,VALUNIT),
+     *                   CSMONYI8(WKPADREF,13,VALUNIT),
+     *                   CSMONYI8(WKPADTOT,13,VALUNIT)
+              WRITE(REPLU,7004)CSMONYI8(WKDAY,13,VALUNIT),
+     *                   CSMONYI8(WKDAYREF,13,VALUNIT),
+     *                   CSMONYI8(WKDAYTOT,13,VALUNIT)
+              WRITE(REPLU,7005)CSMONYI8(WKPRG,13,VALUNIT),
+     *                   CSMONYI8(WKPRGREF,13,VALUNIT),
+     *                   CSMONYI8(WKPRGTOT,13,VALUNIT)
+              WRITE(REPLU,7006)CSMONYI8(WKLIB,13,VALUNIT),
+     *                   CSMONYI8(WKLIBREF,13,VALUNIT),
+     *                   CSMONYI8(WKLIBTOT,13,VALUNIT)
+           END IF
+           CALL FASTSET (0,WKWON,2)
+           CALL FASTSET (0,WKDAY,2)
+           CALL FASTSET (0,WKLIB,2)
+           CALL FASTSET (0,WKPRG,2)
+           CALL FASTSET (0,WKPAD,2)
+           CALL FASTSET (0,WKWONREF,2)
+           CALL FASTSET (0,WKDAYREF,2)
+           CALL FASTSET (0,WKLIBREF,2)
+           CALL FASTSET (0,WKPRGREF,2)
+           CALL FASTSET (0,WKPADREF,2)
+           CALL FASTSET (0,WKWONTOT,2)
+           CALL FASTSET (0,WKDAYTOT,2)
+           CALL FASTSET (0,WKLIBTOT,2)
+           CALL FASTSET (0,WKPRGTOT,2)
+           CALL FASTSET (0,WKPADTOT,2)
+C
+           IF(WEEK.NE.53) GOTO 320
+C
+1000    CONTINUE
+C
+C ------Write grand totals------
+C
+        LINCNT=LINCNT+9
+        IF(LINCNT.GT.LINSPP) THEN
+           CALL TITLE(REPHDR,REPNAM,GIND,REPLU,PAGE,DAYCDC)
+           WRITE(REPLU,9000)
+           LINCNT=7
+        ENDIF
+        WRITE(REPLU,6001)  
+        WRITE(REPLU,7002)CSMONYI8(GRNWON,13,VALUNIT),
+     *                   CSMONYI8(GRNWONREF,13,VALUNIT),
+     *                   CSMONYI8(GRNWONTOT,13,VALUNIT)
+
+        WRITE(REPLU,7003)CSMONYI8(GRNPAD,13,VALUNIT),
+     *                   CSMONYI8(GRNPADREF,13,VALUNIT),
+     *                   CSMONYI8(GRNPADTOT,13,VALUNIT)
+
+        WRITE(REPLU,7004)CSMONYI8(GRNDAY,13,VALUNIT),
+     *                   CSMONYI8(GRNDAYREF,13,VALUNIT),
+     *                   CSMONYI8(GRNDAYTOT,13,VALUNIT)
+
+        WRITE(REPLU,7005)CSMONYI8(GRNPRG,13,VALUNIT),
+     *                   CSMONYI8(GRNPRGREF,13,VALUNIT),
+     *                   CSMONYI8(GRNPRGTOT,13,VALUNIT)
+
+        WRITE(REPLU,7006)CSMONYI8(GRNLIB,13,VALUNIT),
+     *                   CSMONYI8(GRNLIBREF,13,VALUNIT),
+     *                   CSMONYI8(GRNLIBTOT,13,VALUNIT)
+
+        DO GIND=1,NUMWIT
+           CALL USRCLOS1(GIND+5)
+        END DO
+        DO GIND=1,NUMDBL
+           CALL USRCLOS1(GIND+11)
+        END DO
+        DO GIND=1,NUMCPL
+           CALL USRCLOS1(GIND+17)
+        END DO
+        DO GIND=1,NUMTRP
+           CALL USRCLOS1(GIND+27)
+        END DO
+        CALL USRCLOS1(REPLU)
+C
+        RETURN
+C
+C     ===================== Format Statements =================
+C
+8000    FORMAT(1X,A,' Generating ',A8,'         liability report')
+8001    FORMAT(A8,' LIABILITY ',7A2)
+C8001   FORMAT(' LIABILITY ',6A2)
+8002    FORMAT('WLIABLEX','.REP')
+8003    FORMAT(1X,A)
+C
+9000    FORMAT(1X,131('='))
+
+9001    FORMAT(/,1X,'DRAW',I11,12X,'WINS',12X,
+     *         'REFUNDS',14X,'TOTAL'
+     *         /)
+
+C9002   FORMAT(2X,I4,5(2X,A13),A16)
+9003    FORMAT(/,2X,'TOTAL',5(2X,A13))
+C9004   FORMAT(28X,' NET PAID  ',A13,/,
+C     *         28X,'    TAXES  ',A13)
+
+9005     FORMAT(/,1X,'WEEK  ',I2.2,'/',I4.4,/)
+9006     FORMAT(1X,4A4)
+
+7001    FORMAT(/,1X,'TOTALS WEEK    ',I2.2,10X,'WINS',12X,
+     *         'REFUNDS',14X,'TOTAL'
+     *         /)
+7002    FORMAT(1X,'TOTAL WON         ',3(A13,6X))
+7003    FORMAT(1X,'PREVIOUSLY PAID   ',3(A13,6X))
+7004    FORMAT(1X,'PAID TODAY        ',3(A13,6X))
+7005    FORMAT(1X,'PURGED/EXPIRED    ',3(A13,6X))
+7006    FORMAT(1X,'OUTSTANDING       ',3(A13,6X)/)
+
+6001    FORMAT(//,1X,'GRAND TOTALS',15X,'WINS',12X,
+     *         'REFUNDS',14X,'TOTAL'
+     *         /)
+3040    FORMAT(A8,I1)
+C
+        END

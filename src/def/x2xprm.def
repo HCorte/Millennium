@@ -1,0 +1,305 @@
+C
+C X2XPRM.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFIP:[GOLS]X2XPRM.DEV                                   $
+C  $Date::   11 Mar 1997 18:50:26                                         $
+C  $Revision::   1.4                                                      $
+C  $Author::   WPW                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C V25 21-FEB-11 RXK X2X_TERMS and X2X_STATIONS  6144 --> 12288
+C V24 13-JUN-00 UXN X2X_NUM_LOADS_TO_CHECK, X2X_GTXDIAL_STATIONS, 
+C                   X2X_NONDIAL_STATIONS removed.
+C V23 11-MAR-97 WPW Set X2X_ACTUAL_SAP back from 10 to 15 (as in the Baseline).
+C V22 16-MAY-96 wsm Resize x2xr_first_common_process.
+C V21 26-FEB-96 wsm Resize for Finland.
+C V20 13-DEC-95 SCD Resize for Colorado (increase number of terminals from
+C                   4000 to 6000 - merge this change from PVCS branch to trunk
+C V19 07-DEC-95 DAS Increased X2XR_APP_DATA_MAX TO 164 (OR 464 bytes)
+C V18 20-NOV-95 SCD Add normal and pseudo protocol parameters for 
+C                   subnetwork GUI
+C V17 08-SEP-95 DAS Comm type was taken out of x2xgbl for UK still needs
+C                   to be defined because some sites still use old comm.
+C                   Will set it here.
+C V16 07-SEP-95 DAS NEED A WAY TO DISTIGUISH PX2X from EUROGOLS
+C                   AND NOT EXECUTE SOME TASKS (IE. MSCPRO & SLOPOL)
+C
+C V15 04-AUG-95 SCD Disable extended addressing for Colorado by decreasing
+C		    X2X_MAXTERMS from 32 to 30
+C V14 13-JUN-95 SCD Additional sizing for Colorado and REMOVE parameters
+C		    X2X_GTXDIAL_STATIONS and X2X_NONDIAL_STATIONS
+C V13 12-JUN-95 SCD Set X2X_ACTUAL_SAP back from 17 to 15 (for Baseline) and
+C		    size for Colorado
+C V12 14-APR-95 SCD CHANGE X2X_ACTUAL_SAP FROM 15 TO 17
+C V11 01-APR-95 DAS increased size of app_mess to 64 (256 bytes)
+C V10 10-FEB-95 SCD Size for DC
+C V09 30-NOV-94 GPR Define Broadcast station type
+C V08 13-DEC-94 GPR Integrate UK changes into X2X Baseline
+C V07 25-OCT-94 GPR Increase Max sites and Max Port assign - Integrate 
+C		    UK changes into X2X Baseline
+C V06 21-JUL-94 WS MULTINETWORK CHANGES - Integrate UK changes into X2X Baseline
+C V05 25-MAY-94 GPR Add parameter for Broadcast stations 1 & 2
+C V04 05-APR-94 GPR Add X2X_I4_STATION to use in extracting the 
+C                   station from the procom buffer
+C V03 01-APR-94 GPR Change parameters to support X.25 for U.K.
+C V02 16-FEB-94 JWE Add broadcast server support
+C		    Change number of X.25 calling blocks to match X2XSTN
+C
+C     <rxd>  09-jan-94 Sized according to U.K parameters
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V05 24-AUG-94 GPR DEFINE MAX SUBNETWORKS - Integrate UK changes 
+C		    into X2X Baseline
+C V04 01-MAY-92 DAS DECREASED # OF TERMS TO 2000
+C V03 28-APR-92 DAS WEST VIRGINA
+C V02 08-APR-92 DAS TEXAS 
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C THIS FILE CONTAINS PARAMETERS WHICH ARE UTILIZED BY
+C THE X2X SUBSYSTEM.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C..SYSTEM CONFIGURATION ..................................................
+C   
+C
+        LOGICAL PX2X_TASK
+          PARAMETER (PX2X_TASK=.FALSE.)
+        LOGICAL MSC_TASK
+          PARAMETER (MSC_TASK=.FALSE.)
+        LOGICAL SLO_TASK
+          PARAMETER (SLO_TASK=.FALSE.)
+        LOGICAL NEW_COMM 
+          PARAMETER (NEW_COMM=.TRUE.)
+C..SYSTEM CONFIGURATION ..................................................
+C
+C
+	INTEGER*4 X2X_MAX_X2X_FILES	!MAX NO OF X2X FILES - V06
+	PARAMETER (X2X_MAX_X2X_FILES=13) !IN SYNC WITH X2XFIL_MAX_FILES - V06
+	INTEGER*4  X2X_MAX_THRESHOLD,X2X_MAXLEN_MSGCOM
+	PARAMETER (X2X_MAX_THRESHOLD=4)    !THRESHOLD TABLE FOR SAP FOR
+C                                          !LOAD LEVELING ON OUTCALLS
+	PARAMETER (X2X_MAXLEN_MSGCOM=300)  !MAXIMUM MESSAGE LENGTH IN
+C                                          !MESSAGE COMMON
+C
+	INTEGER*4  X2X_STATIONS, X2X_ADRESS_MAXLEN, X2X_MAXPORT
+	INTEGER*4  X2X_MAXTERMS, X2XS_INTRVLS, X2X_NUM_GROUPS
+	INTEGER*4  X2X_LIST_LEN, X2X_TERMS, X2X_LOCAL_PORTS
+	INTEGER*4  X2X_NETWORK_PORTS,    X2X_MAXPRT_ASSIGN
+	INTEGER*4  X2X_MAXDIAL_ASSIGN,   X2X_MAXPVC_ASSIGN
+        INTEGER*4  X2X_MAXX32_ASSIGN,    X2_NUM_LOADS_TO_CHECK
+        INTEGER*4  X2X_EVSN_MAXLEN,      X2X_EVSN_MAXADD
+        INTEGER*4  X2X_MAXPVC_CKTS,      X2X_MAXPVC_LINES
+	INTEGER*4  X2X_I4_STATION					! V04
+	INTEGER*4  X2X_DISTRIBUTE_X25					! V08
+C
+	PARAMETER (X2X_TERMS=12288)         !MAX # OF TERMS CONFIGURED, V10,V25
+					    !agrees with numagt in prmagt.def
+C       INTEGER*4  X2X_GTXDIAL_STATIONS
+CV14    PARAMETER (X2X_GTXDIAL_STATIONS=1)  !NUMBER OF STATIONS		! V03
+C                                           !TO RESERVE FOR GTECH DIAL
+C                                           !PROTOCOL (GTX STATIONS)   
+C       INTEGER*4  X2X_NONDIAL_STATIONS
+CV14    PARAMETER (X2X_NONDIAL_STATIONS=192)  !NUMBER OF NON DIAL STATIONS-V10
+C                                               !THESE ARE NORMAL STATIONS
+C
+
+CV14    PARAMETER (X2X_STATIONS=X2X_NONDIAL_STATIONS+ ! NORMAL STATIONS
+CV14 *                          X2X_GTXDIAL_STATIONS) ! GVT STATIONS
+C
+C	V14 - # of stations for Colorado = 5 ASYNC GTXs * 48 stns per GTX +
+C					   1000 Dial GVT stns + 
+C					   2 pseudo stn GTXs * 48 stns per GTX
+        PARAMETER (X2X_STATIONS = 12288)                                   !V25
+        PARAMETER (X2X_I4_STATION=0)        !STATION IS 4 BYTES IN PROCOM  ! V04
+        PARAMETER (X2X_DISTRIBUTE_X25=0)    !DISTRIBUTE X25 PORTS?	   !V08
+        PARAMETER (X2X_ADRESS_MAXLEN=2)     !LENGTH OF STATION ADRESS IN
+C                                           !FULLWORDS
+        PARAMETER (X2X_EVSN_MAXLEN=2)       !LENGTH OF XTENDED VER. SEQ #
+        PARAMETER (X2X_EVSN_MAXADD=100)     !MAX # TO ADD ONLINE
+	PARAMETER (X2X_MAXPORT=4)           !MAXIMUM PORT NUMBER DEFINED FOR
+C                                           !EACH STATION
+	PARAMETER (X2X_MAXTERMS=30)         !UP TO 'N' TERMINALS CONTROLLED! V03
+C                                           !BY ONE STATION/PORT	   ! V15
+	PARAMETER (X2XS_INTRVLS=2)          !# OF STATISTICS INTERVALS
+C 
+        PARAMETER (X2X_NUM_GROUPS=           !NO OF STATION GROUP LISTS
+     *             (X2X_STATIONS/4+1)/2*2)   !MUST BE EVEN
+	PARAMETER (X2X_LIST_LEN=48)          !MAX STATIONS PER GROUP
+C
+	PARAMETER (X2X_LOCAL_PORTS=2048)    !GTX's NUM OF LOGICAL PORTS ! V03,V10,V14
+	PARAMETER (X2X_NETWORK_PORTS=2048)  !NUMBER OF PORTS FROM	! V03,V10,V14
+C                                           !NETWORK
+	PARAMETER (X2X_MAXPRT_ASSIGN=7)     !NUM OF NETWORK PORTS TO	! V07
+C                                           !ASSIGN TO A STATION
+	PARAMETER (X2X_MAXPVC_ASSIGN=1)     !HIGHEST PVC TO ASSIGN
+        PARAMETER (X2X_MAXPVC_CKTS='3FFF'X) !CKTS ON A USAT LINE (14 BITS)
+C                                           ! '3FFF'X = 16383   
+        PARAMETER (X2X_MAXPVC_LINES=4)      !USAT LINES CONNECTED TO PORTS
+	PARAMETER (X2X_MAXDIAL_ASSIGN=2)    !NUM DIAL PORTS TO ASSIGN
+        PARAMETER (X2X_MAXX32_ASSIGN=2)     !NUM X32 PORTS TO ASSIGN
+C                                           !TO A STATION
+C
+	INTEGER*4  X2X_MAX_SITES, X2X_MAXNODES, X2X_MAX_HUNT
+	PARAMETER (X2X_MAX_SITES=1)         !NUMBER OF DATA CENTERS	! V07,V10
+	PARAMETER (X2X_MAXNODES=1)          !MAX NETWORK NODES FROM NETWORK
+C                                           !SAME AS MAXPRT_ASSIGN!! WRONG - V06!
+					    !X2XSTN_MAXDEF+X2XSTN_MAXX32 - V06
+	PARAMETER (X2X_MAX_HUNT=25)         !MAX NUM OF HUNT ADDRESSES
+C
+C
+	INTEGER*4  X2X_SAP, X2X_SAP_PORTS, X2X_ACTUAL_SAP, X2X_MAXTTN
+	PARAMETER (X2X_SAP=64)              !MAX # OF SAPS CONFIGURED
+CV06	PARAMETER (X2X_SAP_PORTS=4)         !UP TO 'N' PORTS ON SAP	! V03
+	PARAMETER (X2X_SAP_PORTS=48)        !UP TO 'N' PORTS ON SAP	! V03,V06,V10
+	PARAMETER (X2X_ACTUAL_SAP=15)       !REAL FE STARTING SAP	! V12,
+									! V13
+C
+	PARAMETER (X2X_MAXTTN=2)            !MAX NUMBER OF TITN CLASS RECORDS
+C
+	INTEGER*4  X2X_MAX_MAINTENANCE_TYPE
+	PARAMETER (X2X_MAX_MAINTENANCE_TYPE=3) !UP TO 3 FE MAINTENANCE
+C                                        ;TYPE MESSAGES, TYPE 0 NOT ACCONTED
+C                                        ;EACH PORT = 16 BYTES
+C
+	INTEGER*4 X2X_MAX_DELAY_SUBNET	 !NO OF SUBNETWORKS ACCOUNTED
+	PARAMETER (X2X_MAX_DELAY_SUBNET=10) !FOR 10 DIFFRENT SUBNETWORKS
+C					!STATISTICS KEPT 0,...,9, FOR
+C					!SUBNETWORK HIGHER THAN 9, 0 UPDATED
+	INTEGER*4 X2X_MAX_SUBNETWORK	    !MAX NUMBER OF SUBNETWORKS	!V05
+	PARAMETER (X2X_MAX_SUBNETWORK=255)
+C
+C
+	INTEGER*4  X2XR_FIRST_COMMON_PROCESS
+	PARAMETER (X2XR_FIRST_COMMON_PROCESS=7) !FIRST RELAY PROCES # - V06,V10
+C
+	INTEGER*4  X2X_RELAY_APPS, X2XR_APP_DATA_MAX, X2_MAXLOADS
+	PARAMETER (X2X_RELAY_APPS=16)     !UP TO 16 RELAY APPLICATIONS
+	PARAMETER (X2XR_APP_DATA_MAX=116) !UP TO 464 BYTE SINGLE RELAY MESSAGE
+	PARAMETER (X2_MAXLOADS=256)       !MAX NUMBER OF TERMINAL DOWN LOADS
+        PARAMETER (X2_NUM_LOADS_TO_CHECK=4)!NUMBER OF LOADS SENT MULTIPLE TIMES
+
+C ------------- STCONF speed-up for STL --------------------    ! V02
+C From x2xstn:
+	INTEGER*4   X2XS_MAXNET
+	PARAMETER  (X2XS_MAXNET=7)
+	INTEGER*4   X2XS_MAXDIAL
+	PARAMETER  (X2XS_MAXDIAL=2)
+	INTEGER*4   X2XS_MAXDEF					! V06
+	PARAMETER  (X2XS_MAXDEF=4)				! V06
+        INTEGER*4   X2XS_MAXX32
+        PARAMETER  (X2XS_MAXX32=2)
+	INTEGER*4   X2XS_MAX_ALLNET				! V06
+	PARAMETER  (X2XS_MAX_ALLNET=X2XS_MAXNET+X2XS_MAXDIAL+	! V06
+     *			X2XS_MAXX32)				! V06
+C From x2xnpc:
+
+	INTEGER*4 X2XPN_ENTRIES
+	PARAMETER (X2XPN_ENTRIES=15)
+
+C For x2xscl
+        INTEGER*4 X2XC_PERM_CLASSES
+        PARAMETER (X2XC_PERM_CLASSES=10)
+C
+	INTEGER*4 X2XC_CLASSES
+	PARAMETER (X2XC_CLASSES = 16)	
+C
+C	***** Start V08 changes *****
+C
+	INTEGER*4 X2XC_CLASS_X21
+        PARAMETER (X2XC_CLASS_X21        =     1)
+	INTEGER*4 X2XC_CLASS_X25
+        PARAMETER (X2XC_CLASS_X25        =     2)
+	INTEGER*4 X2XC_CLASS_ASYNC
+        PARAMETER (X2XC_CLASS_ASYNC      =     3)
+	INTEGER*4 X2XC_CLASS_ISOCH
+        PARAMETER (X2XC_CLASS_ISOCH      =     4)
+	INTEGER*4 X2XC_CLASS_USAT
+        PARAMETER (X2XC_CLASS_USAT       =     5)
+	INTEGER*4 X2XC_CLASS_X25PVC
+        PARAMETER (X2XC_CLASS_X25PVC     =     6)
+	INTEGER*4 X2XC_CLASS_GVT
+        PARAMETER (X2XC_CLASS_GVT        =     7)
+	INTEGER*4 X2XC_CLASS_GTX
+        PARAMETER (X2XC_CLASS_GTX        =     8)
+	INTEGER*4 X2XC_CLASS_X28
+        PARAMETER (X2XC_CLASS_X28        =     9)
+	INTEGER*4 X2XC_CLASS_X25_REMOTE
+        PARAMETER (X2XC_CLASS_X25_REMOTE =    10)
+C
+C	***** End V08 changes *****
+C
+C Station parameters
+C
+C      station connection types:
+C
+       INTEGER*4 X2XSCT_MAX_TYPE
+           PARAMETER (X2XSCT_MAX_TYPE = 10) !Maximum connection types
+        INTEGER*4 X2XSCT_X21SWC,X2XSCT_X25SVC,X2XSCT_X25PVC,
+     *            X2XSCT_X28PAD,X2XSCT_X25FSL,X2XSCT_ASYPVC,
+     *            X2XSCT_X25_X32, X2XSCT_X25_DIAL,
+     *            X2XSCT_GTECH_DIAL, X2XSCT_USAT_PVC
+            PARAMETER (X2XSCT_X21SWC = 1)
+            PARAMETER (X2XSCT_X25SVC = 2)
+            PARAMETER (X2XSCT_X25PVC = 3)
+            PARAMETER (X2XSCT_X28PAD = 4)
+            PARAMETER (X2XSCT_X25FSL = 5)
+            PARAMETER (X2XSCT_ASYPVC = 6)
+            PARAMETER (X2XSCT_X25_X32= 7)
+            PARAMETER (X2XSCT_X25_DIAL= 8)
+            PARAMETER (X2XSCT_GTECH_DIAL= 9)
+            PARAMETER (X2XSCT_USAT_PVC = 10)
+C
+C Network port parameters
+C
+        INTEGER*4  X2XPT_MAX_TYPE
+           PARAMETER (X2XPT_MAX_TYPE=7) !Maximum network port types
+        INTEGER*4  X2XPT_X21, X2XPT_X25, X2XPT_DIALUP, X2XPT_ASYNC
+        INTEGER*4  X2XPT_USAT_LAPB, X2XPT_UNDEF, X2XPT_BCST1
+	INTEGER*4  X2XPT_BCST2
+	   PARAMETER (X2XPT_UNDEF=0)
+           PARAMETER (X2XPT_X21=1)
+           PARAMETER (X2XPT_X25=2)
+           PARAMETER (X2XPT_DIALUP=3)
+           PARAMETER (X2XPT_ASYNC=4)
+           PARAMETER (X2XPT_USAT_LAPB=5)
+	   PARAMETER (X2XPT_BCST1=6)
+	   PARAMETER (X2XPT_BCST2=7)
+C
+CV06C Broadcast Station type
+C
+CV06	INTEGER*4 BRDCST_TOTAL_NUMBER  ! Total number of broadcast station
+CV06	INTEGER*4 BRDCST_NORMAL_STN    ! Normal station
+CV06	INTEGER*4 BRDCST_STN_USAT      ! Broadcast station for USAT
+        INTEGER*4 X2XST_BCST_TYPE      ! Broadcast station type         ! V08
+C
+CV06	PARAMETER (BRDCST_TOTAL_NUMBER=20)
+CV06	PARAMETER (BRDCST_NORMAL_STN=0)
+CV06	PARAMETER (BRDCST_STN_USAT=1)  
+        PARAMETER (X2XST_BCST_TYPE=3)                                   ! V08
+
+C	Start of V18 protocol parameters
+
+	INTEGER*4    X2XS_NORMAL_PROTOCOL, X2XS_PSEUDO_PROTOCOL
+	PARAMETER   (X2XS_NORMAL_PROTOCOL = 1)
+	PARAMETER   (X2XS_PSEUDO_PROTOCOL = 3)
+
+C	End of V18 protocol parameters

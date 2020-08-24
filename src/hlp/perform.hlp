@@ -1,0 +1,22 @@
+    PER.HLP                GTECH Distributed Network
+                            Performance Snapshot Help           Page 1 of 1
+ 
+    The system performance snapshot displays information on various system 
+    statistics.  These statistics are updated every 60 seconds.
+
+
+    The information displayed includes:
+ 
+    game          - game name
+    wagers/minute - total wagers per minute for each game available. 
+                    (Lotto, Vakio, Ravi, Tulos etc)This snapshot also
+                    lists total wagers, cancels and cashes per minute
+                    for all games.
+    total         - total wagers, cancels and validations per minute
+    wagers/minute   for all games available
+    total         - total for each transaction type (sales, cancels, 
+                    deletes, cashes and refunds) for the current day
+    ##seconds     - reflects the time left before the screen is next
+                    updated. (screen updated every 60 seconds)
+
+

@@ -1,0 +1,201 @@
+C
+C DN_LINK.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]DN_LINK.DEV                                  $
+C  $Date::   17 Apr 1996 12:58:34                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 17-JUN-2000 UXN DN_LINK_STRUCT and DN_BUFFER_STRUCT aligned.
+C                     CDEC$ OPTIONS added for DN_FUNC_STRUCT
+C V01 ??-???-???? ??? INITIAL RELEASE
+C
+C Definition file for DECnet specific data structures...
+C These structure are DECnet private and need only be known
+C by "snoopy" programs that will typically be used to debug
+C the networking code.
+
+C Link Data Structure Definition, one per logical link
+C Definitions for DN_LINK's STATE field
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+
+ 	INTEGER*4   STATE_INITIAL 	!Network has not been initialized
+	PARAMETER  (STATE_INITIAL = 0)
+ 	INTEGER*4   STATE_DOWN          !Initialized, but not connected
+	PARAMETER  (STATE_DOWN = STATE_INITIAL + 1)
+ 	INTEGER*4   STATE_CONNECT       !In Process of Connecting
+	PARAMETER  (STATE_CONNECT = STATE_DOWN + 1)
+ 	INTEGER*4   STATE_CONFIRM       !In Process of Accepting a Connect
+	PARAMETER  (STATE_CONFIRM = STATE_CONNECT + 1)
+ 	INTEGER*4   STATE_DISCONNECT    !In Process of Disconnecting
+	PARAMETER  (STATE_DISCONNECT = STATE_CONFIRM + 1)
+ 	INTEGER*4   STATE_ABORT         !In Process of Aborting
+	PARAMETER  (STATE_ABORT = STATE_DISCONNECT + 1)
+ 	INTEGER*4   STATE_FAILED        !Link Failed - Cleaning up
+	PARAMETER  (STATE_FAILED = STATE_ABORT+ 1)
+ 	INTEGER*4   STATE_RUNNING       !Up and operational
+	PARAMETER  (STATE_RUNNING = STATE_FAILED + 1)
+ 	INTEGER*4   STATE_MAX		!Our Highest State
+	PARAMETER  (STATE_MAX = STATE_RUNNING)
+
+	STRUCTURE /DN_LINK_STRUCT/
+           DOUBLE PRECISION
+	1		STATE_TIME(0 : STATE_MAX)	!Indexed by state. 
+					!Record time when entered by GETTIM 
+					!System Subroutine - QUADWORD
+	   !Things to identify our link and keep it running
+	   INTEGER*4	STATE		!State of our link, see below
+	   INTEGER*4	NODELEN		!Number of chars in NODE
+	   INTEGER*4	TASKLEN		!Number of chars in TASK
+	   INTEGER*4	NCBLEN		!Number of bytes used in NCB 
+	   INTEGER*4	UNIT		!DECnet unit number of link
+	   !Statistics to tell us how well it runs and more
+	   INTEGER*4	OWNER		!Owner of the link
+	   INTEGER*4	MSGXMT		!Messages Sent
+	   INTEGER*4	BYTXMT		!Bytes Sent
+	   INTEGER*4	MSGRCV          !Messages Received
+	   INTEGER*4	BYTRCV		!Bytes Received
+	   INTEGER*4	MSGOUT          !Messages Queued & waiting for
+					!an AST to complete
+	   INTEGER*4	MSGOUTMAX	!Highwater mark of MSGOUT
+           INTEGER*4	STATE_COUNT(0 : STATE_MAX)	!Indexed by state. 
+					!Count entry into each state
+	   INTEGER*4	LAST_COMMAND  	!Save the last Command we received
+	   INTEGER*4	LAST_ERROR  	!Save the last error we encountered
+	   !Link to next DN_LINK
+	   INTEGER*4	NEXT_LINK	!Pointer to next DN_LINK	
+	   INTEGER*2	CHANNEL		!DECnet Link I/O Channel
+ 	   CHARACTER*100 NCB		!Network Connect Block for Link
+	   CHARACTER*32	NODE		!Remote system name
+ 	   CHARACTER*12 TASK		!Remote Task Name
+	   BYTE         PAD(2)         
+	   !End of Structure DN_LINK
+	END STRUCTURE
+
+C STRUCTURE FOR IO STATUS BLOCK.
+
+	STRUCTURE /DN_IOSB_STRUCT/
+	  INTEGER*2 STAT                          !VMS STATUS
+          INTEGER*2 XSIZE                         !TRANSFER SIZE
+          INTEGER*4 PARM                          !PARAMETER/BUFFER ADDRESS
+        END STRUCTURE
+
+C DECnet system communications data structure including DECnet
+C Mailbox management
+
+	STRUCTURE /DN_SYSTEM_STRUCT/
+	   INTEGER*4	FREE_QUEUE(2)	!Free buffer header Queue
+	   INTEGER*4	TASK_QUEUE(2)	!Task Response Queue
+	   INTEGER*4	COMMAND_QUEUE(2)!Write buffer header Queue
+	   CHARACTER*12	MBXNAME		!DECnet mailbox name
+	   INTEGER*4	MBXNAME_SIZE    !Number of Chars in MBXNAME
+	   CHARACTER*12 TSKNAM		!Network Name to Declare
+	   INTEGER*4	TSKNAM_SIZE	!Number of Chars in TSKNAM
+	   RECORD /DN_IOSB_STRUCT/ IOSB	!IOSB for network Mailbox
+	   INTEGER*2	MBXCHAN		!Channel for Mailbox I/O
+	   INTEGER*2	NETCHAN		!Channel for DECnet Control
+	   INTEGER*4	PAD		!Make quadword aligned
+	END STRUCTURE
+	
+C DECnet buffer header structure
+
+	STRUCTURE /DN_BUFFER_STRUCT/
+	   DOUBLE PRECISION TIME	!When Queued... $GETTIM format
+	   INTEGER*4	QUEUE(2)	!Queue header - quad word align!	
+	   RECORD /DN_IOSB_STRUCT/ IOSB	!IOSB for this I/O, one per buffer
+           INTEGER*4	AP_STATUS	!Application status code
+	   INTEGER*2	CHANNEL		!Channel to use                
+	   INTEGER*2	COMMAND		!Command that got us here
+	   INTEGER*4	SOURCE		!Who gets the response when I/O done
+	   INTEGER*4	LINK		!Link Block Index
+	   INTEGER*4	DBUFFER		!Data Buffer Address, if any
+	   INTEGER*4	DBUFFER_SIZE	!Data Buffer Size in BYTES
+	   INTEGER*4	PBLOCK		!Parameter block pointer
+	   INTEGER*4	DBUFFER_NO	!Network buffer no
+	   INTEGER*4	LOCAL_PBLOCK(7) !Local area for pblock
+	   INTEGER*4	BUF_NO		!buffer no
+ 	END STRUCTURE
+
+C Structure for mailbox messages
+
+	STRUCTURE /DN_MBX_STRUCT/
+	  INTEGER*2  MSGTYP		!Message type
+	  INTEGER*2  UNIT		!Device unit number
+	  BYTE	     INFO(100)		!Information structured as follows:
+					!One byte for the length of the device
+					! followed by that many bytes of 
+					! device name
+					!One byte count of additional 
+					! information followed by that many 
+					! bytes of information
+	END STRUCTURE
+
+C Structure for network ACP control functions
+
+CDEC$ OPTIONS /WARNING=NOALIGNMENT
+	STRUCTURE /DN_FUNC_STRUCT/           
+	  BYTE	    FUNC       !One Byte of function
+	  INTEGER*4 FREEWORD   !One byte of zero (for declaring a network name...)
+	END STRUCTURE
+CDEC$ END OPTIONS
+
+C DATA VALUES FOR PARAMETERS STORED IN MACRO LIBRARY.
+C NOTE: THESE VALUES WERE OBTAINED BY THE FOLLOWING:
+C	$ LIBRARY SYS$LIBRARY:LIB.MLB /EXTRACT=$NFBDEF
+
+	INTEGER*4	NFB$C_DECLNAME
+	PARAMETER      (NFB$C_DECLNAME=21)
+	INTEGER*4	NFB$C_DECLOBJ
+	PARAMETER      (NFB$C_DECLOBJ=22)
+
+C Define application error codes
+
+	INTEGER*4  DNE_SUCCESS
+	PARAMETER (DNE_SUCCESS	  = 0)		!Success
+	INTEGER*4  DNE_NOLINKBLOCK 
+	PARAMETER (DNE_NOLINKBLOCK  = 1)	!Zero link block pointer
+	INTEGER*4  DNE_WRONGSTATE 
+	PARAMETER (DNE_WRONGSTATE  = 2)		!Link in wrong state for operation
+	INTEGER*4  DNE_NOBUFFER
+	PARAMETER (DNE_NOBUFFER	  = 3)		!DBUFFER field was zero
+	INTEGER*4  DNE_BUFFERLOCKED
+	PARAMETER (DNE_BUFFERLOCKED  = 4)	!Interlocked buffer queue entry
+	INTEGER*4  DNE_ZEROLENBUFFER
+	PARAMETER (DNE_ZEROLENBUFFER = 5)	!Buffer length set to zero
+	INTEGER*4  DNE_CHECKIOSB 
+	PARAMETER (DNE_CHECKIOSB  = 6)		!Error, more info in IOSB
+	INTEGER*4  DNE_NOBUFFERS 
+	PARAMETER (DNE_NOBUFFERS  = 7)		!No buffer headers on the queue
+	INTEGER*4  DNE_FAILED$SETEF 
+	PARAMETER (DNE_FAILED$SETEF  = 8)	!Unable to set an event flag
+	INTEGER*4  DNE_INVALIDCHAN
+	PARAMETER (DNE_INVALIDCHAN  = 9)	!Passed channel was zero!
+	INTEGER*4  DNE_INVALIDBUFFER
+	PARAMETER (DNE_INVALIDBUFFER  = 10)	!Passed Data buffer pointer zero
+	INTEGER*4  DNE_INVALIDBUFLEN
+	PARAMETER (DNE_INVALIDBUFLEN  = 11)	!Data buffer length zero
+	INTEGER*4  DNE_NODBUFFER
+	PARAMETER (DNE_NODBUFFER      = 12) 	!Can't get data buffer
+	INTEGER*4  DNE_READFAILED
+	PARAMETER (DNE_READFAILED     = 13) 	!Unable to queue a read request
+

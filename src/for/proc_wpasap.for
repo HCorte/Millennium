@@ -1,0 +1,415 @@
+C
+C V04 18-MAY-2020 SCML Total draws per game increased to 60 (P200518_0025)
+C V03 11-AUG-2011 RXK  Call of COPYRITE added.
+C V02 07-DEC-2010 FRP  Lotto2 Changes.
+C V01 15-MAY-2001 ANG  INITIAL RELEASE FOR PORTUGAL
+C
+C THIS PROGRAM GENERATES WPASAP_DAYCDC.ASC
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+C=======OPTIONS /CHECK=NOOVERFLOW
+        PROGRAM PROC_WPASAP
+        IMPLICIT NONE
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:DESVAL.DEF'
+        INCLUDE 'INCLIB:VDETAIL.DEF'
+        INCLUDE 'INCLIB:VALFIL.DEF'
+        INCLUDE 'INCLIB:PRMHSH.DEF'
+        INCLUDE 'INCLIB:PASCOM.DEF'
+        INCLUDE 'INCLIB:STANDARD.DEF'
+        INCLUDE 'INCLIB:DATBUF.DEF'
+
+	INTEGER*2 DATE(DATLEN)
+
+	LOGICAL   FIRST
+C
+        INTEGER*4 TUBSIZ
+        PARAMETER (TUBSIZ=I4BUCSIZ*7)
+        INTEGER*4 VLFBUF(TUBSIZ)
+
+	INTEGER*4 ST,PSTART,PEND,AUXGAM,KIK
+	INTEGER*4 DRW,SHR,DIV,INDPRZ,GAM,OPS
+
+        CALL COPYRITE
+
+        DATE(VCDC) = DAYCDC
+        CALL CDATE(DATE)
+
+        IF (DATE(VDOW).NE.SATURDAY) THEN
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+
+        TYPE*,IAM(),'>>> GENERATE WPASAP_DAYCDC.ASC <<<'
+
+	PEND   = DAYCDC
+	PSTART = DAYCDC - 6
+
+        CALL IOPEN(SFNAMES(1,VLF),VLF,VFLEN*2,VFSCDC,VFSSER*2-1,ST)
+        IF(ST.NE.0) CALL FILERR(SFNAMES(1,VLF),1,ST,0)
+        CALL ITUBSIZE(VLF,TUBSIZ)
+
+        CALL ISREAD(V4BUF,VLF,VLFBUF,ST)
+        IF(ST.NE.0 .AND. ST.NE.ERREND) CALL FILERR(SFNAMES(1,VLF),2,ST,0)
+C
+	FIRST = .TRUE.
+C
+	DO WHILE(ST.NE.ERREND)
+           CALL LOGVAL(VALREC,V4BUF)
+           CALL DLOGVAL(VALREC,VDETAIL)
+
+	   GAM = VALREC(VGAM)
+	   IF ( (VALREC(VCCDC).GE.PSTART.AND.VALREC(VCCDC).LE.PEND) .AND.
+     *           (VALREC(VSTAT).EQ.VCASH.OR.VALREC(VSTAT).EQ.VCASHX) ) THEN
+	      
+	       DO INDPRZ=1,VALREC(VPZOFF)
+		  KIK = VDETAIL(VKIK,INDPRZ)
+	          DRW = VDETAIL(VDRW,INDPRZ)      
+		  SHR = VDETAIL(VSHR,INDPRZ)
+		  DIV = VDETAIL(VDIV,INDPRZ)
+	          OPS = VDETAIL(VOP,INDPRZ)
+		  IF (OPS.EQ.0) THEN
+		     IF (KIK.NE.0) THEN
+		        AUXGAM = KGNTAB(GAM)
+		     ELSE
+		        AUXGAM = GAM		     
+		     ENDIF
+
+		     IF (AUXGAM.LE.0.OR.AUXGAM.GT.MAXGAM) THEN
+		        TYPE*,IAM(),'ERROR GETTING GAME NUMBER'
+		        TYPE*,IAM(),'GAM         = ',AUXGAM
+		        TYPE*,IAM(),'SEL  SERIAL = ',VALREC(VSSER)
+		        TYPE*,IAM(),'CASH SERIAL = ',VALREC(VCSER)
+		        CALL GPAUSE()
+		     ELSE
+		        IF ( FIRST ) THEN
+		           CALL ACC_PRZ(AUXGAM,DRW,SHR,DIV,FIRST)
+		           FIRST = .FALSE.
+		        ELSE
+		           CALL ACC_PRZ(AUXGAM,DRW,SHR,DIV,FIRST)
+		        ENDIF
+	             ENDIF
+                  ENDIF
+	       ENDDO
+	   ENDIF
+
+           CALL ISREAD(V4BUF,VLF,VLFBUF,ST)
+           IF(ST.NE.0.AND.ST.NE.ERREND) CALL FILERR(SFNAMES(1,VLF),2,ST,0)
+	ENDDO
+C
+C GENERATE FILE
+C
+	CALL PRT_SAPFILE()
+C
+	CALL ICLOSE(VLF,VLFBUF,ST)
+C
+C CLOSE ALL GAME FILES
+C
+	IF  ( FIRST ) CALL CLOSE_GFILES()
+
+	CALL GSTOP(GEXIT_SUCCESS)
+	END
+
+C**************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE ACC_PRZ(GAM,DRW,SHR,DIV,FIRST)
+        IMPLICIT NONE
+C**************************************
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+
+	LOGICAL   FIRST
+	INTEGER*4 GAM,DRW,SHR,DIV
+	INTEGER*4 ST,SHV,OFF,NEXT,I
+	INTEGER*4 WEEK,YEAR
+C
+        INTEGER*4 GTOTDRW !V04 Maximum draws per game
+        PARAMETER (GTOTDRW = 60) !V04
+C
+	INTEGER*4 GET_SHV !FUNCTION 
+
+        STRUCTURE /PRZSTRUC/
+            INTEGER*4 DRW
+            INTEGER*4 WEEK
+            INTEGER*4 YEAR
+            INTEGER*4 AMT
+        END STRUCTURE
+C        RECORD /PRZSTRUC/ AGTPRZ(20,MAXGAM)
+        RECORD /PRZSTRUC/ AGTPRZ(GTOTDRW,MAXGAM) !V4
+
+	COMMON /PRZCOM/ AGTPRZ
+C
+        IF(FIRST .EQ. .TRUE.) CALL FASTSET(0, AGTPRZ, SIZEOF(AGTPRZ) / 4)
+C
+	SHV = GET_SHV(GAM,DRW,DIV,FIRST)
+C
+C FIND THE POSITION ON MEMORY TABLE
+C	
+	OFF  = -1
+	NEXT = -1
+CV04	DO I=1,20
+	DO I=1,GTOTDRW !V04
+	    IF (AGTPRZ(I,GAM).DRW.EQ.DRW) THEN
+		OFF = I
+		EXIT
+            ELSEIF (AGTPRZ(I,GAM).DRW.EQ.0) THEN
+	        NEXT = I
+	        EXIT
+	    ENDIF
+	ENDDO
+
+	IF (OFF.EQ.-1) THEN
+	    IF (NEXT.EQ.-1) THEN
+		TYPE*,IAM(),'>>> MEMORY TABLE IS FULL !!'
+		CALL GPAUSE()
+		CALL GSTOP(GEXIT_FATAL)
+	    ENDIF
+
+	    CALL GETWEK(DRW,GAM,WEEK,YEAR,ST)
+	    IF (ST.NE.0) THEN
+		TYPE*,IAM(),'>>> ERROR GETTING WEEK AND YEAR FOR GAM = ',GAM
+		TYPE*,IAM(),'  DRAW NUMBER ',DRW
+		CALL GPAUSE()	
+	    ENDIF
+	    AGTPRZ(NEXT,GAM).DRW  = DRW
+	    AGTPRZ(NEXT,GAM).WEEK = WEEK 
+	    AGTPRZ(NEXT,GAM).YEAR = YEAR
+
+	    OFF = NEXT
+	ENDIF
+
+	AGTPRZ(OFF,GAM).AMT = AGTPRZ(OFF,GAM).AMT + (SHV*SHR) 	
+
+	RETURN
+	END
+
+C***************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+        INTEGER*4 FUNCTION GET_SHV(GAM,DRW,DIV,FIRST)
+        IMPLICIT NONE
+C***************************************
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:DLTREC.DEF'
+        INCLUDE 'INCLIB:DKKREC.DEF'
+        INCLUDE 'INCLIB:DSPREC.DEF'
+        INCLUDE 'INCLIB:DTGREC.DEF'
+
+	STRUCTURE /FDBSTRUC/
+	    INTEGER*4 FDB(7)
+	END STRUCTURE
+	RECORD /FDBSTRUC/ GAMFDB(MAXGAM)
+
+	COMMON /FDBCOM/ GAMFDB
+
+	INTEGER*4 GAM,DRW,ST,DIV
+	INTEGER*4 GLUN,IND,GTYP,GIND
+	LOGICAL   FIRST
+C
+C OPEN ALL GAME FILES
+C
+	GET_SHV = 0
+	IF  ( FIRST ) THEN
+CC	    FIRST = .FALSE.
+	    DO IND=1,MAXGAM
+               GTYP=GNTTAB(GAMTYP,IND)
+               GIND=GNTTAB(GAMIDX,IND)
+               IF (GTYP.NE.TPAS.AND.GIND.GT.0) THEN
+                  CALL FIND_AVAILABLE_LUN(GLUN,ST)
+                  IF (ST.NE.0) THEN
+                      TYPE*,IAM(),'ERROR GETTING LOGICAL UNIT FOR GAME: ',IND
+                      CALL GPAUSE()
+                      CALL GSTOP(GEXIT_FATAL)
+                  ENDIF 
+                  CALL OPENW(GLUN,GFNAMES(1,IND),4,0,0,ST)
+
+                  IF (GTYP.EQ.TLTO) THEN
+                     CALL IOINIT(GAMFDB(IND).FDB,GLUN,DLTSEC*256)
+                  ELSEIF (GTYP.EQ.TSPT) THEN
+                     CALL IOINIT(GAMFDB(IND).FDB,GLUN,DSPSEC*256)
+                  ELSEIF (GTYP.EQ.TKIK) THEN
+                     CALL IOINIT(GAMFDB(IND).FDB,GLUN,DKKSEC*256)
+                  ELSEIF (GTYP.EQ.TTGL) THEN
+                     CALL IOINIT(GAMFDB(IND).FDB,GLUN,DTGSEC*256)
+                  ENDIF
+                  IF(ST.NE.0) THEN
+                     CALL FILERR(GFNAMES(1,IND),1,ST,0)
+                     CALL GSTOP(GEXIT_FATAL)
+                  ENDIF
+	       ENDIF
+	    ENDDO
+	ENDIF
+
+        GTYP=GNTTAB(GAMTYP,GAM)
+        IF (GTYP.EQ.TLTO) THEN
+            CALL READW(GAMFDB(GAM).FDB,DRW,DLTREC,ST)
+            GET_SHV = DLTSHV(DIV,1)
+        ELSEIF (GTYP.EQ.TSPT) THEN
+            CALL READW(GAMFDB(GAM).FDB,DRW,DSPREC,ST)
+            GET_SHV = DSPSHV(DIV)
+        ELSEIF (GTYP.EQ.TKIK) THEN
+            CALL READW(GAMFDB(GAM).FDB,DRW,DKKREC,ST)
+            GET_SHV = DKKSHV(DIV)
+        ELSEIF (GTYP.EQ.TTGL) THEN
+            CALL READW(GAMFDB(GAM).FDB,DRW,DTGREC,ST)
+            GET_SHV = DTGSHV(DIV)
+        ENDIF
+        IF(ST.NE.0) THEN
+           CALL FILERR(GFNAMES(1,GAM),2,ST,DRW)
+        ENDIF
+
+	IF (GET_SHV.EQ.0) THEN
+	    TYPE*,IAM(),'>>> ERROR GETTING PRIZE VALUE'
+	    TYPE*,IAM(),' GAME NUMBER = ',GAM
+	    TYPE*,IAM(),' DRAW NUMBER = ',DRW
+	    TYPE*,IAM(),' DIVISION    = ',DIV
+	    CALL GPAUSE()
+	ENDIF
+
+	RETURN
+	END
+
+C**************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE PRT_SAPFILE()
+        IMPLICIT NONE
+C**************************************
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:DATBUF.DEF'
+
+	INTEGER*2 DATE(DATLEN)
+	INTEGER*4 GAM,OFF
+	INTEGER*4 ST,SAPLUN,CNTREC/0/
+	CHARACTER*20 SAPFILE
+C
+        INTEGER*4 GTOTDRW !V04 Maximum draws per game
+        PARAMETER (GTOTDRW = 60) !V04
+C
+        STRUCTURE /PRZSTRUC/
+            INTEGER*4 DRW
+            INTEGER*4 WEEK
+            INTEGER*4 YEAR
+            INTEGER*4 AMT
+        END STRUCTURE
+CV04        RECORD /PRZSTRUC/ AGTPRZ(20,MAXGAM)
+        RECORD /PRZSTRUC/ AGTPRZ(GTOTDRW,MAXGAM) !V04
+
+	COMMON /PRZCOM/ AGTPRZ
+C
+C BUILD FILE NAME
+C
+        WRITE(SAPFILE,10) DAYCDC
+
+	CALL FIND_AVAILABLE_LUN(SAPLUN,ST)
+	IF (ST.NE.0) THEN
+	    TYPE*,IAM(),'>>> ERROR GETTING LUN FOR FILE ',SAPFILE
+	ENDIF
+
+        OPEN(SAPLUN,
+     *       FILE   = SAPFILE,
+     *       STATUS = 'NEW',
+     *       IOSTAT = ST)
+
+        IF (ST.NE.0) THEN
+            TYPE*,IAM(),'ERROR OPPENING FILE ',SAPFILE
+            CALL GSTOP(GEXIT_FATAL)
+        ENDIF
+C
+C WRITE HEADER
+C
+        DATE(VCDC) = DAYCDC
+        CALL CDATE(DATE)
+
+        CNTREC = CNTREC + 1
+        WRITE(SAPLUN,20) 'HA1',2000+DATE(VYEAR),DATE(VMON),DATE(VDAY),' '
+C
+C WRITE DETAIL
+C
+	DO GAM=1,MAXGAM
+CV04	   DO OFF=1,20
+	   DO OFF=1,GTOTDRW !V04
+	      IF (AGTPRZ(OFF,GAM).AMT.GT.0) THEN
+		     
+	      CNTREC = CNTREC + 1
+	      WRITE(SAPLUN,30) '053',
+     *                          GAM,
+     *                          AGTPRZ(OFF,GAM).WEEK,
+     *                          AGTPRZ(OFF,GAM).YEAR,
+     *                          AGTPRZ(OFF,GAM).AMT
+		  ENDIF
+	   ENDDO
+	ENDDO
+C
+C WRITE TRAILER
+C
+        CNTREC = CNTREC + 1
+        WRITE(SAPLUN,40) 'HA9',CNTREC,' '
+
+	CLOSE (SAPLUN)
+
+	RETURN
+10      FORMAT('FILE:WPASAP_',I4.4,'.ASC')
+20	FORMAT(A3,I4,I2.2,I2.2,13(A1))
+30	FORMAT(A3,I2.2,I3.3,I4,I13.13)
+40	FORMAT(A3,I6.6,15(A1))
+	END
+
+C**************************************
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE CLOSE_GFILES()
+        IMPLICIT NONE
+C**************************************
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+
+	INTEGER*4 GAM
+
+        STRUCTURE /FDBSTRUC/
+            INTEGER*4 FDB(7)
+        END STRUCTURE
+        RECORD /FDBSTRUC/ GAMFDB(MAXGAM)
+
+        COMMON /FDBCOM/ GAMFDB
+
+	DO GAM=1,MAXGAM
+	    IF (GAMFDB(GAM).FDB(1).GT.0) THEN
+		CALL CLOSEFIL(GAMFDB(GAM).FDB)
+	    ENDIF
+	ENDDO
+
+	RETURN
+	END

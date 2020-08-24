@@ -1,0 +1,152 @@
+C
+C X2XBLD.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XBLD.DEV                                   $
+C  $Date::   17 Apr 1996 16:41:42                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V03 15-JUN-00 UXN COMMON/X2XBLD_NAME/X2XBLD_NAME added.
+C V02 05-DEC-94 SCD Integrate UK changes into X2X Baseline
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C This DEF contains the description of the file which is
+C used to interface between HASF and the X2X Database subsystem.
+C This file will allow a user to enter a minimum of parameters
+C to build a station.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   X2XBLD_REC(128)     !Record buffer
+	CHARACTER   X2XBLD_CREC(512)*1  !Record buffer
+	EQUIVALENCE (X2XBLD_REC, X2XBLD_CREC)
+C
+	INTEGER*4   X2XBLD_SECT         !Number of sectors per rec
+	PARAMETER  (X2XBLD_SECT=2)
+C
+	CHARACTER   X2XBLD_NAME*10      !File name
+	DATA        X2XBLD_NAME /'X2XBLD.FIL'/
+	COMMON/X2XBLD_NAME/X2XBLD_NAME
+	INTEGER*4   X2XBLD_FDB(7)       !File descriptor block
+	DATA        X2XBLD_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XBLD_STN          !Station number
+	INTEGER*4   X2XBLD_ADDRES(2)    !Station address
+	INTEGER*4   X2XBLD_SERIAL       !Serial number
+	INTEGER*4   X2XBLD_STNCLS       !Station class
+	INTEGER*4   X2XBLD_REPCLS       !Report class
+	INTEGER*4   X2XBLD_PVC          !Perm Virtual circuit
+	INTEGER*4   X2XBLD_PVCPORT      !PVC port number
+        INTEGER*4   X2XBLD_DIAL_PORT1   !Dialup/X.32 port
+        INTEGER*4   X2XBLD_DIAL_PORT2   !Dialup/X.32 port
+	INTEGER*4   X2XBLD_UPDATE       !CDC last updated
+	INTEGER*4   X2XBLD_FREE(113)    !Free space
+	INTEGER*4   X2XBLD_BITMAP       !Bitmap of updated fields
+	INTEGER*4   X2XBLD_BITMAP2      !Bitmap of updated fields
+	INTEGER*4   X2XBLD_BITMAP3      !Bitmap of updated fields
+	INTEGER*4   X2XBLD_BITMAP4      !Bitmap of updated fields
+C
+	INTEGER*4   X2XBLD_TERM1, X2XBLD_PORT1, X2XBLD_FILFLDS
+C
+	INTEGER*4   X2XBLD_TERM(10)
+	EQUIVALENCE (X2XBLD_TERM,X2XBLD_TERM1)
+	INTEGER*4   X2XBLD_PORT(10)
+	EQUIVALENCE (X2XBLD_PORT,X2XBLD_PORT1)
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+	EQUIVALENCE (X2XBLD_REC(1),  X2XBLD_STN)
+	EQUIVALENCE (X2XBLD_REC(2),  X2XBLD_ADDRES)
+	EQUIVALENCE (X2XBLD_REC(4),  X2XBLD_SERIAL)
+	EQUIVALENCE (X2XBLD_REC(5),  X2XBLD_STNCLS)
+	EQUIVALENCE (X2XBLD_REC(6),  X2XBLD_REPCLS)
+	EQUIVALENCE (X2XBLD_REC(7),  X2XBLD_PVC)
+	EQUIVALENCE (X2XBLD_REC(8),  X2XBLD_PVCPORT)
+        EQUIVALENCE (X2XBLD_REC(9),  X2XBLD_DIAL_PORT1)
+        EQUIVALENCE (X2XBLD_REC(10), X2XBLD_DIAL_PORT2)
+	EQUIVALENCE (X2XBLD_REC(11), X2XBLD_UPDATE)
+	EQUIVALENCE (X2XBLD_REC(12), X2XBLD_FREE)
+	EQUIVALENCE (X2XBLD_REC(125),X2XBLD_BITMAP)
+	EQUIVALENCE (X2XBLD_REC(126),X2XBLD_BITMAP2)
+	EQUIVALENCE (X2XBLD_REC(127),X2XBLD_BITMAP3)
+	EQUIVALENCE (X2XBLD_REC(128),X2XBLD_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XBLD_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XBLD_ENTRIES
+	PARAMETER (X2XBLD_ENTRIES=10)
+C
+	CHARACTER X2XBLD_FIELD(X2XBLD_ENTRIES)*15
+	DATA      X2XBLD_FIELD
+     *	    /'Station        ','Address        ','Serial         ',
+     *	     'Station class  ','Report class   ','Perm circuit # ',
+     *       'PVC port       ','Dial port 1    ','Dial port 2    ',
+     *	     'Last updated   '/
+C
+C STORE THE VALID INPUT RANGE FOR EACH VARIABLE.
+C
+	INTEGER*4 X2XBLD_RANGE(2,X2XBLD_ENTRIES)
+	DATA      X2XBLD_RANGE
+CV02     *	    /1,X2X_STATIONS, -2,10,    0,9999999,
+     *	    /1,X2X_STATIONS, -2,12,    0,9999999,
+     *	     1,9999,  1,9999,
+     *       0,4095,  0,X2X_NETWORK_PORTS,  0,X2X_NETWORK_PORTS,
+     *       0,X2X_NETWORK_PORTS, 0,0/
+
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XBLD_INDEX(X2XBLD_ENTRIES)
+	DATA      X2XBLD_INDEX
+     *	    /1,   2,   4,
+     *	     5,   6,   7,
+     *	     8,   9,  10,
+     *      11/
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+	INTEGER*4 X2XBLD_VALUE(15,X2XBLD_ENTRIES)
+	DATA      X2XBLD_VALUE
+     *	    /15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *	     15*-1/
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XBLD_COMMON/
+	COMMON /X2XBLD_COMMON/ X2XBLD_REC,   X2XBLD_FDB,
+     *	                       X2XBLD_RANGE, X2XBLD_INDEX,
+     *	                       X2XBLD_VALUE, X2XBLD_FILFLDS,
+     *	                       X2XBLD_FIELD
+C
+C

@@ -1,0 +1,452 @@
+C
+C 
+C PROGRAM INVCLC
+C  
+C V16 15-SEP-2010 FJG PostLive changes because SCML considerations
+C V15 01-JAN-2010 FJG ePASSIVE
+C V14 18-JUN-2001 EPH  Transporte only if has activity and Central de recepcao only if not suspended
+C V13 17-APR-01 CS  INITIAL RELEASE FOR PORTUGAL
+C V12 17-MAR-99 RXK Calculation of number of active days of an agent fixed 
+C V11 12-FEB-96 RXK Automatic invoice flag now dependent on weekly update count ASFWCT 
+C V10 24-QPR-95 HXK Merge of V5 development with March 10th 1995 bible
+C V09 02-MAR-95 HXK Changed commission calculation for V5
+C V08 07-OCT-93 HXK Fix for rent.
+C V07 02-SEP-93 SXH Put multi-week sales into ASFBIL
+C V06 27-JUN-93 HXK Rearranged agt related .def includes
+C V05 21-JAN-93 DAB Initial Release Based on Netherlands Bible, 12/92, 
+C                   and Comm 1/93 update. DEC Baseline
+C V04 12-FEB-92 GCAN NEW BTW TAX RULES.
+C V03 09-FEB-92 GCAN ADDED TICKET CHARGE AND FIXED BTW TAX AMOUNT
+C V02 12-NOV-91 MTK  INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX  RELEASED FOR VAX
+C
+C ** Source - invclc.for **
+C
+C INVCLC.FOR
+C
+C AGENT INVOICE CALCULATION PROGRAM.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1995 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	PROGRAM INVCLC
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+C***        INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:RECAGT.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+C
+C
+        ! variables
+	INTEGER*4  NETDUE(2)          !
+	INTEGER*4  CERR               !
+	INTEGER*4  ATYPE              !
+	INTEGER*4  COMAMT(2)          !
+	INTEGER*4  NETSAL             !
+	INTEGER*4  NETSALGAM(MAXGAM)  ! NET SAL PER GAME TO COMISSIONS
+	INTEGER*4  TOTSAL             !
+	INTEGER*4  TOTCAN             !
+	INTEGER*4  TOTVAL             !
+	INTEGER*4  TOTDIS             !
+	INTEGER*4  TOTCOM(2)          !
+	INTEGER*4  ALLTRA             !
+	INTEGER*4  J                  !
+	INTEGER*4  I                  !
+	INTEGER*4  ACTCNT             !
+	INTEGER*4  PSTART             !
+	INTEGER*4  AGT                !
+	INTEGER*4  EXT                !
+	INTEGER*4  PEND               !
+	INTEGER*4  ST                 !
+	INTEGER*4  TOTVCOM(2)         !
+	INTEGER*4  K                  !
+	INTEGER*4  CDNUM              !
+	INTEGER*4  TOTWCOM(2)         !
+	INTEGER*4  TOTREF             !
+	INTEGER*4  BTWTAX(2)          !
+	INTEGER*4  TMPCOM(2)          !
+        INTEGER*4  DUMMY              !
+        INTEGER*4  GTYP,GIND          !
+	INTEGER*2  DATE(LDATE_LEN)
+	CHARACTER*10 C_DATE
+
+	INTEGER*4  YESNO
+	INTEGER*4  CPAMT(NUMAGT)     !VALUE DESTINATED TO THE CENTRAL DE RECEPCAO
+	INTEGER*4  CENTRALTT, CENTRAL, AGENTE
+	INTEGER*4  STTRANSP,OFFWINAMT
+
+	LOGICAL    HAS_ACTIVITY
+
+	INTEGER*4  END_SALES, YEAR, WEEK
+C
+C	INITIALIZE
+C
+	CALL FASTSET( 0, CPAMT, NUMAGT )
+C
+C	OPEN ASF
+C
+	CALL COPYRITE
+	CALL SNIF_AND_WRKSET
+	CALL OPENASF(1)
+C
+C GET LAST DAY OF THE PERIOD
+C
+	DATE(VCDC) = DAYCDC
+	CALL LCDATE(DATE)
+	WRITE(C_DATE,901) DATE(VDAY),DATE(VMON),DATE(VYEAR2)
+901	FORMAT(I2.2,'.',I2.2,'.',I4.4)
+	CALL PRMYESNO('Last day of the period is: '//C_DATE//
+     *                ' Is it OK [Y/N]?',YESNO)
+	IF(YESNO.NE.1) THEN
+C
+	  TYPE*,IAM(),'Enter the last day of the period'
+	  CALL PRMDAT(PEND,EXT)
+	  IF(EXT.LT.0) CALL GSTOP(GEXIT_OPABORT)
+	ELSE
+	  PEND = DAYCDC
+	ENDIF
+C
+	DO 1000 AGT=1,NUMAGT
+	    CALL READASF(AGT,ASFREC,ST)
+	    IF(ST.NE.0) GOTO 3000
+C
+	    IF(ASFINV(ASFEND,1).EQ.PEND) GOTO 1000
+	    PSTART=ASFINV(ASFEND,1)+1
+	    IF(PSTART.GT.PEND) THEN
+	        WRITE(5,900) IAM(),AGT,PSTART,PEND
+	        GOTO 1000
+	    ENDIF
+C
+C SAVE OFFLINE PAYMENTS FROM CURRENT ASFINV POSITION (WE DID IT ON GET_OFFLINE_SALES.FOR)
+C
+	    IF	(AGTHTB(AGTOFFPAY,AGT).EQ.1) THEN	    !CHECK IF THE AGENT IS OFFLINE ?
+		OFFWINAMT = ASFINV(ASFOFFPAY,1)
+	    ELSE
+	        OFFWINAMT           = 0
+		ASFINV(ASFOFFPAY,1) = 0			    !CLR OLD VALUE (FROM LAST WEEK)
+	    ENDIF
+C
+	    CALL FASTMOV(ASFBIL(1,1,1),ASFBIL(1,1,2),
+     *                   MAXGAM*(AGAMLEN+MAXMLTD_SEL))
+	    CALL FASTMOV(ASFINV(1,1),ASFINV(1,2),30)
+	    CALL FASTSET(0,ASFBIL(1,1,1),MAXGAM*(AGAMLEN+MAXMLTD_SEL))
+	    CALL FASTSET(0,ASFINV(1,1),30)
+            ASFWCT=0
+	    ACTCNT=0
+	    TOTCOM(1) = 0
+	    TOTCOM(2) = 0
+	    CALL FASTSET( 0, NETSALGAM, SIZEOF(NETSALGAM)/4 )
+C
+C CACULATE SALES DATA FOR PERIOD
+C
+	    HAS_ACTIVITY = .FALSE.
+C
+	    DO 20 I=1,9
+	        IF(ASFDAT(ASFCDC,I).LT.PSTART) GOTO 20
+	        IF(ASFDAT(ASFCDC,I).GT.PEND  ) GOTO 20
+C
+                ALLTRA = 0
+	        DO J = 1, MAXGAM
+      		    GTYP = GNTTAB(GAMTYP,J)
+C
+C                   All games considered to get the proper repor in terminal      		    
+C                   IF (GTYP.NE.TPAS) THEN	! FOR PASSIVE WE ARE USING RETURNED TICKETS AS CANCELLED TICKETS
+C						! AND WE DO NOT HAVE PASSIVE SALES
+C						! AND WE HAVE DAILY INVOICE VALIDATIONS (IT IS NOT NECESSARY HERE)
+                    ASFBIL(GSCNT,J,1)=ASFBIL(GSCNT,J,1)+ASFDAY(GSCNT,J,I)
+                    ASFBIL(GSAMT,J,1)=ASFBIL(GSAMT,J,1)+ASFDAY(GSAMT,J,I)
+      
+                    ASFBIL(GCCNT,J,1)=ASFBIL(GCCNT,J,1)+ASFDAY(GCCNT,J,I)
+                    ASFBIL(GCAMT,J,1)=ASFBIL(GCAMT,J,1)+ASFDAY(GCAMT,J,I)
+      
+                    ASFBIL(GVCNT,J,1)=ASFBIL(GVCNT,J,1)+ASFDAY(GVCNT,J,I)
+                    ASFBIL(GVAMT,J,1)=ASFBIL(GVAMT,J,1)+ASFDAY(GVAMT,J,I)
+C                   ENDIF
+
+                    ASFBIL(GCLCNT,J,1)=ASFBIL(GCLCNT,J,1)+ASFDAY(GCLCNT,J,I)   ! RETURNS
+                    ASFBIL(GCLAMT,J,1)=ASFBIL(GCLAMT,J,1)+ASFDAY(GCLAMT,J,I)   ! RETURNS
+
+                    ASFBIL(GDCNT,J,1)=ASFBIL(GDCNT,J,1)+ASFDAY(GDCNT,J,I)
+                    ASFBIL(GDAMT,J,1)=ASFBIL(GDAMT,J,1)+ASFDAY(GDAMT,J,I)
+
+                    ASFBIL(GRCNT,J,1)=ASFBIL(GRCNT,J,1)+ASFDAY(GRCNT,J,I)
+                    ASFBIL(GRAMT,J,1)=ASFBIL(GRAMT,J,1)+ASFDAY(GRAMT,J,I)
+                    
+	            ASFBIL(GTKCHG,J,1)=ASFBIL(GTKCHG,J,1)+ASFDAY(GTKCHG,J,I)
+
+                    DO K = AGAMLEN + 1, AGAMLEN + MAXMLTD_SEL
+	                ASFBIL(K,J,1)=ASFBIL(K,J,1)+ASFSPE(K-AGAMLEN,J,I)
+                    END DO
+
+	            ALLTRA = ALLTRA + 
+     *                       ASFDAY(GSCNT,J,I) + ASFDAY(GCCNT,J,I)  + 
+     *                       ASFDAY(GVCNT,J,I) + ASFDAY(GCLCNT,J,I) + 
+     *                       ASFDAY(GRCNT,J,I)
+C
+C                       IF (GTYP.NE.TPAS) THEN
+      		    NETSALGAM(J) = NETSALGAM(J) + (ASFDAY(GSAMT,J,I) - ASFDAY(GCAMT,J,I))
+C
+CC      		NETSAL = ASFDAY(GSAMT,J,I) - ASFDAY(GCAMT,J,I)
+CC			CALL GETCOM(NETSAL,TWAG,J,COMAMT,TOTCOM,GTYP,GIND,AGT)
+C
+C                       ENDIF
+                END DO
+
+	        IF (ALLTRA.GT.0) THEN    !IF HAD ANY ACTIVITY
+                   ACTCNT=ACTCNT+1
+                   HAS_ACTIVITY = .TRUE.
+		ENDIF
+
+20	    CONTINUE
+C
+C           CALCULATING COMISSION FROM NET TOTAL OF SALES (PER GAME)
+C
+	    DO	I = 1, MAXGAM
+                GTYP   = GNTTAB(GAMTYP,I)
+                GIND   = GNTTAB(GAMIDX,I)
+C                
+C               COMISSION ONLY FOR AM SINCE THE LN COMISSION IS CALCULATION IN REAL TIME                
+                IF (GTYP.NE.TPAS) THEN
+		  NETSAL = NETSALGAM(I)
+		  CALL GETCOM(NETSAL,TWAG,I,COMAMT,TOTCOM,GTYP,GIND,AGT)
+		ENDIF
+	    ENDDO
+C
+C           UPDATE CENTRAL DE RECEPCAO
+C	    ==========================
+C
+	    CALL ASCBIN(ASFINF, SAGNO, LAGNO, AGENTE, ST)
+	    CALL ASCBIN(ASFINF, SCENR, LCENR, CENTRAL, ST)
+
+            IF (CENTRAL.GT.0 .AND. CENTRAL.EQ.AGENTE) THEN
+C
+C	       THIS IS A CENTRAL DE RECEPCAO 
+C			 
+	       CPAMT(AGT) = CPAMT(AGT) + P(VALCR1)
+            ENDIF
+
+            IF (HAS_ACTIVITY) THEN
+C	       UPDATE VALUE FOR CENTRAL DE RECEPCAO OF THIS AGENT (IF HE HAS ONE)
+C
+	       IF (CENTRAL.GT.0 .AND. CENTRAL.NE.AGENTE) THEN
+C
+C	          SET CREDIT TO THE CENTRAL DE RECEPCAO FOR THIS AGENT
+C
+                  CALL GET_TERM(CENTRAL, CENTRALTT,ST)
+                  IF (CENTRALTT.GT.0 .AND. CENTRALTT.LE.NUMAGT) THEN
+		     CPAMT(CENTRALTT) = CPAMT(CENTRALTT) + P(VALCR2)
+                  ENDIF
+               ENDIF
+            ENDIF
+
+C
+C SCAN LEDGER TABLE FOR CURRENT PERIOD TRANSACTIONS
+C
+	    DO 30 I=1,15
+	        IF(ASFLGR(LGRCDC,I).LT.PSTART) GOTO 30
+	        IF(ASFLGR(LGRCDC,I).GT.PEND  ) GOTO 30
+
+	        CDNUM=ASFLGR(LGRCOD,I)/10000+1
+	        IF(CDNUM.EQ.1) THEN
+                    CALL ADDI8I8(ASFINV(ASFPADU,1),ASFLGR(LGRAMTU,I),BETUNIT)
+	        ELSE
+	            CALL ADDI8I8(ASFINV(ASFADJU,1),ASFLGR(LGRAMTU,I),BETUNIT)
+	        ENDIF
+30	    CONTINUE
+C
+C CALCULATE INVOICE
+C
+	    TOTVCOM(1)=0
+	    TOTVCOM(2)=0
+	    TOTWCOM(1)=0
+	    TOTWCOM(2)=0
+	    TMPCOM(1)=0
+	    TMPCOM(2)=0
+	    BTWTAX(1)=0
+	    BTWTAX(2)=0
+	    TOTVAL=0
+	    TOTCAN=0
+	    TOTSAL=0
+	    TOTDIS=0
+	    TOTREF=0
+C
+C GET OFFLINE VALIDATIONS FROM AUX. VARIABLE !!!!
+C
+	    ASFINV(ASFOFFPAY,1) = OFFWINAMT
+C
+	    ASFINV(ASFWCNT,1)=ASFHWN(1)
+	    ASFINV(ASFWAMT,1)=ASFHWN(2)
+	    ASFHWN(1)=0
+	    ASFHWN(2)=0
+
+	    DO I = 1, MAXGAM
+                GTYP = GNTTAB(GAMTYP,I)
+                GIND = GNTTAB(GAMIDX,I)
+C               ONLY AM
+                IF (GTYP.NE.TPAS) THEN                
+                  NETSAL=ASFBIL(GSAMT,I,1)-ASFBIL(GCAMT,I,1)
+                  TOTVAL=TOTVAL+ASFBIL(GVAMT,I,1)
+                  TOTCAN=TOTCAN+ASFBIL(GCAMT,I,1)
+                  TOTSAL=TOTSAL+ASFBIL(GSAMT,I,1)
+                  TOTDIS=TOTDIS+ASFBIL(GDAMT,I,1)
+                  TOTREF=TOTREF+ASFBIL(GRAMT,I,1)
+                  ASFINV(ASFTKC,1) = ASFINV(ASFTKC,1) + ASFBIL(GTKCHG,I,1)
+                ENDIF
+            END DO
+
+	    DUMMY = 0
+            CALL GETCOM(TOTVAL,TVAL,I,COMAMT,TOTVCOM,DUMMY,DUMMY,DUMMY)
+C           CALL GETCOM(TOTRET,TRET,I,COMAMT,TOTVCOM,DUMMY,DUMMY,DUMMY) - No Comission for RETURNS
+            CALL GETCOM(TOTREF,TREF,I,COMAMT,TOTVCOM,DUMMY,DUMMY,DUMMY)
+            CALL GETCOM(ASFINV(ASFWAMT,1),-1,I,COMAMT,TOTWCOM,
+     *                                   DUMMY,DUMMY,DUMMY)
+	    CALL ASCBIN(ASFINF,STTYP,LTTYP,ATYPE,CERR)
+	    IF(TSBIT(ATYPE,AGTNCM)) THEN
+	        TOTCOM(1)=0
+	        TOTCOM(2)=0
+	        TOTVCOM(1)=0
+	        TOTVCOM(2)=0
+                TOTWCOM(1)=0
+                TOTWCOM(2)=0
+	    ENDIF
+
+	    CALL ADDI8I8(TMPCOM,TOTCOM ,BETUNIT)
+	    CALL ADDI8I8(TMPCOM,TOTVCOM,BETUNIT)
+	    CALL ADDI8I8(TMPCOM,TOTWCOM,BETUNIT)
+	    CALL ADDI8I8(BTWTAX,TMPCOM,BETUNIT)
+
+	    BTWTAX(1) = IDNINT(DFLOAT(BTWTAX(1)) / 
+     *	         	CALPER(COMTAX+100000))	      !Take 100% + tax out
+	    BTWTAX(1) = IDNINT(DFLOAT(BTWTAX(1)) * CALPER(COMTAX))
+	    BTWTAX(2) = IDNINT(DFLOAT(BTWTAX(2)) / CALPER(COMTAX+100000))
+	    BTWTAX(2) = IDNINT(DFLOAT(BTWTAX(2)) * CALPER(COMTAX))
+            CALL ADDI8I8(ASFINV(ASFBTWU,1),BTWTAX,BETUNIT)
+C
+C	    CALCULATE NETDUE
+C
+	    NETDUE(1)=0
+	    NETDUE(2)=0
+
+	    CALL ADDI8I4(NETDUE,TOTSAL,BETUNIT)
+	    CALL SUBI8I4(NETDUE,TOTCAN,BETUNIT)
+	    CALL SUBI8I4(NETDUE,TOTDIS,BETUNIT)
+            CALL SUBI8I4(NETDUE,TOTVAL,VALUNIT)
+	    CALL SUBI8I4(NETDUE,ASFINV(ASFOFFPAY,1),BETUNIT)	    !TOTAL OF OFFLINE VALIDATIONS
+	    CALL SUBI8I4(NETDUE,TOTREF,BETUNIT)
+	    CALL SUBI8I8(NETDUE,TOTCOM,BETUNIT)
+            CALL SUBI8I8(NETDUE,TOTVCOM,BETUNIT)
+            CALL SUBI8I8(NETDUE,TOTWCOM,BETUNIT)
+	    CALL ADDI8I8(NETDUE,ASFINV(ASFPADU,1),BETUNIT)
+	    CALL ADDI8I8(NETDUE,ASFINV(ASFADJU,1),BETUNIT)
+	    CALL ADDI8I4(NETDUE,ASFINV(ASFTKC,1),BETUNIT)
+C
+C	    UPDATE NETDUE FOR TRANSPORT VALUE (IF IT IS THE CASE) ONLY IF IT HAS ACTIVITY
+C
+            IF (HAS_ACTIVITY) THEN
+	       CALL ASCBIN(ASFINF,SSTTP,LSTTP,STTRANSP,CERR)
+               IF     (STTRANSP.EQ.1) THEN
+	          CALL SUBI8I4(NETDUE,P(VALCT1),BETUNIT)	    
+	       ELSEIF (STTRANSP.EQ.2) THEN
+	          CALL SUBI8I4(NETDUE,P(VALCT2),BETUNIT)	    
+	       ELSEIF (STTRANSP.EQ.3) THEN
+	          CALL SUBI8I4(NETDUE,P(VALCT3),BETUNIT)	    
+	       ENDIF
+	    ENDIF
+C
+C GET RENTAL FEE FROM RECORD AND CALCULATE INTO THE INVOICE.
+C
+            CALL ASCBIN(ASFINF,SRENT,LRENT,ASFINV(ASFSRV,1),CERR)
+            IF(CERR.NE.0) ASFINV(ASFSRV,1)=0
+            IF(NETDUE(1).EQ.0.AND.NETDUE(2).EQ.0) ASFINV(ASFSRV,1)=0
+            ASFINV(ASFSRV,1)=ASFINV(ASFSRV,1)*100/DYN_BETUNIT
+            CALL ADDI8I4(NETDUE,ASFINV(ASFSRV,1),BETUNIT)
+            
+	    ASFINV(ASFDUEU,1)=NETDUE(1)
+	    ASFINV(ASFDUEP,1)=NETDUE(2)
+	    ASFINV(ASFSCMU,1)=TOTCOM(1)
+	    ASFINV(ASFSCMP,1)=TOTCOM(2)
+	    ASFINV(ASFVCMU,1)=TOTVCOM(1)
+	    ASFINV(ASFVCMP,1)=TOTVCOM(2)
+            ASFINV(ASFWCMU,1)=TOTWCOM(1)
+            ASFINV(ASFWCMP,1)=TOTWCOM(2)
+ 	    ASFINV(ASFSTR,1)=PSTART
+	    ASFINV(ASFEND,1)=PEND
+	    ASFINV(ASFACT,1)=ACTCNT
+C
+C UPDATE YEAR TO DATE TOTALS
+C
+	    DO I=1,14
+	        DO J=1,MAXGAM
+	            ASFYTD(I,J,1)=ASFYTD(I,J,1)+ASFBIL(I,J,1)
+                END DO
+            END DO
+
+	    DO I=1,30
+	        ASFYTDINV(I,1)=ASFYTDINV(I,1)+ASFINV(I,1)
+            END DO
+C
+	    CALL WRITASF(AGT,ASFREC,ST)
+	    IF(ST.NE.0) GOTO 3000
+	    IF(MOD(AGT,1000).EQ.0) TYPE*,IAM(),AGT,' records processed '
+1000	CONTINUE
+
+C
+C	UPDATE ASFINV FOR CENTRAL DE RECEPCAO
+C
+	DO AGT=1,NUMAGT
+
+           IF (CPAMT(AGT).GT.0) THEN
+	      CALL READASF(AGT,ASFREC,ST)
+	      IF(ST.NE.0) GOTO 3000
+C
+C	      UPDATE ONLY IF CENTRAL IS NOT SUSPENDED
+C
+              CALL ASCBIN(ASFINF,SWESA,LWESA,END_SALES,CERR)     !END_SALES -> YYYYWW
+              CALL FIGWEK(DAYCDC, WEEK, YEAR)                   !YEAR -> YYYY   WEEK -> WW
+	      IF (END_SALES.EQ.0 .OR. END_SALES.GT.(YEAR*100+WEEK)) THEN
+                 ASFINV(ASFCRAMT,1) = CPAMT(AGT)
+	         CALL SUBI8I4(ASFINV(ASFDUEU,1),ASFINV(ASFCRAMT,1),BETUNIT)
+
+	         CALL WRITASF(AGT,ASFREC,ST)
+	         IF(ST.NE.0) GOTO 3000
+              ENDIF
+	   ENDIF
+
+	ENDDO
+
+        CALL CLOSASF
+	TYPE*,IAM(),' Invoice processing complete'
+	CALL GSTOP(GEXIT_SUCCESS)
+C
+C ASF READ/WRITE ERROR
+C
+3000	CONTINUE
+	TYPE*,IAM(),' ASF I/O error, invoice processing terminated'
+	CALL CLOSASF
+	CALL GSTOP(GEXIT_SUCCESS)
+C
+C
+900	FORMAT(1X,A,' Terminal ',I4,' starting cdc - ',I4,
+     *	        ' greater than ending cdc ',I4,
+     *	        ' invoice not processed  ')
+
+	END

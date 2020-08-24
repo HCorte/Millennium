@@ -1,0 +1,230 @@
+C GUICMSG_SIGN_ON.FOR
+C
+C V02 13-NOV-2000 UXN Multi-threaded GUIMGR changes.
+C V01 24-JUN-1993 MP  INITIAL RELEASE FOR VAX
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C INPUT:      CONN_INX
+C OUTPUT:     none
+C RESULTS:    response message to Sign-on request
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GUICMSG_SIGN_ON(BUF,OUT_BUF,OUT_MSG_LEN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:GUIMCOM.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+C
+	INTEGER*4   BUF
+	BYTE        OUT_BUF(*)
+	INTEGER*4   LH_TYPE
+	INTEGER*4   COMPLETION_CODE
+	INTEGER*4   CLIENT_ID
+	INTEGER*4   HOST_ID
+	INTEGER*4   AUTH_INX
+	INTEGER*4   MSG_OFF
+	INTEGER*4   OUT_MSG_LEN
+	BYTE	     TEXTB(32)
+	CHARACTER*32 TEXTC
+	EQUIVALENCE (TEXTC,TEXTB)
+	INTEGER*4   CONN_INX		!connection number
+C
+	BYTE	     REQ_NAMEB(32)
+	CHARACTER*32 REQ_NAME
+	EQUIVALENCE (REQ_NAME,REQ_NAMEB)
+C
+	BYTE	     REQ_PASSB(32)
+	CHARACTER*32 REQ_PASS
+	EQUIVALENCE (REQ_PASS,REQ_PASSB)
+C
+	BYTE	     REQ_SYSTB(32)
+	CHARACTER*32 REQ_SYST
+	EQUIVALENCE (REQ_SYST,REQ_SYSTB)
+C
+	INTEGER*4   I4TEMP
+	INTEGER*2   I2TEMP(2)
+	BYTE	    I1TEMP(4)
+	EQUIVALENCE (I4TEMP,I2TEMP,I1TEMP)
+C
+	INTEGER*4   GUI_DBG_SIGN_ON
+	PARAMETER  (GUI_DBG_SIGN_ON=11)
+C
+	INTEGER*4   BLANK
+	DATA	    BLANK/'    '/
+C
+	CONN_INX = GUI_WORKER_SOURCE_ID(BUF)
+C
+	CLIENT_ID=0		!initialize
+	HOST_ID=0		!initialize
+C
+C If not Primary, reject with code 2
+C
+	IF(P(SYSTYP).NE.LIVSYS) THEN
+	    COMPLETION_CODE=2			!not Primary
+	    GOTO 8000
+	ENDIF
+C
+C If suppressed, reject with code 3
+C
+	IF(CON_PATH_THRU_SUPPRESS.EQ.1) THEN
+	    COMPLETION_CODE=3			!suppresssed
+	    GOTO 8000
+	ENDIF
+C
+	MSG_OFF=GUI_LH_SZ+1
+	CALL MOVBYT(GUI_WORKER_BBUF(1,BUF),MSG_OFF,REQ_NAMEB,1,32)
+	MSG_OFF=MSG_OFF+32
+	CALL MOVBYT(GUI_WORKER_BBUF(1,BUF),MSG_OFF,REQ_PASSB,1,32)
+	MSG_OFF=MSG_OFF+32
+	CALL MOVBYT(GUI_WORKER_BBUF(1,BUF),MSG_OFF,REQ_SYSTB,1,32)
+C
+C If not in authorization table, reject with code 4.
+C
+	IF(GUI_DBG_UNIT.EQ.GUI_DBG_SIGN_ON) THEN
+	    WRITE(ABS(GUI_DBG_UNIT), *) IAM(), 
+     *	      'Looking for name,pass: ', REQ_NAME, REQ_PASS
+	ENDIF
+C
+	DO 1000 AUTH_INX = 1, GUI_MAX_AUTH_USERS
+	  IF(GUI_DBG_UNIT.EQ.GUI_DBG_SIGN_ON) THEN
+	    WRITE(ABS(GUI_DBG_UNIT), *) IAM(), 'Next name is: ',
+     *	      GUI_AUTH_NAME(AUTH_INX)
+	  ENDIF
+	  IF(GUI_AUTH_NAME(AUTH_INX) .EQ. ' ') GOTO 1000
+	  IF(GUI_AUTH_NAME(AUTH_INX) .EQ. REQ_NAME) THEN	! name found
+	    IF(GUI_DBG_UNIT.EQ.GUI_DBG_SIGN_ON) THEN
+	      WRITE(ABS(GUI_DBG_UNIT), *) IAM(), 'Next password is: ',
+     *	      GUI_AUTH_PASSWRD(AUTH_INX)
+	    ENDIF
+	    IF(GUI_AUTH_PASSWRD(AUTH_INX).EQ.REQ_PASS) GOTO 2000! password match
+	  ENDIF
+1000	CONTINUE
+C
+	CALL FASTSET(BLANK, GUI_MES_BUF,33)
+	WRITE(GUI_MES_CBUF,9010) REQ_NAME, REQ_SYST
+9010	FORMAT('GUICMSG: Access denied for user: ',A,' system: ',A)
+	CALL WRITEBRK(GUI_MES_CBUF)
+C
+	COMPLETION_CODE=4			!not good
+	GOTO 8000
+C
+2000	CONTINUE
+C
+C If already signed-on do normal sign-on
+C Normal sign-on
+C
+	MSG_OFF=GUI_LH_SZ+1+64			!skip user and password
+C
+	CALL MOVBYT(GUI_WORKER_BBUF(1,BUF),MSG_OFF,TEXTB,1,32)
+	GUI_CONN_SYSTEM_NAME(CONN_INX)=TEXTC	! get system name
+	MSG_OFF=MSG_OFF+32
+C
+C get subscribed data classes
+C
+	MSG_OFF=MSG_OFF-1
+	I4TEMP=0
+	I1TEMP(4)=GUI_WORKER_BBUF(MSG_OFF+1,BUF)
+	I1TEMP(3)=GUI_WORKER_BBUF(MSG_OFF+2,BUF)
+	I1TEMP(2)=GUI_WORKER_BBUF(MSG_OFF+3,BUF)
+	I1TEMP(1)=GUI_WORKER_BBUF(MSG_OFF+4,BUF)
+	GUI_CONN_DATA_CLASS_BITS(CONN_INX)=I4TEMP
+	MSG_OFF=MSG_OFF+4
+C
+C check requested data classes against authorized
+C
+	I4TEMP = IAND(GUI_AUTH_DATA_CLASS_BITS(AUTH_INX),
+     *		      GUI_CONN_DATA_CLASS_BITS(CONN_INX))
+        IF (I4TEMP.NE.GUI_CONN_DATA_CLASS_BITS(CONN_INX)) THEN
+C
+	  CALL FASTSET(BLANK, GUI_MES_BUF,33)
+	  WRITE(GUI_MES_CBUF,9020) GUI_CONN_DATA_CLASS_BITS(CONN_INX), REQ_NAME
+9020	  FORMAT('GUICMSG: Bad data classes: ',Z8.8,' from user: ', A)
+	  CALL WRITEBRK(GUI_MES_CBUF)
+C
+	  COMPLETION_CODE=5			! bad data classes
+	  GOTO 8000
+	ENDIF
+C
+C if data classes requested are not spooled, does not matter what last good
+C spool (serial) number is
+C
+	GUI_CONN_NEXT_SEQ_NR(CONN_INX) = 0
+C
+	IF(GUI_DBG_UNIT.EQ.GUI_DBG_SIGN_ON) THEN
+	    WRITE(ABS(GUI_DBG_UNIT), 9025) IAM(), 
+     *		'SIGN_ON: spool,conn masks:', 
+     *		GUI_SPOOL_DATA_CLASS_BITS, 
+     *		GUI_CONN_DATA_CLASS_BITS(CONN_INX)
+9025	    FORMAT(1X,A,A,2X,Z8.8,2X,Z8.8)
+	ENDIF
+C
+	IF(IAND(GUI_SPOOL_DATA_CLASS_BITS, 
+     *		GUI_CONN_DATA_CLASS_BITS(CONN_INX)).EQ.0) GOTO 3000
+C
+C Get last good sequence number
+C
+	I4TEMP=0
+	I1TEMP(4)=GUI_WORKER_BBUF(MSG_OFF+1,BUF)
+	I1TEMP(3)=GUI_WORKER_BBUF(MSG_OFF+2,BUF)
+	I1TEMP(2)=GUI_WORKER_BBUF(MSG_OFF+3,BUF)
+	I1TEMP(1)=GUI_WORKER_BBUF(MSG_OFF+4,BUF)
+C
+	IF(GUI_DBG_UNIT.EQ.GUI_DBG_SIGN_ON) THEN
+	    WRITE(ABS(GUI_DBG_UNIT), *) IAM(), 
+     *		'SIGN_ON: req,con_fst,con_lst sr nrs:', I4TEMP,
+     *		CON_FIRST_SPOOL_PATH_THRU,
+     *		CON_LAST_SPOOL_PATH_THRU
+	ENDIF
+C
+	GUI_CONN_NEXT_SEQ_NR(CONN_INX) = I4TEMP
+C
+3000	CONTINUE
+C
+	GUI_CONN_SIGNED_ON(CONN_INX)  = .TRUE.
+	GUI_CONN_AUTH_INX(CONN_INX)   = AUTH_INX
+C
+	CALL FASTSET(BLANK, GUI_MES_BUF,33)
+	CALL OPS('Successful sign-on on conn:',CONN_INX,0)
+C
+	IF(GUI_CONN_NEXT_SEQ_NR(CONN_INX).GT.0) THEN
+	  CALL FASTSET(BLANK, GUI_MES_BUF,33)
+	  WRITE(GUI_MES_CBUF,9055) CONN_INX,
+     *				 GUI_CONN_NEXT_SEQ_NR(CONN_INX)
+9055	  FORMAT('Resend messages on conn:',I4,' from ser# ',I)
+	  CALL WRITEBRK(GUI_MES_CBUF)
+	ENDIF
+C
+	CALL OPSTXT('Sign-on Name:'//GUI_AUTH_NAME(AUTH_INX))
+	CALL OPSTXT('Sign-on System:'//GUI_CONN_SYSTEM_NAME(AUTH_INX))
+C
+	COMPLETION_CODE=0			!OK
+	CLIENT_ID=CONN_INX
+	HOST_ID=ICHAR('A')+P(SYSNAM)-1
+C
+8000	CONTINUE
+C
+	LH_TYPE=GUI_LH_TYPE_SIGN_ON_RESP		!sign-on response
+	OUT_MSG_LEN=GUI_LH_SZ+3
+	CALL GUICMSG_OUT_TO_CLIENT(LH_TYPE, COMPLETION_CODE, HOST_ID,
+     *                             BUF, OUT_BUF, OUT_MSG_LEN)
+C
+	RETURN
+	END

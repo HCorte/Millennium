@@ -1,0 +1,80 @@
+C OPS_REC.DEF
+C
+C V03 12-DEC-2010 FJG LOTTO2 BATCH INCREASE CCC
+C     26-JAN-2011 FJG Increase number of DIVISIONs
+C V02 07-FEB-2001 UXN NOALIGNMENT warnings disabled.
+C V01 03-JAN-2001 EPH RELEASED FOR PORTUGAL
+C
+C RECORD FOR OPS FILE (OPS.FIL)
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C********************************************************************
+C
+C	CHANGES TO THIS FILE WILL DEMAND FILE CONVERSION 
+C	AND CHANGES IN KEY SIZES AND POSITION
+C	AND CHANGES TO SORT ROUTINE KEYS POSITIONS
+C
+C********************************************************************
+C
+CDEC$ OPTIONS /WARNING=NOALIGNMENT
+
+	STRUCTURE /OPS_STRU/
+           
+	   CHARACTER*2  GAME             ! Game number (Joker does not appear here) (FILLED WITH ZERO LEFT)
+	   CHARACTER*7  YEARWEEK         ! Year plus Week (YYYYWWW) V03-- IN FACT SHOULD BE YEARCCC TOO
+	   CHARACTER*6  ORDER            ! Sequential 6 digit order number (FILLED WITH ZEROS LEFT)        
+	   
+	   CHARACTER*14 BILHETE          ! Serial number for Offline (Joker number) or Online (external serial)
+	   
+	   CHARACTER*2  CWEEK            ! Civil WEEK for OPS BANK identification	   
+
+	   LOGICAL      SPLITTED         ! Contains TRUE if the Order is ONE OF THE TWO orders generated from a
+				         ! SINGLE OFFLINE Order (case of LOTO+LOTO2 Order)
+
+	   CHARACTER*7  AGENT            ! Agent to receive order document (who sold the winning ticket) (ZEROS LEFT)
+
+	   LOGICAL      PRINTED_BY_OFF   ! Indicates if it is an order already printed before our startup (by Offline)
+	   LOGICAL      CLAIM            ! Indicates if the order is a CLAIM
+	                                 
+	   INTEGER*4    PROC_PAID_CDC    ! Day when this OP was registered as paid (from ODJ file)
+           LOGICAL      GENERATED        ! True if it was already selected to print
+
+	   INTEGER*4    PAYABLE_CDC      ! Limit for paying the order (prescription will be done some days later)
+	   INTEGER*4    PAID_CDC         ! CDC when order was paid by the bank
+	   LOGICAL      PAID_SENT_SAP    ! If paid info was sent to SAP 
+
+           LOGICAL      ONLINE_ORDER     ! Indicates a if ONLINE order 
+	   LOGICAL      HI_PRIZE         ! Indicates if a high Order prize (Payable only in specific Branches) 
+
+	   INTEGER*4    WINS(6)          ! Wins on div (Up to 6 divisions)
+	   INTEGER*4    JOKER_DIV        ! Win Division for Joker
+	   INTEGER*4    TOTAL_GAME       ! Value in prize just for the main game 
+           INTEGER*4    TOTAL_JOKER      ! Value in prize just for joker
+
+	   CHARACTER*4  BANK             ! Bank for dsicounting the order and SCML prize account (ZEROS LEFT)
+	   CHARACTER*4  BRANCH           ! Branch for discounting the order (high Orders) and for SCML prize account
+
+C	   LOGICAL      PURGED           ! Is set to .true. when record is purged
+
+	   LOGICAL      PAID_MANUALLY    ! Is set to .true. when OP is paid manually by PAGAMENTO_MANUAL
+
+	END STRUCTURE
+
+CDEC$ END OPTIONS
+
+	RECORD /OPS_STRU/ OPS_REC
+
+	COMMON /OPS_COMMON/ OPS_REC
+

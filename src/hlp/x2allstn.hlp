@@ -1,0 +1,66 @@
+  X2ALLSTN.HLP            GTECH Distributed Network
+                          Stations Summary Snapshot             Page 1 of 3
+ 
+    This snapshot will list summary information on all Stations
+    configured in the system.  This information consists of the
+    following:
+ 
+    Stns Config     - Number of stations configured.
+    Stns Active     - Number of stations active.
+    Stns Not Active - Number of stations not active.
+    Term Config     - Total number of terminals configured.
+    Term Active     - Total number of active terminals.
+    Term not active - Total number of terminals not active.
+ 
+    Station         - Station Number identifier.
+    State           - Station state: notact, idle, init, disable.
+    Address         - Station network address.
+    Num Terms       - Number of terminals configured for this station.
+    Inactive Terms  - Number of inactive terminals for this station.
+ 
+ 
+ 
+ X2ALLSTN.HLP             GTECH Distributed Network
+                          Stations Summary Snapshot            Page 2 of 3
+ 
+    Time Inactive   - Total time station has been inactive.
+    Station Activity- Number of messages was sent/received by the station.
+    Group           - Logical group station corresponds to based on some
+                      physical grouping (ie location,zip code)
+    Last SAP        - Last service access point (Front end).
+ 
+    The information displayed on the snapshot can be sorted by any of the
+    indicated sort fields.  Sort fields are those columns labelled with a
+    number in parenthesis.  This snapshot can be sorted by any of the
+    following columns:
+ 
+    (1) Station
+    (2) Address
+    (3) Inactive Terms
+    (4) Time Inactive
+    (5) Group
+ 
+ 
+ 
+ X2ALLSTN.HLP             GTECH Distributed Network
+                          Stations Summary Snapshot             Page 3 of 3
+ 
+    To sort by any of these columns, enter at the command line, XSRT
+    followed by the number indicated above the column.  For example,
+    to sort by Time Inactive enter:
+ 
+    XSRT 4
+ 
+    Additional facilities provided with this snapshot include commands
+    input at the command line.
+ 
+    XSTN    - To display starting at a specific station.
+    XFOR #  - Can be used to page forward X number of pages.
+    XBAK #  - Can be used to page backward X number of pages.
+    XBOT    - Will bring to the first Station in the list.
+    XTOP    - Will bring you to last Station in the list.
+ 
+ 
+ 
+ 
+ 

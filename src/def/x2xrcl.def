@@ -1,0 +1,179 @@
+C
+C X2XRCL.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XRCL.DEV                                   $
+C  $Date::   17 Apr 1996 16:44:34                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 15-JUN-00 UXN COMMON/X2XRCL_NAME/ X2XRCL_NAME added.
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C The DEF describes the variables which are contained in the
+C X2X Report Class file.
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XRCL_ENTRIES counter, the X2XRCL_FIELD, and
+C        the X2XRCL_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   X2XRCL_REC(128)     !Record buffer
+	CHARACTER   X2XRCL_CREC(512)*1  !Record buffer
+	EQUIVALENCE (X2XRCL_REC, X2XRCL_CREC)
+C
+	INTEGER*4   X2XRCL_SECT         !Number of sectors per rec
+	PARAMETER  (X2XRCL_SECT=2)
+	CHARACTER   X2XRCL_NAME*10      !Report Class file name
+	DATA        X2XRCL_NAME /'X2XRCL.FIL'/
+	COMMON/X2XRCL_NAME/ X2XRCL_NAME
+	INTEGER*4   X2XRCL_FDB(7)       !File descriptor block
+	DATA        X2XRCL_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XRCL_CLASS            !Report class
+	INTEGER*4   X2XRCL_FORM             !Report Format
+	INTEGER*4   X2XRCL_COUNT            !Count of reports
+	INTEGER*4   X2XRCL_CDE01            !Report index into code file
+	INTEGER*4   X2XRCL_CDE02            !Report index into code file
+	INTEGER*4   X2XRCL_CDE03            !Report index into code file
+	INTEGER*4   X2XRCL_CDE04            !Report index into code file
+	INTEGER*4   X2XRCL_CDE05            !Report index into code file
+	INTEGER*4   X2XRCL_CDE06            !Report index into code file
+	INTEGER*4   X2XRCL_CDE07            !Report index into code file
+	INTEGER*4   X2XRCL_CDE08            !Report index into code file
+	INTEGER*4   X2XRCL_CDE09            !Report index into code file
+	INTEGER*4   X2XRCL_CDE10            !Report index into code file
+	INTEGER*4   X2XRCL_CDE11            !Report index into code file
+	INTEGER*4   X2XRCL_CDE12            !Report index into code file
+	INTEGER*4   X2XRCL_CDE13            !Report index into code file
+	INTEGER*4   X2XRCL_CDE14            !Report index into code file
+	INTEGER*4   X2XRCL_CDE15            !Report index into code file
+	INTEGER*4   X2XRCL_CDE16            !Report index into code file
+	INTEGER*4   X2XRCL_UPDATE           !Last updated date
+	INTEGER*4   X2XRCL_FREE(104)        !Free space
+	INTEGER*4   X2XRCL_BITMAP           !Modified fields flag
+	INTEGER*4   X2XRCL_BITMAP2          !Modified fields flag
+	INTEGER*4   X2XRCL_BITMAP3          !Modified fields flag
+	INTEGER*4   X2XRCL_BITMAP4          !Modified fields flag
+C
+	INTEGER*4   X2XRCL_RPTCDE(16)
+	EQUIVALENCE (X2XRCL_RPTCDE,X2XRCL_CDE01)
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+	EQUIVALENCE (X2XRCL_REC(1),   X2XRCL_CLASS)
+	EQUIVALENCE (X2XRCL_REC(2),   X2XRCL_FORM)
+	EQUIVALENCE (X2XRCL_REC(3),   X2XRCL_COUNT)
+	EQUIVALENCE (X2XRCL_REC(4),   X2XRCL_CDE01)
+	EQUIVALENCE (X2XRCL_REC(5),   X2XRCL_CDE02)
+	EQUIVALENCE (X2XRCL_REC(6),   X2XRCL_CDE03)
+	EQUIVALENCE (X2XRCL_REC(7),   X2XRCL_CDE04)
+	EQUIVALENCE (X2XRCL_REC(8),   X2XRCL_CDE05)
+	EQUIVALENCE (X2XRCL_REC(9),   X2XRCL_CDE06)
+	EQUIVALENCE (X2XRCL_REC(10),  X2XRCL_CDE07)
+	EQUIVALENCE (X2XRCL_REC(11),  X2XRCL_CDE08)
+	EQUIVALENCE (X2XRCL_REC(12),  X2XRCL_CDE09)
+	EQUIVALENCE (X2XRCL_REC(13),  X2XRCL_CDE10)
+	EQUIVALENCE (X2XRCL_REC(14),  X2XRCL_CDE11)
+	EQUIVALENCE (X2XRCL_REC(15),  X2XRCL_CDE12)
+	EQUIVALENCE (X2XRCL_REC(16),  X2XRCL_CDE13)
+	EQUIVALENCE (X2XRCL_REC(17),  X2XRCL_CDE14)
+	EQUIVALENCE (X2XRCL_REC(18),  X2XRCL_CDE15)
+	EQUIVALENCE (X2XRCL_REC(19),  X2XRCL_CDE16)
+	EQUIVALENCE (X2XRCL_REC(20),  X2XRCL_UPDATE)
+	EQUIVALENCE (X2XRCL_REC(21),  X2XRCL_FREE)
+	EQUIVALENCE (X2XRCL_REC(125), X2XRCL_BITMAP)
+	EQUIVALENCE (X2XRCL_REC(126), X2XRCL_BITMAP2)
+	EQUIVALENCE (X2XRCL_REC(127), X2XRCL_BITMAP3)
+	EQUIVALENCE (X2XRCL_REC(128), X2XRCL_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XRCL_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XRCL_ENTRIES
+	PARAMETER (X2XRCL_ENTRIES=20)
+C
+	CHARACTER X2XRCL_FIELD(X2XRCL_ENTRIES)*15
+	DATA      X2XRCL_FIELD
+     *	    /'Class          ','Format         ','Report count   ',
+     *	     'Report Code 1  ','Report Code 2  ','Report Code 3  ',
+     *	     'Report Code 4  ','Report Code 5  ','Report Code 6  ',
+     *	     'Report Code 7  ','Report Code 8  ','Report Code 9  ',
+     *	     'Report Code 10 ','Report Code 11 ','Report Code 12 ',
+     *	     'Report Code 13 ','Report Code 14 ','Report Code 15 ',
+     *	     'Report Code 16 ','Last Updated   '/
+C
+C STORE THE VALID INPUT RANGE FOR EACH VARIABLE.
+C NOTE: A -1 IN THE FIRST RANGE DESIGNATES A CHARACTER
+C       VARIABLE, -2 INPUT REAL.
+C
+	INTEGER*4 X2XRCL_RANGE(2,X2XRCL_ENTRIES)
+	DATA      X2XRCL_RANGE
+     *	    /1,256,   1,15,    1,16,
+     *	     1,256,   0,256,   0,256,
+     *	     0,256,   0,256,   0,256,
+     *	     0,256,   0,256,   0,256,
+     *	     0,256,   0,256,   0,256,
+     *	     0,256,   0,256,   0,256,
+     *	     0,256,   0,0/
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XRCL_INDEX(X2XRCL_ENTRIES)
+	DATA      X2XRCL_INDEX
+     *	    /1,   2,   3,
+     *	     4,   5,   6,
+     *	     7,   8,   9,
+     *	     10,  11,  12,
+     *	     13,  14,  15,
+     *	     16,  17,  18,
+     *	     19,  20/
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+	INTEGER*4 X2XRCL_VALUE(15,X2XRCL_ENTRIES)
+	DATA      X2XRCL_VALUE
+     *	    /15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1/
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XRCL_COMMON/
+	COMMON /X2XRCL_COMMON/ X2XRCL_REC,   X2XRCL_FDB,
+     *	                       X2XRCL_RANGE, X2XRCL_INDEX,
+     *	                       X2XRCL_VALUE, X2XRCL_FIELD
+C
+C

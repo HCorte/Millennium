@@ -1,0 +1,82 @@
+* GNSLAN.DXX
+C $Log:   GXAFXT:[GOLS]GNSLAN.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:27:06   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:44:20   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+*
+* V01 01-AUG-90 XXX RELEASED FOR VAX
+*
+* GNSLAN.DEF
+*
+* V01 01-AUG-90 XXX RELEASED FOR VAX
+*
+* V01 03-JUN-90 MRM INITIAL RELEASE.
+*
+* The DEF describes the variables which are used to store
+* the Front End Statistics by time interval.
+*
+*
+* DECLARE THE RECORD VARIABLES.
+* NOTE: RECORD SIZE = 16 BYTES FE INFOR (FIXED) + 16 BYTES
+* ADDITIONAL USE = 32 BYTES PER PORT
+* TO SUPPORT 20 PORTS PER FE = 640 BYTES (2.5) SECTORS
+* WE WILL USE 3 SECTORS AND SUPPORT UP TO 24 PORTS PER FE.
+*
+*
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+* This item is the property of GTECH Corporation, Providence, Rhode
+* Island, and contains confidential and trade secret information. It
+* may not be transferred from the custody or control of GTECH except
+* as authorized in writing by an officer of GTECH. Neither this item
+* nor the information it contains may be used, transferred,
+* reproduced, published, or disclosed, in whole or in part, and
+* directly or indirectly, except as expressly authorized by an
+* officer of GTECH, pursuant to written agreement.
+*
+* Copyright 1990 GTECH Corporation. All rights reserved.
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*
+	INTEGER*4   GNSLAN_REC(64)       !Record buffer
+	CHARACTER   GNSLAN_CREC(256)*1   !Record buffer
+	EQUIVALENCE (GNSLAN_REC, GNSLAN_CREC)
+*
+	INTEGER*4   GNSLAN_SECT         !Number of sectors per rec
+	PARAMETER  (GNSLAN_SECT=1)
+	CHARACTER   GNSLAN_NAME*10      !Global Setup file name
+	DATA        GNSLAN_NAME /'GNSLAN.FIL'/
+	INTEGER*4   GNSLAN_FDB(7)       !File descriptor block
+	DATA        GNSLAN_FDB /7*0/
+*
+* DECLARE VARIABLES.
+*
+	INTEGER*4   GNSLAN_MISFRM       !Number of missed frames
+	INTEGER*4   GNSLAN_LANDEL       !Lan delay
+	INTEGER*4   GNSLAN_FRMSNT       !Number of frames send
+	INTEGER*4   GNSLAN_FRMRCV       !Number of frames received
+	INTEGER*4   GNSLAN_FREE(60)     !Free for use
+*
+* EQUIVALENCE FIELD VARIABLES INTO RECORD.
+*
+	EQUIVALENCE (GNSLAN_REC(1),  GNSLAN_MISFRM)
+	EQUIVALENCE (GNSLAN_REC(2),  GNSLAN_LANDEL)
+	EQUIVALENCE (GNSLAN_REC(3),  GNSLAN_FRMSNT)
+	EQUIVALENCE (GNSLAN_REC(4),  GNSLAN_FRMRCV)
+	EQUIVALENCE (GNSLAN_REC(5),  GNSLAN_FREE)
+*
+* COMMON THE RECORD BUFFER.
+*
+	VOLATILE /GNSLAN_COMMON/
+	COMMON /GNSLAN_COMMON/ GNSLAN_REC,   GNSLAN_FDB
+*
+*
+*
+*
+*
+*
+*
+*

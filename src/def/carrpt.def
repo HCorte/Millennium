@@ -1,0 +1,79 @@
+C CARRPT.DEF
+C
+C Variables for CARRPT (CARTEL weekly summary report) program
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C
+        INTEGER*4  TOTGAM(MAXGAM,GRAMT)  ! BOTTOM LINE TOTALS
+        INTEGER*4  GRDCOM(2,MAXGAM)      ! BOTTOM LINE TOTALS
+        INTEGER*4  GRNTOT(GRAMT)         ! GRAND TOTAL LINE
+
+        INTEGER*4  CTOTGAM(MAXGAM,GRAMT) ! CARTEL BOTTOM LINE TOTALS
+        INTEGER*4  CGRDCOM(2,MAXGAM)     ! CARTEL BOTTOM LINE TOTALS
+        INTEGER*4  CGRNTOT(GRAMT)        ! CARTEL TOTAL LINE
+
+        INTEGER*4  OTOTGAM(MAXGAM,GRAMT) ! NON 5 CARTELS BOTTOM LINE TOTALS
+        INTEGER*4  OGRDCOM(2,MAXGAM)     ! NON 5 CARTELS BOTTOM LINE TOTALS
+        INTEGER*4  OGRNTOT(GRAMT)        ! NON 5 CARTELS TOTAL LINE
+
+        INTEGER*4  TB_TOTGAM(MAXGAM,GRAMT)! NON 8 AND 5 CARTELS BOTTOM LINE TOT
+        INTEGER*4  TB_GRDCOM(2,MAXGAM)    ! NON 8 AND 5 CARTELS BOTTOM LINE TOT
+        INTEGER*4  TB_GRNTOT(GRAMT)       ! NON 8 AND 5 CARTELS TOTAL LINE
+
+        INTEGER*4  REPTYP                ! REPORT TYPE
+
+        INTEGER*4  DUELOT(2)             !
+        INTEGER*4  DUEAGT(2)             !
+        INTEGER*4  TOTCMS(2)             !
+
+        INTEGER*4  CDUELOT(2)            !
+        INTEGER*4  CDUEAGT(2)            !
+        INTEGER*4  CTOTCMS(2)            !
+
+        INTEGER*4  ODUELOT(2)            !
+        INTEGER*4  ODUEAGT(2)            !
+        INTEGER*4  OTOTCMS(2)            !
+
+        INTEGER*4  TB_DUELOT(2)          !
+        INTEGER*4  TB_DUEAGT(2)          !
+        INTEGER*4  TB_TOTCMS(2)          !
+C
+        COMMON /CARRPT/ TOTGAM,
+     *                  GRDCOM,
+     *                  GRNTOT,
+     *                  CTOTGAM,
+     *                  CGRDCOM,
+     *                  CGRNTOT,
+     *                  OTOTGAM,
+     *                  OGRDCOM,
+     *                  OGRNTOT,
+     *                  TB_TOTGAM,
+     *                  TB_GRDCOM,
+     *                  TB_GRNTOT,
+     *                  DUELOT,
+     *                  DUEAGT,
+     *                  TOTCMS,
+     *                  CDUELOT,
+     *                  CDUEAGT,
+     *                  CTOTCMS,
+     *                  ODUELOT,
+     *                  ODUEAGT,
+     *                  OTOTCMS,
+     *                  TB_DUELOT,
+     *                  TB_DUEAGT,
+     *                  TB_TOTCMS,
+     *                  REPTYP
+C
+C

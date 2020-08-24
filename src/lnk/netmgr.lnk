@@ -1,0 +1,168 @@
+$!*** LINKER FILE NETMGR ***
+$!
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFIP:[GOLS]NETMGR.LNV                                   $
+$! $Date::   11 Feb 1997 18:40:20                                         $
+$! $Revision::   1.2                                                      $
+$! $Author::   WPW                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$! 
+$!*** Pre-Baseline Source - netmgr.lnk ***
+$!
+$! V11 01-APR-16 SCML M16 PROJECT: added UPDEUR, UPDEURXRF and EURCOM
+$! V10 01-AUG-14 SCML PLACARD PROJECT - ADDED UPDIGS
+$! V09 13-MAR-03 GPW DESENCR  REMOVE ENCINI1
+$! V08 27-FEB-96 wsm Removed CMDNYK, LEDCMD, UPDFRE, CMDSYS; added CHKSYS, 
+$!                   CMDSCR, CMDWIT, CMDTSL, CMDV65, CMDPPP, CMDBNG, CMDDBL,
+$!                   CMDCPL, ENCINI1, UPDSTA, KIKREP, UPDPOL, UPDV65, UPD234,
+$!                   SNDTRA, UPDMIS, UPDKIK, UPDGAM, CLRSUM, HASHGET, LODTXT,
+$!                   ENCSWAP, TSLSYS, POLIND, ODDSOFF, HASHPUT, TOPTSL, AGTPUT,
+$!                   TOPATS, HASHBLOCK, ADDMSG, CMBOFF, SPTOFF1, DELMSG,GETFRE; 
+$!                   replaced GXMSGCOM.ESH with GXCTMCOM.ESH for Finland.
+$! V07 27-JUL-95 PJS REMOVED THE FOLLOWING:
+$!                   CHKNBR, CMBOFF, GIVBUF, I4XSORT, TRACE, UNIRAN64, UPDMIS.
+$!               PJS ADDED THE FOLLOWING FOR NEW YORK:
+$!                   CMDNYK, UPDMIS.
+$! V06 14-JAN-94 PJS SORTED & CLEANED UP.
+$! V05 26-APR-93 JWE ADDED TMFSWI FOR PRIMARY TM FAIL OVER
+$! V04 30-APR-92 DAS ADDED X2STNCHK,X2FILNAM,X2CHKSUM
+$! V03 10-OCT-91 JPJ ADDED (CASINO KENO)
+$! V02 23-APR-91 JWE RE-RELEASED FOR VAX
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!This item is the property of GTECH Corporation, Providence, Rhode Island,
+$!and contains confidential and trade secret information. It may not be
+$!transferred from the custody or control of GTECH except as authorized in
+$!writing by an officer of GTECH. Neither this item nor the information it
+$!contains may be used, transferred, reproduced, published, or disclosed,
+$!in whole or in part, and directly or indirectly, except as expressly
+$!authorized by an officer of GTECH, pursuant to written agreement.
+$!
+$!Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:NETMGR.EXE -
+OBJLIB:X2NETMGR/OPTION, -
+OBJLIB:NETMGR, -
+ADDMSG, -
+WRITMSG, -
+STUFFIT, -
+FLXDELETE, -
+FREESEG, -
+AGTPUT, -
+CHKNUM, -
+CHKSYS, -
+CLRSUM, -
+CMBOFF, -
+CMDAGT, -
+CMDBNG, -
+CMDCOM, -
+CMDCPL, -
+CMDDBL, -
+CMDGEN, -
+CMDKIK, -
+CMDKNO, -
+CMDLTO, -
+CMDMSC, -
+CMDNBR, -
+CMDNMG, -
+CMDPAR, -
+CMDROU, -
+CMDSPE, -
+CMDSPT, -
+CMDSCR, -
+CMDTSL, -
+CMDTGL,-
+CMDWIT, -
+CMDTRP,-
+CMDSTR,-
+CMDSSC,-
+CMDPAS,-
+DELMSG, -
+ENCINI, -
+SPTCANEVTLIB,-
+DES_EXPAND_KEY,-
+$!ENCINI1, -   V09
+ENCSWAP, -
+GETFRE, -
+GETTIM, -
+GRABRECOVERY, -
+GSERIAL, -
+HASHBLOCK, -
+HASHGET, -
+HASHPUT, -
+HOURSALE, -
+KIKREP, -
+LDUMP, -
+LODTXT, -
+MSCGETB, -
+MSC_BLDCMD, -
+MSC_QUECMD, -
+NET_CHKQUEUE, -
+ODDSOFF, -
+PASIOSUBS,-
+POLIND, -
+QUECMD, -
+REPCLERK, -
+REPROTRA, -
+RESCHK, -
+RESTORE, -
+RLOG, -
+SETNBR, -
+SNDTRA, -
+SPTOFF, -
+SPTOFF1, -
+SUBCNTRL, -
+TOPATS, -
+TOPTSL, -
+TSLSYS, -
+TCPQUEUE, -
+TMFRLN, -
+UPDEUR, -
+UPDEURXRF, -
+UPDIGS, -
+UPDGAM, -
+UPDKIK, -
+UPDLPL, -
+UPDMIS, -
+UPDPOL, -
+UPDSPT, -
+UPDSUB, -
+UPDSTA, -
+UPDXRF, -
+UPLIAB, -
+WLOG, -
+INV64,-
+RND64,-
+SSCTOP,-
+TRPTOP,-
+STRTOP,-
+GAME_OPTIONS, -
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAGTCOM.ESH/SHAREABLE, -
+TSKLIB:GXAPPCOM.ESH/SHAREABLE, -
+TSKLIB:GXAPUCOM.ESH/SHAREABLE, -
+TSKLIB:GXCHKCOM.ESH/SHAREABLE, -
+TSKLIB:GXCPLCOM.ESH/SHAREABLE, -
+TSKLIB:GXCTLCOM.ESH/SHAREABLE, -
+TSKLIB:GXLANCOM.ESH/SHAREABLE, -
+TSKLIB:GXLTOPOL.ESH/SHAREABLE, -
+TSKLIB:GXMSCCOM.ESH/SHAREABLE, -
+TSKLIB:GXCTMCOM.ESH/SHAREABLE, -
+TSKLIB:GXNETCOM.ESH/SHAREABLE, -
+TSKLIB:GXPOLCOM.ESH/SHAREABLE, -
+TSKLIB:GXPOOLLTO.ESH/SHAREABLE, -
+TSKLIB:GXSLOCOM1.ESH/SHAREABLE, -
+TSKLIB:GXX2XCOM.ESH/SHAREABLE,-
+TSKLIB:GXTSPCOM.ESH/SHAREABLE,-
+TSKLIB:GXSTACOM.ESH/SHAREABLE,-
+TSKLIB:GXSTOPCOM.ESH/SHAREABLE,-
+TSKLIB:GXPRZCOM.ESH/SHAREABLE, -
+TSKLIB:GXWINCOM.ESH/SHAREABLE,-
+TSKLIB:GXEURCOM.ESH/SHAREABLE

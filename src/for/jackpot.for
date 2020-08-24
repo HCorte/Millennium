@@ -1,0 +1,293 @@
+C
+C SUBROUTINE JACKPOT
+C
+C V21 27-MAR-2017 HXK REMOVE JOKER JACKPOT
+C V20 29-NOV-2000 UXN TOTOGOLO ADDED.
+C V19 10-MAR-2000 RXK Bingo part changed.
+C V18 10-JAN-2000 PXO Removed 'add sptapl'
+C V17 13-OCT-1999 RXK World Tour added.
+C V16 18-MAR-1999 RXK Game type and index in separate bytes, removed hack for V5
+C V15 07-SEP-1998 RXK Kicker game added
+C V14 22-FEB-1995 HXK HACK FOR V5
+C V13 27-NOV-1994 HXK Fixed minor bug with Bingo bet
+C V12 19-OCT-1994 HXK Change for BNGSHV dimension change
+C V11 15-OCT-1994 HXK Adding /developing Bingo (15.Oct.94)
+C V10 01-FEB-1994 HXK CHANGED TIME
+C V09 05-NOV-1993 HXK CHANGE RAVI AND LOTTO JACKPOTS.
+C V08 01-NOV-1993 HXK DON'T SHOW STANDARD LOTTO JACKPOT.
+C V07 26-SEP-1993 GXA Check for V65 minimum amount and set if necessary.
+C V06 17-AUG-1993 SXH Use PUTIME
+C V05 28-JUN-1993 HXK changed err message length from 5 to 6
+C V04 22-JUN-1993 HXK ADDED RAVI, VIKING
+C V03 21-JAN-1993 DAB Initial Release Based on Netherlands Bible, 12/92
+C                   DEC Baseline
+C V02 14-NOV-1991 GCAN INITIAL RELEASE FOR THE NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C
+C
+C JACKPOT.FOR
+C
+C SUBROUTINE TO GENERATE JACKPOT REPORT FOR ALL GAMES
+C
+C CALLING SEQUENCE:
+C     CALL JACKPOT(TRABUF,MESTAB,OUTLEN)
+C INPUT
+C     TRABUF - INTERNAL TRANSACTION FORMAT
+C     MESTAB - TERMINAL INPUT MESSAGE
+C OUTPUT
+C     MESTAB - TERMINAL OUTPUT MESSAGE
+C     OUTLEN - OUTPUT MESSAGE LENGTH
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE JACKPOT(TRABUF,MESTAB,OUTLEN)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:LTOCOM.DEF'
+        INCLUDE 'INCLIB:SPTCOM.DEF'
+        INCLUDE 'INCLIB:TGLCOM.DEF'
+        INCLUDE 'INCLIB:BNGCOM.DEF'
+        INCLUDE 'INCLIB:KIKCOM.DEF'
+        INCLUDE 'INCLIB:DESTRA.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:DATBUF.DEF'
+        INCLUDE 'INCLIB:CHKSUMCM.DEF'
+C
+        INTEGER*2 OUTLEN
+        INTEGER*4 PLFLAG/0/
+        BYTE      MESTAB(*)
+ 
+        INTEGER*4 I4TEMP
+        INTEGER*2 I2TEMP(2)
+        BYTE      I1TEMP(4)
+        EQUIVALENCE(I4TEMP,I2TEMP,I1TEMP)
+C
+        INTEGER*4 MYCHKSUM, CHKLEN, IND, CDCDATE
+        INTEGER*4 POOL, I, GIDX, GTYP, GNUM, ERRTYP
+        INTEGER*4 LTOT, STOT, BTOT
+C
+        DATA ERRTYP /Z90/
+C
+
+C
+C GET GAME TYPE AND GAME INDEX
+C
+        GTYP = ZEXT( MESTAB(5) )
+        GIDX = ZEXT( MESTAB(6) )
+C
+C CHECK FOR VALID GAME TYPE AND GAME INDEX
+C
+        IF(GTYP.NE.TLTO.AND.GTYP.NE.TSPT.AND.GTYP.NE.TTGL.AND.
+     *     GTYP.NE.TBNG.AND.GTYP.NE.TKIK) THEN  !ONLY ALLOW LOTTO,SPORTS
+           TRABUF(TERR)=SYNT                    !BINGO AND KICKER
+           GOTO 1000
+        ENDIF
+C
+        IF(GIDX.LT.1.OR.GIDX.GT.MAXIND) THEN
+           TRABUF(TERR)=SYNT
+           GOTO 1000
+        ENDIF
+C
+        IF(GTYP.LT.1.OR.GTYP.GT.MAXTYP) THEN
+           TRABUF(TERR)=SYNT
+           GOTO 1000
+        ENDIF
+        GNUM = GTNTAB(GTYP,GIDX)
+C
+C CHECK IF JACKPOT REPORTS ARE SUPRESSED
+C
+        IF(TSBIT(P(SUPRPT),INFREP)) THEN
+           TRABUF(TERR)=SUPR
+           GOTO 1000
+        ENDIF
+C
+        IF(TSBIT(P(SUPRPT),GNUM)) THEN
+           TRABUF(TERR) = SUPR
+           GOTO 1000
+        ENDIF
+C
+        IF (GTYP.EQ.TLTO) GOTO 100
+        IF (GTYP.EQ.TSPT) GOTO 200
+        IF (GTYP.EQ.TTGL) GOTO 300
+        IF (GTYP.EQ.TBNG) GOTO 400
+        IF (GTYP.EQ.TKIK) GOTO 1000   !V21  [was GOTO 500]
+        GOTO 1000
+C
+C GET JACKPOT FOR LOTTO
+C
+100     CONTINUE
+        LTOT=0
+        IF(LTOMAX(GIDX).EQ.48) THEN  !IF VIKING
+           POOL=LTOEST(GIDX)
+           CDCDATE=LTODAT(1,GIDX)
+           GOTO 900
+        ENDIF
+C***    DO I=1,LTGENT
+C***       LTOT=LTOT+LTOSAL(I,GIDX)
+C***    ENDDO
+        POOL=IDNINT(DFLOAT(LTOT)*CALPER(LTOSPR(GIDX)))
+        POOL=IDNINT(DFLOAT(POOL)*CALPER(LTOPER(1,GIDX)))  !!+LTOAPL(GIDX)
+        IF(POOL.LT.LTOMIN(GIDX)) POOL=LTOMIN(GIDX)
+        IF(LTOOPA(GIDX).NE.0) POOL=LTOOPA(GIDX)
+        IF(LTOSTS(GIDX).LE.GAMBFD)PLFLAG=1
+        CDCDATE=LTODAT(1,GIDX)
+        GOTO 900
+C
+C GET JACKPOT FOR SPORTS
+C
+200     CONTINUE
+        STOT=0
+        DO I=1,SPGENT
+           STOT=STOT+SPTSAL(I,GIDX)
+        ENDDO
+        POOL=IDNINT(DFLOAT(STOT)*CALPER(SPTSPR(GIDX)))
+        POOL=IDNINT(DFLOAT(POOL)*CALPER(SPTPER(1,GIDX)))   !!+SPTAPL(GIDX)
+        IF(SPTOPA(GIDX).NE.0) POOL=SPTOPA(GIDX)
+        IF(SPTSTS(GIDX).LE.GAMBFD)PLFLAG=1
+        CDCDATE=SPTDAT(1,GIDX)
+        GOTO 900
+C
+C GET JACKPOT FOR RESULTS
+C
+300     CONTINUE
+        STOT=0
+        DO I=1,TGGENT
+           STOT=STOT+TGLSAL(I,GIDX)
+        ENDDO
+        POOL=IDNINT(DFLOAT(STOT)*CALPER(TGLSPR(GIDX)))
+        POOL=IDNINT(DFLOAT(POOL)*CALPER(TGLPER(1,GIDX)))   !!+TGLAPL(GIDX)
+        IF(TGLOPA(GIDX).NE.0) POOL=TGLOPA(GIDX)
+        IF(TGLSTS(GIDX).LE.GAMBFD)PLFLAG=1
+        CDCDATE=TGLDAT(1,GIDX)
+        GOTO 900
+C
+C GET JACKPOT FOR BINGO
+C
+400     CONTINUE
+        IF(BNGPER(11,BGOFHS,GIDX).GT.0) THEN        ! fullhouse is parimutuel
+           BTOT=0
+           DO I=1,BGOENT
+              BTOT=BTOT+BNGSAL(I,GIDX)
+           ENDDO
+           POOL=IDNINT(DFLOAT(BTOT)*CALPER(BNGSPR(GIDX)))
+           IF(POOL.LT.BNGMIN(GIDX)) POOL = BNGMIN(GIDX)
+           POOL=IDNINT(DFLOAT(BTOT)*CALPER(BNGPER(11,BGOFHS,GIDX))) 
+        ELSE
+           POOL = BNGSHV(11,BGOFHS,GIDX)            ! fullhouse has fixed prize
+        ENDIF
+        IF(BNGSTS(GIDX).LE.GAMBFD)PLFLAG=1
+        CDCDATE=BNGDAT(1,GIDX)
+        GOTO 900
+C
+C GET JACKPOT FOR KICKER
+C
+500     CONTINUE
+C
+C Currently JOKERI JACKPOT is not used. Send always zeros.
+C
+        POOL = 0
+C        JTOT=0
+C        DO I=1,KIGENT
+C           DO GAM = 1,MAXGAM
+C              JTOT=JTOT+KIKSAL(I,GAM,GIDX)
+C           ENDDO
+C        ENDDO
+C        POOL=IDNINT(DFLOAT(JTOT)*CALPER(KIKSPR(GIDX)))+KIKPOL(1,GIDX)
+C        IF(POOL.LT.P(MINKJCK)) POOL = P(MINKJCK)
+C        IF(POOL.GT.P(MAXKJCK)) POOL = P(MAXKJCK)
+        IF(KIKSTS(GIDX).LE.GAMBFD)PLFLAG=1
+        CDCDATE=KIKDAT(1,GIDX)
+        GOTO 900
+C
+C BUILD OUTPUT MESSAGE BACK TO TERMINAL
+C
+900     CONTINUE
+        IND=5
+C
+C SEND TIME
+C
+        I4TEMP = TRABUF(TTIM)
+        MESTAB(IND+0) = I1TEMP(3)
+        MESTAB(IND+1) = I1TEMP(2)
+        MESTAB(IND+2) = I1TEMP(1)
+        IND = IND + 3
+C
+C GAME TYPE AND GAME INDEX
+C
+        MESTAB(IND) = GTYP  !class
+        IND=IND+1
+        MESTAB(IND) = GIDX  !subclass
+        IND=IND+1
+C
+C CDC DATE
+C
+        I4TEMP = CDCDATE
+        MESTAB(IND+0) = I1TEMP(2)
+        MESTAB(IND+1) = I1TEMP(1)
+        IND=IND+2
+C
+C POOL AMOUNT AND POOL FLAG
+C
+        I4TEMP = POOL
+        MESTAB(IND+0) = I1TEMP(4)
+        MESTAB(IND+1) = I1TEMP(3)
+        MESTAB(IND+2) = I1TEMP(2)
+        MESTAB(IND+3) = I1TEMP(1)
+        IND=IND+4
+        MESTAB(IND) = PLFLAG
+        IND=IND+1
+C
+        IF(GTYP.EQ.TBNG) THEN
+           IF(BNGSPH(5,GIDX).EQ.0) THEN
+              MESTAB(IND) = 53
+           ELSE
+              MESTAB(IND) = BNGSPH(5,GIDX)
+           ENDIF 
+           IND=IND+1
+        ENDIF
+
+        OUTLEN=IND-1
+        GOTO 9000
+C
+C
+C ERROR IN REPORT REQUEST FROM TERMINAL
+C
+1000    CONTINUE
+        TRABUF(TSTAT)=REJT
+        MESTAB(2) = ERRTYP
+        MESTAB(5) = TRABUF(TERR)
+        OUTLEN=6
+C
+C CALCULATE CHECKSUM FOR MESSAGE BACK TO TERMINAL
+C
+9000    CONTINUE
+        I4CCITT = TRABUF(TCHK)
+        MESTAB(3) = I1CCITT(2)
+        MESTAB(4) = I1CCITT(1)
+        CHKLEN=OUTLEN-1
+        CALL GETCCITT(MESTAB,1,CHKLEN,MYCHKSUM)
+        I4CCITT = MYCHKSUM
+        MESTAB(3) = I1CCITT(2)
+        MESTAB(4) = I1CCITT(1)
+C
+        RETURN
+        END

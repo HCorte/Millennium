@@ -1,0 +1,319 @@
+C
+C SUBROUTINE X2LINTER
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2LINTER.FOV                                 $
+C  $Date::   23 Apr 1996 15:15:20                                         $
+C  $Revision::   1.1                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - vis_x2linter.for;1 **
+C
+C X2LINTER.FOR
+C
+C X2X Upgrade: 22-FEB-96 wsm Added PRMAGT.DEF, moved VISCOM.DEF for Finland.
+C
+C V04 06-OCT-94 SCD ADD GVTID AND SATELLINE IDU COMMANDS
+C V03 13-SEP-94 GPR MODIFIED TO HANDLE SUBNETWORK OF ZERO
+C V02 17-AUG-94 GPR MODIFIED TO HANDLE STATION ADDRESS LONGER THAN 8 DIGITS
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C This subroutine is used to determine and load input information
+C for the X2X network snapshots.  This is to be used in
+C conjunction with the regular LINTER.
+C
+C Calling sequence:
+C
+C     CALL X2LINTER(SCRIDX,BEGOFF,ERROR)
+C
+C Input parameters:
+C
+C     SCRIDX      Int*4       Current vision screen relative to KEYLST
+C     BEGOFF      Int*4       Current offset into input buffer
+C
+C Output parameters:
+C
+C     ERROR       Int*4       Error code (-1 = input error)
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994,1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2LINTER(SCRIDX,BEGOFF,ERROR)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:X2XPRM.DEF'					    !V04
+	INCLUDE 'INCLIB:X2VIS.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'					    !V04
+	INCLUDE 'INCLIB:VISCOM.DEF'
+C
+	INTEGER*4   SCRIDX			! Screen relative to KEYLIST
+	INTEGER*4   BEGOFF,ENDOFF		! end offsets Array indices
+	INTEGER*4   FLDIDX,INDX			! Level of input Conv
+	INTEGER*4   LEVEL			! error/string length Convert
+	INTEGER*4   ERR,LEN			! binary data Input error
+	INTEGER*4   BINDAT
+	INTEGER*4   ERROR
+	INTEGER*4   TEMP, I
+	CHARACTER   NXTCHR*1                    !Next char string
+	CHARACTER   CHRSTR(20)*1,CHREQV*20      !Input char string
+	CHARACTER   ASCDAT*(LXADR)		!String to hold address	!V02
+	LOGICAL     FUNFND                      !Function found flag
+	LOGICAL     FIRST                       !First data item
+	LOGICAL     NODATA                      !Can be blank field
+	LOGICAL     TESTBIT                     !Function test
+C
+	EQUIVALENCE (CHRSTR,CHREQV)
+C
+C INITIALIZE VARIABLES.
+C
+	FUNFND=.FALSE.
+	FIRST=.TRUE.
+	NODATA=.FALSE.
+	BEGOFF=BEGOFF-1
+	LEN=0
+	FLDIDX=0
+	ENDOFF=0
+	IF(SCRIDX.LE.0.OR.SCRIDX.GT.X2SCRN_CNT) GOTO 8000
+C
+C FIND THE BEGINNING OF NEXT STRING.
+C
+100	CONTINUE
+	BINDAT=0
+	ASCDAT=' '				!V02
+	ENDOFF=BEGOFF
+C
+C SEARCH FOR BEGINNING OF NEXT STRING.
+C
+110	CONTINUE
+	BEGOFF=BEGOFF+1
+	IF(BEGOFF.GT.LQ) THEN
+	  IF(NODATA) GOTO 2020
+	  GOTO 9000
+	ENDIF
+	IF(LINE(BEGOFF).EQ.' ') GOTO 110
+	IF(LINE(BEGOFF).EQ.'-') GOTO 110
+	IF(LINE(BEGOFF).EQ.',') GOTO 110
+C
+C FIND THE END OF THE STRING.
+C
+	ENDOFF=BEGOFF
+120	CONTINUE
+	IF(ENDOFF.EQ.LQ) GOTO 130
+	NXTCHR=LINE(ENDOFF+1)
+	IF(NXTCHR.EQ.' ') GOTO 130
+	IF(NXTCHR.EQ.',') GOTO 130
+	ENDOFF=ENDOFF+1
+	GOTO 120
+C
+C MOVE THE STRING INTO A BUFFER FOR PROGRAM USE.
+C
+130	CONTINUE
+	IF(ENDOFF-BEGOFF+1 .GT. 14) GOTO 8000
+	INDX=0
+	CHREQV=' '
+	DO 132 I=BEGOFF,ENDOFF
+	  INDX=INDX+1
+	  CHRSTR(INDX)=LINE(I)
+132	CONTINUE
+C
+C BRANCH TO APPROPRIATE PROCESSING SECTION.
+C
+	IF(.NOT.FUNFND) GOTO 1000           !FUNCTION PROCESSING
+	GOTO 2000                           !DATA PROCESSING
+C
+C ========= FUNCTION KEY PROCESSING ==========
+C
+1000	CONTINUE
+C
+C VALIDATE INPUT ORDER.
+C
+	IF(FUNFND) GOTO 8000        !TWO FUNCTIONS NOT ALLOWED
+C
+C INPUT STRING HAS BEEN ISOLATED, NOW DETERMINE IF IT IS
+C A VALID REQUEST.
+C
+	DO 1010 FLDIDX=1,X2FLDCNT
+	  IF(CHREQV.EQ.X2FLDNAM(FLDIDX)) GOTO 1020
+1010	CONTINUE
+	IF(FIRST) THEN
+	  GOTO 2000
+	ELSE
+	  GOTO 8000
+	ENDIF
+C
+C KEY CODE WAS FOUND, NOW CHECK IF IT IS VALID FOR THIS SCREEN.
+C
+1020	CONTINUE
+ 	TESTBIT=BJTEST(X2SCRN(X2SCRN_KEYLEV1,SCRIDX),FLDIDX)
+	IF(TESTBIT) THEN
+	  FUNFND=.TRUE.
+	  LEVEL=1
+	ENDIF
+	TESTBIT=BJTEST(X2SCRN(X2SCRN_KEYLEV2,SCRIDX),FLDIDX)
+	IF(TESTBIT) THEN
+	  FUNFND=.TRUE.
+	  LEVEL=2
+	ENDIF
+	TESTBIT=BJTEST(X2SCRN(X2SCRN_KEYLEV3,SCRIDX),FLDIDX)
+	IF(TESTBIT) THEN
+	  FUNFND=.TRUE.
+	  LEVEL=3
+	ENDIF
+	IF(.NOT.FUNFND) GOTO 8000
+C
+C IF PRIMARY KEY BEING CHANGED CLEAR OUT EXISTING INFORMATION.
+C
+	IF(FLDIDX.EQ.X2SCRN(X2SCRN_DEFKEY,SCRIDX)) THEN
+	  DO 1030 I=1,X2FLDCNT
+	    X2FLDINF(I)=0
+1030	  CONTINUE
+	  X2SCRN(X2SCRN_INPLEV1,SCRIDX)=0
+	  X2SCRN(X2SCRN_INPLEV2,SCRIDX)=0
+	  X2SCRN(X2SCRN_INPLEV3,SCRIDX)=0
+	ENDIF
+C
+C IF FIELD CAN CONTAIN NO DATA SET FLAG.
+C
+	TESTBIT=BJTEST(X2SCRN(X2SCRN_NODATA,SCRIDX),FLDIDX)
+	IF(TESTBIT) NODATA=.TRUE.
+C
+C FUNCTION HAS BEEN DETERMINED, NOW LOAD THE DATA PORTION.
+C
+	BEGOFF=ENDOFF+1
+	GOTO 100
+C
+C =============== NUMERIC DATA PROCESSING ===============
+C
+2000	CONTINUE
+C
+C IF DATA INPUT BUT NO FUNCTION KEY FOR FIRST PARAMETER
+C ASSUME THE DEFAULT KEY.
+C
+	IF(FIRST .AND. .NOT.FUNFND) THEN
+	  FLDIDX=X2SCRN(X2SCRN_DEFKEY,SCRIDX)
+	  LEVEL=1
+	  FUNFND=.TRUE.
+	  FIRST=.FALSE.
+	ENDIF
+C
+C VALIDATE INPUT.
+C
+	IF(.NOT.FUNFND) GOTO 8000       !FUNCTION THEN DATA ONLY
+C
+C IF INPUT DATA IN FOR DROP ADDRESS CONVERT TO COLLATING
+C SEQUENCE.
+C
+	IF(FLDIDX.EQ.XDRPIDX) THEN
+          IF(LINE(BEGOFF).NE.'^' .AND. LINE(BEGOFF).NE.'%') THEN
+            BINDAT=ICHAR(LINE(BEGOFF))-63
+          ELSE IF(LINE(BEGOFF).EQ.'^') THEN
+            BINDAT=30+ICHAR(LINE(BEGOFF+1))-63
+          ELSE IF(LINE(BEGOFF).EQ.'%') THEN
+            BINDAT=94+ICHAR(LINE(BEGOFF+1))-63
+          ELSE
+	    GOTO 8000
+          ENDIF
+C
+C ***** Start V02 changes *****
+C
+C PASSS THE ASC DATA TO X2VISUPD
+C
+	ELSEIF ((FLDIDX.EQ.XADRIDX) .OR.			!V04
+     *	        (FLDIDX.EQ.XGVTIDX) .OR.			!V04
+     *	        (FLDIDX.EQ.XIDUIDX)) THEN			!V04
+	  LEN=0
+	  DO I=BEGOFF,MIN0(ENDOFF,BEGOFF+LXADR-1)
+	    LEN=LEN+1
+	    ASCDAT(LEN:LEN)=LINE(I)
+	  ENDDO
+C
+C ***** End V02 changes *****
+C
+C
+C CONVERT THE ASC DATA TO BINARY
+C
+	ELSE
+	  LEN=0
+	  DO 2010 I=BEGOFF,ENDOFF
+	    CALL ASCBIN(LIN24,I,1,TEMP,ERR)
+	    IF(ERR.NE.0) GOTO 8000
+	    BINDAT=10*BINDAT+TEMP
+	    LEN=LEN+1
+2010	  CONTINUE
+	ENDIF
+C
+C ***** Start V03 changes *****
+C
+C Add one so we can handle a subnetwork of zero.
+C We will subtract the one in the snapshot routine.
+C The problem is the x2fldinf array gets cleared to
+C zero and the subnetwork has valid values from 0
+C to 254. A value of 255 will be used for all.
+C If the user enters nothing the snapshot will
+C get 0 then subtract 1 giving -1. This
+C will also be used for all. If the user enters a 
+C value 0 the snapshot will end up using 0.
+C
+	IF(FLDIDX.EQ.XSUBIDX) THEN
+	  BINDAT=BINDAT+1
+	ENDIF
+C
+C ***** End V03 changes *****
+C
+C CHECK TO ENSURE DATA DIDN'T OVERFLOW.
+C
+	IF(LEN.GT.14) GOTO 8000
+C
+C UPDATE ALL INFORMATION IN THE X2VIS COMMON.
+C SET FOUND FLAG AND CHECK FOR MORE BUFFER INPUT.
+C
+2020	CONTINUE
+	CALL X2VISUPD(SCRIDX,LEVEL,FLDIDX,BINDAT,
+     *	              ASCDAT,ENDOFF-BEGOFF+1,ERROR)   !V02
+	FUNFND=.FALSE.
+	BEGOFF=ENDOFF+1
+	NODATA=.FALSE.
+	IF(ERROR.EQ.0) GOTO 100
+C
+C PROGRAM ERROR EXIT
+C
+8000	CONTINUE
+	ERROR=-1
+C
+C PROGRAM EXIT. CHECK TO ENSURE THAT THE MINIMUM SCREEN CRITERIA
+C HAS BEEN SATISFIED. IF IT HASN'T, RETURN AN ERROR.
+C
+9000	CONTINUE
+	IF(.NOT.FUNFND.AND.FIRST) RETURN
+	IF(FUNFND.AND.ERROR.EQ.0) GOTO 2020
+	IF(SCRIDX.NE.0 .AND.
+     *	   X2SCRN(X2SCRN_DEFKEY,SCRIDX).NE.0) THEN
+	  IF(X2FLDINF(X2SCRN(X2SCRN_DEFKEY,SCRIDX)).EQ.0) THEN
+	    ERROR=-1
+	  ENDIF
+	ENDIF
+	RETURN
+	END

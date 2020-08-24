@@ -1,0 +1,58 @@
+C
+C SUBROUTINE IGTBLK
+C $Log:   GXAFXT:[GOLS]IGTBLK.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:35:24   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:37:58   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_hshfili4.for **
+C
+C
+C
+C
+C *** IGTBLK
+C
+C Determine the hash block number which would normally contain the
+C key in the specified record.
+C
+C *** THIS ROUTINE IS PROVIDED ONLY FOR COMPATABILITY WITH THE OLD
+C     INDIRECT FILE SYSTEM.  IT MAY BE CALLED BY AN APPLICATION, BUT
+C     IS NEVER CALLED BY ANY OF THE HSH... SUBROUTINES.
+C ***
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE IGTBLK(I4REC,LUN,NRMBLK,NUMREC)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:HSHCOM.DEF'
+C
+	INTEGER*4 I4REC(*)                  !  INPUT: RECORD WITH KEY
+	INTEGER*4 LUN                       !  INPUT: LOGICAL UNIT #
+	INTEGER*4 NRMBLK                    ! OUTPUT: NORMAL HASH BLK #
+	INTEGER*4 NUMREC                    ! OUTPUT: NUMBER OF RECORDS
+	INTEGER*4 I4KEY
+C
+C
+C
+C
+	IF(FCB(FCBLUN,LUN).NE.LUN)THEN
+	  NRMBLK=0
+	  NUMREC=0
+	ELSE
+	  I4KEY=I4REC(FCB(FCBI4K,LUN))
+	  NUMREC=ISHFT(I4KEY,-30) + 1
+	  I4KEY=IAND(I4KEY,INDMSK)
+	  NRMBLK=MOD(I4KEY,FCB(FCBHSH,LUN)) + 1
+	ENDIF
+C
+	RETURN
+	END

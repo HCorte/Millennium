@@ -1,0 +1,156 @@
+C PASCOM.DEF
+C
+C V03 15-DEC-2015 JHR/FRP CR13 SET 6 DRAWS TO SALE FOR PASSIVE GAMES (INCREASE PASCSB)
+C V02 01-JAN-2010 FJG ePASSIVE
+C V01 24-DEC-00 CS  INITIAL RELEASE FOR PORTUGAL
+C
+C PASSIVE LOTTERY GAME COMMON
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1990,1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	COMMON /PASCOM/
+     *	  PASSTS(PAGEMI,NUMPAS),
+     *	  PASEMIS(PAGEMI,NUMPAS),
+     *	  PASNUMTCK(PAGEMI,NUMPAS),
+     *	  PASNUMSER(PAGEMI,NUMPAS),
+     *	  PASPRC(PAGEMI,NUMPAS),		
+     *	  PASESD(PAGEMI,NUMPAS),		
+     *	  PASTIM(PAGEMI,NUMPAS),		
+     *	  PASCTM(PAGEMI,NUMPAS),		
+     *	  PASPLAN(PAGEMI,NUMPAS)		
+	COMMON /PASCOM/
+     *	  PASPRGCDC(PAGEMI,NUMPAS),              
+     *	  PASREDAMT(PAGEMI,NUMPAS),		
+     *	  PASDIV(PAGEMI,NUMPAS),
+     *    PASEMT(PAGEMI,NUMPAS),
+     *    PASWSER(PAGEMI,NUMPAS),
+     *	  PASWNUM(PAGDIV,PAGEMI,NUMPAS)
+	COMMON /PASCOM/
+     *    PASWIN(PAGNBR,PAGDIV,PAGEMI,NUMPAS),
+     *	  PASSHR(PAGDIV,PAGEMI,NUMPAS),		
+     *	  PASSHV(PAGDIV,PAGEMI,NUMPAS),		
+     *	  PASPAD(PAGDIV,PAGEMI,NUMPAS),
+     *	  PASTYP(PAGDIV,PAGEMI,NUMPAS),
+     *	  PASDIG(PAGDIV,PAGEMI,NUMPAS),
+     *	  PASIDNUM(PAGDIV,PAGEMI,NUMPAS),
+     *	  PASEXSHR(PAGEDV,PAGEMI,NUMPAS),
+     *	  PASEXSHV(PAGEDV,PAGEMI,NUMPAS),
+     *    PASEXPAD(PAGEDV,PAGEMI,NUMPAS),
+     *    PASCHGCDC(PAGEMI,NUMPAS),
+     *    PASBSD(PAGEMI,NUMPAS),
+     *    PASPRG(PAGDIV,PAGEMI,NUMPAS),
+     *    PASPUP(PAGEMI,NUMPAS),
+     *    PASRETCNT(PAGEMI,NUMPAS),
+     *    PASNOFFRA(PAGEMI,NUMPAS),
+     *    PASTODPAY(PAGEMI,NUMPAS),
+     *    PASTOPAYAMT(PAGEMI,NUMPAS),
+     *	  PASRETAFTAMT(PAGEMI,NUMPAS),
+     *	  PASMAXDAYPAY(PAGEMI,NUMPAS),
+     *	  PASDRAW(PAGEMI,NUMPAS),
+     *	  PASFIN(NUMTOT,NUMFIN,PAGEMI,NUMPAS),     
+     *	  PASDIVPLN(NUMTOT,PAGDIV+PAGEDV,PAGEMI,NUMPAS),          
+     *	  PASLITDRW(6,PAGEMI,NUMPAS),        
+     *    PASOPNVAL,
+     *    PASCURDRW(NUMPAS)
+!===============================================================================
+        integer*4         pastpffil(5,pagemi,numpas)
+        character*20      cpastpffil(pagemi,numpas) 
+        equivalence(pastpffil,cpastpffil)
+!        
+        integer*4         pasvpffil(5,pagemi,numpas)
+        character*20      cpasvpffil(pagemi,numpas) 
+        equivalence(pasvpffil,cpasvpffil)
+!
+        byte              passaltab(pagemi,numpas)        
+        byte              passubsts(pagemi,numpas)          
+        byte              pasextdrw(pmaxwek,0:9,numpas)
+!
+        integer*4         pasioerrs(ioermax,pagemi,numpas)
+!        
+        record /stnumcla/ pasnumcla(0:pmaxnumcla,pmaxsal)
+        record /stnumpop/ pasnumpop(0:pmaxnumpop,pmaxsal)        
+!
+        common /pascom/ pastpffil,pasvpffil,passaltab,passubsts,pasextdrw,pasioerrs
+        common /pascom/ pasnumcla,pasnumpop
+C===============================================================================
+C
+C PASSIVE LOTTERY COMMON AREA DEFINITION
+C
+	INTEGER*4 PASSTS			!STATUS
+	INTEGER*4 PASEMIS			!EMISSION
+	INTEGER*4 PASNUMTCK			!NUMBER OF TICKETS/EMISSION
+	INTEGER*4 PASNUMSER			!NUMBER OF SERIES/EMISSION
+	INTEGER*4 PASPRC			!BASE PRICE
+	INTEGER*4 PASESD			!END EMISSION DATE
+	INTEGER*4 PASTIM			!TIME WHEN GAME SHOULD CLOSE
+	INTEGER*4 PASCTM			!ACTUAL CLOSE TIME
+	INTEGER*4 PASPLAN			!EMISSION PLAN
+	INTEGER*4 PASPRGCDC			!PURGING CDC OF THIS EMISSION
+	INTEGER*4 PASREDAMT			!REDEMPTION AMOUNT
+	INTEGER*4 PASDIV			!NUMBER OF DIVISIONS
+	INTEGER*4 PASEMT			!EMISSION TYPE (CLAS/POP/EXTRA)
+	INTEGER*4 PASWSER			!WINNING SERIE
+	INTEGER*4 PASWNUM			!NUMBER OF WIN. NO.
+	INTEGER*4 PASWIN			!REGULAR WINNING NUMBERS
+	INTEGER*4 PASSHR			!SHARES
+	INTEGER*8 PASSHV			!SHARE VALUE
+	INTEGER*4 PASPAD			!PRIZES PAID(COUNT)	
+	INTEGER*4 PASTYP			!PRIZE TYPE
+	INTEGER*4 PASDIG			!# OF DIGITS
+	INTEGER*4 PASIDNUM			!CROSS REFERENCE
+	INTEGER*4 PASEXSHR			!EXTRA SHARE
+	INTEGER*8 PASEXSHV			!EXTRA SHARE VALUE
+	INTEGER*4 PASEXPAD                      !EXTRA PRIZES PAID(COUNT)
+	INTEGER*4 PASCHGCDC			!LAST CHANGE CDC
+	INTEGER*4 PASBSD			!BEGIN SALES DATE
+	INTEGER*4 PASPRG			!PRIZES PURGED(COUNT)
+	INTEGER*4 PASPUP			!LAST PURGE UPDATE
+	INTEGER*4 PASRETCNT			!RETURN TICKETS
+	INTEGER*4 PASNOFFRA			!NUMBER OF FRACTIONS
+	INTEGER*4 PASTODPAY			!FLAG FOR PRIZES PAID TODAY
+	INTEGER*4 PASTOPAYAMT			!AMT FOR PRIZES THAT CAN BE PAID
+	INTEGER*4 PASRETAFTAMT			!AMT FOR RETURNED TCKS AFTER DRW
+	INTEGER*4 PASMAXDAYPAY		        !MAX # OF DAYS AFTER WINPAS THAT A PRIZE CAN BE PAID BY AN AGENT
+	INTEGER*4 PASDRAW			!SCML DRAW NUMBER
+	INTEGER*4 PASFIN                        !FINANCIAL TABLE BY TRANSACTION TYPE
+	INTEGER*4 PASDIVPLN                     !PLANO REAL DIVISION PRIZES
+	INTEGER*4 PASLITDRW                     !DRAW SHORT DESCRIPTION
+C
+	INTEGER*4 PASOPNVAL                     !FLAG TO OPEN VPF AFTER WINPAS (WE ARE NOT MOVING IT TO DPAREC)
+	INTEGER*4 PASCURDRW                     !SAVE THE CURRENT DRAW FOR EACH PASSIVE GAME
+C
+C THE FOLLOWING IS EQUIVALENCED FOR CHECKPOINTING
+C
+C ******************** THIS MUST BE THE LAST DEFINED IN PASCOM **************
+C
+        COMMON/PASCOM/ LAST_PASCOM_ELEMENT
+        INTEGER*4 LAST_PASCOM_ELEMENT
+C
+C ***************************************************************************
+C
+C TO DETERMINE WHAT PASCSB SHOULD BE ONCE ALL CHANGES HAVE BEEN MADE COMPILE,
+C RELINK AND "RUN SHCOMMON" WHICH WILL TELL YOU THE CORRECT NUMBER
+C
+	INTEGER*4 PASCSB
+	PARAMETER(PASCSB = 5611)
+
+	INTEGER*4 PASBLK(2048,PASCSB)
+	EQUIVALENCE(PASBLK(1,1),PASSTS)
+
+	INTEGER*4	 FRST_PASCOM(2)
+	EQUIVALENCE	(FRST_PASCOM, PASSTS)
+	INTEGER*4	 LAST_PASCOM
+	EQUIVALENCE	(LAST_PASCOM, PASBLK(2048,PASCSB))
+
+	VOLATILE /PASCOM/

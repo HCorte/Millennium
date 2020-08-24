@@ -1,0 +1,350 @@
+C
+C SUBROUTINE X2LODDEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2LODDEF.FOV                                 $
+C  $Date::   17 Apr 1996 16:21:18                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2loddef.for;1 **
+C
+C X2LODDEF.FOR
+C
+C V03 22-SEP-95 DAS REMOVED FRPOR FASTSET CALL (NOT USED)
+C V02 09-JUL-92 NJA FIXED PROBLEM WITH FIELD OVERFLOWS.
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C This subroutine will assign default ports for
+C the station to store into EEPROM.  NOTE: This routine
+C differs from normal network port assignment in that
+C it takes into consideration that stations have previously
+C been assigned ports, and that we do not want to change
+C them.
+C
+C NOTE:  If the number of nodes is changed, then new ports
+C will be assigned!!
+C
+C Input parameters:
+C
+C     OFFLINE     Int*4       0=online 1=offline
+C     DISLOG      Logical     Display prompts to console
+C     PRTFLG      Logical     Display prompts to printer
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2LODDEF(OFFLINE,DISLOG,PRTFLG)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+	INCLUDE 'INCLIB:X2NETDEF.DEF'
+	INCLUDE 'INCLIB:X2XSTN.DEF'
+	INCLUDE 'INCLIB:X2XNPC.DEF'
+	INCLUDE 'INCLIB:X2DIAL.DEF'
+C
+        INTEGER*4   XPORT
+	INTEGER*4   OFFLINE                     !Online update flag
+	INTEGER*4   I,J                         !Local variables
+	INTEGER*4   NETPORTS(X2X_NETWORK_PORTS) !Table of ports
+	INTEGER*4   CHKPORTS(X2X_NETWORK_PORTS) !Table of ports
+	INTEGER*4   STNIDX(X2X_STATIONS)        !Station index table
+	INTEGER*4   ACTPRT /0/                  !Actual ports
+	INTEGER*4   PRVPRT /0/                  !Previous ports
+	INTEGER*4   PRVSTN /0/                  !Previous stations
+	INTEGER*4   ACTSTN /0/                  !Actual stations
+	INTEGER*4   DIALPORT(X2X_MAXDIAL_ASSIGN)!Dialup ports to assign
+	INTEGER*4   PORT, TMPPRT, ST, STN, PRTCNT, NEWSTN
+	CHARACTER   X2FILNAM*20                 !File name function
+	LOGICAL     VALID                       !Valid station
+	LOGICAL     VALID_DIAL                  !Valid dialup ports
+	LOGICAL     DISLOG                      !Display log
+	LOGICAL     PRTFLG                      !Print flag
+C
+	IF(DISLOG) THEN
+	  WRITE(5,9000)
+	  IF(PRTFLG) WRITE(6,9000)
+	ENDIF
+C
+C CLEAR OUT FREQUENCY, WEIGHTS, AND PORT PAIR FREQUENCY TABLES.
+C
+	CALL FASTSET(0,TABFRQ,X2X_NETWORK_PORTS*X2X_MAXNODES)
+	CALL FASTSET(0,TABWEI,X2X_NETWORK_PORTS*X2X_MAXNODES)
+C.......CALL FASTSET(0,FRPOR,X2X_NETWORK_PORTS*X2X_NETWORK_PORTS)
+	CALL FASTSET(0,STACWEI,X2X_STATIONS)
+	CALL FASTSET(0,STINX,X2X_STATIONS)
+	CALL FASTSET(0,ONE_SET_OF_PORTS,X2X_MAXNODES)
+	CALL FASTSET(0,ONE_SET_OF_NODES,X2X_MAXNODES)
+	CALL FASTSET(0,ALL_SETS_OF_PORTS,X2X_STATIONS*X2X_MAXNODES)
+	CALL FASTSET(0,POASTONO,X2X_MAXNODES*201)
+	CALL FASTSET(0,CHKPORTS,X2X_NETWORK_PORTS)
+C
+        NUM_OF_NODES=X2XSTN_MAXDEF + X2XSTN_MAXX32
+	PRVSTN=0
+	ACTSTN=0
+	PRVPRT=0
+	ACTPRT=0
+	NEWSTN=0
+C
+C CALL X2DIALPT TO INITIALIZE INTERNAL STRUCTURES.
+C
+	CALL X2DIALPT(0,OFFLINE,PRTCNT,DIALPORT)
+C
+C OPEN THE STATION FILE.
+C
+	CALL OPENLOD(X2FILNAM(XSTN),1)
+C
+C OPEN THE NETWORK PORT CONFIGURATION FILE IF
+C PROCESS IS OFFLINE.
+C
+	IF(OFFLINE.NE.0) THEN
+	  CALL OPENX2X(X2FILNAM(XNPC),2)
+	ENDIF
+C
+C READ THE STATION RECORD, AND IF NO DEFAULT PORTS
+C HAVE BEEN PREVIOUSLY ASSIGNED, UPDATE THE STATION
+C TABLE.
+C
+	STN=0
+100	CONTINUE
+	  STN=STN+1
+	  CALL READLOD(1,STN,X2XSTN_REC,ST)
+	  IF(ST.EQ.144) GOTO 120
+	  IF(X2XSTN_REC(1).LE.0) GOTO 100
+	  VALID=.TRUE.
+C
+C CHECK ALL DEFAULT PORTS.
+C
+          DO 110 I=1,MIN0(NUM_OF_NODES,X2XSTN_MAXDEF+X2XSTN_MAXX32)
+            IF(I.LE.X2XSTN_MAXDEF) THEN
+               XPORT = X2XSTN_DEF_PORT(I)
+            ELSE
+               XPORT = X2XSTN_X32_PORT(I-X2XSTN_MAXDEF)
+            ENDIF
+C
+            IF(XPORT.LE.0) THEN
+              VALID=.FALSE.
+            ELSE
+C
+C VALID PORT - NOW CHECK TO SEE IF WE HAVE ENCOUNTERED IT
+C BEFORE.
+C
+              TMPPRT=XPORT
+	      IF(OFFLINE.EQ.0) THEN
+	        IF(X2XPN_TYPE(TMPPRT).EQ.X2XPT_X21 .OR.
+     *	           X2XPN_TYPE(TMPPRT).EQ.X2XPT_X25) THEN
+	          DO 111 J=1,PRVPRT
+	            IF(CHKPORTS(J).EQ.TMPPRT) GOTO 110
+111	          CONTINUE
+	          PRVPRT=PRVPRT+1
+	          CHKPORTS(PRVPRT)=TMPPRT
+	        ENDIF
+	      ELSE
+	        CALL READX2X(2,TMPPRT,X2XNPC_REC,ST)
+	        IF(ST.EQ.144) GOTO 110
+	        IF(X2XNPC_REC(1).LE.0) GOTO 110
+	        IF(X2XNPC_TYPE.EQ.X2XPT_X21 .OR.
+     *	           X2XNPC_TYPE.EQ.X2XPT_X25) THEN
+	          DO 112 J=1,PRVPRT
+	            IF(CHKPORTS(J).EQ.TMPPRT) GOTO 110
+112	          CONTINUE
+	          PRVPRT=PRVPRT+1
+	          CHKPORTS(PRVPRT)=TMPPRT
+	        ENDIF
+	      ENDIF
+	    ENDIF
+110	  CONTINUE
+C
+C CHECK FOR VALID DIALUP PORTS.  IF THEY ARE ASSIGNED,
+C UPDATE THE ASSIGNMENT TABLES, OTHERWISE ASSIGN A DIALUP PORT.
+C NOTE: IF PORTS HAVE BEEN PREVIOUSLY ASSIGNED, IT IS NECESSARY
+C TO LOAD THE TABLES WITH THE CURRENT ASSIGNED LOAD LEVEL.
+C
+	  VALID_DIAL=.TRUE.
+	  DO 113 I=1,X2XSTN_MAXDIAL
+	    PORT=X2XSTN_DIAL_PORT(I)
+	    IF(PORT.NE.0) THEN
+	      X2DIAL_DIALTBL(I,PORT)=X2DIAL_DIALTBL(I,PORT)+1
+	      X2DIAL_ALLLEV(I)=X2DIAL_ALLLEV(I)+1
+C
+C IF SAME LEVEL REACHED ON ALL PORTS, INCREMENT THE LEVEL.
+C
+	      IF(X2DIAL_ALLLEV(I).EQ.X2DIAL_TOT_PORTS) THEN
+	        X2DIAL_ALLLEV(I)=0
+	        X2DIAL_CURLEV(I)=X2DIAL_CURLEV(I)+1
+	      ENDIF
+	    ELSE
+	      VALID_DIAL=.FALSE.
+	    ENDIF
+113	  CONTINUE
+C
+C IF NOT VALID PORTS, ASSIGN SOME AND UPDATE THE FILE.
+C
+	  IF(.NOT.VALID_DIAL) THEN
+	    CALL X2DIALPT(STN,OFFLINE,PRTCNT,DIALPORT)
+	    DO 114 J=1,PRTCNT
+	      X2XSTN_DIAL_PORT(J)=DIALPORT(J)
+114	    CONTINUE
+	    CALL WRITLOD(1,STN,X2XSTN_REC,ST)
+	    IF(DISLOG) THEN
+	      WRITE(5,9040) STN, (DIALPORT(J),J=1,PRTCNT)
+	      IF(PRTFLG) WRITE(6,9040) STN, (DIALPORT(J),J=1,PRTCNT)
+	    ENDIF
+	  ENDIF
+C
+C STATION DOES NOT CONTAIN VALID PORTS, SO DO NOT UPDATE
+C THE TABLE, AND FORCE NEW PORTS TO BE REGENERATED.
+C
+	  IF(.NOT.VALID) THEN
+	    NEWSTN=NEWSTN+1
+	    STNIDX(NEWSTN)=STN
+	  ELSE
+	    PRVSTN=PRVSTN+1
+	  ENDIF
+	  GOTO 100
+C
+C WE NOW HAVE THE NUMBER OF PREVIOUS PORTS (DETERMINED BY THE
+C HIGHEST DEFAULT PORT ASSIGNED), THE NUMBER OF EXISTING STATIONS
+C WITH THEIR PORTS INSERTED INTO THE ALL_SETS_OF_PORTS ARRAY,
+C AND THE NUMBER OF NEW STATIONS.  WE CAN DETERMINE THE NUMBER OF
+C NEW PORTS BY COMPARING AGAINST COMMON.
+C
+120	CONTINUE
+	ACTPRT=0
+	IF(OFFLINE.EQ.0) THEN
+	  DO 130 I=1,X2X_NETWORK_PORTS
+	    IF(X2XPN_TYPE(I).EQ.X2XPT_X21 .OR.
+     *	       X2XPN_TYPE(I).EQ.X2XPT_X25) THEN
+	      ACTPRT=ACTPRT+1
+	      NETPORTS(ACTPRT)=I
+	    ENDIF
+130	  CONTINUE
+	ELSE
+C
+C LOOP THROUGH ALL NETWORK PORTS IN THE FILE.
+C
+	  PORT=0
+132	  CONTINUE
+	  PORT=PORT+1
+	  IF(PORT.GT.X2X_NETWORK_PORTS) GOTO 140
+	  CALL READX2X(2,PORT,X2XNPC_REC,ST)
+	  IF(ST.EQ.144) GOTO 140
+	  IF(X2XNPC_REC(1).LE.0) GOTO 132
+	  IF(X2XNPC_TYPE.EQ.X2XPT_X21 .OR.
+     *	     X2XNPC_TYPE.EQ.X2XPT_X25) THEN
+	    ACTPRT=ACTPRT+1
+	    NETPORTS(ACTPRT)=PORT
+	  ENDIF
+	  GOTO 132
+	ENDIF
+C
+C DETERMINE THE NUMBER OF PORTS AND STATIONS.
+C
+140	CONTINUE
+	IF(OFFLINE.NE.0) CALL CLOSX2X(2)
+	ACTSTN=PRVSTN+NEWSTN
+	NUM_OF_PORTS=ACTPRT
+	NUM_OF_STATIONS=ACTSTN
+	IF(NUM_OF_PORTS.EQ.0 .OR. NUM_OF_STATIONS.EQ.0) THEN
+	  IF(DISLOG) THEN
+	    WRITE(5,9030)
+	    IF(PRTFLG) WRITE(6,9030)
+	  ENDIF
+	  GOTO 8000
+	ENDIF
+C
+C BUILD THE ASSIGNED TABLES FOR THE EXISTING PORTS,
+C AND THEN REBUILD THEM FOR NEW STATIONS OR PORTS.
+C
+        IF(ACTPRT/NUM_OF_NODES.LT.2) THEN
+          IF(PRVPRT.NE.0 .AND. PRVPRT.GT.NUM_OF_NODES) THEN
+            CALL BLDTAB(0,PRVSTN,0,PRVPRT,NETPORTS)
+          ELSE
+            CALL BLDTAB(PRVSTN,ACTSTN,PRVPRT,ACTPRT,NETPORTS)
+          ENDIF
+        ENDIF
+C
+C STORE DEFAULT PORTS INTO STATION CONFIGURATION FILE
+C FOR THE NEW STATIONS.
+C
+	DO 200 I=PRVSTN+1,ACTSTN
+	  STN=STNIDX(I-PRVSTN)
+	  CALL READLOD(1,STN,X2XSTN_REC,ST)
+          IF(ST.EQ.144) GOTO 200
+C
+C IF FEWER PORTS EXIST THAN WHAT HAVE TO BE ASSIGNED, SIMPLY
+C ASSIGN WHAT PORTS ARE AVAILABLE TO THE STATION.
+C
+          IF(ACTPRT/NUM_OF_NODES.LT.2) THEN
+            DO 190 J=1,ACTPRT
+              IF(J.LE.X2XSTN_MAXDEF) THEN
+                X2XSTN_DEF_PORT(J)=NETPORTS(J)
+              ELSE
+                X2XSTN_X32_PORT(J-X2XSTN_MAXDEF)=NETPORTS(J)
+              ENDIF
+190         CONTINUE
+C
+C ASSIGN THE PORTS WHICH HAVE BEEN EVENLY DISTRIBUTED.
+C
+          ELSE
+            DO 210 J=1,MIN0(X2XSTN_MAXDEF+X2XSTN_MAXX32,NUM_OF_NODES)
+              XPORT=ALL_SETS_OF_PORTS(I,J)
+              IF(J.LE.X2XSTN_MAXDEF) THEN
+                 X2XSTN_DEF_PORT(J) = XPORT
+              ELSE
+                 X2XSTN_X32_PORT(J-X2XSTN_MAXDEF) = XPORT
+              ENDIF
+C
+210         CONTINUE
+          ENDIF
+C
+          CALL WRITLOD(1,STN,X2XSTN_REC,ST)
+          IF(DISLOG) THEN
+            WRITE(5,9020) STN, (ALL_SETS_OF_PORTS(I,J),
+     *                          J=1,NUM_OF_NODES)
+            IF(PRTFLG)
+     *         WRITE(6,9020) STN, (ALL_SETS_OF_PORTS(I,J),
+     *                          J=1,NUM_OF_NODES)
+          ENDIF
+200     CONTINUE
+C
+C CLOSE STATION FILE AND RETURN.
+C
+8000	CONTINUE
+	CALL CLOSLOD(1)
+	IF(DISLOG) THEN
+	  WRITE(5,9010)
+	  IF(PRTFLG) WRITE(6,9010)
+	ENDIF
+C
+C     ================== Format Statements ==================
+C
+9000	FORMAT(1X,'Begin Assignment of Default Network Ports ')
+9010	FORMAT(1X,'End Assignment of Default Network Ports ')
+9020	FORMAT(3X,'Station ',I5,' assigned ports ',10(2X,I3))
+9030	FORMAT(3X,'Common is not initialized - ports not assigned')
+9040	FORMAT(3X,'Station ',I5,' assigned dial ports ',10(2X,I3))
+	RETURN
+	END

@@ -1,0 +1,62 @@
+C SPSHFIL.DEF
+C
+C V01 05-JAN-2017 SCML INITIAL RELEASE
+C
+C STRUCTURE FOR GENERATING THE SPORTS SHARE FILE
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Copyright 2017 SCML. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        STRUCTURE /STCSPSHFIL/
+C         GENERAL DATA
+          INTEGER*4    SPCTRFLG                                                 !FLAG FOR CONTROLLING IF THIS STRUCTURE HAS BEEN LOADED SUCCESSFULLY (1 - SUCCESS, 0 - FAILURE)
+          INTEGER*4    SPSHFLUN                                                 !LUN FOR SPORTS SHARE FILE
+          INTEGER*4    SPGNUM                                                   !SPORTS GAME NUMBER
+          INTEGER*4    SPGTYP                                                   !SPORTS GAME TYPE
+          INTEGER*4    SPGIND                                                   !SPORTS GAME INDEX
+          CHARACTER*24 SPSHFNAM                                                 !SPORTS SHARE FILE NAME
+          INTEGER*4    SPDIV                                                    !TOTAL SPORTS DIVISIONS
+C         HEADER DATA
+          INTEGER*4    SPCCC                                                    !DRAW NUMBER
+          INTEGER*4    SPYEAR                                                   !DRAW YEAR
+          INTEGER*4    SPTOTSALE                                                !TOTAL SALES AMOUNT
+          INTEGER*4    SPTOTONPZ                                                !TOTAL ONLINE PRIZE AMOUNT FOR PRIZE DISTRIBUTION
+          INTEGER*4    SPPREVJKT                                                !PREVIOUS JACKPOT AMOUNT
+          INTEGER*4    SPEXTRJKT                                                !JACKPOT AMOUNT FROM EXTRA
+          INTEGER*4    SPTOTPOOL                                                !TOTAL POOL AMOUNT FOR PRIZE DISTRIBUTION
+          INTEGER*4    SPPREVTOT                                                !PREVIOUS TOTAL AMOUNT
+          INTEGER*4    SPNEXTJKT                                                !NEXT JACKPOT AMOUNT
+          INTEGER*4    SPTOTRESI                                                !TOTAL ROUNDING AMOUNT
+C         BODY DATA
+          INTEGER*4    SPDIVNUMB(SPGDIV)                                        !NUMBER OF EACH PRIZE DIVISION
+          INTEGER*4    SPDIVPOOL(SPGDIV)                                        !TOTAL POOL VALUE OF EACH PRIZE DIVISION
+          INTEGER*4    SPDIVPRJK(SPGDIV)                                        !PREVIOUS JACKPOT AMOUNT OF EACH PRIZE DIVISION
+          INTEGER*4    SPDIVEXJK(SPGDIV)                                        !EXTRA JACKPOT AMOUNT OF EACH PRIZE DIVISION
+          INTEGER*4    SPDIVRESI(SPGDIV)                                        !TOTAL RESIDUAL VALUE OF EACH PRIZE DIVISION
+          INTEGER*4    SPDIVPERC(SPGDIV)                                        !ASSIGNED PERCENTAGE OF EACH PRIZE DIVISION
+          INTEGER*4    SPDIVTOTV(SPGDIV)                                        !TOTAL PRIZE VALUE OF EACH PRIZE DIVISION
+          INTEGER*4    SPDIVPRVV(SPGDIV)                                        !PREVIOUS PRIZE VALUE OF EACH PRIZE DIVISION
+          INTEGER*4    SPDIVSHRQ(SPGDIV)                                        !TOTAL PRIZED BETS OF EACH PRIZE DIVISION
+          INTEGER*4    SPDIVSHRV(SPGDIV)                                        !SHARE AMOUNT VALUE OF EACH PRIZE DIVISION
+          INTEGER*4    SPDIVNXJK(SPGDIV)                                        !NEXT JACKPOT AMOUNT OF EACH PRIZE DIVISION
+C         TRAILER DATA
+          CHARACTER*8  SPCRFDAT                                                 !SPORTS FILE CREATION DATE
+C
+          INTEGER*4    ALIGN                                                    !ALIGNMENT, FREE FOR USE
+        ENDSTRUCTURE
+C
+C SPORTS SHARES FILE RECORD TYPES
+C
+       CHARACTER*2 SPRTYP_HDR /'01'/
+       CHARACTER*2 SPRTYP_BDY /'02'/
+       CHARACTER*2 SPRTYP_TRL /'09'/
+C
+C SPORTS GAME INDEXES APLIABLE
+C
+       INTEGER*4 SPTBN
+       PARAMETER (SPTBN = 1)                                                    !TOTOBOLA NORMAL GAME INDEX
+C
+       INTEGER*4 SPTBE
+       PARAMETER (SPTBE = 3)                                                    !TOTOBOLA EXTRA 1 GAME INDEX
+

@@ -1,0 +1,193 @@
+C
+C PRMIGS.DEF
+C
+C V02 30-MAR-2016 SCML M16 PROJECT: IGS_MAXTYP changed to new value of
+C                                   MAXTYP (21).
+C V01 20-MAY-2014 SCML Creation
+C
+
+
+C
+C Declare constants and structures for IGS 
+C
+
+C----+------------------------------------------------------------------
+C    | Defining maximum number of games in system
+C    | NOTE: when changing MAXGAM value in GLOBAL.DEF, make sure you  
+C    | change it here.
+C----+------------------------------------------------------------------
+        INTEGER*4 IGS_MAXGAM
+        PARAMETER(IGS_MAXGAM = 50)
+C----+------------------------------------------------------------------
+C    | Defining maximum number of game types in system
+C    | NOTE: when changing MAXTYP value in GLOBAL.DEF, make sure you  
+C    | change it here.
+C----+------------------------------------------------------------------
+        INTEGER*4 IGS_MAXTYP
+!        PARAMETER(IGS_MAXTYP = 18)
+        PARAMETER(IGS_MAXTYP = 21)                                              !V02
+C----+------------------------------------------------------------------
+C    | Defining maximum number of game indexes in system
+C    | NOTE: when changing MAXIND value in GLOBAL.DEF, make sure you  
+C    | change it here.
+C----+------------------------------------------------------------------
+        INTEGER*4 IGS_MAXIND
+        PARAMETER(IGS_MAXIND = 6)
+
+        INTEGER*4 IGS_GT, IGS_GI
+C----+------------------------------------------------------------------
+C    | Defining game number conversion table for IGS, from game type and
+C    | game index -- this is useful for bit-flags in P parameters
+C----+------------------------------------------------------------------
+        INTEGER*4 IGS_GAMNUM(0:IGS_MAXTYP,0:IGS_MAXIND)
+        DATA      IGS_GAMNUM/
+     *              ! Game index #0
+     *                 0                                                        ! Game type :  0 - 0  dummy
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0                    ! Game types:  1 - 10 dummy
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0                            ! Game types: 11 - 18 dummy
+     *              ,  0,  0,  0                                                ! Game types: 19 - 21 dummy !V02
+     *              ! Game index #1
+     *              ,  0                                                        ! Game type :  0 - 0  dummy
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0                    ! Game types:  1 - 10
+     *              ,  0,  0,  0,  0,  0,  0,  0,  1                            ! Game types: 11 - 18
+     *              ,  0,  0,  0                                                ! Game types: 19 - 21 dummy !V02
+     *              ! Game index #2
+     *              ,  0                                                        ! Game type :  0 - 0  dummy
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0                    ! Game types:  1 - 10
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0                            ! Game types: 11 - 18
+     *              ,  0,  0,  0                                                ! Game types: 19 - 21 dummy !V02
+     *              ! Game index #3
+     *              ,  0                                                        ! Game type :  0 - 0  dummy
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0                    ! Game types:  1 - 10
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0                            ! Game types: 11 - 18
+     *              ,  0,  0,  0                                                ! Game types: 19 - 21 dummy !V02
+     *              ! Game index #4
+     *              ,  0                                                        ! Game type :  0 - 0  dummy
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0                    ! Game types:  1 - 10
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0                            ! Game types: 11 - 18
+     *              ,  0,  0,  0                                                ! Game types: 19 - 21 dummy !V02
+     *              ! Game index #5
+     *              ,  0                                                        ! Game type :  0 - 0  dummy
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0                    ! Game types:  1 - 10
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0                            ! Game types: 11 - 18
+     *              ,  0,  0,  0                                                ! Game types: 19 - 21 dummy !V02
+     *              ! Game index #6
+     *              ,  0                                                        ! Game type :  0 - 0  dummy
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0                    ! Game types:  1 - 10
+     *              ,  0,  0,  0,  0,  0,  0,  0,  0                            ! Game types: 11 - 18
+     *              ,  0,  0,  0                                                ! Game types: 19 - 21 dummy !V02
+     *  /
+C----+------------------------------------------------------------------
+C    | Defining game type conversion table for IGS, from game number
+C----+------------------------------------------------------------------
+        INTEGER*4 IGS_GAMTYP(IGS_MAXGAM)
+        DATA      IGS_GAMTYP/
+     *                    18 ! Game number # 1 ! Placard - TODS
+     *                  ,  0 ! Game number # 2
+     *                  ,  0 ! Game number # 3
+     *                  ,  0 ! Game number # 4
+     *                  ,  0 ! Game number # 5
+     *                  ,  0 ! Game number # 6
+     *                  ,  0 ! Game number # 7
+     *                  ,  0 ! Game number # 8
+     *                  ,  0 ! Game number # 9
+     *                  ,  0 ! Game number #10
+     *                  ,  0 ! Game number #11
+     *                  ,  0 ! Game number #12
+     *                  ,  0 ! Game number #13
+     *                  ,  0 ! Game number #14
+     *                  ,  0 ! Game number #15
+     *                  ,  0 ! Game number #16
+     *                  ,  0 ! Game number #17
+     *                  ,  0 ! Game number #18
+     *                  ,  0 ! Game number #19
+     *                  ,  0 ! Game number #20
+     *                  ,  0 ! Game number #21
+     *                  ,  0 ! Game number #22
+     *                  ,  0 ! Game number #23
+     *                  ,  0 ! Game number #24
+     *                  ,  0 ! Game number #25
+     *                  ,  0 ! Game number #26
+     *                  ,  0 ! Game number #27
+     *                  ,  0 ! Game number #28
+     *                  ,  0 ! Game number #29
+     *                  ,  0 ! Game number #30
+     *                  ,  0 ! Game number #31
+     *                  ,  0 ! Game number #32
+     *                  ,  0 ! Game number #33
+     *                  ,  0 ! Game number #34
+     *                  ,  0 ! Game number #35
+     *                  ,  0 ! Game number #36
+     *                  ,  0 ! Game number #37
+     *                  ,  0 ! Game number #38
+     *                  ,  0 ! Game number #39
+     *                  ,  0 ! Game number #40
+     *                  ,  0 ! Game number #41
+     *                  ,  0 ! Game number #42
+     *                  ,  0 ! Game number #43
+     *                  ,  0 ! Game number #44
+     *                  ,  0 ! Game number #45
+     *                  ,  0 ! Game number #46
+     *                  ,  0 ! Game number #47
+     *                  ,  0 ! Game number #48
+     *                  ,  0 ! Game number #49
+     *                  ,  0 ! Game number #50
+     *  /
+C----+------------------------------------------------------------------
+C    | Defining game type conversion table for IGS, from game number
+C----+------------------------------------------------------------------
+        INTEGER*4 IGS_GAMIND(IGS_MAXGAM)
+        DATA      IGS_GAMIND/
+     *                     1 ! Game number # 1 ! Placard - TODS
+     *                  ,  0 ! Game number # 2
+     *                  ,  0 ! Game number # 3
+     *                  ,  0 ! Game number # 4
+     *                  ,  0 ! Game number # 5
+     *                  ,  0 ! Game number # 6
+     *                  ,  0 ! Game number # 7
+     *                  ,  0 ! Game number # 8
+     *                  ,  0 ! Game number # 9
+     *                  ,  0 ! Game number #10
+     *                  ,  0 ! Game number #11
+     *                  ,  0 ! Game number #12
+     *                  ,  0 ! Game number #13
+     *                  ,  0 ! Game number #14
+     *                  ,  0 ! Game number #15
+     *                  ,  0 ! Game number #16
+     *                  ,  0 ! Game number #17
+     *                  ,  0 ! Game number #18
+     *                  ,  0 ! Game number #19
+     *                  ,  0 ! Game number #20
+     *                  ,  0 ! Game number #21
+     *                  ,  0 ! Game number #22
+     *                  ,  0 ! Game number #23
+     *                  ,  0 ! Game number #24
+     *                  ,  0 ! Game number #25
+     *                  ,  0 ! Game number #26
+     *                  ,  0 ! Game number #27
+     *                  ,  0 ! Game number #28
+     *                  ,  0 ! Game number #29
+     *                  ,  0 ! Game number #30
+     *                  ,  0 ! Game number #31
+     *                  ,  0 ! Game number #32
+     *                  ,  0 ! Game number #33
+     *                  ,  0 ! Game number #34
+     *                  ,  0 ! Game number #35
+     *                  ,  0 ! Game number #36
+     *                  ,  0 ! Game number #37
+     *                  ,  0 ! Game number #38
+     *                  ,  0 ! Game number #39
+     *                  ,  0 ! Game number #40
+     *                  ,  0 ! Game number #41
+     *                  ,  0 ! Game number #42
+     *                  ,  0 ! Game number #43
+     *                  ,  0 ! Game number #44
+     *                  ,  0 ! Game number #45
+     *                  ,  0 ! Game number #46
+     *                  ,  0 ! Game number #47
+     *                  ,  0 ! Game number #48
+     *                  ,  0 ! Game number #49
+     *                  ,  0 ! Game number #50
+     *  /
+
+        COMMON /IGS_DEFS/ IGS_GAMNUM, IGS_GAMTYP, IGS_GAMIND

@@ -1,0 +1,54 @@
+C
+C IGSDEBUG.DEF
+C
+C V01 04-APR-2014 SCML Creation
+C
+
+
+C
+C Declare auxiliary constants for IGS Debug
+C
+
+
+        ! IGS application : INIGS
+        INTEGER*4 IA_INIGS
+        PARAMETER(IA_INIGS      = '00000001'X)
+        
+        ! IGS application : OUTIGS
+        INTEGER*4 IA_OUTIGS
+        PARAMETER(IA_OUTIGS     = '00000002'X)
+        
+        ! IGS application : COMIGS
+        INTEGER*4 IA_COMIGS
+        PARAMETER(IA_COMIGS     = '00000004'X)
+        
+        ! IGS application : DISPAT
+        INTEGER*4 IA_DISPAT
+        PARAMETER(IA_DISPAT     = '00000008'X)
+        
+        ! IGS application : SPESRV
+        INTEGER*4 IA_SPESRV
+        PARAMETER(IA_SPESRV     = '00000010'X)
+        
+        ! IGS application : COMMGR
+        INTEGER*4 IA_COMMGR
+        PARAMETER(IA_COMMGR     = '00000020'X)
+        
+        ! IGS application : INMGR
+        INTEGER*4 IA_INMGR
+        PARAMETER(IA_INMGR      = '00000040'X)
+        
+        ! IGS application : OUTMGR
+        INTEGER*4 IA_OUTMGR
+        PARAMETER(IA_OUTMGR     = '00000080'X)
+        
+        
+        INTERFACE
+        
+            LOGICAL FUNCTION IGSDEBUG(IGSAPP)
+            IMPLICIT NONE
+            INTEGER*4 IGSAPP
+            END FUNCTION
+            
+        END INTERFACE
+

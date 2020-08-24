@@ -1,0 +1,181 @@
+C
+C PROGRAM ROMCHK
+C $Log:   GXAFXT:[GOLS]ROMCHK.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:45:34   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   20 Feb 1996 20:14:42   HXK
+C   ????
+C  
+C     Rev 1.0   21 Jan 1993 17:31:42   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - romchk.for **
+C
+C ROMCHK.FOR
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C V01 03-APR-90 LOU R.  INITIAL RELEASE FOR FINLAND
+C
+C PRINT REPORT ON TERMINAL STATISTICS.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM ROMCHK
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+C
+	INTEGER*2 DATE(LDATE_LEN)
+C
+	INTEGER*4 X, I, HMRROM, PTRROM, CPUROM, TERMINAL, EXT
+	INTEGER*4 COPY, ST, SER, PAGE, LINCNT, REPLU
+	INTEGER*4 LOGREC(LMUREC),TABLE(NUMAGT,3)
+
+	INTEGER*4 START,OFF
+
+
+	INTEGER*4   I4_dummy
+	character*4 C4_dummy
+
+	equivalence (i4_dummy,c4_dummy)
+
+C
+	CHARACTER HEAD*40
+C
+	LOGICAL EOF    /.FALSE./
+C
+	DATA REPLU/07/
+	DATA LINCNT/70/
+C
+	CALL COPYRITE
+C
+C
+C CLEAR/SET VARIABLES
+C
+	PAGE=0
+	SER=1
+	CALL FASTSET(0,TABLE,NUMAGT*3)
+C
+C GET NUMBER OF REPORT COPIES
+C
+	TYPE *
+	TYPE *,'<<<<< ROMCHK Spectra Rom Configuration >>>>>'
+	TYPE *
+	CALL INPNUM('Enter number of report copies   ',COPY,0,20,EXT)
+	IF(EXT.NE.0) CALL GSTOP(GEXIT_OPABORT)
+C
+C GET TODAYS DATE FROM MEMORY
+C
+	DATE(VCDC)=DAYCDC
+	CALL LCDATE(DATE)
+C
+C
+C OPEN THE TMF FILE
+C
+	CALL OPENW(PTMF,SFNAMES(1,PTMF),4,0,0,ST)
+	IF(ST.NE.0) CALL FILERR(SFNAMES(1,PTMF),1,ST,0)
+	CALL TOPEN(PTMF)
+C
+C LOOP AND READ THE TM FILE
+C
+	TYPE*,'Scanning the Transaction Master File'
+100	CONTINUE
+	CALL READTMF(LOGREC,SER,EOF)
+	IF(EOF) GOTO 1000
+C
+	START = 49
+	OFF   = 4
+	CALL LOGTRA(TRABUF,LOGREC)
+	IF(TRABUF(TSTAT).NE.GOOD) GOTO 100
+	IF(TRABUF(TTYP).NE.TSPE) GOTO 100
+	IF(TRABUF(TSFUN).NE.GOOD) GOTO 100
+	TERMINAL=TRABUF(TTER)
+	CPUROM=0
+	PTRROM=0
+	HMRROM=0
+	CALL MOVBYT(TRABUF(TSOLD),START,CPUROM,1,4)  !CPU ROM ID
+	CALL MOVBYT(TRABUF(TSOLD),START+OFF,PTRROM,1,4) !PRINTER ROM ID
+	CALL MOVBYT(TRABUF(TSOLD),START+OFF*2,HMRROM,1,4) !HOMR ROM ID
+	TABLE(TERMINAL,1)=CPUROM
+	TABLE(TERMINAL,2)=PTRROM
+	TABLE(TERMINAL,3)=HMRROM
+C
+C
+	GOTO 100          !READ NEXT TRANSACTIONS
+C
+C CLOSE TM FILE
+C
+1000	CONTINUE
+	CALL USRCLOS1 (     PTMF)
+C
+1001	CALL ROPEN('ROMCHK.REP',REPLU,ST)
+	IF(ST.NE.0) THEN
+	   TYPE*,'Error opening ROMCHK.REP > ',ST
+	   CALL USRCLOS1(REPLU)
+	   CALL GPAUSE
+	   GOTO 1001
+	ENDIF
+C
+C PRODUCE REPORT
+C
+	WRITE (HEAD,8001) DATE(VMON),DATE(VDAY),DATE(VYEAR2)
+	CALL TITLE(HEAD,'ROMCHK  ',1,REPLU,PAGE,DAYCDC)
+	WRITE(REPLU,9000)
+	LINCNT=3
+C
+C REPORT DETAILS
+C
+	DO 800 I=1,NUMAGT
+	IF(TABLE(I,1).EQ.0) GOTO 800
+	IF(LINCNT.GT.55) THEN
+	  CALL TITLE(HEAD,'ROMCHK  ',1,REPLU,PAGE,DAYCDC)
+	  WRITE(REPLU,9000)
+	  LINCNT=3
+	ENDIF
+C
+	WRITE(REPLU,9001) I,(TABLE(I,X),X=1,3)
+	LINCNT=LINCNT+1
+800	CONTINUE
+C
+C SPOOL REPORT TO THE PRINTER
+C
+	CALL USRCLOS1(REPLU)
+	CALL SPOOL('ROMCHK.REP',COPY,ST)
+	CALL GSTOP(GEXIT_SUCCESS)
+C
+C     ======================= FORMAT STATEMENTS ====================
+C
+8001	FORMAT('CPU ROMS IN NETWORK -------> ',I2.2,'/',I2.2,'/',I4.4)
+C
+9000	FORMAT(1X,131('='),///)
+9001	FORMAT(1X,'TERMINAL ',I4,' HAS CPU ROM ------> ',A4,
+     *	                         ' PRINTER ROM ------> ',A4,
+     *	                            ' HOMR ROM ------> ',A4)
+C
+	END

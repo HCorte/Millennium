@@ -1,0 +1,291 @@
+C
+C PROGRAM SPESRVF
+C
+C V04 28-JAN-2011 RXK FDB fixed, GPAUSE replaced with message to OPS
+C  
+C     Rev 1.3   31 Jan 1997 15:20:02   RXK
+C  Call CDUREQ (customer unit display text request) added
+C  
+C     Rev 1.2   05 Dec 1996 20:56:18   HXK
+C  Updated for Finland IPS
+C  
+C     Rev 1.1   21 May 1996 21:15:02   HXK
+C  Addition of segmented signon (Rita)
+C  
+C     Rev 1.0   17 Apr 1996 15:13:06   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.6   11 Dec 1994 18:33:34   HXK
+C  Added Total key txn
+C  
+C     Rev 1.5   14 Sep 1993 13:56:18   GXA
+C  Applied correction from Ireland for rejected transaction handling,
+C  (GETCCITT called with PRO(OUTTAB,BUF) NOT OUTTAB!).
+C  
+C     Rev 1.4   15 Jul 1993 12:28:22   GXA
+C  Removed SON and SOFF, added them to SPESRV due to the need of a
+C  correct SPECOM for file access for clearks.
+C  
+C     Rev 1.3   12 Jul 1993 11:39:16   GXA
+C  Added Ticket Request subroutine call.
+C  
+C     Rev 1.2   11 Jun 1993 15:41:36   HXK
+C  Added AGTINF.DEF
+C  
+C     Rev 1.1   10 Jun 1993 22:14:48   GXA
+C  Rearanged AGENTCOM stuff.
+C  
+C     Rev 1.0   21 Jan 1993 17:40:36   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - spesrvf.for **
+C
+C SPESRVF.FOR
+C
+C X2X Upgrade: 22-FEB-96 wsm Renamed LBACK to TLBACK for loopback.
+C
+C V04 16-MAR-2016 SCML M16 PROJECT
+C V03 01-NOC-91   GCAN SPLIT SPESRV INTO TWO TASKS, ONE FOR FREEZE ONE WITHOUT.
+C                      SPESRVF.EXE WILL HANDLE ALL FUNCTIONS THAT DO
+C                      REQUIRE A SYSTEM FREEZE OR DO NOT HAVE DISK ACCESS (FAST).
+C V02 07-OCT-91   MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90   XXX  RELEASED FOR VAX
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM SPESRVF
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:SPECOM.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+	INCLUDE 'INCLIB:SLOCOM.DEF'
+	INCLUDE 'INCLIB:QUECOM.DEF'
+	INCLUDE 'INCLIB:CHKSUMCM.DEF'
+!	INCLUDE 'INCLIB:EUROCONFIG.DEF'                                               !V04 - COMMENTED OUT
+C
+	INTEGER*4 LOGREC(LREC*3)
+	INTEGER*4 MYCHKSUM, CHKLEN, TEMP, TER, BUF, STATUS, ST
+	INTEGER*4 TASK, CONTRL, ERRTYP,FDB(7)
+!	COMMON ECFREC                                                                 !V04 - COMMENTED OUT
+	DATA ERRTYP/Z90/
+	DATA CONTRL/Z20/
+C
+C
+	CALL COPYRITE
+	CALL SNIF_AND_WRKSET
+C
+C EURO MIL PROJECT - OPEN EURO CONFIG FILE AND LOAD CONFIG
+C
+!        CALL OPENX(1,'EUROCONF.FIL',4,0,0,ST)                                  !V04 - COMMENTED OUT
+!        CALL IOINIT(FDB,1,ECFSEC*256)                                          !V04 - COMMENTED OUT
+!        IF(ST .NE. 0) THEN                                                     !V04 - COMMENTED OUT
+!          CALL OPS('EUROCONF.FIL open error  ',ST,0)                           !V04 - COMMENTED OUT
+!          CALL OPS('CONTINUING WITHOUT EUROCONF.FIL !!!',0,0)                  !V04 - COMMENTED OUT
+!        ENDIF                                                                  !V04 - COMMENTED OUT
+!                                                                               !V04 - COMMENTED OUT
+!        CALL READW(FDB,1,ECFREC,ST)                                            !V04 - COMMENTED OUT
+!        IF(ST.NE.0) THEN                                                       !V04 - COMMENTED OUT
+!          CALL OPS('EUROCONF.FIL read error ',ST,0)                            !V04 - COMMENTED OUT
+!          CALL OPS('CONTINUING WITHOUT EUROCONF.FIL !!!',0,0)                  !V04 - COMMENTED OUT
+!        ENDIF                                                                  !V04 - COMMENTED OUT
+!        CALL CLOSEFIL(FDB)                                                     !V04 - COMMENTED OUT
+C
+C
+	TASK=SPEF
+10	CONTINUE
+        BASECHKSUM=IAND(DAYCDC,'FFFF'X)
+C
+C
+20	CONTINUE
+	IF(DAYSTS.EQ.DSCLOS) CALL GSTOP(GEXIT_SUCCESS)
+	IF(DAYSTS.EQ.DSSUSP) THEN
+30	  CONTINUE
+	  CALL HOLD(0,ST)
+	  IF(DAYSTS.EQ.DSOPEN) GOTO 10
+	  IF(DAYSTS.EQ.DSCLOS) CALL GSTOP(GEXIT_SUCCESS)
+	  GOTO 30
+	ENDIF
+	CALL HOLD(0,STATUS)
+C
+C GET BUFFER NUMBER FROM TOP OF SPECIAL SERVICES QUEUE.
+C IF NO BUFFERS QUEUED, GO BACK TO WAIT STATE.
+C
+40	CONTINUE
+	CALL TOPQUE(TASK,BUF)
+	IF(BUF.EQ.0) GOTO 20
+	CALL FASTSET(0,TRABUF,TRALEN)
+C
+C BUILD SPECIAL FUNCTION TRANSACTION
+C
+	TER=HPRO(TERNUM,BUF)
+C 
+	TRABUF(TSTAT) =GOOD
+	TRABUF(TERR)  =NOER
+	TRABUF(TTYP)  =TSPE
+	TRABUF(TTER)  =TER
+	TRABUF(TCDC)  =DAYCDC
+	TRABUF(TSIZE) =HPRO(NUMLRC,BUF)
+	TRABUF(TSER)  =PRO(SERIAL,BUF)
+	TRABUF(TTIM)  =PRO(TSTAMP,BUF)
+	IF(TER.GE.1.AND.TER.LE.NUMAGT) TRABUF(TAGT)=AGTTAB(AGTNUM,TER)
+	CALL DSPE(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF),
+     *	          HPRO(TRCODE,BUF))
+C
+C IF TRANSACTION HAS BEEN REJECTED BUILD ERROR MESSAGE
+C BACK TO TERMINAL.
+C
+45	CONTINUE
+        IF(TRABUF(TERR).NE.NOER) THEN
+          TRABUF(TSTAT)=REJT
+          TEMP=CONTRL+TRABUF(TTRN)
+          BPRO(BOUTTAB,BUF) = TEMP
+	  BPRO(BOUTTAB+1,BUF) = ERRTYP
+          I4CCITT   = TRABUF(TCHK)
+          BPRO(BOUTTAB+2,BUF) = I1CCITT(2)
+          BPRO(BOUTTAB+3,BUF) = I1CCITT(1)
+          BPRO(BOUTTAB+4,BUF) = TRABUF(TERR)
+          HPRO(OUTLEN,BUF)=5
+          CHKLEN=HPRO(OUTLEN,BUF)
+          CALL GETCCITT(PRO(OUTTAB,BUF),1,CHKLEN,MYCHKSUM)
+          I4CCITT   = MYCHKSUM
+          BPRO(BOUTTAB+2,BUF) = I1CCITT(2)
+          BPRO(BOUTTAB+3,BUF) = I1CCITT(1)
+          GOTO 100
+        ENDIF
+C
+C PROCESS STATISTICS
+C
+	IF(TRABUF(TSFUN).EQ.TTERSTS) THEN
+	  CALL TERSTATS(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+	  GOTO 100
+	ENDIF
+C
+C PROCESS FAULTS
+C
+	IF(TRABUF(TSFUN).EQ.TFAULT) THEN
+	  CALL TERFAULT(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+	  GOTO 100
+	ENDIF
+C
+C PROCESS TOTAL KEY TRANSACTION
+C
+        IF(TRABUF(TSFUN).EQ.TTKEY) THEN
+           CALL TOTALKEY(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+           GOTO 100
+        ENDIF
+C
+C PROCESS TERMINAL SUPPLY ORDER
+C
+	IF(TRABUF(TSFUN).EQ.TORDR) THEN
+	   CALL TERORDER(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+	   GOTO 100
+	ENDIF
+C
+C PROCESS DOWNLOAD
+C
+	IF(TRABUF(TSFUN).EQ.TLOAD) THEN
+	  CALL DLOAD(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF),
+     *	    HPRO(MSGNUM,BUF))
+	  GOTO 100
+	ENDIF
+C
+C PROCESS ECRYPTION KEY REQUESTS
+C
+	IF(TRABUF(TSFUN).EQ.TEKEY) THEN
+	  CALL GETENC(BUF)
+	  GOTO 100
+	ENDIF
+C
+C PROCESS SLOCHK TRANSACTIONS
+C
+	IF(TRABUF(TSFUN).EQ.TSLOW) THEN
+	  CALL SLOW(TRABUF)
+	  GOTO 100
+	ENDIF
+C
+C PROCESS GAME BLOCKL REQUEST
+C
+        IF(TRABUF(TSFUN).EQ.TGAMBL) THEN
+          CALL GAMBLO(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+          GOTO 100
+        ENDIF
+C
+C PROCESS CONTROL REQUESTS
+C
+	IF(TRABUF(TSFUN).EQ.TCTRL) THEN
+	  CALL SNDCNTRL(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+	  GOTO 100
+	ENDIF
+C
+C PROCESS TEXT REQUESTS
+C
+	IF(TRABUF(TSFUN).EQ.TTEXT) THEN
+	  CALL SNDTEXT(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+	  GOTO 100
+	ENDIF
+C
+C PROCESS TICKET TEXT REQUESTS
+C
+	IF(TRABUF(TSFUN).EQ.TTKTRQ) THEN
+	   CALL TKTREQ(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+	   GOTO 100
+	ENDIF
+C
+C PROCESS CDU TEXT REQUESTS
+C
+	IF(TRABUF(TSFUN).EQ.TCDURQ) THEN
+	   CALL CDUREQ(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+	   GOTO 100
+	ENDIF
+C
+C PROCESS LOOPBACK TRANSACTIONS  
+CRXK   (if MCP loopback then loopsub is called from dload)
+C                                   
+CRXK        IF(TRABUF(TSFUN).EQ.TLBACK) THEN
+CRXK          CALL LOOPSUB(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+CRXK          GOTO 100
+CRXK        ENDIF
+C
+C INVALID FUNCTION FOR THIS SPECIAL SERVICE TASK
+C
+	TRABUF(TSTAT)=REJT
+	TRABUF(TERR)=INVL
+	GOTO 45
+C
+C LOG TRANSACTION AND QUEUE TO THE LOGGER OUTPUT QUEUE
+C
+100	CONTINUE
+	CALL TRALOG(TRABUF,LOGREC)
+	CALL WLOG(PRO(SERIAL,BUF),LOGREC,TASK)
+	IF(TRABUF(TERR).EQ.TBAD) HPRO(ENCOVR,BUF)=-1
+	IF(TRABUF(TINTRA).NE.1) THEN
+	  AGTHTB(ATRNUM,TER)=TRABUF(TTRN)
+	  AGTHTB(ACHKSM,TER)=-1
+	ENDIF
+	CALL QUETRA(LOG,BUF)
+	CALL DQUTRA(TASK,BUF)
+	GOTO 40
+	END

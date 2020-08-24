@@ -1,0 +1,64 @@
+C
+C SUBROUTINE PSTAWN
+C $Log:   GXAFXT:[GOLS]PSTAWN.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:33:52   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   13 Jun 1993 13:57:22   HXK
+C   added AGTINF.DEF
+C  
+C     Rev 1.0   21 Jan 1993 17:23:42   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - pstawn.for **
+C
+C SUBROUTINE TO POST AGENT HIGH WINNERS TO AGENT FILE
+C
+C
+	SUBROUTINE PSTAWN(WINTAB)
+	IMPLICIT NONE
+	INTEGER*4 AGT,ST,K
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+        INCLUDE 'INCLIB:RECAGT.DEF'
+        INTEGER*4 WINTAB(2,NUMAGT)
+C
+C
+        CALL OPENASF(ASF)
+        DO 1000 AGT=1,NUMAGT
+	IF(WINTAB(1,AGT).EQ.0.AND.WINTAB(2,AGT).EQ.0) GOTO 1000
+        CALL READASF(AGT,ASFREC,ST)
+        IF(ST.NE.0) THEN
+          WRITE(5,902) IAM(),(SFNAMES(K,ASF),K=1,5),ST
+          CALL CLOSASF
+          RETURN
+        ENDIF
+C
+C
+	ASFHWN(1)=ASFHWN(1)+WINTAB(1,AGT)
+        ASFHWN(2)=ASFHWN(2)+WINTAB(2,AGT)
+C
+C
+        CALL WRITASF(AGT,ASFREC,ST)
+        IF(ST.NE.0) THEN
+          WRITE(5,902) IAM(),(SFNAMES(K,ASF),K=1,5),ST
+          CALL CLOSASF
+          RETURN
+        ENDIF
+1000    CONTINUE
+        CALL CLOSASF
+        CALL USRCLOS1(     2)
+        RETURN
+C
+C
+902	FORMAT(1X,A,1X,5A4,' read error> ',I4)
+903	FORMAT(1X,A,1X,5A4,' write error> ',I4)
+	END

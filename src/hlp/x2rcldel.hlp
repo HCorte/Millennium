@@ -1,0 +1,22 @@
+                          GTECH Distibuted Network
+                          Report Class Delete Help                Page 1 of 1
+ 
+      The delete report class screen allows a class to be
+      deleted from the Distributed Network Database.  Before deleting
+      a class, you must be sure that you have entered the correct
+      class number.  The program will display all of the configuration
+      information for the input class number allowing you to confirm that
+      this is the desired record.  If you wish to delete the class, enter
+      "Y" and press return.  If you do not wish to delete the class, enter
+      "N".  It should be noted that a class can be deleted even though
+      other components of the network rely on this information.  This
+      error will be detected when the Perform Edit Check function is
+      executed.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

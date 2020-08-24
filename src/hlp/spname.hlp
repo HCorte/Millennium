@@ -1,0 +1,18 @@
+   SPN.HLP               GTECH Distributed Network
+                       Vakio Team Names Snapshot Help      Page 1 of 1
+ 
+    The  SPN snapshot contains information about team names for 
+    sports games for a particular draw.
+
+    The information displayed includes:
+ 
+
+    game name     - Vakio Veikkaus (sports)
+    event code    - draw number
+    status        - open or closed for the current draw
+    row           - row number
+    team names    - name of teams 
+    res           - winning numbers (1, 2 or X)  Field shown only 
+                    for previous draws.
+
+    

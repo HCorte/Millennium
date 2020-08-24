@@ -1,0 +1,44 @@
+ LANID.HLP                GTECH Distributed Network
+                              LANID  information             Page 1 of 2
+ 
+ The following is a layout of the LANxx.ID LANPRO definition file.
+ 
+ 
+ nnnnnnnnnn - integer value, 10 characters, right justified:
+              Number of redundant lans.
+ 
+ nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn - 3 x integer value, 10 characters
+              each, righ justified:
+              LANPRO loop interval in milliseconds,
+              Timeout value one - poll interval,
+              Timeout value two - response interval.
+ 
+ nn mmmmmmmmmmmm - hexadecimal value, 12 characters, right justified:
+              Ethernet physical address on Lan nn;
+              repeated number of lans times.
+ 
+ nn devw: devr: - 2 x character string, 5 characters, right justified:
+              Ethernet device names for write and read sides.
+ 
+ LANID.HLP                GTECH Distributed Network
+                                 Lanid  Snapshot             Page 2 of 2
+ 
+ CCCCCCCC n - character string, 8 characters, left justified,
+              followed by task trap flag (if 0 application task
+              will not be called with task trap when buffer is
+              deposited in its queue):
+              Task name.
+              Repeated at least 4 times.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

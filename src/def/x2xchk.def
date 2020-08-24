@@ -1,0 +1,97 @@
+C X2XCHK.DEF
+C
+C V04 15-JUN-2000 OXK X2XCHK_SCL from X2XCHK.DEF to X2CHKSTN.FOR
+C V03 19-DEC-1994 GPR Integrate UK changes into X2X Baseline
+C V02 15-AUG-1994 GPR ADD FIELDS TO REDUCE CPU & I/O FOR X2CHK* - Integrate 
+C		    UK changes into X2X Baseline
+C V01 01-DEC-1991 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C This DEF includes all field declarations which are used
+C to perform an edit check of all the input network configuration
+C information.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C	***** Start V02 changes *****
+C
+        INTEGER*4   X2XCHK_CLASS
+        PARAMETER   (X2XCHK_CLASS=1)
+        INTEGER*4   X2XCHK_CLASS_TTN
+        PARAMETER   (X2XCHK_CLASS_TTN=2)
+        INTEGER*4   X2XCHK_CLASS_PROTO
+        PARAMETER   (X2XCHK_CLASS_PROTO=4)
+        INTEGER*4   X2XCHK_CLASS_PRTCNT
+        PARAMETER   (X2XCHK_CLASS_PRTCNT=5)
+C
+C	***** End V02 changes *****
+C
+	INTEGER*4   X2XCHK_NPCCNT                       !Count of hosts
+	INTEGER*4   X2XCHK_NPCREC(X2X_NETWORK_PORTS)    !Network port rec pointe
+	INTEGER*4   X2XCHK_NPCADR(2,X2X_NETWORK_PORTS)  !Network port addresses
+	COMMON  /CHKNPC/ X2XCHK_NPCCNT, X2XCHK_NPCREC,
+     *	                 X2XCHK_NPCADR
+C
+CV02	INTEGER*4   X2XCHK_STNCNT                     !Count of stations
+CV02	INTEGER*4   X2XCHK_STNREC(X2X_STATIONS)       !Station record pointer
+CV02	INTEGER*4   X2XCHK_STNSER(X2X_STATIONS)       !Station serial number
+CV02	INTEGER*4   X2XCHK_STNADR(2,X2X_STATIONS)     !Station addresses
+CV02	INTEGER*4   X2XCHK_STNPVC(X2X_STATIONS)       !Station pvc port
+CV02    INTEGER*4   X2XCHK_STNEVSN(X2X_EVSN_MAXLEN,   !Station Ext Ver Seq. Num.
+CV02     *                             X2X_STATIONS)
+C	***** Start V02 changes *****
+C
+	INTEGER*4   X2XCHK_STNCNT                     !Count of stations
+        INTEGER*4   X2XCHK_STN
+        PARAMETER   (X2XCHK_STN=1)
+        INTEGER*4   X2XCHK_STN_REC
+        PARAMETER   (X2XCHK_STN_REC=2)
+        INTEGER*4   X2XCHK_STN_SER
+        PARAMETER   (X2XCHK_STN_SER=2)
+        INTEGER*4   X2XCHK_STN_ADR
+        PARAMETER   (X2XCHK_STN_ADR=2)
+        INTEGER*4   X2XCHK_STN_PVC
+        PARAMETER   (X2XCHK_STN_PVC=2)
+        INTEGER*4   X2XCHK_STN_EVSN
+        PARAMETER   (X2XCHK_STN_EVSN=2)
+	INTEGER*4   X2XCHK_STNREC(X2XCHK_STN_REC,X2X_STATIONS)	!Station record pointer
+	INTEGER*4   X2XCHK_STNSER(X2XCHK_STN_SER,X2X_STATIONS)	!Station serial number
+	INTEGER*4   X2XCHK_STNADR(X2XCHK_STN+X2X_ADRESS_MAXLEN,	!Station addresses
+     *				  X2X_STATIONS)  
+	INTEGER*4   X2XCHK_STNPVC(X2XCHK_STN_PVC,X2X_STATIONS)	!Station pvc port
+        INTEGER*4   X2XCHK_STNEVSN(X2XCHK_STN+X2X_EVSN_MAXLEN,	!Station Ext Ver Seq. Num.
+     *                             X2X_STATIONS)
+C
+C	***** End V02 changes *****
+C
+	COMMON  /CHKSTN/    X2XCHK_STNCNT, X2XCHK_STNREC,
+     *	                    X2XCHK_STNADR, X2XCHK_STNSER,
+     *                      X2XCHK_STNPVC, X2XCHK_STNEVSN
+C
+	INTEGER*4   X2XCHK_SPC(X2X_STATIONS,X2X_MAXPORT)
+	INTEGER*4   X2XCHK_SPC_MAX					!V03
+	PARAMETER   (X2XCHK_SPC_MAX=(X2X_STATIONS+1)*X2X_MAXPORT)	!V03
+	INTEGER*4   X2XCHK_SPC_PORT(X2XCHK_SPC_MAX)			!V03
+	CHARACTER   X2XCHK_SPC_DROPS(X2XCHK_SPC_MAX,X2X_MAXTERMS)*2	!V03
+C
+	COMMON  /CHKSPC/    X2XCHK_SPC,
+     *			    X2XCHK_SPC_PORT,				!V02
+     *			    X2XCHK_SPC_DROPS				!V02
+C
+C	***** Start V02 changes *****
+C
+        LOGICAL*4   X2XCHK_TER(X2X_TERMS)       !Check array for terms
+	COMMON  /CHKTER/    X2XCHK_TER
+C
+C	***** End V02 changes *****
+C

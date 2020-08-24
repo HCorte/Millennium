@@ -1,0 +1,333 @@
+C SUBROUTINE MESCMD
+C
+C V13 02-MAI-2014 SCML Placard Project
+C V12 16-MAR-2011 GPW NUMAGT=12288
+C V11 13-FEB-2001 HXK MESSAGE FOR INCORRECT GAME STATUS
+C V10 10-JAN-2001 CS  INCLUDED MESSAGE FOR PASSIVE GAMES
+C V09 10-MAR-2000 OXK Message 32      *        19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,added for Vakio rollovers
+C V08 13 Jan 1997 RXK GVT id online change added
+C V07 17 Apr 1996 HXK Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C V06 18 Sep 1993 JWE Allow for bigger record #s in X2X file updates
+C V05 18 Jun 1993 HXK ADDED RAVI MESSAGES
+C V04 21 Jan 1993 DAB Initial Release
+C  			Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  			DEC Baseline
+C V03 13-JUL-1992 GCAN ADDED CLOSING TIME AND DATE CHANGE MESSAGES,
+C     			AND TOTO SELECT LOCK POOL MESSAGE.
+C V02 15-JAN-1992 DAS  ADDED MESS # 19 (WAKEUP) AND 20 (DISABLE)
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C SUBROUTINE TO FORMAT COMMAND MESSAGES FOR ERRLOG
+C
+C MESSAGE #               MESSAGE
+C   1               INVALID COMMAND TYPE <XXXX> NUMBER <XXXX>
+C   2               <TYPE><COMMAND> CHANGED FROM <XXXX> TO <XXXX>
+C   3               <GAMTYP><GAMIND><COMMAND> CHANGED FROM XX TO XX
+C   4               <GAMTYP><GAMIND><COMMAND> COMPLETE
+C   5               <TYPE><NAME> LINE XXX, TER XXXX, VALUE XXXXXX
+C   6               <TYPE><NAME> TERMINAL XXXX OLD XXXX NEW XXXX
+C   7               <TYPE><NAME> COMMAND PROCESSING ERROR XXXX/XXXX
+C   8               <GAMTYP><GAMIND><COMMAND> ROW <X> SET TO <XXXX>
+C   9               <TYPE><NAME> BITMAP FFFFFFFF/FFFFFFFF
+C  10               <TYPE><NAME> TER XXXX BITMAP XXXXXXXX/XXXXXXXX
+C  11               <GAMTYP><GAMIND> ROW <XX> OFFSET <XX>
+C                                    CHANGED FROM <XX> TO <XX>
+C  12               <GAMTYP><GAMIND> ROW <XX> TIME CHANGED
+C                                    FROM <XX> TO <XX>
+C  13               <FILE><FIELD> REC XXX VALUE=XXXXXXXX/XXXXXXXX UPD=XXX
+C  14               STATION XXXXXXX SOFT RESET COMMAND SENT
+C  15               STATION XXXXXXX STATISTICS REQUEST SENT
+C  16               STATION XXXXXXX HARD RESET COMMAND SENT
+C  17               <TYPE><NAME> XXX COMPLETE
+C  18               <GAMTYP><GAMIND> CLOSING DATE CHANGE FROM <XX> TO <XX>
+C  19               STATION XXXX WAKEUP COMMAND SENT
+C  20               STATION XXXX  DISABLE COMMAND SENT
+C  21               STATION XXXX  PORT YYYY POLL DISABLE CMD SENT
+C  22               STATION XXXX  PORT YYYY POLL ENABLE  CMD SENT
+C  23               STATION XXXX  PORT YYYY ENABLE COMMAND SENT
+C  24               STATION XXXX  PORT YYYY DISABLE COMMAND SENT
+C  25               <GAMTYP><GAMIND><COMMAND> RACE <X>                         
+C  26               <GAMTYP><GAMIND><COMMAND> CHANGED FROM <XX>TO<XX> RACE <X>           
+C  27               TERMINAL XXXX OLD GVT ID AAAAAAAAAAAA NEW AAAAAAAAAAAA
+C  28               INVALID STATION NUMBER XXXX
+C  29               INVALID STATION CLASS  XXXX
+C  30               <TYPE><NAME> BITMAP FFFFFFFF FFFFFFFF/FFFFFFFF FFFFFFFF
+C  31               <GAMTYP><GAMIND><COMMAND> <EVENT NAME> ROW <XX>
+C                   CHANGED FROM <X> TO <X>
+C  32               <GAMTYP><GAMIND><COMMAND><AMOUNT> ADDED TO DIVISION <DIV>
+C  33               <GAMTYP><GAMIND><COMMAND> GAME FILE ERROR STATUS XX
+C  34               <GAMTYP><GAMIND><COMMAND> INCORRECT STATUS FOR DRAW XXXX
+C  35               <GAMTYP><GAMIND><COMMAND> ' changed winsel status from  ' 
+C                                             XXXX ' to ' YYYY
+C  36               <TYPE><NAME> BITMAP FFFFFFFF/FFFFFFFF
+C  37               <GAMTYP><GAMIND> DRAW <DRAW> EVENT NUMBER <VALUE> HAS BEEN CANCELLED
+C  38               <GAMTYP><GAMIND> DRAW <DRAW> SET <VALUE> MAX CAN EVENTS TO CANCEL A DRAW
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2001 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE MESCMD(MNUM,DBUF,MBUF,ALARM)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+C
+	INTEGER*4   DBUF(*),I, K, MNUM
+	CHARACTER*3 MARKS(3)
+	CHARACTER*140	MBUF
+	CHARACTER   X2FLDNAM*15         !Function
+	CHARACTER   UPDATE(0:1)*1
+	LOGICAL     ALARM
+	DATA MARKS/'(1)','(3)','(2)'/
+	DATA UPDATE/'U',' '/
+        CHARACTER GIDOLD*12,GIDNEW*12
+C
+	GOTO( 1,  2,  3, 4,   5,  6,  7,  8,  9, 10,
+     *     11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+     *     21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+     *     31, 32, 33, 34, 35, 36, 37, 38) MNUM 
+	GOTO 99
+C
+C
+1	CONTINUE
+	ALARM=.TRUE.
+	WRITE (MBUF,901) (DBUF(K),K=1,2)
+901	FORMAT('INVALID COMMAND TYPE> ',I3,' COMMAND NUMBER> ',I3)
+	RETURN
+C
+2	CONTINUE
+	WRITE (MBUF,902) (DBUF(K),K=1,6)
+902	FORMAT(2A4,1X,2A4,' CHANGED FROM ',I10,' TO ',I10)
+	RETURN
+C
+3	CONTINUE
+	WRITE (MBUF,903) (DBUF(K),K=1,7)
+903	FORMAT(2A4,I1,1X,2A4,' CHANGED FROM ',I10,' TO ',I10)
+	RETURN
+C
+4	CONTINUE
+	WRITE (MBUF,904) (DBUF(K),K=1,5)
+904	FORMAT(2A4,1X,I2,1X,2A4,' COMPLETE')
+	RETURN
+C
+5	CONTINUE
+	WRITE (MBUF,905) (DBUF(K),K=1,7)
+905	FORMAT(2A4,1X,2A4,' LINE> ',I3,' TERM> ',I5,' VALUE>',I6)
+	RETURN
+C
+6	CONTINUE
+	WRITE (MBUF,906) (DBUF(K),K=1,7)
+906	FORMAT(2A4,1X,2A4,' TERM> ',I5,' OLD> ',I6,' NEW> ',I6)
+	RETURN
+C
+7	CONTINUE
+	WRITE (MBUF,907) (DBUF(K),K=1,6)
+907	FORMAT(2A4,1X,2A4,' COMMAND PROCESSING ERROR ',I4,'/',I4)
+	RETURN
+C
+8	CONTINUE
+	WRITE (MBUF,908) (DBUF(K),K=1,8)
+908	FORMAT(2A4,I1,1X,2A4,' ROW> ',I2,' CHANGED FROM ',I2,' TO ',I2)
+	RETURN
+C
+9	CONTINUE
+	WRITE (MBUF,909) (DBUF(K),K=1,6)
+909	FORMAT(2A4,1X,2A4,' BITMAP ',Z8,'/',Z8)
+	RETURN
+C
+10	CONTINUE
+	WRITE (MBUF,910) (DBUF(K),K=1,7)
+910	FORMAT(2A4,1X,2A4,'TER> ',I5,' BITMAP ',Z8,'/',Z8)
+	RETURN
+C
+11	CONTINUE
+	WRITE (MBUF,911) (DBUF(K),K=1,6),MARKS(DBUF(7)),(DBUF(K),K=8,9)
+911	FORMAT(2A4,I1,1X,2A4,' ROW> ',I2,' MARK> ',A3,1X,
+     *        'CHANGED FROM ',I2,' TO ',I2)
+	RETURN
+C
+12	CONTINUE
+	IF(DBUF(6).NE.0) THEN
+	   WRITE (MBUF,912) (DBUF(K),K=1,6),
+     *			     DISTIM(DBUF(7)),DISTIM(DBUF(8))
+	ELSE
+	   WRITE (MBUF,1912)(DBUF(K),K=1,5),
+     *                       DISTIM(DBUF(6)),DISTIM(DBUF(7))
+	ENDIF
+912     FORMAT(2A4,I1,1X,2A4,' ROW> ',I2,' CLOSING TIME CHANGED FROM ',
+     *         A8,' TO ',A8)
+1912	FORMAT(2A4,I1,1X,2A4,' CLOSING TIME CHANGED FROM ',A8,' TO ',A8)
+	RETURN
+C
+13	CONTINUE
+	WRITE (MBUF,913) (SFNAMES(I,DBUF(5)),I=1,4),
+     *	                  X2FLDNAM(DBUF(5),DBUF(6)),
+     *	                  DBUF(9),DBUF(7),DBUF(4),UPDATE(DBUF(8))
+913	FORMAT(4A4,1X,A15,1X,I,1X,'VAL=',Z8,'/',Z8,1X,A1)
+	RETURN
+C
+14	CONTINUE
+	WRITE (MBUF,914) DBUF(5)
+914	FORMAT('STATION ',I7,' SOFT RESET COMMAND SENT')
+	RETURN
+C
+15	CONTINUE
+	WRITE (MBUF,915) DBUF(5)
+915	FORMAT('STATION ',I7,' STATISTICS REQUEST SENT')
+	RETURN
+C
+16	CONTINUE
+	WRITE (MBUF,916) DBUF(5)
+916	FORMAT('STATION ',I7,' HARD RESET COMMAND SENT')
+	RETURN
+C
+17	CONTINUE
+	WRITE (MBUF,917) (DBUF(K),K=1,5)
+917	FORMAT(2A4,1X,2A4,1X,I2,' COMPLETE')
+	RETURN
+C
+18	CONTINUE
+	IF(DBUF(6).NE.0) THEN
+	   WRITE (MBUF,918) (DBUF(K),K=1,8)
+	ELSE
+	   WRITE (MBUF,1918)(DBUF(K),K=1,7)
+	ENDIF
+918	FORMAT(2A4,I1,1X,2A4,' CLOSING DATE FOR ROW> ',I2,1X,
+     *         'CHANGED FROM ',I4,' TO ',I4)
+1918	FORMAT(2A4,I1,1X,2A4,' CLOSING DATE CHANGED FROM ',I4,' TO ',I4)
+C
+19      CONTINUE
+        WRITE(MBUF,919) DBUF(5)
+919     FORMAT('STATION ',I7,' WAKEUP COMMAND SENT')
+        RETURN
+C
+20      CONTINUE
+        WRITE(MBUF,920) DBUF(5)
+920     FORMAT('STATION ',I7,' DISABLE COMMAND SENT')
+        RETURN
+C
+21      CONTINUE
+        WRITE(MBUF,921) DBUF(5),DBUF(6)
+921     FORMAT('STATION ',I7,' PORT',I4,' POLLING DISABLE COMMAND SENT')
+        RETURN
+C
+22      CONTINUE
+        WRITE(MBUF,922) DBUF(5),DBUF(6)
+922     FORMAT('STATION ',I7,' PORT ',I4,' POLLING ENABLE COMMAND SENT')
+        RETURN
+C
+23      CONTINUE
+        WRITE(MBUF,923) DBUF(5),DBUF(6)
+923     FORMAT('STATION ',I7,' PORT ',I4,' ENABLE COMMAND SENT')
+        RETURN
+C
+24      CONTINUE
+        WRITE(MBUF,924) DBUF(5),DBUF(6)
+924     FORMAT('STATION ',I7,' PORT ',I4,' DISABLE COMMAND SENT')
+        RETURN
+C                                                                              
+25      CONTINUE                                 
+        WRITE(MBUF,925) (DBUF(K),K=1,6)                                         
+925     FORMAT(2A4,I1,1X,2A4,' RACE> ',I2)                          
+        RETURN                                                        
+C                                                                              
+26      CONTINUE                                                          
+        WRITE(MBUF,926) (DBUF(K),K=1,8)                                         
+926     FORMAT(2A4,I1,1X,2A4,' CHANGED FROM ',I2,' TO ',I2,'  RACE> ',I2)   
+        RETURN                                   
+C
+27	CONTINUE
+        CALL HTOA(GIDOLD,1,12,DBUF(6),K)
+        CALL HTOA(GIDNEW,1,12,DBUF(8),K)
+	WRITE (MBUF,927) DBUF(5),GIDOLD,GIDNEW
+927	FORMAT(' TERM> ',I5,' OLD GVT ID > ',A12,' NEW> ',A12)
+	RETURN
+C                                                                              
+28      CONTINUE
+        WRITE(MBUF,928) DBUF(6)
+928     FORMAT('INVALID STATION NUMBER >',I4.4)
+        RETURN
+C
+29      CONTINUE
+        WRITE(MBUF,929) DBUF(6),DBUF(7)
+929     FORMAT('INVALID STATION CLASS >',I4.4,' FOR STATION >',I4.4)
+        RETURN
+C
+30	CONTINUE
+	WRITE (MBUF,930) (DBUF(K),K=1,8)
+930	FORMAT(2A4,1X,2A4,' BITMAP ',Z8.8,Z8.8,'/',Z8.8,Z8.8)
+	RETURN
+31	CONTINUE
+	WRITE (MBUF,931) (DBUF(K),K=1,11)
+931	FORMAT(2A4,I1,1X,2A4,3A4,' ROW> ',I2,' CHANGED FROM ',I2,' TO ',I2)
+	RETURN
+C
+32	CONTINUE
+	WRITE (MBUF,932) (DBUF(K),K=1,5),CSMONY(DBUF(7),11,BETUNIT),DBUF(6)
+932	FORMAT(2A4,I1,1X,2A4,A11,' ADDED TO DIVISION ',I2)
+	RETURN
+C
+33      CONTINUE
+        WRITE (MBUF,933) (DBUF(K),K=1,6)
+933     FORMAT(2A4,I1,1X,2A4,1X,' game file error status ',I2)
+        RETURN
+C
+C
+34      CONTINUE
+        WRITE (MBUF,934) (DBUF(K),K=1,6)
+934     FORMAT(2A4,I1,1X,2A4,1X,' incorrect status for draw ',I4,' in game file')
+        RETURN
+C
+C
+35      CONTINUE
+
+	DO K = 1, 10
+        TYPE 9999, DBUF(K), DBUF(K)
+9999    FORMAT('INT: ', I, ' ASCCI: ', A)
+	ENDDO
+
+        WRITE (MBUF, 935) (DBUF(K),K=1,6)
+935     FORMAT(2A4,1X,2A4,1X, ' changed winsel status from  ',I4,' to ',I4)
+        RETURN
+C
+C V13 - Start
+C
+36	CONTINUE
+	WRITE (MBUF,936) (DBUF(K),K=1,4), DBUF(6),DBUF(8)
+936	FORMAT(2A4,1X,2A4,' BITMAP ',Z8.8,'/',Z8.8)
+	RETURN
+C
+37	CONTINUE
+	WRITE (MBUF, 937) (DBUF(K), K = 1, 3), DBUF(6), DBUF(7)
+937	FORMAT(2A4, I1, X, 'DRAW', X, I6.6, X, 'EVENT NUMBER', X, I2.2, X, 'HAS BEEN CANCELLED')
+	RETURN
+
+38	CONTINUE
+	WRITE (MBUF, 938) (DBUF(K), K = 1, 3), DBUF(6), DBUF(7)
+938	FORMAT(2A4, I1, X, 'DRAW', X, I6.6, X, 'SET', X, I2.2, X, 'MAX CAN EVENTS TO CANCEL A DRAW')
+	RETURN
+C
+C V13 - End
+C
+C INVALID MESSAGE NUMBER
+C
+99	CONTINUE
+	ALARM=.TRUE.
+	WRITE (MBUF,999) MNUM
+999	FORMAT('INVALID COMMAND MESSAGE NUMBER> ',I4)
+	RETURN
+	END

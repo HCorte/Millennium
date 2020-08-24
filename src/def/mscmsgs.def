@@ -1,0 +1,61 @@
+C *** DEFINITION_FILE MSCMSGS ***
+C
+C V03 15-JUN-2000 OXK COMMONs added
+C V02 12-JAN-1992 RRB MOVED SET PAGE RESPONSE MESSAGE IN TABLE.
+C V01 15-FEB-1991 RRB VAX INITIAL RELEASE
+C
+C DEFINITION OF MESSAGES RECEIVED FROM THE TELENEX MATRIX SWITCH CONTROLLER.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C THE FOLLOWING STRINGS WILL BE USED TO INTERPRET MESSAGES FROM THE MSC.
+C
+C (If you add or change a string be sure to update the message length
+C  table below so we know exactly how many characters to match.)
+C
+	INTEGER*4 MSC_ONLINE_RESP,MSC_LOGON_RESP,MSC_SELECT_RESP,
+     *            MSC_START_RESP,MSC_CONNECT_RESP,MSC_DISP_RESP,
+     *            MSC_SETP_RESP,MSC_ARM_RESP,MSC_LOGOFF_RESP,
+     *            MSC_OFFLINE_RESP,MSC_ERROR_RESP
+	   PARAMETER(MSC_ONLINE_RESP = 1)
+	   PARAMETER(MSC_LOGON_RESP = 2)
+	   PARAMETER(MSC_SETP_RESP = 3)
+	   PARAMETER(MSC_SELECT_RESP = 4)
+	   PARAMETER(MSC_START_RESP = 5)
+	   PARAMETER(MSC_CONNECT_RESP = 6)
+	   PARAMETER(MSC_DISP_RESP = 7)
+	   PARAMETER(MSC_ARM_RESP = 8)
+	   PARAMETER(MSC_LOGOFF_RESP = 9)
+	   PARAMETER(MSC_OFFLINE_RESP = 10)
+	   PARAMETER(MSC_ERROR_RESP = 11)
+
+	CHARACTER*36 MSC_MSGS(MSC_NUM_MSGS)
+	COMMON /MSC_MSGS/ MSC_MSGS
+	DATA         MSC_MSGS/
+     *               'Welcome to Telenex Matrix Switch MSC',   !Go online Resp.
+     *               'is now logged on',                       !Logon Resp.
+     *               'A display page is now',                  !Set Page
+     *               'is now the current switch',              !Select Switch
+     *               'has been started',                       !Start Switch
+     *               'Connection successful',                  !Connect Port
+     *               'to DTE:',                                !Display Connect
+     *               'armed',                                  !Arm Port
+     *               'is now logged off',                      !Logoff
+     *               'This terminal is now offline',           !Go offline
+     *               'ERROR:'/                                 !Other
+C
+C ACTUAL LENGTH OF EACH STRING IN THE ABOVE TABLE
+C
+        INTEGER*4 MSC_MSG_LEN(MSC_NUM_MSGS)/36,16,21,25,16,21,
+     *                                      7,5,17,28,6/
+	COMMON /MSC_MSG_LEN/ MSC_MSG_LEN

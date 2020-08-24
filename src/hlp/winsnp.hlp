@@ -1,0 +1,22 @@
+    WINSNP.HLP             GTECH Distributed Network
+                             Game Snapshot Help               Page 1 of 1
+ 
+    The Win snapshot displays all of the games which have other MULTIWIN
+    status than 'No winner selection today'.
+
+    The information displayed includes:
+ 
+    name          - full name of the game   
+    type          - type of game (lotto, vakio etc)
+    index         - index of the game
+    number        - number of the game
+    draw          - draw number of the winner selection
+    status        - status of the winner selection
+    ws-ind        - index of the multiwin run  
+
+
+
+
+
+
+

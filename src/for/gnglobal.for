@@ -1,0 +1,200 @@
+C
+C SUBROUTINE GNGLOBAL
+C $Log:   GXAFXT:[GOLS]GNGLOBAL.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:26:12   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:31:22   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - gnglobal.for **
+C
+* GNGLOBAL.FOR
+*
+* V01 01-AUG-90 XXX RELEASED FOR VAX
+*
+* V01 13-JUN-90 MRM INITIAL RELEASE
+*
+* This subroutine will build the requested global
+* information messages for GNOS.  The routine will send
+* each message to TCP/IP as it creates it.
+*
+* Input parameters:
+*
+*     MESTYP      Int*4       Upline requested message type
+*     SUBTYP      Int*4       Upline requested message subtype
+*     MSGID       Int*4       PC message identifier
+*     TYP         Int*4(4)    Type of qualification data
+*     CNT         Int*4(4)    Number of qualification parameters
+*     QUADTA      Int*4(20,4) Qualification parameters
+*
+*
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+* This item is the property of GTECH Corporation, Providence, Rhode
+* Island, and contains confidential and trade secret information. It
+* may not be transferred from the custody or control of GTECH except
+* as authorized in writing by an officer of GTECH. Neither this item
+* nor the information it contains may be used, transferred,
+* reproduced, published, or disclosed, in whole or in part, and
+* directly or indirectly, except as expressly authorized by an
+* officer of GTECH, pursuant to written agreement.
+*
+* Copyright 1990 GTECH Corporation. All rights reserved.
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GNGLOBAL(MESTYP,SUBTYP,MSGID,TYP,CNT,QUADTA)
+	IMPLICIT NONE
+*
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+*
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:GNSMES.DEF'
+	INCLUDE 'INCLIB:DESNET.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:LANCOM.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+*
+	INTEGER*4   MESTYP                  !Message type
+	INTEGER*4   SUBTYP                  !Message subtype
+	INTEGER*4   MSGSEQ                  !Message sequence number
+	INTEGER*4   MSGID                   !PC message identifier
+	INTEGER*4   TYP(4)                  !Type of qualification data
+	INTEGER*4   CNT(4)                  !Number of qualification params
+	INTEGER*4   QUADTA(20,4)            !Qualification parameters
+	INTEGER*4   MESS(400)               !Output buffer
+	INTEGER*4   CNFSTN                  !Number of configured stations
+	INTEGER*4   ACTSTN                  !Number of active stations
+	INTEGER*4   ACTSAP                  !Number of active SAPS
+	INTEGER*4   ACTSYS                  !Number of Concurrent backends
+	INTEGER*4   MASTER,BACKUP,SPARE(3)  !System ids
+	INTEGER*4   PRIMOD,BAKMOD,SPRMOD(3) !System modes
+	INTEGER*4   STN			    !Station number
+	INTEGER*4   SAP			    !SAP number
+	INTEGER*4   OFF			    !Array offset
+	INTEGER*4   SPRCNT		    !Spare count
+	INTEGER*4   LSTSER		    !Last serial number
+	INTEGER*4   CURTIM		    !Current time
+	INTEGER*4   FLAGS		    !Flags word
+	INTEGER*4   GAMSAP		    !Game SAP
+	INTEGER*4   GAMSTA		    !Game status
+	INTEGER*4   MESLEN		    !Output message length
+*
+* INITIALIZE VARIABLES.
+*
+	CNFSTN=0
+	ACTSTN=0
+	ACTSAP=0
+	ACTSYS=0
+	MASTER=0
+	BACKUP=0
+	SPARE(1)=0
+	SPARE(2)=0
+	SPARE(3)=0
+	MSGSEQ=0
+*
+* COUNT THE NUMBER OF STATIONS CONFIGURED, AND DETERMINE
+* HOW MANY HAVE BEEN ACTIVE. NOTE: ACTIVITY IS DETERMINED
+* BY HAVING ACTIVITY IN THE LAST 30 MINUTES.
+*
+	DO 100 STN=1,X2X_STATIONS
+	  IF(X2XS_ADRESS_LEN(STN).NE.0) THEN
+	    CNFSTN=CNFSTN+1
+	    IF(X2XS_TIME(STN).GE.P(ACTTIM)-30*60) THEN
+	      ACTSTN=ACTSTN+1
+	    ENDIF
+	  ENDIF
+100	CONTINUE
+*
+* COUNT THE NUMBER OF ACTIVE SAPS (EXCLUDE LOCAL SAPS - GAME).
+*
+	DO 120 SAP=11,X2X_SAP
+	  IF(X2XE_ACT_STATUS(SAP).EQ.X2XES_ONLINE) THEN
+	    ACTSAP=ACTSAP+1
+	  ENDIF
+120	CONTINUE
+*
+* COUNT THE NUMBER OF CONFIGURED BACKEND SYSTEMS
+* AND DETERMINE THE ID NUMBERS OF THE BACKEND SYSTEMS.
+*
+	DO 130 OFF=1,NETSYS
+	  IF(NETROUT(OFF,1).EQ.ROUACT) THEN
+	    ACTSYS=ACTSYS+1
+	    IF(OFF.NE.NETBACKUP(1) .AND.
+     *	       OFF.NE.NETMASTER(1)) THEN
+	      SPRCNT=SPRCNT+1
+	      IF(SPRCNT.LE.3) SPARE(SPRCNT)=OFF
+	    ENDIF
+	  ENDIF
+130	CONTINUE
+	MASTER=NETMASTER(1)
+	BACKUP=NETBACKUP(1)
+	PRIMOD=0
+	BAKMOD=0
+	SPRMOD(1)=0
+	SPRMOD(2)=0
+	SPRMOD(3)=0
+	IF(MASTER.NE.0)    PRIMOD=NETMODE(MASTER,1)
+	IF(BACKUP.NE.0)    BAKMOD=NETMODE(BACKUP,1)
+	IF(SPARE(1).NE.0)  SPRMOD(1)=NETMODE(SPARE(1),1)
+	IF(SPARE(2).NE.0)  SPRMOD(2)=NETMODE(SPARE(2),1)
+	IF(SPARE(3).NE.0)  SPRMOD(3)=NETMODE(SPARE(3),1)
+	LSTSER=NXTSER
+*
+* BUILD OUTPUT HEADER MESSAGE.
+*
+	MSGSEQ=MSGSEQ+1
+	CALL ISBYTE(GNHDRMES_PROTID_VAL,MESS,GNDWNMES_PROTID-1)
+	CALL I4TOBUF2(MESTYP,MESS,GNDWNMES_MESTYP-1)
+	CALL ISBYTE(SUBTYP,MESS,GNDWNMES_SUBTYP-1)
+	CALL I4TOBUF2(MSGID,MESS,GNDWNMES_MSGID-1)
+	CALL I4TOBUF2(MSGSEQ,MESS,GNDWNMES_SEQNUM-1)
+	CALL I4TOBUF2(GNDWNMES_CMDDTA,MESS,GNDWNMES_DATOFF-1)
+	CURTIM=P(ACTTIM)
+	CALL I4TOBUF4(CURTIM,MESS,GNDWNMES_TIME-1)
+	FLAGS=GNDWNMES_FLAGS_END+GNDWNMES_FLAGS_DATA
+	CALL ISBYTE(FLAGS,MESS,GNDWNMES_FLAGS-1)
+	CALL ISBYTE(0,MESS,GNDWNMES_CMDSTS-1)
+	CALL ISBYTE(0,MESS,GNDWNMES_CMDDTA-1)
+	OFF=GNDWNMES_CMDDTA
+*
+* BUILD OUTPUT DATA MESSAGE PORTION.
+*
+	CALL I4TOBUF2(CNFSTN,MESS,OFF+GNGBLMES_NUMSTN-1)
+	CALL I4TOBUF2(ACTSTN,MESS,OFF+GNGBLMES_ACTSTN-1)
+	CALL I4TOBUF2(ACTSAP,MESS,OFF+GNGBLMES_ACTSAP-1)
+	GAMSAP=X2X_GAME_SAP
+	GAMSTA=X2X_GAME_STATE
+	CALL ISBYTE(GAMSAP,MESS,OFF+GNGBLMES_GAMSAP-1)
+	CALL ISBYTE(GAMSTA,MESS,OFF+GNGBLMES_GAMSTA-1)
+	CALL ISBYTE(ACTSYS,MESS,OFF+GNGBLMES_NUMSYS-1)
+	CALL ISBYTE(MASTER,MESS,OFF+GNGBLMES_PRMID-1)
+	CALL ISBYTE(BACKUP,MESS,OFF+GNGBLMES_BAKID-1)
+	CALL ISBYTE(SPARE(1),MESS,OFF+GNGBLMES_SPRID1-1)
+	CALL ISBYTE(SPARE(2),MESS,OFF+GNGBLMES_SPRID2-1)
+	CALL ISBYTE(SPARE(3),MESS,OFF+GNGBLMES_SPRID3-1)
+	CALL ISBYTE(PRIMOD,MESS,OFF+GNGBLMES_PRIMOD-1)
+	CALL ISBYTE(BAKMOD,MESS,OFF+GNGBLMES_BAKMOD-1)
+	CALL ISBYTE(SPRMOD(1),MESS,OFF+GNGBLMES_SPRMOD1-1)
+	CALL ISBYTE(SPRMOD(2),MESS,OFF+GNGBLMES_SPRMOD2-1)
+	CALL ISBYTE(SPRMOD(3),MESS,OFF+GNGBLMES_SPRMOD3-1)
+	CALL I4TOBUF4(LSTSER,MESS,OFF+GNGBLMES_LSTSER-1)
+	CALL ISBYTE(MAXLAN,MESS,OFF+GNGBLMES_NUMLAN-1)
+*
+* STORE MESSAGE LENGTH INTO MESSAGE HEADER.
+*
+	MESLEN=OFF+GNGBLMES_NUMLAN
+	CALL I4TOBUF2(MESLEN,MESS,GNDWNMES_MESLEN-1)
+*
+* SEND MESSAGE TO TCP/IP.
+*
+	CALL TCP_SNDBUF(MESS,MESLEN)
+*
+* PROGRAM EXIT.
+*
+	RETURN
+	END

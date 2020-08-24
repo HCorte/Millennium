@@ -1,0 +1,24 @@
+$! GXSRC:OVERPRO.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]OVERPRO.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:48:30   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:27:32   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:45:18   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:OVERPRO.EXE -
+OBJLIB:OVERPRO,-
+DECOVR,-
+FLUOVR,-
+INCOVR,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXPOOLLTO.ESH/SHAREABLE

@@ -1,0 +1,23 @@
+$! GXSRC:TIMER.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]TIMER.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:54:08   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:49:40   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:49:20   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:TIMER.EXE -
+OBJLIB:TIMER,-
+QUECMD,-
+GETTIM,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE

@@ -1,0 +1,62 @@
+C RECGUT.DEF
+C
+C V06 14-JUN-2000 UXN  GUTAGT,GUTDATE,GUTTIME,GUTSPC,GUTCRLF REMOVED.
+C V05 07-Jun-1993 HHN  MOVED GUTLEN TO PRMAGT.DEF
+C V04 28-JUL-1992 WLM  EXTENDED RECORD TO 120 BYTES (DIVISIBLE BY 4)
+C V03 30-MAY-1992 WLM  FIXED INCONSISTENCIES IN RECORD LENGTH
+C V02 11-DEC-1991 GCAN INITIAL RELEASE FOR THE NETHERLANDS
+C V01 28-MAR-1991 JPJ  INITIAL RELEASE FOR MARYLAND
+C
+C
+C GUTS FILE LAYOUT
+C
+C AGENT NUMBER				8 BYTES (ASCII)
+C DATE MMDDYY				6 BYTES (ASCII)
+C TIME HHMMSS				6 BYTES (ASCII)
+C 1  TERMINAL   HARDWARE ID		8 BYTES
+C 2  PRINTER    HARDWARE ID             8 BYTES
+C 3  SSR        HARDWARE ID             8 BYTES 
+C 4  SMART CARD HARDWARE ID		8 BYTES 
+C 5  TV CONTROL HARDWARE ID             8 BYTES 
+C 6             HARDWARE ID		8 BYTES (NOT USED)
+C 1  CPU	     ROM REV		4 BYTES
+C 2  PRINTER    ROM REV                 4 BYTES
+C 3  SSR        ROM REV			4 BYTES
+C 4  SMART CARD ROM REV			4 BYTES 
+C 5   TV CONTROL ROM REV		4 BYTES 
+C 6  VIDEO      ROM REV			4 BYTES (NOT USED)
+C 7   QDU	     ROM REV		4 BYTES (NOT USED)
+C 8             ROM REV			4 BYTES (NOT USED)
+C 9             ROM REV                 4 BYTES (NOT USED)
+C 10            ROM REV                 4 BYTES (NOT USED)
+C 11            ROM REV                 4 BYTES (NOT USED)
+C 12            ROM REV                 4 BYTES (NOT USED)
+C SPAC					2 BYTES (SPACE)
+C CRLF					2 BYTES (CR + LF)
+C TOTAL BYTES                         120 BYTES (118 + 2)
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C***	INTEGER*4 GUTLEN
+C***    PARAMETER (GUTLEN=24)
+C
+C
+C
+	INTEGER*4 RECGUT(GUTLEN)
+C
+	INTEGER*2 I2_RECGUT(GUTLEN*2)
+	BYTE      I1_RECGUT(GUTLEN*4)
+C
+	EQUIVALENCE(RECGUT,I2_RECGUT,I1_RECGUT)

@@ -1,0 +1,74 @@
+C EURCON.DEF
+C
+C V01 20-MAY-2014 SCML Added support to PLACARD Project - IGS
+C V00 30-MAY-2011 FJG  EURTIMERLIST Out of Bounds
+C
+C TIMERLIST is a doubly linked list of transactions for which
+C we are waiting for a response.  There is one entry per potential
+C sequence number used.
+C
+C----+------------------------------------------------------------------
+C V01| Added support to PLACARD Project - IGS
+C----+------------------------------------------------------------------
+        INTEGER*4  EUR_MAX_TIMER_LISTS
+        PARAMETER (EUR_MAX_TIMER_LISTS = 2)
+
+        INTEGER*4  EUR_TL_MAIN
+        PARAMETER (EUR_TL_MAIN = 1)
+
+        INTEGER*4  EUR_TL_CRS
+        PARAMETER (EUR_TL_CRS = 2)
+
+C        INTEGER*4  EURTIMERTOP          !POINT TO TOP OF LIST (-1=EMPTY)
+C        INTEGER*4  EURTIMERBOT          !POINT TO BOTTOM OF LIST
+C        INTEGER*4  EURTIMERLIST(4,0:NUMPRO+2)  ! 0 ooB
+        INTEGER*4  EURTIMERTOP(EUR_MAX_TIMER_LISTS) !POINT TO TOP OF LIST (-1=EMPTY)
+        INTEGER*4  EURTIMERBOT(EUR_MAX_TIMER_LISTS) !POINT TO BOTTOM OF LIST
+        INTEGER*4  EURTIMERLIST(EUR_MAX_TIMER_LISTS,4,0:NUMPRO+2)  ! 0 ooB
+C----+------------------------------------------------------------------
+C V01| Added support to PLACARD Project - IGS
+C----+------------------------------------------------------------------
+C
+          INTEGER*4  EURTIMERNXT
+          PARAMETER (EURTIMERNXT=1)          !POINTER TO NEXT LINKED ENTRY
+          INTEGER*4  EURTIMERPRV
+          PARAMETER (EURTIMERPRV=2)          !POINTER TO PREV LINKED ENTRY
+          INTEGER*4  EURTIMERBEG
+          PARAMETER (EURTIMERBEG=3)          !TIME STAMP WHEN BEGUN
+          INTEGER*4  EURTIMERSER
+          PARAMETER (EURTIMERSER=4)          !CROSS REF# FOR DOUBLE CHECK
+C
+C MESSAGEQ STATUS
+C
+        INTEGER*4 PAMS__NOMOREMSG
+        PARAMETER (PAMS__NOMOREMSG = 139756347)
+        INTEGER*4 PAMS__SUCCESS
+        PARAMETER (PAMS__SUCCESS = 1)
+        INTEGER*4 PAMS__DECLARED
+        PARAMETER (PAMS__DECLARED = 139761972)
+        INTEGER*4 PAMS__NOLINK
+        PARAMETER (PAMS__NOLINK = 139759394)
+        INTEGER*4 PAMS__LINK_DOWN
+        PARAMETER (PAMS__LINK_DOWN = 139759266)
+        INTEGER*4 PAMS__NOTACTIVE
+        PARAMETER (PAMS__NOTACTIVE = 139759474)
+        INTEGER*4 PAMS__NETLINKLOST
+        PARAMETER (PAMS__NETLINKLOST = 139759730)
+        INTEGER*4 PAMS__STOPPED
+        PARAMETER (PAMS__STOPPED = 139759962)
+        INTEGER*4 PAMS__NETNOLINK
+        PARAMETER (PAMS__NETNOLINK = 139762140)
+        INTEGER*4 PAMS__FATAL
+        PARAMETER (PAMS__FATAL = 139762156)
+        INTEGER*4 PAMS__NETERROR 
+        PARAMETER (PAMS__NETERROR = 139759722)
+        INTEGER*4 PAMS__STUB
+        PARAMETER (PAMS__STUB = 139757248)
+        INTEGER*4 PAMS__TIMEOUT
+        PARAMETER (PAMS__TIMEOUT = 139757256)
+C
+C
+C       
+        COMMON /EURCON/ EURTIMERTOP, EURTIMERBOT, EURTIMERLIST
+        
+        VOLATILE /EURCON/

@@ -1,0 +1,54 @@
+C
+C SUBROUTINE GET_SPT_NAME
+C $Log:   GXAFXT:[GOLS]GET_SPT_NAME.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:24:34   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:30:06   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - lod1x2pol.for **
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C GET_SPT_NAME (NAME)
+C	RETURNS THE NAME OF THE SPORTS SYSTEM FILE
+C--------------------------------------------------------------------------
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GET_SPT_NAME(NAME)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'
+	INTEGER*4 PFDB(7),FDB(7), ST
+	INTEGER*4 NAME(5)
+C
+C
+	CALL OPENX(1,'SCF.FIL',4,0,0,ST)
+	CALL IOINIT(FDB,1,SCFSEC*256)
+	IF(ST.NE.0) THEN
+	  TYPE*,'SCF.FIL open error > ',ST
+	  CALL GPAUSE
+	ENDIF
+	CALL READW(FDB,1,SCFREC,ST)
+	IF(ST.NE.0) THEN
+	  TYPE*,'SCF.FIL read error > ',ST
+	  CALL GPAUSE
+	ENDIF
+C
+	CALL CLOSEFIL(FDB)
+C
+C
+C CHANGE SYSTEM FILE SIZES/VOLUME NAMES
+C
+10	CONTINUE
+	IF(SCFSFN(1,SSF).EQ.'    ') CALL SYSVOL(SCFSFN(1,SSF))
+	CALL FASTMOV(SCFSFN(1,SSF), NAME, 5)
+C
+	RETURN
+	END

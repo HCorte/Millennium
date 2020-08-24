@@ -1,0 +1,171 @@
+                          GTECH Distributed Network
+                           Global Parameters Help                Page 1 of 8
+ 
+      This menu is used to update parameters which are used globally
+      by the X2X Distributed Network systems.  These parameters control
+      the configuration and control of the network.  To update a parameter
+      enter the number of the field to be modified, (the field number is
+      displayed to the left of the field information), and press return.
+      The program will then display a prompt informing of the valid field
+      range.  You must now enter a valid value.  If the input data does
+      not fall within the range, or does not match one of the defined
+      spefic values, an error message will be displayed and you will be
+      prompted to re-enter the value.
+ 
+      The global parameters are composed of multiple pages of information.
+      To move through the pages, enter N (next page), or P (previous page).
+ 
+      Game SAP   - the service access point number to
+                   be assigned to the game.
+      Game state - current status of game through X2XMGR
+ 
+ 
+                         GTECH Distributed Network
+                           Global Parameters Help                Page 2 of 8
+ 
+      Debug flag - system debugging flag (not to be used on-line)
+                      0=no debug,      1=trace in buf,
+                      2=trace out buf, 4=trace subroutines
+ 
+      3) Station Disconnect - flags informing station how to
+                      disconnect upon receipt of packet.
+                      0=remain in current mode   7=unconditional disconnect
+                      8-14=timer disconnect     15=remain connected
+      4) Front End Disconnect - flags information Front End how to
+                      disconnect upon receipt to transport block.
+                      0=no action (usual mode)   1=condition disconnect
+                      2=unconditional disconnect 3=Fast Select disconnect
+      5) Front End Connect - contains the connection from the Front End
+                      to the destined station.
+                      0=response mode,         1=Outcall mode (usual mode)
+                      2=unconditional outcall  3=Fast Select Outcall
+                      4=Connection Access Mode
+ 
+ 
+                          GTECH Distributed Network
+                           Global Parameters Help                Page 3 of 8
+ 
+      6) Delivery Acknowledgement - Front End to generate an ACK message
+                      when it has successfully relayed a message.
+      7) Delivery Error - Front End to generate an error if message
+                      can not be sent to destined station.
+ 
+      8) Network Retry Limit - max number of times a station will try
+                      to establish a connection to the host using the
+                      current network address.
+      9) Network Retry Time - the max interval, in milliseconds, between
+                      successive attempts to establish a connection
+                      using the current network address.
+      10) Network Outcall Time - the timeout value, in millisecs, that the
+                      station will use for its outcall duration timer.
+      11) Network Incall Time - the timeout value, in millisecs, that the
+                      station will use for its incall duration timer.
+      12) SAP Block size - maximum size, in bytes, of the Service Access
+                      Point block.
+ 
+ 
+                          GTECH Distributed Network
+                           Global Parameters Help                Page 4 of 8
+ 
+      13) SAP Block max messages - maximum number of messages per
+                      SAP block.
+      14) SAP Send interval - maximum delay, in millisecs, that a
+                      SAP message should buffer before being sent.
+      15) SAP Flow Timeout - SAP control flow timeout, in millisecs.
+      16) Send Begin Frame Timer - time, millisecs, to elapse before sending
+                      a begin state instead of a maintainence packet.
+      17) Unsolicted Front End Connect - unsolicited messages FE connection
+                      flag (see Front End connection).
+      18) Unsolicted Station Connect - unsolicited messages station
+                      connection flag (see station connection).
+      19) Unsolicted Front End Disconnect - unsolicted messages Front
+                      End disconnection flag (see FE disconnection).
+      20) Unsolicted Station Disconnect - unsolicted messages Station
+                      Disconnect flag (see station disconnect).
+      21) Unsolicited Delivery Flag - unsolicted messages flag
+                      64 - delivery error yes
+                      96 - delivery error and acknowledgement yes
+ 
+                          GTECH Distributed Network
+                           Global Parameters Help                Page 5 of 8
+ 
+      22) Maximum Message per Xport block - maximum number of messages
+                      to be contained in a Transport block.
+      23) Maximum Message Length per Xport block - maximum size, in bytes,
+                      that a transport block can be.
+      24) Maximum Message delay - maximum time, in millisecs,
+                      that a transport block will buffer before being
+                      sent.
+      25) Game state - set to 1 as default, set to 2 from X2GSNP
+      26) Communications type - GTECH GSC communications type
+                              0=New Comm      1=Old Comm
+      27) X2XPRO flush interval - interval, in millisecs, that X2XPRO
+                      should flush its message cache.
+      28) X2XMGR loop delay - interval, in millisecs, that X2XMGR
+                      waits before executing.
+      29) SAP loop delay - time, in millisecs, to loop through the
+                      SAP timer.
+      30) Maintainence loop delay - interval, in millisecs, that a
+                      maintainence packet is sent to a SAP.
+ 
+                          GTECH Distributed Network
+                           Global Parameters Help                Page 6 of 8
+ 
+      31) Statistics Interval - interval, in seconds, that the station
+                      should send a statistics packet.
+      32) SAP threshold level 1 - SAP max capacity for level 1
+      33) SAP threshold level 2 - SAP max capacity for level 2
+      34) SAP threshold level 3 - SAP max capacity for level 3
+      35) SAP threshold level 4 - SAP max capacity for level 4
+      36) Game Application Queue - queue number game is to use when
+                      interfacing with LANPRO.
+      37) Network statistics - station to send network delay when
+                      data packets are received.
+      38) Statistics Auto Update - station to send statistics when the
+                      polling status of one of its terminals changes.
+      39) Max Segments - max segments to send during a relay broadcast.
+      40) Retry count - max times to retry sending a relay message.
+      41) Retry Interval - time, in seconds, to wait between retrying
+                      to send in relay
+      42) ACK Time - max time, in secs, to wait for a relay acknowledgement.
+ 
+ 
+                          GTECH Distributed Network
+                           Global Parameters Help                Page 7 of 8
+ 
+      43) Forward Time - relay forwarding timeout, in seconds.
+      44) Reset message - number of the terminal reset message in the SMF.
+      45) Reset delay - delay, in seconds, after reseting a terminal in a relay
+      46) Load delay - delay,in seconds, between loads when relaying
+                     an application
+      47) Segment delay - delay, in seconds, between sending each segment.
+      48) Send reset - number of times to reset a terminal when relaying.
+      49) Send Load 1 - number of times to send load 1 of the application
+      50) Send Load 2 - number of times to send load 2 of the application
+      51) Send Load 3 - number of times to send load 2 of the application
+      52) Send Load 4 - number of times to send load 4 of the application
+      53) # of Nodes - number of network nodes in a public network in which
+                     to distribute the numbers to call for host access
+      54) Default Checksum - informs the host whether to check the default
+                     parameters stored in EEPROM in the X.25 terminal
+		     0=validate checksum  1=do not validate checksum
+     55) FE Update - interval for which to store FE statistics into the
+                     Front End history file on the host
+ 
+                           GTECH Distributed Network
+                           Global Parameters Help               Page 8 of 8
+
+     56) LAN Update - interval for which to store LAN statistics into the
+                     LAN history file on the host
+     57) GNOS Time - Loop interval determining how often the GNOS process
+                     will execute on the host
+     58) Disconnect Message - Informs the Front End processor to inform
+                     the host when a station disconnects
+                     0=send disconnect message   1=no disconnect message
+     59) Disconnect timeout - informs the host to keep all connections
+                     open for this interval, even if the connection to
+                     the host has been dropped
+     60) Autobaud - number of times to send the first segment of the
+                     terminal download during a broadcast to allow the
+                     terminal to autobaud
+ 

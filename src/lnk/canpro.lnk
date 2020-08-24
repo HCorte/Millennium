@@ -1,0 +1,29 @@
+$! GXSRC:CANPRO.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]CANPRO.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:35:00   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 12:43:02   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:36:08   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:CANPRO.EXE -
+OBJLIB:CANPRO,-
+RLOG,-
+PUTIME,-
+CHKCAN,-
+DCAN,-
+JULCDC,-
+OUTCAN,-
+WAIT_APUQUE,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAGTCOM.ESH/SHAREABLE,-
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE

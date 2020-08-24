@@ -1,0 +1,66 @@
+ X2STNPRT.HLP             GTECH Distributed Network
+                          Station Ports Snapshot             Page 1 of 3
+ 
+    This snapshot will list summary information on a specified Station Port
+    and its corresponding terminals.  This information consists
+    of the following:
+ 
+    Port        - Station port number.
+    Drop        - Drop address for configured terminals.
+    Term        - Terminal number.
+    Agent       - Corresponding agent number.
+    State       - Terminal state: not def, defined, active,
+                  slowpol, disable.
+    Last Time   - Last time terminal was active.
+    Delay in
+    Central     - Central processing time in milliseconds.
+    Last Serial - Last gaming serial number processed for this terminal.
+    Connect Id  - Connection id (hex) (see CONSNP).
+ 
+ 
+ 
+ 
+ X2STNPRT.HLP             GTECH Distributed Network
+                          Station Ports Snapshot            Page 2 of 3
+ 
+    The information displayed on the snapshot can be sorted by any of the
+    indicated sort fields.  Sort fields are those columns label with a
+    number in parenthesis.  This snapshot can be sorted by any of the
+    following columns:
+ 
+    (1) Port
+    (2) Term
+    (3) Agent
+    (4) State
+    (5) Last time
+ 
+    To sort by any of these columns enter at the command line XSRT
+    followed by the number indicated above the column.  For example,
+    to sort by State enter:
+ 
+    XSRT 4
+ 
+ 
+ 
+ X2STNPRT.HLP             GTECH Distributed Network
+                          Station Ports Snapshot             Page 3 of 3
+ 
+    Additional facilities are provided with this snapshot through
+    input at the command line:
+ 
+    XPRT    - To display terminals on a specific Station Port.
+    XFOR #  - Can be used to page forward X number of pages.
+    XBAK #  - Can be used to page backward X number of pages.
+    XTOP    - Will bring you to first terminal for the Station Port.
+    XBOT    - Will bring to the last terminal for the Station Port.
+ 
+    Terminal control commands:
+ 
+    Before issuing a terminal control command, you must first
+    inform the snapshot which terminal to control.  This is done
+    by first issuing an XTER # command.
+ 
+    Commands:
+ 
+      BRO #    - send an unsolicted broadcast (similiar to HOTSNP)
+      TERState - change the terminal state

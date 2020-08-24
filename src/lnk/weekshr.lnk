@@ -1,0 +1,18 @@
+$! GXSRC:WEEKSHR.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]WEEKSHR.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:58:44   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.0   21 Aug 1995 10:30:22   HXK
+$! Initial revision.
+$!
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:WEEKSHR.EXE -
+OBJLIB:WEEKSHR,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

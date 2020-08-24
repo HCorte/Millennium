@@ -1,0 +1,27 @@
+C
+C This definition file contains PROCOM buffer offset for 
+C second phase fractions / unfractions.  
+C
+C V01 09-FEB-1999 UXN INITIAL RELEASE.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+
+	INTEGER*4 FRA_SIZ,FRA_TKT,FRA_FRC,FRA_QUE,FRA_WRKTAB
+	PARAMETER (FRA_SIZ    = WRKTAB+0)  ! size for fractioned tickets
+	PARAMETER (FRA_TKT    = WRKTAB+1)  ! number of fractioned tickets
+	PARAMETER (FRA_FRC    = WRKTAB+2)  ! serial #s of fractioned tickets
+	PARAMETER (FRA_QUE    = WRKTAB+12) ! queue number for second phase 
+                                           ! fractions/unfractions
+	PARAMETER (FRA_WRKTAB = WRKTAB+13) ! WRKTAB for second phase frac/unfra

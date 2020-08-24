@@ -1,0 +1,47 @@
+C
+C SUBROUTINE COMB3
+C $Log:   GXAFXT:[GOLS]COMB3.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:41:40   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 15:59:24   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - poolshr3.for **
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C     GENERATE COMBINATIONS OF BET-3 OUT OF BET AND CONCATENATE THEM
+C     WITH 3 OUT OF LTPOOLNR(GAM)-BET
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE COMB3(IND3,MISSIND,M,BET)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INTEGER*4 K, J, I, NEXT, BET, M
+	INTEGER*4 IND3(BET-3,*)
+C
+	INTEGER*4 MISSIND(3,*)
+C
+	NEXT=1
+	DO 10, I=1,M-2
+	DO 10, J=I+1,M-1
+	DO 10, K=J+1,M
+	  MISSIND(1,NEXT)=I
+	  MISSIND(2,NEXT)=J
+	  MISSIND(3,NEXT)=K
+	  NEXT=NEXT+1
+10	CONTINUE
+C
+	CALL GETCMB(IND3,BET,BET-3)
+C
+	RETURN
+	END

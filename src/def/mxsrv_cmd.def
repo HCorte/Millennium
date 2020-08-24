@@ -1,0 +1,56 @@
+C
+C
+C=============================================================================
+C
+C  This item is the property of GTECH Corporation, West Greewich, Rhode
+C  Island, and contains confidential and trade secret information. It may
+C  not be transferred from the custody or control of GTECH except as
+C  authorized in writing by an officer of GTECH. Neither this item not the
+C  information it contains may be used, transferred, reproduced, published
+C  or disclosed, in whole or in part, and directly or indirectly, except
+C  as expressly authorized by an officer of GTECH, pursuant to written
+C  agreement.
+C
+C  Any and all modifications to this item must have the prior written         
+C  authorization of GTECH's Enterprise Series Platform Team.  GTECH shall     
+C  not be liable in any way for any direct or indirect damages,  whatsoever,  
+C  as a result of any unauthorized modifications.  The Enterprise Series      
+C  Platform Team reserves the right to refuse support as a result of          
+C  unauthorized modification.   
+C
+C  Copyright 2003 GTECH Corporation. All rights reserved.
+C
+C=====[MXSRV_CMD.DEF]=========================================================
+C
+C  Purpose:
+C
+C=====[MXSRV_CMD.DEF]=========================================================
+C
+        INTEGER*4       MAX_CMD_ARG_STR         ! Same as MAX_CMD_ARG_STR
+        PARAMETER (MAX_CMD_ARG_STR = 32)        ! in MXSRV_CMD.H
+C
+        INTEGER*4       MXSRV_VISION_CMD        ! Same as MXSRV_VISION_CMD
+        PARAMETER (MXSRV_VISION_CMD = 1)        ! in MXSRV_CMD.H
+C
+        INTEGER*4       IARG1                   ! PROCOM offset for the 1st
+        PARAMETER (IARG1 = CDT1)                ! command integer argument
+C
+        INTEGER*4       IARG2                   ! PROCOM offset for the 2nd
+        PARAMETER (IARG2 = CDT2)                ! command integer argument
+C
+        INTEGER*4       SARG1                   ! PROCOM offset for the 1st
+        PARAMETER (SARG1 = IARG2 + 1)           ! command string argument
+C
+        INTEGER*4       SARG2                   ! PROCOM offset for the 2nd
+        PARAMETER (SARG2 = SARG1 + 1 + MAX_CMD_ARG_STR)
+                                                ! command string argument
+C
+        STRUCTURE   /CMDSTRUC/
+            INTEGER*4   COMMAND_GROUP
+            INTEGER*4   COMMAND_TYPE
+            INTEGER*4   CMD_ARG_INT1
+            INTEGER*4   CMD_ARG_INT2
+            BYTE        CMD_ARG_STR1(MAX_CMD_ARG_STR)
+            BYTE        CMD_ARG_STR2(MAX_CMD_ARG_STR)
+        END STRUCTURE
+C

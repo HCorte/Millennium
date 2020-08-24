@@ -1,0 +1,218 @@
+C SUBROUTINE SSODSCAN
+C 
+C V04 03-JUL-2000 UXN LATEFLG,CDC,TIME added.
+C V03 15-FEB-2000 UXN P(ODD_DRWPCK) added.
+C V02 01-FEB-2000 UXN Fractions changed.
+C V01 XX-XXX-XXXX RXK Initial release.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SSODSCAN(DRAW,GIND,UCID,ODDS,SUM,LATEFLG,LATECDC,TIME)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DSSREC.DEF'
+	INCLUDE 'INCLIB:RECDAF.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+        INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+C
+	INTEGER*4 DRAW
+	INTEGER*4 GIND
+	INTEGER*4 UCID
+	INTEGER*4 ODDS
+	INTEGER*4 SUM
+	LOGICAL*4 LATEFLG
+	INTEGER*4 LATECDC,TIME
+
+	INTEGER*4 FDB(7),TFDB(7)
+	INTEGER*4 FILCNT, GNUM, GTYP, ST, I, K, L, S, CDC
+	INTEGER*4 SVOL, INPLEN
+	INTEGER*4 TMFBUF(8192), BLOCK, TYPE, EOF, IND, LENGTH
+	INTEGER*4 BETS(2,3,16000), COUNT
+	INTEGER*4 AMTBET
+	INTEGER*4 SSWIN(2,3)
+C
+	INTEGER*4   TEMP
+        BYTE        I1TEMP(4)
+        EQUIVALENCE (TEMP,I1TEMP)
+
+	CHARACTER CXSVOL*4
+	CHARACTER CFILES(200)*20
+        INTEGER*4   FILES(5,200)
+        EQUIVALENCE (FILES,CFILES)
+
+	CHARACTER STRING*50
+
+        REAL*8    TOTAL
+C
+	EQUIVALENCE (SVOL,CXSVOL)
+C	
+	TOTAL = 0.0D0
+C
+C GET LIST OF FILES TO SCAN
+C
+	SUM=0
+	SVOL=P(ODD_DRWPCK)
+	FILCNT=0
+	GNUM = GTNTAB(TSSC,GIND)
+	IF(GNUM.LT.1.OR.GNUM.GT.MAXGAM) THEN
+      	   WRITE(5,910) IAM(),GTNAMES(TSSC),GIND,GNUM
+           RETURN
+        ENDIF 
+        CALL OPENW(1,GFNAMES(1,GNUM),4,0,0,ST)
+        CALL IOINIT(FDB,1,DSSSEC*256)
+        IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM),1,ST,0)
+        CALL READW(FDB,DRAW,DSSREC,ST)
+        IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM),2,ST,DRAW)
+	IF(DSSSTS.LE.GAMOPN) THEN
+	   WRITE(5,920) IAM(),GTNAMES(TSSC),GIND,DSSSTS,GAMBFD
+	   CALL GPAUSE
+	ENDIF
+        IF(SVOL.EQ.0) THEN
+           WRITE(STRING,810) (GLNAMES(K,GNUM),K=1,4),GIND
+           CALL PRMTEXT(STRING,CXSVOL,INPLEN)
+        ENDIF
+	CALL CLOSEFIL(FDB)
+C
+	CALL OPENW(1,SFNAMES(1,DAF),4,0,0,ST)
+	CALL IOINIT(FDB,1,DAFSEC*256)
+	IF(ST.NE.0) CALL FILERR(SFNAMES(1,DAF),1,ST,0)
+	DO 90 CDC=DSSBSD,DSSESD
+	   CALL READW(FDB,CDC,DAFREC,ST)
+	   IF(ST.NE.0) CALL FILERR(SFNAMES(1,DAF),2,ST,CDC)
+	   IF(DAFSTS.EQ.DNOSAL) GOTO 90
+	   IF(DAFSTS.EQ.DSOPEN) GOTO 90
+	   FILCNT=FILCNT+1
+	   WRITE (CFILES(FILCNT),900) SVOL,GSNAMES(GNUM),CDC
+90	CONTINUE
+	CALL CLOSEFIL(FDB)
+C
+C GET SCORE
+C
+        SSWIN(2,3) = IAND(UCID,'0000000F'X)
+        SSWIN(1,3) = IAND(ISHFT(UCID,-4), '0000000F'X)
+        SSWIN(2,2) = IAND(ISHFT(UCID,-8), '0000000F'X)
+        SSWIN(1,2) = IAND(ISHFT(UCID,-12),'0000000F'X)
+        SSWIN(2,1) = IAND(ISHFT(UCID,-16),'0000000F'X)
+        SSWIN(1,1) = IAND(ISHFT(UCID,-20),'0000000F'X)
+C
+C SCAN DRAW FILES
+C
+        DO 3000 L=1,FILCNT
+           CALL SSWIN_OPNDRW(FILES(1,L),PTMF)
+           CALL IOINIT(TFDB,PTMF,128*256)
+           WRITE(5,930) IAM(),(FILES(S,L),S=1,5)
+C
+           BLOCK=0
+           EOF=0
+           IND=8192
+
+2030       CONTINUE
+           IF(IND.GE.8157) THEN
+              BLOCK=BLOCK+1
+              IND=1
+              CALL READW(TFDB,BLOCK,TMFBUF,ST)
+              IF(ST.NE.0) THEN
+                 WRITE(5,940) IAM(),(FILES(K,L),K=1,5),ST,BLOCK
+                 CALL GPAUSE
+              ENDIF
+           ENDIF
+           IF(EOF.GT.1000) GOTO 2090
+C
+C
+           IF(TMFBUF(IND).EQ.0) THEN
+              EOF=EOF+1
+              IND=IND+LREC
+              GOTO 2030
+           ENDIF
+C
+           EOF = 0
+           TEMP = TMFBUF(IND+LREC-1)
+           TYPE = I1TEMP(4)
+           IF(TYPE.NE.LONE.AND.TYPE.NE.LREG) THEN
+              TYPE*,IAM(),' Bad record type > ',TYPE,' index > ',IND
+              IND=IND+LREC
+              GOTO 2030
+           ENDIF
+C
+           LENGTH=LREC
+           IF(TYPE.EQ.LONE) THEN
+              TEMP = TMFBUF(IND+LREC*2-1)
+              TYPE = I1TEMP(4)
+              IF(TYPE.EQ.LEND) LENGTH=LREC*2
+              IF(TYPE.EQ.LTWO) LENGTH=LREC*3
+           ENDIF
+           CALL LOGTRA(TRABUF,TMFBUF(IND))
+           IND=IND+LENGTH
+           GTYP=TRABUF(TGAMTYP)
+           IF(GTYP.NE.TSSC) GOTO 2030
+           IF(TRABUF(TTYP).NE.TWAG) GOTO 2030
+	   IF(TRABUF(TWFFLG).NE.0) GOTO 2030
+           IF(TRABUF(TSTAT).NE.GOOD.AND.TRABUF(TSTAT).NE.FRAC) GOTO 2030
+           IF(TRABUF(TWBEG).GT.DSSDRW) GOTO 2030
+           IF(TRABUF(TWEND).LT.DSSDRW) GOTO 2030
+	   IF(LATEFLG) THEN
+	       IF(TRABUF(TCDC).GT.LATECDC) GOTO 2030
+	       IF(TRABUF(TCDC).EQ.LATECDC.AND.TRABUF(TTIM).GT.TIME) GOTO 2030
+	   ENDIF
+C
+C CHECK IF SEARCHED COMBINATION
+C
+           CALL SSSEXP(TRABUF,BETS,COUNT)
+           AMTBET=TRABUF(TWAMT)
+	   TOTAL = TOTAL + AMTBET
+           IF(TRABUF(TWSYST).EQ.FULSYS) AMTBET=AMTBET/TRABUF(TWSYSN)
+           DO 10 I=1,COUNT
+              IF(BETS(1,1,I).NE.SSWIN(1,1)) GOTO 10
+              IF(BETS(2,1,I).NE.SSWIN(2,1)) GOTO 10
+              IF(DSSEST(2).NE.GAMOPN) GOTO 5
+              IF(BETS(1,2,I).NE.SSWIN(1,2)) GOTO 10
+              IF(BETS(2,2,I).NE.SSWIN(2,2)) GOTO 10
+              IF(DSSEST(3).NE.GAMOPN) GOTO 5
+              IF(BETS(1,3,I).NE.SSWIN(1,3)) GOTO 10
+              IF(BETS(2,3,I).NE.SSWIN(2,3)) GOTO 10
+5             CONTINUE
+              SUM = SUM + AMTBET
+10         CONTINUE
+           GOTO 2030
+2090    CONTINUE  
+3000    CONTINUE
+
+	TOTAL = TOTAL * CALPER(DSSSPR)  
+	TOTAL = TOTAL + DFLOAT(DSSPOL(1))  
+
+        IF(SUM.GT.0) THEN
+           ODDS=IDNINT(100.D0*TOTAL/DFLOAT(SUM))
+	ELSE
+	   ODDS = 0
+	ENDIF
+
+        TYPE*,IAM(),' Draw file scan for Superscore odds complete'
+        RETURN
+
+810	FORMAT('Enter ',4A4,I1,' draw pack volume name: ')
+900	FORMAT(A4,':',A4,I4.4,'.FIL')
+910	FORMAT(1X,A,1X,A8,I1,' invalid game number ',I4)
+920	FORMAT(1X,A,1X,A8,I1,' invalid game status ',I4,' should be> ',I4)
+930     FORMAT(1X,A,1X,'File ',5A4,' scan for odds')
+940     FORMAT(1X,A,1X,5A4,' read error> ',I4,' block> ',I8)
+
+
+	END
+

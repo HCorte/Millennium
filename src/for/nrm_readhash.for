@@ -1,0 +1,70 @@
+C
+C SUBROUTINE READHASH
+C $Log:   GXAFXT:[GOLS]READHASH.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:38:14   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:26:52   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_hshsubi4.for **
+C
+C
+C
+C
+C
+C *** READHASH
+C
+C Call this routine to perform a tub read of the hash file.
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE READHASH(LUN,BKTNUM,IOBUF,STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:HSHCOM.DEF'
+C
+	INTEGER*4 LUN               !LOGICAL UNIT #
+	INTEGER*4 BKTNUM            !BUCKET NUMBER TO READ
+	INTEGER*4 IOBUF(*)          !I/O BUFFER (TUB)
+	INTEGER*4 STATUS            !STATUS (AS RETURNED FROM READW)
+	INTEGER*4 TUBNUM
+C
+C
+C
+	TUBNUM=(BKTNUM-1)/FCB(FCBTUBSIZ,LUN) + 1
+C
+	IF(FCB(FCBTUBBLK,LUN).NE.TUBNUM)THEN
+	  IF(FCB(FCBTUBBLK,LUN).NE.0 .AND. FCB(FCBTUBCHG,LUN).NE.0)THEN
+	    CALL TUBWRITE(LUN,IOBUF,STATUS)
+	    IF(STATUS.NE.0)GO TO 9000
+	    FCB(FCBTUBCHG,LUN)=0
+	  ENDIF
+	  FCB(FCBTUBBLK,LUN)=0
+C
+C       If the file is not an even number of tubs long, we can get
+C       an error during the read.  This can be ignored, however.
+C
+	  CALL READW(FCB(FCBFDB,LUN),TUBNUM,IOBUF,STATUS)
+	  IF(STATUS.EQ.'90'X)THEN          !IF END OF MEDIUM
+	    IF(FCB(FCBFDBLEN,LUN).NE.0)THEN
+	      STATUS=0
+	    ENDIF
+	  ENDIF
+	  IF(STATUS.NE.0)GO TO 9000
+C
+	  FCB(FCBTUBBLK,LUN)=TUBNUM
+	ELSE         !V01
+	  STATUS=0   !V01
+	ENDIF
+C
+	FCB(FCBTUBOFF,LUN)=MOD(BKTNUM-1,FCB(FCBTUBSIZ,LUN))*I4BUCSIZ
+C
+9000	CONTINUE
+	RETURN
+	END

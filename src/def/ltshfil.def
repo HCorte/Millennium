@@ -1,0 +1,57 @@
+C LTSHFIL.DEF
+C
+C V01 20-DEC-2016 SCML INITIAL RELEASE
+C
+C STRUCTURE FOR GENERATING THE LOTTO SHARE FILE
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Copyright 2016 SCML. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        STRUCTURE /STCLTSHFIL/
+C         GENERAL DATA
+          INTEGER*4    LTCTRFLG                                                 !FLAG FOR CONTROLLING IF THIS STRUCTURE HAS BEEN LOADED SUCCESSFULLY (1 - SUCCESS, 0 - FAILURE)
+          INTEGER*4    LTSHFLUN                                                 !LUN FOR LOTTO SHARE FILE
+          INTEGER*4    LTGNUM                                                   !LOTTO GAME NUMBER
+          INTEGER*4    LTGTYP                                                   !LOTTO GAME TYPE
+          INTEGER*4    LTGIND                                                   !LOTTO GAME INDEX
+          CHARACTER*24 LTSHFNAM                                                 !LOTTO SHARE FILE NAME
+          INTEGER*4    LTDIV                                                    !TOTAL LOTTO DIVISIONS
+C         HEADER DATA
+          INTEGER*4    LTCCC                                                    !DRAW NUMBER
+          INTEGER*4    LTYEAR                                                   !DRAW YEAR
+          REAL*8       LTTOTSALE                                                !TOTAL SALES AMOUNT
+          REAL*8       LTTOTPOOL                                                !TOTAL SALES AMOUNT FOR PRIZE DISTRIBUTION
+          INTEGER*4    LTPREVJKT                                                !PREVIOUS JACKPOT AMOUNT
+          REAL*8       LTTOTRESI                                                !TOTAL ROUNDING AMOUNT
+          INTEGER*4    LTNEXTJKT                                                !NEXT JACKPOT AMOUNT
+          REAL*8       LTLKYPOOL                                                !TOTAL PRIZE AMOUNT POOL OF LUCKY NUMBER DIVISION
+          REAL*8       LTLKYRESP                                                !TOTAL PRIZE AMOUNT RESPONSABILITY OF LUCKY NUMBER DIVISION
+          REAL*8       LTLKYDIFF                                                !DIFFERENCE BETWEEN TOTAL PRIZE AMOUNT POOL AND TOTAL PRIZE AMOUNT RESPONSABILITY OF LUCKY NUMBER DIVISION
+C         BODY DATA
+          INTEGER*4    LTDIVNUMB(LTGDIV)                                        !NUMBER OF EACH PRIZE DIVISION
+          CHARACTER*12 LTDIVNAME(LTGDIV)                                        !NAME OF EACH PRIZE DIVISION
+          REAL*8       LTDIVPOOL(LTGDIV)                                        !TOTAL POOL VALUE OF EACH PRIZE DIVISION
+          REAL*8       LTDIVPERC(LTGDIV)                                        !ASSIGNED PERCENTAGE OF EACH PRIZE DIVISION
+          REAL*8       LTDIVREAL(LTGDIV)                                        !TOTAL EFECTIVE VALUE OF EACH PRIZE DIVISION
+          INTEGER*4    LTDIVSHRQ(LTGDIV)                                        !TOTAL PRIZED BETS OF EACH PRIZE DIVISION
+          INTEGER*4    LTDIVSHRV(LTGDIV)                                        !SHARE AMOUNT VALUE OF EACH PRIZE DIVISION
+          REAL*8       LTDIVRESI(LTGDIV)                                        !TOTAL RESIDUAL VALUE OF EACH PRIZE DIVISION
+C         TRAILER DATA
+          CHARACTER*8  LTCRFDAT                                                 !LOTTO FILE CREATION DATE
+C
+          INTEGER*4    ALIGN                                                    !ALIGNMENT, FREE FOR USE
+        ENDSTRUCTURE
+C
+C LOTTO SHARES FILE RECORD TYPES
+C
+       CHARACTER*2 LTRTYP_HDR /'01'/
+       CHARACTER*2 LTRTYP_BDY /'02'/
+       CHARACTER*2 LTRTYP_TRL /'09'/
+C
+C LOTTO GAME INDEXES APLIABLE
+C
+       INTEGER*4 LTSAT
+       PARAMETER (LTSAT = 3)                                                    !TOTOLOTO SABADO GAME INDEX
+       INTEGER*4 LTWED
+       PARAMETER (LTWED = 4)                                                    !TOTOLOTO QUARTA GAME INDEX

@@ -1,0 +1,170 @@
+C  GXSRC:CRSPRO.FOR
+C
+C V05 26-JUL-2000 UXN START() changed,  OPS(), OPSTXT() added.
+C V04 16-MAR-1997 WPW Fix for takeover. See the comments before starting 
+C                     TCPASST.
+C V03 07-OCT-1992 ceb Removed the opening message.
+C V02 27-MAY-1992 NJA CHANGED TO WAIT 10 SECONDS AFTER CALLING TCP.
+C V01 18-NOV-1991 KWP INITIAL RELEASE FOR VAX
+C
+C This program handles the interface between the game
+C and the bisync programs.  This program will handle:
+C requests, responses, and errors.  Requests are placed
+C on the CRSPRO'S queue by INSPRO.  The requests are then formatted
+C and placed on the SNDQUE.  Responses are read from the RCVQUE,
+C formatted, and then sent to the appropriate processing tasks.
+C Errors are read from the ERRQUE and are reported and released.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1992 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM CRSPRO
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMPRO.DEF'
+	INCLUDE 'INCLIB:CRSCOM.DEF'
+	INCLUDE 'INCLIB:TCPEVN.DEF'
+C
+        INCLUDE '($SYSSRVNAM)'
+C
+	INTEGER*4   TBUF                !Transmit buffer
+	INTEGER*4   ST,I,TSKST          !Work variables
+	INTEGER*4   STATUS		!Event status
+C
+	REAL*8      R8_TCPNAME          !Assist name for RUNTSK
+	DATA        R8_TCPNAME /'TCPASST '/
+C
+	CALL COPYRITE
+C
+ 	CALL SNIF_AND_WRKSET
+C
+C CREATE THE COMMON EVENT FLAG CLUSTER.
+C
+        STATUS=SYS$ASCEFC(%VAL(TC_EVNTIMER),TC_EVNNAME,0,0)
+        IF(.NOT.STATUS) CALL LIB$SIGNAL(%VAL(STATUS))
+C
+100	CONTINUE
+	IF (DAYSTS .NE. DSOPEN) CALL GSTOP(GEXIT_SUCCESS)
+	IF (P(SYSTYP) .NE. LIVSYS) THEN
+	   CALL XWAIT(5,2,ST)
+	   GOTO 100
+	ENDIF
+C
+C SET THE BUFFER NUMBERS IN THE HEADER.
+C
+	DO 110 TBUF=1,TCBUFMAX
+	  TCBUF(TCBUFNUM,TBUF)=TBUF
+110	CONTINUE
+C
+C SET UP ALL QUEUES.
+C
+	CALL DEFLST(FREQUE,TCBUFMAX)
+	CALL DEFLST(SNDQUE,TCBUFMAX)
+	CALL DEFLST(RCVQUE,TCBUFMAX)
+C
+	DO 120 I=1,TCBUFMAX
+	  CALL ABL(I,FREQUE,ST)
+120	CONTINUE
+C
+C
+	CRSWAIT=250               !CRSPRO RUN EVERY 250 MS
+	TCP_NUMBUF=0
+	TCP_NUMREC=0
+	TCP_BUFFOFF=0
+	TCP_BUFFLEN=0
+C
+C LOAD AND START THE TCPASST TASK. WAIT TILL IT STARTS, BEFORE
+C SENDING THE QUEUE TRAP TO GET ACTIVE CONNECTION WITH IPS.
+C CHANGED FOR FINLAND AS THERE WAS A TIMING PROBLEM DURING THE
+C TAKEOVER.
+C
+	CALL START(R8_TCPNAME)
+C
+130	CONTINUE
+	CALL STTSK(R8_TCPNAME,TSKST,ST)
+	IF (ST.EQ.4) GOTO 130
+C
+	CALL XWAIT(15,2,ST)	  !WAIT 15 SECONDS
+C
+C
+C SEND A QUEUE TRAP TO TCPASST TO TELL IT TO SETUP ITS 
+C ACTIVE CONNECTIONS AND READS
+C
+	CALL TCPQUEUE(ACONASST,ST)
+	IF(ST.NE.0) THEN
+	  CALL OPS('ERROR STARTING TCPASST, status',ST,ST)
+	  CALL GPAUSE
+	ENDIF
+	CALL XWAIT(5,2,ST)	  !WAIT 5 SECONDS
+C
+C WAIT FOR SOMETHING TO DO
+C IF END OF DAY THEN STOP
+C
+1000	CONTINUE
+	CALL XWAIT(CRSWAIT,1,ST)                !WAIT 'CRSWAIT' MILLISECONDS
+C
+C AT THE END OF THE DAY, FORMAT A SPECIAL BUFFER FOR THE STRATUS MACHINE
+C AND SEND IT OUT
+C
+	IF(DAYSTS.EQ.DSCLOS) THEN
+	  CALL CRSXMT(1,ST)
+C
+	  CALL TCPQUEUE(SNDASST,ST)
+	  IF(ST.NE.0) THEN
+	    CALL OPS('ERROR SENDING WRITE NOTICE TO TCPASST',ST,ST)
+	  ENDIF
+C
+	  CALL OPSTXT('WAITING 10 SECONDS AND THEN SHUTTING TPCASST DOWN')
+	  CALL XWAIT(10,2,ST)
+C
+	  CALL TCPQUEUE(ENDASST,ST)
+	  IF(ST.NE.0) THEN
+	    CALL OPS('ERROR SENDING STOP NOTICE TO TCPASST',ST,ST)
+	  ENDIF
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+C
+C CHECK FOR TIMED OUT BUFFERS.
+C
+	CALL CRSTIM
+C
+C SEE IF ANYTHING ON RECEIVE QUEUE, AND IF
+C SO, FORMAT RESPONSE AND SEND TO DISPAT.
+C
+2000	CONTINUE
+	CALL RTL(TBUF,RCVQUE,ST)
+	IF(ST.NE.2) THEN
+	  CALL CRSRCV(TBUF)
+	  GOTO 2000
+	ENDIF
+C
+C CALL CRSXMT TO FORMAT WRITE BUFFERS
+C
+3000	CONTINUE
+	CALL CRSXMT(0,ST)
+	IF(ST.NE.0) GOTO 3000
+C
+	CALL TCPQUEUE(SNDASST,ST)
+	IF(ST.NE.0) THEN
+	  CALL OPS('ERROR SENDING WRITE NOTICE TO TCPASST',ST,ST)
+	ENDIF
+
+C
+	GOTO 1000
+	END

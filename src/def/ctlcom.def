@@ -1,0 +1,105 @@
+C
+C CTLCOM.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]CTLCOM.DEV                                   $
+C  $Date::   02 Jun 1996 23:35:54                                         $
+C  $Revision::   1.1                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C V02 13-JUN-94 GPR Modified CTLMAXSAP for Switzerland
+C V01 13-DEC-89 MIREK
+C
+C DUPLEX/TRIPEX CONTROL COMMON IN LAN ENVIRONMENT
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 CTLMAXSAP, CTLMAXSYS
+	PARAMETER(CTLMAXSAP=64)                 !SHOULD AGREE WITH LAN AND X2X
+	PARAMETER(CTLMAXSYS=5)                  !SHOULD AGREE WITH DESNET
+C
+	INTEGER*4 CTLSAPSYS(CTLMAXSYS)          !SYS TO CROSS TABLE
+C
+	INTEGER*4 CTLSYSSAP(0:CTLMAXSAP)        !SAP-SYS CROSS TABLE
+C
+	INTEGER*4 CTLSAPSTA(0:CTLMAXSAP)        !STATE OF CONNECTION TO YOUR
+C                                             ;PEER ON THE OTHER SYSTEMS
+	   INTEGER*4 CTLSTADOWN, CTLSTAPEN, CTLSTAUP
+	   PARAMETER(CTLSTADOWN=0)              !DISCONNECTED/NOT OPENED
+	   PARAMETER(CTLSTAPEN=1)               !CONNECTION PENDING/OPEN PEND
+	   PARAMETER(CTLSTAUP=2)                !CONNECTION UP/OPENED
+C                              ;SECOND MEANING - FOR YOUR SAP OPEN PROCEDURE
+C
+	INTEGER*4 CTLSAPTOUT(0:CTLMAXSAP)       !TOUT COUNTER, IF GT 0 THEN
+	INTEGER*4 CTLMAXTOUT                    !MAX TIME OUT
+	INTEGER*4 CTLSAPENA(0:CTLMAXSAP)        !ENABLED=1
+C                                             ;TOUT PENDING
+	INTEGER*4 CTLINT, CTLAPLQUE, CTLTQSIZE, CTLMESNUM
+	PARAMETER(CTLINT=100)                   !TIME LOOP INTERVAL
+	PARAMETER(CTLAPLQUE=2)                  !CTL APPL QUEUE (DLL)
+	PARAMETER(CTLTQSIZE=500)
+	PARAMETER(CTLMESNUM=10)
+C
+	INTEGER*4 CTLSTATUS                     !STATUS
+	   INTEGER*4 CTLACTIVE, CTLINACTIVE
+	   PARAMETER(CTLACTIVE=0)               !ACTIVE
+	   PARAMETER(CTLINACTIVE=1)             !INACTIVE
+C
+	INTEGER*4 CTLTEST
+	INTEGER*4 CTLRSEQ(0:CTLMAXSAP)          !RECEIVE SEQ NUMBER
+	INTEGER*4 CTLSSEQ(0:CTLMAXSAP)          !SEND SEQ NUMBER
+C
+	INTEGER*4 PLXPRIOK, CTLQSIZ
+	PARAMETER(PLXPRIOK=1)                   !PRIMARY OK COMMAND
+	PARAMETER(CTLQSIZ=100)                  !IN QUEUE SIZE
+	INTEGER*4 CTLEXECQ(CTLQSIZ+QHEDSZ)           !QUEUE
+C
+	INTEGER*4 CTLX2XLOC                     !LOCAL X2XMGR STATUS
+	   INTEGER*4  CTLX2XOK, CTLX2XBAD
+	   PARAMETER (CTLX2XOK=1)               !OK
+	   PARAMETER (CTLX2XBAD=2)              !BAD
+C
+	INTEGER*4  CTLX2XMAX
+	PARAMETER (CTLX2XMAX=50)                !TOUT MAX CNT
+C
+	COMMON /CTLCOM/ CTLSAPSYS,
+     *	                CTLSYSSAP,
+     *	                CTLSAPSTA,
+     *	                CTLSAPTOUT,
+     *	                CTLSAPENA,
+     *	                CTLSTATUS,
+     *	                CTLMAXTOUT,
+     *	                CTLRSEQ,
+     *	                CTLSSEQ,
+     *	                CTLEXECQ,
+     *	                CTLX2XLOC,
+     *	                CTLTEST
+C
+C
+	INTEGER*4	 FRST_CTLCOM(2)
+	EQUIVALENCE	(FRST_CTLCOM, CTLSAPSYS)
+	INTEGER*4	 LAST_CTLCOM
+	EQUIVALENCE	(LAST_CTLCOM, CTLTEST)
+C
+	VOLATILE /CTLCOM/
+C

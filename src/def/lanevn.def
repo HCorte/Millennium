@@ -1,0 +1,54 @@
+C LANEVN.DEF
+C
+C V02 15-JUN-2000 OXK LN_EVNMASK removed from here
+C V01 07-SEP-1990 MRM INITIAL RELEASE.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C THIS DEF FILE CONTAIN THE GLOBAL SYSTEM EVENT FLAGS USED
+C TO COMMUNICATE BETWEEN LANPRO AND ITS ASSOCIATED TASKS.
+C
+	INTEGER*4	LN_EVNTIMER		!TIMER TRAP EVENT
+	PARAMETER      (LN_EVNTIMER=64)
+	INTEGER*4	LN_EVNMAIL		!MAILBOX TRAP EVENT
+	PARAMETER      (LN_EVNMAIL=65)	
+	INTEGER*4	APPMAIL
+	PARAMETER      (APPMAIL=66)		!MAILBOX FOR APPGTP
+C
+C EVENT FLAGS FOR EACH TASK IDENTIFIED IN LAN ID FILE.
+C NOTE: THESE FLAGS ARE USED TO SIMULATE QUEUE TRAPS
+C ON CONCURRENT.
+C
+	INTEGER*4	LN_EVNTSK_MAXTSK		!MAX TASK SUPPORTED BY
+	PARAMETER      (LN_EVNTSK_MAXTSK=10)		!TASK TRAPS
+C
+	INTEGER*4	LN_EVNTSK_FLAG(0:LANMAXTSK)	!EVENT FLAG NUMBER
+	DATA		LN_EVNTSK_FLAG /70,71,72,73,74/ !TASKS ARE DEFINED
+C							!IN LANCOM	
+C
+C NAME OF COMMON EVENT FLAG CLUSTER.
+C
+	CHARACTER*8	LN_EVNNAME
+	PARAMETER      (LN_EVNNAME='LANFLAGS')
+C
+C NAME OF MAILBOX USED TO COMMUNICATE BETWEEN TASKS.
+
+	CHARACTER*7	LN_MESNAME
+	PARAMETER      (LN_MESNAME='LANMAIL')
+	CHARACTER*7     MBXGTP
+	PARAMETER      (MBXGTP='GTXMAIL')
+	INTEGER*2	LN_MESCHANNEL
+C
+	COMMON /LANEVN/ LN_EVNTSK_FLAG, LN_MESCHANNEL
+C

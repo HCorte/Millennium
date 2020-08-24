@@ -1,0 +1,102 @@
+C
+C V01 25-NOV-1999 UXN Initial release.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Note: 
+C      This structure and parameters must match exactly with
+C      definitions in C header file ICSCOM.H
+C      If you make any changes to this file, the same changes must
+C      be done to ICSCOM.H as well.
+C
+	INTEGER*4 MAX_CLIENTS,HOSTLEN,IPADDRLEN,FILNAMLEN
+	PARAMETER(MAX_CLIENTS = 5)
+	PARAMETER(HOSTLEN = 80)
+	PARAMETER(IPADDRLEN = 20)
+	PARAMETER(FILNAMLEN = 20)
+C
+	STRUCTURE /CLIENT_REC/
+	    INTEGER*4 STATUS
+	    INTEGER*4 SOCKNUM
+	    INTEGER*4 CONNTIME(2)
+	    INTEGER*4 DISCTIME(2)
+	    INTEGER*4 IOTIME
+	    INTEGER*4 XFRCDC
+	    INTEGER*4 START
+	    INTEGER*4 FINISH
+	    INTEGER*4 LAST
+	    INTEGER*4 BATCHBLK
+	    INTEGER*4 BATCHTICK
+	    INTEGER*4 TOTBLKS
+	    INTEGER*4 TOTERR
+	    INTEGER*4 RETRIES
+	    INTEGER*4 RTRYTICK
+	    INTEGER*4 FDB(7)
+	    INTEGER*4 MJFSTS
+	    INTEGER*4 TOTXOFF
+	    INTEGER*4 THRUPUT
+	    INTEGER*4 BLKCNT
+	    INTEGER*4 NACKCNT
+	    INTEGER*4 BADMSG
+	    INTEGER*4 CACHECNT
+	    BYTE      IPADDR(IPADDRLEN)
+	    BYTE      MJFNAME(FILNAMLEN)
+	    BYTE      NAME(HOSTLEN) 
+	END STRUCTURE
+C
+	STRUCTURE /ACCEPT_CONNECTION/
+	    BYTE      HOST(HOSTLEN)
+	END STRUCTURE 
+C
+	STRUCTURE /ICSLOG_REC/
+	    INTEGER*4 VERSION
+	    INTEGER*4 PRODSTATE
+	    INTEGER*4 ACT_CLIENTS
+	    INTEGER*4 MAX_CLIENTS
+	    INTEGER*4 TCP_PORT
+	    INTEGER*4 MAX_OUT
+	    INTEGER*4 KEEP_ALIVE
+	    INTEGER*4 SLEEP_TIME
+	    INTEGER*4 BATCH_SIZE
+	    INTEGER*4 BATCH_BREAK
+	    INTEGER*4 RETRY_DELAY
+	    INTEGER*4 MAX_RETRIES
+	    INTEGER*4 MAX_ERRORS
+	    INTEGER*4 MAX_BADMSG
+	    INTEGER*4 DO_CHECKSUM
+	    INTEGER*4 VERBOSITY
+	    INTEGER*4 CYCLES
+	    INTEGER*4 IO_CYCLES
+	    INTEGER*4 LOST_CONN
+	    INTEGER*4 DISCONN
+	    INTEGER*4 ERRCNT
+	    INTEGER*4 BADMSG
+	    INTEGER*4 TICK
+	    INTEGER*4 TOTBUCK
+	    INTEGER*4 TOTNACKS
+	    INTEGER*4 TOT_INMSG
+	    INTEGER*4 TOT_CACHE
+	    INTEGER*4 MAIN_SOCK
+	    BYTE      HOSTNAME(HOSTLEN)
+	    INTEGER*4 RUN_ON_PRIMARY
+	    INTEGER*4 RUN_ON_BACKUP
+	    INTEGER*4 RUN_ON_SPARE
+	    RECORD /ACCEPT_CONNECTION/ AC(MAX_CLIENTS)
+	    RECORD /CLIENT_REC/ CLIENT(MAX_CLIENTS)
+	END STRUCTURE
+	
+	RECORD /ICSLOG_REC/ ICSLOG_GLOB
+
+	COMMON /ICSCOM/ ICSLOG_GLOB
+
+	VOLATILE /ICSCOM/

@@ -1,0 +1,70 @@
+C
+C *** DEFINITION_FILE MSCEVN ***
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]MSCEVN.DEV                                   $
+C  $Date::   17 Apr 1996 14:05:46                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C  
+C *** Pre-Baseline Source - mscevn.def ***
+C
+C V03 17-JUN-2000 UXN MSCEVN COMMON ALIGNED PROPERLY
+C V02 07-JAN-1992 RRB REDEFINE TRAP FLAGS
+C V01 22-JAN-1991 RRB VAX INITIAL RELEASE.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Purpose:
+C	THIS DEF FILE CONTAIN THE GLOBAL SYSTEM EVENT FLAGS USED
+C	TO COMMUNICATE BETWEEN MSCMGR AND ITS ASSOCIATED TASKS.
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4	MSC_EVENTS		!TRAP EVENTS CLUSTER
+	   PARAMETER      (MSC_EVENTS=96)
+C
+	INTEGER*4       MSC_ACK_MASK            !ACKNOWLEDGEMENT EVENTS
+C
+	INTEGER*4       MSC_NUM_TRAPS
+	   PARAMETER    (MSC_NUM_TRAPS = 4)
+C
+	INTEGER*4	MSC_EXEC_FLAG, MSC_ACK_FLAG, 
+     *                  MSC_NAK_FLAG, MSC_TOUT_FLAG
+	   PARAMETER    (MSC_EXEC_FLAG = 96) !TASK TRAP FLAG NUMBER
+	   PARAMETER    (MSC_ACK_FLAG  = 97) !RECEIVED ACK FROM MSC
+	   PARAMETER    (MSC_NAK_FLAG  = 98) !RECVD NEGATIVE ACK FROM MSC
+	   PARAMETER    (MSC_TOUT_FLAG = 99) !WRITE TIMEOUT
+C
+C NAME OF COMMON EVENT FLAG CLUSTER.
+C
+	CHARACTER*8	MSC_EVENT_NAME
+	PARAMETER      (MSC_EVENT_NAME='MSCEVENT')
+C
+C NAME OF MAILBOX USED TO COMMUNICATE BETWEEN TASKS.
+C
+	CHARACTER*6     MSC_MESNAME
+	PARAMETER      (MSC_MESNAME='MSCMBX')
+C
+C MAILBOX CHANNEL
+C
+        INTEGER*2       MSC_MESCHANNEL
+C
+C COMMON THE EVENT IDENTIFIERS
+C
+	COMMON /MSCEVN/ MSC_ACK_MASK,
+     *                  MSC_MESCHANNEL
+

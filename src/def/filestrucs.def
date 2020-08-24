@@ -1,0 +1,36 @@
+C
+C FILESTRUCS.DEF
+C
+C V01 05-JAN-01 CS  INITIAL RELEASE FOR PORTUGAL
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C INCLUDE IDX PARAMETERS
+C
+	INCLUDE 'INCLIB:IDXPRM.DEF'
+
+	STRUCTURE /FILESTRUC/
+		INTEGER*4 EMISION
+		INTEGER*4 LUN
+	ENDSTRUCTURE
+
+	RECORD /FILESTRUC/ FILEPAS(PAGEMI,NUMPAS)
+
+	STRUCTURE /FILEIDXSTRUC/
+		INTEGER*4 EMISION
+		INTEGER*4 FDB(FDB_IDXLENGTH)
+	ENDSTRUCTURE
+
+	RECORD /FILEIDXSTRUC/ FILEIDXPAS(PAGEMI,NUMPAS)
+
+	COMMON /FILESTRUC_COMMON/ FILEPAS,FILEIDXPAS

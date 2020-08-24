@@ -1,0 +1,177 @@
+C CNVTSL.FOR
+C
+C This program converts PITKÄ game file.
+C
+C V01 27-NOV-97 UXN Initial release.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	PROGRAM CNVTSL
+	IMPLICIT NONE
+C
+	INCLUDE '(LIB$ROUTINES)'
+	INCLUDE 'INCLIB:SYSDEFINE.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DTSREC_OLD.DEF'
+	INCLUDE 'INCLIB:DTSREC.DEF'
+C
+	INTEGER*4   INP_FDB(7),OUT_FDB(7),INP_FILE(5),OUT_FILE(5)
+	CHARACTER*20 C_INP_FILE,C_OUT_FILE
+	EQUIVALENCE (C_INP_FILE,INP_FILE)
+	EQUIVALENCE (C_OUT_FILE,OUT_FILE)
+	DATA INP_FILE/'FILE',':TS1','F.FI','L   ','    '/
+	DATA OUT_FILE/'FILE',':TS1','F.NE','W   ','    '/
+	CHARACTER*20 C_OLD_FILE/'FILE:TS1F.OLD       '/
+C
+	INTEGER*4   EXT,ST,I,LEN,BLOCK,J	
+C
+	CALL COPYRITE
+C
+	TYPE*,IAM(),' <<<< PITKÄ GAME FILE CONVERSION >>>>'
+	TYPE*,IAM(),'Old game file name > ',C_INP_FILE
+	TYPE*,IAM(),'New game file name > ',C_OUT_FILE
+	CALL PRMYESNO('Is it OK (Y/N)',ST)
+	IF(ST.EQ.1) GOTO 5
+C
+	CALL PRMTEXT('Enter new PITKÄ game file ',C_OUT_FILE,LEN)
+	IF(LEN.LE.0) CALL GSTOP(GEXIT_OPABORT)
+5	CONTINUE
+C
+C Create new file with X number of blocks.
+C
+C	CALL CRTFIL(OUT_FILE,20000,ST)
+C	IF(ST.NE.0) CALL GSTOP(GEXIT_FATAL)
+C
+	CALL OPENW(1,INP_FILE,4,0,0,ST)
+	IF(ST.NE.0) CALL FILERR(INP_FILE,1,ST,0)
+	CALL OPENW(2,OUT_FILE,4,0,0,ST)
+	IF(ST.NE.0) CALL FILERR(OUT_FILE,1,ST,0)
+C
+	CALL IOINIT(INP_FDB,1,ODTSSEC*256)
+	CALL IOINIT(OUT_FDB,2,DTSSEC*256)
+C
+C NOW IT'S TIME TO CONVERT THE FILES....
+C
+	BLOCK = 0
+10	CONTINUE 
+	BLOCK = BLOCK + 1   
+	CALL READW(INP_FDB,BLOCK,ODTSREC,ST)
+	IF(ST.EQ.144) GOTO 20
+	IF(ST.NE.0) CALL FILERR(INP_FILE,2,ST,0)
+	CALL FASTSET(0,DTSREC,DTSLEN)
+	DTSSTS = ODTSSTS
+	DTSWEK = ODTSWEK
+	DTSDRW = ODTSDRW
+	DTSBSD = ODTSBSD
+	DTSESD = ODTSESD
+	DTSPUP = ODTSPUP
+	DTSUPD = ODTSUPD
+	DTSBRK = ODTSSER
+	DTSSAL = ODTSSAL
+	DTSPAD = ODTSPAD
+	DTSPRG = ODTSPRG
+	DTSPRF = ODTSPRF
+	DTSREF = ODTSREF
+	DTSWON = ODTSWON
+	DTSTAX = ODTSTAX
+	DTSHST = ODTSHST
+	DTSREV = ODTSREV
+	DTSRWS = ODTSRWS
+	DTSCMB = ODTSCMB
+	DTSPRC = ODTSPRC
+	DTSDTE = ODTSDTE    			
+	DO I = 1, MAXSRW
+	  DTSDAT(I) = ODTSDAT(I)
+	  DTSCTM(I) = ODTSCTM(I)
+	  DTSTIM(I) = ODTSTIM(I)
+	  DTSWIN(I) = ODTSWIN(I)
+	  DTSHLD(I) = ODTSHLD(I)
+	  DTSODS(1,I) = ODTSODS(1,I)
+	  DTSODS(2,I) = ODTSODS(2,I)
+	  DTSODS(3,I) = ODTSODS(3,I)
+	  DTSSTA(I) = ODTSSTA(I)	
+	ENDDO
+	DO I = 1,OTSLDIV
+	   DTSTBD(I) = ODTSTBD(I)
+	   DO J=1,NUMTOT
+	      DTSWBD(I,J) = ODTSWBD(I,J)
+	      DTSRBD(I,J) = ODTSRBD(I,J)
+	      DTSPBD(I,J) = ODTSPBD(I,J)
+	      DTSSBD(I,J) = ODTSSBD(I,J)
+	   ENDDO
+	ENDDO
+	DO I=1,NUMTOT
+	    DTSOTX(I) = ODTSOTX(I)
+	    DTSMID(I) = ODTSMID(I)
+	    DTSUTX(I) = ODTSUTX(I)
+	    DTSORM(I) = ODTSORM(I)
+	ENDDO
+	DO I=1,TNMS_LEN/4
+	   DO J=1,MAXSRW
+	     DTSNMS(I,1,J) = ODTSNMS(I,1,J)
+	     DTSNMS(I,2,J) = ODTSNMS(I,2,J)
+	   ENDDO
+	ENDDO
+	DO I=1,5    
+	  DTSPFN(I) = ODTSPFN(I)
+	ENDDO
+	DO I=1,30
+	  DTSTOP(1,I) = ODTSTOP(1,I)
+	  DTSTOP(2,I) = ODTSTOP(2,I)
+	ENDDO
+	DO I=1,TTVC_LEN/4
+	   DO J=1,MAXSRW
+	     DTSTVC(I,J) = ODTSTVC(I,J)
+	   ENDDO
+	ENDDO
+	DO I=1,100
+	   DTSWTOP(1,I) = ODTSWTOP(1,I)
+	   DTSWTOP(2,I) = ODTSWTOP(2,I)
+	ENDDO
+	DO I=1,MAXMLTD_AVL
+	   DTSMDS(I) = ODTSMDS(I)
+	ENDDO
+C
+C SET ROW STATUS FOR ALL OLD RECORDS TO 3 - REGULAR ROW....
+C
+	DO I=1,MAXSRW
+	    DTSROWTYP(I) = 3
+	ENDDO
+C
+	CALL WRITEW(OUT_FDB,BLOCK,DTSREC,ST)
+	IF(ST.NE.0) CALL FILERR(OUT_FILE,3,ST,0)
+	IF(MOD(BLOCK,500).EQ.0) TYPE*,IAM(),BLOCK,' records converted...'
+	GOTO 10
+20	CONTINUE
+	CALL CLOSEFIL(INP_FDB)
+	CALL CLOSEFIL(OUT_FDB)
+	TYPE*,IAM(),BLOCK-1,' records converted in total...'
+C
+C Renaming the files....
+C
+C	TYPE*,IAM(),'Renaming ',C_INP_FILE,' to ', C_OLD_FILE
+C	TYPE*,IAM(),'Renaming ',C_OUT_FILE,' to ', C_INP_FILE
+C	ST = LIB$RENAME_FILE(C_INP_FILE,C_OLD_FILE,,,,,,,,,,)
+C	IF(.NOT.ST) CALL LIB$SIGNAL(%VAL(ST))
+C	ST = LIB$RENAME_FILE(C_OUT_FILE,C_INP_FILE,,,,,,,,,,)
+C	IF(.NOT.ST) CALL LIB$SIGNAL(%VAL(ST))
+C
+C Making sure that conversion went ok.
+C
+C	TYPE*,IAM(),'Starting CHKCNVPT to verify the conversion...'
+C	CALL RUNTSK(8HCHKCNVPT)
+	CALL GSTOP(GEXIT_SUCCESS)
+	END

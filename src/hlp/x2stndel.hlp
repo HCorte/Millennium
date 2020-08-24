@@ -1,0 +1,22 @@
+                          GTECH Distibuted Network
+                            Station Delete Help             Page 1 of 1
+ 
+      The delete station screen allows a station configuration
+      to be deleted from the Distributed Network Database.  Before deleting
+      a record, you must be sure that you have entered the correct
+      station number.  The program will display all of the
+      configuration information for the input station number allowing you
+      to confirm that this is the desired record.  If you wish to delete
+      the configuration, enter "Y" and press return.  If you do not wish
+      to delete the configuration, enter "N".  It should be noted that a
+      configuration can be deleted even though other components of the
+      network rely on this information.  This error will be detected when
+      the Perform Edit Check function is executed.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

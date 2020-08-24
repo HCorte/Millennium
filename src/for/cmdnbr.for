@@ -1,0 +1,133 @@
+C
+C SUBROUTINE CMDNBR
+C $Log:   GXAFXT:[GOLS]CMDNBR.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:38:28   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 15:56:10   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - cmdnbr.for **
+C
+C CMDNBR.FOR
+C
+C V02 12-NOV-91 MTK INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C SUBROUTINE TO PROCESS NUMBERS GAME COMMANDS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE CMDNBR(TRABUF,MESS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:NBRCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:POLCOM.DEF'
+	INTEGER*4 MESS(EDLEN), GIND, CMDNUM, LMTOFF, VALDOL, DOLVAL
+	INTEGER*4 TEMP
+	INTEGER*2 I2TEMP(2)
+	EQUIVALENCE(TEMP,I2TEMP)
+C
+C
+C
+	CMDNUM=TRABUF(TCMNUM)
+	GOTO (10,20,30,40,50,60,70,80,90,100) CMDNUM
+	GOTO 1000
+C
+C CHANGE NUMBERS GAME STATUS
+C
+10	CONTINUE
+	GIND=TRABUF(TCMDT1)
+	TRABUF(TCMOLD)=NBRSTS(GIND)
+	NBRSTS(GIND)=TRABUF(TCMNEW)
+	IF(TRABUF(TCMNEW).EQ.GAMBFD) THEN
+          TEMP=NBRREV(GIND)
+          I2TEMP(1)=I2TEMP(1)+1
+          NBRREV(GIND)=TEMP
+	  NBRCTM(GIND)=TRABUF(TTIM)
+	  CALL BSET(NBRTIM(GIND),1)
+	  CALL CLRSUM
+	ENDIF
+	MESS(2)=TECMD
+	MESS(3)=3
+	MESS(6)=GIND
+	MESS(9)=TRABUF(TCMOLD)
+	MESS(10)=TRABUF(TCMNEW)
+	RETURN
+C
+C SET NUMBERS WINNING NUMBERS
+C
+20	CONTINUE
+	GIND=TRABUF(TCMDT1)
+	CALL SETNBR(TRABUF)
+	MESS(2)=TECMD
+	MESS(3)=4
+        MESS(6)=GIND
+	RETURN
+C
+C CHANGE LIABILITY LIMIT
+C
+30      CONTINUE
+40	CONTINUE
+50	CONTINUE
+        GIND=TRABUF(TCMDT1)
+	LMTOFF=TRABUF(TCMDT2)
+ 	TRABUF(TCMOLD)=NBRLIM(LMTOFF,GIND)
+	NBRLIM(LMTOFF,GIND)=TRABUF(TCMNEW)
+        MESS(2)=TECMD
+        MESS(3)=3
+        MESS(6)=GIND
+        MESS(9)=VALDOL(TRABUF(TCMOLD))
+        MESS(10)=VALDOL(TRABUF(TCMNEW))
+        RETURN
+C
+C CHANGE PMESS
+C
+60	CONTINUE
+	TRABUF(TCMOLD)=PMESS(TRABUF(TCMDT1))
+	PMESS(TRABUF(TCMDT1))=TRABUF(TCMNEW)
+        MESS(2)=TECMD
+        MESS(3)=3
+	MESS(6)=TRABUF(TCMDT2)
+        MESS(9)=TRABUF(TCMOLD)
+        MESS(10)=TRABUF(TCMNEW)
+        RETURN
+C
+C PUT NEXT NUMBERS COMMAND HERE
+C
+70	CONTINUE
+80	CONTINUE
+90	CONTINUE
+100	CONTINUE
+C
+C INVALID COMMAND NUMBER
+C
+1000	CONTINUE
+	TRABUF(TSTAT)=REJT
+	TRABUF(TERR)=INVL
+	MESS(2)=TECMD
+	MESS(3)=1
+	MESS(4)=TRABUF(TCMTYP)
+	MESS(5)=TRABUF(TCMNUM)
+	RETURN
+	END

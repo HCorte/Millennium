@@ -1,0 +1,92 @@
+C
+C PROGRAM LODIMGS2
+C
+C V04 27-MAY-1999 UXN Super Triple added.
+C V03 10-NOV-1995 HXK Further changes for Double, Couple
+C V02 15-OCT-1994 HXK Adding /developing Bingo (15.Oct.94)
+C V01 25-AUG-1993 SXH Initial revision.
+C LODIMGS2.FOR
+C
+C This program exists solely to lock global pages in memory during
+C STOPSYS processing.
+C It is run by STOPSYS
+C LODIMGSS2 EXISTS SO YOU CAN LOCK MORE THAN 65000 PAGES (LIMIT FOR
+C ONE TASK
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM LODIMGS2
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+
+	INCLUDE 'INCLIB:SPTCOM.DEF'
+	INCLUDE 'INCLIB:SCRCOM.DEF'
+	INCLUDE 'INCLIB:WITCOM.DEF'
+	INCLUDE 'INCLIB:TSLCOM.DEF'
+	INCLUDE 'INCLIB:QUECOM.DEF'
+	INCLUDE 'INCLIB:WINCOM.DEF'
+        INCLUDE 'INCLIB:BNGCOM.DEF'
+        INCLUDE 'INCLIB:DBLCOM.DEF'
+        INCLUDE 'INCLIB:CPLCOM.DEF'
+        INCLUDE 'INCLIB:TRPCOM.DEF'
+        INCLUDE 'INCLIB:SSCCOM.DEF'
+        INCLUDE 'INCLIB:STRCOM.DEF'
+        INCLUDE 'INCLIB:TROCOM.DEF'
+        INCLUDE 'INCLIB:STROCOM.DEF'
+C
+	INTEGER*4   ST
+        INTEGER*4   WORKSET_SIZE
+C
+	CALL COPYRITE
+C
+	CALL GET_WSEXTENT(WORKSET_SIZE)
+	CALL WRKSET(WORKSET_SIZE)
+C
+	CALL LKPMEM(FRST_QUECOM, LAST_QUECOM)
+	CALL LKPMEM(FRST_SPTCOM, LAST_SPTCOM)
+	CALL LKPMEM(FRST_SCRCOM, LAST_SCRCOM)
+	CALL LKPMEM(FRST_WITCOM, LAST_WITCOM)
+	CALL LKPMEM(FRST_TSLCOM, LAST_TSLCOM)
+	CALL LKPMEM(FRST_WINCOM, LAST_WINCOM)
+        CALL LKPMEM(FRST_BNGCOM, LAST_BNGCOM)
+        CALL LKPMEM(FRST_DBLCOM, LAST_DBLCOM)
+        CALL LKPMEM(FRST_CPLCOM, LAST_CPLCOM)
+        CALL LKPMEM(FRST_TRPCOM, LAST_TRPCOM)
+        CALL LKPMEM(FRST_SSCCOM, LAST_SSCCOM)
+        CALL LKPMEM(FRST_STRCOM, LAST_STRCOM)
+        CALL LKPMEM(FRST_TROCOM, LAST_TROCOM)
+        CALL LKPMEM(FRST_STROCOM, LAST_STROCOM)
+C
+C	FIRST WAIT FOR THE STATUS TO BECOME 'DSCLOS'
+C
+1000	CONTINUE
+	CALL XWAIT(10,2,ST)		!WAIT 10 SECONDS
+	IF(DAYSTS.NE.DSCLOS) GOTO 1000
+C
+C	AFTER THAT WAIT FOR THE STATUS TO BECOME SOMETHING ELSE...
+C
+2000	CONTINUE
+	CALL XWAIT(5,2,ST)		!WAIT 5 SECONDS
+	IF(DAYSTS.EQ.DSCLOS) GOTO 2000
+C
+	CALL GSTOP(GEXIT_SUCCESS)
+	END

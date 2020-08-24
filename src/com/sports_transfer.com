@@ -1,0 +1,298 @@
+$ ! 
+$ !     FILE   : GSONLGAM.FOR
+$ !     AUTHOR : J.H.R
+$ !     VERSION: 01            DATE: 09 / 02 / 2001
+$ !
+$ !
+$ ! V01 JHR INITIAL RELEASE FOR PORTUGAL PROJECT
+$ !
+$ ! MENU TRANSFER TO TO COPY SPOTS FILE CONFIGURATION BETWEEN SYSTEMS
+$ !
+$ !   **************************************************************************
+$ !
+$ !      THIS ITEM IS THE PROPERTY OF GTECH CORPORATION, POVIDENCE, RHODE
+$ !   ISLAND, AND CONTAINS CONFIDENTIAL AND TRADE SECRET INFORMATION. IT MAY
+$ !   NOT BE TRANSFERRED FROM THE CUSTODY OR CONTROL OF GTECH EXCEPT AS AUTO -
+$ !    RIZED IN WRITING BY AN OFFICER OF GTECH. NEITHER THIS ITEM NOR THE
+$ !    INFORMATION IT CONTAINS MAY BE USED, TRANSFERRED, REPRODUCED, PUBLISHED
+$ !    OR DISCLOSED, IN WHOLE OR IN PART, AND DIRECTLY OR INDIRECTLY, EXCEPT AS
+$ !    EXPRESSLY AUTHORIZED BY AN OFFICER OR GTECH, PURSUANT TO WRITTEN AGREEMENT
+$ !
+$ !    Copyright 2000 GTECH Corporation. All Rigth Reserved
+$ !
+$ !   **************************************************************************
+$ !
+$ ! PROCEDURE TO COPY SPORTS FILES CONFIGURATION BETWEEN SYSTEMS
+$ !
+$ DEASSIGN SYS$INPUT
+$ DEFINE SYS$INPUT SYS$COMMAND
+$ !
+$ ! DEFILE LABELS TO WORK 
+$ !
+$ CONSOLE := "WRITE SYS$OUTPUT"
+$ !
+$ ! DISPLAY BY CONSOLE PRESENTATION OF PROGRAM
+$ !
+$ DISPLAY_MAIN_MENU:
+$ GOSUB PRESENTATION_SPORTS_NEMU_TRANSFER
+$ !
+$ ! GET USER SELECTED OPTION ( IF ERROR GO TO DISPLAY MAIN MENU AGAIN )
+$ !
+$ GOSUB USER_SELECTION
+$ IF(USER_OPTION_ERROR .NE. 0) THEN GOTO DISPLAY_MAIN_MENU
+$ !
+$ ! PREPARE LABELS, DEPEND OF USER SELECTION, TO COPY SPORTS FILES
+$ !
+$ GOSUB PREPARE_SYSTEM_TO_COPY
+$ !
+$ ! COPY FILES FROM SELECTED SYSTEM TO THE OTHERS SYSTEMS
+$ !
+$ GOSUB COPY_SPORTS_FILES
+$ GOTO DISPLAY_MAIN_MENU
+$ !
+$ ! THIS IS THE END OF PROCEDURE TO COPY SPORTS FILES BETWEEN SYSTEMS
+$ !
+$ EXIT
+
+
+$ ! ******************************************************************************
+$ !
+$ !    SUBROUTINE: COPY_SYSTEM_FILES
+$ !    AUTHOR    : J.H.R
+$ !    VERSION   : 01            DATE: 11 / 07 / 2001
+$ !
+$ ! ******************************************************************************
+$ !
+$ ! SUBPROCEDURE TO COPY SYSTEM FILES BETWEEN ON LINE MACHINES
+$ !
+$ COPY_SYSTEM_FILES:
+$ !
+$ ! INITIATE VARIABLES TO COPY SYSTEM FILES
+$ !
+$ FILE_CNT = 1
+$ !
+$ ! LOOP TO COPY ALL SYSTEM FILES THAT WE HAVE IN SELECTED SYSTEM
+$ !
+$ LOOP_COPY_SYSTEM_FILES:
+$ !
+$ ! COMPOSE FILE NAMES TO COPY / RENAME
+$ !
+$   FILE_TO_COPY = "''COPYFROM'''TYPE_FILE'''FILE_CNT'" + "F.FIL"
+$   PURGE_FILE_A = "''FRCOPYTO'''TYPE_FILE'''FILE_CNT'" + "F.FIL"
+$   PURGE_FILE_B = "''SCCOPYTO'''TYPE_FILE'''FILE_CNT'" + "F.FIL"
+$   FILE_RENAM_A = PURGE_FILE_A + ";*"
+$   FILE_RENAM_B = PURGE_FILE_B + ";*" 
+$   FILE_VERSI_A = PURGE_FILE_A + ";1"
+$   FILE_VERSI_B = PURGE_FILE_B + ";1"
+$ !
+$ !CHECK IF FILE ARE GOING TO COPY EXIST OR NOT
+$ ! 
+$   IF F$SEARCH(FILE_TO_COPY) .EQS. "" THEN GOTO COPY_NEXT_FILE
+$ !
+$ ! COPY FILES TO DESTINATION SYSTEMS
+$ !
+$   COPY 'FILE_TO_COPY'  'FRCOPYTO' /LOG
+$   COPY 'FILE_TO_COPY'  'SCCOPYTO' /LOG
+$ !
+$ ! PURGE FILES THAT PROCEDURE HAVE COPIED
+$ !
+$   PURGE 'PURGE_FILE_A' /LO
+$   PURGE 'PURGE_FILE_B' /LO
+$ !
+$ ! RENAME FILES TO VERSION NUMBER ONE
+$ !
+$   RENAME 'FILE_RENAM_A'  'FILE_VERSI_A' /LO /EXCLUDE=(*.*;1)
+$   RENAME 'FILE_RENAM_B'  'FILE_VERSI_B' /LO /EXCLUDE=(*.*;1)
+$ !
+$ ! CHEK IF PROCEDURE HAVE TO COPY MORE SYSTEM FILES
+$ !
+$ COPY_NEXT_FILE:
+$   FILE_CNT = FILE_CNT + 1
+$   IF(FILE_CNT .GT 9) THEN RETURN
+$ !
+$ ! END OF LOOP TO COPY ALL SYSTEM FILES THAT WE HAVE IN SELECTED SYSTEM
+$ !
+$ GOTO LOOP_COPY_SYSTEM_FILES
+$ !
+$ ! END OF PROCEDURE TO COPY SYSTEM FILES BETWEEN ON LINE MACHINES
+$ !
+$ RETURN
+
+
+$ ! ******************************************************************************
+$ !
+$ !    SUBROUTINE: COPY_SPORTS_FILES
+$ !    AUTHOR    : J.H.R
+$ !    VERSION   : 01            DATE: 11 / 07 / 2001
+$ !
+$ ! ******************************************************************************
+$ !
+$ ! SUBPROCEDURE TO COPY SPORTS FILES BETWEEN SYSTEMS
+$ !
+$ COPY_SPORTS_FILES:
+$ !
+$ ! COPY TOTO GOLO FILES
+$ !
+$ TYPE_FILE = "R"
+$ GOSUB COPY_SYSTEM_FILES
+$ !
+$ ! COPY TOTO BOLA FILES
+$ !
+$ TYPE_FILE = "S"
+$ GOSUB COPY_SYSTEM_FILES
+$ !
+$ ! END OF PROCEDURE TO COPY SPORTS FILES BETWEEN SYSTEMS
+$ !
+$ RETURN
+
+$ ! ******************************************************************************
+$ !
+$ !    SUBROUTINE: PREPARE_SYSTEM_TO_COPY
+$ !    AUTHOR    : J.H.R
+$ !    VERSION   : 01            DATE: 11 / 07 / 2001
+$ !
+$ ! ******************************************************************************
+$ !
+$ ! SUBPROCEDURE TO PREPARE LABELS TO COPY FILES SYSTEM
+$ !
+$ PREPARE_SYSTEM_TO_COPY:
+$ !
+$ ! PREPARE TO COPY SYSTEM FILES FROM SYSTEM 'PTSYSA' TO OTHERS
+$ !
+$ IF(USER_OPTION .EQS. 1) 
+$ THEN
+$   COPYFROM = "PTSYSA::DRA1:[PORT.TSK]"
+$   FRCOPYTO = "PTSYSB::DRA1:[PORT.TSK]"
+$   SCCOPYTO = "PTSYSC::DRA1:[PORT.TSK]"
+$   RETURN
+$ ENDIF
+$ !
+$ ! PREPARE TO COPY SYSTEM FILES FROM SYSTEM 'PTSYSB' TO OTHERS
+$ !
+$ IF(USER_OPTION .EQS. 2) 
+$ THEN
+$   COPYFROM = "PTSYSB::DRA1:[PORT.TSK]"
+$   FRCOPYTO = "PTSYSA::DRA1:[PORT.TSK]"
+$   SCCOPYTO = "PTSYSC::DRA1:[PORT.TSK]"
+$   RETURN
+$ ENDIF
+$ !
+$ ! PREPARE TO COPY SYSTEM FILES FROM SYSTEM 'PTSYSC' TO OTHERS
+$ !
+$ IF(USER_OPTION .EQS. 3) 
+$ THEN
+$   COPYFROM = "PTSYSC::DRA1:[PORT.TSK]"
+$   FRCOPYTO = "PTSYSA::DRA1:[PORT.TSK]"
+$   SCCOPYTO = "PTSYSB::DRA1:[PORT.TSK]"
+$   RETURN
+$ ENDIF
+$ !
+$ ! END OF PROCEDURE TO PREPARE LABELS TO COPY FILES SYSTEM
+$ !
+$ RETURN
+
+
+$ ! ******************************************************************************
+$ !
+$ !    SUBROUTINE: USER_SELECTION
+$ !    AUTHOR    : J.H.R
+$ !    VERSION   : 01            DATE: 11 / 07 / 2001
+$ !
+$ ! ******************************************************************************
+$ !
+$ ! SUBPROCEDURE TO GET USER SELECTION FROM MAIN MENU
+$ !
+$ USER_SELECTION:
+$ !
+$ ! SET VARIABLES TO GET USER SELECTION
+$ !
+$ USER_OPTION_ERROR = 0
+$ !
+$ ! GET USER SELECTION OPTION ( FROM 1 TO 4 )
+$ !
+$ INQUIRE USER_OPTION "           Enter Option"
+$ CONSOLE "  "
+$ !
+$ ! CHECK IF USER SELECTION IS IN RIGHT VALUES ( FROM 1 TO 4 )
+$ !
+$ IF (USER_OPTION .LT. 1) .OR. (USER_OPTION .GT. 4)
+$ THEN
+$   GOSUB HEADER_PRESENTATION
+$   CONSOLE "  "
+$   CONSOLE "          User Selection Error, Please Try Again ..."
+$   CONSOLE "  "
+$   USER_OPTION_ERROR = 1
+$   WAIT 00:00:06
+$   RETURN
+$  ENDIF
+$ !
+$ ! USER OPTION SAYS THE HE/SHE WANTS FIHISH PROCEDURE
+$ !
+$ IF(USER_OPTION .EQS. "4") 
+$ THEN
+$   CONSOLE "  "
+$   CONSOLE "  "
+$   EXIT
+$ ENDIF
+$ !
+$ ! END OF PROCEDURE TO GET USER SELECTION FROM MAIN MENU
+$ !
+$ RETURN
+
+
+$ ! ******************************************************************************
+$ !
+$ !    SUBROUTINE: PRESENTATION_SPORTS_NEMU_TRANSFER
+$ !    AUTHOR    : J.H.R
+$ !    VERSION   : 01            DATE: 11 / 07 / 2001
+$ !
+$ ! ******************************************************************************
+$ !
+$ ! SUBPROCEDURE TO DISPLAY PRESENTATION OF SPORTS MENU TRANSFER
+$ !
+$ PRESENTATION_SPORTS_NEMU_TRANSFER:
+$ !
+$ ! DISPLAY BY CONSOLE HEADER PRESENTATION OF PROGRAM
+$ !
+$ GOSUB HEADER_PRESENTATION
+$ !
+$ ! DISPLAY MENU FOR SPORTS TRANFER PROCEDURE BETWEEN SYSTEMS
+$ !
+$ CONSOLE "           1.- Copy Files From PTSYSA To PTSYSB And PTSYSC"
+$ CONSOLE "  "
+$ CONSOLE "           2.- Copy Files From PTSYSB To PTSYSA And PTSYSC"
+$ CONSOLE "  "
+$ CONSOLE "           3.- Copy Files From PTSYSC To PTSYSA And PTSYSB"
+$ CONSOLE "  "
+$ CONSOLE "           4.- Exit Sport Menu Transfer"
+$ CONSOLE "  "
+$ !
+$ ! END OF PROCEDURE TO DISPLAY PRESENTATION OF SPORTS MENU TRANSFER
+$ !
+$ RETURN
+
+
+$ ! ******************************************************************************
+$ !
+$ !    SUBROUTINE: HEADER_PRESENTATION
+$ !    AUTHOR    : J.H.R
+$ !    VERSION   : 01            DATE: 11 / 07 / 2001
+$ !
+$ ! ******************************************************************************
+$ !
+$ ! SUBPROCEDURE TO DISPLAY HEADER PRESENTATION
+$ !
+$ HEADER_PRESENTATION:
+$ !
+$ ! DISPLAY BY CONSOLE HEADER PRESENTATION OF PROGRAM
+$ !
+$ SET TERM /WIDTH=80
+$ CONSOLE "  "
+$ CONSOLE "       * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
+$ CONSOLE "       *       Sports Menu Transfer Between On Line Systems      *"
+$ CONSOLE "       * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
+$ CONSOLE "  "
+$ !
+$ ! END OF PROCEDURE TO DISPLAY HEADER PRESENTATION
+$ !
+$ RETURN

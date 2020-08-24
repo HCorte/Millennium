@@ -1,0 +1,51 @@
+
+$! GXSRC:X2TTNMEN.LNK
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]X2TTNMEN.LNV                                 $
+$! $Date::   14 Jul 1996 21:02:40                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! V03 28-NOV-95 WJK ADD LINK TO SHARED IMAGE APPCOM FOR CALL TO BDATE
+$! V02 16-DEC-94 GPR Integrate UK changes into X2X Baseline
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$!
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! This item is the property of GTECH Corporation, Providence, Rhode
+$! Island, and contains confidential and trade secret information. It
+$! may not be transferred from the custody or control of GTECH except
+$! as authorized in writing by an officer of GTECH. Neither this item
+$! nor the information it contains may be used, transferred,
+$! reproduced, published, or disclosed, in whole or in part, and
+$! directly or indirectly, except as expressly authorized by an
+$! officer of GTECH, pursuant to written agreement.
+$!
+$! Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:X2TTNMEN.EXE -
+OBJLIB:X2TTNMEN,-
+X2TTNADD,-
+X2TTNMOD,-
+X2TTNDEL,-
+X2XHLP,-
+X2CHKMOD,-
+X2FILNAM,-
+X2UNLOCK,-
+CMDXTTN,-
+X2CHKSUM,-
+ATOH,-
+X2BSET,-
+X2CHKFLD,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXX2XCOM.ESH/SHAREABLE,-
+TSKLIB:GXX2XPOST.ESH/SHAREABLE, -
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

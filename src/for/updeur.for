@@ -1,0 +1,94 @@
+C SUBROUTINE UPDEUR
+C
+C UPDEUR.FOR
+C
+C V01 01-APR-2016 SCML M16 PROJECT
+C
+C SUBROUTINE TO UPDATE CROSS SYSTEM REFERENCE NUMBER
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE UPDEUR(TRABUF)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:DESTRA.DEF'
+        INCLUDE 'INCLIB:AGTCOM.DEF'
+        INCLUDE 'INCLIB:EURCOM.DEF'
+C
+        INTEGER*8   I8TEMP
+        INTEGER*4   I4TEMP(2)
+        EQUIVALENCE(I8TEMP,I4TEMP)
+C
+        INTEGER*4   EURTYP                                                      !EUR TRANSACTION TYPE
+        INTEGER*4   TER                                                         !TERMINAL NUMBER
+C
+        EURTYP = TRABUF(TEUTYP)
+        TER    = TRABUF(TTER)
+C
+        IF(EURTYP .EQ. TWAG) GOTO 100                                           !TEUR WAG UPDATE
+        IF(EURTYP .EQ. TVAL) GOTO 200                                           !TEUR VAL UPDATE
+        IF(EURTYP .EQ. TCAN) GOTO 300                                           !TEUR CAN UPDATE
+C
+        RETURN
+C
+C TEUR WAG UPDATE
+C
+100     CONTINUE
+C
+C UPDATE AGENT TRANSACTION SERIAL NUMBER
+C
+        IF(TRABUF(TSTAT) .EQ. GOOD) THEN
+          AGTTAB(ALSTRA,TER) = TRABUF(TSER)
+          AGTTAB(ALSWAG,TER) = TRABUF(TSER)
+        ELSEIF(TRABUF(TSTAT) .EQ. REJT) THEN
+              AGTTAB(ALSTRA,TER) = TRABUF(TSER)
+        ENDIF
+        RETURN
+C
+C TEUR VAL UPDATE (PRIZE PAYMENT)
+C
+200     CONTINUE
+C
+C UPDATE AGENT TRANSACTION SERIAL NUMBER
+C
+        IF(TRABUF(TSTAT).EQ.GOOD) THEN
+          IF(      (  TRABUF(TEUVSBT) .EQ. 0 
+     *              .OR. TRABUF(TEUVSBT) .EQ. VNDON                             !NEW VALIDATION CASH ACCEPTED
+     *              .OR. TRABUF(TEUVSBT) .EQ. VNBNK                             !NEW VALIDATION BANK TRANSFER ACCEPTED
+     *             )                               
+     *       .AND. (TRABUF(TEUVST).EQ.11 .OR. TRABUF(TEUVST).EQ.10)
+     *      ) THEN
+            I4TEMP(1) = TRABUF(TEUVCAM)
+            I4TEMP(2) = TRABUF(TEUVCAMH)
+            IF(I8TEMP .GT. 0) THEN
+              AGTTAB(ALSTRA,TER) = TRABUF(TSER)
+              AGTTAB(ALSVAL,TER) = TRABUF(TSER)
+            ENDIF
+          ENDIF
+        ELSEIF(TRABUF(TSTAT) .EQ. REJT) THEN
+          AGTTAB(ALSTRA,TER) = TRABUF(TSER)
+        ENDIF
+        RETURN
+C
+C TEUR CAN UPDATE
+C
+300     CONTINUE
+C
+C UPDATE AGENT TRANSACTION SERIAL NUMBER
+C
+        IF(TRABUF(TSTAT) .EQ. GOOD) THEN
+          IF(TRABUF(TEUCST) .EQ. 0 .AND. TRABUF(TEUCAM).GT.0) THEN
+            AGTTAB(ALSTRA,TER) = TRABUF(TSER)
+            AGTTAB(ALSCAN,TER) = TRABUF(TSER)
+          ENDIF
+        ELSEIF(TRABUF(TSTAT) .EQ. REJT) THEN
+          AGTTAB(ALSTRA,TER) = TRABUF(TSER)
+        ENDIF
+C
+        END
+C
+C END UPDEUR.FOR
+C

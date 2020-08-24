@@ -1,0 +1,73 @@
+C  GXSRC:DESPARAMS.DEF
+C  
+C  $Log:   GXAGBR:[GOLS]DESPARAMS.DEV  $
+C  
+C     Rev 1.3   11 Aug 1994 11:50:08   MTK
+C  CHANGED DEVICE NAME.
+C  
+C     Rev 1.2   15 Feb 1994 11:15:38   JPJ
+C  Now contains support for 1 or two encpro's
+C  
+C     Rev 1.1   04 Jan 1994  0:01:18   SYSTEM
+C  Applying PVCS header for automatic revision history
+C  
+C     Rev 1.0    21 Dec 1993 19:14:50   SYSTEM
+C  Initial revision.
+C
+C
+C
+C V02 13-MAR-03 GPW DESENCR TAKEN FROM UK
+C V01 19-MAR-91 TKO  Initial release
+C
+C This defines general parameters for data cipher module test programs.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C
+C +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4	 XX$K_CONTROL
+	PARAMETER	(XX$K_CONTROL    = 1)
+	INTEGER*4	 XX$K_DATAPATH
+	PARAMETER	(XX$K_DATAPATH   = 2)
+	INTEGER*4	 XX$K_TIMER
+	PARAMETER	(XX$K_TIMER      = 3)
+	INTEGER*4	 XX$K_STATISTICS
+	PARAMETER	(XX$K_STATISTICS = 4)
+C
+	CHARACTER*5	 DESDEVNAME(2)	!DEVICE NAME FOR DES
+	DATA DESDEVNAME /'CBA0:','CBB0:'/
+C
+C +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*2	DESCHAN		!DES DRIVER CHANNEL *** I*2 ***
+	INTEGER*2	MBXCHAN		!MAILBOX CHANNEL    *** I*2 ***
+C
+C The following defines the IOSB for any QIO.
+C
+	STRUCTURE /IOSB/
+	  INTEGER*2 STAT		!STATUS
+	  INTEGER*2 BLEN		!BYTE LENGTH
+	  INTEGER*4 MISC		!Miscellaneous info
+	END STRUCTURE
+C
+	RECORD /IOSB/ MBXIOSB
+C
+C The following is the mailbox input
+C
+	INTEGER*4	MBXINPUT(8)
+C
+	COMMON	/DESPAR/ DESCHAN, MBXCHAN, MBXIOSB, MBXINPUT
+C

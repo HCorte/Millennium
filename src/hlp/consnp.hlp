@@ -1,0 +1,44 @@
+ CONSNP.HLP               GTECH Distributed Network
+                             Connection Snapshot             Page 1 of 2
+ 
+    This snapshot will list summary information on a specified connection.
+    This information consists of the following:
+ 
+    Connection.(S-D). - Connection number between the (Source Service Access
+                        Point - Destination Service Access Point).
+    Lantimer          - LANPRO timer.
+    Current LAN       - Local Area Network connection is in.
+    Last arrival time - Last time a request was sent from the Source SAP
+                        to the Destination SAP.
+    Time-out sched    - Time by which a request is expected to take place.
+ 
+    =========================== Frame Counters =============================
+    find request      - Number of find requests sent.
+    connect request   - Number of connect requests sent.
+    disconn request   - Number of disconnect requests sent.
+    clear             - Number of times cleared.
+    poll request      - Number of times polled.
+ 
+ 
+ CONSNP.HLP               GTECH Distributed Network
+                             Connection Snapshot             Page 2 of 2
+ 
+    find confirm      - Number of find requests confirmed.
+    connect confirm   - Number of connect requests confirmed.
+    disconn confirm   - Number of disconnect request confirmed.
+    data              - Number of paquets sent and received.
+    poll confirm      - Number of poll requests confirmed.
+ 
+    Selection options available:
+ 
+    To view a specific connection just enter the connection number at
+    the command line.
+ 
+ 
+ 
+
+
+
+
+
+

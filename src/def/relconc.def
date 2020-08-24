@@ -1,0 +1,34 @@
+C RELCONC.DEF
+C
+C V01 07-APR-01 CS INITIAL RELEASE FOR PORTUGAL
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991,1993 Gtech Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C PARAMETERS
+C
+	INTEGER*4 ONCARRY,ONDRAW,ONTMF,ONNEXT
+	PARAMETER (ONCARRY=1)
+	PARAMETER (ONDRAW=2)
+	PARAMETER (ONTMF=3)
+	PARAMETER (ONNEXT=4)
+
+	INTEGER*4 MAXCAN
+	PARAMETER (MAXCAN = 15000)
+C
+	INTEGER*4 NUMUF,MAXPRTLN,PORTUG,SPANISH
+	PARAMETER (NUMUF    = 49)
+	PARAMETER (MAXPRTLN = 59)
+	PARAMETER (PORTUG   = 1)
+	PARAMETER (SPANISH  = 2)
+C

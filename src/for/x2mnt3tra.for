@@ -1,0 +1,48 @@
+C
+C SUBROUTINE X2MNT3TRA
+C $Log:   GXAFXT:[GOLS]X2MNT3TRA.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 16:23:30   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:22:26   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2mnttra.for;1 **
+C
+C
+C ===========================================================
+	SUBROUTINE X2MNT3TRA(MESS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:X2MAINT.DEF'
+C
+	INTEGER*4       MESS(400)           !Input buffer
+C
+C EXTRACT DATA FROM MESSAGE TYPE 3.
+C
+	CALL ILBYTE(X2MNT3_DATA(1),MESS,
+     *	              X2MAINT_T3M_LINE_NO-1)
+	CALL ILBYTE(X2MNT3_DATA(2),MESS,
+     *	              X2MAINT_T3M_LINE_STATUS-1)
+	CALL MOV2TOI4(X2MNT3_DATA(3),MESS,
+     *	              X2MAINT_T3M_RUN_MAX_VC_CONN-1)
+	CALL MOV2TOI4(X2MNT3_DATA(4),MESS,
+     *	              X2MAINT_T3M_NO_SABM_DISC_SENT-1)
+	CALL MOV2TOI4(X2MNT3_DATA(5),MESS,
+     *	              X2MAINT_T3M_NO_SABM_DISC_REC-1)
+	CALL MOV2TOI4(X2MNT3_DATA(6),MESS,
+     *	              X2MAINT_T3M_BAND_UTIL-1)
+	CALL MOV2TOI4(X2MNT3_DATA(7),MESS,
+     *	              X2MAINT_T3M_RESP_TIME-1)
+	CALL MOV2TOI4(X2MNT3_DATA(8),MESS,
+     *	              X2MAINT_T3M_TOT_TIME_ACT-1)
+	CALL MOV2TOI4(X2MNT3_DATA(9),MESS,
+     *	              X2MAINT_T3M_TOT_TIME_AVAIL-1)
+	RETURN
+	END

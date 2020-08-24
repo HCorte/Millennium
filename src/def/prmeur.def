@@ -1,0 +1,63 @@
+C PRMEUR.DEF
+C
+C V01 16-03-2016 SCML CREATION (M16 PROJECT)
+C
+C EUROMILLIONS SYSTEM GAMES PARAMETERS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Copyright 2016 SCML Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C MISC PARAMETERS
+C
+        INTEGER*4  ENUMPAR, EMAXFIL, EXRFOFF
+C
+        PARAMETER (ENUMPAR = 50)                                                !EUROMILLIONS SYSTEM PARAMETERS
+        PARAMETER (EMAXFIL = 10)                                                !MAXIMUM NUMBER OF SYSTEM FILES
+        PARAMETER (EXRFOFF = 0)                                                 !CROSS REFERENCE NUMBER OFFSET OF EUROMILLIONS SYSTEM
+C
+C
+C GAME PARAMETERS
+C
+        INTEGER*4  EMAXGAM
+C
+        PARAMETER (EMAXGAM = 10)                                                !MAXIMUM NUMBER OF GAMES
+C
+C GAME NUMBERS
+C
+        INTEGER*4 EUM1GN, RAF1GN, RAF2GN
+        PARAMETER (EUM1GN = 1)                                                  !EUROMILIONS GAME NUMBER IN EUROMILLIONS SYSTEM
+        PARAMETER (RAF1GN = 2)                                                  !SoM GAME NUMBER IN EUROMILLIONS SYSTEM
+        PARAMETER (RAF2GN = 3)                                                  !SM GAME NUMBER IN EUROMILLIONS SYSTEM
+C
+C GAME INDEXES
+C
+        INTEGER*4 EUM1GI, RAF1GI, RAF2GI
+        PARAMETER (EUM1GI = 1)                                                  !EUROMILIONS GAME INDEX
+        PARAMETER (RAF1GI = 1)                                                  !SoM GAME INDEX
+        PARAMETER (RAF2GI = 2)                                                  !SM GAME INDEX
+C
+        INTEGER*4 ENUMEUM
+        PARAMETER (ENUMEUM = 1)                                                 !NUMBER OF EUROMILLIONS GAMES
+C
+        INTEGER*4 ENUMRAF
+        PARAMETER (ENUMRAF = 2)                                                 !NUMBER OF RAFFLE GAMES
+C
+        INTEGER*4 EMAXDBM
+        PARAMETER (EMAXDBM = 7)                                                 !MAXIMUM NUMBER OF DRAWS BITMAP (1 + 6 MULTI DRAWS BITMAP)
+C
+C GAME FILES
+C
+        INTEGER*4    EUM1CFNAM(5)
+        CHARACTER*20 CEUM1CFNAM
+        EQUIVALENCE (EUM1CFNAM(1), CEUM1CFNAM)
+        DATA         EUM1CFNAM /'GXTS','K:EU','M1CF','.FIL','    '/
+C
+        INTEGER*4    RAF2CFNAM(5)
+        CHARACTER*20 CRAF2CFNAM
+        EQUIVALENCE (RAF2CFNAM(1), CRAF2CFNAM)
+        DATA         RAF2CFNAM /'GXTS','K:RA','F2CF','.FIL','    '/
+C
+C END PRMEUR.DEF
+C

@@ -1,0 +1,134 @@
+C
+C MESIGS.FOR
+C
+C Decoding Oddset' Messages for vision
+C
+C V01 25-FEB-2014 SCML Creation
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE MESIGS(MNUM,DBUF,MBUF,ALARM)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+C       
+        INTEGER*4 DBUF(*), K, MNUM
+        CHARACTER*140 MBUF
+        LOGICAL ALARM
+        INTEGER*4 YN(2)
+        DATA YN/'No ','Yes'/
+C
+C        GOTO (1,2,3,4,5,6,7,8,9,10,11,12) MNUM
+        IF(MNUM .EQ.  1)  GOTO 1
+        IF(MNUM .EQ.  2)  GOTO 2
+        IF(MNUM .EQ.  3)  GOTO 3
+        IF(MNUM .EQ.  4)  GOTO 4
+        IF(MNUM .EQ.  5)  GOTO 5
+        IF(MNUM .EQ.  6)  GOTO 6
+C        IF(MNUM .EQ.  7)  GOTO 7
+C        IF(MNUM .EQ.  8)  GOTO 8
+C        IF(MNUM .EQ.  9)  GOTO 9
+C        IF(MNUM .EQ. 10)  GOTO 10
+C        IF(MNUM .EQ. 11)  GOTO 11
+C        IF(MNUM .EQ. 12)  GOTO 12
+C        IF(MNUM .EQ. 13)  GOTO 13
+C        IF(MNUM .EQ. 14)  GOTO 14
+C        IF(MNUM .EQ. 15)  GOTO 15
+C
+        GOTO 99
+        
+1       CONTINUE
+        WRITE (MBUF,901) 
+901     FORMAT('CONNECTED TO MESSAGEQ OF IGS')
+        RETURN
+2       CONTINUE
+        WRITE (MBUF,902) 
+902     FORMAT('NO CONNECTION TO MESSAGEQ OF IGS')
+        RETURN
+3       CONTINUE
+        WRITE (MBUF,903) DBUF(1),DBUF(2),DBUF(3),DBUF(4)
+903     FORMAT('<TIME OUT MESSAGE> BUF:',I0,',TERM:',I0,',MSG T/S:0x',Z0,',TRX#:',I0)
+        ALARM=.TRUE.
+        RETURN
+4       CONTINUE
+        WRITE (MBUF,904) DBUF(1)
+904     FORMAT('<ERROR WHILE PUT INTO QUEUE OF MESSAGEQ> STATUS: ',I10)
+        ALARM=.TRUE.
+        RETURN
+5       CONTINUE
+        WRITE (MBUF,905) 
+905     FORMAT('VISION PASSWORD ERROR WHILE TRYING TO CHANGE IGS TIMEOUT')
+        ALARM=.TRUE.
+        RETURN
+6       CONTINUE
+        WRITE (MBUF,906) 
+906     FORMAT('VISION PASSWORD ERROR WHILE TRYING TO CHANGE IGS FIN TIMEOUT')
+        ALARM=.TRUE.
+        RETURN
+C5       CONTINUE
+C        WRITE (MBUF,905) YN(P(IGSCONF)+1)
+C905     FORMAT('VISION (IGSCOn): Connect to IGS -> ',A3)
+C        ALARM=.TRUE.
+C        RETURN
+C6       CONTINUE
+C        WRITE (MBUF,906) YN(P(ODDSETF)+1)
+C906     FORMAT('VISION (ODDSETF): Enable Placard -> ',A3)
+C        ALARM=.TRUE.
+C        RETURN
+C7       CONTINUE
+C        WRITE (MBUF,907) YN(P(ODSPWAG)+1)
+C907     FORMAT('VISION (ODSPWAG): Suppress Placard Wager -> ',A3)
+C        ALARM=.TRUE.
+C        RETURN
+C8       CONTINUE
+C        WRITE (MBUF,908) YN(P(ODSPCAN)+1)
+C908     FORMAT('VISION (ODSPCAN): Suppress Placard Cancel -> ',A3)
+C        ALARM=.TRUE.
+C        RETURN
+C9       CONTINUE
+C        WRITE (MBUF,909) YN(P(ODSPVAL)+1)
+C909     FORMAT('VISION (ODSPVAL): Suppress Placard Validations -> ',A3)
+C        ALARM=.TRUE.
+C        RETURN
+C10       CONTINUE
+C        WRITE (MBUF,910) 
+C910     FORMAT('VISION PASSWORD ERROR WHILE TRYING TO CHANGE TIMEOUT')
+C        ALARM=.TRUE.
+C        RETURN
+C11      CONTINUE
+C        WRITE (MBUF,911) P(ODTIMOUT)
+C911     FORMAT('VISION (ODTIMOUT): Time to Timeout Messages in ss -> ',I4)
+C        RETURN
+CC
+C12      CONTINUE
+C        WRITE (MBUF,912) YN(P(ODSPREP)+1)
+C912     FORMAT('VISION (ODSPREP): Suppress Placard Reports -> ',A3)
+C        ALARM=.TRUE.
+C        RETURN
+C13      CONTINUE
+C        WRITE (MBUF,913) P(PLAFINTO)
+C913     FORMAT('VISION (PLAFINTO): Time to Timeout Fin Reports in ss -> ',I4)
+C        RETURN
+CC
+C14      CONTINUE
+C        WRITE (MBUF,914) YN(P(ODSPACAN)+1)
+C914     FORMAT('VISION (ODSPACAN): Suppress Placard Auto Cancel -> ',A3)
+C        ALARM=.TRUE.
+C        RETURN
+C15       CONTINUE
+C        WRITE (MBUF,915) 
+C915     FORMAT('VISION PASSWORD ERROR WHILE TRYING TO CHANGE ODSPACAN')
+C        ALARM=.TRUE.
+C        RETURN
+C
+C INVALID MESSAGE NUMBER
+C
+99      CONTINUE
+        ALARM=.TRUE.
+        WRITE (MBUF,999) MNUM
+999     FORMAT('INVALID GENERAL MESSAGE NUMBER> ',I4,'    ')
+        RETURN
+        END

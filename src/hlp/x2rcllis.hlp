@@ -1,0 +1,22 @@
+                          GTECH Distibuted Network
+                          Report Class Listing Help                Page 1 of 1
+ 
+      This screen displays all report classes which are currently defined
+      in the Distributed Network Database.  The information displayed
+      includes: report class number, format, and the report codes which
+      are contained within the class.
+ 
+      The screen can display up to 10 classes on one screen, and allows
+      scrolling forward and back through pages of classes.  This is
+      accomplished by entering "N" to screen to the next page of classes,
+      or "P" to screen to the previous page of classes.  It is also possible
+      to directly display a class by entering "X##", where XX is the
+      number of the class that you wish to display.
+ 
+      To return back to the main menu, enter "E".
+ 
+ 
+ 
+ 
+ 
+ 

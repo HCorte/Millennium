@@ -1,0 +1,59 @@
+C DISKOPENZ.FOR
+C
+C $Log:   GXAFXT:[GOLS]DISKOPENZ.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:54:00   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   02 Sep 1994 18:03:02   HXK
+C  Merge of May,June RFSS batch 
+C  
+C     Rev 1.0   13 Jun 1994 11:51:24   HXK
+C  Initial revision.
+C
+C	DO NOT STACK DUMP IF CAN'T OPEN FILE
+C	We expect to find the filename just entered, but it may be incorrect
+C	due to typo.
+C
+	INTEGER*4 FUNCTION DISKOPENZ(FAB, RAB, LUN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE	'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:DISKIO.DEF'
+C
+	INCLUDE	'($SYSSRVNAM)'
+	INCLUDE '($FABDEF)'
+	INCLUDE '($RABDEF)'
+	INCLUDE '($RMSDEF)'
+C
+	INTEGER*4 LUN
+C
+	RECORD /FABDEF/ FAB
+	RECORD /RABDEF/ RAB
+C
+C Set the block I/O bit in the FAC
+C
+	FAB.FAB$B_FAC = FAB.FAB$B_FAC .OR. FAB$M_BIO
+C
+C Set complete access privileges
+C
+	FAB.FAB$B_SHR = FAB.FAB$B_SHR .OR. FAB$M_UPI
+C
+C Now open the file and connect to the record stream
+C
+	DISKOPENZ = SYS$OPEN(FAB)
+	IF(.NOT.DISKOPENZ) THEN
+C	  CALL LIB$SIGNAL(%VAL(DISKOPENZ))
+	  GOTO 9000
+	ENDIF
+C
+	DISKOPENZ = SYS$CONNECT(RAB)
+	IF(.NOT.DISKOPENZ) THEN
+	  CALL LIB$SIGNAL(%VAL(DISKOPENZ))
+	  GOTO 9000
+	ENDIF
+C
+9000	CONTINUE
+	RETURN
+	END

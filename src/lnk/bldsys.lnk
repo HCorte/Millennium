@@ -1,0 +1,68 @@
+$! GXSRC:BLDSYS.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]BLDSYS.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:34:12   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.4   23 Nov 1995 12:04:28   PXB
+$! Added DBL and CPL games
+$!
+$!    Rev 1.3   25 Oct 1994 17:35:32   HXK
+$! ADDED ISORT5 OBJECT
+$!
+$!    Rev 1.2   15 Oct 1994 22:49:36   GXA
+$! Added BLDBNG and related routines.
+$!
+$!    Rev 1.1   14 Apr 1994 12:42:28   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:36:00   SYSTEM
+$! Initial revision.
+$!
+$! X2X Upgrade: 05-MAR-96 wsm Added I4TOHEX, resolved to GXCTMCOM.ESH.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:BLDSYS.EXE -
+OBJLIB:BLDSYS,-
+BLDKIK,-
+BLDLTO,-
+BLDMIS,-
+BLDNBR,-
+BLDSCR,-
+BLDSPT,-
+BLDTGL,-
+BLDTSL,-
+BLDWIN,-
+BLDBNG,-
+BLDDBL,-
+BLDCPL,-
+BLDSSC,-
+BLDTRP,-
+BLDSTR,-
+BLD_GETPRZ,-
+CHNGVOL,-
+I4TOHEX,-
+SPCDLL,-
+SPTANL,-
+TGLANL,-
+SPTSYS,-
+TGLSYS,-
+SYSDEL,-
+EDIT,-
+GETENT,-
+SAVSYS,-
+SPTDSP,-
+SPTODDS,-
+FULLANL,-
+SPTCHK,-
+FULLCHK,-
+ISORT5,-
+LSYS,-
+LSYSCHK,-
+SYSBETS,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXCTMCOM.ESH/SHARE
+$! TSKLIB:GXAPPCOM.ESH/SHARE

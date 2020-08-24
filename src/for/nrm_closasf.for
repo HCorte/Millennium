@@ -1,0 +1,44 @@
+C
+C SUBROUTINE CLOSASF
+C $Log:   GXAFXT:[GOLS]CLOSASF.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:36:14   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 15:53:36   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_asfsubs.for **
+C
+C
+C
+C     ========================================================
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE CLOSASF
+C
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:ASFSUBS.DEF'
+C
+	INTEGER*4 ST
+C
+	IF(BKTCHG.NE.0)THEN
+	  CALL WRITEW(FDB,BKTNUM,BUCKET,ST)
+	  IF(ST.NE.0)THEN
+	    CALL FILERR(SFNAMES(1,ASF),3,ST,BKTNUM)
+	    RETURN
+	  ENDIF
+	ENDIF
+C
+	CALL USRCLOS1(LUN)
+	CALL CLOSEFIL(FDB)
+C
+	RETURN
+	END

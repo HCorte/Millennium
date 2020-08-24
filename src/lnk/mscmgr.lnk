@@ -1,0 +1,68 @@
+$! *** EXECUTABLE-IMAGE-LINKER-COMMAND-FILE MSCMGR ***
+$!
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]MSCMGR.LNV                                   $
+$! $Date::   14 Jul 1996 20:47:34                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$! 
+$! *** Pre-Baseline Source - mscmgr.lnk ***
+$!
+$! V03 14-DEC-93 RRB/PJS ADDED MSC_CLRTYPAHD
+$! V02 08-JAN-93 RRB ADDED MSC_SNDBUF AND MSC_RCVBUF
+$! V01 22-JAN-91 RRB RELEASED FOR VAX
+$!
+$!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! This item is the property of GTECH Corporation, Providence, Rhode Island,
+$! and contains confidential and trade secret information. It may not be
+$! transferred from the custody or control of GTECH except as authorized in
+$! writing by an officer of GTECH. Neither this item nor the information it
+$! contains may be used, transferred, reproduced, published, or disclosed,
+$! in whole or in part, and directly or indirectly, except as expressly
+$! authorized by an officer of GTECH, pursuant to written agreement.
+$!
+$! Copyright 1994 GTECH Corporation. All rights reserved.
+$!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:MSCMGR.EXE -
+OBJLIB:MSCMGR,-
+CHKQ,-
+GETTIM,-
+MSCCLOSE,-
+MSCFLUSH,-
+MSCGETB,-
+MSCOPEN,-
+MSCREAD,-
+MSCREADW,-
+MSCRELB,-
+MSCWRITEW,-
+MSC_BLDCMD,-
+MSC_BLDCONF,-
+MSC_CHKREPLY,-
+MSC_CLRTYPAHD,-
+MSC_EXEC,-
+MSC_GETCTRL,-
+MSC_GETFREE,-
+MSC_GETLRC,-
+MSC_GETPARM,-
+MSC_MESTRAP,-
+MSC_NOSPACES,-
+MSC_QUECMD,-
+MSC_RCVBUF,-
+MSC_SNDBUF,-
+MSC_START_MESS,-
+MSC_START_TIME,-
+MSC_TIMTRAP,-
+QUECMD,-
+STDLIB:NORMLIB/LIB,-
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE,-
+TSKLIB:GXMSCCOM.ESH/SHAREABLE,-
+TSKLIB:GXNETCOM.ESH/SHAREABLE,-
+TSKLIB:GXX2XCOM.ESH/SHAREABLE

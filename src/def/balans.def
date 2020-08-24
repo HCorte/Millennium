@@ -1,0 +1,85 @@
+C
+C   BALANS.DEF                                                                  
+C                                                                               
+C V05 17-FEB-2011 FRP MAXGAM from 10 to 50
+C V04 13-MAY-2010 RXK Adjusted to MAXGAM 10, tables for commisson added.
+C V03 17-JUN-2000 UXN DATA STRUCTURE ALIGNMENT FIXED.
+C V02 11-MAY-1999 UXN MAXGAM changed from 45 to 60.
+C V01 xx-xxx-xxxx xxx Initial release.
+C
+C   PARAMETERS FOR BALWRI-SUBPROGRAM                                            
+C
+C   BALLSUMS(2*MAXGAM)		   LIABILITY SUMS                        100
+C   BALCDC			   CDC DATE			           1
+C   BALRAPC(17)			   REPORT CODES				  17
+C   BALGSUMS(NO_BALREPS,MAXGAM,NUMFIN,NUMTOT) SUMS PER REPORT PER GAME  4200
+C   BALCSUMS(3,MAXGAM+1)	   CASH SUMS(1-CASH,2-NOT USED,3-PASSIVE)153
+C   BALTSUMS(NO_BALREPS,NO_BALSUMS)TOTALS                       	  84
+C   BALDUE(NO_BALREPS,2)           DUE					  14
+C   BALCOMS(NO_BALREPS,MAXGAM)	   COMMISSIONS                           350 
+C   BALTCOM(NO_BALREPS)            TOTAL COMMISSION                        7
+C                                                                      -----
+C                                                                       4926
+C   BALFREE		FREE SPACE 				         834
+C							         	----
+C							      	        5760
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4  BALLEN            ! record length
+        PARAMETER (BALLEN = 5760)
+        INTEGER*4  BALSEC
+        PARAMETER (BALSEC = BALLEN/64)
+
+        INTEGER*4  BALREC(BALLEN)
+
+        REAL*8     BALLSUMS(MAXGAM)
+        INTEGER*4  BALCDC
+        INTEGER*4  BALRAPC(17)
+        INTEGER*4  BALGSUMS(NO_BALREPS,MAXGAM,NUMFIN,NUMTOT)
+        INTEGER*4  BALCSUMS(3,MAXGAM+1)
+        INTEGER*4  BALTSUMS(NO_BALREPS,NO_BALSUMS)
+        INTEGER*4  BALDUE(NO_BALREPS,2)
+        INTEGER*4  BALCOMS(NO_BALREPS,MAXGAM)
+        INTEGER*4  BALTCOM(NO_BALREPS)
+        INTEGER*4  BALFREE(834)
+C
+        INTEGER*4   BALLSUMSOFF, BALCDCOFF, BALRAPCOFF, BALGSUMSOFF
+	PARAMETER  (BALLSUMSOFF = 1) 
+        PARAMETER  (BALCDCOFF   = BALLSUMSOFF + 2*MAXGAM)			
+        PARAMETER  (BALRAPCOFF  = BALCDCOFF + 1)
+        PARAMETER  (BALGSUMSOFF = BALRAPCOFF + 17)
+C
+        INTEGER*4   BALCSUMSOFF, BALTSUMSOFF, BALDUEOFF
+        PARAMETER  (BALCSUMSOFF = BALGSUMSOFF + NO_BALREPS*MAXGAM*NUMFIN*NUMTOT)
+        PARAMETER  (BALTSUMSOFF = BALCSUMSOFF + 3*(MAXGAM+1))
+        PARAMETER  (BALDUEOFF = BALTSUMSOFF + NO_BALREPS*NO_BALSUMS)
+C
+        INTEGER*4   BALCOMSOFF, BALTCOMOFF
+        PARAMETER  (BALCOMSOFF = BALDUEOFF + NO_BALREPS*2) 
+        PARAMETER  (BALTCOMOFF = BALCOMSOFF + NO_BALREPS*MAXGAM) 
+
+        INTEGER*4   BALFREEOFF
+        PARAMETER  (BALFREEOFF = BALTCOMOFF + NO_BALREPS)	
+C
+        EQUIVALENCE (BALLSUMS(1),       BALREC(BALLSUMSOFF))
+        EQUIVALENCE (BALCDC,            BALREC(BALCDCOFF))
+        EQUIVALENCE (BALRAPC(1),        BALREC(BALRAPCOFF))
+        EQUIVALENCE (BALGSUMS(1,1,1,1), BALREC(BALGSUMSOFF))
+        EQUIVALENCE (BALCSUMS(1,1),     BALREC(BALCSUMSOFF))
+        EQUIVALENCE (BALTSUMS(1,1),     BALREC(BALTSUMSOFF))
+        EQUIVALENCE (BALDUE(1,1),       BALREC(BALDUEOFF))
+        EQUIVALENCE (BALCOMS(1,1),      BALREC(BALCOMSOFF))
+        EQUIVALENCE (BALTCOM(1),        BALREC(BALTCOMOFF))
+        EQUIVALENCE (BALFREE(1),        BALREC(BALFREEOFF))

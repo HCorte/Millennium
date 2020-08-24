@@ -1,0 +1,80 @@
+C
+C V02 25-FEB-2004 FRP EuroMillions: recalculate record according to MAXGAM=20.
+C V01 18-MAY-1999 UXN INITIAL RELEASE. 
+C
+C OLD_TKMMES(TICKET_LENGTH,TICKET_ROWS,OLD_MAXGAM+PRM_NUMOPN+NUMCDU) !TICKET
+C                                                             MESSAGES BY GAME
+C OLD_TKMMLN(OLD_MAXGAM+PRM_NUMOPN+NUMCDU)                    !MESSAGE LENGTH BY GAME
+C OLD_TKMMFL(OLD_MAXGAM+PRM_NUMOPN+NUMCDU)                    !MESSAGE FLAGS
+C OLD_TKMAFL(NUMAGT)                                      !AGENT FLAGS (bytes)
+C OLD_TKMMRV(OLD_MAXGAM+PRM_NUMOPN+NUMCDU)       	      !TICKET TEXT REVISION
+C OLD_TKMCDU				       	      !CDU TEXTS REVISION (ALL)
+C						      !1 BYTE SEQUENCE#
+C						      !1 BYTE CHECKSUM
+C
+C
+C N.B. SECTOR SIZE ON VAX IS 512 BYTES <=> 128 I*4
+C      SECTOR SIZE ON CCC IS 256 BYTES <=>  64 I*4
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++            
+C This item is the property of GTECH Corporation, W.Greenwich, Rhode            
+C Island, and contains confidential and trade secret information. It            
+C may not be transferred from the custody or control of GTECH except            
+C as authorized in writing by an officer of GTECH. Neither this item            
+C nor the information it contains may be used, transferred,                     
+C reproduced, published, or disclosed, in whole or in part, and                 
+C directly or indirectly, except as expressly authorized by an                  
+C officer of GTECH, pursuant to written agreement.                              
+C                                                                               
+C Copyright 1997 GTECH Corporation. All rights reserved.                        
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++            
+C
+      INTEGER*4 OLD_MAXGAM
+      PARAMETER (OLD_MAXGAM=10)
+C
+      INTEGER*4 OLD_TKMMES_OFF,OLD_TKMMLN_OFF,OLD_TKMMFL_OFF,OLD_TKMAFL_OFF
+      INTEGER*4 OLD_TKMMRV_OFF,OLD_TKMCDU_OFF,
+     *          OLD_TKMFRE_OFF
+      PARAMETER (OLD_TKMMES_OFF=1)
+      PARAMETER (OLD_TKMMLN_OFF=OLD_TKMMES_OFF+
+     *                     TICKET_LENGTH*TICKET_ROWS*
+     *                     (OLD_MAXGAM+PRM_NUMOPN+NUMCDU))
+      PARAMETER (OLD_TKMMFL_OFF=OLD_TKMMLN_OFF+OLD_MAXGAM+PRM_NUMOPN+NUMCDU)
+      PARAMETER (OLD_TKMAFL_OFF=OLD_TKMMFL_OFF+OLD_MAXGAM+PRM_NUMOPN+NUMCDU)
+      PARAMETER (OLD_TKMMRV_OFF=OLD_TKMAFL_OFF+(NUMAGT/4))
+      PARAMETER (OLD_TKMCDU_OFF=OLD_TKMMRV_OFF+OLD_MAXGAM+PRM_NUMOPN+NUMCDU)
+C
+      PARAMETER (OLD_TKMFRE_OFF=OLD_TKMCDU_OFF+1)
+
+
+
+C CALCULATE FREE SPACE BASED ON MACHINE DEPENDENT SECTOR SIZES.
+C SHOULD ALLWAYS ADD UP TO A EVEN SECTOR SIZE BYTES (VAX 512).
+C NOTE! IN CALCULATIONS, FRE_OFF-2 IS DONE TO TAKE CARE OF WHEN THE DATA SIZE
+C       ENDS ON A EVEN SECTOR SIZE.
+
+      INTEGER*4 OLD_TKMSEC_VAX, OLD_TKMSEC_NUM
+      PARAMETER (OLD_TKMSEC_VAX=SECSIZE/4)
+      PARAMETER (OLD_TKMSEC_NUM=NINT(FLOAT((OLD_TKMFRE_OFF-2)/OLD_TKMSEC_VAX)+.5))
+
+      INTEGER*4 OLD_TKMLEN, OLD_TKMSEC
+      PARAMETER (OLD_TKMLEN = OLD_TKMSEC_VAX*OLD_TKMSEC_NUM)         !EVEN SEC SIZE
+      PARAMETER (OLD_TKMSEC = OLD_TKMLEN / 64)
+      INTEGER*4 OLD_TKMREC(OLD_TKMLEN)  
+
+      INTEGER*4 OLD_TKMMES(TICKET_LENGTH,TICKET_ROWS,
+     *                 OLD_MAXGAM+PRM_NUMOPN+NUMCDU)                 ! = 1152
+      INTEGER*4 OLD_TKMMFL(OLD_MAXGAM+PRM_NUMOPN+NUMCDU)                 ! =   48   
+      INTEGER*4 OLD_TKMMLN(OLD_MAXGAM+PRM_NUMOPN+NUMCDU)                 ! =   48
+      BYTE      OLD_TKMAFL(NUMAGT)                          ! 6144/4   = 1536
+      INTEGER*4 OLD_TKMMRV(OLD_MAXGAM+PRM_NUMOPN+NUMCDU)                 ! =   48
+      INTEGER*4 OLD_TKMCDU                                           ! =    1
+C                                                               _______________
+C                                                                    2833 
+C
+      EQUIVALENCE (OLD_TKMMES,OLD_TKMREC(OLD_TKMMES_OFF))  
+      EQUIVALENCE (OLD_TKMMLN,OLD_TKMREC(OLD_TKMMLN_OFF))
+      EQUIVALENCE (OLD_TKMMFL,OLD_TKMREC(OLD_TKMMFL_OFF))
+      EQUIVALENCE (OLD_TKMAFL,OLD_TKMREC(OLD_TKMAFL_OFF))
+      EQUIVALENCE (OLD_TKMMRV,OLD_TKMREC(OLD_TKMMRV_OFF))
+      EQUIVALENCE (OLD_TKMCDU,OLD_TKMREC(OLD_TKMCDU_OFF))

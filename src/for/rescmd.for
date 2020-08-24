@@ -1,0 +1,38 @@
+C
+C SUBROUTINE RESCMD
+C $Log:   GXAFXT:[GOLS]RESCMD.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:43:16   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:29:44   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - prizes.for **
+C
+C
+C
+C SUBROUTINE TO QUEUE COMMANDS TO SYSTEM FOR ONLINE DRAWING
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE RESCMD(CBUF)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INTEGER*4 CBUF(CDLEN), ST
+C
+C
+10	CONTINUE
+	CALL QUECMD(CBUF,ST)
+	IF(ST.NE.0) THEN
+	   TYPE*,IAM(),' Queue command error > ',ST,' continue to retry'
+	   CALL GPAUSE
+	   GOTO 10
+	ENDIF
+	RETURN
+	END

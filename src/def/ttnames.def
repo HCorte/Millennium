@@ -1,0 +1,25 @@
+C TTNAMES.DEF Transaction Name definition
+C
+C V03 20-MAR-2014 SCML Placard Project
+C V02 26-JUN-2011 FJG TIR#2445 OOB TRNSNP1 Include TEUR
+C V02 10-APR-2010 RXK Claim replaced with Return 
+C V01 08-JUN-2000 UXN Separated from GTNAMES.DEF
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        REAL*8 TTNAMES(0:12)
+        DATA TTNAMES/'Unused  ','Wager   ','Cancel  ','Delete  ',
+     *               'Cash    ','Return  ','Refund  ','Special ',
+     *               'Command ','Cross   ','Paththru','EuroMil ',
+     *               'IGServer'/
+	COMMON /TTNAMES/ TTNAMES

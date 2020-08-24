@@ -1,0 +1,66 @@
+ X2ALLSAP.HLP             GTECH Distributed Network
+                   Services Access Points Summary Snapshot      Page 1 of 3
+ 
+    This snapshot will list summary information on all Service Access Points
+    (SAP's) configured in the system.  A SAP, as defined in this snapshot,
+    is  a front end processor. The information displayed consists of the
+    following:
+ 
+    SAP #       - Service Access Point identification number.
+    FE Id       - Front End identification number.
+    Status      - Current status of the SAP: notup,online,idle.
+    Last Active - Last time the SAP was active.
+    Capcty      - Number of free network connections.
+    Seq Recv    - Number of transport blocks received.
+    Seq Xmit    - Number of transport blocks transmited.
+    Seq Errs    - Number of transport blocks received out of order.
+    Conn        - Connection identifier. See CONSNP.
+    LAN         - Ethernet Local Area Network (LAN) number.
+    Conf Port   - Number of ports configured on the Front End.
+    Act Port    - Number of active ports on the Front End.
+    Ethr Delay  - Delay, in millisecs, to send and receive on ethernet.
+ 
+ X2ALLSAP.HLP             GTECH Distributed Network
+                   Services Access Points Summary Snapshot      Page 2 of 3
+ 
+ 
+    The information displayed on the snapshot can be sorted by any of the
+    indicated sort fields.  Sort fields are those columns labeled with a
+    number in parenthesis.  This snapshot can be sorted by any of the
+    following columns:
+ 
+    (1) SAP
+    (2) Status
+    (3) Last Active
+    (4) Seq Errs
+ 
+    To sort by any of these columns, enter at the command line, XSRT
+    followed by the number indicated above the column.  For example,
+    to sort by Last Active enter:
+ 
+    XSRT 3
+ 
+ 
+ 
+ X2ALLSAP.HLP             GTECH Distributed Network
+                   Services Access Points Summary Snapshot      Page 3 of 3
+ 
+ 
+    Additional facilities are provided with this snapshot through
+    input at the command line:
+ 
+    XFOR #  - Can be used to page forward X number of pages.
+    XBAK #  - Can be used to page backward X number of pages.
+    XBOT    - Will bring to the first SAP in the list.
+    XTOP    - Will bring you to last SAP in the list.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

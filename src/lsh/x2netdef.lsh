@@ -1,0 +1,20 @@
+$! X2NETDEF.LSH
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]X2NETDEF.LSV                                 $
+$! $Date::   17 Apr 1996 16:25:02                                         $
+$! $Revision::   1.0                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$! 
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$! 
+LINK'P1' -
+/EXE=TSKLIB:GXX2NETDEF.ESH -
+/SHAREABLE -
+OBJLIB:X2NETDEF,-
+SYS$INPUT/OPTION
+SYMBOL_VECTOR=(X2XDEF=PSECT)
+PSECT_ATTR=X2XDEF,SHR,WRT

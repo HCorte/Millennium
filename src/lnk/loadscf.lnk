@@ -1,0 +1,21 @@
+$! GXSRC:LOADSCF.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]LOADSCF.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:45:12   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:15:16   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:42:54   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=GXTSK:LOADSCF.EXE -
+OBJLIB:LOADSCF,-
+SYSCON,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

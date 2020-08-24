@@ -1,0 +1,47 @@
+C
+C SUBROUTINE BSETN
+C $Log:   GXAFXT:[GOLS]BSETN.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:22:40   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   07 Jan 1994 17:55:56   HXK
+C  No change.
+C  
+C     Rev 1.0   21 Jan 1993 15:45:46   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - gcan1.for **
+C
+C
+C
+C
+C **** BSETN - SET A BIT COUNTING FROM LEFT IN INTEGER*4 ARRAY
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE BSETN(BYTARY, BITNUM)
+	IMPLICIT NONE
+C
+C
+	BYTE	    BYTARY(0:*)
+	INTEGER*4   BITNUM
+C
+	INTEGER*4   BYT
+	INTEGER*4   NDX
+	INTEGER*2   BITTAB(0:7)
+	DATA	    BITTAB/ 128,64,32,16, 8,4,2,1 /
+C
+	INTEGER*2   I2
+	BYTE	    I1(2)
+	EQUIVALENCE (I1,I2)
+C
+	BYT = BITNUM/8
+	NDX = MOD(BITNUM,8)
+	I2=0
+	I1(1)=BYTARY(BYT)
+	I2 = IOR(I2,BITTAB(NDX))
+	BYTARY(BYT)=I1(1)
+	RETURN
+	END

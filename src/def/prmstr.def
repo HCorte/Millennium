@@ -1,0 +1,40 @@
+C  GXSRC:PRMSTR.DEF
+C 
+C V02 04-JUN-1999 UXN STRMAXD changed to 30.
+C V01 13-MAY-1999 UXN INITIAL RELEASE.
+C
+C SUPER TRIPLE GAME PARAMETERS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	INTEGER*4 NUMSTR, MAXSTRRW, MAXSTRTI
+	PARAMETER(NUMSTR=6)             ! NUMBER OF SUPER TRIPLE GAMES
+	PARAMETER(MAXSTRRW=18)          ! MAX NUMBER OF COMPETITOR ROWS
+	PARAMETER(MAXSTRTI=24)	        ! MAX NUMBER OF TIES
+
+C NAME FILED LNGTH PARAMETERS
+
+	INTEGER*4 STRENM_LEN, STRDES_LEN , STRNMS_LEN, STRTVC_LEN
+	PARAMETER (STRENM_LEN=28)	! EVENT NAME LENGTH IN BYTES
+	PARAMETER (STRDES_LEN=3*28)     ! EVENT DESCRIPTION LENGTH IN BYTES     
+	PARAMETER (STRNMS_LEN=16)	! ROW NAME LENGTH IN BYTES
+	PARAMETER (STRTVC_LEN= 4)       ! LENGTH IN BYTES OF TC-CHANEL NAME.
+
+C SUPER TRIPLE MAXIMUM NUMBER OF TEXT MESSAGES
+
+	INTEGER*4 STRTXMAX
+	PARAMETER(STRTXMAX=3)           ! MAXIMUM TEXT MESSAGES
+
+	INTEGER*4 STRMAXD		
+	PARAMETER(STRMAXD=30)		! # OF ODDS TO DISPLAY.

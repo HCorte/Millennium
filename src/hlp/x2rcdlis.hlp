@@ -1,0 +1,22 @@
+                          GTECH Distibuted Network
+                          Report Code Listing Help                Page 1 of 1
+ 
+      This screen displays all report codes which are currently defined
+      in the Distributed Network Database.  The information displayed
+      includes: report code number, type, reset statistics flag, and
+      the report code description.
+ 
+      The screen can display up to 10 codes on one screen, and allows
+      scrolling forward and back through pages of codes.  This is
+      accomplished by entering "N" to screen to the next page of codes,
+      or "P" to screen to the previous page of codes.  It is also possible
+      to directly display a code by entering "X##", where XX is the
+      number of the code that you wish to display.
+ 
+      To return back to the main menu, enter "E".
+ 
+ 
+ 
+ 
+ 
+ 

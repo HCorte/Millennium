@@ -1,0 +1,49 @@
+C
+C SUBROUTINE IRCSIZ
+C $Log:   GXAFXT:[GOLS]IRCSIZ.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:40:42   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:42:34   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_hshfili4.for **
+C
+C
+C
+C
+C *** IRCSIZ
+C
+C Obtain integer*2 size of a record
+C
+C *** THIS ROUTINE IS PROVIDED ONLY FOR COMPATABILITY WITH THE OLD
+C     INDIRECT FILE SYSTEM.  IT MAY BE CALLED BY AN APPLICATION, BUT
+C     IS NEVER CALLED BY ANY OF THE HSH... SUBROUTINES.
+C ***
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE IRCSIZ(LUN,I2SIZE)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:HSHCOM.DEF'
+C
+	INTEGER*4 LUN                       !  INPUT: LOGICAL UNIT #
+	INTEGER*4 I2SIZE                    ! OUTPUT: I*2 SIZE OF RECORD
+C
+C
+C
+	IF(FCB(FCBLUN,LUN).NE.LUN)THEN
+	  I2SIZE=0
+	ELSE
+	  I2SIZE=FCB(FCBLN2,LUN)
+	ENDIF
+C
+	RETURN
+	END

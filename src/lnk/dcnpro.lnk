@@ -1,0 +1,70 @@
+$!*** LINKER FILE DCNPRO ***
+$!
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]DCNPRO.LNV                                   $
+$! $Date::   14 Jul 1996 20:38:46                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$! 
+$!*** Pre-Baseline Source - dcnpro.lnk ***
+$!
+$! V03 27-JUL-95 PJS REMOVED THE FOLLOWING:
+$!                   DN_BUILD_BUFFER, DN_CLOSE_LINK, EXTRABUF, FREELINK_AST,
+$!                   NET_CHKQUEUE, NET_DN_BUFNO, SYSIO, TSNDNET, VMS_ERROR_OPS.
+$! V02 14-JAN-94 PJS SORTED & CLEANED UP.
+$! V01 23-APR-91 JWE NEW DCNPRO
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!This item is the property of GTECH Corporation, Providence, Rhode Island,
+$!and contains confidential and trade secret information. It may not be
+$!transferred from the custody or control of GTECH except as authorized in
+$!writing by an officer of GTECH. Neither this item nor the information it
+$!contains may be used, transferred, reproduced, published, or disclosed,
+$!in whole or in part, and directly or indirectly, except as expressly
+$!authorized by an officer of GTECH, pursuant to written agreement.
+$!
+$!Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:DCNPRO.EXE -
+OBJLIB:DCNPRO, -
+ABL_AST, -
+BUFINI, -
+DN_ABORT, -
+DN_AP_STATUS, -
+DN_AP_STATUS_AST, -
+DN_CONFIRM_AST, -
+DN_CONNECT, -
+DN_CONNECT_AST, -
+DN_DISCONNECT, -
+DN_DISCONNECT_AST, -
+DN_FREEBUF, -
+DN_FREEBUF_AST, -
+DN_GETCOMMAND, -
+DN_GET_LOGICAL, -
+DN_GET_UNIT, -
+DN_GET_UNIT_AST, -
+DN_INIT, -
+DN_MAILBOX_AST, -
+DN_NETSHUT, -
+DN_READ, -
+DN_READ_AST, -
+DN_WRITE, -
+DN_WRITE_AST, -
+IODONE, -
+IODONE_AST, -
+NET_CHKBUF, -
+NET_CHKBUF_AST, -
+QUEMBX, -
+QUEMBX_AST, -
+RTL_AST, -
+XWAIT_AST, -
+CHKQCOR,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXNETCOM.ESH/SHAREABLE

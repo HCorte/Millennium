@@ -1,0 +1,60 @@
+C
+C PRMMES.DEF
+C  
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]PRMMES.DEV                                   $
+C  $Date::   11 Aug 1996 16:37:36                                         $
+C  $Revision::   1.2                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C  
+C     MESSAGE COMMON, MESMNT DEFINITIONS IN FORTRAN VII
+C
+C  V02 26-DEC-95 DAS CHANGED TO ALLOW MORE THAN 32K MESSAGES
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  MSGSIZ, MSGS, MSGSZH, MSGCTL
+C......	PARAMETER (MSGSIZ=32768)      !# OF RECORDS THIS VALUE LARGEST POSSIBLE
+C...... PARAMETER (MSGSIZ=49152)      !# OF RECORDS THIS VALUE TOO BIG
+C......	PARAMETER (MSGSIZ=65536)      !# OF RECORDS THIS VALUE TOO BIG
+C......	PARAMETER (MSGSIZ=98304)      !# OF RECORDS THIS VALUE TOO BIG
+        PARAMETER (MSGSIZ=122880)     !A BIT MORE
+	PARAMETER (MSGS=MSGSIZ/4)     !ACTUAL MESSAGE CAPACITY
+C..V02	PARAMETER (MSGSZH=32)         !# OF HALFWORDS/RECORD
+	PARAMETER (MSGSZH=34)         !# OF HALFWORDS/RECORD
+	PARAMETER (MSGCTL=MSGSIZ)     !FREE SPACE CONTROL RECORD
+C
+C       THESE ARE NOW I4 OFFSETS
+C
+	INTEGER*4  SEGLEN, MSGLNK
+C..V02	PARAMETER (SEGLEN=31)         !LENGTH OF THIS SEGMENT
+	PARAMETER (SEGLEN=16)         !LENGTH OF THIS SEGMENT
+C..V02	PARAMETER (MSGLNK=32)         !LINK TO NEXT RECORD IF POSITIVE
+	PARAMETER (MSGLNK=17)         !LINK TO NEXT RECORD IF POSITIVE
+C
+	INTEGER*4  MFRCNT, MFRLNK
+C..V02	PARAMETER (MFRCNT=31)         !# AVAILABLE EMPTY RECORDS
+	PARAMETER (MFRCNT=16)         !# AVAILABLE EMPTY RECORDS
+C..V02	PARAMETER (MFRLNK=32)         !LINK TO NEXT EMPTY RECORD
+	PARAMETER (MFRLNK=17)         !LINK TO NEXT EMPTY RECORD
+C
+C       DEFINITION FOR TEXT OF MESSAGE
+C
+	INTEGER*4  MSGFST, MSGLST
+	PARAMETER (MSGFST=1)          !FIRST CHARACTER OF TEXT
+	PARAMETER (MSGLST=60)         !LAST CHARACTER OF TEXT

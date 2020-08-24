@@ -1,0 +1,850 @@
+C SUBROUTINE SNDCNTRL
+C
+C SNDCNTRL.FOR
+C
+C V26 16-MAR-2016 SCML M16 PROJECT:
+C                       Updated EM game control request
+C                       Added SM game control request
+C V25 08-JUN-2010 RXK ePassive changes
+C V24 01-DEC-2000 UXN TOTOGOLO ADDED.
+C V23 03-MAR-2000 OXK Vakio changes
+C V22 13-OCT-1999 RXK World Tour added.
+C V21 17-MAY-1999 UXN Super Triple changed.
+C V20 18-MAR-1999 RXK Game type/game index change. Hack for V5 removed.
+C V19 11-JAN-1999 UXN PeliSuomi changes.
+C V18 10-DEC-1995 HXK Fix for size of count
+C V17 23-NOV-1995 HXK Merge of post 65 stuff; changes for Double/Couple
+C V16 05-MAY-1995 HXK V5 entered into database again!!!!
+C V15 22-FEB-1995 HXK HACK FOR V5
+C V14 15-OCT-1994 HXK Adding /developing Bingo (15.Oct.94)
+C V13 19-NOV-1993 GXA Corrected conflict betwean TNBR references.
+C V12 15-NOV-1993 GXA Added Opinion Poll control msg.
+C V11 06-AUG-1993 SXH For RAVI scratched horses use I1TEMP(4) and I1TEMP(3)
+C V10 03-AUG-1993 SXH Fixed bug with I1TEMP elements for RAVI
+C V09 02-AUG-1993 GXA Added # races to the Ravi message.
+C V08 14-JUL-1993 GXA Added Liability limit to Toto Select message.
+C V07 13-JUL-1993 GXA Released for Finland Dec Conversion / Oddset.
+C V06 28-JUN-1993 HXK changed err message length from 5 to 6
+C V05 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V04 10-JUL-1992 GCAN ADDED TOTO SELECT ROW STATUSES.
+C V03 07-MAY-1992 GCAN CHANGED POSITIONING OF CONTROL REVISION.
+C V02 05-NOV-1991 GCAN INITIAL RELEASE FOR THE NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C SUBROUTINE TO PROCESS TERMINAL CONTROL MESSAGES.
+C
+C CALLING SEQUENCE:
+C     CALL SNDCNTRL(TRABUF,MESTAB,OUTLEN)
+C INPUT
+C     TRABUF - INTERNAL TRANSACTION FORMAT
+C     MESTAB - TERMINAL INPUT MESSAGE
+C OUTPUT
+C     MESTAB - TERMINAL OUTPUT MESSAGE
+C     OUTLEN - OUTPUT LENGTH
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C 
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE SNDCNTRL(TRABUF,MESTAB,OUTLEN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:LTOCOM.DEF'
+	INCLUDE 'INCLIB:SPTCOM.DEF'
+	INCLUDE 'INCLIB:TGLCOM.DEF'
+	INCLUDE 'INCLIB:PASCOM.DEF'
+	INCLUDE 'INCLIB:NBRCOM.DEF'
+	INCLUDE 'INCLIB:TSLCOM.DEF'
+	INCLUDE 'INCLIB:SCRCOM.DEF'
+	INCLUDE 'INCLIB:WITCOM.DEF'
+	INCLUDE 'INCLIB:KIKCOM.DEF'
+        INCLUDE 'INCLIB:BNGCOM.DEF'
+        INCLUDE 'INCLIB:DBLCOM.DEF'
+        INCLUDE 'INCLIB:CPLCOM.DEF'
+        INCLUDE 'INCLIB:SSCCOM.DEF'
+        INCLUDE 'INCLIB:TRPCOM.DEF'
+        INCLUDE 'INCLIB:STRCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:CHKSUMCM.DEF'
+!	INCLUDE 'INCLIB:EUROCONFIG.DEF'                                               !V26 - COMMENTED OUT
+        INCLUDE 'INCLIB:EURCOM.DEF'                                             !V26
+C
+	BYTE        MESTAB(*)			 !Table containing I/O message
+	BYTE	    I1TEMP(4)			 !Temp. Variable
+	INTEGER*4   STSFLGS(MAXSRW)		 !Row Status Flags
+	INTEGER*4   STSTRP(MAXTRPRW,3)		 !Row Status Flags for Trio gam
+	BYTE	    ROWOPN			 !Row Open parameter
+	BYTE	    ROWCLSL			 !Row Closed, High low nible.
+	BYTE	    ROWCANL			 !Row Cancelled, High low nible.
+	BYTE	    ROWPSTL			!Row Postponed, High low nible.
+C
+	INTEGER*4   COUNT, I, J
+	INTEGER*4   IND				 !Index into MESTAB
+	INTEGER*4   BEGIND			 !Beg. of first data index.
+	INTEGER*4   GTYP			 !Game Type
+	INTEGER*4   GIND			 !Game Index
+	INTEGER*4   GNUM			 !Game Number
+	INTEGER*4   ONUM			 !Opinion Poll 'Game Number'
+	INTEGER*4   I4TEMP			 !Temp. Variable
+	INTEGER*4   PADROW			 !# of Rows Padded to Even Bytes
+	INTEGER*4   ROWOFF			 !Loop index
+	INTEGER*4   CHKLEN			 !Lenght to checksum
+	INTEGER*4   MYCHKSUM			 !Calculated checksum
+	INTEGER*2   ERRTYP          		 !Error and Control Types
+	INTEGER*2   OUTLEN			 !Message Output Length
+	INTEGER*2   I2REVN			 !Revision Number
+	INTEGER*2   I2TEMP(2)			 !Temp. Variable
+        INTEGER*4   TKT_LINE_LENGTH		 !Ticket message line length.
+        INTEGER*4   GI,EM,REM,BSD,NUMD,EMISIND,WY,WEEK,YEAR,NUMSAL,DOFF,NUM
+        INTEGER*4   TMPBSD(PAGEMI),TOSEND(NUMPAS)
+        INTEGER*4   SEND_EMIS(PMAXSAL,NUMPAS)
+
+	LOGICAL	    PARTIAL_MSG/.FALSE./	 !Build complete msg. Flag.
+        LOGICAL     FIRST_PAS/.TRUE./            !First request of Passive cntrl
+C
+	EQUIVALENCE (I4TEMP,I2TEMP(1),I1TEMP(1))
+C          
+	DATA	    ERRTYP /Z90/
+	DATA	    ROWOPN /Z00/
+	DATA	    ROWCLSL/Z01/
+	DATA	    ROWCANL/Z02/
+	DATA	    ROWPSTL/Z03/
+	DATA	    BEGIND /Z05/                      
+	INTEGER*4   TMP
+!	COMMON ECFREC                                                                 !V26 - COMMENTED OUT
+C
+C
+        IND = 5
+C
+C GET GAME TYPE AND GAME INDEX
+C
+        GTYP = ZEXT(MESTAB(IND))
+        GIND = ZEXT(MESTAB(IND+1))
+        TRABUF(TGAMTYP) = GTYP
+        TRABUF(TGAMIND) = GIND
+C
+C EURO MIL PROJECT - IF GAME TYPE EURO GOTO PROCESS
+C
+        IF (GTYP .EQ. TEUM) GOTO 100
+        IF (GTYP .EQ. TRAF) GOTO 100                                            !V26
+        IF(TRABUF(TGAMTYP).LT.1.OR.TRABUF(TGAMTYP).GT.MAXTYP) THEN
+           TRABUF(TERR) = SYNT
+           SYNTERRCOD = 10
+           GOTO 100  !fix for 19-Sep-1994
+        ENDIF
+        IF(TRABUF(TGAMIND).LT.1.OR.TRABUF(TGAMIND).GT.MAXIND) THEN
+           TRABUF(TERR) = SYNT
+           SYNTERRCOD = 30
+           GOTO 100  !fix for 19-Sep-1994
+        ENDIF
+C
+C GET GAME NUMBER (MAKE KLUDGE FOR OPINION POLLS)
+C
+	IF(GTYP.NE.TNBR) THEN
+	   GNUM=GTNTAB(GTYP,GIND)
+	   TRABUF(TGAM)=GNUM
+	   IF(GNUM.LT.1.OR.GNUM.GT.MAXGAM) THEN
+	      TRABUF(TERR) = SYNT
+	      SYNTERRCOD = 40
+              GOTO 100  !fix for 19-Sep-1994
+	   ENDIF
+	ELSE
+	   GNUM = 0
+	   IF(GIND.GT.PRM_NUMOPN) THEN
+	      TRABUF(TERR) = SYNT
+	      SYNTERRCOD = 45
+              GOTO 100  !fix for 19-Sep-1994
+	   ENDIF
+	ENDIF
+C
+C
+100     CONTINUE       !fix for 19-Sep-1994
+C
+C IF TRANSACTION STATUS IS NOT GOOD
+C BUILD ERROR MESSAGE.
+C
+	IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
+	IF(TRABUF(TSTAT).NE.GOOD) THEN
+	  MESTAB(2) = ERRTYP
+	  MESTAB(5) = TRABUF(TERR)
+          MESTAB(6) = 0
+	  OUTLEN = 6
+	  GOTO 20000
+	ENDIF
+C
+C GET CONTROL REVISON# FROM MEMORY
+C
+	I2REVN = 0
+	IF(GTYP.EQ.TLTO) THEN
+	  I2REVN = LTOREV(GIND)
+	ELSEIF(GTYP.EQ.TSPT) THEN
+	  I2REVN = SPTREV(GIND)
+	ELSEIF(GTYP.EQ.TTGL) THEN
+	  I2REVN = TGLREV(GIND)
+	ELSEIF(GTYP.EQ.TTSL) THEN
+	  I2REVN = TSLREV(GIND)
+	ELSEIF(GTYP.EQ.TSCR) THEN
+	  I2REVN = SCRREV(GIND)
+	ELSEIF(GTYP.EQ.TWIT) THEN
+	  I2REVN = WITREV(GIND)
+	ELSEIF(GTYP.EQ.TKIK) THEN
+	  I2REVN = KIKREV(GIND)
+        ELSEIF(GTYP.EQ.TBNG) THEN
+          I2REVN = BNGREV(GIND)
+        ELSEIF(GTYP.EQ.TDBL) THEN
+          I2REVN = DBLREV(GIND)
+        ELSEIF(GTYP.EQ.TCPL) THEN
+          I2REVN = CPLREV(GIND)
+	ELSEIF(GTYP.EQ.TSSC) THEN
+	  I2REVN = SSCREV(GIND)
+	ELSEIF(GTYP.EQ.TTRP) THEN
+	  I2REVN = TRPREV(GIND)
+	ELSEIF(GTYP.EQ.TSTR) THEN
+	  I2REVN = STRREV(GIND)
+	ELSEIF(GTYP.EQ.TNBR) THEN
+	  CALL OPNPOL_CNTRL(GIND,I2REVN)
+C
+C EURO MIL PROJECT - GET GAME REVISION OF EURO MILHOES
+C
+        ELSEIF (GTYP .EQ. TEUM) THEN
+!           I2REVN = ECFGREVSON
+           I2REVN = EUMCTRLREV(GIND)                                            !V26
+        ELSEIF (GTYP .EQ. TRAF) THEN
+          I2REVN = RAFCTRLREV(GIND)                                             !V26
+	ENDIF
+C
+	TRABUF(TSNEW)=I2TEMP(1)
+	TRABUF(TSOLD)=I2REVN
+C
+C BUILD GENERIC PART OF MESSAGE.
+C
+	IND = BEGIND
+C----+---+-------------+------------------------------------------------
+C V26|BEG| M16 PROJECT | UPDATE EM AND ADD SM DATA
+C----+---+-------------+------------------------------------------------
+        IF (GTYP .EQ. TEUM) THEN
+!           MESTAB(IND) = GTYP		! Game type
+!           MESTAB(IND + 1) = GIND	! Game Ind
+!           MESTAB(IND + 2) = 0		! Draw date 
+!           MESTAB(IND + 3) = 0		! Draw date
+!           I4TEMP = ECFPRICE
+!           MESTAB(IND + 4) = I1TEMP(2)	! Base Price
+!           MESTAB(IND + 5) = I1TEMP(1)	! Base Price
+!           I4TEMP = ECFOPTCTRL
+!           MESTAB(IND + 6) = I1TEMP(2)	! Options Flag
+!           MESTAB(IND + 7) = I1TEMP(1)	! Options Flag
+!           MESTAB(IND + 8) = ECFBITMAP1	! Draws Bitmap (1)
+!           MESTAB(IND + 9) = ECFBITMAP2	! Draws Bitmap (2)
+!           MESTAB(IND + 10) = ECFBITMAP3! Draws Bitmap (3)
+!           MESTAB(IND + 11) = ECFBITMAP4! Draws Bitmap (4)
+!           MESTAB(IND + 12) = ECFBITMAP5! Draws Bitmap (5)
+!           MESTAB(IND + 13) = ECFBITMAP6! Draws Bitmap (6)
+!           MESTAB(IND + 14) = ECFBITMAP7! Draws Bitmap (7)
+!           I4TEMP = ECFMAXBETS    ! MAX NUMBER OF BETS
+!           MESTAB(IND + 15) = I1TEMP(2)
+!           MESTAB(IND + 16) = I1TEMP(1)
+!           I4TEMP = ECFGREVSON
+!           MESTAB(IND + 17) = I1TEMP(2)	! Game Rev
+!           MESTAB(IND + 18) = I1TEMP(1)	! Game Rev
+!           IND = IND + 19
+C         GAME TYPE
+          MESTAB(IND + 0) = GTYP
+
+C         GAME INDEX
+          MESTAB(IND + 1) = GIND
+
+C         DRAW DATE
+          MESTAB(IND + 2) = 0
+          MESTAB(IND + 3) = 0
+
+C         GAME BASE PRICE
+          I4TEMP = EUMGBPRICE(GIND)
+          MESTAB(IND + 4) = I1TEMP(2)
+          MESTAB(IND + 5) = I1TEMP(1)
+          IND = IND + 6
+
+C         GAME OPTION FLAGS AND OPTION DATA
+          GNUM = EGTNTAB(GTYP,GIND)                                             !GET GAME NUMBER
+          CALL EURGOPTCTR(MESTAB, IND, GNUM)
+
+C         SoM RAFFLES MINIMUM NUMBER HAVING IMR
+          I4TEMP = EUMSOMIMRB(GIND)
+C          MESTAB(IND + 1) = I1TEMP(1)
+          MESTAB(IND + 0) = I1TEMP(1)
+          IND = IND + 1
+          GOTO 5000
+        ELSEIF(GTYP .EQ. TRAF) THEN
+C         GAME TYPE
+          MESTAB(IND + 0) = GTYP
+
+C         GAME INDEX
+          MESTAB(IND + 1) = GIND
+
+C         DRAW DATE
+          MESTAB(IND + 2) = 0
+          MESTAB(IND + 3) = 0
+
+C         GAME BASE PRICE
+          I4TEMP = RAFGBPRICE(GIND)
+          MESTAB(IND + 4) = I1TEMP(2)
+          MESTAB(IND + 5) = I1TEMP(1)
+          IND = IND + 6
+
+C         GAME OPTION FLAGS AND OPTION DATA
+          GNUM = EGTNTAB(GTYP,GIND)                                             !GET GAME NUMBER
+          CALL EURGOPTCTR(MESTAB, IND, GNUM)
+
+C         SM RAFFLES MINIMUM NUMBER HAVING IMR
+          I4TEMP = RAFIMRBEGI(GIND)
+c          MESTAB(IND + 1) = I1TEMP(1)
+          MESTAB(IND + 0) = I1TEMP(1)  
+          IND = IND + 1
+          GOTO 5000
+C----+---+-------------+------------------------------------------------
+C V26|END| M16 PROJECT | UPDATE EM AND ADD SM DATA
+C----+---+-------------+------------------------------------------------
+        ELSEIF(GTYP.NE.TPAS) THEN
+	   CALL GAME_OPTIONS(MESTAB,IND,TRABUF(TTER),GNUM,PARTIAL_MSG)
+        ENDIF
+C
+C BUILD APPROPRIATE RESPONSE
+C
+	IF(TRABUF(TGAMTYP).EQ.TSPT) GOTO  1000
+	IF(TRABUF(TGAMTYP).EQ.TTSL) GOTO  2000
+	IF(TRABUF(TGAMTYP).EQ.TWIT) GOTO  3000
+	IF(TRABUF(TGAMTYP).EQ.TSCR) GOTO  4000
+	IF(TRABUF(TGAMTYP).EQ.TLTO) GOTO  5000
+	IF(TRABUF(TGAMTYP).EQ.TKIK) GOTO  6000
+	IF(TRABUF(TGAMTYP).EQ.TNBR) GOTO  7000		!Opinion Poll!!.
+        IF(TRABUF(TGAMTYP).EQ.TBNG) GOTO 10000
+        IF(TRABUF(TGAMTYP).EQ.TDBL) GOTO 11000
+        IF(TRABUF(TGAMTYP).EQ.TCPL) GOTO 12000
+        IF(TRABUF(TGAMTYP).EQ.TSSC) GOTO 13000
+        IF(TRABUF(TGAMTYP).EQ.TTRP) GOTO 14000
+        IF(TRABUF(TGAMTYP).EQ.TSTR) GOTO 15000
+	IF(TRABUF(TGAMTYP).EQ.TTGL) GOTO 16000
+	IF(TRABUF(TGAMTYP).EQ.TPAS) GOTO 17000
+C
+C MUST BE INVALID GAME
+C
+	MESTAB(2) = ERRTYP
+	MESTAB(5) = SYNT
+        MESTAB(6) = 0
+	OUTLEN=6
+	GOTO 20000
+C
+C BUILD SPORTS SPECIFIC PART OF THE CONTROL MESSAGE
+C
+1000    CONTINUE
+C
+C # OF ROWS
+C
+        I4TEMP = SPTMAX(GIND)
+	MESTAB(IND + 0) = I1TEMP(2)
+	MESTAB(IND + 1) = I1TEMP(1)
+	IND = IND + 2
+C
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD TOTO SELECT SPECIFIC PART OF THE CONTROL MESSAGE
+C
+2000    CONTINUE
+C
+        MESTAB(IND) = TSLRWS(GIND)                  !# ACTUAL ROWS
+        IND = IND + 1
+C
+C CHECK STATUSES FOR ALL ROWS AND CREATE BITMAP ACCORDINGLY
+C
+        PADROW =(TSLRWS(GIND)+1)/2*2                !NUMBER OF ROWS PADDED
+        DO ROWOFF=1,PADROW
+           STSFLGS(ROWOFF) = ROWCLSL
+           IF(TSLSTA(ROWOFF,GIND).EQ.GAMOPN) STSFLGS(ROWOFF) = ROWOPN
+           IF(TSLSTA(ROWOFF,GIND).EQ.GAMCAN) STSFLGS(ROWOFF) = ROWCANL
+           IF(TSLSTA(ROWOFF,GIND).EQ.GAMBFD) STSFLGS(ROWOFF) = ROWCLSL
+           IF(TSLSTA(ROWOFF,GIND).EQ.GAMREF) STSFLGS(ROWOFF) = ROWPSTL
+	   TMP = TSLROWTYP(ROWOFF,GIND)
+	   STSFLGS(ROWOFF) = IOR(ISHFT(TMP,2),STSFLGS(ROWOFF))
+        END DO
+C
+        DO ROWOFF=1,PADROW,2
+           I4TEMP=ISHFT(STSFLGS(ROWOFF),4)+STSFLGS(ROWOFF+1)
+           MESTAB(IND)=I1TEMP(1)
+           IND=IND+1
+        END DO
+C
+	I4TEMP = P(TSLIAB)
+	MESTAB(IND+0) = I1TEMP(4)
+	MESTAB(IND+1) = I1TEMP(3)
+	MESTAB(IND+2) = I1TEMP(2)
+	MESTAB(IND+3) = I1TEMP(1)
+	IND = IND + 4
+C
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD WIN TIP SPECIFIC PART OF THE CONTROL MESSAGE
+C
+3000    CONTINUE
+C
+C NUMBER OF ACTUAL ROWS
+C
+        COUNT=0
+        DO I=1,MAXWRW
+           IF(WITNMS(1,I,GIND).NE.'    ') COUNT=I
+        END DO
+        I4TEMP = COUNT                                !NUMBER OF ROWS
+        MESTAB(IND) = I1TEMP(1)
+        IND = IND + 1
+C
+C CHECK STATUSES FOR ALL ROWS AND CREATE BITMAP ACCORDINGLY
+C
+        PADROW =(COUNT+1)/2*2                  !NUMBER OF ROWS PADDED
+        DO ROWOFF=1,PADROW
+           STSFLGS(ROWOFF) = ROWCLSL
+           IF(WITSTA(ROWOFF,GIND).EQ.GAMOPN) STSFLGS(ROWOFF) = ROWOPN
+           IF(WITSTA(ROWOFF,GIND).EQ.GAMCAN) STSFLGS(ROWOFF) = ROWCANL
+        END DO
+C
+        DO ROWOFF=1,PADROW,2
+           I4TEMP=ISHFT(STSFLGS(ROWOFF),4)+STSFLGS(ROWOFF+1)
+           MESTAB(IND)=I1TEMP(1)
+           IND=IND+1
+        END DO
+C
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD SCORE SPECIFIC PART OF THE CONTROL MESSAGE
+C
+4000    CONTINUE
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD LOTTO SPECIFIC PART OF THE CONTROL MESSAGE
+C
+5000    CONTINUE
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD KICKER SPECIFIC PART OF THE CONTROL MESSAGE
+C
+6000    CONTINUE
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD OPINION POLL (NUMBERS) SPECIFIV PART OF THE CONTROL MESSAGE
+C
+7000    CONTINUE
+	ONUM = MAXGAM + GIND
+	IND = BEGIND + 2
+        TKT_LINE_LENGTH=(TICKET_LENGTH*4)-2
+C
+	MESTAB(IND) = 1				!Closed
+	IF(I2REVN.NE.0) MESTAB(IND) = 0		!Open
+	IND = IND + 1
+C
+	I4TEMP = SCC_OPNID(GIND)		!Opinion Poll ID.
+	MESTAB(IND+0) = I1TEMP(4)
+	MESTAB(IND+1) = I1TEMP(3)
+	MESTAB(IND+2) = I1TEMP(2)
+	MESTAB(IND+3) = I1TEMP(1)
+	IND = IND + 4
+C
+	I4TEMP = SCC_OPNDATE(PRM_STRDAT,GIND) - DAYCDC	!Start CDC OFFSET
+	MESTAB(IND+0) = I1TEMP(2)
+	MESTAB(IND+1) = I1TEMP(1)
+	IND = IND + 2
+C
+	I4TEMP = SCC_OPNDATE(PRM_ENDDAT,GIND) - DAYCDC	!End CDC OFFSET
+	MESTAB(IND+0) = I1TEMP(2)
+	MESTAB(IND+1) = I1TEMP(1)
+	IND = IND + 2
+C
+        I4TEMP = TKT_LINE_LENGTH*TKTMLN(ONUM)	!Number of Characters in TKT msg
+	MESTAB(IND+0) = I1TEMP(1)
+	IND = IND + 1	
+C
+        DO I=1,TKTMLN(ONUM)
+           CALL MOVBYT(TKTMES(1,I,ONUM),1,MESTAB,IND,
+     *                 TKT_LINE_LENGTH)
+           IND = IND+TKT_LINE_LENGTH
+        END DO
+C
+	I4TEMP = I2REVN
+	MESTAB(IND+0) = I1TEMP(2)
+	MESTAB(IND+1) = I1TEMP(1)
+	IND = IND + 2
+C
+	OUTLEN = IND - 1
+	GOTO 20000
+C
+C BUILD BINGO SPECIFIC PART OF THE CONTROL MESSAGE
+C
+10000   CONTINUE
+C
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD DOUBLE SPECIFIC PART OF THE CONTROL MESSAGE
+C
+11000    CONTINUE
+C
+C PARTIALLY CLOSED COMBINATION 17/18
+C
+	MESTAB(IND) = DBLPCC(GIND)
+	IND = IND + 1
+C
+C NUMBER OF ACTUAL ROWS
+C
+        COUNT=0
+        DO I=1,MAXDBLRW
+           IF(DBLNMS(1,I,GIND).NE.'    ') COUNT=I
+        END DO
+        I4TEMP = COUNT                                !NUMBER OF ROWS
+        MESTAB(IND) = I1TEMP(1)
+        IND = IND + 1
+C
+C CHECK STATUSES FOR ALL ROWS AND CREATE BITMAP ACCORDINGLY
+C
+        PADROW =(COUNT+1)/2*2                  !NUMBER OF ROWS PADDED
+        DO ROWOFF=1,PADROW
+           STSFLGS(ROWOFF) = ROWCLSL
+           IF(DBLSTA(ROWOFF,GIND).EQ.GAMOPN) STSFLGS(ROWOFF) = ROWOPN
+           IF(DBLSTA(ROWOFF,GIND).EQ.GAMCAN) STSFLGS(ROWOFF) = ROWCANL
+        END DO
+C
+        DO ROWOFF=1,PADROW,2
+           I4TEMP=ISHFT(STSFLGS(ROWOFF),4)+STSFLGS(ROWOFF+1)
+           MESTAB(IND)=I1TEMP(1)
+           IND=IND+1
+        END DO
+C
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD COUPLE SPECIFIC PART OF THE CONTROL MESSAGE
+C
+12000    CONTINUE
+C
+C NUMBER OF ACTUAL ROWS EVENT A
+C
+        COUNT=0
+        DO I=1,MAXCPLRW/2
+           IF(CPLNMS(1,I,GIND).NE.'    ') COUNT=I
+        END DO
+        I4TEMP = COUNT                                !NUMBER OF ROWS
+        MESTAB(IND) = I1TEMP(1)
+        IND = IND + 1
+C
+C CHECK STATUSES FOR ALL ROWS AND CREATE BITMAP ACCORDINGLY
+C
+        PADROW =(COUNT+1)/2*2                  !NUMBER OF ROWS PADDED
+        DO ROWOFF=1,PADROW
+           STSFLGS(ROWOFF) = ROWCLSL
+           IF(CPLSTA(ROWOFF,GIND).EQ.GAMOPN) STSFLGS(ROWOFF) = ROWOPN
+           IF(CPLSTA(ROWOFF,GIND).EQ.GAMCAN) STSFLGS(ROWOFF) = ROWCANL
+        END DO
+C
+        DO ROWOFF=1,PADROW,2
+           I4TEMP=ISHFT(STSFLGS(ROWOFF),4)+STSFLGS(ROWOFF+1)
+           MESTAB(IND)=I1TEMP(1)
+           IND=IND+1
+        END DO
+C
+C NUMBER OF ACTUAL ROWS EVENT B
+C
+        COUNT=0
+        DO I=MAXCPLRW/2+1,MAXCPLRW
+           IF(CPLNMS(1,I,GIND).NE.'    ') COUNT=I-MAXCPLRW/2
+        END DO
+        I4TEMP = COUNT                                !NUMBER OF ROWS
+        MESTAB(IND) = I1TEMP(1)
+        IND = IND + 1
+C
+C CHECK STATUSES FOR ALL ROWS AND CREATE BITMAP ACCORDINGLY
+C
+        PADROW =(COUNT+1)/2*2                  !NUMBER OF ROWS PADDED
+        DO ROWOFF=1,PADROW
+          STSFLGS(ROWOFF) = ROWCLSL
+          IF(CPLSTA(ROWOFF+MAXCPLRW/2,GIND).EQ.GAMOPN) STSFLGS(ROWOFF) = ROWOPN
+          IF(CPLSTA(ROWOFF+MAXCPLRW/2,GIND).EQ.GAMCAN) STSFLGS(ROWOFF) = ROWCANL
+        ENDDO
+C
+        DO ROWOFF=1,PADROW,2
+           I4TEMP=ISHFT(STSFLGS(ROWOFF),4)+STSFLGS(ROWOFF+1)
+           MESTAB(IND)=I1TEMP(1)
+           IND=IND+1
+        END DO
+C
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD SUPERSCORE SPECIFIC PART OF THE CONTROL MESSAGE
+C
+13000   CONTINUE
+C
+C NUMBER OF OPEN EVENTS (SETS)
+C
+        I4TEMP = 0
+        DO J=1,3
+           IF(SSCEST(J,GIND).EQ.GAMOPN) I4TEMP=I4TEMP+1
+        ENDDO
+        MESTAB(IND)=I1TEMP(1)
+	IND=IND+1
+
+C
+C STATUS'S OF SETS
+C
+        DO J=1,3
+           IF(SSCEST(J,GIND).EQ.GAMOPN) THEN
+	      I4TEMP = 0
+	   ELSEIF(SSCEST(J,GIND).EQ.GAMCAN) THEN
+	      I4TEMP = 2
+	   ELSEIF(SSCEST(J,GIND).LT.GAMOPN) THEN
+	      I4TEMP = 1
+           ENDIF
+           MESTAB(IND)=I1TEMP(1)
+	   IND=IND+1
+        ENDDO
+
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD TODAY'S TRIO SPECIFIC PART OF THE CONTROL MESSAGE
+C
+14000   CONTINUE
+C
+C NUMBER OF ROWS 
+C
+        I4TEMP = TRPRWS(1,GIND)
+        MESTAB(IND)=I1TEMP(1)
+	IND=IND+1
+        
+        I4TEMP = TRPRWS(2,GIND)
+        MESTAB(IND)=I1TEMP(1)
+	IND=IND+1
+
+        I4TEMP = TRPRWS(3,GIND)
+        MESTAB(IND)=I1TEMP(1)
+	IND=IND+1
+C
+C STATUS'S OF ROWS
+C
+        DO I=1,MAXTRPRW
+	   DO J=1,3
+	      IF(TRPSTA(I,J,GIND).EQ.GAMOPN) THEN
+	         STSTRP(I,J) = ROWOPN        	       	   
+	      ELSEIF(TRPSTA(I,J,GIND).EQ.GAMCAN) THEN
+	         STSTRP(I,J) = ROWCANL        	       	   
+	      ELSEIF(TRPSTA(I,J,GIND).LT.GAMOPN) THEN
+	         STSTRP(I,J) = ROWCLSL       	       	   
+              ENDIF
+	   ENDDO		
+           I4TEMP=ISHFT(STSTRP(I,1),4) +
+     *            ISHFT(STSTRP(I,2),2) +
+     *            STSTRP(I,3)
+           MESTAB(IND)=I1TEMP(1)
+	   IND=IND+1
+        ENDDO
+
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD SUPER TRIPLE SPECIFIC PART OF THE CONTROL MESSAGE
+C
+15000    CONTINUE
+C
+C PARTIALLY CLOSED COMBINATION 17/18
+C
+	MESTAB(IND) = STRPCC(GIND)
+	IND = IND + 1
+C
+C NUMBER OF ACTUAL ROWS
+C
+        COUNT=0
+        DO I=1,MAXSTRRW
+           IF(STRNMS(1,I,GIND).NE.'    ') COUNT=I
+        END DO
+        I4TEMP = COUNT                                !NUMBER OF ROWS
+        MESTAB(IND) = I1TEMP(1)
+        IND = IND + 1
+C
+C CHECK STATUSES FOR ALL ROWS AND CREATE BITMAP ACCORDINGLY
+C
+        PADROW =(COUNT+1)/2*2                  !NUMBER OF ROWS PADDED
+        DO ROWOFF=1,PADROW
+           STSFLGS(ROWOFF) = ROWCLSL
+           IF(STRSTA(ROWOFF,GIND).EQ.GAMOPN) STSFLGS(ROWOFF) = ROWOPN
+           IF(STRSTA(ROWOFF,GIND).EQ.GAMCAN) STSFLGS(ROWOFF) = ROWCANL
+        END DO
+C
+        DO ROWOFF=1,PADROW,2
+           I4TEMP=ISHFT(STSFLGS(ROWOFF),4)+STSFLGS(ROWOFF+1)
+           MESTAB(IND)=I1TEMP(1)
+           IND=IND+1
+        END DO
+C
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD TOTOGOLO SPECIFIC PART OF THE CONTROL MESSAGE
+C
+16000    CONTINUE
+C
+C # OF ROWS
+C
+        I4TEMP = TGLMAX(GIND)
+	MESTAB(IND + 0) = I1TEMP(2)
+	MESTAB(IND + 1) = I1TEMP(1)
+	IND = IND + 2
+C
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C BUILD EPASSIVE SPECIFIC GAME INFO
+C
+17000   CONTINUE
+C
+C CHECK THAT ALL AT FIRST SELECTED DRAWS ARE STILL OPEN
+C
+        IF(.NOT.FIRST_PAS) THEN
+           DO I=1,TOSEND(GIND)
+              EMISIND = SEND_EMIS(I,GIND)
+              IF(PASSTS(EMISIND,GIND).NE.GAMOPN) FIRST_PAS =.TRUE.
+           ENDDO
+        ENDIF
+C
+C SELECT DRAWS WHAT ARE AVAILABLE FOR ONLINE SALES 
+C 
+        IF(FIRST_PAS) THEN
+           CALL FASTSET(0,SEND_EMIS,PMAXSAL*NUMPAS)
+           DO GI = 1,NUMPAS
+              EMISIND = PASCURDRW(GI)
+              CALL FASTSET(0,TMPBSD,PAGEMI)   
+              DO EM = EMISIND,1,-1
+                 TMPBSD(EM) = PASBSD(EM,GI)
+              ENDDO
+              EM = EMISIND
+              DO WHILE(EM.GT.0)
+                 IF(PASSTS(EM,GI).NE.GAMOPN) GOTO 17100
+                 DOFF = PASSALTAB(EM,GI)
+                 IF(DOFF.EQ.0) GOTO 17100
+                 NUMSAL = 0 
+                 IF(GI.EQ.PSBCLA) THEN
+                    DO NUM=0,PMAXNUMCLA
+                       NUMSAL = NUMSAL + PASNUMCLA(NUM,DOFF).FORSAL
+                    ENDDO
+                 ELSEIF(GI.EQ.PSBPOP) THEN
+                    DO NUM=0,PMAXNUMPOP
+                       NUMSAL = NUMSAL + PASNUMPOP(NUM,DOFF).FORSAL
+                    ENDDO
+                 ENDIF
+                 IF(NUMSAL.GT.0) GOTO 17200 
+17100            CONTINUE
+                 TMPBSD(EM) = -1
+17200            CONTINUE
+                 EM = EM - 1 
+              ENDDO
+C
+C CHECK NUMBER OF DRAWS AGAINST PMAXSAL 
+C 
+17300         CONTINUE
+              NUMD = 0
+              DO EM = EMISIND,1,-1
+                 IF(TMPBSD(EM).GT.0) NUMD = NUMD + 1
+              ENDDO
+              IF(NUMD.GT.PMAXSAL) THEN
+                 BSD = TMPBSD(EMISIND)
+                 DO EM = EMISIND-1,1,-1
+                    IF(TMPBSD(EM).GE.BSD) THEN
+                       BSD = TMPBSD(EM)
+                       REM = EM
+                    ENDIF
+                 ENDDO
+                 TMPBSD(REM) = -1
+                 GOTO 17300  
+              ELSE
+                 I = 0
+                 DO EM = EMISIND,1,-1
+                    IF(TMPBSD(EM).GT.0) THEN
+                       I = I + 1
+                       SEND_EMIS(I,GI) = EM
+                    ENDIF
+                 ENDDO
+                 TOSEND(GI) = I  
+              ENDIF                                                         
+           ENDDO 
+           FIRST_PAS = .FALSE.
+        ENDIF  
+C
+C PUT DATA TO OUTPUT MESSAGE
+C
+        IND = BEGIND + 2
+        MESTAB(IND + 0) = TOSEND(GIND)
+        IND = IND +1
+
+        DO I = 1,TOSEND(GIND)
+           EMISIND = SEND_EMIS(I,GIND)
+C
+C DRAW DATE
+C
+           I4TEMP = PASESD(EMISIND,GIND)
+           MESTAB(IND + 0) = I1TEMP(2)
+           MESTAB(IND + 1) = I1TEMP(1)
+	   IND = IND + 2
+C
+C WEEK,YEAR,PRICE
+C
+           WY = PASDRAW(EMISIND,GIND)
+           CALL GETPASDRW(WY,WEEK,YEAR)
+           MESTAB(IND + 0) = WEEK
+           MESTAB(IND + 1) = MOD(YEAR,100)
+           IND = IND + 2
+     
+           I4TEMP = PASPRC(EMISIND,GIND)
+           MESTAB(IND + 0) = I1TEMP(2)
+           MESTAB(IND + 1) = I1TEMP(1)
+	   IND = IND + 2
+C
+C DRAW DESCRIPTION
+C
+           CALL MOVBYT(PASLITDRW(1,EMISIND,GIND),1,MESTAB,IND,24)
+           IND = IND + 24
+        ENDDO
+
+        OUTLEN = IND - 1
+        GOTO 20000
+C
+C CALCULATE CHECKSUM
+C
+20000	CONTINUE
+	I4CCITT = TRABUF(TCHK)
+	MESTAB(3) = I1CCITT(2)
+	MESTAB(4) = I1CCITT(1)
+	CHKLEN=OUTLEN-1
+	CALL GETCCITT(MESTAB,1,CHKLEN,MYCHKSUM)
+	I4CCITT = MYCHKSUM
+	MESTAB(3) = I1CCITT(2)
+	MESTAB(4) = I1CCITT(1)
+        RETURN
+	END

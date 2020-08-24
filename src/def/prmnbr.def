@@ -1,0 +1,97 @@
+C PRMNBR.DEF
+C $Log:   GXAFXT:[GOLS]PRMNBR.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:31:16   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:50:08   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 07-OCT-91 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C NUMBERS GAME PARAMETERS
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 NUMNBR
+	PARAMETER(NUMNBR=3)            !NUMBER OF NUMBERS GAMES
+C
+	INTEGER*4 NBGPOL
+	PARAMETER(NBGPOL=16)           !NUMBER OF POOL ENTRIES
+C
+	INTEGER*4 LIM2ST,LIMSTR,LIMBOX
+	PARAMETER (LIM2ST=1)
+	PARAMETER (LIMSTR=2)
+	PARAMETER (LIMBOX=3)
+
+C
+	INTEGER*4 PARACT,BOXACT,CMBACT,WHLACT
+	PARAMETER (PARACT=1)
+	PARAMETER (BOXACT=2)
+	PARAMETER (CMBACT=4)
+	PARAMETER (WHLACT=8)
+C
+C 3 DIGIT NUMBERS GAME BET TYPES
+C
+	INTEGER*4  NB3TYP, NUMPL3
+	PARAMETER (NB3TYP=1)           !3 DIGIT GAME TYPE
+	PARAMETER (NUMPL3=10)          !NUMBER OF 3 DIGIT POOLS
+C
+	  INTEGER*4  TNB3F2, TNB3B2, TNB3S2, TNB3ST, TNB3B6
+	  PARAMETER (TNB3F2=1)         !3-DIGIT FRONT 2
+	  PARAMETER (TNB3B2=2)         !3-DIGIT BACK  2
+	  PARAMETER (TNB3S2=3)         !3-DIGIT SPLIT 2
+	  PARAMETER (TNB3ST=4)         !3-DIGIT STRAIGHT
+	  PARAMETER (TNB3B6=5)         !3-DIGIT BOX 6
+C
+	  INTEGER*4  TNB3B3, TNB3C6, TNB3C3, TNB3W6, TNB3W3
+	  PARAMETER (TNB3B3=6)         !3-DIGIT BOX 3
+	  PARAMETER (TNB3C6=7)         !3-DIGIT COMBO 6
+	  PARAMETER (TNB3C3=8)         !3-DIGIT COMBO 3
+	  PARAMETER (TNB3W6=9)         !3-DIGIT WHEEL 6
+	  PARAMETER (TNB3W3=10)        !3-DIGIT WHEEL 3
+C
+C 4 DIGIT NUMBERS GAME BET TYPES
+C
+	INTEGER*4  NB4TYP, NUMPL4
+	PARAMETER (NB4TYP=2)           !4 DIGIT GAME TYPE
+	PARAMETER (NUMPL4=16)          !NUMBER OF 4 DIGIT POOLS
+C
+	  INTEGER*4  TNB4F2, TNB4B2, TNB4M2, TNB4ST, TNB4B24
+	  PARAMETER (TNB4F2=1)         !4-DIGIT FRONT 2
+	  PARAMETER (TNB4B2=2)         !4-DIGIT BACK  2
+	  PARAMETER (TNB4M2=3)         !4-DIGIT MIDDLE 2
+	  PARAMETER (TNB4ST=4)         !4-DIGIT STRAIGHT
+	  PARAMETER (TNB4B24=5)        !4-DIGIT BOX 24
+C
+	  INTEGER*4  TNB4B12, TNB4B6, TNB4B4, TNB4C24, TNB4C12
+	  PARAMETER (TNB4B12=6)        !4-DIGIT BOX 12
+	  PARAMETER (TNB4B6=7)         !4-DIGIT BOX 6
+	  PARAMETER (TNB4B4=8)         !4-DIGIT BOX 4
+	  PARAMETER (TNB4C24=9)        !4-DIGIT COMBO 24
+	  PARAMETER (TNB4C12=10)       !4-DIGIT COMBO 12
+C
+	  INTEGER*4  TNB4C6, TNB4C4, TNB4W24, TNB4W12, TNB4W6, TNB4W4
+	  PARAMETER (TNB4C6=11)        !4-DIGIT COMBO 6
+	  PARAMETER (TNB4C4=12)        !4-DIGIT COMBO 4
+	  PARAMETER (TNB4W24=13)       !4-DIGIT WHEEL 24
+	  PARAMETER (TNB4W12=14)       !4-DIGIT WHEEL 12
+	  PARAMETER (TNB4W6=15)        !4-DIGIT WHEEK 6
+	  PARAMETER (TNB4W4=16)        !4-DIGIT WHEEL 4
+

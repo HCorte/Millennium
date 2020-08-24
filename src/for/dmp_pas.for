@@ -1,0 +1,203 @@
+C DMP_PAS.FOR
+C
+C V01 29-JUL-2004 FRP
+C 
+C SUBROUTINE TO DUMP PASSIVE GAME FILE
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+
+
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE DMP_PAS(RLU,FILE,DRAW,MONEY_UNIT)
+	IMPLICIT NONE
+
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+	
+
+        ! arguments
+	INTEGER*4  RLU
+	INTEGER*4  FILE(5)			!
+        INTEGER*4  DRAW                         !
+	INTEGER*4  MONEY_UNIT			!
+	
+
+	INTEGER*4 LUN
+	INTEGER*4 I,J
+
+        INTEGER*4 PAS_ROUND_VALUE
+
+	CHARACTER DESCR(39)*30
+
+	DATA DESCR/
+     *		  'STATUS                        ',
+     *		  'EMISSION                      ',
+     *		  'NUMBER OF TICKETS/EMISSION    ',
+     *		  'NUMBER OF SERIES/EMISSION     ',
+     *		  'BASE PRICE                    ',
+     *		  'END EMISSION DATE             ',
+     *            'TIME WHEN GAME SHOULD CLOSE   ',
+     *            'ACTUAL CLOSE TIME             ',
+     *            'EMISSION PLAN                 ',
+     *            'PURGING CDC OF THIS EMISSION  ',
+     *            'REDEMPTION AMOUNT             ',
+     *            'NUMBER OF DIVISIONS           ',
+     *            'EMISSION TYPE (CLAS/POP/EXTRA)',
+     *            'WINNING SERIE                 ',
+     *            'NUMBER OF WIN. NO.            ',
+     *            'WINNING NUMBERS               ',
+     *            'SHARES                        ',
+     *            'SHARE VALUE                   ',
+     *            'PRIZES PAID(COUNT)            ',
+     *            'PRIZE TYPE                    ',
+     *            '# OF DIGITS                   ',
+     *            'CROSS REFERENCE               ',
+     *            'EXTRA SHARES                  ',
+     *            'EXTRA SHARE VALUE             ',
+     *            'EXTRA PRIZES PAID(COUNT)      ',
+     *            'LAST CHANGE CDC               ',
+     *            'BEGIN SALES DATE              ',
+     *            'PRIZES PURGED(COUNT)          ',
+     *            'LAST PURGE UPDATE             ',
+     *            'RETURN TICKETS COUNT          ',
+     *            'NUMBER OF FRACTIONS           ',
+     *            'FLAG FOR PRIZES PAID TODAY    ',
+     *            'AMT FOR PRIZES THAT CANBE PAID',
+     *            'AMT FOR RETURNED TCKS AFTR DRW',
+     *            'MAX DAYS # AFTER WINPAS TO PAY',
+     *            'SCML DRAW NUMBER              ',
+     *            'ACTIVITY MATRIX BY TYP OR TRAS',
+     *            'PLANO REAL BY PRIZE TICKT PAID',
+     *            'DRAW SHORT DESCRIPTION        '/
+
+
+
+C
+C READ GAME FILE
+C
+	LUN = 9     ! ?
+        CALL READGFL(LUN,FILE,DPASEC,DRAW,DPAREC)
+C
+C DUMP RECORD
+C
+	WRITE(RLU,900) DPASTSOFF, DPASTS, 'DPASTS', DESCR(1)
+	WRITE(RLU,9001) DPAEMISOFF, DPAEMIS, 'DPAEMIS     ', DESCR(2)
+	WRITE(RLU,9001) DPANUMTCKOFF, DPANUMTCK, 'DPANUMTCK   ', DESCR(3)
+	WRITE(RLU,9001) DPANUMSEROFF, DPANUMSER, 'DPANUMSER   ', DESCR(4)
+        WRITE(RLU,912) DPAPRCOFF, CSMONY(DPAPRC,12,MONEY_UNIT),
+     *                'DPAPRC', DESCR(5)
+	WRITE(RLU,900) DPAESDOFF, DPAESD, 'DPAESD', DESCR(6)
+	WRITE(RLU,911) DPATIMOFF, DISTIM(DPATIM), 'DPATIM', DESCR(7)
+	WRITE(RLU,911) DPACTMOFF, DISTIM(DPACTM), 'DPACTM', DESCR(8)
+	WRITE(RLU,9001) DPAPLANOFF, DPAPLAN, 'DPAPLAN     ', DESCR(9)
+	WRITE(RLU,9001) DPAPRGCDCOFF, DPAPRGCDC, 'DPAPRGCDC   ', DESCR(10)
+	WRITE(RLU,909) DPAREDAMTOFF, CSMONY(DPAREDAMT,12,MONEY_UNIT), 
+     *                'DPAREDAMT   ', DESCR(11)
+	WRITE(RLU,900) DPADIVOFF, DPADIV, 'DPADIV', DESCR(12)
+	WRITE(RLU,900) DPAEMTOFF, DPAEMT, 'DPAEMT', DESCR(13)
+	WRITE(RLU,9001) DPAWSEROFF, DPAWSER, 'DPAWSER     ', DESCR(14)
+	DO 100 I=1,PAGDIV
+	  WRITE(RLU,901) DPAWNUMOFF+I-1, DPAWNUM(I), 'DPAWNUM', I, DESCR(15)
+100	CONTINUE
+	DO 110 I=1,PAGNBR
+	  DO 120 J=1,PAGDIV
+	    WRITE(RLU,903) DPAWINOFF+(I-1)*PAGDIV+J-1, DPAWIN(I,J),
+     *                   'DPAWIN', I, J, DESCR(16)
+120	  CONTINUE
+110	CONTINUE
+	DO 130 I=1,PAGDIV
+	  WRITE(RLU,901) DPASHROFF+I-1, DPASHR(I), 'DPASHR', I, DESCR(17)
+130	CONTINUE
+	DO 140 I=1,PAGDIV
+	  WRITE(RLU,906) DPASHVOFF+I-1, CSMONY(PAS_ROUND_VALUE(DPASHV(I)),
+     *                   12,MONEY_UNIT),'DPASHV', I, DESCR(18)
+140	CONTINUE
+	DO 150 I=1,PAGDIV
+	  WRITE(RLU,901) DPAPADOFF+I-1, DPAPAD(I), 'DPAPAD', I, DESCR(19)
+150	CONTINUE
+	DO 160 I=1,PAGDIV
+	  WRITE(RLU,901) DPATYPOFF+I-1, DPATYP(I), 'DPATYP', I, DESCR(20)
+160	CONTINUE
+	DO 170 I=1,PAGDIV
+	  WRITE(RLU,901) DPADIGOFF+I-1, DPADIG(I), 'DPADIG', I, DESCR(21)
+170	CONTINUE
+	DO 180 I=1,PAGDIV
+	  WRITE(RLU,901) DPAIDNUMOFF+I-1, DPAIDNUM(I), 'DPAIDNUM', I, DESCR(22)
+180	CONTINUE
+	DO 190 I=1,PAGEDV
+	  WRITE(RLU,901) DPAEXSHROFF+I-1, DPAEXSHR(I), 'DPAEXSHR', I, DESCR(23)
+190	CONTINUE
+	DO 200 I=1,PAGEDV
+	  WRITE(RLU,906) DPAEXSHVOFF+I-1, CSMONY(PAS_ROUND_VALUE(DPAEXSHV(I)),
+     *                   12,MONEY_UNIT),'DPAEXSHV', I, DESCR(24)
+200	CONTINUE
+	DO 210 I=1,PAGEDV
+	  WRITE(RLU,901) DPAEXPADOFF+I-1, DPAEXPAD(I), 'DPAEXPAD', I, DESCR(25)
+210	CONTINUE
+	WRITE(RLU,9001) DPACHGCDCOFF, DPACHGCDC, 'DPACHGCDC   ', DESCR(26)
+	WRITE(RLU,900) DPABSDOFF, DPABSD, 'DPABSD', DESCR(27)
+	DO 220 I=1,PAGDIV
+	  WRITE(RLU,901) DPAPRGOFF+I-1, DPAPRG(I), 'DPAPRG', I, DESCR(28)
+220	CONTINUE
+	WRITE(RLU,900) DPAPUPOFF, DPAPUP, 'DPAPUP', DESCR(29)
+	WRITE(RLU,9001) DPARETCNTOFF, DPARETCNT, 'DPARETCNT   ', DESCR(30)
+	WRITE(RLU,9001) DPANOFFRAOFF, DPANOFFRA, 'DPANOFFRA   ', DESCR(31)
+	WRITE(RLU,9001) DPATODPAYOFF, DPATODPAY, 'DPATODPAY   ', DESCR(32)
+	WRITE(RLU,909) DPATOPAYAMTOFF, CSMONY(DPATOPAYAMT,12,MONEY_UNIT), 
+     *                'DPATOPAYAMT ', DESCR(33)
+	WRITE(RLU,909) DPARETAFTAMTOFF, CSMONY(DPARETAFTAMT,12,MONEY_UNIT), 
+     *                'DPARETAFTAMT', DESCR(34)
+	WRITE(RLU,9001) DPAMAXDAYPAYOFF, DPAMAXDAYPAY, 'DPAMAXDAYPAY', DESCR(35)
+	WRITE(RLU,9001) DPADRAWOFF, DPADRAW, 'DPADRAW     ', DESCR(36)
+	DO 230 I=1,NUMTOT
+	  DO 240 J=1,NUMFIN
+	    WRITE(RLU,903) DPAFINOFF+(I-1)*NUMFIN+J-1, DPAFIN(I,J),
+     *                   'DPAFIN', I, J, DESCR(37)
+240	  CONTINUE
+230	CONTINUE
+	DO 250 I=1,NUMTOT
+	  DO 260 J=1,PAGDIV+PAGEDV
+	    WRITE(RLU,903) DPADIVPLNOFF+(I-1)*(PAGDIV+PAGEDV)+J-1, DPADIVPLN(I,J),
+     *                   'DPADIVPLN', I, J, DESCR(38)
+260	  CONTINUE
+250	CONTINUE
+	DO 270 I=1,6
+	  WRITE(RLU,901) DPALITDRWOFF+I-1, DPALITDRW(I), 'DPALITDRW', I, DESCR(39)
+270	CONTINUE
+
+	RETURN  
+C
+C
+900	FORMAT(1X,I5,1X,I12,1X,15X,A6,9X,A30)
+9001    FORMAT(1X,I5,1X,I12,1X,15X,A12,3X,A30)
+901	FORMAT(1X,I5,1X,I12,1X,15X,A6,'(',I2,')',5X,A30)
+902	FORMAT(1X,I5,1X,I12,1X,I12,3X,A6,'(',I2,',*)',3X,A30)
+903	FORMAT(1X,I5,1X,I12,1X,12X,3X,A6,'(',I2,',',I2,')',2X,A30)
+904	FORMAT(1X,I5,1X,I12,1X,12X,3X,A6,'(',I2,',',I2,',',I2,')',1X,A28)
+905	FORMAT(1X,I5,1X,I12,1X,12X,3X,A11,4X,A30)
+906	FORMAT(1X,I5,1X,A12,1X,15X,A6,'(',I2,')',5X,A30)
+907	FORMAT(1X,I5,1X,A12,1X,A12,3X,A6,'(',I2,',*)',3X,A30)
+908	FORMAT(1X,I5,1X,5X,F7.3,1X,15X,A6,9X,A30)
+909	FORMAT(1X,I5,1X,A12,1X,15X,A12,3X,A30)
+910	FORMAT(1X,I5,1X,5X,F7.3,1X,15X,A6,'(',I2,')',5X,A30)
+911	FORMAT(1X,I5,1X,4X,A8,1X,15X,A6,9X,A30)
+912     FORMAT(1X,I5,1X,A12,1X,15X,A6,9X,A30)
+C
+	END

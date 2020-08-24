@@ -1,0 +1,166 @@
+C CLNAPRM.DEF
+C
+C V01 17-Oct-95 MP  Initial release for Finland
+C
+C This file contains parameters necessary for data definitions
+C in CLNACOM.DEF and for Applications to interface CLIENMGR.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1995 GTECH Corporation. All rights recliened.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4	CLNAPRM_LH_SZ
+	PARAMETER	(CLNAPRM_LH_SZ=14)	! link header size, bytes
+C
+	INTEGER*4	CLNAPRM_PH_DATA_CLASS_OFF	! pass through header 
+	PARAMETER	(CLNAPRM_PH_DATA_CLASS_OFF=0)	! data class offset
+C
+	INTEGER*4	CLNAPRM_PH_ADDR_LEN_OFF		! pass through header 
+	PARAMETER	(CLNAPRM_PH_ADDR_LEN_OFF=7)	! address length offset
+C
+	INTEGER*4	CLNAPRM_PH_ADDR_OFF	! pass through header 
+	PARAMETER	(CLNAPRM_PH_ADDR_OFF=8)	! address offset
+C
+	INTEGER*4	CLNAPRM_MAX_SERVERS
+	PARAMETER	(CLNAPRM_MAX_SERVERS=2)	!Max Servers (connections)
+C
+	INTEGER*4	CLNAPRM_MAX_SERVICES
+	PARAMETER	(CLNAPRM_MAX_SERVICES=20) !Max Services (on all servers)
+C
+	INTEGER*4	CLNAPRM_MAX_APPS	! max Client applications
+	PARAMETER	(CLNAPRM_MAX_APPS=20)
+C
+	INTEGER*4	CLNAPRM_DATA_CLASS_TEBE_MSG
+	PARAMETER	(CLNAPRM_DATA_CLASS_TEBE_MSG=7)
+C
+	INTEGER*4	CLNAPRM_DATA_CLASS_TEBE_RSP
+	PARAMETER	(CLNAPRM_DATA_CLASS_TEBE_RSP=8)
+C
+	INTEGER*4	CLNAPRM_DATA_CLASS_EXP_DATA_RSP
+	PARAMETER	(CLNAPRM_DATA_CLASS_EXP_DATA_RSP=9)
+C
+	INTEGER*4	CLNAPRM_DATA_CLASS_RCVR_RSP
+	PARAMETER	(CLNAPRM_DATA_CLASS_RCVR_RSP=10)
+C
+	INTEGER*4	CLNAPRM_DATA_CLASS_MAX		! values over 32 will
+	PARAMETER	(CLNAPRM_DATA_CLASS_MAX=32)	! require soft changes
+C
+	INTEGER*4	CLNAPRM_ADDR_FORMAT_DATR	! data to return
+	PARAMETER	(CLNAPRM_ADDR_FORMAT_DATR=7)
+C
+	INTEGER*4	CLNAPRM_ADDR_FORMAT_MAX	! max value
+	PARAMETER	(CLNAPRM_ADDR_FORMAT_MAX=7)
+C
+C BYTE offsets and SIZE in the DATA_TO_RETURN (ADDRESS field) of the 
+C PASS THROUGH header
+C
+	INTEGER*4 CLNAPRM_DATR_APP_ID			! application ID
+	PARAMETER(CLNAPRM_DATR_APP_ID=1)			! - embedded by SEND_
+C
+	INTEGER*4 CLNAPRM_DATR_APP_TX_NR		! application trans. nr
+	PARAMETER(CLNAPRM_DATR_APP_TX_NR=2)
+C
+	INTEGER*4 CLNAPRM_DATR_VRU_ID
+	PARAMETER(CLNAPRM_DATR_VRU_ID=6)
+C
+	INTEGER*4 CLNAPRM_DATR_FEP_ID
+	PARAMETER(CLNAPRM_DATR_FEP_ID=7)
+C
+	INTEGER*4 CLNAPRM_DATR_VRU_PORT_NR
+	PARAMETER(CLNAPRM_DATR_VRU_PORT_NR=8)
+C
+	INTEGER*4 CLNAPRM_DATR_ACCNT_TX_NR
+	PARAMETER(CLNAPRM_DATR_ACCNT_TX_NR=9)
+C
+	INTEGER*4 CLNAPRM_DATR_ACCNT_NR
+	PARAMETER(CLNAPRM_DATR_ACCNT_NR=13)
+C
+	INTEGER*4 CLNAPRM_DATR_TIME_STAMP
+	PARAMETER(CLNAPRM_DATR_TIME_STAMP=17)
+C
+	INTEGER*4 CLNAPRM_DATR_SIZE
+	PARAMETER(CLNAPRM_DATR_SIZE=41)		! bytes - equal to max size
+						! of the pass through header
+						! (50 in SERVPRM.DEF) minus
+						! fixed-size part of the header
+C
+	INTEGER*4	CLNAPRM_BUF_SIZ		! bytes 
+	PARAMETER	(CLNAPRM_BUF_SIZ=512)
+C
+	INTEGER*4	CLNAPRM_MSG_SIZE_MAX
+	PARAMETER	(CLNAPRM_MSG_SIZE_MAX=424)	! bytes, worst case = 
+							! 512 - 
+							! 6*4 (buffer header) -
+							! 14 (link header) - 
+							! 50 (pass through head)
+C
+	INTEGER*4	CLNAPRM_APP_BUFS		! total buffers -
+	PARAMETER (CLNAPRM_APP_BUFS=CLNAPRM_MAX_APPS*2)	! at least 2 per app
+							! because of time-outs
+C
+C offsets have to match parameters defined for the server (SERVMGR)
+C
+	INTEGER*4	CLNAPRM_BUF_NUM_OFF		!BUFFER NUMBER
+	PARAMETER	(CLNAPRM_BUF_NUM_OFF=1)
+C
+	INTEGER*4	CLNAPRM_BUF_LEN_OFF		!LENGTH OF MESSAGE
+	PARAMETER	(CLNAPRM_BUF_LEN_OFF=2)	!VARIABLE LENGTH ALLOWED
+C
+C Following is used as application nr 
+C
+	INTEGER*4	CLNAPRM_BUF_APP_NR_OFF
+	PARAMETER	(CLNAPRM_BUF_APP_NR_OFF=3)	! application nr
+C
+C Following is used only when buffer is on CLNACOM_TO_APP_QUES and not used
+C when buffer is on CLNACOM_FROM_APP_QUE
+C
+	INTEGER*4	CLNAPRM_BUF_ERR_OFF
+	PARAMETER	(CLNAPRM_BUF_ERR_OFF=4)	! IO STATUS TABLE INDEX
+C
+C Offset 5 are free
+C
+	INTEGER*4	CLNAPRM_BUF_CONN_OFF
+	PARAMETER	(CLNAPRM_BUF_CONN_OFF=6)	!Connection nr
+C
+	INTEGER*4	CLNAPRM_BUF_DAT_OFF		!START POSITION OF I/O
+	PARAMETER	(CLNAPRM_BUF_DAT_OFF=7)
+C
+	INTEGER*4	CLNAPRM_BUF_DAT_BOFF		!START POSITION OF I/O
+	PARAMETER	(CLNAPRM_BUF_DAT_BOFF=CLNAPRM_BUF_DAT_OFF*4-3)
+C
+	INTEGER*4  CLNAPRM_BLNWRT, CLNAPRM_CNSWRT, CLNAPRM_GODWRT, CLNAPRM_BADWRT
+	INTEGER*4  CLNAPRM_GODRED, CLNAPRM_BADRED, CLNAPRM_NOCWRT, CLNAPRM_DISRED
+	INTEGER*4  CLNAPRM_DISWRT
+C
+C following error codes are the same as returned from TEBE_GOLS_GET_RESPONSE
+C
+	INTEGER*4  CLNAPRM_BUF_ERR_NONE
+	PARAMETER (CLNAPRM_BUF_ERR_NONE=0)	!GOOD NO ERROR
+C
+	INTEGER*4  CLNAPRM_BUF_ERR_FAIL		! failure to send
+	PARAMETER (CLNAPRM_BUF_ERR_FAIL=-1)
+C
+	INTEGER*4  CLNAPRM_BUF_ERR_SUPP		! suppressed
+	PARAMETER (CLNAPRM_BUF_ERR_SUPP=-2)
+C
+	INTEGER*4  CLNAPRM_BUF_ERR_TOUT		! time-out
+	PARAMETER (CLNAPRM_BUF_ERR_TOUT=-3)
+C
+	INTEGER*4  CLNAPRM_BUF_ERR_EXPRD	! WAIT period expired
+	PARAMETER (CLNAPRM_BUF_ERR_EXPRD=-4)	! (not a buffer code)
+C
+	INTEGER*4  CLNAPRM_BUF_ERR_LATE		! late (timed-out) response 
+	PARAMETER (CLNAPRM_BUF_ERR_LATE=-5)
+C
+	INTEGER*4  CLNAPRM_BUF_ERR_DATA		! bad data
+	PARAMETER (CLNAPRM_BUF_ERR_DATA=-6)	! (should it be passed?)
+C

@@ -1,0 +1,44 @@
+    QUE.HLP                GTECH Distributed Network
+                          System Queue Snapshot Help          Page 1 of 2
+ 
+    The Queue snapshot displays the utilization of the system queues.  A 
+    queue contains a list of processing common buffers (procom buffers)
+    that are being utilized. 
+    
+    The information displayed includes:
+ 
+    free        - list of available procom buffers
+    input       - list of procom buffers with information from X25
+    outq        - output queue for the game
+    dispat      - list of procom buffers with information ready to be 
+                  processed
+    X2XQ        - list of procom buffers with information to be sent to X25
+    transactions- shows when a transaction is being processed by each of 
+    in  process   the main processing applications:
+                  (wagpro, nbrpro, knopro, canpro, preval, valpro, todval
+                  spesrv, incpro, cmdpro, errlog, logger, dispat, apulog
+                  repcan, netmgr, x2xpro, x2xrel, netlog, ledpro, x2xmgr, 
+                  inspro, insout, crspro, servmg)
+    
+    QUE.HLP                GTECH Distributed Network
+                          System Queue Snapshot Help           Page 2 of 2
+    
+    
+    
+    
+    
+    logger      - status of all 16 logger buffers 
+    buffer        The following is a list of possible buffer statuses:
+    utilization   requin  -  request for buffer read
+                  redy    -  ready for application
+                  rout    -  request for buffer write
+                  done    -  write/wait completed
+                  inpr    -  buffer read in progress
+                  rewr    -  buffer ready re-write
+                  onip    -  buffer write in progress
+                  rwwt    -  write/wait in progress
+                  free    -  buffer available for use
+
+
+
+

@@ -1,0 +1,22 @@
+    TSK.HLP                GTECH Distributed Network
+                         Super Kaks Sales Snapshot Help     Page 1 of 1
+ 
+    The TSK snapshot contains sales information for the Super Kaks game.
+
+    The information displayed includes:
+ 
+    game name       - Today couple
+    type            - type of game (super double)
+    index           - super double game index  
+    sales           - amount and count of sales for each game index
+    cancels         - amount and count of cancels for each game 
+                      index 
+    cashs/refunds   - cash and refund count and amount for each game      
+                      index
+    total sales     - total sales amount for super double
+    total cashes    - total cashes amount for super double
+    total cancels   - total cancels amount for super double
+    total refunds   - total refunds amount for super double
+
+
+

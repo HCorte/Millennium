@@ -1,0 +1,87 @@
+C CHKCOM.DEF
+C 
+C V35 15-DEC-2015 JHR/FRP CR13 SET 6 DRAWS TO SALE FOR PASSIVE GAMES
+C                         CHANGED CHKCSB FROM 9500 TO 12500 (PASCOM)
+C V34 01-JAN-2010 FJG  ePASSIVE
+C V33 08-MAR-2001 JHR  CHANGED CHKCSB FROM 4333 TO 4350 (AGTCOM)
+C V32 05-JAN-2001 CS   CHANGED CHKCSB FROM 4300 TO 4333 (PASCOM)
+C V31 17-OCT-2000 UXN  CHKCSB CHANGED TO 4313 (FOR BASELINE)
+C V30 05-JUN-2000 OXK  CHKCSB CHANGED FROM 8540 TO 8546 (SSOCOM added)
+C V29 16-JAN-2000 OXK  CHKCSB CHANGED FROM 8538 TO 8540 (Vakio changes)
+C V28 26-NOV-1999 OXK  CHKCSB CHANGED FROM 7058 TO 8538
+C V27 19-OCT-1999 UXN  CHKCSB CHANGED FROM 7057 TO 7058
+C V26 28-MAY-1999 UXN  CHKCSB CHANGED FROM 7056 TO 7057
+C V25 11-MAY-1999 UXN  CHKCSB CHANGED FROM 6109 TO 7056
+C V24 27-NOV-1998 UXN  CHKCSB CHANGED FROM 5499 TO 6109
+C V23 29-JUN-1998 UXN  CHKCSB CHANGED FROM 4882 TO 5499
+C V22 13-JAN-1998 UXN  CHKCSB CHANGED FROM 4870 TO 4882
+C V21 23-DEC-1997 UXN  CHKCSB changed from 3214 to 4870 (Super Score anD
+C                      Today's Triple added, MAXGAM,MAXTYP changed.    
+C V20 18-JUL-1997 UXN  Changed CHKCSB from 3213 to 3214 due to BNGCOM 
+C V19 14-JAN-1997 HXK  Changed CHKCSB from 3207 to 3213
+C V18 08-JAN-1997 HXK  Changed CHKCSB from 2254 to 3207
+C V17 31-MAY-1996 HXK  Changed CHKCSB
+C V16 17-APR-1996 HXK  Release of Finland for X.25, Telephone Betting, 
+C                      Instant Pass Thru Phase 1
+C V15 02-JAN-1996 HXK  Changed CHKCSB
+C V14 10-NOV-1995 HXK  Further changes for Double, Couple
+C V13 26-JUN-1995 HXK  Minor changes for RAVI modifications batch
+C V12 24-APR-1995 HXK  Merge of V5 development with 10th March 1995 bible
+C V11 05-MAR-1995 HXK  Further minor changes for V5
+C V10 19-FEB-1995 HXK  Changed CHKCSB from 1583 to 1585 for V5 game
+C V09 15-OCT-1994 HXK  Adding / Developing Bingo
+C V08 20-DEC-1993 HXK  changed again from 1577 to 1578 (hopefully the last time)
+C V07 20-DEC-1993 HXK  CHANGED CHKCSB FROM 1549 TO 1577.
+C V06 24-AUG-1993 GXA  Added S234COM and SCNCOM.
+C V05 10-JUL-1993 GXA  Released for Finland Dec Conversion / Oddset.
+C V04 21-JAN-1993 DAB  Initial Release
+C                      Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                      DEC Baseline
+C V03 28-JAN-1992 GCAN FIX BUG WITH SCRCOM LENGTH ,INCREASED FROM 31 TO 33.
+C V02 07-OCT-1991 MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C ====== CALCULATE THIS TOTAL WITH SHCOMMON.EXE ==========
+C
+C CONCOM           10          80         160
+C AGTCOM         6763       54104      108208
+C LTOCOM            2          16          32
+C SPTCOM           67         536        1072
+C TGLCOM           14         112         224
+C KIKCOM            1           8          16
+C PASCOM         5611       44888       89776
+C ===========================================
+C TOTAL         12469       99752      199504
+C
+C CHKCOM        12470       99760      199520
+C CHKCSB        12500      100000      200000
+C
+	INTEGER*4	CHKCSB
+	PARAMETER	(CHKCSB=12500)
+C
+	INTEGER*4	CHKTAB(2048,CHKCSB)
+	COMMON /CHKCOM/ CHKTAB
+        VOLATILE /CHKCOM/
+C
+	INTEGER*4	 FRST_CHKCOM(2)
+	EQUIVALENCE	(FRST_CHKCOM, CHKTAB(1,1))
+	INTEGER*4	 LAST_CHKCOM
+	EQUIVALENCE	(LAST_CHKCOM, CHKTAB(2048,CHKCSB))
+C
+C END CHKCOM.DEF
+C

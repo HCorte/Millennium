@@ -1,0 +1,132 @@
+C SUBROUTINE TO DECODE GVT INSTALL REQUEST/CONFIRM MESSAGES FROM TERMINAL
+C
+C
+C V02 03-JAN-95 SMH  Seed with zero for checksum
+C V01 01-SEP-94 XXX  Initial Release
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1995 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE DINSGVT(TERMES,TRABUF,MESLEN)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+	INCLUDE 'INCLIB:CHKSUMCM.DEF'
+C
+	INTEGER*2 MESLEN
+	INTEGER*4 MESS(EDLEN)
+	BYTE	  TERMES(*)
+C
+	INTEGER*4   TEMP, TEMP1, TEMP2, TEMP3, TEMP4
+	INTEGER*4   CHKLEN, MYCHKSUM, ENCMES, ENCACT, IND
+C
+C GET SEQUENCE NUMBER
+C
+	TEMP = ZEXT(TERMES(1))
+	TRABUF(TTRN)=IAND(TEMP,15)
+	IND=IND+1
+C
+C GET CHECKSUM
+C
+	TEMP1 = ZEXT(TERMES(3))
+        TEMP2 = ZEXT(TERMES(4))
+	TRABUF(TCHK) = ISHFT(TEMP1,8) + TEMP2
+	IND=IND+2
+C
+C GET STATISTICS
+C
+	TRABUF(TTSTCS)= ZEXT(TERMES(5))
+C
+C GET NODE NUMBER
+C
+	IND=7
+	TEMP1 = ZEXT(TERMES(IND+0))
+	TEMP2 = ZEXT(TERMES(IND+1))
+	TEMP3 = ZEXT(TERMES(IND+2))
+	TEMP4 = ZEXT(TERMES(IND+3))
+	TRABUF(TII_NODE) = ISHFT(TEMP1,24)+ISHFT(TEMP2,16)+
+     *	                   ISHFT(TEMP3,8)+TEMP4
+	IND=IND+4
+C
+C GET AGENT  NUMBER
+C
+        TEMP1 = ZEXT(TERMES(IND+0))
+        TEMP2 = ZEXT(TERMES(IND+1))
+        TEMP3 = ZEXT(TERMES(IND+2))
+        TEMP4 = ZEXT(TERMES(IND+3))
+        TRABUF(TII_AGENT) = ISHFT(TEMP1,24)+ISHFT(TEMP2,16)+
+     *                      ISHFT(TEMP3,8)+TEMP4
+        IND=IND+4
+C
+C GET LOCATION NUMBER
+C
+        TEMP1 = ZEXT(TERMES(IND+0))
+        TEMP2 = ZEXT(TERMES(IND+1))
+        TEMP3 = ZEXT(TERMES(IND+2))
+        TEMP4 = ZEXT(TERMES(IND+3))
+        TRABUF(TII_LOCATION) = ISHFT(TEMP1,24)+ISHFT(TEMP2,16)+
+     *                         ISHFT(TEMP3,8)+TEMP4
+        IND=IND+4
+C
+C GET CLASS
+C
+	TRABUF(TII_CLASS)=ZEXT(TERMES(IND+0))
+	IND=IND+1
+C
+C PROCESS INSTALL CONFIRMATION
+C
+	IF(TRABUF(TII_CLASS).EQ.1) THEN
+	  TRABUF(TII_ACTION)=ZEXT(TERMES(IND))
+	  IND=IND+1
+	  CALL MOVBYT(TERMES(IND),1,TRABUF(TII_GVTID),1,12)
+	ELSE
+C
+C PROCESS INSTALL REQUEST
+C
+          TEMP1 = ZEXT(TERMES(IND+0))
+          TEMP2 = ZEXT(TERMES(IND+1))
+          TEMP3 = ZEXT(TERMES(IND+2))
+          TEMP4 = ZEXT(TERMES(IND+3))
+          TRABUF(TII_INSTALLER) = ISHFT(TEMP1,24)+ISHFT(TEMP2,16)+
+     *                            ISHFT(TEMP3,8)+TEMP4
+          IND=IND+4
+C
+C GET INSTALLER PASS NUMBER (NOT USED)
+C
+	  IND=IND+2
+	  CALL MOVBYT(TERMES(IND),1,TRABUF(TII_GVTID),1,12)
+	ENDIF
+C
+C CHECK MESSAGE CHECKSUM
+C
+        IF(P(SUPSUM).EQ.0) THEN
+          IF(.NOT.BTEST(AGTTAB(AGTTYP,TRABUF(TTER)),AGTSUM)) THEN
+          !!!I4CCITT=IAND(BASECHKSUM+TRABUF(TTER),'FFFF'X)
+	    I4CCITT=0   !!! V02
+            TERMES(3) = I1CCITT(2)
+            TERMES(4) = I1CCITT(1)
+            CHKLEN=MESLEN-1
+            CALL GETCCITT(TERMES,1,CHKLEN,MYCHKSUM)
+            IF(MYCHKSUM.NE.TRABUF(TCHK)) TRABUF(TERR)=CBAD
+	  ENDIF
+        ENDIF
+C
+	IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
+	RETURN
+	END

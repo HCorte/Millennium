@@ -1,0 +1,22 @@
+$! GXSRC:STATANL.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]STATANL.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:52:28   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:44:24   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:48:18   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:STATANL.EXE -
+OBJLIB:STATANL,-
+OFFLOG,-
+READTMF,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

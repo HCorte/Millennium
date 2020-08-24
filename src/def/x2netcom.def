@@ -1,0 +1,66 @@
+C
+C X2NETCOM.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2NETCOM.DEV                                 $
+C  $Date::   17 Apr 1996 16:24:22                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 15-JUN-2000 UXN NUM_OF_ASS_PRT,MAX_NUM_LIN_TO_PRT,NUM_OF_ASC_PORT removed.
+C V01 01-DEC-1991 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C X2NETPR1.DEF
+C
+C V01 30-JUN-90 MRM INITIAL RELEASE.
+C
+C This DEF contains the variables which are used to interface
+C with the algorithmns which assign network ports to stations
+C for site 1.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  NUM_OF_STATIONS
+	INTEGER*4  NUM_OF_PORTS
+	INTEGER*4  NUM_OF_NODES
+        INTEGER*4  STNWEIGHT(2,X2X_STATIONS)
+          INTEGER*4  STNIDX
+          PARAMETER (STNIDX=1)
+          INTEGER*4  STNRNK
+          PARAMETER (STNRNK=2)
+	INTEGER*4  IDNUM
+	INTEGER*2  ALL_SETS_OF_PORTS
+	INTEGER*2  TABFRQ, TABWEI
+C
+	COMMON /X2XNET/
+     *	  STNWEIGHT,                
+     *	  IDNUM,
+     *	  NUM_OF_STATIONS, NUM_OF_PORTS, NUM_OF_NODES,
+     *	  ALL_SETS_OF_PORTS(X2X_MAX_SITES,X2X_STATIONS,10),
+     *	  TABFRQ(200,10), TABWEI(200,10)
+C
+C
+	INTEGER*4	 FRST_X2NETCOM(2)
+	EQUIVALENCE	(FRST_X2NETCOM, STNWEIGHT(1,1))
+	INTEGER*4	 LAST_X2NETCOM
+	EQUIVALENCE	(LAST_X2NETCOM, TABWEI(199,10)) !**INTEGER*2
+C
+	VOLATILE /X2XNET/
+C 

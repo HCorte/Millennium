@@ -1,0 +1,63 @@
+C PRMSPT.DEF
+C
+C V09 14-FEB-2001 JHR SPGNBR CHANGED TO 17
+C V08 16-JAN-2000 OXK SPEVN_LEN added (Vakio changes)
+C V07 05-AUG-1998 RXK Value of SPGSYS increased  
+C V06 08 Jun 1993 GXA Released for Finland Dec Conversion / Oddset.
+C V05 03 May 1993 STUART Restored Baseline version
+C V04 30 Mar 1993 HUY Initial release for Vax.
+C V03 21 Jan 1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V02 07-OCT-1991 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C SPORT GAME PARAMETERS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4 NUMSPT
+        PARAMETER(NUMSPT=6)            !NUMBER OF SPORT GAMES
+C
+        INTEGER*4 SPGENT, SPGDIV, SPGNBR, SPGSYS, SPXMAX
+        PARAMETER(SPGENT=25)           !NUMBER OF SALES ENTRIES
+        PARAMETER(SPGDIV=8)            !MAXIMUM NUMBER OF DIVISIONS
+        PARAMETER(SPGNBR=17)           !MAXIMUM WINNING NUMBERS DRAWN
+        PARAMETER(SPGSYS=110)          !MAXIMUM SYSTEM BET DEFINITIONS
+        PARAMETER(SPXMAX=0)            !MAXIMUM TEXT MESSAGES
+C
+C NAME FIELD LENGTH PARAMETERS
+C
+        INTEGER*4 SPNMS_LEN
+        PARAMETER (SPNMS_LEN=16)       !LENGTH IN BYTES OF NAME FIELD
+C
+C NAME FILED LENGTH PARAMETERS
+C
+        INTEGER*4 SPEVN_LEN
+        PARAMETER (SPEVN_LEN=16)       ! EVENT NAME LENGTH IN BYTES
+C
+C
+C WINNING MARK WHEN THE DRAW HAS BEEN CANCELLED
+C
+C  1 = 1 --> WIN HOME
+C  2 = X --> EQUAL
+C  3 = C --> EVENT CANCELLED
+C  4 = 2 --> WIN AWAY
+C
+       INTEGER * 4 WINNUM_CANEVENT
+C
+       PARAMETER(WINNUM_CANEVENT = 3)
+C
+C END OF PRMSPT.DEF
+C

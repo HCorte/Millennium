@@ -1,0 +1,44 @@
+                          GTECH Distributed Network
+                        Auto Build Configuration Help             Page 1 of 2
+ 
+      This help screen describes each of the fields associated with
+      updating auto build records..  For specific instructions
+      on how to use the Add and Modify screens, refer to the Auto build
+      Menu Help.
+ 
+      The following describes each of the station port configuration
+      parameters:
+ 
+      Station       - number of the station to be created/modified
+      Address       - network address of the station (note: pad with
+                      trailing zeros up to 10 digits.)
+      Serial        - serial number of the station hardware.
+      Group         - logical grouping of station based on some physical
+                      aspects (location, postal code, etc).
+      Station Class - number of the station class record to be used for
+                      defaults for the station information.
+ 
+ 
+ 
+                          GTECH Distributed Network
+                        Auto Build Configuration Help             Page 1 of 2
+ 
+      Report Class  - number of the report class record to be used
+                      for statisticial reporting.
+      PVC Channel   - Permanent Virutual Circuit Channel # (future use).
+      PVC Port      - Permanent Virutual Circuit Port # (future use).
+      Last Update   - CDC date of the last time this record was updated.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

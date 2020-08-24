@@ -1,0 +1,18 @@
+$! GXSRC:POLCOM.LSH
+$! 
+$! $Log:   GXAFXT:[GOLS]POLCOM.LSV  $
+$! 
+$!    Rev 1.0   17 Apr 1996 14:24:08   HXK
+$! Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+$! 
+$!    Rev 1.1   14 Apr 1994 13:29:20   SYSTEM
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Apr 1994 9:57:02   SYSTEM
+$! Initial revision.
+$! 
+$ LINK 'P1' /EXE=TSKLIB:GXPOLCOM.ESH/SHAREABLE -
+OBJLIB:POLCOM,-
+SYS$INPUT:/OPTION
+SYMBOL_VECTOR=(POLCOM=PSECT)
+PSECT_ATTR=POLCOM,SHR,WRT

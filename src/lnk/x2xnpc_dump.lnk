@@ -1,0 +1,46 @@
+$! GXSRC:X2XNPC_DUMP.LNK
+$! 
+$! $Log:   GXAFXT:[GOLS]X2XNPC_DUMP.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 22:22:44   HXK
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Jul 1996 22:20:46   HXK
+$! Initial revision.
+$! 
+$! GXSRC:X2XNPC_DUMP.LNK
+$!
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]X2XNPC_DUMP.LNV                              $
+$! $Date::   14 Jul 1996 22:22:44                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! V01 13-DEC-94 GPR RELEASED FOR UK
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! This item is the property of GTECH Corporation, Providence, Rhode
+$! Island, and contains confidential and trade secret information. It
+$! may not be transferred from the custody or control of GTECH except
+$! as authorized in writing by an officer of GTECH. Neither this item
+$! nor the information it contains may be used, transferred,
+$! reproduced, published, or disclosed, in whole or in part, and
+$! directly or indirectly, except as expressly authorized by an
+$! officer of GTECH, pursuant to written agreement.
+$!
+$! Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:X2XNPC_DUMP.EXE -
+OBJLIB:X2Xnpc_DUMP,-
+X2UNLOCK,-
+X2FILNAM,-
+ATOH,-
+HTOA,-
+STDLIB:NORMLIB/LIB,-
+SYS$INPUT/OPTION,-
+OBJLIB:PSECT.OPT/OPTION

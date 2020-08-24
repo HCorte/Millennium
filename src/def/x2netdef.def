@@ -1,0 +1,69 @@
+C
+C X2NETDEF.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2NETDEF.DEV                                 $
+C  $Date::   17 Apr 1996 16:24:52                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 22-SEP-96 DAS REMOVED ARRAY FRPOR (NOT USED)
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C THIS COMMON IS UTILIZED TO GENERATE AND STORE DEFAULT NETWORK PORT
+C ASSIGNMENTS.  NOTE: VARIABLE NAMES HAVE NOT BEEN CHANGED TO
+C ALLOW MAPPING INTO ROUTINES PREVIOUSLY DEVELOPED.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 NUM_OF_STATIONS                !NUMBER OF STATIONS TO ASSIGN
+	INTEGER*4 NUM_OF_NODES                   !NUMBER OF NETWORK NODES
+	INTEGER*4 NUM_OF_PORTS                   !NUMBER OF NETWORK PORTS
+	INTEGER*4 IDUM                           !RANNUMB SEED
+	INTEGER*4 STACWEI(1,X2X_STATIONS)        !STATION WEIGHT TABLE
+	INTEGER*4 STINX(X2X_STATIONS)            !STATION INDEX TABLE
+	INTEGER*4 ONE_SET_OF_PORTS(X2X_MAXNODES) !FOR ONE STATION - ASSIGNED POR
+	INTEGER*4 ONE_SET_OF_NODES(X2X_MAXNODES) !FOR ONE NODE - ASSIGNED PORTS
+	INTEGER*4 ALL_SETS_OF_PORTS(X2X_STATIONS,X2X_MAXNODES)  !ASSIGNED PORTS
+	INTEGER*4 POASTONO(X2X_MAXNODES,0:200)   !PORT ASSIGNED TO NODE
+C
+	INTEGER*4 TABFRQ(X2X_NETWORK_PORTS,X2X_MAXNODES)
+	INTEGER*4 TABWEI(X2X_NETWORK_PORTS,X2X_MAXNODES)
+C......	INTEGER*4 FRPOR(X2X_NETWORK_PORTS,X2X_NETWORK_PORTS)
+C
+	COMMON /X2XDEF/
+     *	                  NUM_OF_STATIONS, NUM_OF_NODES,
+     *	                  NUM_OF_PORTS,    IDUM,
+     *	                  STACWEI,         STINX,
+     *	                  ALL_SETS_OF_PORTS,
+     *	                  ONE_SET_OF_PORTS,
+     *	                  ONE_SET_OF_NODES,
+     *	                  TABFRQ,          TABWEI,
+     *	                  POASTONO
+C
+C
+	INTEGER*4	 FRST_X2NETREL(2)
+	EQUIVALENCE	(FRST_X2NETREL, NUM_OF_STATIONS)
+	INTEGER*4	 LAST_X2NETREL
+	EQUIVALENCE	(LAST_X2NETREL, POASTONO(X2X_MAXNODES,200))
+C
+	VOLATILE /X2XDEF/
+C 

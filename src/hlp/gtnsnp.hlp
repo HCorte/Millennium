@@ -1,0 +1,44 @@
+    GTN.HLP                GTECH Distributed Network
+                       GTech Network Summary Snapshot Help      Page 1 of 2
+ 
+    The GTECH network summary snapshot summarizes the NETwork snapshot in 
+    three sections: System configuration, System Status summary, and  
+    Lan/Nplex control summary
+
+    The information displayed includes:
+ 
+    Site primary  - primary system ID letter and number code
+    *BACKup       - backup system ID in letter code and number
+    nxtser        - next available serial number to be assigned to a
+                    transaction
+    *CHKPnt       - command to force a checkpoint
+    status        - status of network configuration for systems A, B, C and  
+                    D (normal=connected, idle=not connected, no connection=
+                    dropped connection)
+    last ser #    - last serial number sent to the backup system
+    retries/err   - retries and error count for systems A, B, C and D
+    last I/O      - time in milliseconds of last sucessful I/O
+    system        - system name (A, B, C or D)
+    
+    GTN.HLP                GTECH Distributed Network
+                       GTech Network Summary Snapshot Help      Page 2 of 2
+    
+    SAP           - service access point identification number
+    State         - network status(open=a connection from CTLPRO to LANPRO
+                    pending=CTLPRO on primary is trying to connect to 
+                    CTLPRO on backup or the existing connection between the 
+                    primary and backup system is lost)
+    timeout       - internal timers 
+    enable        - displays the status of the system network link. Enabled 
+                    shows that a link has been established.  This field is  
+                    set through the backup paramater.
+    sendseq       - number of sequence numbers to send across the network 
+                    to the other system
+    recseq        - number of sequence numbers sent across the network to 
+                    the other system.
+    recovery stage- recovery information sent by broadcast logic
+    transaction   - serial number of transactions sent to systems A, B, C
+    sent            and D
+    net *DIAg     - time interval between broadcasts
+    interval time
+    *MAX Response - maximum wait time for broadcast response.

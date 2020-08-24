@@ -1,0 +1,25 @@
+$! GXSRC:SERVCOM.LSH
+$! 
+$! $Log:   GXAFXT:[GOLS]SERVCOM.LSV  $
+$! 
+$!    Rev 1.0   17 Apr 1996 14:57:22   HXK
+$! Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+$! 
+$!    Rev 1.1   24 Mar 1994 14:12:56   MCM
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    03 Jan 1994 16:57:20   JPJ
+$! Initial revision.
+$! 
+$!
+$!
+$! 
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$! 
+LINK'P1' -
+/EXE=TSKLIB:GXGUICOM.ESH -
+/SHAREABLE -
+OBJLIB:GUICOM,-
+SYS$INPUT/OPTION
+SYMBOL_VECTOR=(GUICOM=PSECT)
+PSECT_ATTR=GUICOM,SHR,WRT

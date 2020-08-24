@@ -1,0 +1,24 @@
+$! GXSRC:VSYSTAP.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]VSYSTAP.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:58:14   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 14:04:44   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:52:24   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=GXUTL:VSYSTAP.EXE -
+OBJLIB:VSYSTAP,-
+VLOAD,-
+VSAVE_IM,-
+VSYSRED,-
+FILL_I4WORD,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

@@ -1,0 +1,22 @@
+    SAL.HLP                GTECH Distributed Network
+                         System Sales Snapshot Help           Page 1 of 1
+ 
+    The sales snapshot reflects the current count and amount of system  
+    sales, cancellations, claims, cashes and deletes.  Sales, 
+    cancellations, cashes and claims are displayed both as a total figure
+    and broken down by games.
+
+    The information displayed includes:
+ 
+    game    - name of games being monitored
+    sales   - gross sales for each game type
+    cancels - number of sales cancelled for each game type
+    csh/ref - total number of cashed and refunded tickets for each game
+              type
+    totals  - total sales, cancels, deletes, cashes, claims, and refunds 
+              for all games.
+
+
+
+
+

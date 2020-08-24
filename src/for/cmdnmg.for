@@ -1,0 +1,188 @@
+C
+C SUBROUTINE CMDNMG
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]CMDNMG.FOV                                   $
+C  $Date::   17 Apr 1996 12:38:38                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - cmdnmg.for **
+C
+C CMDNMG.FOR
+C
+C V03 09-NOV-04 UXN ON OLD BACKUP SYSTEM CLOSE PRIMARY SAP
+C V02 27-MAY-03 UXN FOR OLD BACKUP SYSTEM RESET CTLSAPSTA, OTHERWISE
+C                   CTLPRO WILL NOT START POLLING TO PRIMARY COMM SAP IF
+C                   THIS SYSTEM BECOMES BACKUP AGAIN
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C SUBROUTINE TO PROCESS NETWORK SYSTEM COMMANDS
+C
+C
+C V01 01-FEB-89 MTK INITIAL RELEASE FOR SWEDEN
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE CMDNMG(TRABUF,MESS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DESNET.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+        INCLUDE 'INCLIB:CTLCOM.DEF'		  ! V02
+        INCLUDE 'INCLIB:X2XCOM.DEF'		  ! V02
+	INTEGER*4 MESS(EDLEN), WAY, CMDNUM
+        INTEGER*4 PRIMARY, PRIMSAP                !V03
+C
+C
+C
+	CMDNUM=TRABUF(TCMNUM)
+	GOTO (10,20,30,40,50,60,70,80,90,100) CMDNUM
+	GOTO 1000
+C
+C TAKEOVER TIME
+C
+10	CONTINUE
+	TRABUF(TCMOLD)=IDLETIM
+	IDLETIM=TRABUF(TCMNEW)
+	MESS(2)=TECMD
+	MESS(3)=2
+	MESS(8)=TRABUF(TCMOLD)
+	MESS(9)=TRABUF(TCMNEW)
+	RETURN
+C
+C TOFREEZE
+C
+20	CONTINUE
+	TRABUF(TCMOLD)=TOFREEZ
+	TOFREEZ=TRABUF(TCMNEW)
+	MESS(2)=TECMD
+	MESS(3)=2
+	MESS(8)=TRABUF(TCMOLD)
+	MESS(9)=TRABUF(TCMNEW)
+	RETURN
+C
+C CHANGE BACKUP ID
+C
+30	CONTINUE
+	WAY=TRABUF(TCMDT2)
+	TRABUF(TCMOLD)=NETBACKUP(WAY)
+	IF(NETMASTER(WAY).EQ.TRABUF(TCMNEW).OR.
+     *	   TRABUF(TCMNEW).GT.NETSYS) THEN
+	  MESS(2)=TECMD
+	  MESS(3)=7
+	  MESS(8)=TRABUF(TCMOLD)
+	  MESS(9)=TRABUF(TCMNEW)
+	  RETURN
+	ENDIF
+	IF(NODEID.EQ.NETBACKUP(WAY)) P(SYSTYP)=SPRSYS
+	NETBACKUP(WAY)=TRABUF(TCMNEW)
+	IF(NODEID.EQ.NETBACKUP(WAY)) P(SYSTYP)=BAKSYS
+CV02
+C
+C FOR OLD BACKUP SYSTEM RESET PRIMARY COMM CTLSAPSTA TO CTLSTADOWN
+C
+        IF(NODEID.EQ.TRABUF(TCMOLD) .AND. NODEID.NE.NETBACKUP(WAY)) THEN
+           CTLSAPSTA(X2X_GAME_SAP) = CTLSTADOWN
+           CTLRSEQ(X2X_GAME_SAP)   = 0
+           PRIMARY                 = NETMASTER(WAY)                   !V03
+           PRIMSAP                 = CTLSAPSYS(PRIMARY)               !V03
+           CTLSAPSTA(PRIMSAP)      = CTLSTADOWN   ! Close primary SAP !V03
+           CTLRSEQ(PRIMSAP)        = 0                                !V03
+        ENDIF
+CEV02
+	MESS(2)=TECMD
+	MESS(3)=2
+	MESS(8)=TRABUF(TCMOLD)
+	MESS(9)=TRABUF(TCMNEW)
+	RETURN
+C
+C ADD LINK
+C
+40	CONTINUE
+	MESS(2)=TENET
+	MESS(3)=3
+	MESS(8)=TRABUF(TCMDT1)
+	MESS(9)=TRABUF(TCMNEW)
+	MESS(10)=TRABUF(TCMDT2)
+	RETURN
+C
+C REMOVE LINK
+C
+50	CONTINUE
+	WAY=TRABUF(TCMDT2)
+	IF(TRABUF(TCMDT1).EQ.NETBACKUP(WAY)) NETBACKUP(WAY)=0
+	MESS(2)=TENET
+	MESS(3)=4
+	MESS(8)=TRABUF(TCMDT1)
+	MESS(9)=WAY
+	RETURN
+C
+C SYNCWAIT
+C
+60	CONTINUE
+	TRABUF(TCMOLD)=SYNCWAIT
+	SYNCWAIT=TRABUF(TCMNEW)
+	MESS(2)=TECMD
+	MESS(3)=2
+	MESS(8)=TRABUF(TCMOLD)
+	MESS(9)=TRABUF(TCMNEW)
+	RETURN
+C
+C SET MASTER
+C
+70	CONTINUE
+	WAY=TRABUF(TCMDT2)
+	NETMASTER(WAY)=TRABUF(TCMDT1)
+	IF(WAY.EQ.WAYINP) THEN
+	  IF(NODEID.NE.NETMASTER(WAY)) P(SYSTYP)=SPRSYS
+	  NETBACKUP(WAY)=0
+	ENDIF
+	MESS(2)=TENET
+	MESS(3)=5
+	MESS(8)=TRABUF(TCMDT1)
+	MESS(9)=TRABUF(TSER)
+	MESS(10)=TRABUF(TCMDT2)
+	RETURN
+C
+C PUT NEXT NETWORK COMMAND HERE
+C
+80	CONTINUE
+90	CONTINUE
+100	CONTINUE
+C
+C INVALID COMMAND NUMBER
+C
+1000	CONTINUE
+	TRABUF(TSTAT)=REJT
+	TRABUF(TERR)=INVL
+	MESS(2)=TECMD
+	MESS(3)=1
+	MESS(4)=TRABUF(TCMTYP)
+	MESS(5)=TRABUF(TCMNUM)
+	RETURN
+	END

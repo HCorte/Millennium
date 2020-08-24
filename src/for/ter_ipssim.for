@@ -1,0 +1,667 @@
+C IPSSIM.FOR
+C
+C PREPARE A SIMULATED IPS TRANSACTION
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS	/CHECK=NOOVERFLOW
+	SUBROUTINE IPSSIM(STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:TERSIM.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+C
+	INTEGER*4 STATUS,I,IPSTYP,EXT,CNT,OPT,RTYP,SCLS
+C
+	INTEGER*4 TEMP
+	BYTE      TEMP1(4)
+	EQUIVALENCE (TEMP,TEMP1)
+C
+	BYTE TER_HEADER(7)
+	DATA(TER_HEADER(I),I=1,7)/
+     *  Z20,               ! 1   control and sequence
+     *  Z00,               ! 2   type and subtype
+     *  Z00,               ! 3   checksum
+     *  Z00,               ! 4   checksum
+     *  Z80,               ! 5   statistics (simulator transaction)
+     *  Z00,Z00/           ! 6-7 option flags (set to 0)
+C
+C
+C
+	GTYP=1
+	STATUS=0
+	CALL CLRSCR(5)
+C
+10	CONTINUE
+	TYPE*
+	TYPE*,IAM(),'Choose IPS message type'
+	TYPE*
+	TYPE*,IAM(),' 1 = Game Parameters'
+	TYPE*,IAM(),' 2 = Active Games/Prize Table Request'
+	TYPE*,IAM(),' 3 = Terminal Ticket Ordering'
+	TYPE*,IAM(),' 4 = Order Confirmation'
+	TYPE*,IAM(),' 5 = Order-Pack Activation'
+	TYPE*,IAM(),' 6 = Instant Validation'
+	TYPE*,IAM(),' 7 = Quota Report'
+	TYPE*,IAM(),' 8 = Inventory Report'
+	TYPE*,IAM(),' 9 = Financial Report'
+	TYPE*,IAM(),'10 = Packs Settled Report'
+	TYPE*,IAM(),'11 = FSE Sign-On'
+	TYPE*,IAM(),'12 = Pack Issues'
+	TYPE*,IAM(),'13 = Pack Status Change'
+	TYPE*,IAM(),'14 = Carton Status Change'
+	TYPE*
+C
+	CALL INPNUM('Enter Option: ',IPSTYP,1,14,EXT)
+	IF(EXT.NE.0) THEN
+	  STATUS = -1
+	  RETURN
+	ENDIF
+C
+	GOTO( 100,  200,  300, 400, 500, 600, 700, 800, 900, 1000,
+     *        1100, 1200, 1300, 1400) IPSTYP
+	GOTO 10
+C
+C Game Parameters IORD
+C
+100	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'D7'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter Game Number             : ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 100
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Continuation Game Number: ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 100
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2 
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C Active Games/Prize Table Request IGTB
+C
+200	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'DF'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter 1=Active Games, 2=Prizes: ',TEMP,1,2,EXT)
+	IF(EXT.NE.0) GOTO 200
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1)
+	MESLEN = MESLEN + 1
+C
+	IF(TEMP.EQ.2) THEN
+	  CALL INPNUM('Enter Game Number 1           : ',TEMP,0,999,EXT)
+	  IF(EXT.NE.0) GOTO 200
+	  CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	  MESLEN = MESLEN + 2
+C
+	  CALL INPNUM('Enter Game Number 2           : ',TEMP,0,999,EXT)
+	  IF(EXT.NE.0) GOTO 200
+	  CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	  MESLEN = MESLEN + 2
+	ENDIF 
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C Terminal Ticket Ordering IMNU
+C
+300	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'D6'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter Retailer Number          : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 300
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4
+C
+	CALL INPNUM('Enter Number of Orders in Batch: ',CNT,1,TSMAX,EXT)
+	IF(EXT.NE.0) GOTO 300
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),CNT,2) 
+	MESLEN = MESLEN + 2
+C
+	DO I=1,CNT
+	  TYPE*,IAM(),' *** Order ',I,' in Batch *** '
+C
+	  CALL INPNUM('Enter Game Number              : ',TEMP,0,999,EXT)
+	  IF(EXT.NE.0) GOTO 300
+	  TEMP = ISHFT(GTYP,4) + IAND(TEMP,'0FFF'X)
+	  CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	  MESLEN = MESLEN + 2
+C
+	  CALL INPNUM('Enter Supply Quantity          : ',TEMP,99999,EXT)
+	  IF(EXT.NE.0) GOTO 300
+	  CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	  MESLEN = MESLEN + 2
+	ENDDO
+C
+C Order Confirmation ICNF
+C
+400	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'DC'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter First 4 Digits of Order: ',TEMP,0,9999,EXT)
+	IF(EXT.NE.0) GOTO 400
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Last  9 Digits of Order: ',TEMP,0,999999999,EXT)
+	IF(EXT.NE.0) GOTO 400
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C Order-Pack Activation IOACT
+C
+500	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'DE'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter First 4 Digits of Order: ',TEMP,0,9999,EXT)
+	IF(EXT.NE.0) GOTO 500
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Last  9 Digits of Order: ',TEMP,0,999999999,EXT)
+	IF(EXT.NE.0) GOTO 500
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C Instant Validation IVAL
+C
+600	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'DD'X
+	MESLEN = 8
+C
+	TYPE*,IAM(),'Values for Batch Flag:'
+	TYPE*,IAM(),'00'X,' Not Batched'
+	TYPE*,IAM(),'01'X,' Last'
+	TYPE*,IAM(),'02'X,' Batched'
+	TYPE*,IAM(),'40'X,' GVT Not Batched'
+	TYPE*,IAM(),'42'X,' GVT Batched'
+	TYPE*,IAM(),'80'X,' Fail'
+C
+	CALL INPNUM('Enter Batch Flag                            : ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 600
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1)
+	MESLEN = MESLEN + 1
+C
+	CALL INPNUM('Enter Retailer Number (0 for non-priv)  : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 600
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	MESLEN = MESLEN + 4
+C
+	CALL INPNUM('Enter Validation Mode (0=Pay, 1=Inquiry): ',TEMP,0,1,EXT)
+	IF(EXT.NE.0) GOTO 600
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1)
+	MESLEN = MESLEN + 1
+C
+	CALL INPNUM('Enter Envelope ID (0 for non-priv)      : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 600
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	MESLEN = MESLEN + 4
+C
+	CALL INPNUM('Enter Number of Tickets in Batch        : ',CNT,1,TIVMX,EXT)
+	IF(EXT.NE.0) GOTO 600
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),CNT,1)
+	MESLEN = MESLEN + 1
+C
+	DO I=1,CNT
+	  TYPE*,IAM(),' *** Ticket ',I,' in Batch *** '
+C
+	  CALL INPNUM('Enter Game Number                       : ',TEMP,0,999,EXT)
+	  IF(EXT.NE.0) GOTO 600
+	  CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	  MESLEN = MESLEN + 2
+C
+	  CALL INPNUM('Enter Pack Number                       : ',TEMP,1,9999999,EXT)
+	  IF(EXT.NE.0) GOTO 600
+	  CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	  MESLEN = MESLEN + 4
+C
+	  CALL INPNUM('Enter VIRN Number (9 digits)            : ',TEMP,1,999999999,EXT)
+	  IF(EXT.NE.0) GOTO 600
+	  CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	  MESLEN = MESLEN + 4
+C
+	  CALL INPNUM('Enter Latex Number                      : ',TEMP,0,99999,EXT)
+	  IF(EXT.NE.0) GOTO 600
+	  CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	  MESLEN = MESLEN + 2
+C
+	  CALL INPNUM('Enter Amount in Cents                   : ',TEMP,0,99999,EXT)
+	  IF(EXT.NE.0) GOTO 600
+	  CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	  MESLEN = MESLEN + 2
+C
+	ENDDO 
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C Quota Report IQTA
+C
+700	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'D3'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter Class                   : ',TEMP,0,99,EXT)
+	IF(EXT.NE.0) GOTO 700
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1) 
+	MESLEN = MESLEN + 1
+C
+	TEMP=0  !Subclass
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1)
+	MESLEN = MESLEN + 1
+C
+	CALL INPNUM('Enter Retailer Number         : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 700
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4
+C
+	TEMP=0  !Pass Number
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Game Number             : ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 700
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+	TEMP=0  !Free Space
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	MESLEN = MESLEN + 4 
+C
+	CALL INPNUM('Enter Continuation Game Number: ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 700
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2 
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C Inventory Report IINV
+C
+800	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'D4'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter Class                          : ',TEMP,0,99,EXT)
+	IF(EXT.NE.0) GOTO 800
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1) 
+	MESLEN = MESLEN + 1
+C
+	TEMP=0  !Subclass
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1) 
+	MESLEN = MESLEN + 1
+C
+	CALL INPNUM('Enter Retailer Number                : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 800
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4
+C
+	TEMP=0  !Pass Number
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Game Number                    : ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 800
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Continuation Pack Number       : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 800
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4 
+C
+	CALL INPNUM('Enter Continuation Game Number       : ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 800
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2 
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C Financial Report IFIN & IINVR
+C
+900	CONTINUE
+C
+C	TYPE*
+	TYPE*,IAM(),'Financial Reports:'
+	TYPE*,IAM(),'00. Todays report'
+	TYPE*,IAM(),'01. Last Monday'
+	TYPE*,IAM(),'02. Last Tuesday'
+	TYPE*,IAM(),'03. Last Wednesday'
+	TYPE*,IAM(),'04. Last Thursday'
+	TYPE*,IAM(),'05. Last Friday'
+	TYPE*,IAM(),'06. Last Saturday'
+	TYPE*,IAM(),'07. Last Sunday'
+	TYPE*,IAM(),'08. Week-to-date report'
+	TYPE*,IAM(),'09. Last Invoice report'
+C	TYPE*,IAM(),'10. Pack settled report'
+C	TYPE*,IAM(),'11. Adjustment report'
+C	TYPE*,IAM(),'12. Invoice Footer'
+C	TYPE*,IAM(),'13. Invoice Header'
+C	TYPE*,IAM(),'15. Clerk reports'
+	CALL INPNUM('Enter Option: ',OPT,0,9,EXT)
+	IF(EXT.NE.0) GOTO 10
+C	IF(OPT.EQ.14) GOTO 900
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'D5'X
+	MESLEN = 8
+C
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),OPT,1)  !Report Type
+	MESLEN = MESLEN + 1
+C
+	RTYP=0  !Request Type
+	CALL INPNUM('Enter Class (1-Retailer Only, 2-Store)  : ',SCLS,1,2,EXT)
+	IF(EXT.NE.0) GOTO 900
+	TEMP = IOR(ISHFT(RTYP,4),SCLS)
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1) 
+	MESLEN = MESLEN + 1
+C
+	CALL INPNUM('Enter Retailer Number                   : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 900
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4
+C
+	CALL INPNUM('Enter Pass Number                       : ',TEMP,0,9999,EXT)
+	IF(EXT.NE.0) GOTO 900
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C Packs Settled Report IFIN & IPSET
+C
+1000	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'D5'X
+	MESLEN = 8
+C
+	OPT=10
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),OPT,1)  !Report Type
+	MESLEN = MESLEN + 1
+C
+	RTYP=0  !Request Type
+	CALL INPNUM('Enter Class (1-Retailer Only, 2-Store)  : ',SCLS,1,2,EXT)
+	IF(EXT.NE.0) GOTO 1000
+	TEMP = IOR(ISHFT(RTYP,4),SCLS)
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1) 
+	MESLEN = MESLEN + 1
+C
+	CALL INPNUM('Enter Retailer Number                   : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1000
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4
+C
+	CALL INPNUM('Enter Pass Number                       : ',TEMP,0,9999,EXT)
+	IF(EXT.NE.0) GOTO 1000
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Game Number (0-First Request)     : ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 1000
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Pack Number (0-First Request)     : ',TEMP,1,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1000
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	MESLEN = MESLEN + 4
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C FSE Sign-On IFSESON
+C
+1100	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'DB'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter 0=Sign-on, 1=Sign-off: ',TEMP,0,1,EXT)
+	IF(EXT.NE.0) GOTO 1100
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1)
+	MESLEN = MESLEN + 1
+C	
+	CALL INPNUM('Enter FSE Number           : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1100
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	MESLEN = MESLEN + 4
+C
+	CALL INPNUM('Enter FSE Password         : ',TEMP,0,32000,EXT)
+	IF(EXT.NE.0) GOTO 1100
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2
+C
+	TEMP=0  !FSE Class Number
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1)
+	MESLEN = MESLEN + 1
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C Pack Issues IISS
+C
+1200	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'D1'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter Agent Pass Code               : ',TEMP,0,9999,EXT)
+	IF(EXT.NE.0) GOTO 1200
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Sales Representative Number   : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1200
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4
+C
+	CALL INPNUM('Enter Sales Representative Pass Code: ',TEMP,1,9999,EXT)
+	IF(EXT.NE.0) GOTO 1200
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Number Of Entries             : ',TEMP,0,10,EXT)
+	IF(EXT.NE.0) GOTO 1200
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,1) 
+	MESLEN = MESLEN + 1
+C
+	CALL INPNUM('Enter Game Number                   : ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 1200
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Pack Number                   : ',TEMP,1,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1200
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	MESLEN = MESLEN + 4	
+C
+	MESLEN = MESLEN - 1
+	CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C Pack Status Change ILOT
+C	
+1300	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'D2'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter Agent Pass Code                : ',TEMP,0,9999,EXT)
+	IF(EXT.NE.0) GOTO 1300
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Sales Representative Number    : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1300
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4
+C
+	CALL INPNUM('Enter Sales Representative Pass Code : ',TEMP,1,9999,EXT)
+	IF(EXT.NE.0) GOTO 1300
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+	TYPE*,IAM(),'Class:'
+	TYPE*,IAM(),'1 - Pack activation'
+C	TYPE*,IAM(),'2 - Pack deactivation'
+	TYPE*,IAM(),'3 - Packs sold (settlement)'
+	TYPE*,IAM(),'4 - Return full'
+C	TYPE*,IAM(),'5 - Return partial'
+C	TYPE*,IAM(),'6 - Issue'
+C	TYPE*,IAM(),'7 - Transfer'
+C
+	CALL INPNUM('Enter Option: ',OPT,1,5,EXT)
+	IF(EXT.NE.0) GOTO 1300	
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),OPT,1) 
+	MESLEN = MESLEN + 1
+C
+	CALL INPNUM('Enter Game Number                    : ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 1300
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Pack Number                    : ',TEMP,1,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1300
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	MESLEN = MESLEN + 4	
+C
+	IF(OPT.EQ.2 .OR. OPT.EQ.5) THEN
+	CALL INPNUM('Enter Starting Sequence Ticket Number: ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 1300
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2	
+C
+	CALL INPNUM('Enter Ending   Sequence Ticket Number: ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 1300
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2	
+	ENDIF
+C
+	MESLEN = MESLEN - 1
+        CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+C
+C Carton Status Change ICAR
+C	
+1400	CONTINUE
+C
+	CALL MOVBYT(TER_HEADER,1,MESBUF1,1,7)
+	MESBUF1(2) = 'D8'X
+	MESLEN = 8
+C
+	CALL INPNUM('Enter Agent Pass Code                : ',TEMP,0,9999,EXT)
+	IF(EXT.NE.0) GOTO 1400
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Sales Representative Number    : ',TEMP,0,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1400
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4) 
+	MESLEN = MESLEN + 4
+C
+	CALL INPNUM('Enter Sales Representative Pass Code : ',TEMP,1,9999,EXT)
+	IF(EXT.NE.0) GOTO 1400
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2) 
+	MESLEN = MESLEN + 2
+C
+C	TYPE*,IAM(),'Class:'
+C	TYPE*,IAM(),'1 - Carton activation'
+C
+C	CALL INPNUM('Enter Option: ',OPT,1,1,EXT)
+C	IF(EXT.NE.0) GOTO 1400	
+	OPT=1
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),OPT,1) 
+	MESLEN = MESLEN + 1
+C
+	CALL INPNUM('Enter Game Number                    : ',TEMP,0,999,EXT)
+	IF(EXT.NE.0) GOTO 1400
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,2)
+	MESLEN = MESLEN + 2
+C
+	CALL INPNUM('Enter Carton Number                  : ',TEMP,1,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1400
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	MESLEN = MESLEN + 4	
+C
+	CALL INPNUM('Enter Starting Pack Number           : ',TEMP,1,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1400
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	MESLEN = MESLEN + 4	
+C
+	CALL INPNUM('Enter Ending   Pack Number           : ',TEMP,1,9999999,EXT)
+	IF(EXT.NE.0) GOTO 1400
+	CALL HOST_TO_TERM(MESBUF1(MESLEN),TEMP,4)
+	MESLEN = MESLEN + 4	
+C
+	MESLEN = MESLEN - 1
+        CALL SETCHKSUM(MESBUF1,MESLEN)
+	GOTO 9999
+C
+9999	CONTINUE
+	IF(NODISP) RETURN
+	TYPE 99999, (MESBUF1(I),I=1,MESLEN)
+99999	FORMAT(' IPS PassThru'/ '     mes: ',<MESLEN>Z3.2)
+C
+	RETURN
+	END

@@ -1,0 +1,21 @@
+$! GXSRC:ENABONUS.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]ENABONUS.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:39:48   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   13 Jul 1995 15:25:48   HXK
+$! Adding objects
+$!
+$!    Rev 1.0   13 Jul 1995 15:22:54   HXK
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:ENABONUS.EXE -
+OBJLIB:ENABONUS,-
+GETPRZ,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

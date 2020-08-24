@@ -1,0 +1,171 @@
+C STACOM.DEF
+C
+C V10 02-FEB-2000 OXK STAFRE & STACSB changed (Vakio changes)
+C V09 13-OCT-1999 RXK STAWTD added for World Tour.
+C V08 11-MAY-1999 UXN MAXGAM changed to 60
+C V07 17-APR-1996 HXK Release of Finland for X.25, Telephone Betting, 
+C                     Instant Pass Thru Phase 1
+C V06 24-AUG-1993 HXK amended staspt array length for quick picks in finland
+C V05 23-AUG-1993 HXK REMOVED STASTS
+C V04 22-AUG-1993 HXK changed array dimensions
+C V03 16-JUL-1993 HXK ADDED VAKIO STATS MATCH LIST
+C V02 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V01 05-MAY-1992 HdB RELEASED FOR VAX
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C COMMON LAYOUT FOR STATISTICAL GAME DATA
+C
+C
+C STALTO(NUMTOT,2,MAXBRD,MAXBRD+1,NUMLTO)       LOTTO STATISTICS
+C                               2;  1 = COUPON,2 = QUICK PICK
+C                               MAXBRD+1 = 12; 1 - 12 = NUM QUICKP/BETSLIP
+C                                                  13 = NUM NON QUICKP/BETSLIP
+C                               NUMTOT=2 (NUMBER OF TOTALS)
+C                               MAXBRD=12
+C                               NUMLTO=4
+C                                                       SIZE =  2496
+C                               
+C
+C STAGAM(NUMTOT,4,MAXGAM)       GAME STATISTICS
+C                               1 = COUPON TICKITS
+C                               2 = QUICK PICK
+C                               3 = SIMPLE WAGERS (NON-SYSTEM)
+C                               4 = SYSTEM BETS
+C                               NUMTOT=2 (NUMBER OF TOTALS)
+C                               MAXGAM=60
+C                                                       SIZE =   480
+C
+C
+C STAKIK(2,MAXGAM)              KICKER GAME STATISTICS
+C                               1 = # OF COUPONS WITHOUT KICKER
+C                               2 = # OF COUPONS WITH KICKER
+C                               MAXGAM=60
+C                                                       SIZE =   120
+C
+C
+C STASPT(NUMTOT,2,MAXBRD,MAXBRD+1,NUMSPT)       SPORTS STATISTICS
+C                               2;     1 = COUPON, 2 = QUICK PICK
+C                               MAXBRD+1 = 13 QP + TOTAL
+C                               MAXBRD   = 12
+C                               NUMTOT   = 2
+C                               NUMSPT   = 6
+C
+C
+C STASPT_CUP(NUMSPT)            SPORTS COUPON COUNT
+C                               NUMSPT=6 
+C
+C                               
+C STASPT_TAB1(SPGNBR,7,NUMSPT)  SPORTS STATS TABLE 1 (ACTUAL EVENT PLAYS)
+C                               1 = 1--
+C                               2 = -X-
+C                               3 = --2
+C                               4 = 1X-
+C                               5 = 1-2
+C                               6 = -X2
+C                               7 = 1X2
+C                               SPGNBR=17
+C                               NUMSPT=6
+C
+C
+C STASPT_TAB2(SPGNBR,3,NUMSPT)  SPORTS STATS TABLE 2 (TOTAL OUTCOMES PER EVENT)
+C                               1 = 1--
+C                               2 = -X-
+C                               3 = --2
+C
+C
+C STATSL(NUMTOT,5,NUMTSL)       TOTO SELECT STATISTICS
+C                               1 = FOUR TRIPLES
+C                               2 = FIVE TRIPLES
+C                               3 = SIX TRIPLES
+C                               4 = FIVE FOURS
+C                               5 = SIX FOURS
+C                               NUMTOT=2 (NUMBER OF TOTALS)
+C                               NUMTSL=1
+C                                                       SIZE =    10
+C                                                               ---- +
+C                                                       TOTAL
+C
+C FREE()
+C
+C
+	INTEGER*4 STALTO_OFF, STAGAM_OFF, STAKIK_OFF, STASPT_OFF
+	INTEGER*4 STASPT_CUP_OFF, STASPT_TAB1_OFF, STASPT_TAB2_OFF
+	INTEGER*4 STATSL_OFF, STAFRE_OFF
+
+	PARAMETER(STALTO_OFF=1)
+	PARAMETER(STAGAM_OFF=STALTO_OFF+NUMTOT*2*MAXBRD*(MAXBRD+1)*NUMLTO)
+	PARAMETER(STAKIK_OFF=STAGAM_OFF+NUMTOT*4*MAXGAM)
+	PARAMETER(STASPT_OFF=STAKIK_OFF+2*MAXGAM)
+	PARAMETER(STASPT_CUP_OFF=STASPT_OFF+NUMTOT*MAXBRD*(MAXBRD+1)*NUMSPT)
+	PARAMETER(STASPT_TAB1_OFF=STASPT_CUP_OFF+NUMSPT)
+	PARAMETER(STASPT_TAB2_OFF=STASPT_TAB1_OFF+SPGNBR*7*NUMSPT)
+	PARAMETER(STATSL_OFF=STASPT_TAB2_OFF+SPGNBR*3*NUMSPT)
+	PARAMETER(STAFRE_OFF=STATSL_OFF+NUMTOT*5*NUMTSL)
+
+        INTEGER*4  STACOMLEN
+        PARAMETER (STACOMLEN = STAFRE_OFF-1)
+
+        INTEGER*4  ISTACOMSEC
+        PARAMETER (ISTACOMSEC = STACOMLEN/128+1)
+
+        INTEGER*4  STACOMSEC
+        PARAMETER (STACOMSEC = ISTACOMSEC*2)
+
+        INTEGER*4 STAFRESIZ
+        PARAMETER (STAFRESIZ = STACOMSEC*64 - STACOMLEN)
+
+
+        COMMON /STACOM/
+     *          STALTO(NUMTOT,2,MAXBRD,MAXBRD+1,NUMLTO),
+     *          STAGAM(NUMTOT,4,MAXGAM),
+     *          STAKIK(2,MAXGAM),
+     *          STASPT(NUMTOT,2,MAXBRD,MAXBRD+1,NUMSPT),
+     *          STASPT_CUP(NUMSPT),
+     *          STASPT_TAB1(SPGNBR,7,NUMSPT),
+     *          STASPT_TAB2(SPGNBR,3,NUMSPT),
+     *          STATSL(NUMTOT,5,NUMTSL),
+     *          STAFRE(STAFRESIZ)
+C
+C
+        INTEGER*4       STALTO
+        INTEGER*4       STAGAM
+        INTEGER*4       STAKIK
+        INTEGER*4       STASPT
+        INTEGER*4       STASPT_CUP
+        INTEGER*4       STASPT_TAB1
+        INTEGER*4       STASPT_TAB2
+        INTEGER*4       STATSL
+        INTEGER*4       STAFRE
+C
+C
+C CHECK POINT BLOCK SIZE AND EQUIVALENCE
+C
+        INTEGER*4  STACSB                       !NUMBER OF CHECKPOINT BLOCKS
+        PARAMETER  (STACSB=STACOMSEC*64/2048+1) !# OF STACOM 2048 COMMON BLOCKS
+        INTEGER*4  STABLK(2048,STACSB)          !CHECKPOINT BLOCK ARRAY
+C
+        EQUIVALENCE (STABLK(1),STALTO(1,1,1,1,1))
+
+
+        INTEGER*4       FRST_STACOM(2)
+        EQUIVALENCE    (FRST_STACOM, STALTO(1,1,1,1,1))
+        INTEGER*4       LAST_STACOM
+        EQUIVALENCE    (LAST_STACOM, STAFRE(STAFRESIZ))
+
+        VOLATILE   /STACOM/

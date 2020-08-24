@@ -1,0 +1,128 @@
+C TERSIM.DEF
+C
+C V07 16-MAR-2011 GPW NUMAGT=12288
+C V06 13-APR-2010 RXK Added transaction type TRTYPT for passive returns
+C V05 19-DEC-2000 ANG INCLUDED PASSVAL FOR PASSIVE VALIDATION
+C V04 13-JUN-2000 OXK Strings to respective COMMONs
+C V03 31-JAN-2000 OXK Increased MXROW to 14 (Vakio changes)
+C V02 15-SEP-1995 SLK JOKER ADDED TO GAME PARAMETERS
+C V01 12-APR-1995 WXM INITIAL RELEASE FOR LITHUANIA
+C
+C LOCAL VARIABLES DEFINITION FILE FOR TERSIM.FOR
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1995 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INCLUDE 'INCLIB:RECSIM.DEF'
+C
+C MAXIMUM VALUES (FOR TERSIM ARRAY DIMENSIONING)
+C
+	INTEGER*4 MXMAX, MXBET, MXBRD, MXDRW, MXLEN, MXROW, MXTER
+	PARAMETER (MXMAX=80)		!MAX # OF NUMBERS
+	PARAMETER (MXBET=24)		!MAX # OF MARKS
+	PARAMETER (MXBRD=12)		!MAX # OF BOARDS
+	PARAMETER (MXDRW=20)		!MAX # OF DRAWS
+	PARAMETER (MXROW=14)		!MAX # OF ROWS
+	PARAMETER (MXLEN=48)		!MAX MESSAGE LENGTH
+	PARAMETER (MXTER=12288)		!MAX NUMBER OF TERMINALS
+C
+	INTEGER*4 MXTRTYP
+	PARAMETER (MXTRTYP=15)		!NUMBER OF TRANSACTION TYPES
+C
+	INTEGER*4 TRTYPW,TRTYPV,TRTYPC,TRTYPN,TRTYPF,TRTYPD,TRTYPR
+	INTEGER*4 TRTYPP,TRTYPO,TRTYPG,TRTYPI,TRTYPT
+	PARAMETER (TRTYPW=0)  !wager 
+	PARAMETER (TRTYPV=1)  !validation
+	PARAMETER (TRTYPC=2)  !cancellation
+	PARAMETER (TRTYPN=3)  !signon
+	PARAMETER (TRTYPF=4)  !signoff
+	PARAMETER (TRTYPD=5)  !download request
+	PARAMETER (TRTYPR=6)  !report
+	PARAMETER (TRTYPP=8)  !reprint
+	PARAMETER (TRTYPI=12) !instant
+	PARAMETER (TRTYPO=13) !order/service request
+	PARAMETER (TRTYPG=14) !group betting
+	PARAMETER (TRTYPT=15) !return (pPassive)
+C
+	CHARACTER*7   TYPTXT(0:MXTRTYP)					    
+	COMMON /TYPTXT/ TYPTXT
+	DATA TYPTXT/'  WAGER', 
+     *              'VALIDAT', 
+     *              ' CANCEL', 
+     *              ' SIGNON',
+     *              'SIGNOFF',
+     *              'DWNLOAD',
+     *              ' REPORT',
+     *              'ENC KEY',
+     *              'REPRINT',
+     *              '  ERROR',
+     *              'LOOPBCK',
+     *              ' UNMESS',
+     *              'Instant',
+     *              'ORD/SRV',
+     *              '   FRAC',
+     *              ' RETURN'/
+C
+	CHARACTER*9 REPORT(4)
+	COMMON /REPORT/ REPORT
+	DATA REPORT/'Game     ',
+     *              'Jackpot  ',
+     *              'Financial',
+     *              'News     '/
+C
+	CHARACTER*12 REPRINT(4)
+	COMMON /REPRINT/ REPRINT
+	DATA REPRINT/'Transaction ',
+     *               'Wager       ',
+     *               'Cancellation',
+     *               'Validation  '/
+C
+	CHARACTER*7 ORDSRV(2)
+	COMMON /ORDSRV/ ORDSRV
+	DATA ORDSRV/'Order  ',
+     *              'Service'/
+C
+	INTEGER*4 MXPAR
+	PARAMETER (MXPAR=9)		!NUMBER OF PARAMETERS KEPT FOR A GAME
+					!V02: CHANGED TO 9
+C
+	INTEGER*4 GMTYP, GMIND, GMMAX, GMBET, GMBRD, GMDRW, GMBON, GMMIN
+	INTEGER*4 GMJOK							!V02
+	PARAMETER (GMTYP=1)		!GAME TYPE
+	PARAMETER (GMIND=2)		!GAME INDEX
+	PARAMETER (GMMAX=3)		!# OF NUMBERS/ROWS
+	PARAMETER (GMBET=4)		!MAX # OF MARKS
+	PARAMETER (GMBRD=5)		!MAX # OF BOARDS
+	PARAMETER (GMDRW=6)		!MAX # OF DRAWS
+	PARAMETER (GMBON=7)		!MAX BONUS #
+	PARAMETER (GMMIN=8)		!MIN # OF BOARDS
+	PARAMETER (GMJOK=9)		!JOKER YES/NO FLAG		!V02
+C
+	INTEGER*4 PAR(MXPAR,MAXGAM)		!GAME PARAMETER TABLE
+	INTEGER*4 GTYP, GIND, GMAX, GBET, GBRD, GDRW, GBON, GMIN
+	INTEGER*4 GJOK							!V02
+C
+	INTEGER*4 BUFLEN4, BUFLEN1
+	PARAMETER (BUFLEN4=64)
+	PARAMETER (BUFLEN1=4*BUFLEN4)
+	BYTE      MESBUF1(BUFLEN1)
+	INTEGER*4 MESBUF4(BUFLEN4)
+	EQUIVALENCE (MESBUF4,MESBUF1)
+	INTEGER*4 MESLEN
+	INTEGER*4 SEQNO(MXTER)
+	INTEGER*4 CDC, TER
+        LOGICAL   PASSVAL
+C
+C
+	COMMON /TERSIM/ PAR,GTYP,GIND,GMAX,GBET,GBRD,GDRW,GBON,GMIN,GJOK  !V02
+	COMMON /TERSIM/ MESBUF4,MESLEN,SIMREC,SEQNO,CDC,TER,PASSVAL

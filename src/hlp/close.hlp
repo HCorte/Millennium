@@ -1,0 +1,22 @@
+    CLO.HLP                GTECH Distributed Network
+                              Close Snapshot Help               Page 1 of 1
+ 
+    The Close snapshot displays the day of the week, date and time, 
+    when each game in the system which is currently active will close.  
+    After the game has been closed, the game status is changed from 
+    "game open" to "game closed".  
+
+    Note:       This snapshot does not include PITKA.
+
+    Information displayed includes:
+
+    name          - full name of each game   
+    type/ind      - type and index of game defined on the system 
+                    for example; (lotto, Vakio etc)
+    close date    - closing date for corresponding game
+    close time    - closing time for corresponding game
+    status        - status for individual game (not initialized, game
+                    open, game closed ....)
+
+
+

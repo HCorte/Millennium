@@ -1,0 +1,66 @@
+C
+C SUBROUTINE CLOSEQFIL
+C $Log:   GXAFXT:[GOLS]CLOSEQFIL.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:36:22   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 15:53:50   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_diskqio.for **
+C
+C
+C
+C **** CLOSEQFIL
+C
+C This will close a file for a given FDB
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE CLOSEQFIL(FDB)
+	IMPLICIT NONE
+C
+	INCLUDE	'INCLIB:SYSPARAM.DEF'
+	INCLUDE	'INCLIB:SYSEXTRN.DEF'
+	INCLUDE	'INCLIB:DISKQIO.DEF'
+	INCLUDE	'($SYSSRVNAM)'
+	INCLUDE '($RMSDEF)'
+C
+	INTEGER*4   FDB(7)
+	INTEGER*4   STAT, LUN
+C
+	CALL CHKQINIT()
+	LUN = FDB(FDB_LUN)
+C
+C Check if file was INDEED opened for QIO or somebody calls this routine
+C by mistake (confusion...)
+C
+	IF(LUN.LT.1 .OR. LUN.GT.MAXLUNARRAY)THEN
+C**	  TYPE *,'FDB HAS BAD LUN IN VAX_DISKQIO/CLOSEQFIL = ',LUN
+C**	  CALL LIB$SIGNAL(%VAL(RMS$_FNF))
+	  RETURN
+	ENDIF
+	IF(LUNARRAY(LUN).LE.0)THEN
+C**	  TYPE *,'VAX_DISKQIO: LUNARRAY HAS BAD CHAN= ',
+C**     *	  LUNARRAY(LUN), ' LUN=', LUN
+C**	  CALL LIB$SIGNAL(%VAL(RMS$_FNF))
+	  RETURN
+	ENDIF
+C
+C**	STAT = SYS$CLOSE (FABARRAY(LUN))
+C**	IF(.NOT. STAT) THEN
+C**	  TYPE *,'SYS$CLOSE FAILED, LUN= ', LUN
+C**	  CALL LIB$SIGNAL(%VAL(STAT))
+C**	ENDIF
+C
+	STAT = SYS$DASSGN (%VAL(LUNARRAY(LUN)))
+	LUNARRAY(LUN) = -1
+	IF(.NOT. STAT) THEN
+	  TYPE *,IAM(),'SYS$DASSGN FAILED, CHAN= ',LUNARRAY(LUN)
+	  CALL LIB$SIGNAL(%VAL(STAT))
+	ENDIF
+C
+	RETURN
+	END

@@ -1,0 +1,22 @@
+    OVR.HLP                GTECH Distributed Network
+                              Over Snapshot Help           Page 1 of 1
+ 
+    The over snapshot displays all agents with sales exceeding the amount
+    specified. 
+
+    The information displayed includes:
+ 
+    # agents      - number of agents who have sales exceeding the amount 
+                    selected
+    agent         - individual agent number of each agent that falls into
+                    this category  
+    sales         - actual sales associated with each individual agent 
+                    number identified.
+
+
+
+
+
+
+
+

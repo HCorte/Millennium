@@ -1,0 +1,98 @@
+C RECSSF.DEF
+C $Log:   GXAFXT:[GOLS]RECSSF.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:40:56   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   12 Aug 1993 11:44:12   SXH
+C  Corrected offset lengths
+C  
+C     Rev 1.0   21 Jan 1993 18:51:52   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C SPORTS SYSTEM BETS RECORD DESCRIPTION
+C
+C
+C SSFATR(SPGSYS)           SYSTEM ATRIBUTES                     110
+C SSFPTR(SPGSYS)           POINTERS INTO SYSTAB                 110
+C SSFNUM(5,SPGSYS)         SYSTEM DESCRIPTION                   550
+C SSFTAB(260000)           SYSTEM BET TABLE  (INT*2)         130000
+C SSFFPT                   FREE POINTER INTO SYSTAB               1
+C SSFTST                   TEST FLAG                              1
+C SSFINT                   COMMON INIT FLAG                       1
+C SSFFSF(0:15,0:15,NUMSPT) FULL SYSTEM FLAGS  MARK_3/MARK_2     512
+C SSFGAR(SPGSYS)           SYSTEM QUARANTEE                     110
+C                                                           ____________
+C                                                            131395 I*4       
+C SSFFRE                   FREE SPACE                        CALCULATED
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4  SFTABMAX
+        PARAMETER (SFTABMAX=260000)
+C
+        INTEGER*4 SSFFPT,SSFINT,SSFTST
+        INTEGER*4 SSFATR(SPGSYS)
+        INTEGER*4 SSFPTR(SPGSYS)
+        INTEGER*4 SSFNUM(5,SPGSYS)
+        INTEGER*2 SSFTAB(SFTABMAX)
+        INTEGER*4 SSFFSF(0:15,0:15,NUMSPT)
+        INTEGER*4 SSFGAR(SPGSYS)
+C
+        INTEGER*4 SSFATR_OFF, SSFPTR_OFF, SSFNUM_OFF, SSFTAB_OFF
+        INTEGER*4 SSFFPT_OFF, SSFTST_OFF, SSFINT_OFF, SSFFSF_OFF
+        INTEGER*4 SSFGAR_OFF, SSFFRE_OFF
+C
+        PARAMETER (SSFATR_OFF = 1)
+        PARAMETER (SSFPTR_OFF = SSFATR_OFF + SPGSYS)
+        PARAMETER (SSFNUM_OFF = SSFPTR_OFF + SPGSYS)
+        PARAMETER (SSFTAB_OFF = SSFNUM_OFF + 5*SPGSYS)
+        PARAMETER (SSFFPT_OFF = SSFTAB_OFF + SFTABMAX/2)
+        PARAMETER (SSFTST_OFF = SSFFPT_OFF + 1)
+        PARAMETER (SSFINT_OFF = SSFTST_OFF + 1)
+        PARAMETER (SSFFSF_OFF = SSFINT_OFF + 1) 
+        PARAMETER (SSFGAR_OFF = SSFFSF_OFF + 16*16*NUMSPT)
+        PARAMETER (SSFFRE_OFF = SSFGAR_OFF + SPGSYS)
+C
+        INTEGER*4 SSFLEN
+        PARAMETER(SSFLEN = SSFFRE_OFF-1)
+C
+        INTEGER*4 ISSFSEC
+        PARAMETER(ISSFSEC = SSFLEN/128 + 1)
+C
+        INTEGER*4 SSFSEC
+        PARAMETER(SSFSEC = ISSFSEC*2)
+C
+        INTEGER*4 SSFFRESIZ
+        PARAMETER(SSFFRESIZ = SSFSEC * 64 - SSFLEN)
+C
+        INTEGER*4 SSFREC(SSFLEN+SSFFRESIZ)
+C
+        INTEGER*4 SSFFRE(SSFFRESIZ)
+C
+        EQUIVALENCE (SSFATR, SSFREC(SSFATR_OFF))
+        EQUIVALENCE (SSFPTR, SSFREC(SSFPTR_OFF))
+        EQUIVALENCE (SSFNUM, SSFREC(SSFNUM_OFF))
+        EQUIVALENCE (SSFTAB, SSFREC(SSFTAB_OFF))
+        EQUIVALENCE (SSFFPT, SSFREC(SSFFPT_OFF))
+        EQUIVALENCE (SSFTST, SSFREC(SSFTST_OFF))
+        EQUIVALENCE (SSFINT, SSFREC(SSFINT_OFF))
+        EQUIVALENCE (SSFFSF, SSFREC(SSFFSF_OFF))
+        EQUIVALENCE (SSFGAR, SSFREC(SSFGAR_OFF))
+        EQUIVALENCE (SSFFRE, SSFREC(SSFFRE_OFF))
+

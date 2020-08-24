@@ -1,0 +1,35 @@
+C
+C V02 24-FEB-2014 SCML Added support for IGS
+C V01 02-SEP-2000 UXN Initial release.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C EURO MIL PROJECT - EURCON
+C                          
+	STRUCTURE /SETUP/
+	    INTEGER*4 SYSMOD                   ! TEST or LIVE mode
+	    INTEGER*4 DAYCDC                   ! DAY CDC
+	    INTEGER*4 RESCHK		       ! RESTART FROM CHECKPOINT
+	    INTEGER*4 TAPLOG                   ! BACKUP TAPE LOGGING
+	    INTEGER*4 BAKLOG                   ! BACKUP DISK LOGGING
+	    INTEGER*4 IPSCON                   ! CONNECT TO IPS
+	    INTEGER*4 GVTTIM                   ! GVT END TIME
+	    INTEGER*4 EURCON		       ! EURO MIL CONNECT
+C----+------------------------------------------------------------------
+C V02| Adding support for IGS
+C----+------------------------------------------------------------------
+            INTEGER*4 IGSCON                   ! IGS CONNECT
+C----+------------------------------------------------------------------
+C V02| Adding support for IGS
+C----+------------------------------------------------------------------
+	END STRUCTURE

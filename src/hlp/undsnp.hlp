@@ -1,0 +1,21 @@
+    UND.HLP                GTECH Distributed Network
+                             Under Snapshot Help           Page 1 of 1
+ 
+    The Under snapshot displays the number of retailers who have wagering
+    sales under a certain amount for that day.
+
+    The information displayed includes:
+ 
+    #Agents   - number of agents who have sales under the amount selected
+    under
+    agent     - number of the agents with sales under the amount selected
+    sales     - sales associated with the displayed agaent number
+     
+
+	      
+
+
+
+
+
+

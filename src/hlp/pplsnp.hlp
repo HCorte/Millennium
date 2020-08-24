@@ -1,0 +1,44 @@
+    PPL.HLP                GTECH Distributed Network
+                           Today Couple Snapshot Help         Page 1 of 2
+ 
+    The PPL snapshot contains sales information for the Today Couple game.
+
+    The information displayed includes:
+ 
+    game name       - Today couple
+    event code      - number of the event
+    status          - status of the results   
+    A/B             - number of winners for both A and B
+    row winner      - name of winner for row A and B
+    odds/#winners   - the odds applicable for both row A and B winners
+    beginning sales - day and date sales for the event commence
+    ending sales    - day and date sales for the event are closed
+    draw date       - day and date when the event draw takes place
+    total sales     - for the event
+    refunds paid    - total amount of refunds paid
+    net sales       - net sales amount
+
+
+
+    PPL.HLP                GTECH Distributed Network
+                           Today Couple Snapshot Help         Page 2 of 2
+
+    winners share   - amount each winner will receive
+    winning amount  - total winning amount
+    rounding pot    - total amount of rounding pot
+    winning tax     - winning tax payable
+    winners paid    - amount of winners actually paid
+    paid refunds    - amount of refunds actually paid
+    amount purged   - amount of unclaimed winners that has been purged
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,71 @@
+C DATBUF.DEF
+C $Log:   GXAFXT:[GOLS]DATBUF.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:47:08   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:41:40   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C OFFSETS FOR VCAL DATE BUFFER
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  VMON, VDAY, VYEAR, VJUL, VCDC, VDOW, VDNAM, VDATE
+	PARAMETER (VMON=1)             !MONTH
+	PARAMETER (VDAY=2)             !DAY
+	PARAMETER (VYEAR=3)            !YEAR
+	PARAMETER (VJUL=4)             !JULIAN
+	PARAMETER (VCDC=5)             !CDC
+	PARAMETER (VDOW=6)             !DAY OF WEEK
+	PARAMETER (VDNAM=7)            !DAY NAME
+	PARAMETER (VDATE=8)            !ALPHA REPRESENTATION
+	INTEGER*4 VYEAR2
+	PARAMETER (VYEAR2=14)          !YEAR in 4 digits.
+C
+	INTEGER*4 SDATE_LEN,LDATE_LEN
+	PARAMETER (SDATE_LEN=12)       ! short DATE buffer length
+	PARAMETER (LDATE_LEN=14)       ! long  DATE buffer length
+C
+C PARAMETERS FOR VDOW
+C
+	INTEGER*4 MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY
+	INTEGER*4 SATURDAY, SUNDAY
+	PARAMETER(MONDAY   =1)
+	PARAMETER(TUESDAY  =2)
+	PARAMETER(WEDNESDAY=3)
+	PARAMETER(THURSDAY =4)
+	PARAMETER(FRIDAY   =5)
+	PARAMETER(SATURDAY =6)
+	PARAMETER(SUNDAY   =7)
+C
+C For oddset games only - offset for starting day.
+C WEEK_OFFSET values :
+C      -1 - week starts from Sunday
+C	0 - week starts from Monday
+C	1 - week starts from Tuesday
+C	2 - week starts from Wednesday
+C	3 - week starts from Thursday
+C	4 - week starts from Friday
+C	5 - week starts from Saturday
+C
+	INTEGER*4 WEEK_OFFSET	 ! For oddset game week starts from Tuesday.
+	PARAMETER(WEEK_OFFSET=0)

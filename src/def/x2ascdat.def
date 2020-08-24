@@ -1,0 +1,39 @@
+C X2ASCDAT.DCC
+C
+C $Log:   GXAFXT:[GOLS]X2ASCDAT.DEV  
+C  
+C     Rev 1.0   17 Apr 1996 16:07:56   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.3   24 Sep 1993  1:19:32   JWE
+C  Add $Log: so you can see this message...
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C This file determines how we interpet ASCII start & end dates
+C stored in the ASF...
+C
+C Format  DAY MONTH   YEAR
+C
+C DDMMYY  1   3	      5
+C MMDDYY  3   1	      5
+C YYMMDD  5   3	      1
+C
+	INTEGER*2   MONTH_OFFSET
+	PARAMETER   (MONTH_OFFSET   = 3)
+	INTEGER*2   DAY_OFFSET
+	PARAMETER   (DAY_OFFSET	    = 1)
+	INTEGER*2   YEAR_OFFSET
+	PARAMETER   (YEAR_OFFSET    = 5)
+C

@@ -1,0 +1,369 @@
+C SOUPFM.DEF
+C
+C V02 08-ABR-2014 SCML Adding support for new expired prizes reports
+C V01 13-DEC-2013 SCML Creation
+C
+C
+C Declare auxiliary variables required for SOUPFM.FOR
+C
+C
+        INTEGER*4  MAX_NR_FILES
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+C       PARAMETER (MAX_NR_FILES                         = 15)
+        PARAMETER (MAX_NR_FILES                         = 20)
+
+
+
+        ! Values compiled from GLOBAL.DEF :
+        !    in order to avoid multiple symbol definition problems
+        INTEGER*4  SOUPFM_MAXGAM
+        PARAMETER (SOUPFM_MAXGAM                        = 50)
+
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+
+        ! Values compiled from PRMHSH.DEF :
+        !    in order to avoid multiple symbol definition problems
+        INTEGER*4  SOUPFM_TUBSIZ
+        PARAMETER (SOUPFM_TUBSIZ                        = 32 * 64 * 7)
+
+        ! Values compiled from PRMHSH.DEF :
+        !    in order to avoid multiple symbol definition problems
+        INTEGER*4  SOUPFM_VLF_TUBSIZ
+        PARAMETER (SOUPFM_VLF_TUBSIZ                    = 32 * 64 * 7)
+
+        STRUCTURE /SOUPFMSTRUCT/
+            INTEGER*4  PASSIVE_FDB(7)
+            INTEGER*4  PAS_EMIS
+            INTEGER*4  PAS_GNUM
+            INTEGER*4  PAS_GIND
+            INTEGER*4  PAS_CURR_REC_CNT
+            INTEGER*4  PAS_VPF_FILE_CNT
+            INTEGER*4  PAS_VPFBUF(SOUPFM_TUBSIZ)
+            INTEGER*4  PAS_SERIAL
+            INTEGER*4  PAS_NUM
+            INTEGER*4  PAS_FRAC
+            LOGICAL    PAS_DEBUG
+
+            INTEGER*4  VLFBUF(SOUPFM_VLF_TUBSIZ)
+            INTEGER*4  VLF_SERIAL
+            INTEGER*4  VLF_CDC
+
+            INTEGER*4  PRG_FDB(7)
+            INTEGER*4  PRG_BLK_CNT
+            INTEGER*4  PRG_IND
+            LOGICAL    PRG_BLK_FIRST_RUN
+
+            INTEGER*4  START_LUN
+            ! LUN Table
+            INTEGER*4  LUN_TABLE        (MAX_NR_FILES)
+            INTEGER*4  SRC_FILE_NAME    (MAX_NR_FILES,7)
+
+            INTEGER*4  SRC_CDC_DATE
+            
+            INTEGER*4  AUX_CNT          (MAX_NR_FILES)
+            INTEGER*4  LINE_CNT         (MAX_NR_FILES)
+            INTEGER*4  TRX_CNT          (MAX_NR_FILES)
+            INTEGER*4  FILE_DATA_CDC    (MAX_NR_FILES)
+            INTEGER*4  FILE_GEN_CDC     (MAX_NR_FILES)
+            
+            INTEGER*4  TOTAL_TRX_CNT
+            INTEGER*4  TOTAL_VAL_CNT
+            
+            LOGICAL    HANDLE_FILE      (MAX_NR_FILES)
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+            STRUCTURE /GAME_DATA/ GAME_DATA_REC
+                INTEGER*4  GLUN(SOUPFM_MAXGAM)
+                INTEGER*4  GFDB(7,SOUPFM_MAXGAM)
+                INTEGER*4  IN_GAME_NUM
+                INTEGER*4  IN_DRAW_NUM
+                INTEGER*4  OUT_DRAW_DATE_CDC
+                INTEGER*4  OUT_PURGE_DATE_CDC
+            END STRUCTURE
+            
+            STRUCTURE /EXP_STAT/ EXP_STAT_REC
+                INTEGER*4  NR_BETS(MAX_NR_FILES,SOUPFM_MAXGAM)
+                INTEGER*8  AMOUNT(MAX_NR_FILES,SOUPFM_MAXGAM)
+                INTEGER*4  TOTAL_NR_BETS(MAX_NR_FILES)
+                INTEGER*8  TOTAL_AMOUNT(MAX_NR_FILES)
+            END STRUCTURE
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+
+        END STRUCTURE
+
+        RECORD /SOUPFMSTRUCT/ SOUPFM_REC
+
+        INTEGER*4  CURR_SRC_FILE_NAME(7)
+        
+        INTEGER*4  INT_SRC_FILE_NAME(7)
+        CHARACTER*28  CHR_SRC_FILE_NAME
+        EQUIVALENCE(CHR_SRC_FILE_NAME,INT_SRC_FILE_NAME)
+        
+        ! LUN Table Indicii
+        INTEGER*4  IDX_TMF_FILE
+        PARAMETER (IDX_TMF_FILE                         = 1)
+        INTEGER*4  IDX_PRG_FILE
+        PARAMETER (IDX_PRG_FILE                         = 2)
+        INTEGER*4  IDX_CURR_PRG_PAS_FILE
+        PARAMETER (IDX_CURR_PRG_PAS_FILE                = 3)
+        INTEGER*4  IDX_CURR_VLF_FILE
+        PARAMETER (IDX_CURR_VLF_FILE                    = 4)
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+        INTEGER*4  IDX_CURR_GAME_FILE
+        PARAMETER (IDX_CURR_GAME_FILE                   = 5)
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+        INTEGER*4  IDX_LN_PAY_FILE
+        PARAMETER (IDX_LN_PAY_FILE                      = 11)
+        INTEGER*4  IDX_LN_EXPIRED_FILE
+        PARAMETER (IDX_LN_EXPIRED_FILE                  = 12)
+        INTEGER*4  IDX_LN_RETURNED_FILE
+        PARAMETER (IDX_LN_RETURNED_FILE                 = 13)
+        INTEGER*4  IDX_AM_PAY_FILE
+        PARAMETER (IDX_AM_PAY_FILE                      = 14)
+        INTEGER*4  IDX_AM_EXPIRED_FILE
+        PARAMETER (IDX_AM_EXPIRED_FILE                  = 15)
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+        INTEGER*4  IDX_AM_EXPIRED_REP_FILE
+        PARAMETER (IDX_AM_EXPIRED_REP_FILE              = 16)
+        INTEGER*4  IDX_LN_EXPIRED_REP_FILE
+        PARAMETER (IDX_LN_EXPIRED_REP_FILE              = 17)
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+
+        CHARACTER*30 GENERATED_FILES_LIST(MAX_NR_FILES)
+        
+        DATA  GENERATED_FILES_LIST /
+     *            '??????????????????????????????'
+     *          , '??????????????????????????????'
+     *          , '??????????????????????????????'
+     *          , '??????????????????????????????'
+     *          , '??????????????????????????????'
+     *          , '??????????????????????????????'
+     *          , '??????????????????????????????'
+     *          , '??????????????????????????????'
+     *          , '??????????????????????????????'
+     *          , '??????????????????????????????'
+     *          , 'SoupFM LN Premios Pagos       '
+     *          , 'SoupFM LN Premios Caducados   '
+     *          , 'SoupFM LN Premios Devolvidos  '
+     *          , 'SoupFM AM Premios Pagos       '
+     *          , 'SoupFM AM Premios Caducados   '
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+     *          , 'SoupFM AM Rel Premios Caduc.  '
+     *          , 'SoupFM LN Rel Premios Caduc.  '
+     *          , '??????????????????????????????'
+     *          , '??????????????????????????????'
+     *          , '??????????????????????????????'
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+     *  /
+
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+        INTEGER*4 MAX_MAP_FILES
+        PARAMETER(MAX_MAP_FILES = 2)
+        
+        INTEGER*4 GEN_FILES_MAP(MAX_MAP_FILES,MAX_NR_FILES)
+        DATA GEN_FILES_MAP /
+     *            0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *          , IDX_LN_PAY_FILE, 0
+     *          , IDX_LN_EXPIRED_FILE, IDX_LN_EXPIRED_REP_FILE
+     *          , IDX_LN_RETURNED_FILE, 0
+     *          , IDX_AM_PAY_FILE, 0
+     *          , IDX_AM_EXPIRED_FILE, IDX_AM_EXPIRED_REP_FILE
+     *          , 0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *          , 0, 0
+     *  /
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+
+     
+        CHARACTER*30 NO_FILE_DESC
+        PARAMETER   (NO_FILE_DESC = '??????????????????????????????')
+        
+        CHARACTER*28 DEFAULT_FILES_NAME(MAX_NR_FILES)
+        DATA  DEFAULT_FILES_NAME /
+     *            'PRIM:MTMF01.FIL             '
+     *          , 'WORK:UPURGE.FIL             '
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+     *          , '????????????????????????????'
+C----+------------------------------------------------------------------
+C V02| Adding support for new expired prizes reports
+C----+------------------------------------------------------------------
+     *  /
+        
+        ! FILERR File Functions
+        INTEGER*4  FUN_HANDLER
+        PARAMETER (FUN_HANDLER                          = 0)
+        INTEGER*4  FUN_OPEN_FILE
+        PARAMETER (FUN_OPEN_FILE                        = 1)
+        INTEGER*4  FUN_READ_FILE
+        PARAMETER (FUN_READ_FILE                        = 2)
+        INTEGER*4  FUN_WRITE_FILE
+        PARAMETER (FUN_WRITE_FILE                       = 3)
+        INTEGER*4  FUN_CLOSE_FILE
+        PARAMETER (FUN_CLOSE_FILE                       = 4)
+
+        ! DATE ARRAY FIELD YEAR
+        INTEGER*4  DATE_ARR_YEAR
+        PARAMETER (DATE_ARR_YEAR                        = 1)
+        ! DATE ARRAY FIELD MONTH
+        INTEGER*4  DATE_ARR_MONTH
+        PARAMETER (DATE_ARR_MONTH                       = 2)
+        ! DATE ARRAY FIELD DAY
+        INTEGER*4  DATE_ARR_DAY
+        PARAMETER (DATE_ARR_DAY                         = 3)
+
+
+        ! Constants
+        CHARACTER*1  PRIZE_PAY_MODE_PORTAL_UNDEF
+        PARAMETER   (PRIZE_PAY_MODE_PORTAL_UNDEF        = ' ')
+
+        CHARACTER*1  PRIZE_PAY_MODE_CASH_CARD
+        PARAMETER   (PRIZE_PAY_MODE_CASH_CARD           = '1')
+
+        CHARACTER*1  PRIZE_PAY_MODE_BANK_TRF
+        PARAMETER   (PRIZE_PAY_MODE_BANK_TRF            = '2')
+
+        CHARACTER*1  PRIZE_PAY_MODE_CHECK
+        PARAMETER   (PRIZE_PAY_MODE_CHECK               = '3')
+
+        CHARACTER*1  PRIZE_PAY_MODE_ADJ
+        PARAMETER   (PRIZE_PAY_MODE_ADJ                 = '4')
+
+
+        ! Constants
+        INTEGER*4    PRIZE_PAY_CHANNEL_ID_MED_NETWORK
+        PARAMETER   (PRIZE_PAY_CHANNEL_ID_MED_NETWORK   = 1)
+
+        INTEGER*4    PRIZE_PAY_CHANNEL_ID_GAME_PORTAL
+        PARAMETER   (PRIZE_PAY_CHANNEL_ID_GAME_PORTAL   = 2)
+
+        INTEGER*4    PRIZE_PAY_CHANNEL_ID_MED_PORTAL
+        PARAMETER   (PRIZE_PAY_CHANNEL_ID_MED_PORTAL    = 3)
+
+        INTEGER*4    PRIZE_PAY_CHANNEL_ID_MOBILE
+        PARAMETER   (PRIZE_PAY_CHANNEL_ID_MOBILE        = 4)
+
+        INTEGER*4    PRIZE_PAY_CHANNEL_ID_SCML_DJ
+        PARAMETER   (PRIZE_PAY_CHANNEL_ID_SCML_DJ       = 5)
+
+        ! Constants
+        INTEGER*4    PORTAL_SAP_CODE
+        PARAMETER   (PORTAL_SAP_CODE                    = 7456)
+
+
+        ! Constants
+        INTEGER*4    PRIZE_RETURNED_ALL_TICKET
+        PARAMETER   (PRIZE_RETURNED_ALL_TICKET          = 1)
+
+        INTEGER*4    PRIZE_RETURNED_FRACTION
+        PARAMETER   (PRIZE_RETURNED_FRACTION            = 2)
+
+        INTEGER*4    PRIZE_RETURNED_HALF_TICKET
+        PARAMETER   (PRIZE_RETURNED_HALF_TICKET         = 3)
+
+        ! Constants
+        INTEGER*4    READW_EOF_REACHED
+        PARAMETER   (READW_EOF_REACHED                  = 144)
+
+C        ! Constants
+C        INTEGER*4    ISREAD_EOF_REACHED
+C        PARAMETER   (ISREAD_EOF_REACHED                 = -134)
+
+        ! Constants
+        INTEGER*4    PRIZE_TYPE_AM
+        PARAMETER   (PRIZE_TYPE_AM                      = 1)
+
+        INTEGER*4    PRIZE_TYPE_LN
+        PARAMETER   (PRIZE_TYPE_LN                      = 2)
+
+
+        INTERFACE
+        
+            INTEGER*4 FUNCTION GET_SAP_AGENT_CODE(TRABUF)
+            IMPLICIT NONE
+            INCLUDE 'INCLIB:DESTRA.DEF'
+            END FUNCTION
+            
+            INTEGER*4 FUNCTION GET_AGENT_CODE(TRABUF)
+            IMPLICIT NONE
+            INCLUDE 'INCLIB:DESTRA.DEF'
+            END FUNCTION
+            
+            INTEGER*4 FUNCTION GET_PRIZE_PAY_CHANNEL_ID(TRABUF)
+            IMPLICIT NONE
+            INCLUDE 'INCLIB:DESTRA.DEF'
+            END FUNCTION
+            
+            INTEGER*8 FUNCTION GET_PRIZE_PAY_REF(TRABUF)
+            IMPLICIT NONE
+            INCLUDE 'INCLIB:DESTRA.DEF'
+            END FUNCTION
+            
+            INTEGER*8 FUNCTION GET_BET_REF(TRABUF)
+            IMPLICIT NONE
+            INCLUDE 'INCLIB:DESTRA.DEF'
+            END FUNCTION
+            
+            INTEGER*8 FUNCTION GET_BET_REF_FROM_VALREC(VALREC)
+            IMPLICIT NONE
+            INCLUDE 'INCLIB:DESVAL.DEF'
+            END FUNCTION
+            
+            CHARACTER FUNCTION SOUPFM_DMONYI8*32(IN_VALUE)
+            IMPLICIT NONE
+            INTEGER*8 IN_VALUE
+            END FUNCTION
+        END INTERFACE
+        

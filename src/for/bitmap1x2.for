@@ -1,0 +1,65 @@
+C
+C SUBROUTINE BITMAP1X2
+C $Log:   GXAFXT:[GOLS]BITMAP1X2.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:17:08   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 15:42:30   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - lod1x2pol.for **
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C BITMP1X2 (DEFSET, ALIAN, STDFORM, NUM))
+C	     - CHECKS IF ANY OF 'ALIAN' CHARACTERS ARE IN 'DEFSET'
+C 	       BUILDS THE BIT MAP IN 'NUM'
+C	       BUILDS 'STDFORM' THAT IS THE SAME AS 'ALIAN' BUT IN
+C	       THE STANDARD FORM.
+C--------------------------------------------------------------------
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE BITMAP1X2(DEFSET, ALIAN, STDFORM, NUM)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+C
+	CHARACTER*3 DEFSET, ALIAN, STDFORM, DEFSET_OTHER_CASE
+C
+	CHARACTER*1 CHARX
+	INTEGER*4 I, J, NUM
+C
+	STDFORM = '   '
+	NUM = 0
+C
+	DO 5 I = 1,3
+	    CALL CONVERT_CASE (DEFSET(I:I), DEFSET_OTHER_CASE(I:I))
+5	CONTINUE
+C
+	DO 20, I=1,3
+	    CHARX = ALIAN(I:I)
+	    IF (CHARX .EQ. ' ') GOTO 20
+	    DO 10, J=1,3
+		IF (CHARX .EQ. DEFSET(J:J)
+     1		.OR.CHARX .EQ. DEFSET_OTHER_CASE(J:J)) THEN
+		    IF (STDFORM(J:J) .NE. ' ') THEN
+		        TYPE *,IAM(),'DUPLICATE TRANSLATION: ',
+     1			  ALIAN, DEFSET
+			NUM = 0
+			RETURN
+		    ENDIF
+		    STDFORM(1:1) = CHARX
+		    NUM = IOR(NUM, ISHFT(1,J-1))
+		    GOTO 20
+		ENDIF
+10	    CONTINUE
+	    TYPE *,IAM(), 'THERE IS NO TRANSLATION: ', ALIAN, DEFSET
+20	CONTINUE
+C
+	RETURN
+C
+	END

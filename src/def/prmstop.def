@@ -1,0 +1,112 @@
+C PRMSTOP.DEF
+C
+C V09 23-JAN-2001 ANG ADDED WINPAS STATUS
+C V08 22-MAR-2000 OXK WRFBIT added
+C V07 28-DEC-1999 OXK SHAROK added.
+C V06 27-DEC-1999 OXK MAXMVLF increased to 15 to match MAXWTSK
+C V05 14-DEC-1999 OXK MAX_WINSEL,WINCAN,WINSOK added
+C V04 13-OCT-1999 RXK MAXMVLF increased for World Tour game.
+C V03 25-MAY-1999 RXK MAXMVLF increased, values for VLFTSK status added.
+C V02 27-APR-1999 RXK Value WMRG for TCC and VLC status's added.
+C V01 11-JAN-1999 GPW STOPSYS OPTIMIZATION
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+      INTEGER * 4 WINMANUAL,WINMULTI
+      PARAMETER(WINMANUAL=0)                      !MANUAL WINSEL
+      PARAMETER(WINMULTI=1)                       !MULTI WINSEL
+C
+      INTEGER * 4 WINNOT,WINYES,WINPRV,RESNOT
+      INTEGER * 4 WINCAN,WINSOK,SHAROK
+      PARAMETER(WINNOT =0)                        !NO WINSEL TODAY
+      PARAMETER(WINYES =1)                        !REGULAR WINSEL
+      PARAMETER(WINPRV =2)                        !PREV. POSTPONED WINSEL
+      PARAMETER(RESNOT =3)                        !RESULTS NOT IN
+      PARAMETER(WINCAN =4)                        !WINSEL CANCELLED/REMOVED
+      PARAMETER(WINSOK =5)                        !WINSEL DONE
+      PARAMETER(SHAROK =6)                        !SHARECLC DONE
+C
+      INTEGER * 4 MAXWTSK,MAXF1,MAXMVLF,MAXMTCF
+      PARAMETER(MAXWTSK= 15)                      !MAX. # OF WINSEL TASKS
+      PARAMETER(MAXF1  =200)                      !MAX. # OF DRAW FILES
+      PARAMETER(MAXMVLF =15)                      !MAX. # OF MERGE VLF TODAY
+      PARAMETER(MAXMTCF = 2)                      !MAX. # OF MERGE TCF TODAY
+C
+C
+C----------------- WINTASK STATUS ------------
+C
+      INTEGER * 4 NOWINS,TOBWIN,WINDON,RPTDON,
+     *            BKKDON,TOBMER,MRGDON,SHRDON,TSKDON
+C
+      PARAMETER (NOWINS=0)                        !NO WINSELS TODAY
+      PARAMETER (TOBWIN=1)                        !WINSEL REQUIRED
+      PARAMETER (WINDON=2)                        !WINSEL DONE
+      PARAMETER (RPTDON=3)                        !WINRPT DONE
+      PARAMETER (BKKDON=4)                        !BKKREP DONE
+      PARAMETER (TOBMER=6)                        !MRGVLF REQUIRED
+      PARAMETER (MRGDON=7)                        !MRGVLF DONE
+      PARAMETER (SHRDON=8)                        !SHRCLC  DONE
+      PARAMETER (TSKDON=9)                        !MULTIWIN DONE
+C
+C------------------ SRMRGTCF STATUS --------
+C
+      INTEGER * 4 AFTMRGTCF
+C
+      PARAMETER (AFTMRGTCF=1)                     !MRGTCF DONE
+C
+C------------------ MRG STATUS ---------------
+C
+      INTEGER * 4 MRGNO,MRGVL,MRGALL
+C
+      PARAMETER (MRGNO =0)                        !NO MERGES 
+      PARAMETER (MRGVL =1)                        !MRGVLF ONLY
+      PARAMETER (MRGALL=2)                        !MRGVLF & MRGTCF
+C
+C------------------ VLW/TCW STATUS ---------------
+C
+      INTEGER * 4 WCLR,WUSE,WCOP,WMRG 
+C
+      PARAMETER (WCLR=1)                          !VLW/TCW CLEANED
+      PARAMETER (WUSE=0)                          !VLW/TCW USED
+      PARAMETER (WCOP=2)                          !VLF->VLC COPY DONE
+      PARAMETER (WMRG=3)                          !VLW/TCW MERGED AND RENAMED
+C
+C---------------- ASF FILE BIT STATUS  -------
+C
+      INTEGER * 4 ASFBIT                          !ASF FILE ACCESS BIT FLAG
+      PARAMETER(ASFBIT= 1)
+      INTEGER * 4 WRFBIT                          !WRF FILE ACCESS BIT FLAG
+      PARAMETER(WRFBIT= 2)
+C
+C---------------- VLFTSK STATUS  -------
+C
+      INTEGER * 4 VLFSTR,REDBAL 
+      PARAMETER(VLFSTR = 1)                       !VLFTSK STARTED
+      PARAMETER(REDBAL = 2)                       !UPDATES FOR BALANS PGM DONE 
+C
+      INTEGER*4 MAX_WINSEL
+      PARAMETER(MAX_WINSEL = 3)			  ! MAX # OF WINSELS PER GAME
+C
+C
+C-------------- WINPAS STATUS ------------
+C
+        INTEGER*4 WINPAS_NOT_INI, WINPAS_RUN, WINPAS_ERR, WINPAS_DON, WINPAS_STP
+        PARAMETER (WINPAS_NOT_INI = 0)
+        PARAMETER (WINPAS_RUN     = 1)
+        PARAMETER (WINPAS_ERR     = 2)
+        PARAMETER (WINPAS_DON     = 3)
+        PARAMETER (WINPAS_STP     = 4)
+

@@ -1,0 +1,598 @@
+C
+C This subroutine reads ODDINF file and updates Super Score game file,
+C verification file and DAF.
+C 
+C V03 30-SEP-1999 UXN Fix for skipping updates.
+C V02 07-JUN-1999 UXN Minimum stake added to the report
+C V01 14-MAY-1998 UXN Initial release.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	SUBROUTINE ODDINF_TSSC(LUN,UPDATE,STATUS)
+	IMPLICIT NONE
+	INCLUDE 'INCLIB:SYSDEFINE.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:RECDAF.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'
+	INCLUDE 'INCLIB:DSSREC.DEF'
+	INCLUDE 'INCLIB:ODDINF.DEF'
+C
+	INTEGER*4	LUN,STATUS
+	LOGICAL*4	UPDATE
+C
+	COMMON		SCFREC
+	INTEGER*4	ST,DRAW,FDB(7),VFDB(7),DFDB(7)
+	INTEGER*4	GIND,GNUM,FLAG,HRS,MINS,MTYP  
+	INTEGER*4	REV1,REV2,REV3,REV4,PREV3
+	INTEGER*2	I2DATE(LDATE_LEN),I2DATE2(LDATE_LEN),I2DATE3(LDATE_LEN)
+	INTEGER*4	I,K
+	INTEGER*4	I4TV,MIN_STAKE
+	CHARACTER*4	TV
+	EQUIVALENCE	(TV,I4TV)
+	CHARACTER*80	TNAME
+	INTEGER*4	I4TNAME(30)
+	EQUIVALENCE	(TNAME,I4TNAME)
+	INTEGER*4	SSC_NAME_LEN
+	PARAMETER	(SSC_NAME_LEN=14)
+	CHARACTER*20	CDSSPFN,CDSSPOF
+	EQUIVALENCE	(CDSSPFN,DSSPFN)
+	EQUIVALENCE	(CDSSPOF,DSSPOF)
+	INTEGER*4	SET_COUNT,SET_NR
+	LOGICAL		SKIP,FIRST
+	CHARACTER*4	TV_CHANNEL(3)
+	INTEGER*4	REPLUN,PAGE
+	CHARACTER*40	TITL_NAME
+	CHARACTER*20	FILNAM
+	CHARACTER*9	HDR_DATE
+	CHARACTER*7	HDR_TIME
+	INTEGER*4	HDR_WEEK,HDR_YEAR,DUMMY	
+C
+	SKIP = .FALSE.
+	FIRST = .TRUE.
+C
+C Read file header
+C
+	READ(UNIT=LUN,IOSTAT=ST,FMT='(190A)') INF.INLINE
+	IF(ST.NE.0) THEN    
+	    WRITE(6,913) IAM(),GTNAMES(TSSC),ST    
+	    GOTO 9999
+	ENDIF
+	IF(INF.HDR_TYPE.NE.'0') THEN
+	    TYPE*,IAM(),'Invalid record type in the file header ...'   
+	    GOTO 9999
+	ENDIF
+	IF(INF.HDR_GAME(4:4).NE.'6') THEN
+	    TYPE*,IAM(),'Invalid game code in the file header ...'   
+	    GOTO 9999
+	ENDIF
+	HDR_DATE = INF.HDR_DATE
+	HDR_TIME = INF.HDR_TIME
+	READ(INF.HDR_WEEK,I4FMT) HDR_WEEK
+	READ(INF.HDR_YEAR(2:),I4FMT) HDR_YEAR
+C
+C Read header record.
+C	
+	READ(UNIT=LUN,IOSTAT=ST,FMT='(190A)') INF.INLINE
+	IF(ST.NE.0) THEN    
+	    WRITE(6,913) IAM(),GTNAMES(TSSC),ST    
+	    GOTO 9999
+	ENDIF
+C
+C Get event header record..
+C
+	IF(INF.EVHDR_TYPE.NE.'1') THEN
+	    TYPE*,IAM(),'Invalid record type in the event header  ...'   
+	    GOTO 9999
+	ENDIF
+C
+	IF(INF.EVHDR_GAME(4:4).NE.'6') THEN
+	    TYPE*,IAM(),'Invalid game code in the event header  ...'   
+	    GOTO 9999
+	ENDIF
+C
+40 	CONTINUE
+C
+C Read event record. 
+C
+	READ(UNIT=LUN,IOSTAT=ST,FMT='(190A)') INF.INLINE
+	IF(ST.NE.0) THEN    
+	    WRITE(6,913) IAM(),GTNAMES(TSSC),ST    
+	    GOTO 9999
+	ENDIF
+C
+50	CONTINUE	
+	IF(SKIP.AND.INF.SSC_TYPE.EQ.'3') GOTO 40 ! get next line
+	SKIP = .FALSE.
+	IF(INF.SSC_TYPE.EQ.'9') GOTO 1000   ! end record.
+	IF(INF.SSC_TYPE.NE.'2') THEN
+	    TYPE*,IAM(),'Invalid record type ...'   
+	    GOTO 9999
+	ENDIF
+C
+	IF(INF.SSC_GAME(4:4).NE.'6') THEN
+	    TYPE*,IAM(),'Invalid game code ...'   
+	    GOTO 9999
+	ENDIF
+C
+C Get game index
+C
+	READ(INF.SSC_GAME_IND,I4FMT) GIND
+	IF(GIND.LE.0.OR.GIND.GT.NUMSSC) THEN
+	    WRITE(6,912) IAM(),GTNAMES(TSSC),GIND
+	    GOTO 9999
+	ENDIF	    
+C
+C Open game, verification and DAF file.
+C
+	GNUM = SCFGTN(TSSC,GIND)    
+	IF(GNUM.LE.0.OR.GNUM.GT.MAXGAM) THEN
+	    WRITE(6,900) IAM(),GTNAMES(TSSC),GIND
+	    GOTO 9999
+	ENDIF
+	CALL OPENW(1,SCFSFN(1,DAF),4,0,0,ST)
+	CALL IOINIT(DFDB,1,DAFSEC*256)
+	IF(ST.NE.0) CALL FILERR(SCFSFN(1,DAF),1,ST,0)
+	CALL OPENW(2,SCFGFN(1,GNUM),4,0,0,ST)
+	CALL IOINIT(FDB,2,DSSSEC*256)
+	IF(ST.NE.0) CALL FILERR(SCFGFN(1,GNUM),1,ST,0)	
+	CALL OPENW(3,SCFGVN(1,GNUM),4,0,0,ST)
+	CALL IOINIT(VFDB,3,DSSSEC*256)
+	IF(ST.NE.0) CALL FILERR(SCFGVN(1,GNUM),1,ST,0)	
+C
+C Read draw number
+C
+	READ(INF.SSC_DRAW_NO,I4FMT) DRAW
+	IF(DRAW.LE.0) THEN
+	    WRITE(6,909) IAM(),GTNAMES(TSSC),GIND,DRAW
+	    GOTO 9999
+	ENDIF
+C
+C Read the file for the previous draw
+C
+	PREV3 = 0
+        IF((DRAW.GT.1).AND.UPDATE) THEN
+	    CALL READW(FDB,DRAW-1,DSSREC,ST)
+	    IF(ST.NE.0) CALL FILERR(SCFGFN(1,GNUM),2,ST,DRAW-1)
+	    CALL ILBYTE(PREV3,DSSREV,2)		! Get previous text checksum
+	    IF(DSSSTS.EQ.0) THEN
+		WRITE(6,901) IAM(),GTNAMES(TSSC),GIND,DRAW,DRAW-1
+		GOTO 9999
+	    ENDIF	    
+	ENDIF
+C
+C Read file for the current draw
+C
+	CALL READW(FDB,DRAW,DSSREC,ST)
+	IF(ST.NE.0) CALL FILERR(SCFGFN(1,GNUM),2,ST,DRAW)
+C
+C Checking if draw is not already set
+C
+        IF(DSSSTS.EQ.GAMINF.OR.DSSSTS.EQ.GAMOPN) THEN
+           WRITE(6,902),IAM(),GTNAMES(TSSC),GIND,DRAW
+	   IF(UPDATE) THEN
+             CALL INPYESNO('Do you want to overwrite [Y/N] ?',FLAG)
+             IF(FLAG.NE.1) THEN
+	       SKIP = .TRUE.
+	       GOTO 1000
+	     ENDIF
+	   ENDIF
+        ENDIF
+C
+C Checking if draw is closed.
+C
+        IF(DSSSTS.GT.GAMOPN) THEN
+           WRITE(6,903),IAM(),GTNAMES(TSSC),GIND,DRAW
+           GOTO 9999
+	ENDIF
+C
+C Initialize some variables...
+C
+	CALL LIB$MOVC5(0,0,ICHAR(' '),SIZEOF(DSSMNM),DSSMNM)
+	CALL LIB$MOVC5(0,0,ICHAR(' '),SIZEOF(DSSSNM),DSSSNM)
+	CALL LIB$MOVC5(0,0,ICHAR(' '),SIZEOF(DSSDES),DSSDES)
+	DO I=1,3
+	  DSSEST(I) = 0
+	  DSSECD(I) = 0
+	  DSSECT(I) = 0
+	ENDDO
+C
+C Read game start date
+C	
+	I2DATE(VCDC) = 0
+	READ(INF.SSC_SDATE(4:5),I2FMT) I2DATE(VYEAR)
+	READ(INF.SSC_SDATE(6:7),I2FMT) I2DATE(VMON)
+	READ(INF.SSC_SDATE(8:9),I2FMT) I2DATE(VDAY)
+	CALL BDATE(I2DATE)
+	DSSBSD = I2DATE(VCDC)
+C
+C Get draw end date
+C
+	I2DATE(VCDC) = 0
+	READ(INF.SSC_EDATE(4:5),I2FMT) I2DATE(VYEAR)
+	READ(INF.SSC_EDATE(6:7),I2FMT) I2DATE(VMON)
+	READ(INF.SSC_EDATE(8:9),I2FMT) I2DATE(VDAY)
+	CALL BDATE(I2DATE)
+	DSSESD = I2DATE(VCDC)
+C
+C Set week number
+C
+	CALL FIGWEK(DSSESD-WEEK_OFFSET,DSSWEK,DUMMY)
+C
+C Get draw date
+C
+	I2DATE(VCDC) = 0
+	READ(INF.SSC_DRAW_DATE(4:5),I2FMT) I2DATE(VYEAR)
+	READ(INF.SSC_DRAW_DATE(6:7),I2FMT) I2DATE(VMON)
+	READ(INF.SSC_DRAW_DATE(8:9),I2FMT) I2DATE(VDAY)
+	CALL BDATE(I2DATE)
+	DSSDAT = I2DATE(VCDC)
+C
+C Draw closing time.
+C
+	READ(INF.SSC_CLOSE_TIME(2:3),I2FMT) HRS
+	READ(INF.SSC_CLOSE_TIME(4:5),I2FMT) MINS
+	DSSTIM = HRS*3600+MINS*60
+C
+C Sport code 
+C
+	READ(INF.SSC_SPORT_CODE,I4FMT) MTYP	
+	IF(MTYP.GE.2.AND.MTYP.LE.6) THEN
+	    DSSTYP=2
+	ELSEIF(MTYP.EQ.1) THEN
+	    DSSTYP=1
+	ENDIF
+C
+C TV channel
+C
+	TV = INF.SSC_TV
+C
+C Event master name
+C
+        CALL STR$UPCASE(TNAME,INF.SSC_MASTER_NAME)
+        CALL STR$TRANSLATE(TNAME,TNAME,TRANSLATE_TABLE,MATCH_TABLE)
+        CALL MOVBYT(I4TNAME,1,DSSMNM,1,SSNMS_LEN)
+C
+C Description lines 1-3
+C
+        CALL STR$UPCASE(TNAME,INF.SSC_DESC1)
+        CALL STR$TRANSLATE(TNAME,TNAME,TRANSLATE_TABLE,MATCH_TABLE)
+        CALL MOVBYT(I4TNAME,1,DSSDES,1,28)
+C
+        CALL STR$UPCASE(TNAME,INF.SSC_DESC2)
+        CALL STR$TRANSLATE(TNAME,TNAME,TRANSLATE_TABLE,MATCH_TABLE)
+        CALL MOVBYT(I4TNAME,1,DSSDES,29,28)
+C
+        CALL STR$UPCASE(TNAME,INF.SSC_DESC3)
+        CALL STR$TRANSLATE(TNAME,TNAME,TRANSLATE_TABLE,MATCH_TABLE)
+        CALL MOVBYT(I4TNAME,1,DSSDES,57,28)
+C
+C Get number of contests.
+C
+	READ(INF.SSC_SET_CNT,I4FMT) SET_COUNT
+	IF(SET_COUNT.LE.0.OR.SET_COUNT.GT.3) THEN
+	    WRITE(6,914) IAM(),GTNAMES(TSSC),GIND,SET_COUNT	    
+	    GOTO 9999
+	ENDIF
+C
+C Minimum stake (in pennies)
+C
+        READ(INF.SSC_MIN_STAKE,I6FMT) MIN_STAKE
+	IF(MIN_STAKE.LT.100.OR.MIN_STAKE.GT.SCFPAR(MAXSTAKE)*DYN_BETUNIT) THEN
+	    WRITE(6,918) IAM(),GTNAMES(TSSC),GIND,MIN_STAKE
+	    GOTO 9999
+	ENDIF
+        DSSPRC = MIN_STAKE/DYN_BETUNIT	
+C
+C Read set records.
+C
+	DO I=1,SET_COUNT
+	  READ(UNIT=LUN,IOSTAT=ST,FMT='(190A)') INF.INLINE
+	  IF(ST.NE.0) THEN    
+	    WRITE(6,913) IAM(),GTNAMES(TSSC),ST    
+	    GOTO 9999
+	  ENDIF
+	  IF(INF.SSC_TYPE2.NE.'3') THEN
+	    TYPE*,IAM(),'Invalid record type ...'   
+	    GOTO 9999
+	  ENDIF
+C
+	  IF(INF.SSC_GAME(4:4).NE.'6') THEN
+	    TYPE*,IAM(),'Invalid game code ...'   
+	    GOTO 9999
+	  ENDIF
+C
+C Contest number
+C
+	  READ(INF.SSC_SET_NR,I4FMT) SET_NR
+	  IF(SET_NR.LE.0.OR.SET_NR.GT.SET_COUNT) THEN
+	    WRITE(6,914) IAM(),GTNAMES(TSSC),GIND,SET_NR	    
+	    GOTO 9999
+	  ENDIF 
+	  DSSEST(SET_NR) = GAMOPN
+C
+C TV channel
+C
+	  TV_CHANNEL(SET_NR) = INF.SSC_TV2
+C
+C Get event closing date
+C
+	  I2DATE(VCDC) = 0
+	  READ(INF.SSC_MATCH_EDATE(4:5),I2FMT) I2DATE(VYEAR)
+	  READ(INF.SSC_MATCH_EDATE(6:7),I2FMT) I2DATE(VMON)
+	  READ(INF.SSC_MATCH_EDATE(8:9),I2FMT) I2DATE(VDAY)
+	  CALL BDATE(I2DATE)
+	  DSSECD(SET_NR) = I2DATE(VCDC)
+C
+C Draw closing time.
+C
+	  READ(INF.SSC_MATCH_STIME(2:3),I2FMT) HRS
+	  READ(INF.SSC_MATCH_STIME(4:5),I2FMT) MINS
+	  DSSECT(SET_NR) = HRS*3600+MINS*60
+C
+C Contest name (set name)
+C
+          CALL STR$UPCASE(TNAME,INF.SSC_SET_NAME)
+          CALL STR$TRANSLATE(TNAME,TNAME,TRANSLATE_TABLE,MATCH_TABLE)
+          CALL MOVBYT(I4TNAME,1,DSSSNM(1,SET_NR),1,SSNMS_LEN)
+	ENDDO
+C
+C Read next record, to be sure that COUNT had correct value....
+C
+	READ(UNIT=LUN,IOSTAT=ST,FMT='(190A)') INF.INLINE
+	IF(ST.NE.0) THEN    
+	    WRITE(6,913) IAM(),GTNAMES(TSSC),ST    
+	    GOTO 9999
+	ENDIF
+C
+	IF(INF.SSC_TYPE.NE.'2'.AND.INF.SSC_TYPE.NE.'9') THEN
+	    TYPE*,IAM(),'Invalid competitor count or record type...'
+	    GOTO 9999	
+	ENDIF
+C
+C Pool file name.
+C
+        WRITE (CDSSPFN,904) GIND,DRAW
+        DSSPFN(1) = FILEPACK
+        IF(UPDATE) WRITE(6,905) IAM(),CDSSPFN
+C
+C Pool overflow file name.
+C
+        WRITE (CDSSPOF,916) GIND,DRAW
+        DSSPOF(1) = FILEPACK
+        IF(UPDATE) WRITE(6,917) IAM(),CDSSPOF
+C
+	DSSSTS = GAMOPN
+	DSSDRW = DRAW
+C
+C Calculate checksum.
+C
+        BUFIDX = 1
+        CALL MOVBYT(DSSDES,1,BYTTAB,BUFIDX,SIZEOF(DSSDES))
+        BUFIDX = BUFIDX + SIZEOF(DSSDES)
+        CALL MOVBYT(DSSMNM,1,BYTTAB,BUFIDX,SIZEOF(DSSMNM))
+        BUFIDX = BUFIDX + SIZEOF(DSSMNM)
+        CALL MOVBYT(DSSSNM,1,BYTTAB,BUFIDX,SIZEOF(DSSSNM))
+        BUFIDX = BUFIDX + SIZEOF(DSSSNM)
+C
+        CALL CHECKSUM(BYTTAB,1,BUFIDX,REV4)
+        CALL ILBYTE(REV1,DSSREV,0)
+        IF(DSSDRW.EQ.M251-1) THEN
+           REV1 = MOD(REV1+DSSDRW,(M251-10)) + 1
+        ELSE
+           REV1 = MOD(REV1+DSSDRW,M251) + 1
+        ENDIF
+        REV2 = MOD(DSSDRW,255)
+        CALL ILBYTE(REV3,DSSREV,2)          !GET PREVIOUS TEXT REV #
+        REV3 = MOD(PREV3 + REV3,255) + 1
+        CALL ISBYTE(REV1,DSSREV,0)          !CONTROL REV BYTE (SEQUENCE#)
+        CALL ISBYTE(REV2,DSSREV,1)          !DRAW REV BYTE
+        CALL ISBYTE(REV3,DSSREV,2)          !TEXT REV # BYTE  (SEQUENCE#)
+        CALL ISBYTE(REV4,DSSREV,3)          !TEXT CHECKSUM BYTE
+C
+C Verify all data.
+C
+        IF(DSSBSD.GT.DSSESD) THEN
+           TYPE*,IAM(),'Begining sales date greater then ending sales date'
+	   GOTO 9999
+        ENDIF
+        IF(DSSBSD.EQ.0) THEN
+           TYPE*,IAM(),'Begining sales date not set '
+	   GOTO 9999
+        ENDIF
+        IF(DSSESD.EQ.0) THEN
+           TYPE*,IAM(),'Ending sales date not set'
+           GOTO 9999
+        ENDIF
+        IF(DSSDAT.LT.DSSESD) THEN
+           TYPE*,IAM(),'Event date is less than ending sales date'
+           GOTO 9999
+        ENDIF
+        IF(DSSSPR.EQ.0) THEN
+           TYPE*,IAM(),'Pool percentage not set '
+           GOTO 9999
+        ENDIF
+        IF(DSSPRC.EQ.0) THEN
+           TYPE*,IAM(),'Minimum stake not set '
+           GOTO 9999
+        ENDIF
+C
+	DO I=DSSBSD,DSSESD
+          CALL READW(DFDB,I,DAFREC,ST)
+          IF(ST.NE.0) CALL FILERR(SCFSFN(1,DAF),2,I,ST)
+          I2DATE(5)=I
+          CALL LCDATE(I2DATE)
+          IF(DAFSTS.NE.DNOSAL.AND.DAFSTS.NE.DSOPEN) THEN
+            WRITE(6,907) IAM(),(I2DATE(K),K=7,13)
+	    GOTO 9999
+          ENDIF
+          IF(DAFDRW(GNUM).NE.0.AND.DAFDRW(GNUM).NE.DRAW) THEN
+           WRITE(6,906) IAM(),(I2DATE(K),K=7,13),GTNAMES(TSSC),GIND,DAFDRW(GNUM)
+	   IF(UPDATE) THEN
+             CALL INPYESNO('Do you want to overwrite [Y/N] ?',FLAG)
+             IF(FLAG.NE.1) THEN
+	       SKIP = .TRUE.
+	       GOTO 1000
+	     ENDIF
+	   ENDIF
+          ENDIF
+	ENDDO
+C
+	IF(UPDATE) THEN
+          DO I=DSSBSD,DSSESD
+           CALL READW(DFDB,I,DAFREC,ST)
+           IF(ST.NE.0) CALL FILERR(SCFSFN(1,DAF),2,ST,I)
+           DAFDRW(GNUM)=DRAW
+           CALL WRITEW(DFDB,I,DAFREC,ST)
+           IF(ST.NE.0) CALL FILERR(SCFSFN(1,DAF),3,ST,I)
+	   WRITE(6,910) IAM(),(SCFSFN(K,DAF),K=1,5),I
+	  ENDDO
+C
+	  CALL WRITEW(FDB,DRAW,DSSREC,ST)
+	  IF(ST.NE.0) CALL FILERR(SCFGFN(1,GNUM),3,ST,DRAW)
+	  WRITE(6,911) IAM(),(SCFGFN(K,GNUM),K=1,5),DRAW
+	  CALL WRITEW(VFDB,DRAW,DSSREC,ST)
+	  IF(ST.NE.0) CALL FILERR(SCFGVN(1,GNUM),3,ST,DRAW)
+	  WRITE(6,911) IAM(),(SCFGVN(K,GNUM),K=1,5),DRAW
+
+	  WRITE(6,908) IAM(),GTNAMES(TSSC),GIND,DRAW
+	ENDIF
+C
+C Generating report...
+C
+	IF(FIRST) THEN
+          FIRST = .FALSE.
+	  WRITE(FILNAM,919) 
+	  REPLUN = 7
+	  CALL ROPEN(FILNAM,REPLUN,ST)
+          IF(ST.NE.0) THEN
+            TYPE*,IAM(),'Error opening ',FILNAM,' status=',ST
+	    GOTO 9999
+          ENDIF
+	  PAGE = 0
+	  WRITE(TITL_NAME,920) HDR_WEEK,HDR_YEAR 
+	  CALL TITLE(TITL_NAME,FILNAM,1,REPLUN,PAGE,DAYCDC)
+	  WRITE(REPLUN,925)
+	  WRITE(REPLUN,921) HDR_DATE(8:9),HDR_DATE(6:7),HDR_DATE(2:5),
+     *        HDR_TIME(2:3),HDR_TIME(4:5),HDR_TIME(6:7)
+	  WRITE(REPLUN,922)
+	  WRITE(REPLUN,923)
+	  WRITE(REPLUN,924)
+	ENDIF
+	I2DATE(VCDC) = DSSBSD
+	CALL LCDATE(I2DATE)
+	I2DATE2(VCDC) = DSSESD
+	CALL LCDATE(I2DATE2)
+	I2DATE3(VCDC) = DSSDAT
+	CALL LCDATE(I2DATE3)
+	HRS=DSSTIM/3600
+	MINS=(DSSTIM-HRS*3600)/60
+	WRITE(REPLUN,926) GIND,DSSDRW,(DSSMNM(K),K=1,7),
+     *       (I2DATE(K),K=9,13),(I2DATE2(K),K=9,13),HRS,MINS,
+     *       (I2DATE3(K),K=9,13),TV,
+     *       DSSPRC*DYN_BETUNIT/DOLL_BASE,
+     *       MOD(DSSPRC*DYN_BETUNIT,DOLL_BASE)
+
+	WRITE(REPLUN,922)
+	DO I=1,SET_COUNT
+	   I2DATE(VCDC) = DSSECD(I)
+	   CALL LCDATE(I2DATE)
+	   HRS = DSSECT(I)/3600
+           MINS=(DSSECT(I)-HRS*3600)/60
+	   IF(DSSECD(I).EQ.0.AND.DSSECT(I).NE.0) THEN
+		WRITE(REPLUN,932) (DSSSNM(K,I),K=1,7),HRS,MINS,
+     *            (I2DATE3(K),K=9,13),TV_CHANNEL(I)
+	   ELSEIF(DSSECD(I).NE.0.AND.DSSECT(I).EQ.0) THEN	
+		WRITE(REPLUN,931) (DSSSNM(K,I),K=1,7),(I2DATE3(K),K=9,13),
+     *            (I2DATE3(K),K=9,13),TV_CHANNEL(I)
+	   ELSEIF(DSSECD(I).EQ.0.AND.DSSECT(I).EQ.0) THEN	
+		WRITE(REPLUN,933) (DSSSNM(K,I),K=1,7),
+     *            (I2DATE3(K),K=9,13),TV_CHANNEL(I)
+	   ELSE
+		WRITE(REPLUN,930) (DSSSNM(K,I),K=1,7),(I2DATE(K),K=9,13),
+     *             HRS,MINS,(I2DATE3(K),K=9,13),TV_CHANNEL(I)
+	   ENDIF
+	ENDDO
+	WRITE(REPLUN,922)   
+C
+C Close game files and DAF
+C
+1000	CONTINUE
+	CALL CLOSEFIL(FDB)			  
+	CALL CLOSEFIL(VFDB)			  
+	CALL CLOSEFIL(DFDB)
+C
+C Get next record.
+C
+	IF(SKIP) GOTO 40
+	IF(INF.SSC_TYPE.NE.'9')	GOTO 50	! Get next record.
+	STATUS = 0
+	CLOSE(REPLUN)
+	RETURN
+C
+C ODDINF file processed with errors....
+C
+9999	CONTINUE
+	CALL CLOSEFIL(FDB)			  
+	CALL CLOSEFIL(VFDB)			  
+	CALL CLOSEFIL(DFDB)
+	STATUS = -1
+	CLOSE(REPLUN)
+	TYPE*,IAM(),'********** ERRORS FOUND ****************'
+	TYPE*,INF.INLINE
+	TYPE*,IAM(),'********** ERRORS FOUND ****************'
+	RETURN
+C
+C Format statements.
+C
+900     FORMAT(1X,A,A8,1X,I1,' draw ',I4,' is not correct')
+901     FORMAT(1X,A,A8,1X,I1,' draw ',I4,' draw not defined')
+902     FORMAT(1X,A,A8,1X,I1,' draw ',I4,' data has been already entered')
+903     FORMAT(1X,A,A8,1X,I1,' draw ',I4,' has already been closed')
+904	FORMAT(4X,':SS',I1,'P',I4.4,'.FIL  ')
+905     FORMAT(1X,A,'Pool file name is ',A20)
+906     FORMAT(1X,A,7A2,' is already active for ',A8,1X,I1,' event # ',I4)
+907     FORMAT(1X,A,7A2,' - Day has already been closed')
+908     FORMAT(1X,A,A8,1X,I1,' event ',I4,' verify complete')
+909	FORMAT(1X,A,A8,1X,I1,' invalid draw number >',I4)
+910	FORMAT(1X,A,1X,5A4,' updated for CDC  ',I4.4)
+911	FORMAT(1X,A,1X,5A4,' updated for draw ',I4.4)
+912	FORMAT(1X,A,A8,' invalid game index >',I4)	
+913	FORMAT(1X,A,'Error reading ',A8,' ODDINF file, status = ',I4)
+914	FORMAT(1X,A,A8,1X,I1,' invalid number of contests >',I4)	
+915	FORMAT(1X,A,A8,1X,I1,' invalid contest number  >',I4)	
+916	FORMAT(4X,':SO',I1,'P',I4.4,'.FIL  ')
+917     FORMAT(1X,A,'Pool overflow file name is ',A20)
+918	FORMAT(1X,A,A8,1X,I1,' invalid minimum stake >',I4)	
+919	FORMAT('MVODDINF.REP')
+920	FORMAT('MONIVETOKOHTEET VIIKOLLA ',I2.2,'/',I4.4)
+921	FORMAT(1X,'File ',A2,'.',A2,'.',A4,2X,A2,':',A2,':',A2)
+922	FORMAT(132X)
+923	FORMAT(1X,'N:o Draw Target',T48,'Start Date    End Date    Time',
+     *         '     Draw Date     TV')
+924	FORMAT(1X,98('-'))
+925	FORMAT(132('='))
+926	FORMAT(2X,I2,1X,I4,1X,7A4,T47,5A2,4X,5A2,2X,I2.2,':',I2.2,
+     *         4X,5A2,4X,A4,/,/,2X,'Minimum Bet',2X,I2,'.',I2.2,/)
+927	FORMAT(11X,I2,'. ',4A4,T53,I2,'. ',4A4)
+928	FORMAT(11X,I2,'. ',4A4)
+930	FORMAT(10X,7A4,T61,5A2,2X,I2.2,':',I2.2,4X,5A2,4X,A4)
+931	FORMAT(10X,7A4,T61,5A2,2X,5X,4X,5A2,4X,A4)
+932	FORMAT(10X,7A4,T61,10X,2X,I2.2,':',I2.2,4X,5A2,4X,A4)
+933	FORMAT(10X,7A4,T61,10X,2X,5X,4X,5A2,4X,A4)
+	END
+

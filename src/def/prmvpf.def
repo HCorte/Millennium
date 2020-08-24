@@ -1,0 +1,110 @@
+C PRMVPF.DEF
+C
+C DESCRIPTION FOR PASSIVE VALIDATION FILE DISK RECORDS
+C
+C V03 27-SET-2013 SCML Net prize pay added
+C                      Free space added
+C V02 01-JAN-2010 FJG ePassive
+C V01 13/01/01	CS	INITIAL RELEASE FOR PORTUGAL
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C THERE ARE 4 DIFFERENT VALIDATION FILE RECORD FORMATS
+C RECORD TYPE 0 - COMPRESSED VALIDATION  (1 RECORD)
+C RECORD TYPE 1 - REGULAR VALIDATION     (2 - 4 RECORDS)
+C RECORD TYPE 2 - AVAILABLE
+C RECORD TYPE 3 - AVAILABLE
+C
+C
+C DESCRIPTION OF PASSIVE COMPRESSED VALIDATION (1 RECORD, RECTYP 0)
+C
+C SERIE/TICKET#     - 4 BYTES (TWO BITS FOR RECORD TYPE, SIX BITS TO SERIE AND THREE BYTES TO TICKET#)
+C FRACTION          - 1 BYTE
+C ** FREE SPACE **  - 1 BYTE  **** BEWARE MUST BE FREE SINCE IS THE SECOND KEY ****
+C RECTYP/STATUS     - 1 BYTE
+C GAME #            - 1 BYTE
+C CASHING SERIAL    - 4 BYTES
+C VALIDATION #      - 4 BYTES * V02 if ticket is Online, here we save the serial number
+C PAY AMOUNT        - 4 BYTES
+C NET PAY AMOUNT    - 4 BYTES * V03
+C EXPIRE DRAW       - 2 BYTES
+C CASHING TER       - 2 BYTES
+C CASHING CDC       - 2 BYTES
+C WINSEL CDC	    - 2 BYTES
+C PURGE CDC         - 2 BYTES
+C GTYP/GIND         - 1 BYTE
+C TYPE OR TICKET    - 1 BYTE  * V02 (OFFLINE 0 and ONLINE 1 for compatibility)
+C SELLING CDC       - 2 BYTES * V02 The ONLINE tickets are sold with serial number
+C OFFLINE CASH TER  - 2 BYTE
+C PRIZE DATA        - 4 BYTES
+C
+C
+C DESCRIPTION FOR PASSIVE REGULAR VALIDATION (2-4  RECORDS, RECTYP 1)
+C
+C SERIE/TICKET#     - 4 BYTES (TWO BITS FOR RECORD TYPE, SIX BITS TO SERIE AND THREE BYTES TO TICKET #)
+C FRACTION          - 1 BYTE
+C ** FREE SPACE **  - 1 BYTE  **** BEWARE MUST BE FREE SINCE IS THE SECOND KEY ****
+C RECTYP/STATUS     - 1 BYTE
+C GAME #            - 1 BYTE
+C CASHING SERIAL    - 4 BYTES
+C VALIDATION #      - 4 BYTES * V02 if ticket is Online, here we save the serial number
+C PAY AMOUNT1       - 4 BYTES
+C NET PAY AMOUNT1   - 4 BYTES * V03
+C SELLING CDC       - 2 BYTES * V02 The ONLINE tickets are sold with serial number
+C OFFLINE CASH TER  - 2 BYTES
+C EXPIRE DRAW       - 2 BYTES
+C CASHING TER       - 2 BYTES
+C CASHING CDC       - 2 BYTES
+C WINSEL CDC        - 2 BYTES
+C PURGE CDC         - 2 BYTES
+C GTYP/GIND         - 1 BYTE
+C PRIZE INDEX       - 1 BYTE
+C # FRACTIONS       - 1 BYTE
+C TYPE OR TICKET    - 1 BYTE * V02 (OFFLINE 0 and ONLINE 1 for compatibility)
+C ** FREE SPACE **  - 2 BYTES
+C ** FREE SPACE **  - 4 BYTES
+C ** FREE SPACE **  - 4 BYTES * V03
+C ** FREE SPACE **  - 4 BYTES * V03
+C ** FREE SPACE **  - 4 BYTES * V03
+C PRIZE DATA        - 36 BYTES (1 - 9 WINS)
+C
+C REGULAR VALIDATION (3RD RECORD)
+C 
+C PRIZE DATA        - 40 BYTES (10 - 19 WINS)
+C
+C REGULAR VALIDATION (4TH RECORD)
+C
+C PRIZE DATA        - 40 BYTES (20 - 29 WINS)
+C
+        INTEGER*4 VPFLEN
+!        PARAMETER (VPFLEN=10)
+        PARAMETER (VPFLEN=11) !V03
+	INTEGER*4 VPFMAXREC
+	PARAMETER (VPFMAXREC=4)
+C
+	INTEGER*4 VPDATLEN
+	PARAMETER (VPDATLEN=29)   !REGULAR PASSIVE PRIZE DATA LENGTH
+C
+C DEFINE VALIDATION KEY FIELDS
+C
+        INTEGER*4  VFSSER, VFSCDC
+        PARAMETER (VFSSER=1)    !INTEGER*4
+        PARAMETER (VFSCDC=3)    !INTEGER*2
+C
+C DEFINE VALIDATION RECORD TYPES
+C
+        INTEGER*4 VAL_SHORT, VAL_REG
+	PARAMETER (VAL_SHORT=0)  !SHORT (COMPRESSED) VALIDATION
+	PARAMETER (VAL_REG  =1)  !REGULAR VALIDATION RECORD

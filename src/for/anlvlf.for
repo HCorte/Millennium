@@ -1,0 +1,493 @@
+C ANLVLF.FOR
+C
+C V21 04-JAN-2011 FJG Lotto2 Batch: Increase NUM_DRW to 2000
+C V20 13-MAY-1999 UXN Super Triple added.
+C V19 09-FEB-1998 UXN Super Score and Todays Triple added.
+C V18 18-MAR-1997 RXK Read game number/game type table always from SCF
+C V17 17-MAY-1996 HXK Update from Wojtek, Siew Mun
+C V16 05-DEC-1994 HXK Merging from 25-Nov -> 5 Dec
+C V15 30-NOV-1994 HXK Fix for Bingo div representation
+C V14 02-SEP-1994 HXK Merge of May,June RFSS batch 
+C V13 27-APR-1994 JXP COPY=0
+C V12 22-JAN-1994 JXP Print format corrections
+C V11 17-OCT-1993 HXK removed type*
+C V10 29-SEP-1993 GXA Added Refunds and included VPRPAY in uncashed section.
+C V09 08-SEP-1993 SXH Hard-coded COPY=1
+C V08 08-SEP-1993 HXN Added more checks on VSTAT.
+C V07 26-AUG-1993 SXH Added IAM() etc
+C V06 12-AUG-1993 HXN VERSION BASED ON DNTH PACK. ADDED CMONY FUNCTION WHEN 
+C                     PRINTING REPORT
+C V05 22-JUL-1993 HXN VERSION BASED ON DNTH PACK. ADDED CMONY FUNCTION WHEN 
+C                     PRINTING REPORT.
+C V04 05-JUL-1993 HXN Version based on the DNTH[.SRC] pack. Also added CMONY 
+C                     function when write to Report file.
+C V03 26-MAR-1993 HDB ADDED EXECPTION FOR KENO
+C V02 12-NOV-1991 MTK INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C THIS PROGRAM WILL READ THROUGH THE VALIDATION FILE
+C TO CHECK FOR ERRORS
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	PROGRAM ANLVLF
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMVLF.DEF'
+	INCLUDE 'INCLIB:DESVAL.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+	INCLUDE 'INCLIB:VDETAIL.DEF'
+C
+	INTEGER*4    MAXREC
+	PARAMETER   (MAXREC=2048/VFLEN)
+	INTEGER*4    BLKUSE(MAXREC+1)
+	INTEGER*4    TOTS(NUMTOT,6,MAXGAM)
+
+        INTEGER*4 NUM_DRW
+!       PARAMETER (NUM_DRW=501)
+        PARAMETER (NUM_DRW=2000)
+
+	INTEGER*4    SHRS(10,6,NUM_DRW,MAXGAM,2) !allow for for 2 subgames
+C
+	INTEGER*4    MLTREC(0:3)
+	INTEGER*4    FDB(7)
+C
+	INTEGER*4    BIGBUF(32*64)
+	INTEGER*4    BUF(VFLEN,MAXREC)
+	EQUIVALENCE (BIGBUF,BUF)
+C
+	INTEGER*4    LINCNT, GTYP, GIND, AVAIL, CNT, HI, LO, BLKCNT
+	INTEGER*4    SHR, KIK, GAMN, PRZCNT, JNDX, STA, NDX, MLTCNT
+	INTEGER*4    ZFLAG, XCNT, BLK, TOTREC, PAGE,NUMPRT, DUMCNT
+	INTEGER*4    DIV, DRW, J, TYP, GAM, K, I, ST
+	INTEGER*4    COPY, X, TEMP, REF, SUB
+
+	CHARACTER*4  OTYPE(2)
+	DATA OTYPE/' WIN',' REF'/
+C
+	INTEGER*2 I2TEMP(2)
+	EQUIVALENCE (TEMP,I2TEMP)
+C
+	REAL*8       PCNT
+
+C Begin code -------------------------------------------------------
+
+	CALL COPYRITE
+	TYPE *
+	TYPE *,'<<<<< ANLVLF Validation File Analysis   V01 >>>>>'
+	TYPE *
+        COPY=0
+
+C READ SCF RECORD
+C
+        CALL GETSCONF(SCFREC,ST)
+	IF(ST.NE.0) CALL GSTOP(GEXIT_FATAL)
+
+C CLEAR TOTALS
+C
+	DO 110 K=1,MAXREC+1
+	  BLKUSE(K) = 0
+110	CONTINUE
+C
+	DO 120 GAM=1,MAXGAM
+	DO 120 TYP=1,6
+	DO 120 J=1,NUMTOT
+	  TOTS(J,TYP,GAM) = 0
+120	CONTINUE
+C
+	DO 125 GAM=1,MAXGAM
+	DO 125 DRW=1,NUM_DRW
+	DO 125 TYP=1,6
+	DO 125 DIV=1,10
+        DO 125 SUB=1,2
+	  SHRS(DIV,TYP,DRW,GAM,SUB) = 0
+125	CONTINUE
+C
+	DO 130 K=0,3
+	  MLTREC(K) = 0
+130	CONTINUE
+C
+	DUMCNT = 0
+C
+	NUMPRT=0
+C
+
+
+
+200	CONTINUE
+
+	CALL OPENW(1,SCFSFN(1,VLF),0,0,0,ST)
+	IF (ST .NE. 0)THEN
+	  CALL FILERR(SCFSFN(1,VLF),1,ST,0)
+	  TYPE *,IAM(),'***ERROR ON OPEN OF FILE OR DEVICE -- # ',ST
+	  CALL GPAUSE
+	  GOTO 200
+	ENDIF
+
+	CALL IOINIT(FDB,1,32*256)
+
+
+	PAGE = 0
+C
+	CALL ROPEN('ANLVLF.REP',6,ST)
+	IF(ST.NE.0)THEN
+	  TYPE *,IAM(),'CANNOT OPEN ANLVLF.REP > ',ST
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+C
+	CALL TITLE('VALIDATION FILE ANALYSIS',
+     *	           '  ANLVLF',1,6,PAGE,DAYCDC)
+	WRITE(6,9000)
+C
+	WRITE(6,501)
+501	FORMAT(///,X,30('*'),' ABNORMALITIES ',30('*'),/)
+C
+	TOTREC = 0
+	BLK = 0
+
+
+C READ NEXT BLOCK
+C ---------------
+1000	CONTINUE
+
+	IF (MOD(BLK,10000).EQ.0) TYPE*,' ANLVLF in progress...',BLK
+
+	BLK = BLK + 1
+	CALL READW(FDB,BLK,BIGBUF,ST)
+
+	IF (ST .EQ. 144) THEN
+	  CALL USRCLOS1(1)
+	  GO TO 5000
+	ENDIF
+
+	IF (ST.NE.0 .AND. ST.NE.144) THEN
+	  CALL USRCLOS1(1)
+	  TYPE *,IAM(),'ERROR READING FROM VLF FILE > ',ST
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+
+
+	XCNT = 0
+	ZFLAG = 0
+	MLTCNT = 0
+
+	DO 4000 NDX=1,MAXREC
+	  IF (MLTCNT .GT. 0) THEN
+	    MLTCNT = MLTCNT - 1
+	    GO TO 4000
+	  ENDIF
+
+	  IF(BUF(1,NDX) .EQ. 0) THEN
+	    IF(ZFLAG .EQ. 0) ZFLAG = NDX
+	    GO TO 4000
+	  ENDIF
+
+	  IF(ZFLAG .NE. 0)THEN
+	    WRITE(6,1001)BLK,ZFLAG,NDX-1
+	    ZFLAG = 0
+	  ENDIF
+C
+	  MLTCNT = ISHFT(BUF(1,NDX),-30)
+	  MLTREC(MLTCNT) = MLTREC(MLTCNT) + 1
+	  XCNT = XCNT + MLTCNT + 1
+	  CALL LOGVAL(VALREC,BUF(1,NDX))
+	  CALL DLOGVAL(VALREC,VDETAIL)
+	  IF(NUMPRT.GT.0)THEN
+	    NUMPRT=NUMPRT-1
+	    WRITE(6,*)VALREC
+	  ENDIF
+C
+	  IF(VALREC(VSCDC) .LT. 0) THEN
+	    WRITE(6,10021)BLK,NDX
+10021	    FORMAT(X,'BLOCK',I8,'/',I3,' IS A DUMMY RECORD')
+	    DUMCNT = DUMCNT + 1
+	    GOTO 4000
+	  ENDIF
+
+	  STA = VALREC(VSTAT)
+
+	  IF(STA .EQ. VUNCSH.OR.STA.EQ.VPRPAY)THEN
+	    JNDX = 1
+	  ELSE IF(STA.EQ.VCASH  .OR.  STA.EQ.VCASHX)THEN
+	    JNDX = 2
+	  ELSE IF(STA.EQ.VDEL   .OR.  STA.EQ.VCXL)THEN
+	    JNDX = 3
+
+C***	  ELSE IF(STA.EQ.VHOLD  .OR.  STA.EQ.VNOPRZ.OR.
+C***     *	          STA.EQ.VPOST  .OR.  STA.EQ.VPRPAY.OR.
+C***     *            STA.EQ.VPRPOST)THEN
+C***	    JNDX = 4
+          ELSE IF(STA.EQ.VHOLD  .OR.  STA.EQ.VNOPRZ)THEN
+            JNDX = 4
+
+          ELSE IF(STA.EQ.VNOPAY.OR.STA.EQ.VPOST) THEN
+            JNDX = 5
+C*** 	  ELSE IF(STA.EQ.VNOPAY .OR.  STA.EQ.VPPNPZ)THEN
+C***	    JNDX = 5
+
+          ELSE IF(STA.EQ.VBANK)THEN
+            JNDX = 6
+C***	  ELSE IF(STA.EQ.VCLAM  .OR.  STA.EQ.VCLAMX)THEN
+C***	    JNDX = 6
+
+          ELSE IF (STA.EQ.VCLAM     .OR.
+     *             STA.EQ.VCLAMX    .OR.
+     *             STA.EQ.VPPNPZ    .OR.
+     *             STA.EQ.VPRPOST   .OR.
+     *             STA.EQ.VSBNK     .OR.
+     *             STA.EQ.VSBNKM    )   THEN 
+	    GO TO 4000                  !don't handle those STATUS
+
+	  ELSE
+	    WRITE(6,1002)BLK,NDX,VALREC(VSCDC),VALREC(VSSER),
+     *	                 'STATUS',STA
+	    GO TO 4000
+	  ENDIF
+
+	  GAM = VALREC(VGAM)
+	  IF(GAM.LT.1 .OR. GAM.GT.MAXGAM)THEN
+	    WRITE(6,1002)BLK,NDX,VALREC(VSCDC),VALREC(VSSER),
+     *	                 'GAME  ',GAM
+	    GO TO 4000
+	  ENDIF
+
+	  TOTS(1,JNDX,GAM) = TOTS(1,JNDX,GAM) + 1
+	  TOTS(2,JNDX,GAM) = TOTS(2,JNDX,GAM) + VALREC(VPAMT)+
+     *	                                        VALREC(VKPAMT)+
+     *                                          VALREC(VRAMT) 
+
+	  PRZCNT=VALREC(VPZOFF)
+	  IF(PRZCNT.GT.VMAX) PRZCNT=VMAX
+	  GAMN=GAM
+CRXK	  GTYP=GNTTAB(GAMTYP,GAMN)
+          GTYP = SCFGNT(GAMTYP,GAMN)
+
+	  DO 2100 I=1,PRZCNT
+	     KIK  = VDETAIL(VKIK,I)
+	     DIV = VDETAIL(VDIV,I)
+             SHR  = VDETAIL(VSHR,I)
+	     REF = VDETAIL(VREF,I)
+	     DRW = VDETAIL(VDRW,I)
+             SUB = VDETAIL(VSUB,I)
+             IF(SUB.EQ.0) SUB=1
+
+	     IF(KIK.NE.0) THEN
+	        GAMN= VALREC(VKGME)
+	     ENDIF
+
+	     IF (DRW .LT. 1)  GOTO 2150
+	     IF (DRW .GT. NUM_DRW)GOTO 2100
+
+	     IF(GTYP.EQ.TSCR.OR.GTYP.EQ.TWIT.OR.GTYP.EQ.TTSL
+     *          .OR.GTYP.EQ.TCPL.OR.GTYP.EQ.TDBL.OR.
+     *          GTYP.EQ.TSSC.OR.GTYP.EQ.TTRP.OR.GTYP.EQ.TSTR) THEN
+	       DIV=1
+	       IF(REF.NE.0) DIV=2
+	     ENDIF
+
+             
+	     IF(DIV.GT.10 .OR. DIV .LT. 1) GOTO 2100
+	     SHRS(DIV,JNDX,DRW,GAMN,SUB) = SHRS(DIV,JNDX,DRW,GAMN,SUB) + SHR
+2100	  CONTINUE
+
+
+
+
+2150	  CONTINUE
+	  IF(VALREC(VSTAT).EQ.VHOLD)THEN
+	    WRITE(6,1003)BLK,NDX,VALREC(VSCDC),VALREC(VSSER),
+     *	                         ((VALREC(VPAMT)+VALREC(VKPAMT))/2)
+	  ENDIF
+C
+4000	CONTINUE
+C
+	BLKUSE(XCNT+1) = BLKUSE(XCNT+1) + 1
+	TOTREC = TOTREC + XCNT
+	GO TO 1000
+C
+C COME HERE WHEN ALL DONE
+C
+5000	CONTINUE
+	CALL USRCLOS1(     1)
+	BLKCNT = BLK - 1
+C
+C TOTAL UP ALL SHARES INTO DRAW NUM_DRW
+C
+	DO 5800 GAM=1,MAXGAM
+	DO 5800 DRW=1,NUM_DRW-1
+	DO 5800 TYP=1,6
+	DO 5800 DIV=1,10
+        DO 5800 SUB=1,2
+	  SHRS(DIV,TYP,NUM_DRW,GAM,SUB)=SHRS(DIV,TYP,NUM_DRW,GAM,SUB)+
+     *	                         SHRS(DIV,TYP,DRW,GAM,SUB)
+5800	CONTINUE
+C
+	LO=MAXREC+1
+	HI=1
+	DO 6010 K=1,MAXREC+1
+	  IF(BLKUSE(K).NE.0)THEN
+	    LO=MIN(K,LO)
+	    HI=K
+	  ENDIF
+6010	CONTINUE
+C
+	CNT=0
+	DO 6100 K=LO,HI
+	  CNT=CNT+1
+	  IF(MOD(CNT,50).EQ.1)THEN
+	    CALL TITLE('VALIDATION FILE ANALYSIS',
+     *	               '  ANLVLF',1,6,PAGE,DAYCDC)
+	    WRITE(6,9000)
+C
+	    WRITE(6,6001)
+6001	    FORMAT(///,X,30('*'),' BLOCK USAGE ',30('*'),/)
+	  ENDIF
+C
+	  X = BLKUSE(K)
+	  PCNT = DFLOAT(X) / DFLOAT(BLKCNT) * 100.0D0
+	  WRITE(6,6002) K-1,X,PCNT
+6002	  FORMAT(X,'TOTAL BUCKETS WITH',I4,' RECORDS = ',I6,X,F6.2,'%')
+6100	CONTINUE
+C
+	AVAIL = BLKCNT * MAXREC
+	PCNT = DFLOAT(TOTREC) / DFLOAT(AVAIL) * 100.0D0
+C
+	WRITE(6,6003)TOTREC,BLKCNT,PCNT
+	WRITE(6,6004)(K+1,MLTREC(K),K=0,3)
+	WRITE(6,6005) DUMCNT, SCFSFN(1,VLF)
+	CALL TITLE('VALIDATION FILE ANALYSIS',
+     *	           '  ANLVLF',1,6,PAGE,DAYCDC)
+	WRITE(6,9000)
+C
+	DO 6800 GAM=1,MAXGAM
+	   GIND = SCFGNT(GAMIDX,GAM)
+	   GTYP = SCFGNT(GAMTYP,GAM)
+	   IF (GTYP.LE.0) GOTO 6800
+	   WRITE(6,6301) GTNAMES(GTYP),GIND
+	   WRITE(6,6303)(      TOTS(1,J,GAM),
+     *                   CMONY(TOTS(2,J,GAM),13,VALUNIT)   ,J=1,6)
+6800	CONTINUE
+C
+	DO 7800 GAM=1,MAXGAM
+	  GIND = SCFGNT(GAMIDX,GAM)
+	  GTYP = SCFGNT(GAMTYP,GAM)
+	  IF (GTYP.LE.0) GOTO 7800
+	  CALL TITLE('VALIDATION FILE ANALYSIS',
+     *	             '  ANLVLF',1,6,PAGE,DAYCDC)
+	  WRITE(6,9000)
+	  WRITE(6,7001) GTNAMES(GTYP),GIND
+	  LINCNT = 0
+	  DO 7600 DRW=1,NUM_DRW
+	    CNT = 0
+	    DO 7500 DIV=1,10
+	      DO 7200 TYP=1,6
+                IF(GTYP.EQ.TBNG) THEN
+                   IF(SHRS(DIV,TYP,DRW,GAM,1).NE.0 .OR.
+     *                SHRS(DIV,TYP,DRW,GAM,2).NE.0) GOTO 7300
+                ENDIF
+	        IF(SHRS(DIV,TYP,DRW,GAM,1).NE.0) GOTO 7300
+7200	      CONTINUE
+	      GO TO 7500
+C
+7300	      CONTINUE
+	      CNT = 1
+	      IF(DRW .NE. NUM_DRW)THEN
+	        IF(GTYP.EQ.TSCR.OR.GTYP.EQ.TWIT.OR.GTYP.EQ.TTSL.OR.
+     *             GTYP.EQ.TCPL.OR.GTYP.EQ.TDBL.OR.GTYP.EQ.TSSC.OR.
+     *             GTYP.EQ.TTRP.OR.GTYP.EQ.TSTR) THEN
+	          WRITE(6,73042) DRW,OTYPE(DIV),
+     *                    (CSMONY(SHRS(DIV,K,DRW,GAM,1),12,VALUNIT),K=1,6)
+                ELSEIF(GTYP.EQ.TBNG) THEN
+                  WRITE(6,73061) DRW,DIV,(SHRS(DIV,K,DRW,GAM,1),K=1,3)
+                  WRITE(6,73062)         (SHRS(DIV,K,DRW,GAM,2),K=1,6)
+	        ELSE
+	          WRITE(6,7304) DRW,DIV,(SHRS(DIV,K,DRW,GAM,1),K=1,6)
+	        ENDIF
+	      ELSE
+	        IF(GTYP.EQ.TSCR.OR.GTYP.EQ.TWIT.OR.GTYP.EQ.TTSL.OR.
+     *             GTYP.EQ.TCPL.OR.GTYP.EQ.TDBL.OR.
+     *             GTYP.EQ.TSSC.OR.GTYP.EQ.TTRP.OR.GTYP.EQ.TSTR ) THEN
+                  WRITE(6,73043) OTYPE(DIV),
+     *                    (CSMONY(SHRS(DIV,K,DRW,GAM,1),12,VALUNIT),K=1,6)
+                ELSEIF(GTYP.EQ.TBNG) THEN
+                  WRITE(6,73063) DIV,(SHRS(DIV,K,DRW,GAM,1),K=1,3)
+                  WRITE(6,73064)     (SHRS(DIV,K,DRW,GAM,2),K=1,6)
+	        ELSE
+                  WRITE(6,73041)DIV,(SHRS(DIV,K,DRW,GAM,1),K=1,6)
+ 	        ENDIF
+	      ENDIF
+	      LINCNT = LINCNT + 1
+7500	    CONTINUE
+C
+	    IF(CNT .NE. 0)THEN
+	      WRITE(6,7305)
+	      LINCNT = LINCNT + 1
+	    ENDIF
+	    IF(LINCNT.GT.50  .OR.  DRW.EQ.5000)THEN
+	      CALL TITLE('VALIDATION FILE ANALYSIS',
+     *	                 '  ANLVLF',1,6,PAGE,DAYCDC)
+	      WRITE(6,9000)
+	      WRITE(6,7001) GTNAMES(GTYP),GIND
+	      LINCNT = 0
+	    ENDIF
+7600	  CONTINUE
+7800	CONTINUE
+C
+	CALL USRCLOS1(     6)
+C
+	CALL SPOOL('ANLVLF.REP',COPY,ST)
+C
+C     ===================== Format Statements ======================
+C
+9000	FORMAT(1X,131('='))
+1001	FORMAT(X,'HOLE IN BLOCK ',I8,' FROM',I4,' TO',I4)
+1002	FORMAT(X,'BLOCK',I8,'/',I3,' SRL',I5,'/',I9,' *** BAD ',A,I12,
+     *	         ' *** IGNORED')
+1003	FORMAT(X,'BLOCK',I8,'/',I3,' SRL',I5,'/',I9.9,
+     *	         ' ** ON HOLD ',I12,'=AMT')
+6003	FORMAT(/,X,I12,' TOTAL RECORDS IN ',I8,' BLOCKS',/,
+     *	         X,F6.2,'% OF FILE IS USED')
+6004	FORMAT(//,4(X,'# OF RECORDS USING',I2,' SLOTS=',I12,/))
+6005	FORMAT(/,' THERE ARE ',I4,' DUMMY RECORDS IN ',A16)
+6301	FORMAT(////,30('*'),X,' ON FILE FOR ',A8,I1,//,
+     *	         X,10X,7X,'UNCASHED',14X,'CASHED',13X,'CXL/DEL',
+     *                 13X,'HOLD/PR',10X'POST / NOPAY',11X,'BANK PAY',/,
+C     *	               13X,'HOLD/PR',10X'   NOPAY',14X,'CLAIMED ',/,
+     *	         X,10X,6(2X,'COUNT',7X,'AMOUNT'),/)
+6303	FORMAT(/,X,'*  TOTAL *',6(I7,A13))
+7001	FORMAT(//,30('*'),X,' SHARES ON FILE FOR ',A8,I1,//,
+     *	         X,13X,5X,'UNCASHED',6X,'CASHED',5X,'CXL/DEL',
+     *           5X,'HOLD/PR',3X,'    NOPAY',4X,'BANK PAY',/)
+C     *	         3X,'HOLD/PR',1X,'    NOPAY',3X,'CLAIMED',/)
+7304	FORMAT(X,'DRW',I4,' DIV',I2,6I10)
+73041	FORMAT(X,'*TOTAL*',' DIV',I2,6I10)
+73042   FORMAT(X,'DRW',I4,1X,A4,2X,6A12)
+73043   FORMAT(X,'*TOTAL* ',A4,2X,6A12)
+7305	FORMAT(X)
+73061   FORMAT(X,'DRW',I4,' DIV',I2,3I10,30X,' <- Bingo AB')
+73062   FORMAT(X,13X,6I10,' <- Bingo Full House')
+73063   FORMAT(X,'*TOTAL*',' DIV',I2,3I10,30X,' <- Bingo AB')
+73064   FORMAT(X,13X,6A10,' <- Bingo Full House')
+
+C
+	CALL GSTOP(GEXIT_SUCCESS)
+	END

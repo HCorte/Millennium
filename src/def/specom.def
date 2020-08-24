@@ -1,0 +1,84 @@
+C SPECOM.DEF
+C
+C V13 02-SEP-2010 MAC RFSS0145 - ASFIV FILE ADDED
+C V12 13-JAN-2001 CS  Added PASSIVE FOR PORTUGAL
+C V11 29-NOV-2000 UXN Added DTGREC.DEF
+C V10 13-OCT-1999 RXK Added DWRREC.DEF
+C V10 14-MAY-1999 UXN Added DSTREC.DEF
+C V09 15-OCT-1994 HXK Adding / Developing Bingo
+C V08 24-JUN-1993 HXK ADDED INSTANT.DEF
+C V07 11-JUN-1993 HXK removed AGTINF.DEF just for the hell of it!
+C V06 10-JUN-1993 GXA Added AGTINF.DCC
+C V05 09-JUN-1993 HXK Added Ravi game (V65). [D65REC.DEF,L65REC.DEF]
+C V04 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V03 14-NOV-1991 GCAN INITIAL RELEASE FOR THE NETHERLANDS
+C V02 28-FEB-1991 MTK  INITIAL RELEASE FOR MARYLAND
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C
+C SPECIAL SERVICES COMMON BLOCK
+C
+	INCLUDE 'INCLIB:RECAGT.DEF'
+	INCLUDE 'INCLIB:RECDAF.DEF'
+	INCLUDE 'INCLIB:DLTREC.DEF'
+	INCLUDE 'INCLIB:DSPREC.DEF'
+	INCLUDE 'INCLIB:DKKREC.DEF'
+	INCLUDE 'INCLIB:DNBREC.DEF'
+	INCLUDE 'INCLIB:DTSREC.DEF'
+	INCLUDE 'INCLIB:DSCREC.DEF'
+	INCLUDE 'INCLIB:DWIREC.DEF'
+        INCLUDE 'INCLIB:DBNREC.DEF'
+        INCLUDE 'INCLIB:DDBREC.DEF'
+        INCLUDE 'INCLIB:DCPREC.DEF'
+        INCLUDE 'INCLIB:DSSREC.DEF'
+        INCLUDE 'INCLIB:DTRREC.DEF'
+        INCLUDE 'INCLIB:DSTREC.DEF'
+        INCLUDE 'INCLIB:DTGREC.DEF'
+        INCLUDE 'INCLIB:DPAREC.DEF'
+	INCLUDE 'INCLIB:CLERK.DEF'
+	INCLUDE 'INCLIB:RECAGTIV.DEF'           !V13
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2010 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 ASFFDB(7)              !AGENT SALES FILE
+	INTEGER*4 DAFFDB(7)              !DAILY ACTIVITY FILE
+	INTEGER*4 GAMFDB(7,MAXGAM)       !GAME FILES
+	INTEGER*4 CLRKFDB(7)             !CLERK ACCOUNTING FILE
+	INTEGER*4 ASFIVFDB(7)            !AGENT ACCOUNTING FILE   !V13
+C
+C FILE FDBS
+C
+	COMMON/SPECPM/
+     *     DPAREC,
+     *	   ASFFDB,
+     *	   DAFFDB,
+     *	   GAMFDB,
+     *	   CLRKFDB,
+     *     ASFIVFDB,                                !V13
+     *	   ASFREC,
+     *     ASFIVREC,                                !V13
+     *	   DAFREC,
+     *	   DLTREC,
+     *	   DSPREC,
+     *	   DKKREC,
+     *     DNBREC,
+     *	   DTSREC,
+     *	   DSCREC,
+     *	   DWIREC,
+     *	   DTGREC,
+     *	   CLRKREC

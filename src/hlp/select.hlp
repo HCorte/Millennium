@@ -1,0 +1,43 @@
+    SEL.HLP                GTECH Distributed Network
+                             Pitka Snapshot Help               Page 1 of 2
+ 
+    The SEL snapshot contains information about the Pika game.
+    
+    The information displayed includes:
+ 
+    dates         - current date and dates when sales are opened for 
+                    the event
+    game name     - pitka event name   
+    event code    - pitka draw number
+    game          - game status for the draw (open,closed)
+    row           - number of each row
+    team name     - team name associated with row number
+    odds          - odds on each possible outcome (1, X or 2) 
+    cdc           - cdc of draw for each row 
+    date          - date and day name of each draw
+    sts           - status of each row
+    
+    Fields Shown Only When The Event Is Final
+    beginning sales date when the sales were opened
+    ending sales  - date when the sales were closed
+    
+    SEL.HLP                GTECH Distributed Network
+                             Pitka Snapshot Help               Page 2 of 2
+    
+
+    
+    total sales   - total sales for the event
+    total refund  - total refund for the event in the case of cancelled 
+                    rows.
+    net sales     - total sales less total refund
+    winners share - total pool value (70% of net sales)
+    winning amount  total amount for validations
+    winning tax   - n/a
+    winners paid  - total amount validated
+    refunds paid  - total amount refunded
+    amount purged - total amount of validations or refunds that was not
+                    claimed in one year.
+    
+    
+    
+

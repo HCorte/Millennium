@@ -1,0 +1,60 @@
+C
+C X2LODSUB.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2LODSUB.DEV                                 $
+C  $Date::   17 Apr 1996 16:22:12                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 12-SEP-95 DAS INCREASE SIZE OF FILENAME TO 30 A.K.A. LEIPZIG
+C V01 01-DEC-91 XXX RELEASED FOR VAX (NETHERLANDS)
+C
+C This describes the common area used by X2LODSUB.FTN
+C This routine is used only for loading network files,
+C and will allow only 1 file to be opened.  To use more
+C than 1 file at a time use X2XSUBS.
+C
+C RECSPERBKT is the number of records contained in 1 I/O bucket.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  RECSPERBKT
+	PARAMETER (RECSPERBKT=50)
+C
+	INTEGER*4  MAXFIL
+	PARAMETER (MAXFIL=1)
+	INTEGER*4 X2XSEC
+	PARAMETER (X2XSEC=2)
+	CHARACTER X2XNAM(MAXFIL)*30
+C
+	INTEGER*4 LUN
+	INTEGER*4 FDB(7,MAXFIL)
+C
+	INTEGER*4 BKTNUM(MAXFIL)     !BUCKET NUMBER
+	INTEGER*4 BKTCHG(MAXFIL)     !SET TO 1 WHEN A BUCKET HAS BEEN CHANGED
+	INTEGER*4 BUCKET(64*X2XSEC,RECSPERBKT,MAXFIL)
+	INTEGER*4 X2XFIL
+C
+C
+	COMMON /X2LODSUB/FDB,BKTNUM,BKTCHG,BUCKET,X2XFIL,X2XNAM
+C
+C

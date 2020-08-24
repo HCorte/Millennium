@@ -1,0 +1,22 @@
+    TSO.HLP                GTECH Distributed Network
+                           Pitka Odds Snapshot Help          Page 1 of 1
+ 
+    The Pitka odds snapshot is used to display odds information for all 
+    rows in the current and previous Pitka games. 
+    
+    The information displayed includes:
+ 
+    event code    - code number of the event
+    calculated    - shows the calculated odds for each row and outcome
+    odds   
+    fixed odds    - shows the fixed odds for each row and outcome
+    amount bet    - the amount in finnish marks wagered on each row.
+
+
+
+
+
+
+
+
+

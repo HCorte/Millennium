@@ -1,0 +1,22 @@
+    GAM.HLP                GTECH Distributed Network
+                             Game Snapshot Help               Page 1 of 1
+ 
+    The Game snapshot displays all of the current games defined in 
+    the system.
+
+    The information displayed includes:
+ 
+    name          - full name of each game   
+    type          - type of game defined on the system (lotto, Vakio etc)
+    index         - index of each type of game defined
+    number        - number of games defined
+
+
+
+
+
+
+
+
+
+

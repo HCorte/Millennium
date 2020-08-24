@@ -1,0 +1,19 @@
+C VALFIL_OLD.DEF
+C $Log:   GXAFXT:[GOLS]VALFIL_OLD.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:48:56   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   02 Sep 1994 18:15:58   HXK
+C  Merge of May,June RFSS batch 
+C  
+C     Rev 1.1   26 Apr 1994 16:02:14   HXK
+C  CORRECTED VARIABLE NAME TYPO.
+C  
+C     Rev 1.0   26 Apr 1994 15:55:44   HXK
+C  Initial revision.
+C  
+C VALIDATION FILE RECORD DESCRIPTION.
+C
+	INCLUDE 'INCLIB:PRMVLF_OLD.DEF'
+	INTEGER*4 V4BUF_OLD(OLD_VFLEN*4)

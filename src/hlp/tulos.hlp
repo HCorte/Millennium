@@ -1,0 +1,66 @@
+    TUL.HLP                GTECH Distributed Network
+                             Tulos Snapshot Help               Page 1 of 3
+ 
+    The Tulos snapshot contains odds and sales information on all possible     
+    outcomes for defined Tulos events.
+    The information displayed includes:
+ 
+    game index    - Tulos game index (1-6)
+    dates         - current date and dates when sales are opened for 
+                    the event
+    event name    - competitors names   
+    event code    - Tulos draw number
+    home win      - the odds and amount bet on number of goals scored by 
+                    each team, in the event that the home team wins. Rest
+                    field includes all the combinations that are not shown
+    away win      - the odds and amount bet on number of goals scored by 
+                    each team, in the event that the away team wins. Rest
+                    field includes all the combinations that are not shown
+
+   
+
+
+    VOI.HLP                GTECH Distributed Network
+                            Voittaja Snapshot Help             Page 2 of 3
+    
+
+    tie           - the odds and amount bet on number of goals scored by 
+                    each team, in the event that the outcome of the game 
+                    is a tie between both teams. Rest field includes all 
+                    the combinations that are not shown.
+    total sales   - total sales for the event
+    tax           - tax liability
+    roll pot      - n/a 
+    round pool    - n/a 
+    net pool      - 70% of total sales
+    
+    Fields Shown Only When The Event Is Final.
+    teams         - competitors names
+    score         - outcome of the event 
+    odds          - odds used for payouts calculation
+    amount bet    - Total amount bet on winning outcome
+    beginning     - date when the sales were opened
+    sales
+    
+    VOI.HLP                GTECH Distributed Network
+                            Voittaja Snapshot Help             Page 3 of 3
+
+
+
+    ending sales  - date when the sales were closed
+    draw date     - winner selection date
+    total sales   - total sales for the event
+    total refund  - total refund for the event in the case of a cancelled 
+                    event
+    net sales     - same as total sales 
+    winners share - total pool value (70% of net sales)
+    winning amount  winning and total amount for validations
+    rounding pot  - rounding amount created during calculating prizes
+    roll pot      - n/a
+    winning tax   - n/a
+    winners paid  - total amount validated
+    refunds paid  - total amount refunded
+    amount purged - total amount of validations or refunds that was not
+                    claimed in one year.
+    
+    

@@ -1,0 +1,20 @@
+$! GXSRC:YEAREND.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]YEAREND.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 21:03:26   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 14:24:28   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:56:18   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:YEAREND.EXE -
+OBJLIB:YEAREND,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

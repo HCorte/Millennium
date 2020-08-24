@@ -1,0 +1,79 @@
+C SSFREC.DEF
+C $Log:   GXAFXT:[GOLS]SSFREC.DEV  $
+C  
+C SUPERSCORE POOL FILE RECORD DESCRIPTION
+C
+C
+C     SSFLAMT                             1   ;LOWEST COMBINATION AMOUNT
+C     SSFFEL                              1   ;LINK TO FIRST COMBINATION
+C     SSFLEL                              1   ;LINK TO LAST COMBINATION
+C     SSFTNUM                             1   ;NUMBER OF ENTRIES IN TOP ARRAY
+C     SSFONUM                             1   ;NUMBER OF RECORDS IN THE POOL
+C                                             ; OVERFLOW FILE
+C     SSFCMB                              1   ;NUMBER OF PLAYED COMBINATIONS
+C     SSFDCMB                             1   ;NUMBER OF DROPPED COMBINATIONS
+C     SSFMAIN(SSGPOL)                262144   ;MAIN POOL ARRAY
+C     SSFCAMT(SSGPOL)                262144   ;COMBINATION AMOUNT ARRAY
+C     SSFTOPC(SSGTPS,SSGTOP)           1016   ;TOP COMBINATIONS ARRAY
+C     SSFNBA	                          1   ;NUMBER OF BUCKETS ASSIGNED
+C     SSFNBU                              1   ;MAX NUMBER OF BUCKETS USED
+C     
+C     SSFFREE                           255  
+C                                    
+C                            TOTAL   525568 I*4 (=4106 512B VAX SECTORS)        
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4 SSFLEN,SSFSEC
+	PARAMETER (SSFLEN=525568)      !LENGTH IN FULL WORDS
+	PARAMETER (SSFSEC=SSFLEN/64)   !LENGTH IN SECTORS
+C
+        INTEGER*4 SSFREC(SSFLEN)       !RECORD
+C
+        INTEGER*4 SSFLAMT,SSFFEL,SSFLEL,SSFTNUM,SSFONUM
+	INTEGER*4 SSFCMB,SSFDCMB,SSFNBA,SSFNBU
+        INTEGER*4 SSFMAIN(SSGPOL),SSFCAMT(SSGPOL)
+        INTEGER*4 SSFTOPC(SSGTPS,SSGTOP)
+C
+        INTEGER*4 SSFLAMT_OFF, SSFFEL_OFF, SSFLEL_OFF, SSFTNUM_OFF
+        INTEGER*4 SSFONUM_OFF, SSFCMB_OFF, SSFDCMB_OFF
+	INTEGER*4 SSFNBA_OFF,  SSFNBU_OFF 
+	INTEGER*4 SSFMAIN_OFF, SSFCAMT_OFF, SSFTOPC_OFF
+
+        PARAMETER (SSFLAMT_OFF = 1)
+        PARAMETER (SSFFEL_OFF  = SSFLAMT_OFF + 1 )
+        PARAMETER (SSFLEL_OFF  = SSFFEL_OFF  + 1 )
+	PARAMETER (SSFTNUM_OFF = SSFLEL_OFF  + 1 )
+	PARAMETER (SSFONUM_OFF = SSFTNUM_OFF + 1 )
+	PARAMETER (SSFCMB_OFF  = SSFONUM_OFF + 1 )
+	PARAMETER (SSFDCMB_OFF = SSFCMB_OFF  + 1 )
+	PARAMETER (SSFNBA_OFF  = SSFDCMB_OFF + 1 )
+	PARAMETER (SSFNBU_OFF  = SSFNBA_OFF  + 1 )
+	PARAMETER (SSFMAIN_OFF = SSFNBU_OFF  + 1 )
+        PARAMETER (SSFCAMT_OFF = SSFMAIN_OFF + SSGPOL)
+        PARAMETER (SSFTOPC_OFF = SSFCAMT_OFF + SSGPOL)
+     
+        EQUIVALENCE (SSFLAMT,SSFREC(SSFLAMT_OFF))       
+        EQUIVALENCE (SSFFEL, SSFREC(SSFFEL_OFF ))       
+        EQUIVALENCE (SSFLEL, SSFREC(SSFLEL_OFF ))       
+        EQUIVALENCE (SSFTNUM,SSFREC(SSFTNUM_OFF))       
+        EQUIVALENCE (SSFONUM,SSFREC(SSFONUM_OFF)) 
+        EQUIVALENCE (SSFCMB, SSFREC(SSFCMB_OFF )) 
+        EQUIVALENCE (SSFDCMB,SSFREC(SSFDCMB_OFF)) 
+        EQUIVALENCE (SSFNBA, SSFREC(SSFNBA_OFF )) 
+        EQUIVALENCE (SSFNBU, SSFREC(SSFNBU_OFF )) 
+        EQUIVALENCE (SSFMAIN,SSFREC(SSFMAIN_OFF))       
+        EQUIVALENCE (SSFCAMT,SSFREC(SSFCAMT_OFF))       
+        EQUIVALENCE (SSFTOPC,SSFREC(SSFTOPC_OFF))       
+

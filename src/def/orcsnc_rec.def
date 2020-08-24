@@ -1,0 +1,39 @@
+C V01 08-SEP-2003 CMB  INITIAL RELEASE FOR PORTAL-PJMC
+C
+C RECORD LAYOUT FOR ORCSNC_<C/P>_EEAAAA.ASC
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1998 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+
+CDEC$ OPTIONS /WARNING = NOALIGNMENT
+
+        STRUCTURE /ORCSNC_STRUC/
+            INTEGER*4    LUN
+	    CHARACTER*10 DTHD
+            CHARACTER*2  RECTYP
+            INTEGER*4    GTYP
+            INTEGER*4    EMIS
+C            INTEGER*4    INDPAS
+C            INTEGER*4    INDEMI
+            INTEGER*4    ST
+            
+            INTEGER*4   TICNUM
+            INTEGER*4   TICSER
+        END STRUCTURE
+
+        RECORD /ORCSNC_STRUC/ ORCSNC_REC
+
+
+CDEC$ END OPTIONS
+

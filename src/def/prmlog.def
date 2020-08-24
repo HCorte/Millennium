@@ -1,0 +1,58 @@
+C PRMLOG.DEF
+C $Log:   GXAFXT:[GOLS]PRMLOG.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:30:50   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.2   03 May 1993 10:07:02   STUART
+C  Restored Baseline version
+C  
+C     Rev 1.1   31 Mar 1993 14:46:36   HUY
+C  Initial Release for Vax.
+C
+C     Rev 1.0   21 Jan 1993 18:49:52   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 07-OCT-91 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C FORTRAN LOGCOM SIZE PARAMETERS
+C
+C LOGGER BUFFER PARAMETERS
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  LOGLEN, NUMLOG, DBLOCK
+	PARAMETER (LOGLEN=2054)   !LOGGER BUFFER LENGTH
+	PARAMETER (NUMLOG=16)     !NUMBER OF LOGGER BUFFERS
+	PARAMETER (DBLOCK=2048)   !DISK BLOCK SIZE
+C
+C TRANSACTION RECORD PARAMETERS
+C
+	INTEGER*4  LREC, LMUREC, LBLK, LHDR
+	PARAMETER (LREC=16)       !SIZE OF LOG RECORD
+	PARAMETER (LMUREC=LREC*3) !SIZE OF LARGEST MULTIPLE LOG RECORD
+	PARAMETER (LBLK=125)      !NUMBER OF RECORDS IN A BLOCK
+	PARAMETER (LHDR=16)       !SIZE OF DISK RECORD HEADER
+C
+C LOG RECORD TYPES
+C
+	INTEGER*4 LREG, LONE, LTWO, LEND
+	PARAMETER (LREG=1)        !SINGLE RECORD TRANSACTION
+	PARAMETER (LONE=2)        !FIRST RECORD OF A MULTI RECORD TRANS
+	PARAMETER (LTWO=3)        !SECOND RECORD OF A MULTI RECORD TRANS
+	PARAMETER (LEND=4)        !LAST RECORD OF A MULTI RECORD TRANS

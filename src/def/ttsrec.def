@@ -1,0 +1,249 @@
+C TTSREC.DEF
+C $Log:   GXAFXT:[GOLS]TTSREC.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:39:52   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.5   04 Mar 1994 23:05:54   HXK
+C  ADDED TTSWTOP.
+C  
+C     Rev 1.4   20 Oct 1993 11:23:24   HXK
+C  PUT IN OTHER xSD's.
+C  
+C     Rev 1.3   19 Oct 1993 12:03:26   HXK
+C  CHANGED SBD TO INCLUDE COUNTS AS WEEL AS AMOUNTS.
+C  
+C     Rev 1.2   07 Sep 1993 13:28:00   HXK
+C  Made TTSTVC longer for all events
+C  
+C     Rev 1.1   29 Jun 1993 18:13:10   GXA
+C  Released for Finland Dec Conversion / Oddset.
+C  
+C     Rev 1.0   21 Jan 1993 18:54:32   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V04 04-SEP-92 HDB  ADDED TTSPRC TO MAKE FILE SAME AS DTSREC.DEF !
+C V03 02-SEP-92 GCAN ADDED EVENT DRAW DATE FOR POSTPONED WINNER SELECTION.
+C V02 07-OCT-91 MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX  RELEASED FOR VAX
+C
+C TOTO SELECT VERIFICATION FILE RECORD LAYOUT (DISK)
+C
+C
+C     TTSSTS                            ! GAME STATUS                     1
+C     TTSWEK                            ! WEEK NUMBER                     1
+C     TTSDAT(MAXSRW)                    ! DRAW DATE                      40
+C     TTSDRW                            ! DRAW NUMBER                     1
+C     TTSBSD                            ! BEGINNING SALES DATE            1
+C     TTSESD                            ! ENDING SALES DATE               1
+C     TTSPUP                            ! LAST PURGE UPDATE   (FILE ONLY) 1
+C     TTSUPD                            ! LAST FILE UPDATE    (FILE ONLY) 1
+C     TTSCTM(MAXSRW)                    ! ACTUAL TIME WHEN CLOSED        40
+C     TTSTIM(MAXSRW)                    ! TIME WHEN GAME SHOULD CLOSE    40
+C     TTSBRK                            ! BREAKAGE AMOUNT                 1
+C     TTSSAL                            ! TOTAL SALES                     1
+C     TTSPAD                            ! PRIZES PAID + REFUNDS           1
+C     TTSPRG                            ! PRIZES PURGED                   1
+C     TTSPRF                            ! PAID REFUNDS                    1
+C     TTSREF                            ! TOTAL REFUND AMOUNT             1
+C     TTSWON                            ! PRIZES WON                      1
+C     TTSWBD(TSLDIV,NUMTOT)             ! AMOUNT WON BY DIVISION          4
+C     TTSRBD(TSLDIV,NUMTOT)             ! REFUNDS BY DIVISION             4
+C     TTSPBD(TSLDIV,NUMTOT)             ! PAID BY DIVISION                4
+C     TTSTBD(TSLDIV)                    ! WINNING TAX BY DIVISION         4
+C     TTSSBD(TSLDIV,NUMTOT)             ! SALES BY DIVISION               4
+C     TTSODS(3,MAXSRW)                  ! TOTOSELECT ODDS BY ROW (1,2,3)120
+C     TTSWIN(MAXSRW)                    ! WINNING RESULTS                40
+C     TTSHLD(MAXSRW)                    ! RESULTS HOLD                   40
+C     TTSTAX                            ! WINNING TAXES                   1
+C     TTSOTX(NUMTOT)                    ! OVER TAX LIMIT                  2
+C     TTSMID(NUMTOT)                    ! >REDMIN <REDMAX                 2
+C     TTSUTX(NUMTOT)                    ! UNDER TAX LIMIT                 2
+C     TTSHST                            ! HIGHEST WINNER FOR THIS GAME    1
+C     TTSORM(NUMTOT)                    ! OVER REDMAX                     2
+C     TTSNMS(TNMS_LEN/4,2,MAXSRW)       ! TEAM NAMES (HOME,AWAY)        320
+C     TTSSTA(MAXSRW)                    ! ROW STATUS                     40
+C     TTSREV                            ! REV #                           1
+C     TTSPFN(5)                         ! POOL FILE NAME                  5
+C     TTSTOP(2,30)                      ! TOP 30 COMBINATIONS            60
+C     TTSRWS                            ! ACTUAL NUMBER OF ROWS USED      1
+C     TTSCMB                            ! NUMBER OF PLAYED COMB. TODAY    1
+C     TTSPRC                            ! BASE PRICE                      1
+C     TTSDTE                            ! EVENT DRAW DATE                 1
+C     TTSTVC(TTVC_LEN/4,MAXSRW)         ! TV-CHANEL NAME                  4
+C     TTSMDS(MAXMLTD_AVL)               ! MULTI DRAW SELECTED TABLE
+C                                         (52 BYTE / 4 = 13)
+C     TTSWTOP(2,100)                    ! TOP 100 LIABILITIES           100
+C
+C TOTO SELECT GAME FILE PARAMETERS
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+        INTEGER*4 TTSSTS,TTSWEK,TTSDRW
+        INTEGER*4 TTSDAT(MAXSRW),TTSBSD
+        INTEGER*4 TTSESD,TTSPUP
+        INTEGER*4 TTSUPD,TTSCTM(MAXSRW)
+        INTEGER*4 TTSTIM(MAXSRW),TTSBRK
+        INTEGER*4 TTSSAL,TTSPAD
+        INTEGER*4 TTSPRG,TTSPRF
+        INTEGER*4 TTSREF,TTSWON
+        INTEGER*4 TTSWBD(TSLDIV,NUMTOT),TTSRBD(TSLDIV,NUMTOT)
+        INTEGER*4 TTSPBD(TSLDIV,NUMTOT),TTSTBD(TSLDIV)
+        INTEGER*4 TTSSBD(TSLDIV,NUMTOT),TTSODS(3,MAXSRW)
+        INTEGER*4 TTSWIN(MAXSRW),TTSHLD(MAXSRW)
+        INTEGER*4 TTSTAX,TTSOTX(NUMTOT)
+        INTEGER*4 TTSMID(NUMTOT),TTSUTX(NUMTOT)
+        INTEGER*4 TTSHST,TTSORM(NUMTOT)
+        INTEGER*4 TTSNMS(TNMS_LEN/4,2,MAXSRW)
+        INTEGER*4 TTSSTA(MAXSRW),TTSREV
+        INTEGER*4 TTSPFN(5),TTSTOP(2,30),TTSRWS
+        INTEGER*4 TTSCMB,TTSPRC,TTSDTE
+        INTEGER*4 TTSTVC(TTVC_LEN/4,MAXSRW)
+        INTEGER*4 TTSWTOP(2,100)
+C
+        BYTE      TTSMDS(MAXMLTD_AVL)
+C
+C OFFSET PARAMETERS AND EQUIVALENCES
+C
+        INTEGER*4 TTSSTS_OFF, TTSWEK_OFF, TTSDAT_OFF, TTSDRW_OFF
+        PARAMETER(TTSSTS_OFF = 1)                                       !001
+        PARAMETER(TTSWEK_OFF = TTSSTS_OFF + 1)                          !002
+        PARAMETER(TTSDAT_OFF = TTSWEK_OFF + 1)                          !003
+        PARAMETER(TTSDRW_OFF = TTSDAT_OFF + MAXSRW)                     !043
+C
+        INTEGER*4 TTSBSD_OFF, TTSESD_OFF, TTSPUP_OFF, TTSUPD_OFF
+        PARAMETER(TTSBSD_OFF = TTSDRW_OFF + 1)                          !044
+        PARAMETER(TTSESD_OFF = TTSBSD_OFF + 1)                          !045
+        PARAMETER(TTSPUP_OFF = TTSESD_OFF + 1)                          !046
+        PARAMETER(TTSUPD_OFF = TTSPUP_OFF + 1)                          !047
+C
+        INTEGER*4 TTSCTM_OFF, TTSTIM_OFF, TTSBRK_OFF, TTSSAL_OFF
+        PARAMETER(TTSCTM_OFF = TTSUPD_OFF + 1)                          !048
+        PARAMETER(TTSTIM_OFF = TTSCTM_OFF + MAXSRW)                     !088
+        PARAMETER(TTSBRK_OFF = TTSTIM_OFF + MAXSRW)                     !128
+        PARAMETER(TTSSAL_OFF = TTSBRK_OFF + 1)                          !129
+C
+        INTEGER*4 TTSPAD_OFF, TTSPRG_OFF, TTSPRF_OFF, TTSREF_OFF
+        PARAMETER(TTSPAD_OFF = TTSSAL_OFF + 1)                          !130
+        PARAMETER(TTSPRG_OFF = TTSPAD_OFF + 1)                          !131
+        PARAMETER(TTSPRF_OFF = TTSPRG_OFF + 1)                          !132
+        PARAMETER(TTSREF_OFF = TTSPRF_OFF + 1)                          !133
+C
+        INTEGER*4 TTSWON_OFF, TTSWBD_OFF, TTSRBD_OFF, TTSPBD_OFF
+        PARAMETER(TTSWON_OFF = TTSREF_OFF + 1)                          !134
+        PARAMETER(TTSWBD_OFF = TTSWON_OFF + 1)                          !135
+        PARAMETER(TTSRBD_OFF = TTSWBD_OFF + TSLDIV*NUMTOT)
+        PARAMETER(TTSPBD_OFF = TTSRBD_OFF + TSLDIV*NUMTOT)
+C
+        INTEGER*4 TTSTBD_OFF, TTSSBD_OFF, TTSODS_OFF, TTSWIN_OFF
+        PARAMETER(TTSTBD_OFF = TTSPBD_OFF + TSLDIV*NUMTOT)
+        PARAMETER(TTSSBD_OFF = TTSTBD_OFF + TSLDIV)                     !151
+        PARAMETER(TTSODS_OFF = TTSSBD_OFF + TSLDIV*NUMTOT)              !155
+        PARAMETER(TTSWIN_OFF = TTSODS_OFF + 3*MAXSRW)                   !????
+C
+        INTEGER*4 TTSHLD_OFF, TTSTAX_OFF, TTSOTX_OFF, TTSMID_OFF
+        PARAMETER(TTSHLD_OFF = TTSWIN_OFF + MAXSRW)                     !315
+        PARAMETER(TTSTAX_OFF = TTSHLD_OFF + MAXSRW)                     !355
+        PARAMETER(TTSOTX_OFF = TTSTAX_OFF + 1)                          !356
+        PARAMETER(TTSMID_OFF = TTSOTX_OFF + NUMTOT)                     !358
+C
+        INTEGER*4 TTSUTX_OFF, TTSHST_OFF, TTSORM_OFF, TTSNMS_OFF
+        PARAMETER(TTSUTX_OFF = TTSMID_OFF + NUMTOT)                     !360
+        PARAMETER(TTSHST_OFF = TTSUTX_OFF + NUMTOT)                     !362
+        PARAMETER(TTSORM_OFF = TTSHST_OFF + 1)                          !363
+        PARAMETER(TTSNMS_OFF = TTSORM_OFF + NUMTOT)                     !365
+C
+        INTEGER*4 TTSSTA_OFF, TTSREV_OFF, TTSPFN_OFF, TTSTOP_OFF
+        PARAMETER(TTSSTA_OFF = TTSNMS_OFF + ((TNMS_LEN/4)*2*MAXSRW))    !685
+        PARAMETER(TTSREV_OFF = TTSSTA_OFF + MAXSRW)                     !725
+        PARAMETER(TTSPFN_OFF = TTSREV_OFF + 1)                          !726
+        PARAMETER(TTSTOP_OFF = TTSPFN_OFF + 5)                          !731
+C
+        INTEGER*4 TTSRWS_OFF, TTSCMB_OFF, TTSPRC_OFF, TTSDTE_OFF
+        PARAMETER(TTSRWS_OFF = TTSTOP_OFF + (2*30))                     !791
+        PARAMETER(TTSCMB_OFF = TTSRWS_OFF + 1)                          !792
+        PARAMETER(TTSPRC_OFF = TTSCMB_OFF + 1)                          !793
+        PARAMETER(TTSDTE_OFF = TTSPRC_OFF + 1)                          !794
+C
+        INTEGER*4 TTSTVC_OFF, TTSMDS_OFF, TTSWTOP_OFF
+        PARAMETER(TTSTVC_OFF = TTSDTE_OFF + 1)                          !795
+        PARAMETER(TTSMDS_OFF = TTSTVC_OFF + (TTVC_LEN/4)*MAXSRW)        !835
+        PARAMETER(TTSWTOP_OFF = TTSMDS_OFF + (MAXMLTD_AVL/4))           !809
+C
+        INTEGER*4 TTSFRE_OFF
+        PARAMETER(TTSFRE_OFF = TTSWTOP_OFF + (2*100))                          
+C
+C CALCULATE FREE SPACE BASED ON MACHINE DEPENDENT SECTOR SIZES.
+C SHOULD ALLWAYS ADD UP TO A EVEN SECTOR SIZE BYTES (VAX 512).
+C NOTE! IN CALCULATIONS, FRE_OFF-2 IS DONE TO TAKE CARE OF WHEN THE DATA SIZE
+C       ENDS ON A EVEN SECTOR SIZE.
+C
+        INTEGER*4 TTSSEC_VAX, TTSSEC_NUM
+        PARAMETER (TTSSEC_VAX = SECSIZE/4)
+        PARAMETER (TTSSEC_NUM = NINT(FLOAT((TTSFRE_OFF-2)/TTSSEC_VAX)+.5))
+C
+        INTEGER*4 TTSLEN, TTSSEC
+        PARAMETER(TTSLEN = TTSSEC_VAX * TTSSEC_NUM)        ! even sector size
+        PARAMETER(TTSSEC = TTSLEN/64)
+C
+        INTEGER*4 TTSREC(TTSLEN)
+C
+        EQUIVALENCE(TTSSTS,TTSREC(TTSSTS_OFF))
+        EQUIVALENCE(TTSWEK,TTSREC(TTSWEK_OFF))
+        EQUIVALENCE(TTSDAT,TTSREC(TTSDAT_OFF))
+        EQUIVALENCE(TTSDRW,TTSREC(TTSDRW_OFF))
+        EQUIVALENCE(TTSBSD,TTSREC(TTSBSD_OFF))
+        EQUIVALENCE(TTSESD,TTSREC(TTSESD_OFF))
+        EQUIVALENCE(TTSPUP,TTSREC(TTSPUP_OFF))
+        EQUIVALENCE(TTSUPD,TTSREC(TTSUPD_OFF))
+        EQUIVALENCE(TTSCTM,TTSREC(TTSCTM_OFF))
+        EQUIVALENCE(TTSTIM,TTSREC(TTSTIM_OFF))
+        EQUIVALENCE(TTSBRK,TTSREC(TTSBRK_OFF))
+        EQUIVALENCE(TTSSAL,TTSREC(TTSSAL_OFF))
+        EQUIVALENCE(TTSPAD,TTSREC(TTSPAD_OFF))
+        EQUIVALENCE(TTSPRG,TTSREC(TTSPRG_OFF))
+        EQUIVALENCE(TTSPRF,TTSREC(TTSPRF_OFF))
+        EQUIVALENCE(TTSREF,TTSREC(TTSREF_OFF))
+        EQUIVALENCE(TTSWON,TTSREC(TTSWON_OFF))
+        EQUIVALENCE(TTSWBD,TTSREC(TTSWBD_OFF))
+        EQUIVALENCE(TTSRBD,TTSREC(TTSRBD_OFF))
+        EQUIVALENCE(TTSPBD,TTSREC(TTSPBD_OFF))
+        EQUIVALENCE(TTSTBD,TTSREC(TTSTBD_OFF))
+        EQUIVALENCE(TTSSBD,TTSREC(TTSSBD_OFF))
+        EQUIVALENCE(TTSODS,TTSREC(TTSODS_OFF))
+        EQUIVALENCE(TTSWIN,TTSREC(TTSWIN_OFF))
+        EQUIVALENCE(TTSHLD,TTSREC(TTSHLD_OFF))
+        EQUIVALENCE(TTSTAX,TTSREC(TTSTAX_OFF))
+        EQUIVALENCE(TTSOTX,TTSREC(TTSOTX_OFF))
+        EQUIVALENCE(TTSMID,TTSREC(TTSMID_OFF))
+        EQUIVALENCE(TTSUTX,TTSREC(TTSUTX_OFF))
+        EQUIVALENCE(TTSHST,TTSREC(TTSHST_OFF))
+        EQUIVALENCE(TTSORM,TTSREC(TTSORM_OFF))
+        EQUIVALENCE(TTSNMS,TTSREC(TTSNMS_OFF))
+        EQUIVALENCE(TTSSTA,TTSREC(TTSSTA_OFF))
+        EQUIVALENCE(TTSREV,TTSREC(TTSREV_OFF))
+        EQUIVALENCE(TTSPFN,TTSREC(TTSPFN_OFF))
+        EQUIVALENCE(TTSTOP,TTSREC(TTSTOP_OFF))
+        EQUIVALENCE(TTSRWS,TTSREC(TTSRWS_OFF))
+        EQUIVALENCE(TTSCMB,TTSREC(TTSCMB_OFF))
+        EQUIVALENCE(TTSPRC,TTSREC(TTSPRC_OFF))
+        EQUIVALENCE(TTSDTE,TTSREC(TTSDTE_OFF))
+        EQUIVALENCE(TTSTVC,TTSREC(TTSTVC_OFF))
+        EQUIVALENCE(TTSMDS,TTSREC(TTSMDS_OFF))
+        EQUIVALENCE(TTSWTOP,TTSREC(TTSWTOP_OFF))

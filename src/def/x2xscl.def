@@ -1,0 +1,442 @@
+C
+C X2XSCL.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XSCL.DEV                                   $
+C  $Date::   17 Apr 1996 16:45:00                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V11 15-JUN-00 UXN COMMON/X2XSCL_NAME/ X2XSCL_NAME added.
+C V10 22-aug-95 das Modified to handle background downloads
+C V09 29-DEC-94 WJK MOVE UNSOLICITED STATION CONNECT AND DISCONNECT FROM GLOBAL
+C                   TO STATION CLASS
+C V08 12-DEC-94 DAS Integrate UK changes into X2X Baseline
+C V07 01-NOV-94 GPR Add ! to fields which require RUNSYS and $ to
+C		    fields which require X2BLDNET to take effect
+C V06 26-OCT-94 GPR Added field to define network port optimization
+C V05 20-OCT-94 GPR Added field to define unsolicited messages
+C V04 22-SEP-94 GPR Added field to define dial backup type
+C V03 21-JUL-94 WS MULTINETWORK CHANGES
+C V02 28-APR-94 XXX MOVE STATION CLASS MEMORY ARRAY TO X2XCOM
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C The DEF describes the variables which are contained in the
+C X2X Station Class file.
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XSCL_ENTRIES counter, the X2XSCL_FIELD, and
+C        the X2XSCL_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+	INTEGER*4   X2XSCL_REC_LEN
+	PARAMETER   (X2XSCL_REC_LEN=128)
+	INTEGER*4   X2XSCL_REC(X2XSCL_REC_LEN)       !Record buffer
+	CHARACTER   X2XSCL_CREC(X2XSCL_REC_LEN*4)*1  !Record buffer
+	EQUIVALENCE (X2XSCL_REC, X2XSCL_CREC)
+C
+	INTEGER*4   X2XSCL_SECT         !Number of sectors per rec
+	PARAMETER  (X2XSCL_SECT=2)
+	CHARACTER   X2XSCL_NAME*10      !Global Setup file name
+	DATA        X2XSCL_NAME /'X2XSCL.FIL'/
+	COMMON/X2XSCL_NAME/ X2XSCL_NAME
+	INTEGER*4   X2XSCL_FDB(7)       !File descriptor block
+	DATA        X2XSCL_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XSCL_CLASS            !Station class
+	CHARACTER   X2XSCL_DESC*12          !Station class name
+	INTEGER*4   X2XSCL_INTIM            !Incall timer
+	INTEGER*4   X2XSCL_OUTTIM           !Outcall timer
+	INTEGER*4   X2XSCL_RESTIM           !Response timer
+	INTEGER*4   X2XSCL_INTTIM           !Intertrans timer
+	INTEGER*4   X2XSCL_STSTIM           !Statistics timer
+	INTEGER*4   X2XSCL_MSTENA           !Master enable
+	INTEGER*4   X2XSCL_RETRY            !Station retry limit
+	INTEGER*4   X2XSCL_PROTO            !Protocol
+	INTEGER*4   X2XSCL_PRTCNT           !Station port count
+	INTEGER*4   X2XSCL_TYPE             !Type of station (1=X.21,2=X.25)
+	INTEGER*4   X2XSCL_DELACK           !Delivery acknowledge
+	INTEGER*4   X2XSCL_ERRREP           !Error reporting
+	INTEGER*4   X2XSCL_STNDIS           !Station disconnect
+	INTEGER*4   X2XSCL_FEDIS            !Front End disconnect
+	INTEGER*4   X2XSCL_NETPORT(7)
+	INTEGER*4   X2XSCL_NETPT1           !Network port (specific)
+	EQUIVALENCE (X2XSCL_NETPT1,X2XSCL_NETPORT)
+	INTEGER*4   X2XSCL_NETPT2           !Network port (specific)
+	INTEGER*4   X2XSCL_NETPT3           !Network port (specific)
+	INTEGER*4   X2XSCL_NETPT4           !Network port (specific)
+	INTEGER*4   X2XSCL_NETPT5           !Network port (specific)
+	INTEGER*4   X2XSCL_NETPT6           !Network port (specific)
+	INTEGER*4   X2XSCL_NETPT7           !Network port (specific)
+	INTEGER*4   X2XSCL_POLTIM           !Network port (specific)
+	INTEGER*4   X2XSCL_ADDLEN           !Address length
+	INTEGER*4   X2XSCL_NETSTAT          !Network statistics
+	INTEGER*4   X2XSCL_AUTOUPD          !Auto updated poll status
+	INTEGER*4   X2XSCL_BAUD             !Speed of communications
+	INTEGER*4   X2XSCL_TTN_PORT1        !TITAN parameters for port 1
+	INTEGER*4   X2XSCL_TTN_PORT2        !TITAN parameters for port 2
+	INTEGER*4   X2XSCL_SITE1            !Site for network port assignment
+	INTEGER*4   X2XSCL_SITE2            !Site for network port assignment
+	INTEGER*4   X2XSCL_SITE3            !Site for network port assignment
+	INTEGER*4   X2XSCL_SITE4            !Site for network port assignment
+	INTEGER*4   X2XSCL_SITE5            !Site for network port assignment
+	INTEGER*4   X2XSCL_SITE6            !Site for network port assignment
+	INTEGER*4   X2XSCL_SITE7            !Site for network port assignment
+	INTEGER*4   X2XSCL_DIALENA          !Dialup enable flag
+	INTEGER*4   X2XSCL_DIAL_PORT1       !Dialup port (specific)
+	INTEGER*4   X2XSCL_DIAL_PORT2       !Dialup port (specific)
+        INTEGER*4   X2XSCL_L2TOUT           !Level 2 timeout
+        INTEGER*4   X2XSCL_DISX25ROM        !Override disconnection mode x25 rom
+        INTEGER*4   X2XSCL_DISDUPROM        !Override disconnection mode dup rom
+        INTEGER*4   X2XSCL_DISX25RAM        !Override disconnection mode x25 ram
+        INTEGER*4   X2XSCL_DISDUPRAM        !Override disconnection mode dup ram
+        INTEGER*4   X2XSCL_X32_PORT1        !X.32 port (specific)
+        INTEGER*4   X2XSCL_X32_PORT2        !X.32 port (specific)
+        INTEGER*4   X2XSCL_X32_SITE1        !X.32 port (specific)
+        INTEGER*4   X2XSCL_X32_SITE2        !X.32 port (specific)
+        INTEGER*4   X2XSCL_SLPTIME          !night game sleep time
+        INTEGER*4   X2XSCL_AFTMAX           !after hours max. counter
+        INTEGER*4   X2XSCL_NAAS_LENGTH      !Message length
+        CHARACTER*1 X2XSCL_NAAS_TEXT(16)    !NAAS message text
+        INTEGER*4   X2XSCL_EVSN_LEN         !Extended Ver Seq. Length
+        INTEGER*4   X2XSCL_CLOCK            !Clock (0-internal,1-external)
+        INTEGER*4   X2XSCL_SYNC             !(O-Async, 1-Sync)
+        INTEGER*4   X2XSCL_ABS_DISC_TIM     !Absolute disconnect timer (minutes)
+	INTEGER*4   X2XSCL_DIAL_OV_OVERRIDE !OV bit for dial up ( from Ireland)
+	INTEGER*4   X2XSCL_SUBNETWORK	    !Subnetwork number for class - V03
+	INTEGER*4   X2XSCL_BCST_RETRY_INTERVAL !RETRY INTERVAL IN SECS - V03
+	INTEGER*4   X2XSCL_BCST_RETRY_LIMIT  !NO OF TRIES (0 FOR EVER) - V03
+	INTEGER*4   X2XSCL_BCST_AUTO_REPORT  !STATION REPORTS - V03
+	INTEGER*4   X2XSCL_BCST_ENABLE1      !ENABLE  BCST1 PORT - V03
+	INTEGER*4   X2XSCL_BCST_ENABLE2      !ENABLE  BCST2 PORT - V03
+	INTEGER*4   X2XSCL_BCST_NET_PORT1    !NETWORK PORT 1 - V03
+	INTEGER*4   X2XSCL_BCST_NET_PORT2    !NETWORK PORT 2 - V03
+	INTEGER*4   X2XSCL_REPCLS	     !Report class
+	INTEGER*4   X2XSCL_DEF_PORT_OVERRIDE!default port to use
+	INTEGER*4   X2XSCL_MAX_THRUPUT	    !Maximum thruput
+	INTEGER*4   X2XSCL_DIAL_TYPE	    !Dial backup type used?	!V04
+	INTEGER*4   X2XSCL_UNSO_MSGS	    !Unsolicied messages?	!V05
+	INTEGER*4   X2XSCL_OPTIMIZE_SITES   !Optimize network ports?	!V06
+	INTEGER*4   X2XSCL_MAX_THRUPUT_SEND !Maximum no of unso/sec
+        INTEGER*4   X2XSCL_UNSSTCON         ! V09 Unsolicited station connect
+        INTEGER*4   X2XSCL_UNSSTDIS         ! V09 Unsolicited station disconnect
+C..V10
+        CHARACTER*1 X2XSCL_ROMREV1(4)       !ROM revision first app     !V10
+        CHARACTER*1 X2XSCL_ROMREV2(4)       !ROM revision second app    !V10
+        CHARACTER*1 X2XSCL_ROMREV3(4)       !ROM revision third app     !V10
+        INTEGER*4   X2XSCL_DLL_USE_ENVELOPE !Use "envelope" for downloading
+        INTEGER*4   X2XSCL_REQ_BACKGROUND_DELAY !Delay before next request
+        INTEGER*4   X2XSCL_DLL_ENABLE_BACKGROUND!Stop bAckground download
+        INTEGER*4   X2XSCL_DLL_BACKGROUND_FLAG !Use background download mode
+        INTEGER*4   X2XSCL_ENABLE_TEST_DLL  !Enable test load (to use the load
+C                                           !in the terminal)
+        INTEGER*4   X2XSCL_REQ_FORGROUND_DELAY   !Delay before next request
+        INTEGER*4   X2XSCL_DLL_ENABLE_FORGROUND !Stop bAckground download
+C..V10
+	INTEGER*4   X2XSCL_UPDATE           !Last date updated
+	INTEGER*4   X2XSCL_FREE(35)         !Free space			!V09
+	INTEGER*4   X2XSCL_BITMAP           !Modified fields flag
+	INTEGER*4   X2XSCL_BITMAP2          !Modified fields flag
+	INTEGER*4   X2XSCL_BITMAP3          !Modified fields flag
+	INTEGER*4   X2XSCL_BITMAP4          !Modified fields flag
+C
+	INTEGER*4   X2XSCL_TTN(2)
+	EQUIVALENCE (X2XSCL_TTN(1), X2XSCL_TTN_PORT1)
+	INTEGER*4   X2XSCL_SITE(7)
+	EQUIVALENCE (X2XSCL_SITE(1), X2XSCL_SITE1)
+        INTEGER*4   X2XSCL_X32(2)
+        EQUIVALENCE (X2XSCL_X32(1), X2XSCL_X32_PORT1)
+        INTEGER*4   X2XSCL_X32_SITE(2)
+        EQUIVALENCE (X2XSCL_X32_SITE(1), X2XSCL_X32_SITE1)
+        INTEGER*4   X2XSCL_DIAL_PORT(2)
+        EQUIVALENCE (X2XSCL_DIAL_PORT(1), X2XSCL_DIAL_PORT1)
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+	EQUIVALENCE (X2XSCL_REC(1),  X2XSCL_CLASS)
+	EQUIVALENCE (X2XSCL_REC(2),  X2XSCL_DESC)
+	EQUIVALENCE (X2XSCL_REC(5),  X2XSCL_INTIM)
+	EQUIVALENCE (X2XSCL_REC(6),  X2XSCL_OUTTIM)
+	EQUIVALENCE (X2XSCL_REC(7),  X2XSCL_RESTIM)
+	EQUIVALENCE (X2XSCL_REC(8),  X2XSCL_INTTIM)
+	EQUIVALENCE (X2XSCL_REC(9),  X2XSCL_STSTIM)
+	EQUIVALENCE (X2XSCL_REC(10), X2XSCL_MSTENA)
+	EQUIVALENCE (X2XSCL_REC(11), X2XSCL_RETRY)
+	EQUIVALENCE (X2XSCL_REC(12), X2XSCL_PROTO)
+	EQUIVALENCE (X2XSCL_REC(13), X2XSCL_PRTCNT)
+	EQUIVALENCE (X2XSCL_REC(14), X2XSCL_TYPE)
+	EQUIVALENCE (X2XSCL_REC(15), X2XSCL_DELACK)
+	EQUIVALENCE (X2XSCL_REC(16), X2XSCL_ERRREP)
+	EQUIVALENCE (X2XSCL_REC(17), X2XSCL_STNDIS)
+	EQUIVALENCE (X2XSCL_REC(18), X2XSCL_FEDIS)
+	EQUIVALENCE (X2XSCL_REC(19), X2XSCL_NETPT1)
+	EQUIVALENCE (X2XSCL_REC(20), X2XSCL_NETPT2)
+	EQUIVALENCE (X2XSCL_REC(21), X2XSCL_NETPT3)
+	EQUIVALENCE (X2XSCL_REC(22), X2XSCL_NETPT4)
+	EQUIVALENCE (X2XSCL_REC(23), X2XSCL_NETPT5)
+	EQUIVALENCE (X2XSCL_REC(24), X2XSCL_NETPT6)
+	EQUIVALENCE (X2XSCL_REC(25), X2XSCL_NETPT7)
+	EQUIVALENCE (X2XSCL_REC(26), X2XSCL_POLTIM)
+	EQUIVALENCE (X2XSCL_REC(27), X2XSCL_ADDLEN)
+	EQUIVALENCE (X2XSCL_REC(28), X2XSCL_NETSTAT)
+	EQUIVALENCE (X2XSCL_REC(29), X2XSCL_AUTOUPD)
+	EQUIVALENCE (X2XSCL_REC(30), X2XSCL_BAUD)
+	EQUIVALENCE (X2XSCL_REC(31), X2XSCL_TTN_PORT1)
+	EQUIVALENCE (X2XSCL_REC(32), X2XSCL_TTN_PORT2)
+	EQUIVALENCE (X2XSCL_REC(33), X2XSCL_SITE1)
+	EQUIVALENCE (X2XSCL_REC(34), X2XSCL_SITE2)
+	EQUIVALENCE (X2XSCL_REC(35), X2XSCL_SITE3)
+	EQUIVALENCE (X2XSCL_REC(36), X2XSCL_SITE4)
+	EQUIVALENCE (X2XSCL_REC(37), X2XSCL_SITE5)
+	EQUIVALENCE (X2XSCL_REC(38), X2XSCL_SITE6)
+	EQUIVALENCE (X2XSCL_REC(39), X2XSCL_SITE7)
+	EQUIVALENCE (X2XSCL_REC(40), X2XSCL_DIALENA)
+	EQUIVALENCE (X2XSCL_REC(41), X2XSCL_DIAL_PORT1)
+	EQUIVALENCE (X2XSCL_REC(42), X2XSCL_DIAL_PORT2)
+        EQUIVALENCE (X2XSCL_REC(43), X2XSCL_L2TOUT)
+        EQUIVALENCE (X2XSCL_REC(44), X2XSCL_DISX25ROM)
+        EQUIVALENCE (X2XSCL_REC(45), X2XSCL_DISDUPROM)
+        EQUIVALENCE (X2XSCL_REC(46), X2XSCL_DISX25RAM)
+        EQUIVALENCE (X2XSCL_REC(47), X2XSCL_DISDUPRAM)
+        EQUIVALENCE (X2XSCL_REC(48), X2XSCL_X32_PORT1)
+        EQUIVALENCE (X2XSCL_REC(49), X2XSCL_X32_PORT2)
+        EQUIVALENCE (X2XSCL_REC(50), X2XSCL_X32_SITE1)
+        EQUIVALENCE (X2XSCL_REC(51), X2XSCL_X32_SITE2)
+        EQUIVALENCE (X2XSCL_REC(52), X2XSCL_SLPTIME)
+        EQUIVALENCE (X2XSCL_REC(53), X2XSCL_AFTMAX)
+        EQUIVALENCE (X2XSCL_REC(54), X2XSCL_NAAS_LENGTH)
+        EQUIVALENCE (X2XSCL_REC(55), X2XSCL_NAAS_TEXT)
+        EQUIVALENCE (X2XSCL_REC(59), X2XSCL_EVSN_LEN)
+        EQUIVALENCE (X2XSCL_REC(60), X2XSCL_CLOCK)
+        EQUIVALENCE (X2XSCL_REC(61), X2XSCL_SYNC)
+	EQUIVALENCE (X2XSCL_REC(62), X2XSCL_ABS_DISC_TIM)
+	EQUIVALENCE (X2XSCL_REC(63), X2XSCL_DIAL_OV_OVERRIDE)
+	EQUIVALENCE (X2XSCL_REC(64), X2XSCL_SUBNETWORK)			!V03
+        EQUIVALENCE (X2XSCL_REC(65), X2XSCL_BCST_RETRY_INTERVAL)	!V03
+        EQUIVALENCE (X2XSCL_REC(66), X2XSCL_BCST_RETRY_LIMIT)		!V03
+        EQUIVALENCE (X2XSCL_REC(67), X2XSCL_BCST_AUTO_REPORT)		!V03
+        EQUIVALENCE (X2XSCL_REC(68), X2XSCL_BCST_ENABLE1)		!V03
+        EQUIVALENCE (X2XSCL_REC(69), X2XSCL_BCST_ENABLE2)		!V03
+	EQUIVALENCE (X2XSCL_REC(70), X2XSCL_BCST_NET_PORT1)
+	EQUIVALENCE (X2XSCL_REC(71), X2XSCL_BCST_NET_PORT2)
+	EQUIVALENCE (X2XSCL_REC(72), X2XSCL_REPCLS)
+	EQUIVALENCE (X2XSCL_REC(73), X2XSCL_DEF_PORT_OVERRIDE)
+	EQUIVALENCE (X2XSCL_REC(74), X2XSCL_MAX_THRUPUT)
+	EQUIVALENCE (X2XSCL_REC(75), X2XSCL_DIAL_TYPE)			!V04
+	EQUIVALENCE (X2XSCL_REC(76), X2XSCL_UNSO_MSGS)			!V05
+	EQUIVALENCE (X2XSCL_REC(77), X2XSCL_OPTIMIZE_SITES)		!V06
+	EQUIVALENCE (X2XSCL_REC(78), X2XSCL_MAX_THRUPUT_SEND)
+        EQUIVALENCE (X2XSCL_REC(79), X2XSCL_UNSSTCON)                   !V09
+        EQUIVALENCE (X2XSCL_REC(80), X2XSCL_UNSSTDIS)                   !V09
+        EQUIVALENCE (X2XSCL_REC(81), X2XSCL_ROMREV1)                    !V10
+        EQUIVALENCE (X2XSCL_REC(82), X2XSCL_ROMREV2)                    !V10
+        EQUIVALENCE (X2XSCL_REC(83), X2XSCL_ROMREV3)                    !V10
+        EQUIVALENCE (X2XSCL_REC(84), X2XSCL_DLL_USE_ENVELOPE)
+        EQUIVALENCE (X2XSCL_REC(85), X2XSCL_REQ_BACKGROUND_DELAY)
+        EQUIVALENCE (X2XSCL_REC(86), X2XSCL_DLL_ENABLE_BACKGROUND)
+        EQUIVALENCE (X2XSCL_REC(87), X2XSCL_DLL_BACKGROUND_FLAG)
+        EQUIVALENCE (X2XSCL_REC(88), X2XSCL_ENABLE_TEST_DLL)
+        EQUIVALENCE (X2XSCL_REC(89), X2XSCL_REQ_FORGROUND_DELAY)
+        EQUIVALENCE (X2XSCL_REC(90), X2XSCL_DLL_ENABLE_FORGROUND)
+	EQUIVALENCE (X2XSCL_REC(91), X2XSCL_UPDATE)			!V09
+	EQUIVALENCE (X2XSCL_REC(92), X2XSCL_FREE)			!V09
+	EQUIVALENCE (X2XSCL_REC(125),X2XSCL_BITMAP)
+	EQUIVALENCE (X2XSCL_REC(126),X2XSCL_BITMAP2)
+	EQUIVALENCE (X2XSCL_REC(127),X2XSCL_BITMAP3)
+	EQUIVALENCE (X2XSCL_REC(128),X2XSCL_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XSCL_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XSCL_ENTRIES					!V09
+	PARAMETER (X2XSCL_ENTRIES=86)
+C
+	CHARACTER X2XSCL_FIELD(X2XSCL_ENTRIES)*15
+	INTEGER*4 XSCL_CNT1,XSCL_CNT2
+	DATA      (X2XSCL_FIELD(XSCL_CNT1),XSCL_CNT1=1, 45)
+     *	    /'Station class  ','Class name     ','Incall timer   ',
+     *	     'Outcall timer  ','Response time  ','Intertrans time',
+     *	     'Statistics time','Master enable  ','Station retry  ',
+     *	     'Protocol       ','Port count     ','$Connection typ',	!V07
+     *	     'Delivery ack   ','Error reporting','Stn disconnect ',
+     *	     'FE disconnect  ','Network port 1 ','Network port 2 ',
+     *	     'Network port 3 ','Network port 4 ','Network port 5 ',
+     *	     'Network port 6 ','Network port 7 ','Poll timeout   ',
+     *	     '$Address length','$Network stats ','$Auto stats upd',	!V07
+     *	     'Baud rate      ','TITN  port 1   ','TITN  port 2   ',
+     *	     'Port 1 site    ','Port 2 site    ','Port 3 site    ',
+     *	     'Port 4 site    ','Port 5 site    ','Port 6 site    ',
+     *	     'Port 7 site    ','Dialup enable  ','Dialup port 1  ',
+     *       'Dialup port 2  ','Level 2 timeout','Dis X25 EEPROM ',
+     *       'Dis D_up EEPROM','Dis X25 RAM    ','!Dis D_up RAM  '/	!V07
+C
+	DATA      (X2XSCL_FIELD(XSCL_CNT1),XSCL_CNT1=46, X2XSCL_ENTRIES)
+     *       /'!X32 port 1   ','!X32 port2     ','X32 port 1 site',	!V07
+     *       'X32 port 2 site','Sleep Time     ','After hour cnt ',
+     *       '!NAAS mes len  ','!NAAS message  ','$Ext VerSeq Len',	!V07
+     *       'Clock Type     ','Sync. Type     ','Abs disc timer ',
+     *       'OV (dial)      ','Subnetwork no  ','BCST retry intv',	!V03
+     *       'BCST retries   ','BCST auto upd  ','Enable BCST 1  ',
+     *       'Enable BCST 2  ','BCST port 1    ','BCST port 2    ',
+     *       'Report class   ','Def port no    ','Max thruput/sec',
+     *	     'Dial Type      ','Unso Msgs      ','Optimize sites ',	!V06
+     *	     'Max Unso/sec   ','Uns STN connect','Uns STN discnct',	!V09
+     *       'Rom Revision 1 ', 
+     *       'Rom Revision 2 ','Rom Revision 3 ','Download envlop',
+     *       'Req bgrnd delay','Dll enbl bkgrnd','Dll use forgrnd',
+     *       'Enable test dll','Req fgrnd delay','Dll enbl frgrnd',
+     *       'Last updated   '/						!V06
+C
+C
+C STORE THE VALID BOT AND TOP RANGE FOR EACH VARIABLE.
+C NOTE: A -1 IN THE BOT RANGE DESIGNATES A CHARACTER
+C       VARIABLE AND THE TOP RANGE INDICATES THE LENGTH,
+C       A -2 IN THE BOTTOM RANGE DESIGNATES BCD INPUT.
+C
+	INTEGER*4 X2XSCL_RANGE(2,X2XSCL_ENTRIES)
+	DATA      ((X2XSCL_RANGE(XSCL_CNT1,XSCL_CNT2),XSCL_CNT1=1, 2),
+     *	      XSCL_CNT2=1, 45)
+     *	    /1,X2XC_CLASSES,    -1,12,    0,60000,
+     *	     0,60000,   0,60000, 0,60000,
+     *	     0,60000,   0,1,     0,255,
+     *	     1,4,       0,255,   1,X2XSCT_MAX_TYPE,
+     *	     0,1,       0,1,     0,15,
+     *	     0,3,       0,X2X_NETWORK_PORTS,   0,X2X_NETWORK_PORTS,
+     *	     0,X2X_NETWORK_PORTS,     0,X2X_NETWORK_PORTS,
+     *		   0,X2X_NETWORK_PORTS,
+     *	     0,X2X_NETWORK_PORTS,     0,X2X_NETWORK_PORTS,   1,5000,
+     *	     0,16,      0,1,     0,1,
+     *	     0,8,       1,X2X_MAXTTN,   1,X2X_MAXTTN,
+     *	     0,2,       0,2,     0,2,
+     *	     0,2,       0,2,     0,2,
+     *	     0,2,       0,1,     0,X2X_NETWORK_PORTS,
+     *       0,X2X_NETWORK_PORTS,     0,32000, 0,15,
+     *       0,15,      0,15,    0,15/
+C
+	DATA      ((X2XSCL_RANGE(XSCL_CNT1,XSCL_CNT2),XSCL_CNT1=1, 2),
+     *	      XSCL_CNT2=46, X2XSCL_ENTRIES)
+     *      /0,X2X_NETWORK_PORTS,     0,X2X_NETWORK_PORTS,   0,2,
+     *       0,2,       0,32760, 0,256,
+     *       1,16,     -1,16,    0,12,
+     *       0,1,       0,1,     0,720,
+     *       0,1,       0,254,   10,36000,				!V03
+     *	     0,9999,	0,1,    0,1,					!V03
+     *       0,1,	0,X2X_NETWORK_PORTS,  0,X2X_NETWORK_PORTS,	!V03
+     *       0,255,	0,X2X_NETWORK_PORTS,  0,1000000,
+     *	     0,1,	0,2,	 0,1,					!V06
+     *	     0,1000000,	0,4,	 0,15,					!V09
+     *       -1,4,                                
+     *       -1,4,     -1,4,     0,1,
+     *       0,600,     0,1,     0,1,
+     *       0,1,       0,600,   0,1,
+     *	     0,0/							!V06
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XSCL_INDEX(X2XSCL_ENTRIES)
+	DATA      X2XSCL_INDEX
+     *	    /1,   2,   5,
+     *	     6,   7,   8,
+     *	     9,  10,  11,
+     *	    12,  13,  14,
+     *	    15,  16,  17,
+     *	    18,  19,  20,
+     *	    21,  22,  23,
+     *	    24,  25,  26,
+     *	    27,  28,  29,
+     *	    30,  31,  32,
+     *	    33,  34,  35,
+     *	    36,  37,  38,
+     *	    39,  40,  41,
+     *      42,  43,  44,
+     *      45,  46,  47,
+     *      48,  49,  50,
+     *      51,  52,  53,
+     *      54,  55,  59,
+     *      60,  61,  62, 
+     *      63,  64,  65,
+     *      66,	 67,  68,				!V03
+     *      69,  70,  71,
+     *      72,  73,  74,
+     *      75,  76,  77,				!V06
+     *      78,  79,  80,				!V09
+     *      81,  82,  83,
+     *      84,  85,  86,
+     *      87,  88,  89,
+     *      90,  91/						!V06
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+	INTEGER*4 X2XSCL_VALUE(15,X2XSCL_ENTRIES)
+	DATA      X2XSCL_VALUE
+     *	    /15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 
+     *                    X2XSCT_X21SWC,X2XSCT_X25SVC,              ! 1, 2
+     *                    X2XSCT_X28PAD,X2XSCT_ASYPVC,              ! 4, 6
+     *                    X2XSCT_GTECH_DIAL,X2XSCT_USAT_PVC,9*-1,   ! 9,10
+     *	     15*-1, 15*-1, 0,7,8,9,10,11,12,13,14,15,5*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 0,7,8,9,10,11,12,13,14,15,5*-1,
+     *       0,7,8,9,10,11,12,13,14,15,5*-1,
+     *       0,7,8,9,10,11,12,13,14,15,5*-1,
+     *       0,7,8,9,10,11,12,13,14,15,5*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,			!V06
+     *	     15*-1, 15*-1, 0,7,8,9,10,11,12,13,14,15,5*-1,	!V09
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1/					!V06
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XSCL_COMMON/
+	COMMON /X2XSCL_COMMON/ X2XSCL_REC,   X2XSCL_FDB,
+     *	                       X2XSCL_RANGE, X2XSCL_INDEX,
+     *	                       X2XSCL_VALUE, X2XSCL_FIELD
+C

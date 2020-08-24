@@ -1,0 +1,83 @@
+    SYS.HLP                GTECH Distributed Network
+                          System Control Snapshot Help          Page 1 of 4
+ 
+    This is the system control snapshot which shows some general status 
+    information for the system. These include throughput and game 
+    parameters that can be enabled/disabled as required. The snapshot 
+    also shows a brief summary of buffer utization and wagers, cancels 
+    validations for the day.
+    
+    The information displayed includes:
+ 
+    logtim     - time interval after which the logger task is activated    
+    logblo     - displays the log buffer blocking unit (# transactions to
+                 be written)
+    tapesw     - sets and displays tape drive number for primary tape 
+                 logging
+    disksw     - sets ad displays disk drive number for disk logging
+    chktim     - amount of time that elapses between system checkpoints
+    chkpnt     - command for manually performing a checkpoint
+    stapsw     - sets and displays tape dirve number for secondary system 
+                 tape logging
+
+    SYS.HLP                GTECH Distributed Network
+                          System Control Snapshot Help          Page 2 of 4
+
+
+    syssts     - sets and displays the current system ststus:
+                 (1=open, 2=pools closed, 3=day closed, 4=day final)
+    romrev     - sets and displays current ROM revision for terminal 
+                 application
+    maxmes     - displays the maximum number of messages residing in the          
+                 console queue
+    meslog     - displays the error/message logging configuration.
+                 (0=no error logging devices, 1=log error messages to 
+                 system console, 2=log error messages to ERROR.LOG file on 
+                 disk, 3=log to both console and ERROR.LOG file, 4=log to 
+                 both devices - no comm reporting)
+    redmax     - maximum amount that can be paid out at an agent location
+    redmin     - minimum amount that can be pai out at an agent location
+    credmax    - maximum  amount that can be paid out by concessionaire
+                 location
+    supspe     - enables/disables special service function:
+                 (0=enabled, 1=disabled)
+
+    SYS.HLP                GTECH Distributed Network
+                          System Control Snapshot Help          Page 3 of 4
+    
+    supspe     - enables/disables special service function:
+                 (0=enabled, 1=disabled)
+    supfil     - enables/disables game file access function:
+                 (0=enabled, 1=disabled)
+    supsum     - enables/disables terminal checksum function:
+                 (0=enabled, 1=disabled)
+    supupd     - enables/disables lotto pool updates function:
+                 (0=enabled, 1=disabled)
+    supsyn     - enables/disables syntax error reporting function:
+                 (0=enabled, 1=disabled)
+    supcom     - enables/disables comm. error reporting function:
+                 (0=enabled, 1=disabled)
+    supmemv    - enables/disables memory validations function:
+                 (0=enabled, 1=disabled)
+    suprem     - enables/disables remote logging function:
+                 (0=enabled, 1=disabled)
+    
+    
+
+    SYS.HLP                GTECH Distributed Network
+                          System Control Snapshot Help          Page 4 of 4
+
+    supops     - enables/disables OPS message function:
+                 (0=enabled, 1=disabled)
+    supcjo     - enables/disables central generated joker function:
+                 (0=enabled, 1=disabled)
+    supwag     - enables/disables wagering function:
+                 (0=enabled, 1=disabled)
+    supcan     - enables/disables cancellation function:
+                 (0=enabled, 1=disabled)
+    supval     - enables/disables validations function:
+                 (0=enabled, 1=disabled)
+    avgtim     - average time a transaction takes to process
+    maxtim     - maximum time a transaction takes to process
+    
+    

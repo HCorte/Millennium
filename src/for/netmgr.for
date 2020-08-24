@@ -1,0 +1,443 @@
+C
+C PROGRAM NETMGR
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]NETMGR.FOV                                   $
+C  $Date::   17 Apr 1996 14:10:12                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C *** Pre-Baseline Source - netmgr.for ***
+C
+C V04 01-AUG-2000 UXN TYPE* REPLACED WITH OPSTXT()
+C V03 10-DEC-1991 RRB A LITTLE BOUNDARY CHECKING.
+C V02 22-OCT-1991 TKO Change CALL ABORT to CALL TSKABORT
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode Island,
+C and contains confidential and trade secret information. It may not be
+C transferred from the custody or control of GTECH except as authorized in
+C writing by an officer of GTECH. Neither this item nor the information it
+C contains may be used, transferred, reproduced, published, or disclosed,
+C in whole or in part, and directly or indirectly, except as expressly
+C authorized by an officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Purpose:
+C	NETWORK MANAGER TASK:
+C		THIS TASK WILL SERVICE ALL I/O DONE REQUESTS AND COMMANDS
+C		FROM NETLOG (NETWORK LOGGING TASK).
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+C
+	PROGRAM NETMGR
+C
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+C
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DCNEVN.DEF'
+	INCLUDE 'INCLIB:DESNET.DEF'
+	INCLUDE 'INCLIB:LANCOM.DEF'
+C
+	INCLUDE '(LIB$ROUTINES)'
+        INCLUDE '($SYSSRVNAM)'
+C
+C LOCAL DECLARATIONS
+C
+	INTEGER*4	BUF,
+     *			BWAY,
+     *			CHECK_BUF,
+     *			DAYCLOSED	/0/,		! 0 IF DAY JUST CLOSED
+     *			DUMTIM(NETSYS, NUMWAY),		! TIME SENT DUMMY MSG
+     *			ITIM,
+     *			KILL,
+     *			OFF,
+     *			REMCLOK,
+     *			SETMAS_BUF,
+     *			ST,
+     *			STATUS,
+     *			SYS,
+     *			TRCADR,
+     *			TYPE,
+     *			W,
+     *			WAY,
+     *			XMIT
+C
+	CHARACTER*4	GXEVNNAM
+C
+	LOGICAL*1	ANYONE_IN_RECOVERY,
+     *			ONE_SYSTEM_READY_FOR_MORE
+C
+C COMMON DECLARATIONS
+C
+	COMMON	/TEST_CHECK/	CHECK_BUF
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C CALL COPYRITE & SNIF_AND_WRKSET & DEFINE CIRCULAR LISTS.
+C
+	CALL COPYRITE
+C
+	CALL SNIF_AND_WRKSET
+C
+	CALL DEFLST(ERRTAB,  ERRLEN)			! ERROR TRACING TABLE
+	CALL DEFLST(TRACTAB, TRACLEN)			! TRACE SWITCHING TABLE
+C
+C WAIT TILL NETLOG SETS THE SYSTEM READY
+C
+C 		NETRDY = ??? 0
+C RESET		NETRDY = NETRDY_RESET
+C NETLOG	wait for NETRDY_RESET  -> NETRDY_NETLOG
+C NETMGR	wait for NETRDY_NETLOG -> NETRDY_NETMGR
+C DISPAT	wait for NETRDY_NETMGR -> NETRDY_DISPAT
+C
+100	CONTINUE
+	IF (NETRDY .LT. NETRDY_NETLOG .AND.
+     *      NETRDY .LT. NETRDY_DISPAT) THEN
+	  CALL XWAIT(1, 2, ST)				! WAIT A SECOND
+	  GOTO 100
+	ENDIF
+C
+	NETRDY = NETRDY_NETMGR				! LET NETMGR GO ...
+C
+150	CONTINUE
+	IF (THISSTA .NE. STAUP .AND.
+     *      LANGO   .NE. LANPRODIS) THEN
+	  CALL XWAIT(30, 1, ST)				! WAIT 30 MSEC
+	  GOTO 150
+	ENDIF
+C
+C CREATE THE COMMON EVENT FLAG CLUSTER FOR QUEUE TRAPS.
+C
+	STATUS = SYS$ASCEFC(%VAL(DN_EVNTIMER),
+     *                      GXEVNNAM() // DN_EVNNAME, 0, %VAL(1))
+	IF (.NOT. STATUS) CALL LIB$SIGNAL(%VAL(STATUS)) 
+C
+C RELEASE BUFFERS FIRST
+C
+	DO 200 OFF = 1, NETNUM
+	  CHECK_BUF = 401
+	  CALL FREEBUF(OFF)
+200	CONTINUE
+C
+C INITIALIZE LOGICAL CONNECTION (ONLY FOR ACTIVE CONNECTIONS).
+C
+	DO 400 WAY = 1, NUMWAY
+	  DO 300 OFF = 1, NETSYS
+	    IF (NETROUT(OFF, WAY) .EQ. ROUACT) THEN
+	      CALL GRABBUF(BUF, WAY, ST)
+	      IF (ST .EQ. 2) THEN
+		CALL NOTIFY(TRCADR, NOTBUF, ST, WAY)
+		CALL GPAUSE
+		GOTO 100
+	      ENDIF
+	      NETBUF(HDRSIZ+1, BUF) = ADDLINK
+	      NETBUF(HDRSIZ+2, BUF) = OFF
+	      NETBUF(HDRSIZ+3, BUF) = NETSTAT(OFF, WAY)
+	      NETBUF(HDRSIZ+4, BUF) = WAY
+	      CALL CMDNET(BUF)
+	    ENDIF
+300	  CONTINUE
+400	CONTINUE
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C MAIN LOOP
+C
+	FREEZQUEU = 0
+C
+C IF GAME IS CLOSED, RUN ONLY FOR 20 SECS.
+C
+500	CONTINUE
+	IF (DAYSTS .EQ. DSCLOS) THEN			! IF DAY CLOSED
+	  IF (DAYCLOSED .EQ. 0) THEN
+	    CALL GETTIM(KILL)
+	    DAYCLOSED = -1
+	  ENDIF
+C
+	  CALL GETTIM(ITIM)
+	  REMCLOK = 0
+	  DO 700 W = 1, NUMWAY
+	    IF (NETATR(W) .EQ. INP) GOTO 700
+	    DO 600 SYS = 1, NETSYS
+	      IF (REMCLOSED(SYS)  .NE. -1 .AND.
+     *            NETROUT(SYS, W) .EQ. ROUACT .AND.
+     *            NETSTAT(SYS, W) .EQ. NSTASEC) REMCLOK = -1
+600	    CONTINUE
+700	  CONTINUE
+C
+	  IF (ITIM - 20 .GT. KILL .AND.			! IF CLOSED FOR 20 SECS
+     *        REMCLOK   .EQ. 0 .OR.			! AND REMOTE CLOSED
+     *        P(LOGSTP) .EQ. 1) THEN
+	    CALL OPSTXT('STOPPING NETLOG')
+	    CALL TSKABORT(8HNETLOG  ,ST)
+	    CALL OPSTXT('STOPPING DCNPRO')
+	    CALL TSKABORT(8HDCNPRO  ,ST)
+	    CALL OPSTXT('STOPPING NETMON')
+	    CALL TSKABORT(8HNETMON  ,ST)
+	    CALL OPSTXT('OK')
+	    CALL GSTOP(GEXIT_SUCCESS)
+	  ENDIF
+	ENDIF
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C WAIT FOR NETWAIT OR SYNCWAIT WHICHEVER IS SMALLER
+C
+	IF (NETWAIT .GT. 0 .AND. SYNCWAIT .GT. 0)
+     *    CALL XWAIT(MIN(NETWAIT, SYNCWAIT), 1, ST)	! WAIT SOME TIME
+C
+C ADD THE AMOUNT OF TIME WE WAITED. ALWAYS ADD AT LEAST ONE.
+C
+	NETTIMER = NETTIMER + MAX(MIN(SYNCWAIT, NETWAIT), 1)
+C
+C SEND DUMMY RECORDS ON PRIMARY LINKS WITH NO ACTIVITY.
+C
+	DO 900 WAY = 1, NUMWAY
+	  IF (FREEZDUMM .EQ. 0) THEN			! SKIP IF SENDING FROZEN
+	    DO 800 OFF = 1, NETSYS
+	      IF (NETROUT(OFF, WAY) .EQ. ROUACT .AND.
+     *            NETSTAT(OFF, WAY) .EQ. NSTAPRIM) THEN
+		DUMTIM(OFF, WAY) = MAX0(DUMTIM(OFF, WAY),
+     *                                  NETTIM(OFF, WAY))
+		IF (DUMTIM(OFF, WAY) + MAXIDLE .LT. NETTIMER) THEN
+		  CALL SNDDUMMY(OFF, WAY, ST)
+		  IF (ST .EQ. 0) DUMTIM(OFF, WAY) = NETTIMER + 2000	! ????
+		ENDIF
+	      ENDIF
+800	    CONTINUE
+	  ENDIF
+900	CONTINUE
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C GET NEXT BUFFER FROM FINISH QUEUE.
+C
+1000	CONTINUE
+	ST = 2
+C
+	IF (NETCMDFRZ .EQ. 0 .OR. FREEZQUEU .EQ. 0) THEN
+	  CALL RTL(BUF, NETFINISH, ST)
+	  FREEZQUEU = 0
+	ENDIF
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C IF THERE IS SOMETHING TO DO, DISPATCH REQUEST ...
+C CHECK FOR DATA COMING TO THIS SYSTEM.
+C
+	IF (ST .NE. 2) THEN
+	  NETWAIT = MAX(NETWAIT - 1, NETWAIT_MIN)	! RUN MORE OFTEN
+C
+	  TYPE = NETBUF(MODE,  BUF)
+	  BWAY = NETBUF(WAYNR, BUF)
+C
+C IF WE RAN OUT OF READS,
+C TRY TO SEND A DUMMY BACK TO GET READS AND WRITES GOING AGAIN.
+C
+	  IF (NETBUF(ACTFROM, BUF) .NE. 0) THEN
+	    IF (READIOCHK(NETBUF(ACTFROM, BUF)) .EQ. 0)
+     *        CALL SNDDUMMY(NETBUF(ACTFROM, BUF), BWAY, ST)
+	  ENDIF
+C
+C INPUT MODE.
+C
+	  IF (TYPE .EQ. TRNMD .AND.
+     *        (NETATR(BWAY) .EQ. RLG .OR.
+     *         NETATR(BWAY) .EQ. INP .AND.
+     *         NETMODE(NODEID, BWAY) .EQ. TRNMD)) THEN
+C
+C GENERATE A COMMAND NOW, IGNORE THIS BUFFER.
+C
+	    IF (NETMASTER(BWAY) .NE. NETBUF(PPORG, BUF) .AND.	! NOT FR MAS
+     *          NETMASTER(BWAY) .NE. NODEID .AND.		! I'M NOT EITHER
+     *          NETBUF(BUFTYP, BUF) .NE. RTR) THEN
+	      CALL OPS('*** NETMGR - IGNORING BUFFER - SETMAS ***',
+     *                 BUF, NETBUF(PSER, BUF))
+	      CALL EXTRABUF(SETMAS_BUF, BWAY, ST)
+	      IF (ST .NE. 2) THEN
+		NETBUF(HDRSIZ+1, SETMAS_BUF) = SETMASTER
+		NETBUF(HDRSIZ+2, SETMAS_BUF) = NETBUF(PPORG, BUF)
+		NETBUF(HDRSIZ+3, SETMAS_BUF) = 0
+		NETBUF(HDRSIZ+4, SETMAS_BUF) = BWAY
+		NETBUF(MODE,     SETMAS_BUF) = CMDMD
+		NETBUF(WAYNR,    SETMAS_BUF) = BWAY
+		CALL CMDNET(SETMAS_BUF)
+	      ENDIF
+	      CALL TAKENET(BUF, BWAY)			! READ FROM NETWORK
+	      CHECK_BUF = 40200
+	      CALL FREEBUF(BUF)				! FREE BUFFER
+	      GOTO 1000
+C
+	    ELSEIF (NETMASTER(BWAY) .NE. NETBUF(PPORG, BUF) .AND. ! NOT FR MAS
+     *              NETMASTER(BWAY) .EQ. NODEID .AND.		! I'M LOCAL MAS
+     *              NETBUF(BUFTYP, BUF) .NE. RTR) THEN
+	      CALL NOTIFY(TRCADR, NOTDATA, NETBUF(PPORG, BUF), BWAY)
+	      CHECK_BUF = 40201
+	      CALL FREEBUF(BUF)				! FREE BUFFER
+	      GOTO 1000
+C
+	    ELSE
+	      CALL TAKENET(BUF, BWAY)			! READ FROM NETWORK
+	      CHECK_BUF = 402
+	      CALL FREEBUF(BUF)				! FREE BUFFER
+	      GOTO 1000
+	    ENDIF
+	  ENDIF
+C
+C FILE TRANSFER MODE.
+C
+	  IF (TYPE .EQ. FILMD .AND.
+     *        (NETATR(BWAY) .EQ. RLG .OR.
+     *         NETATR(BWAY) .EQ. INP .AND.
+     *         NETMODE(NODEID, BWAY) .EQ. FILMD)) THEN
+	    CALL TAKEFIL(BUF, NODEID, BWAY)
+	    CHECK_BUF = 403
+	    CALL FREEBUF(BUF)				! FREE BUFFER
+	    GOTO 1000
+	  ENDIF
+C
+C DUMP DATA IN SENDING DUMMIES MODE.
+C
+	  IF (TYPE .EQ. DUMMD) THEN
+	    IF (DAYCDC .NE. NETBUF(HDRSIZ+1, BUF))
+     *        CALL OPS('*** NETMGR - DATE INCONSISTENCY ***',
+     *                 NETBUF(HDRSIZ+1, BUF), DAYCDC)
+	    CHECK_BUF = 40301
+	    CALL FREEBUF(BUF)				! FREE BUFFER
+	    GOTO 1000
+	  ENDIF
+C
+C NOW DATA IS COMING IN DIFFERENT MODE THEN THE LINK IS IN.
+C
+	  IF (NETATR(BWAY) .EQ. INP) THEN
+	    IF (TYPE .EQ. TRNMD .AND.
+     *          NETMODE(NODEID, BWAY) .EQ. FILMD) THEN
+	      CALL NOTIFY(TRCADR, NOTDATA, TYPE, BWAY)
+	      CHECK_BUF = 404
+	      CALL FREEBUF(BUF)				! FREE BUFFER
+	      GOTO 1000
+	    ENDIF
+C
+C THIS OUT OF MODE ERROR SHOULD NEVER HAPPEN.
+C
+	    IF (TYPE .EQ. FILMD .AND.
+     *          NETMODE(NODEID, BWAY) .EQ. TRNMD) THEN
+	      CALL NOTIFY(TRCADR, NOTDATA, TYPE, BWAY)
+	      CHECK_BUF = 405
+	      CALL FREEBUF(BUF)				! FREE BUFFER
+	      GOTO 1000
+	    ENDIF
+	  ENDIF
+C
+C PROCESS COMMAND.
+C
+	  IF (TYPE .EQ. CMDMD) THEN			! IF COMMAND
+	    CALL CMDNET(BUF)
+	    GOTO 1000
+	  ENDIF
+C
+	  IF (TYPE .EQ. FRZMD) THEN
+	    FREEZQUEU = -1
+	    CHECK_BUF = 406
+	    CALL FREEBUF(BUF)				! FREE BUFFER
+	    GOTO 1000
+	  ENDIF
+C
+C PROCESS BUFFERS WITH I/O ERRORS.
+C
+	  IF (TYPE .LT. 0) THEN
+	    CALL ERRNET(BUF)				! IF ERROR
+	    GOTO 1000
+	  ENDIF
+C
+	  CALL OPS('*** NETMGR - BUF WITH INVL MODE ***', TYPE, BWAY)
+	  CALL OPS('*** NETMGR - BUF WITH INVL MODE ***', BUF,  TYPE)
+	  CHECK_BUF = 407
+	  CALL FREEBUF(BUF)				! FREE BUFFER
+	  GOTO 1000
+C
+C NOTHING TO DO ...
+C   DON'T WAIT ANY MORE THAN DISPAT TIMER.
+C
+	ELSE
+	  NETWAIT = MIN(NETWAIT + 1, P(DPTTIM) * 125)
+	ENDIF
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C CHECK SECONDARY CONNECTIONS
+C
+	DO 1200 WAY = 1, NUMWAY
+	  DO 1100 OFF = 1, NETSYS
+	    IF (NETTIM(OFF,  WAY) .EQ. 0) GOTO 1100	! LINK INITIATED AND
+	    IF (NETROUT(OFF, WAY) .EQ. ROUACT .AND.	! LINK ACTIVE AND
+     *          NETSTAT(OFF, WAY) .EQ. NSTASEC) THEN	! SECONDARY LINK ...
+	      IF (NETTIM(OFF, WAY) .GT. NETTIMER)
+     *          NETTIM(OFF, WAY) = NETTIMER
+	      IF (NETTIM(OFF, WAY) .LT. NETTIMER - IDLETIM)
+     *          CALL GRABNET(1, 0, WAY)
+	    ENDIF
+1100	  CONTINUE
+1200	CONTINUE
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C CHECK PRIMARY CONNECTIONS
+C
+	ANYONE_IN_RECOVERY        = .FALSE.
+	ONE_SYSTEM_READY_FOR_MORE = .FALSE.
+C
+	DO 1400 WAY = 1, NUMWAY
+	  XMIT = -1
+C
+C CHECK IF THIS UNIT IS NOT IN RECOVERY FORMAT
+C
+	  IF (NETMODE(NODEID, WAY) .NE. FILMD) THEN
+	    DO 1300 OFF = 1, NETSYS
+	      IF ((NETATR(WAY) .NE. INP .AND.		! IN RECOVERY ON INPUT ?
+     *             NETCMDFRZ .LT. 900) .AND.		! NOT LAST STAGE
+     *            NETMODE(OFF, WAYINP) .EQ. FILMD .AND.
+     *            NETROUT(OFF, WAYINP) .EQ. ROUACT) GOTO 1300
+C
+	      IF (NETROUT(OFF,  WAY) .EQ. ROUACT .AND.	! IF LINK ACTIVE AND
+     *            NETSTAT(OFF,  WAY) .EQ. NSTAPRIM .AND.! PRIMARY LINK AND
+     *            NETRECOV(OFF, WAY) .NE. RECDONE .AND.	! RECOVERY NOT DONE AND
+     *            NETMODE(OFF,  WAY) .EQ. FILMD) THEN	! IN RESYNC MODE ...
+		ANYONE_IN_RECOVERY = .TRUE.
+		CALL SYNC(OFF, XMIT, WAY)		! RESYNC PATH 'OFF'
+		IF (XMIT .EQ. 0)
+     *            ONE_SYSTEM_READY_FOR_MORE = .TRUE.
+	      ENDIF
+1300	    CONTINUE
+	  ENDIF
+1400	CONTINUE
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C RE-CALCULATE SYNCWAIT.
+C
+	IF (.NOT. ONE_SYSTEM_READY_FOR_MORE .AND. NETCMDFRZ .EQ. 0) THEN
+	  SYNCWAIT = MIN(SYNCWAIT + 1, P(DPTTIM) * 125)
+	ELSE
+	  SYNCWAIT = MAX(SYNCWAIT - 1, SYNCWAIT_MIN)
+	ENDIF
+C
+	IF (.NOT. ANYONE_IN_RECOVERY) SYNCWAIT = P(DPTTIM) * 125
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C LOOP BACK AROUND.
+C
+	GOTO 500
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C END.
+C
+	END

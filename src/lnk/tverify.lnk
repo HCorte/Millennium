@@ -1,0 +1,22 @@
+$! GXSRC:TVERIFY.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]TVERIFY.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:55:04   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:53:10   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:50:00   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=GXUTL:TVERIFY.EXE -
+OBJLIB:TVERIFY,-
+OFFLOG,-
+READTAPE,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

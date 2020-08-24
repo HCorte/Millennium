@@ -1,0 +1,411 @@
+C
+C PROGRAM W9LSYS
+C $Log:   GXAFXT:[GOLS]W9LSYS.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:58:06   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   25 May 1993 18:03:06   HXN
+C  Include  GLOBAL.DEF  before  RECSCF.DEF
+C  
+C     Rev 1.0   21 Jan 1993 18:03:46   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - w9lsys.for **
+C
+C W9LSYS.FOR
+C V02 25-MAY-93 HXN INCLUDE GLOBAL.DEF BEFORE RECSCF.DEF
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C+
+C+    W9LSYS.FTN
+C+
+C+      V1.0   APR-14-98 WS INITIAL RELEASE
+C+
+C+    THIS PROGRAM ALLOWS TO ENTER SYSTEM BETS IN SYSCHK.FIL
+C+    AND IT SERVES TO ANALYZE SYSTEM BETS DISTRIBUTION
+C+
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM W9LSYS
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:LSYSCOM.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+C
+	INTEGER*4  BET_LENGTH
+	PARAMETER (BET_LENGTH=LMXMARK)
+C
+	INTEGER*4 SYSNR
+	INTEGER*4 FDB(7)
+	INTEGER*4 SHARE(LMXMARK),BONUS_SHARE(LMXMARK)
+	INTEGER*4 BET_MASK(BET_LENGTH)
+	INTEGER*4 BET_DEF(LMXMARK)
+	INTEGER*4  EDBET, WINMSK, TIMES, MATCH, BONUS_OFF, BONUS
+	INTEGER*4 SYSTEM, BONUSBET, FROM, CHOSE, COUNT, OFF, I
+	INTEGER*4 MRK, BET, BASE_BETS, POINTER, MARKS, NBET, ATR, GAME
+	INTEGER*4 ENDSYS, STARTSYS, STATUS, CMD, ST
+C
+	CALL COPYRITE
+C
+C
+	TYPE *,'This is a testing task for bets distribution for'
+	TYPE *,'reduced lotto system bets'
+	TYPE *,'To get distribution of bets in the file, assign LU 6'
+	TYPE *,'to the file when you load this task'
+	TYPE *,' '
+	CALL OPENX(1,'SCF.FIL',4,0,0,ST)
+	CALL IOINIT(FDB,1,SCFSEC*256)
+	IF(ST.NE.0) THEN
+	  TYPE*,'SCF.FIL open error > ',ST
+	  PAUSE
+	ENDIF
+	CALL READW(FDB,1,SCFREC,ST)
+	IF(ST.NE.0) THEN
+	  TYPE*,'SCF.FIL read error > ',ST
+	  PAUSE
+	ENDIF
+C
+	CALL CLOSEFIL(FDB)
+C
+C
+C CHANGE SYSTEM FILE SIZES/VOLUME NAMES
+C
+5	CONTINUE
+	IF(SCFSFN(1,LSF).EQ.'    ') CALL SYSVOL(SCFSFN(1,LSF))
+	CALL OPENQW(1,SCFSFN(1,LSF),4,0,0,ST)
+	IF(ST.NE.0) THEN
+	  CALL FILERR(SCFSFN(1,LSF),1,ST,0)
+	  PAUSE
+	  GOTO 5
+	ENDIF
+	CALL IOQINIT(FDB,1,1*256)
+	CALL READQIO(FDB,1,LSYS_ATR,LSYS_COMMON_LENGTH*4,ST)
+	IF (ST.NE.0) THEN
+	   CALL FILERR(SCFSFN(1,LSF),2,ST,1)
+	   STOP 'bye bye boys'
+	ENDIF
+C
+10	CONTINUE
+	TYPE *,' 1 - to display system bet'
+	TYPE *,' 2 - analyze distribution of winnings'
+      TYPE *,' 3 - to add system bet, to modify a bet, delete it first'
+	TYPE *,'                         and then reenter it'
+	TYPE *,' 4 - to add a game, you can always reenter new game'
+	TYPE *,'                    instead for old one'
+	TYPE *,' 5 - save image in the file'
+	TYPE *,' 6 - to display LSYS_GAMSHR(*,I1,I2,I3,I4) '
+	TYPE *,' 7 - to call lsyschk n times'
+	TYPE *,' 8 - to delete system bet'
+	TYPE *,' 9 - edit boards in reduced system bet'
+	CALL INPNUM('Enter command: ',CMD,1,9,ST)
+	IF (ST.LT.0) CALL CLOSEFIL(FDB)
+	IF (ST.LT.0) STOP 'Bye bye boys'
+	GOTO (100,200,300,400,500,600,700,800,900) CMD
+	TYPE *,'Invalid'
+	GOTO 10
+C
+C     DISPLAY BET
+C
+100	CONTINUE
+	CALL INPNUM('Enter system nr [0 - all] ',SYSNR,0,LSYSMAX,ST)
+	IF (ST.LT.0) GOTO 10
+	IF (SYSNR.NE.0) THEN
+	   CALL LSYSDSP(SYSNR,STATUS)
+	ELSE
+	   DO 110, SYSNR=1,LSYSMAX
+	      IF (LSYS_GAME(SYSNR).NE.0) CALL LSYSDSP(SYSNR,STATUS)
+110	   CONTINUE
+	ENDIF
+	GOTO 10
+C
+C     ANALYZE BET
+C
+200	CONTINUE
+	CALL INPNUM('Enter FIRST system number (0=all) ',
+     *	     STARTSYS,0,LSYSMAX,ST)
+	IF (ST.LT.0) GOTO 10
+	IF(STARTSYS.EQ.0) THEN
+	   STARTSYS=1
+	   ENDSYS=LSYSMAX
+	ELSE
+	   CALL INPNUM('Enter LAST system number ',ENDSYS,STARTSYS,
+     *	   LSYSMAX,ST)
+	   IF(ST.LT.0) GOTO 10
+	ENDIF
+C
+	DO 210, SYSNR=STARTSYS,ENDSYS
+	   IF (LSYS_GAME(SYSNR).NE.0) CALL LSYSANL(SYSNR)
+210	CONTINUE
+	GOTO 10
+C
+C     ENTER SYSTEM BET
+C
+300	CONTINUE
+	CALL INPNUM('Enter system #: ',SYSNR,1,LSYSMAX,ST)
+	IF (ST.LT.0) GOTO 10
+C
+	IF (LSYS_GAME(SYSNR).GT.0) GOTO 10
+	CALL INPNUM('Enter game #  : ',GAME,1,LSYS_MAXGAM,ST)
+	IF (ST.LT.0) GOTO 10
+	TYPE *,' Full system type:',LSYS_FULL,' reduced:',LSYS_REDUCED
+	CALL INPNUM('Enter atribute: ',ATR,LSYS_FULL,LSYS_REDUCED,ST)
+	IF (ST.LT.0) GOTO 10
+	IF (ATR.EQ.LSYS_FULL) THEN
+	   NBET=1
+	ELSE
+	   CALL INPNUM('Enter # of bets:',NBET,1,999,ST)
+	   IF (ST.LT.0) GOTO 10
+	ENDIF
+	CALL INPNUM('Enter # of marks: ',MARKS,1,LMXMARK,ST)
+	IF (ST.LT.0) GOTO 10
+	POINTER=LSYS_FREEPTR+1
+	IF (ATR.NE.LSYS_FULL) THEN
+	   CALL INPNUM('Enter # of corresponding simple bets:',
+     *	                BASE_BETS,1,10000,ST)
+	   IF (ST.LT.0) GOTO 10
+	   DO 350, BET=1,NBET
+	     TYPE *,'Entering bet ',BET
+	     CALL INPNUM('Enter # of marks ',MRK,1,LMXMARK,ST)
+	     IF (ST.LT.0) GOTO 10
+310	     CONTINUE
+	     LSYS_TAB(POINTER+1)=0
+	     TYPE *,'Enter marks'
+	     ACCEPT *,(BET_DEF(I),I=1,MRK)
+	     DO 320, OFF=1,MRK
+	       IF (BET_DEF(OFF).GT.LMXMARK.OR.BET_DEF(OFF).LE.0.OR.
+     *	           BET_DEF(OFF).GT.MARKS) THEN
+	         TYPE *,'Invalid bet'
+	         GOTO 310
+	       ENDIF
+	       CALL BSET(LSYS_TAB(POINTER+1),BET_DEF(OFF)-1)
+320	     CONTINUE
+C
+	     CALL BITCNT(LSYS_TAB(POINTER+1),L_SYSBYTES,COUNT)
+	     IF (COUNT.NE.MRK) THEN
+	       TYPE *,'Invalid bet definition, please reenter bet '
+	       GOTO 310
+	     ENDIF
+C
+	     LSYS_TAB(POINTER)=MRK
+	     POINTER=POINTER+2
+350	   CONTINUE
+C
+	ELSE
+	   CALL SYSPRICE(LSYS_GAMCHOSE(GAME),LSYS_GAMFROM(GAME),MARKS,
+     *	                 BASE_BETS)
+	   LSYS_TAB(POINTER)=MARKS
+	   DO 360, OFF=0,MARKS-1
+	      CALL BSET(LSYS_TAB(POINTER+1),OFF)
+360	   CONTINUE
+	   POINTER=POINTER+2
+	ENDIF
+C
+	LSYS_PTR(SYSNR)=LSYS_FREEPTR+1
+	LSYS_FREEPTR=POINTER-1
+	LSYS_NUMBET(SYSNR)=NBET
+	LSYS_NUMMRK(SYSNR)=MARKS
+	LSYS_GAME(SYSNR)=GAME
+	LSYS_ATR(SYSNR)=ATR
+	LSYS_BOARD(SYSNR)=BASE_BETS
+	GOTO 10
+C
+C     GAME INFO
+C
+400	CONTINUE
+	CALL INPNUM('Enter game # ',GAME,1,LSYS_MAXGAM,ST)
+	IF (ST.LT.0) GOTO 10
+	CALL INPNUM('Enter number of numbers in base bet ',CHOSE,
+     *	             1,LMXMARK,ST)
+	IF (ST.LT.0) GOTO 10
+	LSYS_GAMCHOSE(GAME)=CHOSE
+	CALL INPNUM('Enter highest number bet ',FROM,1,100,ST)
+	IF (ST.LT.0) GOTO 10
+	LSYS_GAMFROM(GAME)=FROM
+	CALL INPNUM('Enter # of bonus numbers ',BONUSBET,0,LMXBONUS,ST)
+	IF (ST.LT.0) GOTO 10
+	LSYS_BONUSBET(GAME)=BONUSBET
+	CALL FASTSET(0,LSYS_GAMDIV(0,GAME),LMXSHR+1)
+	CALL FASTSET(0,LSYS_GAMBON(0,GAME),LMXSHR+1)
+	TYPE *,'Enter match with no bonus divisions '
+	ACCEPT *,(LSYS_GAMDIV(I,GAME),I=0,CHOSE)
+C
+	IF (BONUSBET.NE.0) THEN
+	   TYPE *,'Enter bonus divisions '
+	   ACCEPT *,(LSYS_GAMBON(I,GAME),I=0,CHOSE)
+	ENDIF
+C
+C     GENERATE SHARES TABLE
+C
+	DO 490, SYSTEM=1,LMXFULLMARK
+	   DO 480, BONUS=0,BONUSBET
+	      BONUS_OFF=2*BONUS
+	      DO 470, MATCH=0,CHOSE
+	         CALL SYSDIV(CHOSE,FROM,SYSTEM,MATCH,BONUS,BONUSBET,
+     *	 LSYS_GAMBON(0,GAME),LSYS_GAMSHR(0,MATCH,BONUS_OFF,SYSTEM,GAME)
+     *	       ,LSYS_GAMSHR(0,MATCH,BONUS_OFF+1,SYSTEM,GAME))
+C
+	         DO 450, OFF=0,CHOSE
+	            LSYS_GAMSHR(OFF,MATCH,BONUS_OFF,SYSTEM,GAME)=
+     *	            LSYS_GAMSHR(OFF,MATCH,BONUS_OFF,SYSTEM,GAME)
+     *	           *LSYS_GAMDIV(OFF,GAME)
+450	         CONTINUE
+	         IF (BONUS.NE.0.OR.SYSTEM.LT.CHOSE) THEN
+	         DO 460, OFF=0,CHOSE
+	            LSYS_GAMSHR(OFF,MATCH,BONUS_OFF+1,SYSTEM,GAME)=
+     *	            LSYS_GAMSHR(OFF,MATCH,BONUS_OFF+1,SYSTEM,GAME)
+     *	           *LSYS_GAMBON(OFF,GAME)
+460	         CONTINUE
+	         ENDIF
+C***  TYPE 465,SYSTEM,MATCH,BONUS,(LSYS_GAMSHR(I,MATCH,BONUS,SYSTEM
+C*** *                                        ,GAME),I=0,CHOSE)
+C***465   FORMAT(1H ,'System ',I2,' match ',I2,' b ',I1,' shares '
+C*** *   ,10I5)
+C
+470	      CONTINUE
+480	   CONTINUE
+490	CONTINUE
+	GOTO 10
+C
+C     UPDATE LSYSCHK.FIL
+C
+500	CONTINUE
+	CALL WRITEQIO(FDB,1,LSYS_ATR,LSYS_COMMON_LENGTH*4,ST)
+	GOTO 10
+C
+C     DISPLAY LSYS_GAMSHR TABLE
+C
+600	CONTINUE
+	TYPE *,'Displaying LSYS_GAMSHR(*,I1,I2,I3,I4)'
+	CALL INPNUM(' Enter I1 (match) ',MATCH,0,LMXSHR,ST)
+	IF (ST.LT.0) GOTO 10
+	CALL INPNUM(' Enter I2 (bonus off) ',BONUS,0,LMXBONUS*2+1,ST)
+	IF (ST.LT.0) GOTO 10
+	CALL INPNUM(' Enter I3 (system)',SYSTEM,0,LMXMARK,ST)
+	IF (ST.LT.0) GOTO 10
+	CALL INPNUM(' Enter I4 (game)  ',GAME,1,LSYS_MAXGAM,ST)
+	IF (ST.LT.0) GOTO 10
+	TYPE *,(LSYS_GAMSHR(I,MATCH,BONUS,SYSTEM,GAME),I=0,LMXSHR)
+	GOTO 10
+C
+C     PERFORM TIMING BENCHMARK (CALL LSYSCHK N TIMES)
+C
+700	CONTINUE
+	CALL INPNUM('How many times to call ',TIMES,1,100000,ST)
+	IF (ST.LT.0) GOTO 10
+	CALL INPNUM('Enter sysnr ',SYSNR,1,LSYSMAX,ST)
+	IF (ST.LT.0) GOTO 10
+C
+	IF (LSYS_GAME(SYSNR).LE.0) GOTO 10
+	CALL FASTSET(0,BET_MASK,BET_LENGTH)
+C
+C
+C     SET THE BET_MASK
+C
+	GAME=LSYS_GAME(SYSNR)
+	MARKS=LSYS_NUMMRK(SYSNR)
+	CHOSE=LSYS_GAMCHOSE(GAME)
+C
+	DO 710, OFF=1,MARKS
+	   CALL SETNIBLE(1,BET_MASK,OFF)
+710	CONTINUE
+C
+	TYPE *,'Enter winning mask in hex'
+	ACCEPT 715,WINMSK
+715	FORMAT(Z)
+	CALL INPNUM('Enter bonus # ',BONUS,-1,100,ST)
+	IF (ST.LT.0) GOTO 10
+C
+	PAUSE 'take accounting now'
+C
+	DO 720, OFF=1,TIMES
+	   CALL LSYSCHK(BET_MASK,SYSNR,WINMSK,BONUS,SHARE,BONUS_SHARE)
+720	CONTINUE
+C
+	PAUSE 'hello, wake up'
+	GOTO 10
+C
+C     DELETE SYSTEM BET, DELETE IS NOT VERY SOFISTICATED, SHOULD
+C     SHRINK LSYS_TAB
+C
+800	CONTINUE                 !DELETE SYSTEM BET
+	CALL INPNUM('Enter system # to delete ',SYSNR,1,LSYSMAX,ST)
+	IF (ST.LT.0) GOTO 10
+	LSYS_PTR(SYSNR)=0
+	LSYS_NUMBET(SYSNR)=0
+	LSYS_NUMMRK(SYSNR)=0
+	LSYS_GAME(SYSNR)=0
+	LSYS_ATR(SYSNR)=0
+	LSYS_BOARD(SYSNR)=0
+	GOTO 10
+C
+C EDIT SYSTEM BETS
+C
+900	CONTINUE
+	CALL INPNUM('Enter system #: ',SYSNR,1,LSYSMAX,ST)
+	IF (ST.LT.0) GOTO 10
+	IF(LSYS_GAME(SYSNR).LE.0) THEN
+	   TYPE*,' System not defined '
+	   GOTO 10
+	ENDIF
+	GAME=LSYS_GAME(SYSNR)
+	ATR=LSYS_ATR(SYSNR)
+	IF(ATR.EQ.LSYS_FULL) THEN
+	   TYPE*,' You must reenter full system bets '
+	   GOTO 10
+	ENDIF
+	MARKS=LSYS_NUMMRK(SYSNR)
+	NBET=LSYS_NUMBET(SYSNR)
+C
+C
+910	CONTINUE
+	 CALL INPNUM('Enter bet # to edit (E-exit) ',EDBET,1,NBET,ST)
+	 IF(ST.LT.0) GOTO 10
+	 POINTER=LSYS_PTR(SYSNR)+(EDBET-1)*2
+C
+C
+	   TYPE *,'Entering bet ',EDBET
+	   CALL INPNUM('Enter # of marks ',MRK,1,MARKS,ST)
+	   IF (ST.LT.0) GOTO 10
+	   LSYS_TAB(POINTER)=MRK
+C
+920	   CONTINUE
+	   TYPE *,'Enter marks'
+	   ACCEPT *,(BET_DEF(I),I=1,MRK)
+	   LSYS_TAB(POINTER+1)=0
+	   DO 930, OFF=1,MRK
+	     IF (BET_DEF(OFF).GT.LMXMARK.OR.BET_DEF(OFF).LE.0.OR.
+     *	         BET_DEF(OFF).GT.MARKS) THEN
+	       TYPE *,'Invalid bet'
+	       GOTO 920
+	     ENDIF
+	     CALL BSET(LSYS_TAB(POINTER+1),BET_DEF(OFF)-1)
+930	   CONTINUE
+C
+	   CALL BITCNT(LSYS_TAB(POINTER+1),L_SYSBYTES,COUNT)
+	    IF (COUNT.NE.MRK) THEN
+	      TYPE *,'Invalid bet definition, please reenter bet '
+	      GOTO 920
+	   ENDIF
+C
+	GOTO 910
+	END

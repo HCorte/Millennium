@@ -1,0 +1,22 @@
+    TPR.HLP                GTECH Distributed Network
+                           Todays Couple Snapshot Help         Page 1 of 1
+ 
+    The TPR snapshot contains draw information for the Todays Couple game.
+
+    The information displayed includes:
+ 
+    game name     - Paivan Pari
+    index         - game index number
+    game sales    - the name of the day for which sales information is 
+                    being displayed
+    date          - system date and system time
+    system        - letter id of the system and configuration information 
+                    example primary or secondary
+    sales         - count and amount of sales for each game index
+    cancels       - count and amount of cancels for each game index
+    cashs/refunds - count and amount of cashes and refunds for each game 
+                    index
+    total sales   - total sales for the game
+    total cashes  - total cashes for the game
+    total cancels - total cancels for the game
+    total refunds - total refunds for the game

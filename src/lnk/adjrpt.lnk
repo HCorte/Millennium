@@ -1,0 +1,23 @@
+$! GXSRC:ADJRPT.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]ADJRPT.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:32:34   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 12:36:00   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:34:28   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:ADJRPT.EXE -
+OBJLIB:ADJRPT,-
+SRTFLD,-
+ADJRPTSUB,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAGTCOM.ESH/SHAREABLE,-
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

@@ -1,0 +1,22 @@
+    TTUL.HLP                GTECH Distributed Network
+                              Tulos Snapshot Help             Page 1 of 1
+ 
+    The TTUL snapshot reflets sales information for the Tulos game.
+    
+    The information displayed includes:
+ 
+    type/index     - game type and game index
+    sales          - sales for each game
+    cancels        - amount of wagers cancelled for each game
+    cashes/refunds - total amount of cashes/refunds per game
+    totals         - total sales, cancels, cashes and refunds for all 
+                     Tulos games.
+
+
+
+
+
+
+
+
+

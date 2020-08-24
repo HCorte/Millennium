@@ -1,0 +1,32 @@
+C
+C FUNCTION SMONY
+C $Log:   GXAFXT:[GOLS]SMONY.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 15:09:20   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:38:34   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_bigamt.for **
+C
+C
+C
+C SUBROUTINE TO CONVERT 4 BYTE SIGNED INTEGER TO BASE UNIT
+C
+C
+	DOUBLE PRECISION FUNCTION SMONY(NUM)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	DOUBLE PRECISION BIG
+	INTEGER*4 NUM
+C
+C
+	BIG=DFLOAT(NUM)
+	SMONY=BIG/2.0D0
+	RETURN
+	END

@@ -1,0 +1,151 @@
+C FTP.DEF
+C  
+C V14 14-JUN-2000 UXN IND removed.
+C V13 12-JUN-2000 OXK VINDEX removed (not used)
+C V12 25-Nov-1999 OXK WAP added to TEBEID's.
+C V11 28-Nov-1995 HXK Batch of changes for Double/Couple release
+C V10 02-Dec-1994 HXK aDEDed new bingo head record
+C V09 23-Nov-1994 PXB Added parameters for Bingo game.
+C V08 02-Sep-1994 HXK Initial revision.
+C V07 26-Jun-1994 HXK added subtypes for wininfo records
+C V06 12-May-1994 HXK CHANGED FLUN VALUE.
+C V05 12-May-1994 HXK CHANGED LUN TO FLUN, ADDED VINDEX.
+C V04 12-May-1994 HXK ADDED LUN, FTP_TEST
+C V03 09-May-1994 HXK ADDED FLUSH LOGICAL.
+C V02 27-Apr-1994 HXK TIDIED UP.
+C V01 27-Apr-1994 HXK Initial revision.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+      INTEGER*4 HEADREC		! Header
+      PARAMETER (HEADREC=0)
+        INTEGER*4 TPROG, FTRNS, BNKWN
+        PARAMETER (TPROG=0)
+        PARAMETER (FTRNS=1)
+        PARAMETER (BNKWN=2)
+
+      INTEGER*4 BNKWREC		! Bank winners
+      PARAMETER (BNKWREC=1)
+
+      INTEGER*4 VALDREC		! Validations
+      PARAMETER (VALDREC=2)
+
+      INTEGER*4 RENTREC		! Rents
+      PARAMETER (RENTREC=3)
+
+      INTEGER*4 LIABREC		! Liabilities
+      PARAMETER (LIABREC=4)
+	INTEGER*4 LIABWHED
+	PARAMETER (LIABWHED=0)
+	INTEGER*4 LIABRHED
+	PARAMETER (LIABRHED=1)
+	INTEGER*4 LIABMRK
+	PARAMETER (LIABMRK=2)
+	INTEGER*4 LIABWTOT
+	PARAMETER (LIABWTOT=3)
+	INTEGER*4 LIABRTOT
+	PARAMETER (LIABRTOT=4)
+	INTEGER*4 TB_LIABWHED
+	PARAMETER (TB_LIABWHED=10)
+	INTEGER*4 TB_LIABRHED
+	PARAMETER (TB_LIABRHED=11)
+	INTEGER*4 TB_LIABWTOT
+	PARAMETER (TB_LIABWTOT=13)
+	INTEGER*4 TB_LIABRTOT
+	PARAMETER (TB_LIABRTOT=14)
+
+      INTEGER*4 BNKSREC		! Bank sums
+      PARAMETER (BNKSREC=5)
+        INTEGER*4 BNKINF
+        PARAMETER (BNKINF=0)
+        INTEGER*4 BNKCHK
+        PARAMETER (BNKCHK=1)
+
+      INTEGER*4 TMFSREC		! TMF sums	
+      PARAMETER (TMFSREC=6)
+        INTEGER*4 WAGSM,VALSM,REFSM
+	PARAMETER (WAGSM=0)    
+	PARAMETER (VALSM=1)
+	PARAMETER (REFSM=2)
+
+      INTEGER*4 TMFTREC		! TMF totals
+      PARAMETER (TMFTREC=7)
+        INTEGER*4 TOTNUM
+        PARAMETER (TOTNUM=10)
+	INTEGER*4 TOTCNT
+	PARAMETER (TOTCNT=0)
+	INTEGER*4 TOTAMT
+	PARAMETER (TOTAMT=1)
+
+      INTEGER*4 WNERREC		! Winners
+      PARAMETER (WNERREC=8)
+
+      INTEGER*4 WINFREC		! Win info
+      PARAMETER (WINFREC=9)
+          INTEGER*4 NRM_INF_REC
+          PARAMETER (NRM_INF_REC=0)
+          INTEGER*4 WIT_INF_HEAD
+          PARAMETER (WIT_INF_HEAD=1)
+          INTEGER*4 WIT_INF_DATA
+          PARAMETER (WIT_INF_DATA=2)
+          INTEGER*4 TSL_INF_HEAD
+          PARAMETER (TSL_INF_HEAD=3)
+          INTEGER*4 TSL_INF_DATA
+          PARAMETER (TSL_INF_DATA=4)
+          INTEGER*4 BNG_INF_HEAD
+          PARAMETER (BNG_INF_HEAD=5)
+          INTEGER*4 BNG_INF_HEAD2
+          PARAMETER (BNG_INF_HEAD2=6)
+          INTEGER*4 BNG_INF_DATA
+          PARAMETER (BNG_INF_DATA=7)
+          INTEGER*4 DCL_INF_HEAD
+          PARAMETER (DCL_INF_HEAD=8)
+          INTEGER*4 DCL_INF_DATA
+          PARAMETER (DCL_INF_DATA=9)
+	  INTEGER*4 DTR_INF_DATA
+	  PARAMETER (DTR_INF_DATA=10)
+	  INTEGER*4 DTR_INF_HEAD
+	  PARAMETER (DTR_INF_HEAD=11)
+	  INTEGER*4 DSS_INF_HEAD
+	  PARAMETER (DSS_INF_HEAD=12)
+
+      INTEGER*4 OINFREC		! Oddset info
+      PARAMETER (OINFREC=10)
+
+      INTEGER*4 BYTLEN
+      PARAMETER (BYTLEN=100)
+
+      INTEGER*4 TAPLEN
+      PARAMETER (TAPLEN=100)
+
+      INTEGER*4 FLUN	
+      PARAMETER(FLUN=2)
+
+      INTEGER*4 MAX_DRW
+      PARAMETER (MAX_DRW=2500)
+
+      COMMON /IBMBUF/ IBMBUF
+      CHARACTER*100 IBMBUF
+      INTEGER*4     IBUF(BYTLEN/4)
+      EQUIVALENCE(IBUF,IBMBUF)
+      
+      INTEGER*4	TEBEID   ! 1-NO TEBE, 2-VRU/WWW, 3-VRU, 4-WWW, 5-WAP
+      PARAMETER  (TEBEID=5) ! ATTRIBUTE COUNT.
+      INTEGER*4  NTB, OTB, VRU, WWW, WAP
+      PARAMETER  (NTB  = 1) ! ALL TOGETHER (TEBE AND NON-TEBE)
+      PARAMETER  (OTB  = 2) ! OLD TEBE WINNER VRU/WWW
+      PARAMETER  (VRU  = 3) ! VRU WINNERS
+      PARAMETER  (WWW  = 4) ! WWW WINNERS
+      PARAMETER  (WAP  = 5) ! WAP WINNERS

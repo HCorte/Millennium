@@ -1,0 +1,296 @@
+C PRINTEURO.DEF
+C
+C V01 18-04-2016 SCML CREATION (M16 PROJECT)
+C
+C DEFINITIONS FOR PRINTING EUR TRANSACTIONS IN TMIR
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C Copyright 2016 SCML Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4 SHNO, SHYES, SMNO, SMYES, KINO, KIYES
+        PARAMETER (SHNO = 0, SHYES = 1, SMNO = 0, SMYES = 1, KINO = 0, KIYES = 1)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        INTEGER*4 GTCNT, GTAMT, EUM1TAMT, RAF2TAMT
+        PARAMETER (GTCNT = 1, GTAMT = 2, EUM1TAMT = 3, RAF2TAMT = 4)
+C
+        COMMON /EURSTAT/ 
+     *    EURGWAG(EMAXGAM,SHNO:SHYES,SMNO:SMYES,KINO:KIYES,GTCNT:RAF2TAMT),
+     *    EURGCAN(EMAXGAM,SHNO:SHYES,SMNO:SMYES,GTCNT:RAF2TAMT),
+     *    EURGVAL(EMAXGAM,SHNO:SHYES,SMNO:SMYES,GTCNT:RAF2TAMT)
+C
+        INTEGER*4 EURGWAG
+        INTEGER*4 EURGCAN
+        INTEGER*8 EURGVAL
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        INTEGER*4 TOTWAG, TOTCAN, TOTVAL
+        PARAMETER (TOTWAG = 1, TOTCAN = 2, TOTVAL = 3)
+C
+        COMMON /EURSTAT/ 
+     *    EURTOT(TOTWAG:TOTVAL,GTCNT:RAF2TAMT)
+C
+        INTEGER*8 EURTOT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        INTEGER*4 GBCNT, EUM1BCNT, RAF1BCNT, RAF2BCNT
+        PARAMETER (GBCNT = 1, EUM1BCNT = 2, RAF1BCNT = 3, RAF2BCNT = 4)
+C
+        COMMON /EURSTAT/ 
+     *    EURGBET(EMAXGAM,SHNO:SHYES,SMNO:SMYES,KINO:KIYES,GBCNT:RAF2BCNT),
+     *    EURTBET(GBCNT:RAF2BCNT)
+C
+        INTEGER*4 EURGBET, EURTBET
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        INTEGER*4 NUMHI, NUMLO, STRHI, STRLO
+        PARAMETER (NUMLO = 5, NUMHI = 11, STRLO = 2, STRHI = 12)
+C
+        COMMON /EURSTAT/
+     *    EUM1MULTOT(NUMLO:NUMHI+1,STRLO:STRHI+1)                               !TOTAL COUNT # OF EM MULTIPLE BETS BY MULTIPLE BET TYPE
+C
+        INTEGER*4 EUM1MULTOT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        INTEGER*4 SIMLO, SIMHI
+        PARAMETER (SIMLO = 1, SIMHI = 5)
+C
+        COMMON /EURSTAT/
+     *    EUM1SIMTOT(SIMLO:SIMHI+1)
+C
+        INTEGER*4 EUM1SIMTOT                                                    !TOTAL COUNT # OF EM WAGER TRANSACTIONS BY # OF SIMPLE BETS BY COUPON
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        INTEGER*4 EUM1MSTAB(NUMLO:NUMHI,STRLO:STRHI)                            !MULTIPLE TO SIMPLE BETS TABLE
+        DATA EUM1MSTAB /  1,  6, 21, 56,126,252,462,                            ! 2 Stars + 5-11 Numbers
+     *                    3, 18, 63,168,378,756,  0,                            ! 3 Stars + 5-10 Numbers
+     *                    6, 36,126,336,756,  0,  0,                            ! 4 Stars + 5-9  Numbers
+     *                   10, 60,210,560,  0,  0,  0,                            ! 5 Stars + 5-8  Numbers
+     *                   15, 90,315,  0,  0,  0,  0,                            ! 6 Stars + 5-7  Numbers
+     *                   21,126,441,  0,  0,  0,  0,                            ! 7 Stars + 5-7  Numbers
+     *                   28,168,588,  0,  0,  0,  0,                            ! 8 Stars + 5-7  Numbers
+     *                   36,216,756,  0,  0,  0,  0,                            ! 9 Stars + 5-7  Numbers
+     *                   45,270,  0,  0,  0,  0,  0,                            !10 Stars + 5-6  Numbers
+     *                   55,330,  0,  0,  0,  0,  0,                            !11 Stars + 5-6  Numbers
+     *                   66,396,  0,  0,  0,  0,  0/                            !12 Stars + 5-5  Numbers
+C
+        INTEGER*4 EUM1NUMHI(STRLO:STRHI)                                        !HIGHEST NUMBER AS A FUNCTION OF STAR
+        DATA EUM1NUMHI/11,10,9,8,7,7,7,7,6,6,6/
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        CHARACTER*20 EURGNAM(EMAXGAM,SHNO:SHYES,SMNO:SMYES,KINO:KIYES)
+        DATA EURGNAM /'EM                  ',                                   !(1 ,0,0,0)
+     *                '                    ',                                   !(2 ,0,0,0)
+     *                'M1LHAO              ',                                   !(3 ,0,0,0)
+     *                '                    ',                                   !(4 ,0,0,0)
+     *                '                    ',                                   !(5 ,0,0,0)
+     *                '                    ',                                   !(6 ,0,0,0)
+     *                '                    ',                                   !(7 ,0,0,0)
+     *                '                    ',                                   !(8 ,0,0,0)
+     *                '                    ',                                   !(9 ,0,0,0)
+     *                '                    ',                                   !(10,0,0,0)
+C
+     *                'EM+CMIL             ',                                   !(1 ,1,0,0)
+     *                '                    ',                                   !(2 ,1,0,0)
+     *                '                    ',                                   !(3 ,1,0,0)
+     *                '                    ',                                   !(4 ,1,0,0)
+     *                '                    ',                                   !(5 ,1,0,0)
+     *                '                    ',                                   !(6 ,1,0,0)
+     *                '                    ',                                   !(7 ,1,0,0)
+     *                '                    ',                                   !(8 ,1,0,0)
+     *                '                    ',                                   !(9 ,1,0,0)
+     *                '                    ',                                   !(10,1,0,0)
+C
+     *                'EM+M1LHAO           ',                                   !(1 ,0,1,0)
+     *                '                    ',                                   !(2 ,0,1,0)
+     *                '                    ',                                   !(3 ,0,1,0)
+     *                '                    ',                                   !(4 ,0,1,0)
+     *                '                    ',                                   !(5 ,0,1,0)
+     *                '                    ',                                   !(6 ,0,1,0)
+     *                '                    ',                                   !(7 ,0,1,0)
+     *                '                    ',                                   !(8 ,0,1,0)
+     *                '                    ',                                   !(9 ,0,1,0)
+     *                '                    ',                                   !(10,0,1,0)
+C
+     *                'EM+CMIL+M1LHAO      ',                                   !(1 ,1,1,0)
+     *                '                    ',                                   !(2 ,1,1,0)
+     *                '                    ',                                   !(3 ,1,1,0)
+     *                '                    ',                                   !(4 ,1,1,0)
+     *                '                    ',                                   !(5 ,1,1,0)
+     *                '                    ',                                   !(6 ,1,1,0)
+     *                '                    ',                                   !(7 ,1,1,0)
+     *                '                    ',                                   !(8 ,1,1,0)
+     *                '                    ',                                   !(9 ,1,1,0)
+     *                '                    ',                                   !(10,1,1,0)
+C       WITH JOKER
+     *                'EM+JOKER            ',                                   !(1 ,0,0,1)
+     *                '                    ',                                   !(2 ,0,0,1)
+     *                'M1LHAO              ',                                   !(3 ,0,0,1)
+     *                '                    ',                                   !(4 ,0,0,1)
+     *                '                    ',                                   !(5 ,0,0,1)
+     *                '                    ',                                   !(6 ,0,0,1)
+     *                '                    ',                                   !(7 ,0,0,1)
+     *                '                    ',                                   !(8 ,0,0,1)
+     *                '                    ',                                   !(9 ,0,0,1)
+     *                '                    ',                                   !(10,0,0,1)
+C
+     *                'EM+CMIL+JOKER       ',                                   !(1 ,1,0,1)
+     *                '                    ',                                   !(2 ,1,0,1)
+     *                '                    ',                                   !(3 ,1,0,1)
+     *                '                    ',                                   !(4 ,1,0,1)
+     *                '                    ',                                   !(5 ,1,0,1)
+     *                '                    ',                                   !(6 ,1,0,1)
+     *                '                    ',                                   !(7 ,1,0,1)
+     *                '                    ',                                   !(8 ,1,0,1)
+     *                '                    ',                                   !(9 ,1,0,1)
+     *                '                    ',                                   !(10,1,0,1)
+C
+     *                'EM+M1LHAO+JOKER     ',                                   !(1 ,0,1,1)
+     *                '                    ',                                   !(2 ,0,1,1)
+     *                '                    ',                                   !(3 ,0,1,1)
+     *                '                    ',                                   !(4 ,0,1,1)
+     *                '                    ',                                   !(5 ,0,1,1)
+     *                '                    ',                                   !(6 ,0,1,1)
+     *                '                    ',                                   !(7 ,0,1,1)
+     *                '                    ',                                   !(8 ,0,1,1)
+     *                '                    ',                                   !(9 ,0,1,1)
+     *                '                    ',                                   !(10,0,1,1)
+C
+     *                'EM+CMIL+M1LHAO+JOKER',                                   !(1 ,1,1,1)
+     *                '                    ',                                   !(2 ,1,1,1)
+     *                '                    ',                                   !(3 ,1,1,1)
+     *                '                    ',                                   !(4 ,1,1,1)
+     *                '                    ',                                   !(5 ,1,1,1)
+     *                '                    ',                                   !(6 ,1,1,1)
+     *                '                    ',                                   !(7 ,1,1,1)
+     *                '                    ',                                   !(8 ,1,1,1)
+     *                '                    ',                                   !(9 ,1,1,1)
+     *                '                    '/                                   !(10,1,1,1)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        CHARACTER*32 EURVALSUBTYP(0:15)
+        DATA EURVALSUBTYP /
+     *                      'Regular                         '                  !0x10
+     *                  ,   'Mid-Tier Cash                   '                  !0x11
+     *                  ,   'Claim                           '                  !0x12
+     *                  ,   'Validation Detail               '                  !0x13
+     *                  ,   '                                '                  !0x14
+     *                  ,   '                                '                  !0x15
+     *                  ,   'NV Cash Payment                 '                  !0x16 (Inquiry)
+     *                  ,   'NV Cash Payment or Bank Transfer'                  !0x17 (Inquiry)
+     *                  ,   'NV Cash Payment                 '                  !0x18
+     *                  ,   'NV Bank Transfer                '                  !0x19
+     *                  ,   'NV Bank Transfer Only           '                  !0x1A (Inquiry)
+     *                  ,   '                                '                  !0x1B
+     *                  ,   '                                '                  !0x1C
+     *                  ,   '                                '                  !0x1D
+     *                  ,   '                                '                  !0x1E
+     *                  ,   'Validation Error                '                  !0x1F
+     *                    /
+C
+        CHARACTER*20 EURVALSTATUS(10:11)
+        DATA EURVALSTATUS /
+     *                      'No Exchange Ticket  '                              !10
+     *                  ,   'Cashed With Exchange'                              !11
+     *                    /
+C
+        CHARACTER*30 EURVALSTATUSE(0:31)
+        DATA EURVALSTATUSE /
+     *                       'No Results Yet Or Not A Winner'                   !0
+     *                   ,   'Results Not Confirmed         '                   !1
+     *                   ,   'No Such Ticket                '                   !2
+     *                   ,   'Cant Pay Yet                  '                   !3
+     *                   ,   'Already Cashed                '                   !4
+     *                   ,   '---------------               '                   !5
+     *                   ,   'Prize Expired                 '                   !6
+     *                   , 2*'---------------               '                   !7-8
+     *                   ,   'Cash At Lottery               '                   !9
+     *                   , 8*'---------------               '                   !10-17
+     *                   ,   'No Details Available          '                   !18
+     *                   ,11*'---------------               '                   !19-29
+     *                   ,   'Winner Holding Limit          '                   !30
+     *                   ,   'No Results Yet                '                   !31
+     *                     /
+C
+        CHARACTER*49 EURCANSTATUS(0:7)
+        DATA EURCANSTATUS /
+     *                      'Good Cancel                                      ' !0
+     *                  ,   'Time Limit Exceeded                              ' !1
+     *                  ,   'Invalid Cancel                                   ' !2
+     *                  ,   'Already Cancelled                                ' !3
+     *                  ,   'Wrong Terminal                                   ' !4
+     *                  , 2*'---------------                                  ' !5-6 (STATUS 5 IS SET IN OUTMGR WHEN CANCEL FUNCTION IS SUPRESSED)
+     *                  ,   'Cancel only possible by cancelling the main wager' !7
+     *                    /
+C
+        CHARACTER*11 WCHDESC(0:5)
+        DATA WCHDESC /
+     *                 'Not defined'
+     *             ,   'Retailer   '
+     *             ,   'Web        '
+     *             ,   'SMS        '
+     *             ,   'Portal MED '
+     *             ,   'Mobile     '
+     *               /
+C
+        CHARACTER*9 DRWINDDESC(0:7)
+        DATA DRWINDDESC /
+     *                    'Next Draw'
+     *                ,   'Monday   '
+     *                ,   'Tuesday  '
+     *                ,   'Wednesday'
+     *                ,   'Thursday '
+     *                ,   'Friday   '
+     *                ,   'Saturday '
+     *                ,   'Sunday   '
+     *                  /
+C
+        INTEGER*4     PTID, PTUNKN, PTCARD, PTPHON
+        PARAMETER     (PTUNKN = -1, PTCARD = 0, PTPHON = 1)
+        CHARACTER*24  PLIDTYPDESC(PTUNKN:PTPHON)
+        DATA PLIDTYPDESC /
+     *                     '(Unknown Player Type Id)'
+     *                 ,   '(Card #)                '
+     *                 ,   '(Phone #)               '
+     *                   /
+C
+        INTEGER*4 NV, NO, YES
+        PARAMETER (NV = -1, NO = 0, YES = 1)
+C
+        CHARACTER*1 YNDESC(NV:YES)
+        DATA YNDESC /' ','N','Y'/
+C
+        CHARACTER*3 YESNODESC(NV:YES)
+        DATA YESNODESC /'   ','No ','Yes'/
+C
+        CHARACTER*11 C11MONY(2)
+        CHARACTER*17 BLANK11MONY
+        DATA BLANK11MONY /'                 '/
+C
+        CHARACTER*17 C17MONY(3)
+        CHARACTER*17 BLANK17MONY
+        DATA BLANK17MONY /'                 '/
+C
+        INTEGER*4  NIB(6)
+        CHARACTER*24 CNIB
+        EQUIVALENCE (NIB,CNIB)
+        INTEGER*4  BLANK
+        DATA BLANK /'    '/
+C
+        CHARACTER*8  IAGT_NO
+C
+        INTEGER*4 I4PRZAMT(2)                                                   !PRIZE AMOUNT
+        INTEGER*8 I8PRZAMT
+        REAL*8    R8PRZAMT
+        EQUIVALENCE (I8PRZAMT,I4PRZAMT)
+C
+        INTEGER*4 I4NPZAMT(2)                                                   !NET PRIZE AMOUNT
+        INTEGER*8 I8NPZAMT
+        REAL*8    R8NPZAMT
+        EQUIVALENCE (I8NPZAMT,I4NPZAMT)
+C
+        INTEGER*4 I4TAXAMT(2)                                                   !TAX PRIZE AMOUNT
+        INTEGER*8 I8TAXAMT
+        REAL*8    R8TAXAMT
+        EQUIVALENCE (I8TAXAMT,I4TAXAMT)
+C
+        INTEGER*4 I4AMT(2)                                                      !AUX VARIABLE AMOUNT
+        INTEGER*8 I8AMT
+        EQUIVALENCE (I8AMT,I4AMT)
+C
+C END PRINTEURO.DEF
+C

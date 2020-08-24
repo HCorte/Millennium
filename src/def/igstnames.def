@@ -1,0 +1,97 @@
+C IGSTNAMES.DEF
+C
+C V01 10-MAR-2014 Placard Project
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C       
+        
+        REAL*8 IGSTNAMES(0:NUMIGSTTYP)
+        DATA   IGSTNAMES/'Wagers  ','Cancels ','Valids  ','Payments',
+     *                 'Reports ','????????'/
+	COMMON /IGSTNAMES/ IGSTNAMES
+	
+C        
+        INTEGER*4 VPM_LIDX, VPM_RIDX
+        PARAMETER (VPM_LIDX = -1, VPM_RIDX = 2)
+        CHARACTER*29 VALPAYMODE(VPM_LIDX:VPM_RIDX)
+        DATA VALPAYMODE /
+     *                ' '
+     *              , 'Cash Payment '                        ! x00
+     *              , 'Bank Transfer'                        ! x01
+     *              , 'Cash Payment or Bank Transfer'        ! x02     
+     *                   /
+	COMMON /VALPAYMODE/ VALPAYMODE
+C        
+        INTEGER*4 SEC_LIDX, SEC_RIDX
+        PARAMETER (SEC_LIDX = 0, SEC_RIDX = 3)
+        CHARACTER*6 SYSTEMERRORCODE(SEC_LIDX:SEC_RIDX)
+        DATA SYSTEMERRORCODE /
+     *                '      '                        ! x00
+     *              , 'MIL - '                        ! x01
+     *              , 'IGS - '                        ! x02
+     *              , 'ABP - '                        ! x03     
+     *                   /
+	COMMON /SYSTEMERRORCODE/ SYSTEMERRORCODE
+C        
+        CHARACTER*31 VALSTATUS(-1:8)
+        DATA VALSTATUS /
+     *                ' '
+     *              , 'Good Validation'
+     *              , 'No Results Yet Or Not A Winner'
+     *              , 'Results Not Confirmed'
+     *              , 'No Such Ticket'
+     *              , 'Cant Pay Yet'
+     *              , 'Already Cashed'
+     *              , 'Cash At Lottery'
+     *              , 'No Details Available'
+     *              , 'Winner Holding Limit'
+     *                   /
+	COMMON /VALSTATUS/ VALSTATUS
+C       
+        CHARACTER*20 CANSTATUS(-1:5)
+        DATA CANSTATUS /
+     *                ' '
+     *              , 'Good Cancel'
+     *              , 'Time Limit Exceeded'
+     *              , 'Event Already Closed'
+     *              , 'Invalid Cancel'
+     *              , 'Already Cancelled'
+     *              , 'Wrong Terminal'
+     *                   /
+	COMMON /CANSTATUS/ CANSTATUS
+C        
+        CHARACTER*31 PAYSTATUSE(-1:8)
+        DATA PAYSTATUSE /
+     *                ' '
+     *              , 'Good Payment'
+     *              , 'No Results Yet Or Not A Winner'
+     *              , 'Results Not Confirmed'
+     *              , 'No Such Ticket'
+     *              , 'Cant Pay Yet'
+     *              , 'Already Cashed'
+     *              , 'Cash At Lottery'
+     *              , 'No Details Available'
+     *              , 'Winner Holding Limit'
+     *                   /
+	COMMON /PAYSTATUSE/ PAYSTATUSE
+C        
+        INTEGER*4 RTYP_LIDX, RTYP_RIDX
+        PARAMETER (RTYP_LIDX = 0, RTYP_RIDX = 3)
+	CHARACTER*12 REPRINTTYPE(RTYP_LIDX:RTYP_RIDX)
+        DATA REPRINTTYPE /
+     *                ' '                   ! x00
+     *              , 'APOSTA'              ! x01
+     *              , 'PAGAMENTO'           ! x02
+     *              , 'CANCELAMENTO'        ! x03     
+     *                   /
+	COMMON /REPRINTTYPE/ REPRINTTYPE
+C        
+        INTEGER*4 VFN_LIDX, VFN_RIDX
+        PARAMETER (VFN_LIDX = -1, VFN_RIDX = 1)
+        CHARACTER*3 VALFLAGNIF(VFN_LIDX:VFN_RIDX)
+        DATA VALFLAGNIF /
+     *                ' '
+     *              , 'No '                        ! x00
+     *              , 'Yes'                        ! x01     
+     *                   /
+	COMMON /VALFLAGNIF/ VALFLAGNIF
+	

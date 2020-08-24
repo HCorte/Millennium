@@ -1,0 +1,132 @@
+C
+C X2XTER.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XTER.DEV                                   $
+C  $Date::   17 Apr 1996 16:45:34                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V04 15-JUN-00 UXN COMMON/X2XTER_NAME/ X2XTER_NAME added.
+C V03 12-DEC-94 DAS Integrate UK changes into X2X Baseline
+C V02 01-NOV-94 GPR Add ! to fields which require RUNSYS and $ to
+C                   fields which require X2BLDNET to take effect
+C                   and get rid of X2XGBL_COMTYP
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C The DEF describes the variables which are contained in the
+C X2X Terminal Configuration file.
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XTER_ENTRIES counter, the X2XTER_FIELD, and
+C        the X2XTER_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   X2XTER_REC(128)     !Record buffer
+	CHARACTER   X2XTER_CREC(512)*1  !Record buffer
+	EQUIVALENCE (X2XTER_REC, X2XTER_CREC)
+C
+	INTEGER*4   X2XTER_SECT         !Number of sectors per rec
+	PARAMETER  (X2XTER_SECT=2)
+	CHARACTER   X2XTER_NAME*10      !Global Setup file name
+	DATA        X2XTER_NAME /'X2XTER.FIL'/
+	COMMON/X2XTER_NAME/ X2XTER_NAME
+	INTEGER*4   X2XTER_FDB(7)       !File descriptor block
+	DATA        X2XTER_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XTER_TER              !Terminal number
+	INTEGER*4   X2XTER_STN              !Station number
+	INTEGER*4   X2XTER_PORT             !Port relative to station
+	CHARACTER   X2XTER_DROP*2           !Drop address
+	INTEGER*4   X2XTER_STATE            !Terminal status
+	INTEGER*4   X2XTER_UPDATE           !Last date updated
+	INTEGER*4   X2XTER_FREE(118)        !Free space
+	INTEGER*4   X2XTER_BITMAP           !Field update bitmap
+	INTEGER*4   X2XTER_BITMAP2          !Field update bitmap
+	INTEGER*4   X2XTER_BITMAP3          !Field update bitmap
+	INTEGER*4   X2XTER_BITMAP4          !Field update bitmap
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+	EQUIVALENCE (X2XTER_REC(1),  X2XTER_TER)
+	EQUIVALENCE (X2XTER_REC(2),  X2XTER_STN)
+	EQUIVALENCE (X2XTER_REC(3),  X2XTER_PORT)
+	EQUIVALENCE (X2XTER_REC(4),  X2XTER_DROP)
+	EQUIVALENCE (X2XTER_REC(5),  X2XTER_STATE)
+	EQUIVALENCE (X2XTER_REC(6),  X2XTER_UPDATE)
+	EQUIVALENCE (X2XTER_REC(7),  X2XTER_FREE)
+	EQUIVALENCE (X2XTER_REC(125),X2XTER_BITMAP)
+	EQUIVALENCE (X2XTER_REC(126),X2XTER_BITMAP2)
+	EQUIVALENCE (X2XTER_REC(127),X2XTER_BITMAP3)
+	EQUIVALENCE (X2XTER_REC(128),X2XTER_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XTER_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XTER_ENTRIES
+	PARAMETER (X2XTER_ENTRIES=6)
+C
+	CHARACTER X2XTER_FIELD(X2XTER_ENTRIES)*15
+	DATA      X2XTER_FIELD
+     *	    /'Terminal #     ','$Station       ','$Port          ',	!V02
+     *	     '$Drop          ','$Status        ','Last updated   '/	!V02
+C
+C STORE THE VALID BOT AND TOP RANGE FOR EACH VARIABLE.
+C NOTE: A -1 IN THE BOT RANGE DESIGNATES A CHARACTER
+C       VARIABLE AND THE TOP RANGE INDICATES THE LENGTH,
+C       A -2 IN THE BOTTOM RANGE DESIGNATES BCD INPUT.
+C
+	INTEGER*4 X2XTER_RANGE(2,X2XTER_ENTRIES)
+	DATA      X2XTER_RANGE
+     *	    /1,X2X_TERMS,  1,X2X_STATIONS, 1,X2X_MAXPORT,
+     *	    -1,2,     0,6,     0,0/
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XTER_INDEX(X2XTER_ENTRIES)
+	DATA      X2XTER_INDEX
+     *	    /1,   2,   3,
+     *	     4,   5,   6/
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+	INTEGER*4 X2XTER_VALUE(15,X2XTER_ENTRIES)
+	DATA      X2XTER_VALUE
+     *	    /15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1/
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XTER_COMMON/
+	COMMON /X2XTER_COMMON/ X2XTER_REC,   X2XTER_FDB,
+     *	                       X2XTER_RANGE, X2XTER_INDEX,
+     *	                       X2XTER_VALUE, X2XTER_FIELD
+C
+C

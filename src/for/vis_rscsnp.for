@@ -1,0 +1,380 @@
+C SUBROUTINE RSCSNP
+C 
+C V15 07-JUL-1999 UXN MAXSCR CHANGED TO MAX_SCORE
+C V14 25-APR-1997 RXK Change of format of display of odds which are requested 
+C                     by /xxxx   
+C V13 02-SEP-1994 HXK Merge of May,June RFSS batch 
+C V12 21-MAY-1994 HXK FIXED FORMAT STATEMENT BUG
+C V11 21-MAY-1994 HXK REARRANGED /XXXX STUFF
+C V10 21-MAY-1994 HXK SHOW /XXXX ON SCREEN
+C V09 28-APR-1994 JXP Inquiries of score odds up to 50-50 now possible
+C V08 02-FEB-1994 HXK FURHER LAYOUT FIXES.
+C V07 01-FEB-1994 HXK FIXED NUMBER OF WINNERS, SHOW CANCELLED TEXT.
+C V06 11-JAN-1994 JXP Simple text changes
+C V05 02-JAN-1994 HXK CAHNGED LOOP ON SCPOOL FROM 10000 TO SLEN.
+C V04 13-JUN-1993 HXK added AGTINF.DEF, PRMAGT.DEF
+C V03 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V02 22-OCT-1991 GCAN INITIAL RELEASE FOR THE NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXTEND
+	SUBROUTINE RSCSNP(NUM,GIND,SCORE)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:SCRCOM.DEF'
+	INCLUDE 'INCLIB:DSCREC.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+        INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:VISCOM.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+     
+	INTEGER*2 DBUF2(LDATE_LEN),CBUF(LDATE_LEN),TIME
+	INTEGER*4 NUM,DRAW,GNUM,ST
+	INTEGER*4 TOTSAL,TAX,GSTATUS,WEEK,YEAR
+	INTEGER*4 SALTAX/0/                    !TEMPORARILY UNTILL FURTHER....
+	INTEGER*4 I,K,LNS
+	INTEGER*4 DSCORES(2,45),FDB(7)
+	INTEGER*4 GIND           !SCORE GAME NUMBER
+	INTEGER*4 NETPOL         !70% OF SALES + ROLL POT + ROUND POT
+	INTEGER*4 HOMSCR,AWYSCR,INDEX,IODDS
+	REAL*8    TOTAL                       !Total Sales for Game
+	REAL*8    RODDS
+	CHARACTER*13 POLSTS(3)
+
+	INTEGER*4 SCORE
+
+
+	DATA POLSTS/'CHANGING ODDS',' FINAL ODDS  ','   RESULTS   '/
+C
+	DRAW=NUM
+	IF(GIND.LT.1.OR.GIND.GT.MAXIND) THEN
+	  WRITE(CLIN23,3000) GTNAMES(TSCR)
+	  RETURN
+	ENDIF
+C
+	GNUM=GTNTAB(TSCR,GIND)
+	IF(GNUM.LT.1) THEN
+	  WRITE(CLIN23,3010) GTNAMES(TSCR),GIND
+	  RETURN
+	ENDIF
+C
+	IF(DRAW.LT.1) DRAW=DAYDRW(GNUM)
+	IF(DRAW.EQ.0) DRAW=DAYHDR(GNUM)
+C
+C GET DATA FROM COMMON OR DISK
+C
+	IF(DRAW.EQ.DAYDRW(GNUM)) THEN
+	  CALL GAMLOG(TSCR,GIND,DSCREC,SCRSTS)
+	  GOTO 100
+	ENDIF
+C
+	SMODE=.TRUE.
+	CALL OPENW(1,GFNAMES(1,GNUM),4,0,0,ST)
+	CALL IOINIT(FDB,1,DSCSEC*256)
+	IF(ST.NE.0) THEN
+	  WRITE(CLIN23,3020) (GFNAMES(K,GNUM),K=1,5),ST
+	  CALL USRCLOS1(     1)
+	  RETURN
+	ENDIF
+C
+	CALL READW(FDB,DRAW,DSCREC,ST)
+	IF(ST.NE.0) THEN
+	  WRITE(CLIN23,3030) (GFNAMES(K,GNUM),K=1,5),ST,DRAW
+	  CALL USRCLOS1(     1)
+	  RETURN
+	ENDIF
+	CALL USRCLOS1(     1)
+C
+	IF(DSCSTS.EQ.0) THEN
+	  WRITE(CLIN23,3040) GTNAMES(TSCR),GIND,DRAW
+	  RETURN
+	ENDIF
+
+	CALL FIGWEK(DSCESD - WEEK_OFFSET, WEEK, YEAR)
+C
+C
+C  DISPLAYS ODSS AND AMOUNTS BY SCORE FOR THE FOLLOWING
+C
+C HOME WIN SCORES,ODDS - 15 SCORES,ODDS AND TOTALS PLUS OVRIGA *
+C TIE SCORES,ODDS      -  6 SCORES,ODDS AND TOTALS PLUS OVRIGA
+C AWAY WIN SCORES,ODDS - 15 SCORES,ODDS AND TOTALS PLUS OVRIGA
+C
+C   (OVRIGA)    - LOWEST ODDS OF SCORES NOT DISPLAYED ON SNAP
+C
+	IF(DSCSTS.EQ.0) THEN
+	   WRITE(CLIN23,3040) GTNAMES(TSCR),GIND,DRAW
+	   RETURN
+	ENDIF
+C
+	CBUF(VCDC)=DSCESD
+	CALL LCDATE(CBUF)
+	DBUF2(5) = DSCDAT
+	CALL LCDATE(DBUF2)
+C
+	TIME = DSCCTM
+C
+C     ENCODE DATA FROM FILE  -- ONLY WINNING ODDS WILL BE DISPLAYED
+C     THERE ARE NO ODDS BY SCORE KEPT IN THE GAME FILE
+C
+	WRITE(CLIN1,901) GTNAMES(TSCR),GIND
+	WRITE(CLIN2,899) DRAW,(CBUF(I),I=7,13),DISTIM(TIME),(DBUF2(I),I=7,13)
+	WRITE(CLIN3,902) WEEK
+	WRITE(CLIN4,999)
+	WRITE(CLIN5,903) POLSTS(3),GTNAMES(TSCR),GIND
+	WRITE(CLIN6,999)
+	WRITE(CLIN7,999)
+	WRITE(CLIN8,1006) (DSCNM1(I),I=1,3),(DSCNM2(I),I=1,3)
+	WRITE(CLIN9,999)
+        IF(DSCWIN(1).NE.-1) THEN
+      	   WRITE(CLIN10,1008) DSCWIN(1),DSCWIN(2),DSCODS/100,
+     *		              MOD(DSCODS,100)
+        ELSE
+           WRITE(CLIN10,1009)
+        ENDIF
+	WRITE(CLIN11,999)
+	WRITE(CLIN12,999)
+	WRITE(CLIN13,999)
+	WRITE(CLIN14,999)
+	WRITE(CLIN15,999)
+	WRITE(CLIN16,999)
+	WRITE(CLIN17,1015) CMONY(DSCSAL,14,BETUNIT)
+	WRITE(CLIN18,999)
+	WRITE(CLIN19,1017) DSCWPR(1,PRWON)
+	WRITE(CLIN20,999)
+	WRITE(CLIN21,999)
+	WRITE(CLIN22,999)
+	RETURN
+C
+C     DISPLAY SCORE AND ODDS KEPT IN MEMORY
+C
+100	CONTINUE
+	IF(DSCSTS.EQ.0) THEN
+	   WRITE(CLIN23,3040) GTNAMES(TSCR),GIND,DRAW
+	   RETURN
+	ENDIF
+	TOTSAL=0
+	NETPOL=0
+	TAX=0
+	GSTATUS=1
+	IF(DSCSTS.GE.GAMBFD) GSTATUS=3
+	IF(DSCSTS.GE.GFINAL) GSTATUS=2
+	DO 6 I=1,SLEN
+	   TOTSAL=TOTSAL+SCPOOL(I,2,2,GIND)
+6	CONTINUE
+	TAX=IDNINT(DFLOAT(TOTSAL)*CALPER(SALTAX))
+
+	CALL FIGWEK(DSCESD - WEEK_OFFSET, WEEK, YEAR)
+
+	NETPOL=TOTSAL-TAX+DSCBRK(1)+DSCPOL(1)
+	DO 15 I=1,45
+	  CALL INDPOL(DSCORES(1,I),DSCORES(2,I),DPOOL(I,SPSCOR,GIND))
+15	CONTINUE
+C
+	CBUF(VCDC)=DSCESD
+	CALL LCDATE(CBUF)
+	DBUF2(5) = DSCDAT
+	CALL LCDATE(DBUF2)
+C
+	TIME = DSCCTM
+C
+	WRITE(CLIN1,901) GTNAMES(TSCR),GIND
+	WRITE(CLIN2,899) DRAW,(CBUF(I),I=7,13),DISTIM(TIME),(DBUF2(I),I=7,13)
+	WRITE(CLIN3,902) WEEK
+	WRITE(CLIN4,900) (DSCNM1(I),I=1,3),(DSCNM2(I),I=1,3),
+     *	                  POLSTS(GSTATUS),GTNAMES(TSCR),GIND
+	WRITE(CLIN5,904)
+	WRITE(CLIN6,905)
+	LNS=7
+	DO 120 I=1,15
+	IF(LNS.LT.13) THEN
+	  WRITE(XNEW(  LNS),906) DSCORES(1,I),DSCORES(2,I),
+     *	  DPOOL(I,2,GIND)/100,MOD(DPOOL(I,2,GIND),100),
+     *	  DSCORES(1,I+15),DSCORES(2,I+15),
+     *	  DPOOL(I+15,2,GIND)/100,MOD(DPOOL(I+15,2,GIND),100),
+     *	  DSCORES(1,I+30),DSCORES(2,I+30),
+     *	  DPOOL(I+30,2,GIND)/100,MOD(DPOOL(I+30,2,GIND),100)
+	ENDIF
+	IF(LNS.EQ.13) THEN
+ 	   WRITE(XNEW(  LNS),907) DSCORES(1,I),DSCORES(2,I),
+     *	          DPOOL(I,2,GIND)/100,MOD(DPOOL(I,2,GIND),100),
+     *	          OPOOL(2,2,GIND)/100,MOD(OPOOL(2,2,GIND),100),
+     *	          DSCORES(1,I+30),DSCORES(2,I+30),
+     *	          DPOOL(I+30,2,GIND)/100,MOD(DPOOL(I+30,2,GIND),100)
+	ENDIF
+	IF(LNS.EQ.14) THEN
+           WRITE(XNEW(  LNS),908) DSCORES(1,I),DSCORES(2,I),
+     *	          DPOOL(I,2,GIND)/100,MOD(DPOOL(I,2,GIND),100),
+     *	          DSCORES(1,I+30),DSCORES(2,I+30),
+     *	          DPOOL(I+30,2,GIND)/100,MOD(DPOOL(I+30,2,GIND),100)
+	ENDIF
+	IF(LNS.EQ.15.OR.LNS.EQ.16) THEN
+           WRITE(XNEW(  LNS),909) DSCORES(1,I),DSCORES(2,I),
+     *	          DPOOL(I,2,GIND)/100,MOD(DPOOL(I,2,GIND),100),
+     *	          DSCORES(1,I+30),DSCORES(2,I+30),
+     *	          DPOOL(I+30,2,GIND)/100,MOD(DPOOL(I+30,2,GIND),100)
+	ENDIF
+	IF(LNS.EQ.17) THEN
+           WRITE(XNEW(  LNS),9101) DSCORES(1,I),DSCORES(2,I),
+     *	          DPOOL(I,2,GIND)/100,MOD(DPOOL(I,2,GIND),100),
+     *	          DSCORES(1,I+30),DSCORES(2,I+30),
+     *	          DPOOL(I+30,2,GIND)/100,MOD(DPOOL(I+30,2,GIND),100)
+	ENDIF
+	IF(LNS.EQ.18) THEN
+           WRITE(XNEW(  LNS),911) DSCORES(1,I),DSCORES(2,I),
+     *	          DPOOL(I,2,GIND)/100,MOD(DPOOL(I,2,GIND),100),
+     *	          DSCORES(1,I+30),DSCORES(2,I+30),
+     *	          DPOOL(I+30,2,GIND)/100,MOD(DPOOL(I+30,2,GIND),100)
+	ENDIF
+	IF(LNS.EQ.19) THEN
+           WRITE(XNEW(  LNS),912) DSCORES(1,I),DSCORES(2,I),
+     *	          DPOOL(I,2,GIND)/100,MOD(DPOOL(I,2,GIND),100),
+     *	          DSCORES(1,I+30),DSCORES(2,I+30),
+     *	          DPOOL(I+30,2,GIND)/100,MOD(DPOOL(I+30,2,GIND),100)
+	ENDIF
+	IF(LNS.EQ.20) THEN
+           WRITE(XNEW(  LNS),913) DSCORES(1,I),DSCORES(2,I),
+     *	          DPOOL(I,2,GIND)/100,MOD(DPOOL(I,2,GIND),100),
+     *	          DSCORES(1,I+30),DSCORES(2,I+30),
+     *	          DPOOL(I+30,2,GIND)/100,MOD(DPOOL(I+30,2,GIND),100)
+	ENDIF
+	IF(LNS.EQ.21) THEN
+           WRITE(XNEW(  LNS),914) DSCORES(1,I),DSCORES(2,I),
+     *	          DPOOL(I,2,GIND)/100,MOD(DPOOL(I,2,GIND),100),
+     *	          DSCORES(1,I+30),DSCORES(2,I+30),
+     *	          DPOOL(I+30,2,GIND)/100,MOD(DPOOL(I+30,2,GIND),100)
+	ENDIF
+	LNS=LNS+1
+120	CONTINUE
+	WRITE(CLIN22,921)OPOOL(1,2,GIND)/100,MOD(OPOOL(1,2,GIND),100),
+     *	                 OPOOL(3,2,GIND)/100,MOD(OPOOL(3,2,GIND),100)
+	HOMSCR=SCORE/100
+	AWYSCR=MOD(SCORE,100)
+	IF(AWYSCR.LT.0.OR.AWYSCR.GT.MAX_SCORE) GOTO 200
+	IF(HOMSCR.LT.0.OR.HOMSCR.GT.MAX_SCORE) GOTO 200
+	CALL POLIND(HOMSCR,AWYSCR,INDEX)
+	TOTAL=0
+        DO I = 1,SLEN
+           TOTAL = TOTAL + SCPOOL(I,SPAMNT,SPSTAT,GIND) * DYN_BETUNIT
+	END DO
+C
+        TOTAL = (TOTAL * CALPER(SCRSPR(GIND))) + SCRPOL(1,GIND) * DYN_BETUNIT
+C
+        IF(SCPOOL(INDEX,SPAMNT,SPSTAT,GIND).EQ.0) THEN
+              RODDS = 999999                     ! IF NO INVESTMENT
+        ELSE
+              RODDS = TOTAL / (SCPOOL(INDEX,SPAMNT,SPSTAT,GIND) *
+     *                DYN_BETUNIT) * 100
+        ENDIF
+        IODDS = IDNINT(RODDS)
+	IF(IODDS.LT.100) IODDS = 100    ! MINIMUM ODD 1 TO 1
+        IF(IODDS.GT.999999) IODDS = 999999
+
+C        TOTAL = DFLOAT(DSCSAL) * CALPER(DSCSPR)
+C        TOTAL = TOTAL + DFLOAT(DSCPOL(1)) + DFLOAT(DWIBRK(1))
+C        DSCTPL= IDINT(TOTAL)
+C        TOTAL = TOTAL * DFLOAT(DYN_BETUNIT)
+C        WIN = DFLOAT(SPFPOL(INDEX,2)*DYN_BETUNIT)
+C        IF(WIN.EQ.0) THEN
+C		RODDS = 99999                     ! IF NO INVESTMENT
+C	ELSE
+C		RODDS = TOTAL/WIN
+C	ENDIF
+C        DSCABW = SPFPOL(INDEX,2)
+C        IODDS = INT(RODDS*1000.0D0)+5
+C	IF(IODDS.LT.100) IODDS = 100    ! MINIMUM ODD 1 TO 1
+C        IF(IODDS.GT.99999) IODDS = 99999
+
+	LNS=19
+	I=13
+	WRITE(XNEW(  LNS),9061) DSCORES(1,I),DSCORES(2,I),
+     *	  DPOOL(I,2,GIND)/100,MOD(DPOOL(I,2,GIND),100),
+     *	  HOMSCR,AWYSCR,
+     *	  IODDS/100,MOD(IODDS,100),
+     *	  DSCORES(1,I+30),DSCORES(2,I+30),
+     *	  DPOOL(I+30,2,GIND)/100,MOD(DPOOL(I+30,2,GIND),100)
+200	CONTINUE
+	RETURN
+C
+C
+899	FORMAT(' ','Event: ',I4,4X,'Closing time: ',7A2,
+     *	       4X,A8,4X,'Draw ',7A2)
+900	FORMAT(' ',3A4,' - ',3A4,'    ',A13,' - ',A8,1X,I1,20(' '))
+901	FORMAT(A8,1X,I1,'  Oy Veikkaus Ab') 
+902	FORMAT(' RESULT SERVICE   WEEK: ',I2.2,
+     *	       '     SIGNATURE:_______________________')
+903	FORMAT(28(' '),A12,' - ',A8,1X,I1,25(' '))
+904	FORMAT(3(' '),'HOME WIN  ',20(' '),'TIE     ',18(' '),
+     *	       'AWAY WIN  ')
+905	FORMAT('RESULTS ',1(' '),'ODDS',15(' '),'RESULTS '
+     *	       1(' '),'ODDS',15(' '),'RESULTS ',1(' '),'ODDS',2(' '))
+906	FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),
+     *	       14(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),
+     *	       14(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '))
+9061	FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),
+     *	       14(' '),I2.2,'-',I2.2,1(' '),I4,'.',I2.2,1(' '),
+     *	       14(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '))
+907	FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),14(' '),
+     *	      'REST  ',1(' '),I3,'.',I2.2,15(' '),I2.2,'-',I2.2,
+     *	       2(' '),I3,'.',I2.2,1(' '))
+908	FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),2(' '),21(' '),
+     *	       19(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '))
+909	FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),2(' '),21(' '),
+     *	       19(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '))
+910	FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),2(' '),
+     *	       '          '3(' '),8(' '),
+     *	       19(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '))
+9101    FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,
+     *         6(' '),'Enter /XXXX for particular odds',
+     *         6(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '))
+911	FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),2(' '),
+     *	       '   ',10(' '),8(' '),
+     *	       19(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '))
+912	FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),2(' '),
+     *	       '        ',5(' '),8(' '),
+     *	       19(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '))
+913	FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),2(' '),
+     *	       '          ',3(' '),8(' '),
+     *	       19(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '))
+914	FORMAT(I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '),2(' '),
+     *	       '        ',5(' '),8(' '),
+     *	       19(' '),I2.2,'-',I2.2,2(' '),I3,'.',I2.2,1(' '))
+921	FORMAT('REST  ',1(' '),I3,'.',I2.2,43(' '),
+     *	       'REST  ',1(' '),I3,'.',I2.2,8(' '))
+999	FORMAT(80(' '))
+1006	FORMAT(' EVENT: ',3A4' - ',3A4,40(' '))
+1008	FORMAT(' FINAL RESULTS:   ',I2,' - ',I2,9(' '),'ODDS: ',I6,'.',
+     *	       I2.2,30(' '))
+1009    FORMAT(' CANCELLED:       ',16X,'ODDS: ','     1.00',30(' '))
+1015	FORMAT(' TOTAL SALES:      ',3(' '),A14,2(' '),'EUROS  ',
+     *	       34(' '))
+1017	FORMAT(' NUMBER OF WINNERS:',3(' '),I8,10(' '),
+     *	       '                                  ')
+C
+3000	FORMAT('Enter !',A8,' game index ')
+3010	FORMAT(A8,1X,I1,' game not active')
+3020	FORMAT(5A4,' open error ',I4)
+3030	FORMAT(5A4,' read error ',I4,' record > ',I4)
+3040	FORMAT(A8,1X,I1,' game not initialized event > ',I4)
+C
+	END

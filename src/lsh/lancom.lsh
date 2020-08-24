@@ -1,0 +1,20 @@
+$! GXSRC:LANCOM.LSH
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]LANCOM.LSV                                   $
+$! $Date::   17 Apr 1996 13:46:58                                         $
+$! $Revision::   1.0                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$! 
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$! 
+LINK'P1' -
+/EXE=TSKLIB:GXLANCOM.ESH -
+/SHAREABLE -
+OBJLIB:LANCOM,-
+SYS$INPUT/OPTION
+SYMBOL_VECTOR=(LANCOM=PSECT)
+PSECT_ATTR=LANCOM,SHR,WRT

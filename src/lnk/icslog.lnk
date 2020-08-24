@@ -1,0 +1,18 @@
+$! icslog.lnk
+$!
+$! V01 21-aug-96 mf
+$!
+$ link 'p1' /exe=gxtsk:icslog.exe -
+objlib:icslog, -
+icslog_tcp,-
+icslog_setup,-
+ioctl,-
+crc,-
+icslog_gols,-
+prosys,-
+getlun,-
+stdlib:normlib/lib,-
+OBJLIB:PSECT.OPT/OPTION,-
+sys$input/option
+tsklib:gxappcom.esh/shareable
+TSKLIB:gxicscom.esh/shareable

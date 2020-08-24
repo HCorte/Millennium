@@ -1,0 +1,572 @@
+C SSCTOP.FOR
+C
+C V04 15-JUN-2000 UXN GOTO 10 removed, MAX(1,*) added.
+C V03 05-JUN-2000 OXK SSOREC replaced w/ SSOCOM
+C V02 17-MAR-2000 OXK IF(SSCEST(*).NE.GAMOPN) added to skip (enddo) CONTINUEs
+C V01 xx-xxx-xxxx RXK Initial revision
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SSCTOP(TRABUF)  
+        IMPLICIT NONE
+
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:DESTRA.DEF'
+        INCLUDE 'INCLIB:SSCCOM.DEF'
+        INCLUDE 'INCLIB:SSPCOM.DEF'
+        INCLUDE 'INCLIB:SSOCOM.DEF'
+
+
+        INTEGER*4 UCID		      !unic combination identifier
+        INTEGER*4 MONY		      !bet amount per 1 cmb
+        INTEGER*4 SIGN		      !+1 if wager, -1 if cancel
+        INTEGER*4 GIND		      !game index
+
+        INTEGER*4 BUCKET	      !bucket number
+        INTEGER*4 ENTR		      !entry number in bucket
+        INTEGER*4 FTOP		      !entry number in top table
+	INTEGER*4 PFTOP,NFTOP	      !previous and next links for FTOP,here
+				      !previous means "previous bigger amount" 			
+				      !and next means "next smaller amount" 			
+	INTEGER*4 LAST		      !the closest entry number in top table
+				      !with bigger amount than FTOP
+	INTEGER*4 PREV,NEXT	      !previous and next links for LAST
+	INTEGER*4 FB,FE,FAMT	      !bucket #, entry # and corresp. amount
+				      !in main table	
+	INTEGER*4 HOLDER	      !next free entry for top table	
+	INTEGER*4 FI		      !next free entry in overflow file
+
+        INTEGER*4 I,J
+        INTEGER*4 I1,I2,I3,I4,I5,I6
+        INTEGER*4 OFF1,OFF2,OFF3,OFF4,OFF5,OFF6
+
+        INTEGER*4 I4TEMP
+        BYTE      I1TEMP(4)
+        EQUIVALENCE(I4TEMP,I1TEMP)
+	
+        LOGICAL FOUND		      !UCID found in main table or overflow file
+        LOGICAL TABTOP		      !entry is on the top of the top table
+        LOGICAL BOTTOM		      !entry is on the bottom of the top table
+
+        GIND=TRABUF(TGAMIND)
+        MONY=TRABUF(TWAMT)
+        IF(TRABUF(TWSYST).EQ.FULSYS) MONY=MONY/TRABUF(TWSYSN)
+        SIGN=1
+        IF(TRABUF(TTYP).EQ.TCAN.OR.TRABUF(TTYP).EQ.TINC) SIGN=-1
+
+	I1=0
+	I2=0
+	I3=0
+	I4=0
+	I5=0
+	I6=0
+        I4TEMP=0
+        OFF1=-1
+  	OFF2=OFF1+TRABUF(TWSSHM1)
+  	OFF3=OFF2+TRABUF(TWSSAW1)
+  	OFF4=OFF3+TRABUF(TWSSHM2)
+  	OFF5=OFF4+TRABUF(TWSSAW2)
+  	OFF6=OFF5+TRABUF(TWSSHM3)
+
+        DO 1060 I1=1,TRABUF(TWSSHM1)
+        DO 1050 I2=1,TRABUF(TWSSAW1)
+
+           DO 1040 I3=1,MAX(1,TRABUF(TWSSHM2))
+           DO 1030 I4=1,MAX(1,TRABUF(TWSSAW2))
+
+              DO 1020 I5=1,MAX(1,TRABUF(TWSSHM3))
+              DO 1010 I6=1,MAX(1,TRABUF(TWSSAW3))
+
+
+                 I1TEMP(3) = ISHFT(TRABUF(TWSSBET+OFF1+I1),4) +
+     *                       IAND(TRABUF(TWSSBET+OFF2+I2),'0F'X)
+
+                 IF(SSCEST(2,GIND).EQ.GAMOPN) THEN
+                    I1TEMP(2) = ISHFT(TRABUF(TWSSBET+OFF3+I3),4) +
+     *                          IAND(TRABUF(TWSSBET+OFF4+I4),'0F'X)
+                    IF(SSCEST(3,GIND).EQ.GAMOPN) THEN
+                       I1TEMP(1) = ISHFT(TRABUF(TWSSBET+OFF5+I5),4) +
+     *                          IAND(TRABUF(TWSSBET+OFF6+I6),'0F'X)
+                    ENDIF
+                 ENDIF
+
+        UCID=I4TEMP
+        CALL GETCCITT(UCID,1,3,BUCKET)
+        CALL RND64(BUCKET,GIND,1,65535,6)
+        FB=BUCKET
+        FOUND=.FALSE.
+C
+C SEARCH MAIN TABLE FOR UCID 
+C
+        DO J=1,SSPNBA(GIND)
+           DO ENTR=1,SSGISZ
+              IF(ISSPMAIN(ENTR,BUCKET,GIND).EQ.-1) THEN
+		 ISSPMAIN(ENTR,BUCKET,GIND)=UCID  
+                 SSPCAMT(ENTR,BUCKET,GIND)=MONY
+		 SSPCMB(GIND)=SSPCMB(GIND)+1  
+                 GOTO 100
+              ELSEIF(IAND(ISSPMAIN(ENTR,BUCKET,GIND),'00FFFFFF'X).EQ.
+     *           UCID) THEN
+                 FOUND=.TRUE.
+                 CALL MOVBYT(ISSPMAIN(ENTR,BUCKET,GIND),SSGTEL,FTOP,1,1)
+                 SSPCAMT(ENTR,BUCKET,GIND)= 
+     *                  SSPCAMT(ENTR,BUCKET,GIND) + SIGN*MONY
+                 GOTO 100
+              ENDIF  
+           ENDDO
+           BUCKET=MOD(BUCKET+1,65536)
+           IF(J.GT.SSPNBU(GIND)) SSPNBU(GIND)=J+1
+        ENDDO
+	SSPNBU(GIND)=SSPNBA(GIND)
+C
+C IF UCID NOT FOUND IN MAIN TABLE THEN READ THE OVERFLOW COMMON
+C
+	DO I=1,SSPONUM(GIND)
+	  IF(SSOCOMCMB(I,GIND).EQ.UCID) THEN
+	     SSOCOMAMT(I,GIND)=SSOCOMAMT(I,GIND)+SIGN*MONY
+	     FI=I  
+      	     GOTO 20
+      	  ENDIF   
+        ENDDO
+C
+C UCID NOT FOUND IN OVERPOOL EATHER, WRITE IT THERE
+C
+  	IF(.NOT.FOUND.AND.SSPONUM(GIND).LT.SSOCOMNUM) THEN
+	   SSPONUM(GIND)=SSPONUM(GIND)+1
+	   SSPCMB(GIND)=SSPCMB(GIND)+1  
+	   SSOCOMCMB(SSPONUM(GIND),GIND)=UCID
+	   SSOCOMAMT(SSPONUM(GIND),GIND)=MONY
+	   FI=SSPONUM(GIND) 
+	ELSE
+           I4TEMP=UCID
+	   WRITE(5,900),IAM(),GIND,I1TEMP(3),I1TEMP(2),I1TEMP(1)
+	   SSPDCMB(GIND)=SSPDCMB(GIND)+1 
+           GOTO 1000
+	ENDIF
+C
+C COMPARE AMOUNT WITH LOWEST ONE FROM TOP TABLE.
+C IF NEW AMOUNT SHOULD GO TO THE TOP TABLE THEN SEARCH THE RIGHT BUCKET FOR 
+C AN UCID, WHICH IS NOT IN TOP TABLE AND REPLACE THIS ONE WITH NEW UCID,   
+C WRITE UCID FROM MAIN TABLE INTO OVERFLOW COMMON INSTEAD.
+C 
+20      CONTINUE
+        FOUND=.FALSE.
+	IF(SSOCOMAMT(FI,GIND).GT.SSPLAMT(GIND)) THEN
+   	   DO J=1,SSPNBA(GIND)
+              DO I=1,SSGISZ
+	         CALL MOVBYT(ISSPMAIN(I,FB,GIND),SSGTEL,FTOP,1,1)
+		 IF(FTOP.EQ.0) THEN
+		    BUCKET=FB
+		    ENTR=I
+	            SSOCOMCMB(FI,GIND)=ISSPMAIN(ENTR,BUCKET,GIND)
+		    FAMT=SSOCOMAMT(FI,GIND)
+		    SSOCOMAMT(FI,GIND)=SSPCAMT(ENTR,BUCKET,GIND)	
+		    ISSPMAIN(ENTR,BUCKET,GIND)=UCID
+		    SSPCAMT(ENTR,BUCKET,GIND)=FAMT
+		    FOUND=.TRUE.
+		    GOTO 40			       	
+		 ENDIF
+	      ENDDO
+	      FB=MOD(FB+1,65536)
+	   ENDDO	       	      	
+C
+C ENTRY IN MAIN TABLE WITHOUT POINTER ONTO TOP TABLE  NOT FOUND
+C UCID WILL NOT BE INCLUDED INTO TOP TABLE
+C
+           I4TEMP=UCID
+	   WRITE(5,901) IAM(),GIND,I1TEMP(3),I1TEMP(2),I1TEMP(1),
+     *                  CMONY(SSOCOMAMT(FI,GIND),8,BETUNIT)
+        ENDIF
+
+40	CONTINUE
+        IF(.NOT.FOUND) GOTO 1000
+C
+C MAINTENANCE OF TOP TABLE BEGINS
+C
+100     CONTINUE
+C
+        IF(SSPTNUM(GIND).GE.SSGTOP .AND.
+     *     SSPLAMT(GIND).GE.SSPCAMT(ENTR,BUCKET,GIND) .AND.
+     *     (.NOT.FOUND .OR. FTOP.EQ.0)) GOTO 1000
+
+        IF(SSPTNUM(GIND).GE.SSGTOP .AND. FTOP.EQ.0) GOTO 300
+C
+C
+C ENTRY WAS FOUND, UPDATE NECESSARY LINKS
+C
+        IF(FOUND) THEN
+C
+C IF WAGER THEN SEARCH FOR THE CLOSEST BIGGER AMOUNT IN BIGGER-DIRECTION
+C
+           IF(SIGN*MONY.GT.0) THEN
+	      IF(SSPTNUM(GIND).EQ.1) THEN
+		 SSPLAMT(GIND) = SSPLAMT(GIND) + MONY
+		 GOTO 1000
+              ENDIF		
+              TABTOP=.FALSE.
+              BOTTOM=.FALSE. 
+              LAST=SSPTOPC(SSGPEL,FTOP,GIND) 
+              IF(LAST.EQ.0) GOTO 1000 
+              IF(SSPTOPC(SSGNEL,LAST,GIND).EQ.SSPLEL(GIND)) THEN
+                 BOTTOM=.TRUE.
+              ENDIF 
+C
+C FIND THE CLOSEST BIGGER AMOUNT
+C
+130           CONTINUE
+              FE=SSPTOPC(SSGAME,LAST,GIND)
+	      CALL MOVBYT(SSPTOPC(SSGAMB,LAST,GIND),1,FB,1,2) 
+      	      FAMT=SSPCAMT(FE,FB,GIND)   
+	      IF(SSPCAMT(ENTR,BUCKET,GIND).GE.FAMT) THEN
+                 IF(LAST.EQ.SSPFEL(GIND)) THEN 
+                    TABTOP=.TRUE.
+                    GOTO 140
+                 ENDIF    
+                 LAST=SSPTOPC(SSGPEL,LAST,GIND)
+                 GOTO 130
+              ENDIF
+C
+C UPDATE LINKS, IF NECESSARY UPDATE LINKS TO FIRST AND LAST ENTRY AND
+C LOWEST TOP COMBINATION AMOUNT ALSO
+C
+140            CONTINUE
+
+	      LAST=SSPTOPC(SSGNEL,LAST,GIND)  
+              NEXT=SSPTOPC(SSGNEL,LAST,GIND)
+              PREV=SSPTOPC(SSGPEL,LAST,GIND)
+              PFTOP=SSPTOPC(SSGPEL,FTOP,GIND)
+              NFTOP=SSPTOPC(SSGNEL,FTOP,GIND)
+
+              IF(TABTOP.AND.BOTTOM)THEN
+                 SSPTOPC(SSGNEL,PFTOP,GIND)=NFTOP               
+                 SSPTOPC(SSGPEL,FTOP,GIND)=  0 
+	         SSPTOPC(SSGNEL,FTOP,GIND)=PREV
+	         SSPTOPC(SSGPEL,PREV,GIND)=FTOP  
+		 SSPFEL(GIND)=FTOP
+		 SSPLEL(GIND)=PFTOP
+                 FE=SSPTOPC(SSGAME,PFTOP,GIND)
+	         CALL MOVBYT(SSPTOPC(SSGAMB,PFTOP,GIND),1,FB,1,2) 
+      	         SSPLAMT(GIND)=SSPCAMT(FE,FB,GIND)   
+              ELSEIF(TABTOP)THEN
+                 SSPTOPC(SSGPEL,NFTOP,GIND)=PFTOP               
+                 SSPTOPC(SSGNEL,PFTOP,GIND)=NFTOP               
+                 SSPTOPC(SSGPEL,FTOP,GIND)=  0 
+	         SSPTOPC(SSGNEL,FTOP,GIND)=PREV
+	         SSPTOPC(SSGPEL,PREV,GIND)=FTOP  
+		 SSPFEL(GIND)=FTOP
+              ELSEIF(BOTTOM)THEN
+                 IF(NEXT.EQ.0) THEN
+      	            SSPLAMT(GIND)=SSPCAMT(ENTR,BUCKET,GIND)
+                    GOTO 1000
+                 ENDIF
+                 SSPTOPC(SSGNEL,PFTOP,GIND)=NFTOP               
+                 SSPTOPC(SSGNEL,FTOP,GIND)=LAST
+	         SSPTOPC(SSGPEL,FTOP,GIND)=PREV
+	         SSPTOPC(SSGPEL,LAST,GIND)=FTOP
+	         SSPTOPC(SSGNEL,PREV,GIND)=FTOP  
+		 SSPLEL(GIND)=PFTOP
+                 FE=SSPTOPC(SSGAME,PFTOP,GIND)
+	         CALL MOVBYT(SSPTOPC(SSGAMB,PFTOP,GIND),1,FB,1,2) 
+      	         SSPLAMT(GIND)=SSPCAMT(FE,FB,GIND)   
+	      ELSE	
+                 IF(LAST.EQ.FTOP) GOTO 1000
+                 SSPTOPC(SSGNEL,PFTOP,GIND)=NFTOP               
+                 SSPTOPC(SSGPEL,NFTOP,GIND)=PFTOP               
+                 SSPTOPC(SSGPEL,FTOP,GIND)=PREV
+	         SSPTOPC(SSGNEL,FTOP,GIND)=LAST
+	         SSPTOPC(SSGPEL,LAST,GIND)=FTOP
+	         SSPTOPC(SSGNEL,PREV,GIND)=FTOP  
+              ENDIF
+              GOTO 1000    !end for existing ucid, wager
+C
+C IF CANCELLATION THEN SEARCH FOR THE CLOSEST BIGGER AMOUNT IN SMALLER-DIRECTION
+C
+           ELSE
+
+	      IF(SSPTNUM(GIND).EQ.1) THEN
+		 SSPLAMT(GIND) = SSPLAMT(GIND) - MONY
+		 GOTO 1000
+              ENDIF		
+              TABTOP=.FALSE.
+              BOTTOM=.FALSE. 
+              LAST=SSPTOPC(SSGNEL,FTOP,GIND) 
+              IF(LAST.EQ.0) THEN    !ON P6HJAELEM
+	         SSPLAMT(GIND)=SSPCAMT(ENTR,BUCKET,GIND)
+	         GOTO 1000
+              ENDIF
+              IF(FTOP.EQ.SSPFEL(GIND)) THEN
+                 TABTOP=.TRUE.
+              ENDIF
+C
+C FIND THE CLOSEST BIGGER AMOUNT
+C
+150           CONTINUE
+
+              FE=SSPTOPC(SSGAME,LAST,GIND)
+	      CALL MOVBYT(SSPTOPC(SSGAMB,LAST,GIND),1,FB,1,2) 
+      	      FAMT=SSPCAMT(FE,FB,GIND)   
+	      IF(SSPCAMT(ENTR,BUCKET,GIND).GT.FAMT) THEN
+                 LAST=SSPTOPC(SSGPEL,LAST,GIND)  
+                 GOTO 160
+	      ELSE
+		 IF(LAST.EQ.SSPLEL(GIND)) THEN
+                    BOTTOM=.TRUE.
+  		    GOTO 160
+		 ENDIF 
+                 LAST=SSPTOPC(SSGNEL,LAST,GIND)
+                 GOTO 150
+              ENDIF
+C
+C UPDATE LINKS, IF NECESSARY UPDATE LINKS TO FIRST AND LAST ENTRY AND
+C LOWEST TOP COMBINATION AMOUNT ALSO
+C
+160           CONTINUE
+
+              NEXT=SSPTOPC(SSGNEL,LAST,GIND)
+              PREV=SSPTOPC(SSGPEL,LAST,GIND)
+              PFTOP=SSPTOPC(SSGPEL,FTOP,GIND)
+              NFTOP=SSPTOPC(SSGNEL,FTOP,GIND)
+
+              IF(TABTOP.AND.BOTTOM)THEN
+                 SSPTOPC(SSGPEL,NFTOP,GIND)= 0
+	         SSPTOPC(SSGNEL,LAST,GIND)=FTOP
+                 SSPTOPC(SSGNEL,FTOP,GIND)=NEXT
+	         SSPTOPC(SSGPEL,FTOP,GIND)=LAST
+		 SSPLEL(GIND)=FTOP
+		 SSPFEL(GIND)=NFTOP
+                 FE=SSPTOPC(SSGAME,FTOP,GIND)
+	         CALL MOVBYT(SSPTOPC(SSGAMB,FTOP,GIND),1,FB,1,2) 
+      	         SSPLAMT(GIND)=SSPCAMT(FE,FB,GIND)   
+              ELSEIF(TABTOP)THEN
+	 	 IF(LAST.EQ.FTOP) GOTO 1000  
+                 SSPTOPC(SSGPEL,NFTOP,GIND)= 0
+                 SSPTOPC(SSGPEL,FTOP,GIND)=LAST
+	         SSPTOPC(SSGNEL,FTOP,GIND)=NEXT
+	         SSPTOPC(SSGNEL,LAST,GIND)=FTOP  
+	         SSPTOPC(SSGPEL,NEXT,GIND)=FTOP  
+		 SSPFEL(GIND)=NFTOP
+              ELSEIF(BOTTOM)THEN
+                 SSPTOPC(SSGNEL,PFTOP,GIND)=NFTOP               
+                 SSPTOPC(SSGPEL,NFTOP,GIND)=PFTOP               
+                 SSPTOPC(SSGNEL,FTOP,GIND)=NEXT
+	         SSPTOPC(SSGPEL,FTOP,GIND)=LAST
+	         SSPTOPC(SSGNEL,LAST,GIND)=FTOP
+		 SSPLEL(GIND)=FTOP
+                 FE=SSPTOPC(SSGAME,FTOP,GIND)
+	         CALL MOVBYT(SSPTOPC(SSGAMB,FTOP,GIND),1,FB,1,2) 
+      	         SSPLAMT(GIND)=SSPCAMT(FE,FB,GIND)   
+	      ELSE	
+                 IF(LAST.EQ.FTOP) GOTO 1000
+                 SSPTOPC(SSGNEL,PFTOP,GIND)=NFTOP               
+                 SSPTOPC(SSGPEL,NFTOP,GIND)=PFTOP               
+                 SSPTOPC(SSGPEL,FTOP,GIND)=LAST
+	         SSPTOPC(SSGNEL,FTOP,GIND)=NEXT
+	         SSPTOPC(SSGPEL,NEXT,GIND)=FTOP
+	         SSPTOPC(SSGNEL,LAST,GIND)=FTOP  
+              ENDIF
+              GOTO 1000    !end for existing ucid,cancellation
+           ENDIF          
+C
+C UCID WAS NOT FOUND AND TOP TABLE IS NOT FULL, CREATE NEW LINKS
+C
+C VERY FIRST ENTRY
+C 
+        ELSEIF(SSPTNUM(GIND).EQ.0) THEN
+           SSPTNUM(GIND)=1
+           SSPFEL(GIND)=1
+           SSPLEL(GIND)=1
+           SSPTOPC(SSGPEL,1,GIND)=0
+           SSPTOPC(SSGNEL,1,GIND)=0
+           CALL MOVBYT(UCID,1,SSPTOPC(SSGCID,1,GIND),1,3)
+           CALL MOVBYT(1,1,ISSPMAIN(ENTR,BUCKET,GIND),SSGTEL,1)
+           SSPTOPC(SSGAME,1,GIND)=ENTR
+	   HOLDER=1 
+C
+C NEXT ENTRIES
+C
+        ELSE
+           HOLDER=SSPTNUM(GIND)+1
+           IF(SSPCAMT(ENTR,BUCKET,GIND).GT.SSPLAMT(GIND)) THEN
+              LAST=SSPLEL(GIND)
+              TABTOP=.TRUE.
+              NEXT=SSPTOPC(SSGNEL,LAST,GIND)
+              PREV=SSPTOPC(SSGPEL,LAST,GIND)
+              DO I=1,SSPTNUM(GIND)
+                 NEXT=SSPTOPC(SSGNEL,LAST,GIND)
+                 PREV=SSPTOPC(SSGPEL,LAST,GIND)
+                 FE=SSPTOPC(SSGAME,LAST,GIND)
+                 CALL MOVBYT(SSPTOPC(SSGAMB,LAST,GIND),1,FB,1,2)
+                 FAMT=SSPCAMT(FE,FB,GIND)
+	         IF(SSPCAMT(ENTR,BUCKET,GIND).LT.FAMT) THEN
+                    TABTOP=.FALSE. 
+                    GOTO 200 
+                 ENDIF
+                 LAST=PREV
+              ENDDO
+C
+C NEW AMOUNT IS THE BIGGEST ONE SO FAR, SET LINKS DOWN
+C
+              IF(TABTOP.AND.SSPTNUM(GIND).LT.SSGTOP)THEN
+	         SSPTNUM(GIND)=SSPTNUM(GIND)+1
+	         SSPTOPC(SSGPEL,SSPTNUM(GIND),GIND)=0
+                 SSPTOPC(SSGPEL,SSPFEL(GIND),GIND)=SSPTNUM(GIND) 
+                 SSPTOPC(SSGNEL,SSPTNUM(GIND),GIND)=SSPFEL(GIND)
+                 SSPFEL(GIND)=SSPTNUM(GIND)
+                 GOTO 500
+              ELSE
+                 GOTO 300
+              ENDIF
+C
+C NEW AMOUNT IS SOMEWHERE IN THE MIDDLE, SET LINKS UP AND DOWN
+C
+200           CONTINUE
+              IF(SSPTNUM(GIND).LT.SSGTOP) THEN
+                 SSPTNUM(GIND)=SSPTNUM(GIND)+1
+		 SSPTOPC(SSGPEL,SSPTNUM(GIND),GIND)=LAST
+		 SSPTOPC(SSGNEL,SSPTNUM(GIND),GIND)=NEXT
+     		 SSPTOPC(SSGPEL,NEXT,GIND)=SSPTNUM(GIND)
+                 SSPTOPC(SSGNEL,LAST,GIND)=SSPTNUM(GIND)
+                 GOTO 500
+              ELSE
+                 GOTO 300
+	      ENDIF
+C
+C NEW AMOUNT IS THE LOWEST ONE SO FAR, SET LINKS UP
+C
+           ELSEIF(SSPTNUM(GIND).LT.SSGTOP) THEN
+	      SSPTNUM(GIND)=SSPTNUM(GIND)+1
+	      SSPTOPC(SSGNEL,SSPTNUM(GIND),GIND)=0
+              SSPTOPC(SSGNEL,SSPLEL(GIND),GIND)=SSPTNUM(GIND) 
+              SSPTOPC(SSGPEL,SSPTNUM(GIND),GIND)=SSPLEL(GIND)
+              SSPLEL(GIND)=SSPTNUM(GIND)
+              GOTO 500
+           ELSE
+              GOTO 300
+           ENDIF
+        ENDIF      !  links for new ucid done
+
+        GOTO 500   
+C
+C TOP TABLE IS FULL, REPLACE LOWEST AMOUNT ENTRY WITH NEW ONE
+C 
+300     CONTINUE
+C
+C REMOVE OLD POINTER FROM MAIN TABLE
+C
+	FE=SSPTOPC(SSGAME,SSPLEL(GIND),GIND)
+	CALL MOVBYT(SSPTOPC(SSGAMB,SSPLEL(GIND),GIND),1,FB,1,2) 
+	CALL MOVBYT(0,1,ISSPMAIN(FE,FB,GIND),SSGTEL,1)
+
+	HOLDER=SSPLEL(GIND)  
+
+        TABTOP=.FALSE.
+        BOTTOM=.FALSE. 
+        LAST=SSPLEL(GIND)
+	FTOP=SSPLEL(GIND)  
+
+C
+C FIND THE CLOSEST BIGGER AMOUNT
+C
+320     CONTINUE
+
+        FE=SSPTOPC(SSGAME,LAST,GIND)
+        CALL MOVBYT(SSPTOPC(SSGAMB,LAST,GIND),1,FB,1,2) 
+        FAMT=SSPCAMT(FE,FB,GIND)   
+        IF(SSPCAMT(ENTR,BUCKET,GIND).GE.FAMT) THEN
+           IF(LAST.EQ.SSPFEL(GIND)) THEN 
+              TABTOP=.TRUE.
+              GOTO 340
+           ENDIF    
+              LAST=SSPTOPC(SSGPEL,LAST,GIND)
+              GOTO 320
+           ENDIF
+C
+C UPDATE LINKS, IF NECESSARY UPDATE LINKS TO FIRST AND LAST ENTRY AND
+C LOWEST TOP COMBINATION AMOUNT ALSO
+C
+340     CONTINUE
+
+        IF(SSPTOPC(SSGNEL,LAST,GIND).EQ.SSPLEL(GIND))
+     *     BOTTOM=.TRUE.
+
+	LAST=SSPTOPC(SSGNEL,LAST,GIND)  
+        NEXT=SSPTOPC(SSGNEL,LAST,GIND)
+        PREV=SSPTOPC(SSGPEL,LAST,GIND)
+        PFTOP=SSPTOPC(SSGPEL,FTOP,GIND)
+        NFTOP=SSPTOPC(SSGNEL,FTOP,GIND)
+
+        IF(TABTOP)THEN
+	   SSPFEL(GIND)=FTOP
+	   SSPLEL(GIND)=SSPTOPC(SSGPEL,FTOP,GIND)
+           FE=SSPTOPC(SSGAME,SSPLEL(GIND),GIND)
+           CALL MOVBYT(SSPTOPC(SSGAMB,SSPLEL(GIND),GIND),1,FB,1,2)
+           SSPLAMT(GIND)=SSPCAMT(FE,FB,GIND)
+           SSPTOPC(SSGNEL,PFTOP,GIND)=NFTOP               
+           SSPTOPC(SSGPEL,FTOP,GIND)=  0 
+	   SSPTOPC(SSGNEL,FTOP,GIND)=PREV
+	   SSPTOPC(SSGPEL,PREV,GIND)=FTOP  
+        ELSEIF(BOTTOM)THEN
+ 	   SSPLAMT(GIND)=SSPCAMT(ENTR,BUCKET,GIND)
+	ELSE	
+	   SSPLEL(GIND)=SSPTOPC(SSGPEL,FTOP,GIND)
+           FE=SSPTOPC(SSGAME,SSPLEL(GIND),GIND)
+           CALL MOVBYT(SSPTOPC(SSGAMB,SSPLEL(GIND),GIND),1,FB,1,2)
+           SSPLAMT(GIND)=SSPCAMT(FE,FB,GIND)
+           SSPTOPC(SSGNEL,PFTOP,GIND)=NFTOP               
+           SSPTOPC(SSGPEL,FTOP,GIND)=PREV
+	   SSPTOPC(SSGNEL,FTOP,GIND)=LAST
+	   SSPTOPC(SSGPEL,LAST,GIND)=FTOP
+	   SSPTOPC(SSGNEL,PREV,GIND)=FTOP  
+        ENDIF
+        GOTO 520      ! ucid with lowest amount replaced
+C
+C CHECK LOWEST COMBINATION AMOUNT VALUE
+C
+500     CONTINUE
+        IF(SSPLAMT(GIND).GT.SSPCAMT(ENTR,BUCKET,GIND))
+     *       SSPLAMT(GIND)=SSPCAMT(ENTR,BUCKET,GIND)
+C
+C FILL IN FIELDS OF TOP TABLE
+C
+520     CONTINUE
+	CALL MOVBYT(UCID,1,SSPTOPC(SSGCID,HOLDER,GIND),1,3)  
+	CALL MOVBYT(BUCKET,1,SSPTOPC(SSGAMB,HOLDER,GIND),1,2)  
+	CALL MOVBYT(ENTR,1,SSPTOPC(SSGAME,HOLDER,GIND),1,1)  
+C
+C SET POINTER ON TOP IN MAIN TABLE
+C
+        CALL MOVBYT(HOLDER,1,ISSPMAIN(ENTR,BUCKET,GIND),SSGTEL,1)
+
+1000    CONTINUE
+
+1010    CONTINUE
+1020	CONTINUE
+
+1030	CONTINUE
+1040	CONTINUE
+
+1050	CONTINUE
+1060    CONTINUE
+        RETURN
+
+900     FORMAT(1X,A,' SUPERSCORE',I1,' OVERFLOW FILE IS FULL, CMB',
+     *        3(Z3.2),' DROPPED') 
+901	FORMAT(1X,A,' SUPERSCORE',I1,' TOP CMB',3(Z3.2),' WITH AMOUNT ', 
+     *        A8,' DROPPED')
+        END

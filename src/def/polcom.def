@@ -1,0 +1,97 @@
+C POLCOM.DEF
+C $Log:   GXAFXT:[GOLS]POLCOM.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:24:00   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:48:58   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 07-OCT-91 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C FORTRAN POOL COMMON DESCRIPTION
+C POLCOM CONTAINS LIABLIITY POOLS FOR ALL ONLINE NUMBER GAMES
+C
+C POOL OFFSETS
+C
+C 1-720                   BOX POOL
+C 721-820                 FRONT PAIR POOL
+C 821-920                 BACK PAIR POOL
+C 921-1020                SPLIT/MIDDLE PAIR POOL
+C 1021-11020              STRAIGHT POOL
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4  PLEN, POLCSB, POLDAY, POLGAM
+	PARAMETER (PLEN=11020)
+	PARAMETER (POLCSB=200)              !# OF CHECKPOINT BLOCKS
+	PARAMETER (POLDAY=12)
+	PARAMETER (POLGAM=3)
+C
+C  POOL OFFSETS
+C
+	INTEGER*4  PBOX, PFP2, PBP2, PSM2, PSTR
+	PARAMETER (PBOX=  1)    !START BOX TABLE
+	PARAMETER (PFP2=721)    !START FRONT 2 PAIR TABLE
+	PARAMETER (PBP2=821)    !START BACK 2 PAIR TABLE
+	PARAMETER (PSM2=921)    !START SPLIT/MIDDLE PAIR TABLE
+	PARAMETER (PSTR=1021)   !START STRAIGHT TABLE
+C
+C OFFSETS FOR UPDTAB
+C
+	INTEGER*4  LIBNUM, LIBAMT, LIBPOL, LIBBOX, LIBSTR
+	PARAMETER (LIBNUM=1)
+	PARAMETER (LIBAMT=2)
+	PARAMETER (LIBPOL=3)
+	PARAMETER (LIBBOX=4)
+	PARAMETER (LIBSTR=5)
+C
+C
+	COMMON /POLCOM/
+     *	 POOLT(PLEN,POLDAY,POLGAM)
+	INTEGER*4 POOLT
+C
+C NUMBERS GAME POOL OFFSETS AND BET TYPES FOR QUICK
+C POOL UPDATES.
+C
+	INTEGER*4  BOXADR, BOXPOL
+	PARAMETER (BOXADR=1)
+	PARAMETER (BOXPOL=2)
+C
+	INTEGER*2 P4OFF,P3OFF
+        INTEGER*4 PMESS,POLFRE
+	COMMON /POLCOM/
+     *	 P4OFF(10000,2),
+     *	 P3OFF(1000,2),
+     *   PMESS(100),
+     *	 POLFRE(1780)
+C
+C EQUIVALENCE FOR CHECKPOINT
+C
+	INTEGER*4 POLBLK(2048,POLCSB)
+	EQUIVALENCE(POLBLK(1,1),POOLT(1,1,1))
+C
+C
+	INTEGER*4	 FRST_POLCOM(2)
+	EQUIVALENCE	(FRST_POLCOM, POOLT)
+	INTEGER*4	 LAST_POLCOM
+	EQUIVALENCE	(LAST_POLCOM, POLFRE(1780))
+C
+	VOLATILE /POLCOM/
+C

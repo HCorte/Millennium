@@ -1,0 +1,154 @@
+C
+C V01 01-JAN-2010 FJG ePASSIVE
+C
+C Parameters for VMS I/O Errors
+C
+C In case of ERROR you can use the name parameter ioe_%NAME% and
+C type this in OpenVMS: HELP FORTRAN RUN %NAME%
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!       RMS OpenVMS Errors: Negative
+!===============================================================================
+        integer*4 ioe_REWERR     
+        integer*4 ioe_DUPFILSPE  
+        integer*4 ioe_INPRECTOO  
+        integer*4 ioe_BACERR     
+        integer*4 ioe_ENDDURREA  
+        integer*4 ioe_RECNUMOUT  
+        integer*4 ioe_OPEDEFREQ  
+        integer*4 ioe_TOOMANREC  
+        integer*4 ioe_CLOERR     
+        integer*4 ioe_FILNOTFOU  
+        integer*4 ioe_OPEFAI     
+        integer*4 ioe_MIXFILACC  
+        integer*4 ioe_INVLOGUNI  
+        integer*4 ioe_ENDFILERR  
+        integer*4 ioe_UNIALROPE  
+        integer*4 ioe_SEGRECFOR  
+        integer*4 ioe_ATTACCNON  
+        integer*4 ioe_INCRECLEN  
+        integer*4 ioe_ERRDURWRI  
+        integer*4 ioe_ERRDURREA  
+        integer*4 ioe_RECIO_OPE  
+        integer*4 ioe_NO_SUCDEV  
+        integer*4 ioe_FILNAMSPE  
+        integer*4 ioe_INCRECTYP  
+        integer*4 ioe_KEYVALERR  
+        integer*4 ioe_INCOPECLO  
+        integer*4 ioe_WRIREAFIL  
+        integer*4 ioe_INCKEYCHG  
+        integer*4 ioe_INCFILORG  
+        integer*4 ioe_SPERECLOC  
+        integer*4 ioe_NO_CURREC  
+        integer*4 ioe_REWRITERR  
+        integer*4 ioe_DELERR     
+        integer*4 ioe_UNLERR     
+        integer*4 ioe_FINERR     
+        integer*4 ioe_LISIO_SYN  
+        integer*4 ioe_INFFORLOO  
+        integer*4 ioe_OUTCONERR  
+        integer*4 ioe_INPCONERR  
+        integer*4 ioe_OUTSTAOVE  
+        integer*4 ioe_INPSTAREQ  
+        integer*4 ioe_WRONUMARG  
+        integer*4 ioe_STRLENERR  
+        integer*4 ioe_UNFIO_FMT  
+        integer*4 ioe_FMTIO_UNF  
+        integer*4 ioe_DIRIO_KEY  
+        integer*4 ioe_SEQIO_DIR  
+        integer*4 ioe_KEYIO_DIR  
+        integer*4 ioe_OPERREQDIS 
+        integer*4 ioe_OPEREQSEQ  
+        integer*4 ioe_ENDRECDUR 
+!
+        parameter (ioe_REWERR     = -20  ) !REWIND error
+        parameter (ioe_DUPFILSPE  = -21  ) !Duplicate file specifications
+        parameter (ioe_INPRECTOO  = -22  ) !Input record too long
+        parameter (ioe_BACERR     = -23  ) !BACKSPACE error
+        parameter (ioe_ENDDURREA  = -24  ) !End-of-file during read
+        parameter (ioe_RECNUMOUT  = -25  ) !Record number outside range
+        parameter (ioe_OPEDEFREQ  = -26  ) !OPEN or DEFINE FILE required for keyed or direct access
+        parameter (ioe_TOOMANREC  = -27  ) !Too many records in I/O statement
+        parameter (ioe_CLOERR     = -28  ) !CLOSE error
+        parameter (ioe_FILNOTFOU  = -29  ) !File not found
+        parameter (ioe_OPEFAI     = -30  ) !Open failure
+        parameter (ioe_MIXFILACC  = -31  ) !Mixed file access modes
+        parameter (ioe_INVLOGUNI  = -32  ) !Invalid logical unit number
+        parameter (ioe_ENDFILERR  = -33  ) !ENDFILE error
+        parameter (ioe_UNIALROPE  = -34  ) !Unit already open
+        parameter (ioe_SEGRECFOR  = -35  ) !Segmented record format error
+        parameter (ioe_ATTACCNON  = -36  ) !Attempt to access non-existent record. In seq access could be an EOF
+        parameter (ioe_INCRECLEN  = -37  ) !Inconsistent record length
+        parameter (ioe_ERRDURWRI  = -38  ) !Error during write
+        parameter (ioe_ERRDURREA  = -39  ) !Error during read
+        parameter (ioe_RECIO_OPE  = -40  ) !Recursive I/O operation
+        parameter (ioe_NO_SUCDEV  = -42  ) !No such device
+        parameter (ioe_FILNAMSPE  = -43  ) !File name specification error
+        parameter (ioe_INCRECTYP  = -44  ) !Inconsistent record type
+        parameter (ioe_KEYVALERR  = -45  ) !Keyword value error in OPEN statement
+        parameter (ioe_INCOPECLO  = -46  ) !Inconsistent OPEN/CLOSE parameters
+        parameter (ioe_WRIREAFIL  = -47  ) !Write to READONLY file
+        parameter (ioe_INCKEYCHG  = -50  ) !Inconsistent key change or duplicate key
+        parameter (ioe_INCFILORG  = -51  ) !Inconsistent file organization
+        parameter (ioe_SPERECLOC  = -52  ) !Specified record locked
+        parameter (ioe_NO_CURREC  = -53  ) !No current record
+        parameter (ioe_REWRITERR  = -54  ) !REWRITE error
+        parameter (ioe_DELERR     = -55  ) !DELETE error
+        parameter (ioe_UNLERR     = -56  ) !UNLOCK error
+        parameter (ioe_FINERR     = -57  ) !FIND error
+        parameter (ioe_LISIO_SYN  = -59  ) !List-directed I/O syntax error
+        parameter (ioe_INFFORLOO  = -60  ) !Infinite format loop
+        parameter (ioe_OUTCONERR  = -63  ) !Output conversion error
+        parameter (ioe_INPCONERR  = -64  ) !Input conversion error
+        parameter (ioe_OUTSTAOVE  = -66  ) !Output statement overflows record
+        parameter (ioe_INPSTAREQ  = -67  ) !Input statement requires too much data
+        parameter (ioe_WRONUMARG  = -80  ) !Wrong number of arguments
+        parameter (ioe_STRLENERR  = -148 ) !String length error
+        parameter (ioe_UNFIO_FMT  = -256 ) !Unformatted I/O to unit open for formatted transfers
+        parameter (ioe_FMTIO_UNF  = -257 ) !Formatted I/O to unit open for unformatted transfers
+        parameter (ioe_DIRIO_KEY  = -258 ) !Direct-access I/O to unit open for keyed access
+        parameter (ioe_SEQIO_DIR  = -259 ) !Sequential-access I/O to unit open for direct access
+        parameter (ioe_KEYIO_DIR  = -260 ) !Keyed-access I/O to unit open for direct access
+        parameter (ioe_OPERREQDIS = -264 ) !Operation requires file to be on disk or tape
+        parameter (ioe_OPEREQSEQ  = -265 ) !Operation requires sequential file organization and access
+        parameter (ioe_ENDRECDUR  = -268 ) !End of record during read
+!===============================================================================
+!       Logical I/O Errors
+!===============================================================================      
+        integer*4 ioe_noerr
+        integer*4 ioe_rlen
+        integer*4 ioe_gind        
+        integer*4 ioe_draw        
+        integer*4 ioe_maxser                
+        integer*4 ioe_maxfra         
+        integer*4 ioe_maxnum                 
+        integer*4 ioe_lun     
+        integer*4 ioe_filnam                    
+        integer*4 ioe_keyerr
+        integer*4 ioe_nofdb
+        integer*4 ioe_hierr        
+!
+        parameter (ioe_noerr   = 0     ) !     0 NO Error
+        parameter (ioe_nofdb   = 2**1  ) !     2 The FDB estructure is not init        
+        parameter (ioe_rlen    = 2**2  ) !     4 Error in reclen
+        parameter (ioe_gind    = 2**3  ) !     8 Error in draw
+        parameter (ioe_draw    = 2**4  ) !    16 Error in index
+        parameter (ioe_maxser  = 2**5  ) !    32 Error in maxser        
+        parameter (ioe_maxfra  = 2**6  ) !    64 Error in maxfra
+        parameter (ioe_maxnum  = 2**7  ) !   128 Error in maxnum                                
+        parameter (ioe_lun     = 2**8  ) !   256 Error getting lun
+        parameter (ioe_filnam  = 2**9  ) !   512 Name incongruent
+        parameter (ioe_keyerr  = 2**10 ) !  1024 Key check error
+        parameter (ioe_hierr   = 2**11 ) !  2048 Previous error, usually in init                
+!

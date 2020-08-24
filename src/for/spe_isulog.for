@@ -1,0 +1,143 @@
+C  GXSRC:SPE_ISULOG.FOR
+C  
+C V03 06-OCT-2000 UXN AlphaIPS release.
+C V02 13-JUL-1993 MCM ADDED GVTID CHANGES
+C V01 28-APR-1993 TJR INITIAL RELEASE FOR GEORGIA
+C
+C SUBROUTINE TO PROCESS BAD UNSOLICITED INTRA-SYSTEM STRATUS MSGS
+C  (STRATUS MSGS 11.15,11.16)
+C REFERENCE DESIGN DOC CDH0001
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE ISULOG(TRABUF,OUTTAB)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+C
+        INTEGER*4 IND
+	BYTE      OUTTAB(*)
+C
+	INTEGER*4   I4TEMP
+	INTEGER*2   I2TEMP(2)
+	BYTE	    I1TEMP(4)
+	EQUIVALENCE (I4TEMP,I2TEMP,I1TEMP)
+C
+	INTEGER*4   MESS(EDLEN)
+C
+C	   	   
+C SET TRNSCTN STATUS
+C
+        TRABUF(TERR)=BCRS
+	TRABUF(TSTAT)=REJT
+C	
+C MOVE SIGNIFICANT MSG CONTENTS TO TRABUF
+C
+C  TRANSACTION LENGTH
+C
+	IND=1
+	I4TEMP=0
+	I1TEMP(1)=OUTTAB(IND+0)
+	I1TEMP(2)=OUTTAB(IND+1)
+	TRABUF(TSDT1)= I4TEMP
+C    
+C TRANSACTION TYPE
+C
+	IND=IND+8
+	I4TEMP=0
+	I1TEMP(1)=OUTTAB(IND+0)
+	I1TEMP(2)=OUTTAB(IND+1)
+	TRABUF(TSDT2)=I4TEMP
+C
+C PASS NUMBER INDEX (SIGNIFICANT FOR TRNSCTN TYPE 20 ONLY)
+C
+        IND=IND+2
+	I4TEMP=0
+        I1TEMP(1)=OUTTAB(IND+0)
+        I1TEMP(2)=OUTTAB(IND+1)
+      	TRABUF(TSDT3)=I4TEMP
+C
+C RETAILER NUMBER
+C
+	IND=IND+4
+	I4TEMP=0
+	I1TEMP(1)=OUTTAB(IND+0)
+	I1TEMP(2)=OUTTAB(IND+1)
+	I1TEMP(3)=OUTTAB(IND+2)
+	I1TEMP(4)=OUTTAB(IND+3)
+	TRABUF(TSDT4)=I4TEMP
+C
+C TERMINAL NUMBER
+C
+	IND=IND+4
+        I4TEMP=0
+        I1TEMP(1)=OUTTAB(IND+0)
+        I1TEMP(2)=OUTTAB(IND+1)
+        I1TEMP(3)=OUTTAB(IND+2)
+        I1TEMP(4)=OUTTAB(IND+3)
+        TRABUF(TSDT5)=I4TEMP
+C
+C GVTID 
+C
+	IF(TRABUF(TSDT2).EQ.23) THEN
+          IND=IND+4
+          I4TEMP=0
+          I1TEMP(1)=OUTTAB(IND+0)
+          I1TEMP(2)=OUTTAB(IND+1)
+          I1TEMP(3)=OUTTAB(IND+2)
+          I1TEMP(4)=OUTTAB(IND+3)
+          TRABUF(TSDT6)=I4TEMP
+C
+          IND=IND+4
+          I4TEMP=0
+          I1TEMP(1)=OUTTAB(IND+0)
+          I1TEMP(2)=OUTTAB(IND+1)
+          I1TEMP(3)=OUTTAB(IND+2)
+          I1TEMP(4)=OUTTAB(IND+3)
+          TRABUF(TSDT7)=I4TEMP
+C
+C AGTTYP BITMAP (TRN 19) OR PASSNUMBER (TRN 20)
+C
+        ELSE
+          IND=IND+4
+          I4TEMP=0
+          I1TEMP(1)=OUTTAB(IND+0)
+          I1TEMP(2)=OUTTAB(IND+1)
+          I1TEMP(3)=OUTTAB(IND+2)
+          I1TEMP(4)=OUTTAB(IND+3)
+          TRABUF(TSDT6)=I4TEMP		
+        ENDIF
+C
+C	
+C	BUILD CONSOLE/ERROR LOG MSG 
+C
+        MESS(1)=SPE
+        MESS(2)=TEGEN
+	IF (TRABUF(TSDT2).EQ.19) THEN         !AGTTYP TRN	  
+            MESS(3)=40			    
+	ELSE IF (TRABUF(TSDT2).EQ.20) THEN    !PASNUM TRN
+	    MESS(3)=41
+	ELSE IF (TRABUF(TSDT2).EQ.23) THEN    !GVTID TRN
+	    MESS(3)=42
+	END IF
+        MESS(4)=TRABUF(TSER)
+	CALL QUEMES(MESS)
+C
+	RETURN
+	END

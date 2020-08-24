@@ -1,0 +1,49 @@
+C CSHPAS.DEF
+C
+C V01 11-JAN-01 CS  INITIAL RELEASE FOR PORTUGAL
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1997-1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C REPORT VARIABLES
+C
+	INTEGER*4 NUMREPS
+	PARAMETER (NUMREPS  = 1)
+
+	INTEGER*4 REP_CSH
+	PARAMETER (REP_CSH  = 1)
+
+	INTEGER*4 MAXPRTLN
+	PARAMETER (MAXPRTLN = 50)
+
+	INTEGER*4 RLUN(NUMREPS),
+     *            PAGE(NUMREPS),
+     *		  VERSION(NUMREPS),
+     *            LINCNT(NUMREPS)
+
+	INTEGER*4 CNTREG
+	INTEGER*4 CNTPRV
+
+	INTEGER*8 TOTREG
+	INTEGER*8 TOTPRV
+
+	CHARACTER*8  REPNAM(NUMREPS)
+	CHARACTER*42 HEAD(NUMREPS)
+C
+C COMMON REPORT DEFINITION
+C
+	COMMON /CSHPAS/ TOTREG, TOTPRV, CNTREG, CNTPRV,
+     *                  PAGE, VERSION, LINCNT, RLUN, REPNAM, HEAD
+C
+C END OF CSHPAS.DEF
+C

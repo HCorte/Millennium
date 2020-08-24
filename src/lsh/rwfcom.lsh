@@ -1,0 +1,18 @@
+$! GXSRC:RWFCOM.LSH
+$! 
+$! $Log:   GXAFXT:[GOLS]RWFCOM.LSV  $
+$! 
+$!    Rev 1.0   17 Apr 1996 14:46:52   HXK
+$! Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+$! 
+$!    Rev 1.1   14 Apr 1994 13:37:02   SYSTEM
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Apr 1994 9:57:20   SYSTEM
+$! Initial revision.
+$! 
+$ LINK 'P1' /EXE=TSKLIB:GXRWFCOM.ESH/SHAREABLE -
+OBJLIB:RWFCOM,-
+SYS$INPUT:/OPTION
+SYMBOL_VECTOR=(RWFCOM=PSECT)
+PSECT_ATTR=RWFCOM,SHR,WRT

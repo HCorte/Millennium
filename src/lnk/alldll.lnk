@@ -1,0 +1,39 @@
+$! GXSRC:ALLDLL.LNK
+$! 
+$! $Log:   GXAFXT:[GOLS]ALLDLL.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 21:25:56   HXK
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Jul 1996 21:24:48   HXK
+$! Initial revision.
+$! 
+$! ALLDLL.LNK
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]ALLDLL.LNV                                   $
+$! $Date::   14 Jul 1996 21:25:56                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$! V01 15-MAY-93 MCM RELEASED FOR GEORGIA (IRFSS #10132)
+$!
+$! V01 01-FEB-92 PJS RELEASED FOR VAX
+$!
+LINK'P1' -
+/EXE=TSKLIB:ALLDLL.EXE -
+OBJLIB:ALLDLL,-
+DLLREC,-
+I4TOHEX,-
+SPCDLL,-
+LOADSMF,-
+SAVESMF,-
+OPENQFILE,-
+READ_ROM_REV,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXCTMCOM.ESH/SHAREABLE

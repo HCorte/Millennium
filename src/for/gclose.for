@@ -1,0 +1,726 @@
+C
+C PROGRAM GCLOSE
+C
+C GCLOSE.FOR
+C
+C V15 17-MAR-2015 SCML DO NOT BROADCAST BROTEXT MESSAGES TO X2X NETWORK
+C V14 12-JAN-2011 FJG Lotto2 Changes: Closing both Lottos
+C     24-JAN-2011 FJG Out of Bounds issue
+C V13 01-JAN-2010 FJG ePassive
+C V12 18-DEC-2000 CS  INCLUDED PASSIVE GAME.
+C V11 29-NOV-2000 UXN TOTOGOLA ADDED.
+C V10 08-JUN-2000 UXN 810 label added.
+C V09 13-OCT-1999 RXK World Tour added.
+C V08 14-MAY-1999 UXN Super Triple added.
+C V07 23-NOV-1995 HXK Merge of post 65 stuff; changes for Double/Couple
+C V06 15-OCT-1994 HXK ADDED BINGO
+C V05 23-JUN-1993 HXK ADDED SPEDE, RAVI GAMES
+C V04 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V03 16-JUL-1992 GCAN FIXED SPORTS CLOSING (SET BITMAP)
+C V02 12-NOV-1991 MTK  INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C PROGRAM TO CLOSE GAME SALES
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM GCLOSE
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:NBRCOM.DEF'
+	INCLUDE 'INCLIB:LTOCOM.DEF'
+	INCLUDE 'INCLIB:SPTCOM.DEF'
+	INCLUDE 'INCLIB:TGLCOM.DEF'
+        INCLUDE 'INCLIB:KIKCOM.DEF'
+        INCLUDE 'INCLIB:SCRCOM.DEF'
+        INCLUDE 'INCLIB:WITCOM.DEF'
+	INCLUDE 'INCLIB:TSLCOM.DEF'
+        INCLUDE 'INCLIB:BNGCOM.DEF'
+        INCLUDE 'INCLIB:DBLCOM.DEF'
+        INCLUDE 'INCLIB:CPLCOM.DEF'
+        INCLUDE 'INCLIB:SSCCOM.DEF'
+        INCLUDE 'INCLIB:TRPCOM.DEF'
+        INCLUDE 'INCLIB:STRCOM.DEF'
+        INCLUDE 'INCLIB:PASCOM.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+C
+	INTEGER*4 TSLWLEN, WRNLEN
+	PARAMETER(TSLWLEN=MAXSRW*NUMTSL)
+	PARAMETER(WRNLEN=MAXTYP*MAXIND)
+	INTEGER*4 CBUF(CDLEN),MESS(EDLEN),WRNCNT(MAXTYP,MAXIND)
+	INTEGER*4 GAM, REMSEC, REMMIN, REMTIM, I, BITMAP(2), WTIME, GTYP
+	INTEGER*4 HTIME, TIME, ST, LTIME, BTIME, ROW
+	INTEGER*4 LIBREP(NUMNBR),WTSLCNT(MAXSRW,NUMTSL)
+C
+        INTEGER*4 OGIND
+        INTEGER*4 OGNUM
+        INTEGER*4 BMAP(2)         
+C	
+	DATA WRNCNT/WRNLEN*0/, WTSLCNT/TSLWLEN*0/
+	DATA LIBREP/NUMNBR*0/
+C
+C
+	BTIME=0
+	CALL COPYRITE
+	CALL SNIF_AND_WRKSET
+C
+C
+	CALL ICLOCK(2,LTIME)
+	LTIME=LTIME/3600
+10	CONTINUE
+	IF(DAYSTS.EQ.DSCLOS) CALL GSTOP(GEXIT_SUCCESS)
+	IF(DAYSTS.EQ.DSSUSP) THEN
+	  CALL HOLD(0,ST)
+	  GOTO 10
+	ENDIF
+	CALL XWAIT(10,2,ST)
+	IF(P(SYSTYP).NE.LIVSYS) GOTO 10
+C
+	CALL ICLOCK(2,TIME)
+C
+C CHECK IF DRAW BREAK IS OVER
+C
+C       IF(BTIME.LT.TIME.AND.BTIME.NE.0) THEN
+C	  BTIME=0
+C         CBUF(1)=SYSSTS
+C         CBUF(2)=SYSACT
+C         CBUF(3)=TCPAR
+C         CBUF(6)='SYS '
+C         CALL GCLCMD(CBUF,ST)
+C       ENDIF
+C
+C CHECK IF TIME TO SET HOURLY SALES
+C
+	HTIME=TIME/3600
+	IF(HTIME.NE.LTIME) THEN
+	  IF(LTIME.GE.1.AND.LTIME.LE.24) THEN
+	    CBUF(1)=7
+	    CBUF(2)=LTIME
+	    CBUF(3)=TCSPE
+	    CBUF(6)='SYS '
+	    CALL GCLCMD(CBUF,ST)
+	  ENDIF
+	  LTIME=HTIME
+	ENDIF
+C
+	WTIME=TIME+600
+	BITMAP(1)=0
+	BITMAP(2)=0
+C
+C CHECK LOTTO GAMES
+C
+	DO 100 I=1,NUMLTO
+	IF(LTOSTS(I).NE.GAMOPN) GOTO 100
+	IF(LTOTIM(I).GT.WTIME)  GOTO 100
+	IF(MOD(WRNCNT(TLTO,I),30).EQ.0) THEN
+	  REMTIM=LTOTIM(I)-TIME
+	  IF(REMTIM.LT.0) REMTIM=0
+	  REMMIN=REMTIM/60
+	  REMSEC=REMTIM-REMMIN*60
+	  MESS(1)=GCL
+	  MESS(2)=TEGEN
+	  MESS(3)=12
+	  CALL FASTMOV(GTNAMES(TLTO),MESS(4),2)
+	  MESS(6)=I
+	  MESS(7)=REMMIN
+	  MESS(8)=REMSEC
+	  CALL QUEMES(MESS)
+	ENDIF
+	WRNCNT(TLTO,I)=WRNCNT(TLTO,I)+1
+	IF(LTOTIM(I).GT.TIME) GOTO 100
+	CBUF(1)=1
+	CBUF(2)=GAMBFD
+	CBUF(3)=TCLTO
+	CBUF(6)='SYS '
+	CBUF(8)=I
+	CALL GCLCMD(CBUF,ST)
+	BTIME=TIME
+	IF(ST.EQ.0) THEN
+	  LTOTIM(I)=LTOTIM(I)+ '40000000'X	
+	  GAM=GTNTAB(TLTO,I)
+	  CALL BSET(BITMAP,GAM)
+	ENDIF
+!=======V14=====================================================================	
+	IF(LTOJPG(I).NE.0) THEN
+	  OGIND = LTOJPG(I)
+          OGNUM = GTNTAB(TLTO,OGIND)
+	  IF(LTOSTS(OGIND).EQ.GAMOPN) THEN
+            BMAP(1) = P(SUPGWA)
+            BMAP(2) = P(SUPGWA1)
+            CALL BSET(BMAP,OGNUM)
+            CBUF(1) = SUPGWA
+            CBUF(2) = BMAP(1)
+            CBUF(9) = BMAP(2)
+            CBUF(3) = TCPAR
+	    CBUF(6) ='SYS '
+            CALL GCLCMD(CBUF,ST)	    
+	  ENDIF
+	ENDIF
+!=======V14=====================================================================	
+100	CONTINUE
+C
+C CHECK SPORTS GAMES
+C
+	DO 200 I=1,NUMSPT
+	IF(SPTSTS(I).NE.GAMOPN) GOTO 200
+	IF(SPTTIM(I).GT.WTIME)  GOTO 200
+	IF(MOD(WRNCNT(TSPT,I),30).EQ.0) THEN
+	  REMTIM=SPTTIM(I)-TIME
+	  IF(REMTIM.LT.0) REMTIM=0
+	  REMMIN=REMTIM/60
+	  REMSEC=REMTIM-REMMIN*60
+	  MESS(1)=GCL
+	  MESS(2)=TEGEN
+	  MESS(3)=12
+	  CALL FASTMOV(GTNAMES(TSPT),MESS(4),2)
+	  MESS(6)=I
+	  MESS(7)=REMMIN
+	  MESS(8)=REMSEC
+	  CALL QUEMES(MESS)
+	ENDIF
+	WRNCNT(TSPT,I)=WRNCNT(TSPT,I)+1
+	IF(SPTTIM(I).GT.TIME) GOTO 200
+	CBUF(1)=1
+	CBUF(2)=GAMBFD
+	CBUF(3)=TCSPT
+	CBUF(6)='SYS '
+	CBUF(8)=I
+	CALL GCLCMD(CBUF,ST)
+	BTIME=TIME
+	IF(ST.EQ.0) THEN
+	  GAM=GTNTAB(TSPT,I)
+	  SPTTIM(I)=SPTTIM(I)+ '40000000'X
+	  CALL BSET(BITMAP,GAM)
+	ENDIF
+200	CONTINUE
+C
+C CHECK BINGO GAMES
+C
+        DO 300 I=1,NUMBGO
+        IF(BNGSTS(I).NE.GAMOPN) GOTO 300
+        IF(BNGTIM(I).GT.WTIME)  GOTO 300
+        IF(MOD(WRNCNT(TBNG,I),30).EQ.0) THEN
+          REMTIM=BNGTIM(I)-TIME
+          IF(REMTIM.LT.0) REMTIM=0
+          REMMIN=REMTIM/60
+          REMSEC=REMTIM-REMMIN*60
+          MESS(1)=GCL
+          MESS(2)=TEGEN
+          MESS(3)=12
+          CALL FASTMOV(GTNAMES(TBNG),MESS(4),2)
+          MESS(6)=I
+          MESS(7)=REMMIN
+          MESS(8)=REMSEC
+          CALL QUEMES(MESS)
+        ENDIF
+        WRNCNT(TBNG,I)=WRNCNT(TBNG,I)+1
+        IF(BNGTIM(I).GT.TIME) GOTO 300
+        CBUF(1)=1
+        CBUF(2)=GAMBFD
+        CBUF(3)=TCBNG
+        CBUF(6)='SYS '
+        CBUF(8)=I
+        CALL GCLCMD(CBUF,ST)
+        BTIME=TIME
+        IF(ST.EQ.0) THEN
+          BNGTIM(I)=BNGTIM(I)+ '40000000'X
+          GAM=GTNTAB(TBNG,I)
+	  CALL BSET(BITMAP,GAM)
+        ENDIF
+300     CONTINUE
+C
+C CHECK KICKER GAMES
+C
+	DO 400 I=1,NUMKIK
+	IF(KIKSTS(I).NE.GAMOPN) GOTO 400
+	IF(KIKTIM(I).GT.WTIME)  GOTO 400
+	IF(MOD(WRNCNT(TKIK,I),30).EQ.0) THEN
+	  REMTIM=KIKTIM(I)-TIME
+	  IF(REMTIM.LT.0) REMTIM=0
+	  REMMIN=REMTIM/60
+	  REMSEC=REMTIM-REMMIN*60
+	  MESS(1)=GCL
+	  MESS(2)=TEGEN
+	  MESS(3)=12
+	  CALL FASTMOV(GTNAMES(TKIK),MESS(4),2)
+	  MESS(6)=I
+	  MESS(7)=REMMIN
+	  MESS(8)=REMSEC
+	  CALL QUEMES(MESS)
+	ENDIF
+	WRNCNT(TKIK,I)=WRNCNT(TKIK,I)+1
+	IF(KIKTIM(I).GT.TIME) GOTO 400
+	CBUF(1)=1
+	CBUF(2)=GAMBFD
+	CBUF(3)=TCKIK
+	CBUF(6)='SYS '
+	CBUF(8)=I
+	CALL GCLCMD(CBUF,ST)
+	BTIME=TIME
+	IF(ST.EQ.0) THEN
+	  KIKTIM(I)=KIKTIM(I)+ '40000000'X
+	  GAM=GTNTAB(TKIK,I)
+	  CALL BSET(BITMAP,GAM)
+	ENDIF
+400	CONTINUE
+C
+C CHECK NUMBERS GAMES
+C
+        DO 500 I=1,NUMNBR
+        IF(NBRSTS(I).NE.GAMOPN) GOTO 500
+        IF(NBRTIM(I).GT.WTIME)  GOTO 500
+        IF(MOD(WRNCNT(TNBR,I),30).EQ.0) THEN
+          REMTIM=NBRTIM(I)-TIME
+          IF(REMTIM.LT.0) REMTIM=0
+          REMMIN=REMTIM/60
+          REMSEC=REMTIM-REMMIN*60
+          MESS(1)=GCL
+          MESS(2)=TEGEN
+          MESS(3)=12
+          CALL FASTMOV(GTNAMES(TNBR),MESS(4),2)
+          MESS(6)=I
+          MESS(7)=REMMIN
+          MESS(8)=REMSEC
+          CALL QUEMES(MESS)
+	ENDIF
+        WRNCNT(TNBR,I)=WRNCNT(TNBR,I)+1
+        IF(NBRTIM(I).GT.TIME) GOTO 500
+        CBUF(1)=1
+        CBUF(2)=GAMBFD
+        CBUF(3)=TCNBR
+        CBUF(6)='SYS '
+        CBUF(8)=I
+        CALL GCLCMD(CBUF,ST)
+	BTIME=TIME
+        IF(ST.EQ.0) THEN
+          NBRTIM(I)=NBRTIM(I)+ '40000000'X
+          GAM=GTNTAB(TNBR,I)
+	  CALL BSET(BITMAP,GAM)
+        ENDIF
+	LIBREP(I)=1
+500	CONTINUE
+C
+C CHECK SCORE GAMES
+C
+        DO 600 I=1,NUMSCR
+        IF(SCRSTS(I).NE.GAMOPN) GOTO 600
+        IF(SCRTIM(I).GT.WTIME)  GOTO 600
+        IF(MOD(WRNCNT(TSCR,I),30).EQ.0) THEN
+          REMTIM=SCRTIM(I)-TIME
+          IF(REMTIM.LT.0) REMTIM=0
+          REMMIN=REMTIM/60
+          REMSEC=REMTIM-REMMIN*60
+          MESS(1)=GCL
+          MESS(2)=TEGEN
+          MESS(3)=12
+          CALL FASTMOV(GTNAMES(TSCR),MESS(4),2)
+          MESS(6)=I
+          MESS(7)=REMMIN
+          MESS(8)=REMSEC
+          CALL QUEMES(MESS)
+        ENDIF
+        WRNCNT(TSCR,I)=WRNCNT(TSCR,I)+1
+        IF(SCRTIM(I).GT.TIME) GOTO 600
+        CBUF(1)=1
+        CBUF(2)=GAMBFD
+        CBUF(3)=TCSCR
+        CBUF(6)='SYS '
+        CBUF(8)=I
+        CALL GCLCMD(CBUF,ST)
+        BTIME=TIME
+        IF(ST.EQ.0) THEN
+          SCRTIM(I)=SCRTIM(I)+ '40000000'X
+          GAM=GTNTAB(TSCR,I)
+	  CALL BSET(BITMAP,GAM)
+        ENDIF
+600     CONTINUE
+C
+C CHECK WINNERS TIP GAMES
+C
+        DO 700 I=1,NUMWIT
+        IF(WITSTS(I).NE.GAMOPN) GOTO 700
+        IF(WITTIM(I).GT.WTIME)  GOTO 700
+        IF(MOD(WRNCNT(TWIT,I),30).EQ.0) THEN
+          REMTIM=WITTIM(I)-TIME
+          IF(REMTIM.LT.0) REMTIM=0
+          REMMIN=REMTIM/60
+          REMSEC=REMTIM-REMMIN*60
+          MESS(1)=GCL
+          MESS(2)=TEGEN
+          MESS(3)=12
+          CALL FASTMOV(GTNAMES(TWIT),MESS(4),2)
+          MESS(6)=I
+          MESS(7)=REMMIN
+          MESS(8)=REMSEC
+          CALL QUEMES(MESS)
+        ENDIF
+        WRNCNT(TWIT,I)=WRNCNT(TWIT,I)+1
+        IF(WITTIM(I).GT.TIME) GOTO 700
+        CBUF(1)=1
+        CBUF(2)=GAMBFD
+        CBUF(3)=TCWIT
+        CBUF(6)='SYS '
+        CBUF(8)=I
+        CALL GCLCMD(CBUF,ST)
+        BTIME=TIME
+        IF(ST.EQ.0) THEN
+          WITTIM(I)=WITTIM(I)+ '40000000'X
+          GAM=GTNTAB(TWIT,I)
+	  CALL BSET(BITMAP,GAM)
+        ENDIF
+700     CONTINUE
+C
+C CHECK TOTO SELECT GAMES
+C
+        DO 800 I=1,NUMTSL
+        IF(TSLSTS(I).NE.GAMOPN) GOTO 800
+	DO 810 ROW=1,TSLRWS(I)
+	IF(TSLSTA(ROW,I).NE.GAMOPN) GOTO 810
+        IF(TSLTIM(ROW,I).GT.WTIME)  GOTO 810
+        IF(MOD(WTSLCNT(ROW,I),30).EQ.0) THEN
+          REMTIM=TSLTIM(ROW,I)-TIME
+          IF(REMTIM.LT.0) REMTIM=0
+          REMMIN=REMTIM/60
+          REMSEC=REMTIM-REMMIN*60
+          MESS(1)=GCL
+          MESS(2)=TEGEN
+          MESS(3)=13
+          CALL FASTMOV(GTNAMES(TTSL),MESS(4),2)
+          MESS(6)=I
+	  MESS(7)=ROW
+          MESS(8)=REMMIN
+          MESS(9)=REMSEC
+          CALL QUEMES(MESS)
+        ENDIF
+        WTSLCNT(ROW,I)=WTSLCNT(ROW,I)+1
+        IF(TSLTIM(ROW,I).GT.TIME) GOTO 810
+        CBUF(1)=2
+        CBUF(2)=GAMBFD
+        CBUF(3)=TCTSL
+        CBUF(6)='SYS '
+        CBUF(8)=I
+	CBUF(9)=ROW
+        CALL GCLCMD(CBUF,ST)
+        BTIME=TIME
+        IF(ST.EQ.0) THEN
+	  TSLTIM(ROW,I)=TSLTIM(ROW,I)+ '40000000'X
+          GAM=GTNTAB(TTSL,I)
+CRXK	  CALL BSET(BITMAP,GAM)     don't send unsolicited message twice,
+CRXK                                already done in CMDTSL 
+        ENDIF
+810     CONTINUE
+800     CONTINUE
+C
+C CHECK SPORTS GAMES
+C
+	DO 900 I=1,NUMTGL
+	IF(TGLSTS(I).NE.GAMOPN) GOTO 900
+	IF(TGLTIM(I).GT.WTIME)  GOTO 900
+	IF(MOD(WRNCNT(TTGL,I),30).EQ.0) THEN
+	  REMTIM=TGLTIM(I)-TIME
+	  IF(REMTIM.LT.0) REMTIM=0
+	  REMMIN=REMTIM/60
+	  REMSEC=REMTIM-REMMIN*60
+	  MESS(1)=GCL
+	  MESS(2)=TEGEN
+	  MESS(3)=12
+	  CALL FASTMOV(GTNAMES(TTGL),MESS(4),2)
+	  MESS(6)=I
+	  MESS(7)=REMMIN
+	  MESS(8)=REMSEC
+	  CALL QUEMES(MESS)
+	ENDIF
+	WRNCNT(TTGL,I)=WRNCNT(TTGL,I)+1
+	IF(TGLTIM(I).GT.TIME) GOTO 900
+	CBUF(1)=1
+	CBUF(2)=GAMBFD
+	CBUF(3)=TCTGL
+	CBUF(6)='SYS '
+	CBUF(8)=I
+	CALL GCLCMD(CBUF,ST)
+	BTIME=TIME
+	IF(ST.EQ.0) THEN
+	  GAM=GTNTAB(TTGL,I)
+	  TGLTIM(I)=TGLTIM(I)+ '40000000'X
+	  CALL BSET(BITMAP,GAM)
+	ENDIF
+900	CONTINUE
+C
+C CHECK DOUBLE GAMES
+C
+        DO 1100 I=1,NUMDBL
+        IF(DBLSTS(I).NE.GAMOPN) GOTO 1100
+        IF(DBLTIM(I).GT.WTIME)  GOTO 1100
+        IF(MOD(WRNCNT(TDBL,I),30).EQ.0) THEN
+          REMTIM=DBLTIM(I)-TIME
+          IF(REMTIM.LT.0) REMTIM=0
+          REMMIN=REMTIM/60
+          REMSEC=REMTIM-REMMIN*60
+          MESS(1)=GCL
+          MESS(2)=TEGEN
+          MESS(3)=12
+          CALL FASTMOV(GTNAMES(TDBL),MESS(4),2)
+          MESS(6)=I
+          MESS(7)=REMMIN
+          MESS(8)=REMSEC
+          CALL QUEMES(MESS)
+        ENDIF
+        WRNCNT(TDBL,I)=WRNCNT(TDBL,I)+1
+        IF(DBLTIM(I).GT.TIME) GOTO 1100
+        CBUF(1)=1
+        CBUF(2)=GAMBFD
+        CBUF(3)=TCDBL
+        CBUF(6)='SYS '
+        CBUF(8)=I
+        CALL GCLCMD(CBUF,ST)
+        BTIME=TIME
+        IF(ST.EQ.0) THEN
+          DBLTIM(I)=DBLTIM(I)+ '40000000'X
+          GAM=GTNTAB(TDBL,I)
+	  CALL BSET(BITMAP,GAM)
+        ENDIF
+1100    CONTINUE
+C
+C CHECK COUPLE GAMES
+C
+        DO 1200 I=1,NUMCPL
+        IF(CPLSTS(I).NE.GAMOPN) GOTO 1200
+        IF(CPLTIM(I).GT.WTIME)  GOTO 1200
+        IF(MOD(WRNCNT(TCPL,I),30).EQ.0) THEN
+          REMTIM=CPLTIM(I)-TIME
+          IF(REMTIM.LT.0) REMTIM=0
+          REMMIN=REMTIM/60
+          REMSEC=REMTIM-REMMIN*60
+          MESS(1)=GCL
+          MESS(2)=TEGEN
+          MESS(3)=12
+          CALL FASTMOV(GTNAMES(TCPL),MESS(4),2)
+          MESS(6)=I
+          MESS(7)=REMMIN
+          MESS(8)=REMSEC
+          CALL QUEMES(MESS)
+        ENDIF
+        WRNCNT(TCPL,I)=WRNCNT(TCPL,I)+1
+        IF(CPLTIM(I).GT.TIME) GOTO 1200
+        CBUF(1)=1
+        CBUF(2)=GAMBFD
+        CBUF(3)=TCCPL
+        CBUF(6)='SYS '
+        CBUF(8)=I
+        CALL GCLCMD(CBUF,ST)
+        BTIME=TIME
+        IF(ST.EQ.0) THEN
+          CPLTIM(I)=CPLTIM(I)+ '40000000'X
+          GAM=GTNTAB(TCPL,I)
+	  CALL BSET(BITMAP,GAM)
+        ENDIF
+1200    CONTINUE
+C
+C
+C CHECK SUPERSCORE GAMES
+C
+        DO 1300 I=1,NUMSSC
+        IF(SSCSTS(I).NE.GAMOPN) GOTO 1300
+        IF(SSCTIM(I).GT.WTIME)  GOTO 1300
+        IF(MOD(WRNCNT(TSSC,I),30).EQ.0) THEN
+          REMTIM=SSCTIM(I)-TIME
+          IF(REMTIM.LT.0) REMTIM=0
+          REMMIN=REMTIM/60
+          REMSEC=REMTIM-REMMIN*60
+          MESS(1)=GCL
+          MESS(2)=TEGEN
+          MESS(3)=12
+          CALL FASTMOV(GTNAMES(TSSC),MESS(4),2)
+          MESS(6)=I
+          MESS(7)=REMMIN
+          MESS(8)=REMSEC
+          CALL QUEMES(MESS)
+        ENDIF
+        WRNCNT(TSSC,I)=WRNCNT(TSSC,I)+1
+        IF(SSCTIM(I).GT.TIME) GOTO 1300
+        CBUF(1)=1
+        CBUF(2)=GAMBFD
+        CBUF(3)=TCSSC
+        CBUF(6)='SYS '
+        CBUF(8)=I
+        CALL GCLCMD(CBUF,ST)
+        BTIME=TIME
+        IF(ST.EQ.0) THEN
+          SSCTIM(I)=SSCTIM(I)+ '40000000'X
+          GAM=GTNTAB(TSSC,I)
+	  CALL BSET(BITMAP,GAM)
+        ENDIF
+1300    CONTINUE
+C
+C CHECK TODAY'S TRIO GAMES
+C
+        DO 1400 I=1,NUMTRP
+        IF(TRPSTS(I).NE.GAMOPN) GOTO 1400
+        IF(TRPTIM(I).GT.WTIME)  GOTO 1400
+        IF(MOD(WRNCNT(TTRP,I),30).EQ.0) THEN
+          REMTIM=TRPTIM(I)-TIME
+          IF(REMTIM.LT.0) REMTIM=0
+          REMMIN=REMTIM/60
+          REMSEC=REMTIM-REMMIN*60
+          MESS(1)=GCL
+          MESS(2)=TEGEN
+          MESS(3)=12
+          CALL FASTMOV(GTNAMES(TTRP),MESS(4),2)
+          MESS(6)=I
+          MESS(7)=REMMIN
+          MESS(8)=REMSEC
+          CALL QUEMES(MESS)
+        ENDIF
+        WRNCNT(TTRP,I)=WRNCNT(TTRP,I)+1
+        IF(TRPTIM(I).GT.TIME) GOTO 1400
+        CBUF(1)=1
+        CBUF(2)=GAMBFD
+        CBUF(3)=TCTRP
+        CBUF(6)='SYS '
+        CBUF(8)=I
+        CALL GCLCMD(CBUF,ST)
+        BTIME=TIME
+        IF(ST.EQ.0) THEN
+          TRPTIM(I)=TRPTIM(I)+ '40000000'X
+          GAM=GTNTAB(TTRP,I)
+	  CALL BSET(BITMAP,GAM)
+        ENDIF
+1400    CONTINUE
+C
+C CHECK SUPER TRIPLE GAMES
+C
+        DO 1500 I=1,NUMSTR
+        IF(STRSTS(I).NE.GAMOPN) GOTO 1500
+        IF(STRTIM(I).GT.WTIME)  GOTO 1500
+        IF(MOD(WRNCNT(TSTR,I),30).EQ.0) THEN
+          REMTIM=STRTIM(I)-TIME
+          IF(REMTIM.LT.0) REMTIM=0
+          REMMIN=REMTIM/60
+          REMSEC=REMTIM-REMMIN*60
+          MESS(1)=GCL
+          MESS(2)=TEGEN
+          MESS(3)=12
+          CALL FASTMOV(GTNAMES(TSTR),MESS(4),2)
+          MESS(6)=I
+          MESS(7)=REMMIN
+          MESS(8)=REMSEC
+          CALL QUEMES(MESS)
+        ENDIF
+        WRNCNT(TSTR,I)=WRNCNT(TSTR,I)+1
+        IF(STRTIM(I).GT.TIME) GOTO 1500
+        CBUF(1)=1
+        CBUF(2)=GAMBFD
+        CBUF(3)=TCSTR
+        CBUF(6)='SYS '
+        CBUF(8)=I
+        CALL GCLCMD(CBUF,ST)
+        BTIME=TIME
+        IF(ST.EQ.0) THEN
+          STRTIM(I)=STRTIM(I)+ '40000000'X
+          GAM=GTNTAB(TSTR,I)
+	  CALL BSET(BITMAP,GAM)
+        ENDIF
+1500    CONTINUE
+C
+C CHECK PASSIVE LOTTERY GAMES
+C
+        DO  I=1, NUMPAS
+            GTYP = TPAS
+            GAM  = GTNTAB(TPAS,I)
+            IF(PASCURDRW(I).GT.0) THEN
+              IF(PASSTS(PASCURDRW(I),I).EQ.GAMOPN) THEN
+C
+C SET WARNING FLAG FOR THIS GAME
+C DURING TERMINAL WARNING PERIOD
+C
+                IF(PASTIM(PASCURDRW(I),I).LE.WTIME) THEN
+C
+C SHOW MESSAGE ON CONSOLE
+C DURING CONSOLE WARNING PERIOD
+C
+                    IF  (MOD(WRNCNT(TPAS,I),30).EQ.0) THEN
+                        REMTIM=PASTIM(PASCURDRW(I),I)-TIME
+                        IF(REMTIM.LT.0) REMTIM=0
+                        REMMIN=REMTIM/60
+                        REMSEC=REMTIM-REMMIN*60
+                        MESS(1)=GCL
+                        MESS(2)=TEGEN
+                        MESS(3)=12
+                        CALL FASTMOV(GTNAMES(TPAS),MESS(4),2)
+                        MESS(6)=I
+                        MESS(7)=REMMIN
+                        MESS(8)=REMSEC
+                        CALL QUEMES(MESS)
+                    ENDIF
+                    WRNCNT(TPAS,I)=WRNCNT(TPAS,I)+1
+C
+C SEND COMMAND TO CHANGE EMISSION
+C STATUS IF IT IS CLOSE TIME
+C
+                    IF(PASTIM(PASCURDRW(I),I).LE.TIME) THEN
+                        CBUF(1)=1
+                        CBUF(2)=GAMBFD
+                        CBUF(3)=TCPAS
+                        CBUF(6)='SYS '
+                        CBUF(8)=I
+                        CBUF(9)=PASEMIS(PASCURDRW(I),I)
+                        CALL GCLCMD(CBUF,ST)
+
+                        IF(ST.EQ.0) THEN
+                            CALL BSET(PASTIM(PASCURDRW(I),I),30)
+                            CALL BSET(BITMAP,GAM)
+                        ENDIF
+                    ENDIF
+                ENDIF
+              ENDIF
+            ENDIF
+        ENDDO
+C
+C IF ANY GAME CLOSED THEN BROADCAST GAME CHANGES.
+C
+C	IF(BITMAP(1).NE.0 .OR. BITMAP(2).NE.0) THEN   !V15
+C	  BTIME=BTIME+30                              !V15
+C	  CBUF(1)=6                                   !V15
+C	  CBUF(2)=BITMAP(1)                           !V15
+C	  CBUF(3)=TCSPE                               !V15
+C	  CBUF(6)='SYS '                              !V15
+C          CBUF(8)=BITMAP(2)                    !V15
+C	  CALL GCLCMD(CBUF,ST)                        !V15
+C	  BITMAP(1)=0                                 !V15
+C	  BITMAP(2)=0                                 !V15
+C	ENDIF                                         !V15
+C
+C RUN NUMBERS GAME LIABILITY REPORTS
+C
+	DO 2000 I=1,NUMNBR
+	IF(LIBREP(I).EQ.1.AND.NBRSTS(I).GE.GAMBFD) THEN
+	  IF(NBRTYP(I).EQ.NB3TYP) CALL POOL3(I)
+	  IF(NBRTYP(I).EQ.NB4TYP) CALL POOL4(I)
+	  LIBREP(I)=0
+	ENDIF
+2000	CONTINUE
+C
+C
+	GOTO 10
+	END

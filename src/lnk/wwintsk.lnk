@@ -1,0 +1,23 @@
+$! GXSRC:WWINTSK.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]WWINTSK.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:59:32   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 14:08:56   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:53:14   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:WWINTSK.EXE -
+OBJLIB:WWINTSK,-
+FMAINT,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXWINCOM.ESH/SHAREABLE,-
+TSKLIB:GXSTOPCOM.ESH/SHAREABLE

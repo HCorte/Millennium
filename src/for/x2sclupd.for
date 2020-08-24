@@ -1,0 +1,270 @@
+C
+C SUBROUTINE X2SCLUPD
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2SCLUPD.FOV                                 $
+C  $Date::   17 Apr 1996 16:33:46                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2sclupd.for;1 **
+C
+C X2SCLUPD.FOR
+C
+C V02 21-AUG-94 GPR DONT UPDATE STATION RECORD FROM CLASS UNLESS NEEDED -
+C		    Integrate UK changes into X2X Baseline
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C This subroutine will scan through the Station file and
+C will update the default parameters which were obtained
+C from the station class when the station was originally
+C built using autobuild.
+C
+C Input parameters:
+C
+C     NUMSCL      Int*4           Number of modified station classes
+C     SCLTBL      Int*4(100)      Table of modified station class
+C                                 record numbers.
+C
+C Output parameters:
+C
+C     None
+C
+C
+C NOTE:
+C
+C     Logical units 1 - Station Class and 2 - Station file must
+C     have been previously opened for buffer I/O using X2XSUBS.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2SCLUPD(NUMSCL,SCLTBL)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:X2XPRM.DEF'
+	INCLUDE 'INCLIB:X2XSTN.DEF'
+	INCLUDE 'INCLIB:X2XSCL.DEF'
+C
+	INTEGER*4   NUMSCL                  !Number of station classes
+	INTEGER*4   SCLTBL(100)             !Table of modified SCL recs
+	INTEGER*4   SYSDATE(3)              !System date
+	INTEGER*2   DATBUF(12)              !GTECH date buffer
+	INTEGER*4   ST                      !Status/Exit
+	INTEGER*4   REC                     !Record to modify
+	INTEGER*4   LSTCLS /0/              !Last class record read
+	INTEGER*4   NUMUPD                  !Number of records updated
+        INTEGER*4   I
+	CHARACTER   X2FILNAM*20             !File name function
+C
+C CLEAR THE SCREEN AND DISPLAY THE MENU.
+C
+	WRITE(5,9000)
+C
+C DETERMINE THE CDC DATE FROM THE SYSTEM DATE.
+C
+	CALL XDAT(SYSDATE)
+	DATBUF(VYEAR)=SYSDATE(1)
+	DATBUF(VMON)=SYSDATE(2)
+	DATBUF(VDAY)=SYSDATE(3)
+	CALL BDATE(DATBUF)
+	NUMUPD=0
+C
+C LOOP THROUGH ALL STATIONS LOOKING FOR RECORDS WHICH MUST
+C BE UPDATED.
+C
+	DO 5000 REC=1,X2X_STATIONS
+C
+	  CALL READX2X(2,REC,X2XSTN_REC,ST)
+	  IF(ST.EQ.144) GOTO 6000
+	  IF(X2XSTN_REC(1).LE.0) GOTO 5000
+C
+C CHECK TO SEE IF THIS STATION MATCHES ANY OF THE MODIFIED
+C STATION CLASSES.
+C
+	  DO 5010 I=1,NUMSCL
+	    IF(X2XSTN_STNCLS.EQ.SCLTBL(I)) GOTO 5020
+5010	  CONTINUE
+	  GOTO 5000
+C
+C STATION UTILIZES A MODIFIED STATION CLASS, SO UPDATE IT.
+C IF REQUIRED, READ THE STATION CLASS RECORD.
+C
+5020	  CONTINUE
+	  IF(LSTCLS.NE.X2XSTN_STNCLS) THEN
+	    CALL READX2X(1,X2XSTN_STNCLS,X2XSCL_REC,ST)
+	    IF(ST.NE.0 .OR. X2XSCL_CLASS.EQ.0) THEN
+	      WRITE(5,*) 'Invalid station class    stn/class ',REC,
+     *	                 X2XSTN_STNCLS
+	      PAUSE
+	    ENDIF
+	    LSTCLS=X2XSCL_CLASS
+	  ENDIF
+C
+C UPDATE THE RECORD USING STATION CLASS DEFAULTS.
+C NOTE: ONLY SET THE BITMAP FOR FIELDS WHICH HAVE BEEN UPDATED.
+C
+	  IF(TSBIT(X2XSCL_BITMAP,25)) THEN
+	    X2XSTN_ADDLEN  = X2XSCL_ADDLEN
+	    CALL BSET(X2XSTN_BITMAP,2)
+	  ENDIF
+C
+C	  ***** Start V02 changes *****
+C
+CV02	  IF(TSBIT(X2XSCL_BITMAP,10)) THEN
+CV02	    X2XSTN_PROTO   = X2XSCL_PROTO
+CV02	    CALL BSET(X2XSTN_BITMAP,4)
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,11)) THEN
+CV02	    X2XSTN_PRTCNT  = X2XSCL_PRTCNT
+CV02	    CALL BSET(X2XSTN_BITMAP,5)
+CV02	  ENDIF
+	  IF(TSBIT(X2XSCL_BITMAP,12)) THEN
+	    X2XSTN_TYPE    = X2XSCL_TYPE
+	    CALL BSET(X2XSTN_BITMAP,5)					!V02
+	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,13)) THEN
+CV02	    X2XSTN_DELACK  = X2XSCL_DELACK
+CV02	    CALL BSET(X2XSTN_BITMAP,6)					!V02
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,14)) THEN
+CV02	    X2XSTN_ERRREP  = X2XSCL_ERRREP
+CV02	    CALL BSET(X2XSTN_BITMAP,7)					!V02
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,15)) THEN
+CV02	    X2XSTN_STNDIS  = X2XSCL_STNDIS
+CV02	    CALL BSET(X2XSTN_BITMAP,8)					!V02
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,16)) THEN
+CV02	    X2XSTN_FEDIS   = X2XSCL_FEDIS
+CV02	    CALL BSET(X2XSTN_BITMAP,9)					!V02
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,17)) THEN
+CV02	    X2XSTN_NETPT1  = X2XSCL_NETPT1
+CV02	    CALL BSET(X2XSTN_BITMAP,16)
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,18)) THEN
+CV02	    X2XSTN_NETPT2  = X2XSCL_NETPT2
+CV02	    CALL BSET(X2XSTN_BITMAP,17)
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,19)) THEN
+CV02	    X2XSTN_NETPT3  = X2XSCL_NETPT3
+CV02	    CALL BSET(X2XSTN_BITMAP,18)
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,20)) THEN
+CV02	    X2XSTN_NETPT4  = X2XSCL_NETPT4
+CV02	    CALL BSET(X2XSTN_BITMAP,19)
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,21)) THEN
+CV02	    X2XSTN_NETPT5  = X2XSCL_NETPT5
+CV02	    CALL BSET(X2XSTN_BITMAP,20)
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,22)) THEN
+CV02	    X2XSTN_NETPT6  = X2XSCL_NETPT6
+CV02	    CALL BSET(X2XSTN_BITMAP,21)
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,23)) THEN
+CV02	    X2XSTN_NETPT7  = X2XSCL_NETPT7
+CV02	    CALL BSET(X2XSTN_BITMAP,22)
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,24)) THEN
+CV02	    X2XSTN_POLTIM  = X2XSCL_POLTIM
+CV02	    CALL BSET(X2XSTN_BITMAP,26)
+CV02	  ENDIF
+	  IF(TSBIT(X2XSCL_BITMAP,26)) THEN
+	    X2XSTN_NETSTAT = X2XSCL_NETSTAT
+	    CALL BSET(X2XSTN_BITMAP,23)					!V02
+	  ENDIF
+	  IF(TSBIT(X2XSCL_BITMAP,27)) THEN
+	    X2XSTN_AUTOUPD = X2XSCL_AUTOUPD
+	    CALL BSET(X2XSTN_BITMAP,24)					!V02
+	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,28)) THEN
+CV02	    X2XSTN_BAUD    = X2XSCL_BAUD
+CV02	    CALL BSET(X2XSTN_BITMAP,29)
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,38)) THEN
+CV02	    X2XSTN_DIALENA = X2XSCL_DIALENA
+CV02	    CALL BSET(X2XSTN_BITMAP,36)
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,39)) THEN
+CV02	    IF(X2XSCL_DIAL_PORT1.NE.0) THEN
+CV02	      X2XSTN_DIAL_PORT1= X2XSCL_DIAL_PORT1
+CV02	      CALL BSET(X2XSTN_BITMAP,37)
+CV02	    ENDIF
+CV02	  ENDIF
+CV02	  IF(TSBIT(X2XSCL_BITMAP,40)) THEN
+CV02	    IF(X2XSCL_DIAL_PORT2.NE.0) THEN
+CV02	      X2XSTN_DIAL_PORT2= X2XSCL_DIAL_PORT2
+CV02	      CALL BSET(X2XSTN_BITMAP,38)
+CV02	    ENDIF
+CV02	  ENDIF
+C
+C	  ***** End V02 changes *****
+C
+	  IF(TSBIT(X2XSCL_BITMAP,46)) THEN
+	    X2XSTN_X32_PORT1 = X2XSCL_X32_PORT1
+	    CALL BSET(X2XSTN_BITMAP,33)					!V02
+	  ENDIF
+	  IF(TSBIT(X2XSCL_BITMAP,47)) THEN
+	    X2XSTN_X32_PORT2 = X2XSCL_X32_PORT2
+CV02	    CALL BSET(X2XSTN_BITMAP,41)
+	    CALL BSET(X2XSTN_BITMAP,34)					!V02
+	  ENDIF
+          IF(TSBIT(X2XSCL_BITMAP,59)) THEN
+            X2XSTN_EVSN_LEN =  X2XSCL_EVSN_LEN 
+            CALL BSET(X2XSTN_BITMAP,36)					!V02
+          ENDIF         
+CV02      IF(TSBIT(X2XSCL_BITMAP,60)) THEN	  !V02
+CV02        X2XSTN_CLOCK     = X2XSCL_CLOCK	  !V02
+CV02        CALL BSET(X2XSTN_BITMAP,48)		  !V02
+CV02      ENDIF					  !V02
+CV02      IF(TSBIT(X2XSCL_BITMAP,61)) THEN	  !V02
+CV02        X2XSTN_SYNC      = X2XSCL_SYNC	  !V02
+CV02        CALL BSET(X2XSTN_BITMAP,49)		  !V02
+CV02      ENDIF					  !V02
+C
+C REWRITE THE STATION RECORD.
+C
+	  CALL WRITX2X(2,REC,X2XSTN_REC,ST)
+	  IF(ST.NE.0) THEN
+	    CALL OS32ER(5,X2FILNAM(XSTN),'WRITEW',ST,REC)
+	    CALL GPAUSE
+	  ENDIF
+	  NUMUPD=NUMUPD+1
+5000	CONTINUE
+C
+C PROGRAM EXIT.
+C
+6000	CONTINUE
+	WRITE(5,9010) NUMUPD
+	CALL XWAIT(2,2,ST)
+	RETURN
+C
+C ========================== FORMAT STATEMENTS =====================
+C
+9000	FORMAT(1X,'Beginning update of station defaults ')
+9010	FORMAT(1X,'Station update complete - ',I6,' stations updated ')
+	END

@@ -1,0 +1,221 @@
+C
+C SUBROUTINE X2BROMES
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2BROMES.FOV                                 $
+C  $Date::   17 May 1996 11:44:44                                         $
+C  $Revision::   1.2                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - x2bromes.for;1 **
+C
+C X2BROMES.FOR
+C
+C V04 21-mar-96 das ADDEd support for sending ACL 
+C V03 12-DEC-94 GPR Integrate UK changes into X2X Baseline
+C V02 19-JUL-94 WS MULTINETWORK CHANGES
+C V01 01-DEC-91 XXX RELEASED FOR VAX (NETHERLANDS)
+C
+C THIS PROGRAM WILL STATION/TERMINAL RESET MESSAGE FOR X2XREL
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2BROMES(OPT,OPT2,OPT3,BUFFER,STATION,MES_NUM,
+     *	                    OUT_LEN,DEST,FORMAT)
+C
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+	INCLUDE 'INCLIB:X2FEMES.DEF'
+	INCLUDE 'INCLIB:X2STMES.DEF'
+	INCLUDE 'INCLIB:X2XREL.DEF'
+	INCLUDE 'INCLIB:PRMDLL.DEF'
+C
+	INTEGER*2 BUFFER(*)
+	INTEGER*4 TBUF(4), OUT_LEN, DEST, FORMAT
+	INTEGER*4 OPT,OPT2,OPT3,STATION, MES_NUM
+        INTEGER*4 MAX_OPTS, IND
+        INTEGER*4 CLASS, SUBCLASS
+	INTEGER*4 CHKSUM
+	CHARACTER C1CHKSUM(4)
+C
+	EQUIVALENCE (CHKSUM, C1CHKSUM)
+	PARAMETER (MAX_OPTS=13)
+C
+	IF (OPT.LE.0 .OR. OPT.GT.MAX_OPTS) THEN
+	  TYPE *,'INVALID MENU OPTION.......',CHAR(7)
+	  RETURN
+	ENDIF
+C
+C STORE THE STATION CONFIGURATION CHECKSUM.
+C
+	CHKSUM=0
+	IF(STATION.GT.0 .AND. STATION.LT.X2X_STATIONS) THEN
+	  C1CHKSUM(4)=X2XS_CONF(STATION)
+	  IF (X2XS_TYPE(STATION).EQ.X2XST_BCST) 	!V02
+     *		      CHKSUM=0				!V02
+	ENDIF
+C
+C BUILD TERMINAL MESSAGE.
+C
+	DEST=X2STMES_RELAYF_DS_STATION   !MESSAGE TO STATIONS
+	MES_NUM=0
+	IF (OPT.EQ.2) THEN
+	  MES_NUM=OPT
+C
+C PROCESS NEWS MESSAGE REQUEST
+C
+	  IND=4
+	  CALL MOVBYT(CLASS,4,BUFFER,IND,1)
+	  IND=IND+1
+	  CALL MOVBYT(SUBCLASS,4,BUFFER,IND,1)
+	  IND=IND+1
+	  CALL ICLOCK(0,TBUF)
+	  CALL MOVBYT(TBUF(1),4,BUFFER,IND,1)
+	  IND=IND+1
+	  CALL MOVBYT(TBUF(2),4,BUFFER,IND,1)
+	  IND=IND+1
+	  CALL MOVBYT(TBUF(3),4,BUFFER,IND,1)
+	  IND=IND+1
+	  OUT_LEN=8
+	ELSEIF(OPT.LE.4 .OR. OPT.EQ.11 .OR. OPT.EQ.12) THEN 
+	  IF(OPT.EQ.11) THEN						!V03
+	    MES_NUM=RRESET
+      	  ELSEIF(OPT .EQ. 12) THEN
+            MES_NUM = OPT2
+	  ELSE
+	    MES_NUM=OPT
+	  ENDIF
+	  OUT_LEN=0
+	  DEST=X2STMES_RELAYF_DS_TERM  !MESSAGE TO TERMINALS
+C
+C BUILD STATION MESSAGES.
+C
+	ELSE
+	  IF (FORMAT.EQ.X2XR_APPA_ALL_NO_FORMAT) FORMAT=
+     *	                       X2XR_APPA_ALL_STN_NO_FORMAT
+C
+C BUILD THE MESSAGE BUFFER FOR THE STATION SOFT RESET COMMAND.
+C
+	  IF(OPT.EQ.5) THEN
+	    OUT_LEN=X2STMES_HDRLEN
+	    CALL ISBYTE(X2STMES_PROTID_VAL,BUFFER,
+     *	                  X2STMES_PROTID-1)
+	    CALL ISBYTE(X2STMES_DATATYPE_CMD_DOWN,BUFFER,
+     *	                  X2STMES_DATATYPE-1)
+	    CALL ISBYTE(0,BUFFER,X2STMES_CONFCHK-1)
+	    CALL I4TOBUF2(STATION,BUFFER,
+     *	                  X2STMES_STATION_NO-1)
+	    CALL ISBYTE(X2STMES_SOFT_RESET,BUFFER,
+     *	                  X2STMES_CODE-1)
+	    CALL ISBYTE(X2STMES_UNS,BUFFER,
+     *	                  X2STMES_FLAGS-1)
+	    CALL I4TOBUF2(OUTLEN,BUFFER,				!V03
+     *	                  X2STMES_MESLEN-1)
+C
+C BUILD STATION HARD RESET.
+C
+	  ELSE IF(OPT.EQ.6) THEN
+	    OUT_LEN=X2STMES_HDRLEN
+	    CALL ISBYTE(X2STMES_PROTID_VAL,BUFFER,
+     *	                  X2STMES_PROTID-1)
+	    CALL ISBYTE(X2STMES_DATATYPE_CMD_DOWN,BUFFER,
+     *	                  X2STMES_DATATYPE-1)
+	    CALL ISBYTE(0,BUFFER,X2STMES_CONFCHK-1)
+	    CALL I4TOBUF2(STATION,BUFFER,
+     *	                  X2STMES_STATION_NO-1)
+	    CALL ISBYTE(X2STMES_RESET,BUFFER,
+     *	                  X2STMES_CODE-1)
+	    CALL ISBYTE(X2STMES_UNS,BUFFER,
+     *	                  X2STMES_FLAGS-1)
+	    CALL I4TOBUF2(OUTLEN,BUFFER,
+     *	                  X2STMES_MESLEN-1)				!V03
+C
+C BUILD STATION STATISTICS REQUEST.
+C
+	  ELSE IF(OPT.EQ.7) THEN
+	    OUT_LEN=X2STMES_HDRLEN
+	    CALL ISBYTE(X2STMES_PROTID_VAL,BUFFER,
+     *	                  X2STMES_PROTID-1)
+	    CALL ISBYTE(X2STMES_DATATYPE_CMD_DOWN,BUFFER,
+     *	                  X2STMES_DATATYPE-1)
+	    CALL ISBYTE(CHKSUM,BUFFER,X2STMES_CONFCHK-1)
+	    CALL I4TOBUF2(STATION,BUFFER,
+     *	                  X2STMES_STATION_NO-1)
+	    CALL ISBYTE(X2STMES_STAT_REQ,BUFFER,
+     *	                  X2STMES_CODE-1)
+	    CALL ISBYTE(X2STMES_UNS,BUFFER,
+     *	                  X2STMES_FLAGS-1)
+	    CALL I4TOBUF2(1,BUFFER,
+     *	                  X2STMES_MESLEN-1)				!V03
+	    CALL ISBYTE(OPT2+OPT3,BUFFER,X2STMES_STSHDR_HDRLEN) !
+C
+C BUILD STATION SHUTUP MESSAGE.
+C
+	  ELSE IF(OPT.EQ.9) THEN					!V03
+	    OUT_LEN=X2STMES_HDRLEN+X2STMES_DIS_DATA_LENGTH
+	    CALL ISBYTE(X2STMES_PROTID_VAL,BUFFER,
+     *	                  X2STMES_PROTID-1)
+	    CALL ISBYTE(X2STMES_DATATYPE_CMD_DOWN,BUFFER,
+     *	                  X2STMES_DATATYPE-1)
+	    CALL ISBYTE(CHKSUM,BUFFER,X2STMES_CONFCHK-1)
+	    CALL I4TOBUF2(STATION,BUFFER,
+     *	                  X2STMES_STATION_NO-1)
+	    CALL ISBYTE(X2STMES_DISABLE,BUFFER,
+     *	                  X2STMES_CODE-1)
+	    CALL ISBYTE(X2STMES_DIS_UNC,BUFFER,
+     *	                  X2STMES_FLAGS-1)
+	    CALL ISBYTE(X2STMES_DIS_DATA_LENGTH,BUFFER,
+     *	                  X2STMES_MESLEN-1)
+	    CALL ISBYTE(X2STMES_DISABLE,BUFFER,
+     *	                  X2STMES_DISABLE_CODE-1)
+	    CALL ISBYTE(OPT2,BUFFER,
+     *	                  X2STMES_DISABLE_REASON-1)
+	    CALL I4TOBUF4(OPT3,BUFFER,
+     *	                  X2STMES_DISABLE_INTERVAL-1)
+C
+C STATION WAKEUP MESSAGE.
+C
+	  ELSE IF (OPT.EQ.10) THEN					!V03
+	    OUT_LEN=X2STMES_HDRLEN
+	    CALL ISBYTE(X2STMES_PROTID_VAL,BUFFER,
+     *	                  X2STMES_PROTID-1)
+	    CALL ISBYTE(X2STMES_DATATYPE_CMD_DOWN,BUFFER,
+     *	                  X2STMES_DATATYPE-1)
+	    CALL ISBYTE(CHKSUM,BUFFER,X2STMES_CONFCHK-1)
+	    CALL I4TOBUF2(STATION,BUFFER,
+     *	                  X2STMES_STATION_NO-1)
+	    CALL ISBYTE(X2STMES_WAKE_UP,BUFFER,
+     *	                  X2STMES_CODE-1)
+	    CALL ISBYTE(X2STMES_UNS,BUFFER,
+     *	                  X2STMES_FLAGS-1)
+	    CALL I4TOBUF2(OUTLEN,BUFFER,				!V03
+     *	                  X2STMES_MESLEN-1)
+	  ENDIF
+	ENDIF
+	RETURN
+	END

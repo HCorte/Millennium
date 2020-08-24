@@ -1,0 +1,53 @@
+! X2CMDPRO.OPT
+!
+!*************************** START X2X PVCS HEADER ****************************
+!
+! $Logfile::   GXAFXT:[GOLS]X2CMDPRO.OPV                                 $
+! $Date::   17 Apr 1996 16:14:12                                         $
+! $Revision::   1.0                                                      $
+! $Author::   HXK                                                        $
+!
+!**************************** END X2X PVCS HEADER *****************************
+!
+! V02 28-FEB-96 wsm Added X2CNVDRP, X2SWPVSN, MSC_NOSPACES for Finland.
+!
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+! This item is the property of GTECH Corporation, Providence, Rhode
+! Island, and contains confidential and trade secret information. It
+! may not be transferred from the custody or control of GTECH except
+! as authorized in writing by an officer of GTECH. Neither this item
+! nor the information it contains may be used, transferred,
+! reproduced, published, or disclosed, in whole or in part, and
+! directly or indirectly, except as expressly authorized by an
+! officer of GTECH, pursuant to written agreement.
+!
+! Copyright 1994 GTECH Corporation. All rights reserved.
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!
+OBJLIB:CMDXBRO,-
+CMDX2X,-
+CMDXGBL,-
+CMDXGRP,-
+CMDXLPC,-
+CMDXNPC,-
+CMDXSCL,-
+CMDXSTN,-
+CMDXTER,-
+CMDXTTN,-
+CMDMSC,-
+MSC_GETPARM,-
+MSC_BLDCMD,-
+MSC_NOSPACES,-
+MSC_QUECMD,-
+MSCGETB,-
+VALIDTER,-
+X2QSHFT,-
+X2STNRES,-
+X2FLDNUM,-
+X2FILSEC,-
+X2STRSUM,-
+X2FILNAM,-
+X2CHKSUM,-
+X2CNVDRP,-
+X2SWPVSN,-
+X2STNCHK

@@ -1,0 +1,24 @@
+$! GXSRC:TAPLOG.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]TAPLOG.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:53:20   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:47:38   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:48:58   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:TAPLOG.EXE -
+OBJLIB:TAPLOG,-
+RESTSK,-
+TAPCHG,-
+TAPHDR,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXCPLCOM.ESH/SHAREABLE

@@ -1,0 +1,28 @@
+C
+C BNGDNAM.DEF 
+C Full list of bingo division names.  
+C
+C V01 14-JAN-00 RXK Initial version.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        CHARACTER*8 BNGDNAMES(BGOLOT)
+        INTEGER*4   IBNGDNAMES(2*BGOLOT)
+        EQUIVALENCE(BNGDNAMES,IBNGDNAMES)
+        DATA BNGDNAMES/'Bingo-1 ','Bingo   ','Double-1','Double  ',
+     *                 'Triple-1','Triple  ','Quad-1  ','Quad    ',
+     *                 'Block-1 ','Block   ','Border-1','Border  ',
+     *                 'Fullh   ','Fullh-1 ','Fullh-2 ','Fullh-3 ',
+     *                 'Fullh-4 ','Fullh-5 ','Worst   ','Worst2  '/
+

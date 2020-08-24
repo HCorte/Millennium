@@ -1,0 +1,71 @@
+C
+C PROGRAM SETTKF
+C $Log:   GXAFIP:[GOLS]SETTKF.FOV  $
+C  
+C     Rev 1.0   19 Feb 1997 18:28:16   RXK
+C  Initial revision.
+C  
+C PROGRAM TO SET TICKET MESSAGE ENABLED FLAGS
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+        PROGRAM LOADTKM
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:RECTKM.DEF'
+        INCLUDE 'INCLIB:RECAGT.DEF'
+C
+        INTEGER*4  FDB(7),ASFFDB(7)
+        INTEGER*4  ST 
+        INTEGER*4  I,J
+        CHARACTER    CZERO*1/Z0/
+C
+C
+        TYPE*,IAM(),' Setting ''ticket messages enabled'' flags '
+C
+C OPEN AND READ TICKET MESSAGE FILE
+C --------------------------------------
+        CALL OPENW(3,SFNAMES(1,TKTM),4,0,0,ST)
+        CALL IOINIT(FDB,3,TKMSEC*256)
+        IF(ST.NE.0) CALL FILERR(SFNAMES(1,TKTM),1,ST,0)
+
+        CALL READW(FDB,1,TKMREC,ST)
+        IF(ST.NE.0) CALL FILERR(SFNAMES(1,TKTM),2,ST,1)
+
+C
+C OPEN AND READ ASF FILE
+C -------------------------
+        CALL OPENW (ASF,SFNAMES(1,ASF),4,0,0,ST)
+        IF(ST.NE.0) CALL FILERR (SFNAMES(1,ASF),1,ST,0)
+
+        CALL IOINIT(ASFFDB,ASF,ASFSEC*256)  
+
+        DO I=1,NUMAGT
+           IF (MOD(I,1000).EQ.0) THEN
+              TYPE*,' Flag for',I,' agents set'
+           ENDIF
+           CALL READW(ASFFDB,I,ASFREC,ST)
+           IF(ST.NE.0) CALL FILERR(SFNAMES(1,ASF),2,ST,I)
+
+           DO J=SAGNO,EAGNO
+              IF(ASFBYT(J).NE.' '.AND.ASFBYT(J).NE.CZERO) THEN
+	         TKMAFL(I) = 1
+                 GOTO 100
+              ENDIF 
+           ENDDO
+100        CONTINUE
+        ENDDO   
+
+        CALL CLOSEFIL(ASFFDB)
+
+        CALL WRITEW(FDB,1,TKMREC,ST)                                           
+        IF(ST.NE.0) CALL FILERR(SFNAMES(1,TKTM),3,ST,1)                        
+	CALL CLOSEFIL(FDB)
+
+	CALL GSTOP(GEXIT_SUCCESS)
+	END

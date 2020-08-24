@@ -1,0 +1,421 @@
+C
+C X2XTTN.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XTTN.DEV                                   $
+C  $Date::   17 Apr 1996 16:45:44                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V03 15-JUN-00 UXN COMMON/X2XTTN_NAME/ X2XTTN_NAME added.
+C V02 11-AUG-94 GPR DEFINE PARAMETER FOR REC LEN
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C The DEF describes the variables which are used to define
+C the TITAN default parameters.
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XTTN_ENTRIES counter, the X2XTTN_FIELD, and
+C        the X2XTTN_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4   X2XTTN_REC_LEN					!V02
+        PARAMETER   (X2XTTN_REC_LEN=128)				!V02
+	INTEGER*4   X2XTTN_REC(X2XTTN_REC_LEN)     !Record buffer	!V02
+	CHARACTER   X2XTTN_CREC(X2XTTN_REC_LEN*4)*1  !Record buffer	~V02
+	EQUIVALENCE (X2XTTN_REC, X2XTTN_CREC)
+C
+	INTEGER*4   X2XTTN_SECT         !Number of sectors per rec
+	PARAMETER  (X2XTTN_SECT=2)
+	CHARACTER   X2XTTN_NAME*10      !Global Setup file name
+	DATA        X2XTTN_NAME /'X2XTTN.FIL'/
+	COMMON/X2XTTN_NAME/ X2XTTN_NAME
+	INTEGER*4   X2XTTN_FDB(7)       !File descriptor block
+	DATA        X2XTTN_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XTTN_CLASS        !Class number
+	INTEGER*4   X2XTTN_LMSENA       !Enable LMS on line
+	INTEGER*4   X2XTTN_FRMDISP      !Frames to display
+	INTEGER*4   X2XTTN_WINSIZ       !Size of frame window
+	INTEGER*4   X2XTTN_MAXBUF       !Maximum receive buffers
+	INTEGER*4   X2XTTN_MINBUF       !Minimum receive buffers
+	INTEGER*4   X2XTTN_LINSPD       !Line transmit speed
+	INTEGER*4   X2XTTN_T1TIMOUT     !T1 timeout value
+	INTEGER*4   X2XTTN_T4TIMOUT     !T4 timeout (ISO)
+	INTEGER*4   X2XTTN_N2REPCNT     !N2 repetition counter
+	INTEGER*4   X2XTTN_CONNMOD      !Connection mode
+	INTEGER*4   X2XTTN_DCDPOLTIM    !DCD polling timer
+	INTEGER*4   X2XTTN_DCDPOLCNT    !DCD polling counter
+	INTEGER*4   X2XTTN_AUTOCALL     !Auto call unit mode
+	INTEGER*4   X2XTTN_ACUTIM       !ACU timeout
+	INTEGER*4   X2XTTN_TERMOD       !Terminal mode
+	INTEGER*4   X2XTTN_AUTOMOD      !Auto-config terminal mode
+	INTEGER*4   X2XTTN_T3TIME       !T3 timer
+	INTEGER*4   X2XTTN_CLKMOD       !Clock mode
+	INTEGER*4   X2XTTN_LAPMOD       !LAP mode
+	INTEGER*4   X2XTTN_FRMMOD       !Frame modulo number
+	INTEGER*4   X2XTTN_XIDP1        !XID P1 response time
+	INTEGER*4   X2XTTN_XIDC2        !XID P2 resend count
+	INTEGER*4   X2XTTN_RNRBUF       !RNR min free buffers
+	INTEGER*4   X2XTTN_MINFREBUF    !Min free buffer timer
+	INTEGER*4   X2XTTN_FLWCNTL      !Flow cntrl FIFO size
+	INTEGER*4   X2XTTN_TMXIOUP      !TM-XIOUP
+	INTEGER*4   X2XTTN_FRMTYP       !Frame network type
+	INTEGER*4   X2XTTN_ENALMS       !Enable LMS on line
+	INTEGER*4   X2XTTN_PACDISP      !Packets to display by
+	INTEGER*4   X2XTTN_LINTYP       !Line type
+	INTEGER*4   X2XTTN_MAXRECV      !Maximum receive size
+	INTEGER*4   X2XTTN_HIGCHN       !Highest channel number
+	INTEGER*4   X2XTTN_LOWCHN       !Lowest channel number
+	INTEGER*4   X2XTTN_NUMPVC       !Number of PVC's
+	INTEGER*4   X2XTTN_LOWINC       !Lowest incoming only
+	INTEGER*4   X2XTTN_NUMINC       !Number of incoming SVC's
+	INTEGER*4   X2XTTN_LOWSVC       !Lowest 2 way SVC num
+	INTEGER*4   X2XTTN_NUMSVC       !Number of 2 way SVC's
+	INTEGER*4   X2XTTN_LOWOUTSVC    !Lowest outgoing SVC
+	INTEGER*4   X2XTTN_NUMOUTSVC    !Number of outgoing SVC's
+	INTEGER*4   X2XTTN_INPPACSIZ    !Def input packet size
+	INTEGER*4   X2XTTN_OUTPACSIZ    !Def output packet size
+	INTEGER*4   X2XTTN_MAXPACINP    !Max packet input size
+	INTEGER*4   X2XTTN_MAXPACOUT    !Max packet output size
+	INTEGER*4   X2XTTN_DEFINPWIN    !Default input window size
+	INTEGER*4   X2XTTN_DEFOUTWIN    !Default output window size
+	INTEGER*4   X2XTTN_MAXINCWIN    !Maximum incoming window
+	INTEGER*4   X2XTTN_MAXOUTWIN    !Maximum outgoing window
+	INTEGER*4   X2XTTN_NETID        !Network id code
+	INTEGER*4   X2XTTN_T20DUR       !Duration of T20 timer
+	INTEGER*4   X2XTTN_T21DUR       !Duration of T21 timer
+	INTEGER*4   X2XTTN_T22DUR       !Duration of T22 timer
+	INTEGER*4   X2XTTN_T23DUR       !Duration of T23 timer
+	INTEGER*4   X2XTTN_T28DUR       !Duration of T28 timer
+	INTEGER*4   X2XTTN_T24DUR       !Duration of T24 timer
+	INTEGER*4   X2XTTN_T25DUR       !Duration of T25 timer
+	INTEGER*4   X2XTTN_T26DUR       !Duration of T26 timer
+	INTEGER*4   X2XTTN_CLNSTIM      !CLNS idle timer
+	INTEGER*4   X2XTTN_PVCOFF       !Offset to PVC tables
+	INTEGER*4   X2XTTN_NETTYP       !Network type
+	INTEGER*4   X2XTTN_PACMOD       !Packet level modulo
+	INTEGER*4   X2XTTN_PRONUM       !Process number for glun
+	INTEGER*4   X2XTTN_NEGTN        !Negotiation
+	INTEGER*4   X2XTTN_FRBINC       !Forbid incoming calls
+	INTEGER*4   X2XTTN_FRBOUT       !Forbid outgoing calls
+	INTEGER*4   X2XTTN_AUTFAST      !Authorize fast select
+	INTEGER*4   X2XTTN_AUTFLOW      !Authorize flow control
+	INTEGER*4   X2XTTN_AUTDBIT      !Authorize D-bit usage
+	INTEGER*4   X2XTTN_MAXRESET     !Maximum reset packets
+	INTEGER*4   X2XTTN_MAXCLEAR     !Maximum clear packets
+	INTEGER*4   X2XTTN_MAXRESIS     !Max registrat packets
+	INTEGER*4   X2XTTN_MAXRESTART   !Max restart packets
+	INTEGER*4   X2XTTN_CALEDTHRUPUT !Called default thru-put
+	INTEGER*4   X2XTTN_CALLTHRUPUT  !Calling default thru-put
+	INTEGER*4   X2XTTN_CALEDMAXTHRU !Called max thru-put
+	INTEGER*4   X2XTTN_CALLMAXTHRU  !Call max thru-put
+	INTEGER*4   X2XTTN_RESTART      !Restart sent on reset
+	INTEGER*4   X2XTTN_UNUSED1      !Free slot
+	INTEGER*4   X2XTTN_UNUSED2      !Free slot
+	INTEGER*4   X2XTTN_UNUSED3      !Free slot
+	INTEGER*4   X2XTTN_UNUSED4      !Free slot
+	INTEGER*4   X2XTTN_CLSGRP       !Closed user group
+	INTEGER*4   X2XTTN_CUG          !Bilateral CUG
+	INTEGER*4   X2XTTN_AUTREV       !Authorize reverse charging
+	INTEGER*4   X2XTTN_NUI          !NUI
+	INTEGER*4   X2XTTN_EXPDATA      !Exp. data
+	INTEGER*4   X2XTTN_DATAPAC      !Datapac facilities
+	INTEGER*4   X2XTTN_ONLINREG     !Online registration
+	INTEGER*4   X2XTTN_PRELOCAL     !Prevent local charge
+	INTEGER*4   X2XTTN_LONGADD      !Long address format
+	INTEGER*4   X2XTTN_UNUSED5      !Unused parameter
+	INTEGER*4   X2XTTN_PVC1LUN      !LUN number for PVC1
+	INTEGER*4   X2XTTN_PVC1RCVPAC   !Maximum receive packet size
+	INTEGER*4   X2XTTN_PVC1SNDPAC   !Maximum sned packet size
+	INTEGER*4   X2XTTN_PVC1RCVWIN   !Maximum receive window size
+	INTEGER*4   X2XTTN_PVC1SNDWIN   !Maximum send window size
+	INTEGER*4   X2XTTN_PVC1DBIT     !D-bit authorization
+	INTEGER*4   X2XTTN_PVC1FLOW     !Flow control window
+	INTEGER*4   X2XTTN_UNUSED6      !Unused parameter
+	INTEGER*4   X2XTTN_PVC2LUN      !LUN number for PVC1
+	INTEGER*4   X2XTTN_PVC2RCVPAC   !Maximum receive packet size
+	INTEGER*4   X2XTTN_PVC2SNDPAC   !Maximum sned packet size
+	INTEGER*4   X2XTTN_PVC2RCVWIN   !Maximum receive window size
+	INTEGER*4   X2XTTN_PVC2SNDWIN   !Maximum send window size
+	INTEGER*4   X2XTTN_PVC2DBIT     !D-bit authorization
+	INTEGER*4   X2XTTN_PVC2FLOW     !Flow control window
+	INTEGER*4   X2XTTN_UPDATE       !Last updated
+	INTEGER*4   X2XTTN_FREE(16)     !Free space
+	INTEGER*4   X2XTTN_BITMAP       !Modified fields
+	INTEGER*4   X2XTTN_BITMAP2      !Modified fields
+	INTEGER*4   X2XTTN_BITMAP3      !Modified fields
+	INTEGER*4   X2XTTN_BITMAP4      !Modified fields
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+	EQUIVALENCE (X2XTTN_REC(1),  X2XTTN_CLASS)
+	EQUIVALENCE (X2XTTN_REC(2),  X2XTTN_LMSENA)
+	EQUIVALENCE (X2XTTN_REC(3),  X2XTTN_FRMDISP)
+	EQUIVALENCE (X2XTTN_REC(4),  X2XTTN_WINSIZ)
+	EQUIVALENCE (X2XTTN_REC(5),  X2XTTN_MAXBUF)
+	EQUIVALENCE (X2XTTN_REC(6),  X2XTTN_MINBUF)
+	EQUIVALENCE (X2XTTN_REC(7),  X2XTTN_LINSPD)
+	EQUIVALENCE (X2XTTN_REC(8),  X2XTTN_T1TIMOUT)
+	EQUIVALENCE (X2XTTN_REC(9),  X2XTTN_T4TIMOUT)
+	EQUIVALENCE (X2XTTN_REC(10), X2XTTN_N2REPCNT)
+	EQUIVALENCE (X2XTTN_REC(11), X2XTTN_CONNMOD)
+	EQUIVALENCE (X2XTTN_REC(12), X2XTTN_DCDPOLTIM)
+	EQUIVALENCE (X2XTTN_REC(13), X2XTTN_DCDPOLCNT)
+	EQUIVALENCE (X2XTTN_REC(14), X2XTTN_AUTOCALL)
+	EQUIVALENCE (X2XTTN_REC(15), X2XTTN_ACUTIM)
+	EQUIVALENCE (X2XTTN_REC(16), X2XTTN_TERMOD)
+	EQUIVALENCE (X2XTTN_REC(17), X2XTTN_AUTOMOD)
+	EQUIVALENCE (X2XTTN_REC(18), X2XTTN_T3TIME)
+	EQUIVALENCE (X2XTTN_REC(19), X2XTTN_CLKMOD)
+	EQUIVALENCE (X2XTTN_REC(20), X2XTTN_LAPMOD)
+	EQUIVALENCE (X2XTTN_REC(21), X2XTTN_FRMMOD)
+	EQUIVALENCE (X2XTTN_REC(22), X2XTTN_XIDP1)
+	EQUIVALENCE (X2XTTN_REC(23), X2XTTN_XIDC2)
+	EQUIVALENCE (X2XTTN_REC(24), X2XTTN_RNRBUF)
+	EQUIVALENCE (X2XTTN_REC(25), X2XTTN_MINFREBUF)
+	EQUIVALENCE (X2XTTN_REC(26), X2XTTN_FLWCNTL)
+	EQUIVALENCE (X2XTTN_REC(27), X2XTTN_TMXIOUP)
+	EQUIVALENCE (X2XTTN_REC(28), X2XTTN_FRMTYP)
+	EQUIVALENCE (X2XTTN_REC(29), X2XTTN_ENALMS)
+	EQUIVALENCE (X2XTTN_REC(30), X2XTTN_PACDISP)
+	EQUIVALENCE (X2XTTN_REC(31), X2XTTN_LINTYP)
+	EQUIVALENCE (X2XTTN_REC(32), X2XTTN_MAXRECV)
+	EQUIVALENCE (X2XTTN_REC(33), X2XTTN_HIGCHN)
+	EQUIVALENCE (X2XTTN_REC(34), X2XTTN_LOWCHN)
+	EQUIVALENCE (X2XTTN_REC(35), X2XTTN_NUMPVC)
+	EQUIVALENCE (X2XTTN_REC(36), X2XTTN_LOWINC)
+	EQUIVALENCE (X2XTTN_REC(37), X2XTTN_NUMINC)
+	EQUIVALENCE (X2XTTN_REC(38), X2XTTN_LOWSVC)
+	EQUIVALENCE (X2XTTN_REC(39), X2XTTN_NUMSVC)
+	EQUIVALENCE (X2XTTN_REC(40), X2XTTN_LOWOUTSVC)
+	EQUIVALENCE (X2XTTN_REC(41), X2XTTN_NUMOUTSVC)
+	EQUIVALENCE (X2XTTN_REC(42), X2XTTN_INPPACSIZ)
+	EQUIVALENCE (X2XTTN_REC(43), X2XTTN_OUTPACSIZ)
+	EQUIVALENCE (X2XTTN_REC(44), X2XTTN_MAXPACINP)
+	EQUIVALENCE (X2XTTN_REC(45), X2XTTN_MAXPACOUT)
+	EQUIVALENCE (X2XTTN_REC(46), X2XTTN_DEFINPWIN)
+	EQUIVALENCE (X2XTTN_REC(47), X2XTTN_DEFOUTWIN)
+	EQUIVALENCE (X2XTTN_REC(48), X2XTTN_MAXINCWIN)
+	EQUIVALENCE (X2XTTN_REC(49), X2XTTN_MAXOUTWIN)
+	EQUIVALENCE (X2XTTN_REC(50), X2XTTN_NETID)
+	EQUIVALENCE (X2XTTN_REC(51), X2XTTN_T20DUR)
+	EQUIVALENCE (X2XTTN_REC(52), X2XTTN_T21DUR)
+	EQUIVALENCE (X2XTTN_REC(53), X2XTTN_T22DUR)
+	EQUIVALENCE (X2XTTN_REC(54), X2XTTN_T23DUR)
+	EQUIVALENCE (X2XTTN_REC(55), X2XTTN_T28DUR)
+	EQUIVALENCE (X2XTTN_REC(56), X2XTTN_T24DUR)
+	EQUIVALENCE (X2XTTN_REC(57), X2XTTN_T25DUR)
+	EQUIVALENCE (X2XTTN_REC(58), X2XTTN_T26DUR)
+	EQUIVALENCE (X2XTTN_REC(59), X2XTTN_CLNSTIM)
+	EQUIVALENCE (X2XTTN_REC(60), X2XTTN_PVCOFF)
+	EQUIVALENCE (X2XTTN_REC(61), X2XTTN_NETTYP)
+	EQUIVALENCE (X2XTTN_REC(62), X2XTTN_PACMOD)
+	EQUIVALENCE (X2XTTN_REC(63), X2XTTN_PRONUM)
+	EQUIVALENCE (X2XTTN_REC(64), X2XTTN_NEGTN)
+	EQUIVALENCE (X2XTTN_REC(65), X2XTTN_FRBINC)
+	EQUIVALENCE (X2XTTN_REC(66), X2XTTN_FRBOUT)
+	EQUIVALENCE (X2XTTN_REC(67), X2XTTN_AUTFAST)
+	EQUIVALENCE (X2XTTN_REC(68), X2XTTN_AUTFLOW)
+	EQUIVALENCE (X2XTTN_REC(69), X2XTTN_AUTDBIT)
+	EQUIVALENCE (X2XTTN_REC(70), X2XTTN_MAXRESET)
+	EQUIVALENCE (X2XTTN_REC(71), X2XTTN_MAXCLEAR)
+	EQUIVALENCE (X2XTTN_REC(72), X2XTTN_MAXRESIS)
+	EQUIVALENCE (X2XTTN_REC(73), X2XTTN_MAXRESTART)
+	EQUIVALENCE (X2XTTN_REC(74), X2XTTN_CALEDTHRUPUT)
+	EQUIVALENCE (X2XTTN_REC(75), X2XTTN_CALLTHRUPUT)
+	EQUIVALENCE (X2XTTN_REC(76), X2XTTN_CALEDMAXTHRU)
+	EQUIVALENCE (X2XTTN_REC(77), X2XTTN_CALLMAXTHRU)
+	EQUIVALENCE (X2XTTN_REC(78), X2XTTN_RESTART)
+	EQUIVALENCE (X2XTTN_REC(79), X2XTTN_UNUSED1)
+	EQUIVALENCE (X2XTTN_REC(80), X2XTTN_UNUSED2)
+	EQUIVALENCE (X2XTTN_REC(81), X2XTTN_UNUSED3)
+	EQUIVALENCE (X2XTTN_REC(82), X2XTTN_UNUSED4)
+	EQUIVALENCE (X2XTTN_REC(83), X2XTTN_CLSGRP)
+	EQUIVALENCE (X2XTTN_REC(84), X2XTTN_CUG)
+	EQUIVALENCE (X2XTTN_REC(85), X2XTTN_AUTREV)
+	EQUIVALENCE (X2XTTN_REC(86), X2XTTN_NUI)
+	EQUIVALENCE (X2XTTN_REC(87), X2XTTN_EXPDATA)
+	EQUIVALENCE (X2XTTN_REC(88), X2XTTN_DATAPAC)
+	EQUIVALENCE (X2XTTN_REC(89), X2XTTN_ONLINREG)
+	EQUIVALENCE (X2XTTN_REC(90), X2XTTN_PRELOCAL)
+	EQUIVALENCE (X2XTTN_REC(91), X2XTTN_LONGADD)
+	EQUIVALENCE (X2XTTN_REC(92), X2XTTN_UNUSED5)
+	EQUIVALENCE (X2XTTN_REC(93), X2XTTN_PVC1LUN)
+	EQUIVALENCE (X2XTTN_REC(94), X2XTTN_PVC1RCVPAC)
+	EQUIVALENCE (X2XTTN_REC(95), X2XTTN_PVC1SNDPAC)
+	EQUIVALENCE (X2XTTN_REC(96), X2XTTN_PVC1RCVWIN)
+	EQUIVALENCE (X2XTTN_REC(97), X2XTTN_PVC1SNDWIN)
+	EQUIVALENCE (X2XTTN_REC(98), X2XTTN_PVC1DBIT)
+	EQUIVALENCE (X2XTTN_REC(99), X2XTTN_PVC1FLOW)
+	EQUIVALENCE (X2XTTN_REC(100),X2XTTN_UNUSED6)
+	EQUIVALENCE (X2XTTN_REC(101),X2XTTN_PVC2LUN)
+	EQUIVALENCE (X2XTTN_REC(102),X2XTTN_PVC2RCVPAC)
+	EQUIVALENCE (X2XTTN_REC(103),X2XTTN_PVC2SNDPAC)
+	EQUIVALENCE (X2XTTN_REC(104),X2XTTN_PVC2RCVWIN)
+	EQUIVALENCE (X2XTTN_REC(105),X2XTTN_PVC2SNDWIN)
+	EQUIVALENCE (X2XTTN_REC(106),X2XTTN_PVC2DBIT)
+	EQUIVALENCE (X2XTTN_REC(107),X2XTTN_PVC2FLOW)
+	EQUIVALENCE (X2XTTN_REC(108),X2XTTN_UPDATE)
+	EQUIVALENCE (X2XTTN_REC(109),X2XTTN_FREE)
+	EQUIVALENCE (X2XTTN_REC(125),X2XTTN_BITMAP)
+	EQUIVALENCE (X2XTTN_REC(126),X2XTTN_BITMAP2)
+	EQUIVALENCE (X2XTTN_REC(127),X2XTTN_BITMAP3)
+	EQUIVALENCE (X2XTTN_REC(128),X2XTTN_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XTTN_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XTTN_ENTRIES
+	PARAMETER (X2XTTN_ENTRIES=108)
+C
+	INTEGER*4 IXCNT3
+	CHARACTER X2XTTN_FIELD(X2XTTN_ENTRIES)*15
+	DATA     (X2XTTN_FIELD(IXCNT3),IXCNT3=1,30)
+     *	    /'Class          ','Enable LMS     ','Frames to disp ',
+     *	     'Size for frame ','Max recv buf   ','Min recv buf   ',
+     *	     'Line speed     ','T1 timeout     ','T4 timeout     ',
+     *	     'N2 repeat cnt  ','Connection mode','DCD poll timer ',
+     *	     'DCD poll count ','Auto Call unit ','ACU timeout    ',
+     *	     'Terminal mode  ','Auto-conf term ','T3 timer       ',
+     *	     'Clock mode     ','LAP mode       ','Frame modulo   ',
+     *	     'XID p1 resp tim','XID c2 rsnd cnt','RNR min buffers',
+     *	     'Min buff timer ','Flow control   ','TM-XIOUP       ',
+     *	     'Frame net type ','Enable LMS     ','Packets to disp'/
+	DATA     (X2XTTN_FIELD(IXCNT3),IXCNT3=31,60)
+     *	    /'Line type      ','Max recv size  ','Highest channel',
+     *	     'Lowest channel ','Number of PVCs ','Lowest incoming',
+     *	     'Num of incoming','Low 2 way SVC  ','# 2 way SVC    ',
+     *	     'Low outgoin SVC','# outgoing SVC ','Input pack size',
+     *	     'Output pack siz','Max in pac size','Max out pac siz',
+     *	     'Input win size ','Output win size','Max in window  ',
+     *	     'Max out window ','Network ID     ','T20 timer      ',
+     *	     'T21 timer      ','T22 timer      ','T23 timer      ',
+     *	     'T28 timer      ','T24 timer      ','T25 timer      ',
+     *	     'T26 timer      ','CLNS idle timer','PVC tbl offset '/
+	DATA     (X2XTTN_FIELD(IXCNT3),IXCNT3=61,90)
+     *	    /'Network type   ','Packet modulo  ','Process num    ',
+     *	     'Negotiation    ','Forbid incalls ','Forbid outcalls',
+     *	     'Fast select    ','Flow contrl    ','D-bit usage    ',
+     *	     'Max reset pack ','Max clear pack ','Max registrat  ',
+     *	     'Max restart    ','Called thru-put','Calling thruput',
+     *	     'Called max thru','Callng max thru','Restart send   ',
+     *	     '               ','               ','               ',
+     *	     '               ','Closed User Grp','Bilateral CUG  ',
+     *	     'Rev charge     ','NUI            ','Exp data       ',
+     *	     'DATAPAC facilty','Online register','Prev local chrg'/
+	DATA     (X2XTTN_FIELD(IXCNT3),IXCNT3=91,108)
+     *	    /'Long address   ','               ','PVC1 LUN       ',
+     *	     'PVC1 rec pack  ','PVC1 snd pack  ','PVC1 rec window',
+     *	     'PVC1 snd window','PVC1 D-bit     ','PVC1 flow cntrl',
+     *	     '               ','PVC2 LUN       ','PVC2 rec pack  ',
+     *	     'PVC2 snd pack  ','PVC2 rec window','PVC2 snd window',
+     *	     'PVC2 D-bit     ','PVC2 flow cntrl','Last updated   '/
+C
+C STORE THE VALID INPUT RANGE FOR EACH VARIABLE.
+C NOTE: A -1 IN THE FIRST RANGE DESIGNATES A CHARACTER
+C       VARIABLE, -2 INPUT REAL.
+C
+	INTEGER*4    X2XTTN_RANGE(2,X2XTTN_ENTRIES)
+	EQUIVALENCE (X2XTTN_RANGE(1,1), X2XTTN_RANGE1)
+	EQUIVALENCE (X2XTTN_RANGE(1,51),X2XTTN_RANGE2)
+C
+	INTEGER*4 X2XTTN_RANGE1(2,50)
+	DATA      X2XTTN_RANGE1
+     *	    /1,50,    0,1,  -32768,32767,    1,127,   1,255,
+     *	     1,255,   1,19,    1,255,   0,255,   1,255,
+     *	     0,143,   10,255,   0,255,   0,1,     1,32000,
+     *	     1,3,     0,1,     1,255,   1,1,     1,3,
+     *	     8,128,   1,255,   1,255,   1,255,   1,255,
+     *	     0,255,   0,32000, 0,255,   0,1,  -32768,32767,
+     *	     0,1,     1,4096,   0,4096,   0,4096,   0,2,
+     *	     0,4096,   0,4096,   0,4096,   0,4096,   0,4096,
+     *	     0,4096,   16,4096,   16,4096,   128,4096,   128,4096,
+     *	     1,127,    1,127,    2,127,    2,127,    -32767,32767/
+C
+	INTEGER*4 X2XTTN_RANGE2(2,58)
+	DATA      X2XTTN_RANGE2
+     *	    /0,32767,  0,32767,  0,32767,  0,32767,  0,32767,
+     *	     0,32767,  0,32767,  0,32767,  1,30000,  0,32767,
+     *	     0,256,   0,1,   1,4,   0,3,    0,1,
+     *	     0,1,    0,1,    1,255,    0,1,    0,255,
+     *	     0,255,    0,255,    0,255,    0,255,    0,255,
+     *	     0,255,    0,255,    0,1,    0,0,     0,0,
+     *	     0,0,     0,0,     0,255,    0,1,    0,1,
+     *	     0,1,    0,1,    0,1,    0,1,    0,1,
+     *	     0,1,    0,0,     1,32000,    128,4096,   128,4096,
+     *	     1,127,   1,127,   0,1,    1,4095,    0,0,
+     *	     01,32000,    128,4096,   128,4096,   1,127,   1,127,
+     *	     0,1,    1,4095,    0,0/
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XTTN_INDEX(X2XTTN_ENTRIES)
+	DATA     (X2XTTN_INDEX(IXCNT3),IXCNT3=1,50)
+     *	    /1,   2,   3,   4,   5,
+     *	     6,   7,   8,   9,  10,
+     *	    11,  12,  13,  14,  15,
+     *	    16,  17,  18,  19,  20,
+     *	    21,  22,  23,  24,  25,
+     *	    26,  27,  28,  29,  30,
+     *	    31,  32,  33,  34,  35,
+     *	    36,  37,  38,  39,  40,
+     *	    41,  42,  43,  44,  45,
+     *	    46,  47,  48,  49,  50/
+	DATA     (X2XTTN_INDEX(IXCNT3),IXCNT3=51,108)
+     *	   /51,  52,  53,  54,  55,
+     *	    56,  57,  58,  59,  60,
+     *	    61,  62,  63,  64,  65,
+     *	    66,  67,  68,  69,  70,
+     *	    71,  72,  73,  74,  75,
+     *	    76,  77,  78,  79,  80,
+     *	    81,  82,  83,  84,  85,
+     *	    86,  87,  88,  89,  90,
+     *	    91,  92,  93,  94,  95,
+     *	    96,  97,  98,  99, 100,
+     *	   101, 102, 103, 104, 105,
+     *	   106, 107, 108/
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+	INTEGER*4 X2XTTN_VALUE(15,X2XTTN_ENTRIES)
+	INTEGER*4 X2XTTN_VALUE_CLR
+	PARAMETER (X2XTTN_VALUE_CLR=X2XTTN_ENTRIES*15)
+	DATA      X2XTTN_VALUE /X2XTTN_VALUE_CLR*-1/
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XTTN_COMMON/
+	COMMON /X2XTTN_COMMON/ X2XTTN_REC,   X2XTTN_FDB,
+     *	                       X2XTTN_RANGE, X2XTTN_INDEX,
+     *	                       X2XTTN_VALUE, X2XTTN_FIELD
+C
+C

@@ -1,0 +1,78 @@
+C RECTPF.DEF
+C $Log:   GXAFXT:[GOLS]RECTPF.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:41:12   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   03 Mar 1994 12:22:16   JXP
+C  Increased length og sector
+C  
+C     Rev 1.0   21 Jan 1993 18:52:08   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C TOTO SELECT POOL FILE RECORD DESCRIPTION
+C
+C
+C THE FIRST 2048 WORDS WILL BE USED FOR HEADER INFORMATION
+C AND TO STORE TOTOSELECT SALES BY ROW AND MARK.
+C
+C TPFGAM               GAME INDEX OF POOL FILE                 1
+C TPFCDC               LAST CDC OF FILE UPDATE                 1
+C TPFDRW               DRAW # OF POOL FILE                     1
+C TPFBEG               BEGINING SALES DAY                      1
+C TPFEND               ENDING SALES DAY                        1
+C TPFPOL(540)          ARRAY OF BETS, LOCK FLAGS AND COUNTS  540
+C TPFFRE(1503)         FREE SPACE                           1503
+C
+C TOTAL WORDS                                               2048
+C
+C	HASH_NUM_COMB3*2   for  HASH_DIR_SUP		ccf. hashmem.dcc 
+C	HASH_LEN		HASH_TAB_SUP		     for values
+C	40*3			HASH_ROW_SUP
+C	40*40			HASH_COMB_SUP
+C
+C FROM WORD 2049 DOWN SALES INFORMATION WILL BE STORED BY
+C COMBINATION FOR TOTOSELECT IN BLOCKS OF 2048. FIRST THE HASH_DIR
+C TABLE AND THEN THE HASH_TAB FOUND IN HASHMEM.DEF.
+C
+C SEE HASHMEM.DEF FOR MORE INFORMATION.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1990 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 TPFLEN,TPFSEC,TPFBUF
+	PARAMETER (TPFLEN=2048)             !LENGTH IN WORDS FOR HEADER
+	PARAMETER (TPFSEC=(TPFLEN+(((HASHLEN/2048)+1)*2048)+
+     *	                  (((HASH_NUM_COMB3/2048)+1)*2048)+
+     *	                  (((HASH_NUM_COMB3*2/2048)+1)*2048)+
+     *			  (((HASHLEN/2048)+1)*2048)+
+     *			  (((40*3/2048)+1)*2048)+
+     *			  (((40*40/2048)+1)*2048))/64)
+C                                         ;LENGTH IN SECTORS
+	PARAMETER (TPFBUF=TPFLEN/64)
+	INTEGER*4 TPFREC(TPFLEN)         
+C
+	INTEGER*4 TPFGAM,TPFCDC,TPFDRW,TPFBEG,TPFEND
+	INTEGER*4 TPFPOL(540),TPFFRE(1503)
+C
+	EQUIVALENCE (TPFGAM,TPFREC(1))
+	EQUIVALENCE (TPFCDC,TPFREC(2))
+	EQUIVALENCE (TPFDRW,TPFREC(3))
+	EQUIVALENCE (TPFBEG,TPFREC(4))
+	EQUIVALENCE (TPFEND,TPFREC(5))
+	EQUIVALENCE (TPFPOL,TPFREC(6))
+	EQUIVALENCE (TPFFRE,TPFREC(546))

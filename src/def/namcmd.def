@@ -1,0 +1,387 @@
+C NAMCMD.DEF
+C 
+C V40 31-MAR-2016 SCML M16 PROJECT: added new euromillions command names:
+C                      EUMILF, EUSPWAG, EUSPCAN, EUSPVAL, EUTIMOUT, EUSPGRR, 
+C                      EUSPBIR, EUSPICA, EUSPFIR, EUSPGWAG, EUSPGGRR and EUSPGICA
+C V39 20-JUL-2015 SCML Adding support for IGS internal cancel flags 
+C V38 03-APR-2014 SCML Placard Project
+C V37 21-APR-2010 RXK Names REDIMN,REDMIN added 
+C V36 01-JAN-2010 FJG ePASSIVE
+C V35 23-DEC-2000 CS  ADDED PASSIVE GAME FOR PORTUGAL
+C V34 29-NOV-2000 UXN TotoGola added.
+C V33 13-JUN-2000 OXK COMMON added
+C V32 12-MAY-2000 OXK Sports -> Vakio
+C V31 08-MAR-2000 OXK ROLLOVER added to NAMSPT
+C V30 13-OCT-1999 RXK World Tour game added.
+C V29 10-MAY-1999 UXN TRIPLE CHANGED TO TRIO. Super Triple added.
+C V28 17-APR-1996 HXK Release of Finland for X.25, Telephone Betting, 
+C                     Instant Pass Thru Phase 1
+C V27 23-NOV-1995 HXK Changes for Double/Couple; merge oV5 changes
+C V26 26-JUN-1995 HXK Minor changes for RAVI modifications batch
+C V25 24-APR-1995 HXK Merge of V5 development with 10th March 1995 bible
+C V24 18-FEB-1995 HXK Changes for V5 game
+C V23 11-NOV-1994 HXK Added phase command names texts for Bingo
+C V22 24-OCT-1994 HXK Added Bingo to NAMTYP
+C V21 15-OCT-1994 HXK Adding / Developing Bingo
+C V20 02-SEP-1994 HXK Merge of May,June RFSS batch 
+C V19 07-APR-1994 HXK ADDED NEW PAR, REMLOG
+C V18 04-MAR-1994 HXK NEW TSMXLI PARAM.
+C V17 25-FEB-1994 HXK PITKA LIABILITY LIMITATIONS CHANGE.
+C V16 24-FEB-1994 JXP Added TSMXOD 
+C V15 14-DEC-1993 SXH Added TVTIME parameter
+C V14 06-AUG-1993 HXK ADDED MAXSPT, CHANGED SPPRMX TO MAXPPP
+C V13 29-JUL-1993 JWE SWAPPED RAVI AND SPEDE IN NAMTYP
+C V12 24-JUN-1993 SXH Adde crucial comma in NAMTYP declaration!
+C V11 19-JUN-1993 GXA Added Dispaly betdetail on reprints parameter (DSPBDET).
+C V10 19-JUN-1993 GXA Added Speden Row maximum (SPPRMX).
+C V09 18-JUN-1993 HXK ADDED SPEDE, RAVI TO NAMTYP
+C V08 16-JUN-1993 SXH Set number of blank spaces in NAMPAR correctly
+C V07 15-JUN-1993 GXA Removed REDMAX, REDMIN (Allready exists in the SCF by 
+C                     game).
+C V06 15-JUN-1993 GXA Released for Finland Dec Conversion / Oddset.
+C V05 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V04 02-JUL-1992 GCAN ADDED TOTO SELECT LIABILITY WARNING PARAMETERS.
+C V03 26-FEB-1992 GCAN ADDED JACKPOT AND NEWS UPDATE PARAMETERS.
+C V02 07-OCT-1991 MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C SYSTEM COMMAND NAME TABLES
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        REAL*8 NAMTYP(23)
+        REAL*8 NAMPAR(NUMPAR)
+        REAL*8 NAMGEN(24)
+        REAL*8 NAMSPE(24)
+        REAL*8 NAMNET(24)
+        REAL*8 NAMCOM(24)
+        REAL*8 NAMAGT(24)
+        REAL*8 NAMLTO(24)
+        REAL*8 NAMSPT(24)
+        REAL*8 NAMKIK(24)
+        REAL*8 NAMNBR(24)
+        REAL*8 NAMWIT(24)
+        REAL*8 NAMTSL(24)
+        REAL*8 NAMSCR(24)
+        REAL*8 NAMBNG(24)
+        REAL*8 NAMDBL(24)
+        REAL*8 NAMCPL(24)
+        REAL*8 NAMX2X(24)
+        REAL*8 NAMMSC(24)
+        REAL*8 NAMSSC(24)
+        REAL*8 NAMTRP(24)
+        REAL*8 NAMSTR(24)
+        REAL*8 NAMTGL(24)
+        REAL*8 NAMPAS(24)
+
+	COMMON /NAMCMDNAMES/ NAMTYP, NAMPAR, NAMGEN, NAMSPE, NAMNET, NAMCOM,
+     *                       NAMAGT, NAMLTO, NAMSPT, NAMKIK, NAMNBR,
+     *                       NAMWIT, NAMTSL, NAMSCR, NAMBNG, NAMDBL, 
+     *                       NAMCPL, NAMX2X, NAMMSC, NAMSSC, NAMTRP,
+     *                       NAMSTR, NAMTGL, NAMPAS
+
+C
+C COMMAND TYPE NAMES
+C
+        DATA NAMTYP/'PARAMS  ','GENERAL ','NOFREEZE','NETWORK ',
+     *              'COMMUN  ','AGENT   ','LOTTO   ','SPORTS  ',
+     *              'JOKER   ','X2XCOM  ','NUMBERS ','MSCMGR  ',
+     *              'SCORE   ','WINTIP  ','LANGEN  ',
+     *              'BINGO   ','SUPER D ','TODAYS C','SUPER S ',
+     *              'TODAYS T','SUPER T ','TOTOGOLO','PASSIVE '/
+C
+C SYSTEM PARAMETER COMMAND NAMES
+C
+        INTEGER*4  K
+        DATA (NAMPAR(K),K=1,56)/
+     *              'CMDFRZ  ','CHKTIM  ','MAXTRA  ','DPTTIM  ',
+     *              'RCHECK  ','CHKFLG  ','REPFLG  ','        ',
+     *              '        ','        ','LOGTIM  ','LOGBLO  ',
+     *              'TAPESW  ','DISKSW  ','TSLICE  ','LOGFLG  ',
+     *              'LOGSTP  ','        ','        ','        ',
+     *              '        ','MESLOG  ','MAXMES  ','MESFUL  ',
+     *              '        ','        ','        ','        ',
+     *              'SYSTYP  ','SYSNAM  ','LSTCMD  ','PPISR3  ',
+     *              'NETFLU  ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              'SUPWAG  ','SUPCAN  ','SUPVAL  ','        ',
+     *              '        ','        ','SUPSPE  ','SUPCOM  ',
+     *              'SUPFIL  ','SUPSUM  ','SUPRET  ','SUPPUD  ',
+     *              'SUPSYN  ','SUPSWI  ','        ','        '/
+        DATA (NAMPAR(K),K=57,NUMPAR)/
+     *              '        ',
+     *              'SUPGRE  ','        ','SUPGWA  ','        ',
+     *              'SUPGCA  ','        ','SUPGVA  ','        ',
+     *              235*'        ',
+     *              '        ','CHSDAY  ','NXTTRA  ','SYSSTS  ',
+     *              'ROMREV  ','CANTIM  ','DESFLG  ','ACTTIM  ',
+     *              'POOLACT ','COMSER  ','POLSER  ','ODSUPD  ',
+     *              'DESACT  ','        ','DEBUG1  ','DEBUG2  ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','MAXSPT  ',
+     *              '        ','        ','        ','        ', 
+     *              '        ','        ','SUPTSP  ','TSPMIN  ',
+     *              'TSPPER  ','TSLIAB  ','JAKUPD  ','TXTBRO  ',
+     *              'TVNUPD  ','TSLWRN  ','TSTLIM  ','TSLMAX  ',
+     *              'CANDRW  ','REDDEF  ','PCANTIM ','PMAXCAN ',
+     *              'PMAXRTM ','PMAXLOP ','PMAXSEK ','PASTHRO ',
+     *              'PSUPRSL','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              'DSPBDET ','TSWMAX  ','TVTIME  ','TSMXLI  ',
+     *              'TSMXODD ','REM_LOG ','        ','        ',
+     *              '        ','        ','        ','SUPINS  ',
+     *              'SUPFPT  ','FPTTIM  ','GVTREV  ','GVTFLG  ',
+     *              'GVTSUP  ','GVTGPL  ','GVTRST  ','GVTDFL  ',
+     *              'PRMSTR  ',
+     *               41*'        ',
+     *              'REDIMN  ',
+C V38 - Start
+C     *               77*'        '/
+C----+---+-------------+------------------------------------------------
+C V40|BEG| M16 PROJECT | ADDED NEW EUROMILLIONS COMMAND NAMES
+C----+---+-------------+------------------------------------------------
+!     *              53*'        ',
+     *              42*'        ',
+     *              'EUMILF  ','EUSPWAG ','EUSPCAN ','EUSPVAL ',
+     *              'EUTIMOUT','        ','        ','        ',
+     *              'EUSPGRR ','EUSPBIR ','        ',
+C----+---+-------------+------------------------------------------------
+C V40|END| M16 PROJECT | ADDED NEW EUROMILLIONS COMMAND NAMES
+C----+---+-------------+------------------------------------------------
+C
+     *              'IGSCONF ','IGSPPLA ','IGSPWAG ','IGSPCAN ',
+     *              'IGSPVAL ','IGSTOUT ','IGSPREP ','IGSPFIN ',
+     *              'IGSPRNT ','IGSPGWAG','IGSPGCAN','IGSPGVAL',
+     *              'IGSPGREP','IGSPGFIN','IGSPGRNT','PLAFINTO',
+C----+------------------------------------------------------------------
+C V39| Added support for IGS internal cancel flags
+C----+------------------------------------------------------------------
+C    *              ,8*'        '/
+CV40     *             ,'EUFINTO ','IGSPICAN','IGSPGICA',5*'        '/
+C----+------------------------------------------------------------------
+C V39| Added support for IGS internal cancel flags
+C----+------------------------------------------------------------------
+C V38 - End
+C
+C----+---+-------------+------------------------------------------------
+C V40|BEG| M16 PROJECT | ADDED NEW EUROMILLIONS COMMAND NAMES
+C----+---+-------------+------------------------------------------------
+     *              'EUFINTO ','IGSPICAN','IGSPGICA','EUSPICA ',
+     *              'EUSPFIR ','EUSPGWAG','EUSPGGRR','EUSPGICA'/
+C----+---+-------------+------------------------------------------------
+C V40|END| M16 PROJECT | ADDED NEW EUROMILLIONS COMMAND NAMES
+C----+---+-------------+------------------------------------------------
+C
+C GENERAL COMMAND NAMES
+C
+        DATA NAMGEN/'CHKPOINT','DAYSTS  ','REDMAX  ','REDMIN  ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','WINSTS  ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C SPECIAL COMMAND NAMES
+C
+        DATA NAMSPE/'RESYNC  ','ENASYNC ','DIAGTIM ','MAXBRO  ',
+     *              'BROMESS ','BROTEXT ','HOURSALE','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C NETWORK COMMAND NAMES
+C
+        DATA NAMNET/'TOTIME  ','TOFREEZE','BACKUPID','ADD LINK',
+     *              'REM LINK','SYNCWAIT','SET MAST','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C COMMUNICATIONS COMMAND NAMES
+C
+        DATA NAMCOM/'DISABLE ','ENABLE  ','REASSIGN','ENCFLG  ',
+     *              'ENCKEY  ','SETPRI  ','LINE REP','TERM REP',
+     *              '        ','        ','RETMAX  ','ERRPEN  ',
+     *              'ERRMAX  ','ERRSUP  ','REPORT  ','LOGCYC  ',
+     *              'GDGCYC  ','CPSEED  ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C AGENT COMMAND NAMES
+C
+        DATA NAMAGT/'OPSTAT  ','PASNUM  ','AGTTYP  ','AGTGAM  ',
+     *              'AGTLNG  ','REDMAX  ','REDMIN  ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C LOTTO COMMAND NAMES
+C
+        DATA NAMLTO/'GAMSTS  ','SETWIN  ','OFF SALE','ROLLOVER',
+     *              'LTOLSV  ','SHARECNT','POOL AMT','L GAMSTS',
+     *              'LTOLANU ','        ','SPEC AMT','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C 1X2 COMMAND NAMES
+C
+        DATA NAMSPT/'GAMSTS  ','SETWIN  ','        ','ROLLOVER',
+     *              'CANEVENT','MAXCETCD','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C TOTOGOLO COMMAND NAMES
+C
+        DATA NAMTGL/'GAMSTS  ','SETWIN  ','        ','ROLLOVER',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C KICKER ( JOKER ) COMMAND NAMES
+C
+        DATA NAMKIK/'GAMSTS  ','SETWIN  ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C NUMBERS COMMAND NAMES
+C
+        DATA NAMNBR/'GAMSTS  ','SETWIN  ','LIM2ST  ','LIMSTR  ',
+     *              'LIMBOX  ','PMESS   ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C X2X MAINTAINENCE COMMANDS.
+C
+        DATA NAMX2X/'X2XUPD  ','SOFTREST','STATSREQ','CONNREQ ',
+     *              'HARDREST','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C MATRIX SWITCH MAINTENANCE COMMANDS
+C
+        DATA NAMMSC/'CONPORT ','CONGROUP','CONSGRP ','MSCSTS  ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C SCORE COMMAND NAMES
+C
+        DATA NAMSCR/'GAMSTS  ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C WINNERS TIP COMMAND NAMES
+C
+        DATA NAMWIT/'GAMSTS  ','ROWSTS  ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C TOTO SELECT COMMAND NAMES
+C
+        DATA NAMTSL/'GAMSTS  ','ROWSTS  ','LOCKPOL ','ROWCLOSE',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C BINGO COMMAND NAMES
+C
+      DATA NAMBNG/'GAMSTS  ','SETWIN  ','FHOUSE  ','HIT 24  ',
+     *            'TRIPLE  ','WORST   ','NUM1    ','NUM2    ',
+     *            '        ','        ','        ','        ',
+     *            '        ','        ','        ','        ',
+     *            '        ','        ','        ','        ',
+     *            '        ','        ','        ','        '/
+C
+C DOUBLE COMMAND NAMES
+C
+        DATA NAMDBL/'GAMSTS  ','ROWSTS  ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C COUPLE COMMAND NAMES
+C
+        DATA NAMCPL/'GAMSTS  ','ROWSTS  ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C SUPERSCORE COMMAND NAMES
+C
+        DATA NAMSSC/'GAMSTS  ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C TODAY'S TRIO COMMAND NAMES
+C
+        DATA NAMTRP/'GAMSTS  ','ROWSTS  ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C SUPER TRIPLE COMMAND NAMES
+C
+        DATA NAMSTR/'GAMSTS  ','ROWSTS  ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+C
+C PASSIVE LOTTERY COMMAND NAMES
+C
+        DATA NAMPAS/'GAMSTS  ','DPAESD  ','DPATIM  ','SETWIN  ',
+     *              'WINSERIE','PURGECDC','SPEC PRZ','TOT PAY ',
+     *              'REL EXPI','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        ',
+     *              '        ','        ','        ','        '/
+

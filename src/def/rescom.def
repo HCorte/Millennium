@@ -1,0 +1,144 @@
+C  
+C V17 07-FEB-2011 RXK LBNREC removed
+C V16 24-JAN-2001 ANG ADDED EXTPRZ
+C V15 13-DEC-2000 CS  ADDED PASSIVE FOR PORTUGAL
+C V14 01-DEC-2000 UXN TOTOGOLO ADDED.
+C V13 13-OCT-1999 RXK World Tour game added.
+C V12 18-MAY-1999 UXN Super Triple added.
+C V11 23-NOV-1995 PXB Added Double and Couple games.
+C V10 27-OCT-1994 HXK Tidied up for Bingo
+C V09 23-OCT-1994 GXA Added Bingo MATCHTAB, BGIND, BGAB_WTAB, PROGNOSIS.
+C V08 16-OCT-1994 HXK Added Bingo
+C V07 30-SEP-1993 HXK Added L65rec to common.
+C V06 28-JUL-1993 SXH Added CUR_LSTOPT
+C V05 28-JUL-1993 SXH Added V65 logicals
+C V04 23-JUL-1993 SXH Released for Finland
+C V03 21-JAN-1993 DAB Initial Release
+C                     Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                     DEC Baseline
+C V02 01-NOV-1991 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX RELEASED FOR VAX
+C
+C RESULTS ENTRY GLOBAL COMMON DEFINITION
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:RECSCF.DEF'
+	INCLUDE 'INCLIB:DLTREC.DEF'
+	INCLUDE 'INCLIB:DSCREC.DEF'
+	INCLUDE 'INCLIB:DWIREC.DEF'
+	INCLUDE 'INCLIB:DTSREC.DEF'
+	INCLUDE 'INCLIB:DSPREC.DEF'
+	INCLUDE 'INCLIB:DKKREC.DEF'
+	INCLUDE 'INCLIB:DNBREC.DEF'
+        INCLUDE 'INCLIB:DBNREC.DEF'
+	INCLUDE 'INCLIB:DDBREC.DEF'
+	INCLUDE 'INCLIB:DCPREC.DEF'
+	INCLUDE 'INCLIB:DSSREC.DEF'
+	INCLUDE 'INCLIB:DTRREC.DEF'
+	INCLUDE 'INCLIB:DSTREC.DEF'
+	INCLUDE 'INCLIB:DTGREC.DEF'
+        INCLUDE 'INCLIB:DPAREC.DEF'
+C
+	INTEGER*4  OPDONE 
+	INTEGER*4  VERREADY
+	INTEGER*4  PRZREADY
+	INTEGER*4  CUR_GTYP 
+	INTEGER*4  CUR_GIND 
+	INTEGER*4  CUR_GNUM 
+	INTEGER*4  CUR_DRAW
+	INTEGER*4  CUR_LSTOPT
+	INTEGER*4  LSTDIV 
+	INTEGER*4  LSTBDR 
+	INTEGER*4  LSVHLD(LTGDIV,2) 
+	INTEGER*4  TSRHLD(LTGDIV,2)
+	INTEGER*4  LANHLD(LTGDIV,2) 
+	INTEGER*4  WROWSTS(MAXWRW,2)
+	INTEGER*4  TROWWIN(MAXSRW,2) 
+	INTEGER*4  TROWDAT(MAXSRW,2)
+	INTEGER*4  DBROWSTS(MAXDBLRW,2)
+	INTEGER*4  STROWSTS(MAXSTRRW,2)
+	INTEGER*4  CPROWSTS(MAXCPLRW,2)
+	INTEGER*4  TRROWSTSE(MAXTRPRW,3),TRROWSTSV(MAXTRPRW,3)
+	INTEGER*4  BGAB_WTAB((BGOVAB/32)+1)   !Bingo AB winning bitmap
+	INTEGER*4  PROGNOSIS(MAXGAM)	      !Prognosis info entered
+	INTEGER*4  BGIND		      !Bingo Game Index for Scan.
+        INTEGER*4  EXTPRZ                     !For passive game
+	INTEGER*4  ESP_AMT                    !Special amt for lotto games
+
+	LOGICAL    ONLINE
+        LOGICAL    EPBFLG
+        LOGICAL    NOMORE     !NO MORE RACE ENTRIES FOR THIS SESSION        
+        LOGICAL    OPSLST     !LIST OP INPUT COMPLETE                              
+        LOGICAL    VERLST     !LIST VERIFICATION COMPLETE                          
+        LOGICAL    LSTERR     !LIST ERROR DURING VERIFY                            
+
+
+	COMMON/RESCOM/
+     *	   SCFREC,
+     *	   DLTREC,
+     *	   DSPREC,
+     *	   DTGREC,
+     *     DNBREC,
+     *	   DKKREC,
+     *     DPAREC,
+     *     DSCREC,
+     *     DWIREC,
+     *     DDBREC,
+     *     DCPREC,
+     *     DTSREC,
+     *     DBNREC,
+     *     DSSREC,
+     *     DTRREC,
+     *     DSTREC,
+     *	   OPDONE,
+     *	   ONLINE,
+     *     VERREADY,
+     *     PRZREADY,
+     *	   CUR_GTYP,
+     *     CUR_GIND,
+     *     CUR_GNUM,
+     *     CUR_DRAW,
+     *     CUR_LSTOPT,
+     *     LSTDIV,
+     *     LSTBDR,
+     *     LSVHLD,
+     *     TSRHLD,
+     *     LANHLD
+C
+	COMMON /RESCOM/
+     *     EPBFLG,
+     *     WROWSTS,
+     *     TROWWIN,
+     *     TROWDAT,
+     *     DBROWSTS,
+     *     STROWSTS,
+     *     CPROWSTS,
+     *     TRROWSTSE,
+     *     TRROWSTSV,
+     *     NOMORE,
+     *     OPSLST,
+     *     VERLST,
+     *     LSTERR,
+     *     BGAB_WTAB,
+     *     PROGNOSIS,
+     *	   BGIND, 
+     *     EXTPRZ,
+     *     ESP_AMT
+
+C
+C
+	VOLATILE /RESCOM/

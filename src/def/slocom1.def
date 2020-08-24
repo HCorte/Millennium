@@ -1,0 +1,66 @@
+C SLOCOM1.DEF
+C
+C V05 23-FEB-11 RXK X2X_TERMS and X2X_STATIONS  6144 --> 12288,
+C                   FREE SPACE AND COMMON SIZE CALCULATED
+C  
+C     Rev 1.0   17 Apr 1996 15:08:32   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:52:50   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 22-JAN-91 KWP REPLACE STATIONS WITH LINES
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 SLOWT1(X2X_TERMS)
+	INTEGER*4 SLOWT2(X2X_TERMS)	!TERM. INTERMITTENT ERRORS
+C
+	INTEGER*4 DEADLINE(X2X_STATIONS)       !COUNT OF DEAD TERMINALS
+	INTEGER*4 FLAKYLINE(X2X_STATIONS)      !COUNT OF FLAKY TERMINALS
+	INTEGER*4 SLOWINTERVAL          !SLOW1 TO SLOW2 REFRESH TIME
+C                                      (IN SECONDS*2)
+C
+	INTEGER*4 DEADMODE(X2X_STATIONS)       !SET TO -1 IF LINE DEAD
+	INTEGER*4 FLAKYMODE(X2X_STATIONS)      !SET TO -1 IF LINE FLAKY
+C						FLAKY BEFORE LINE SET TO FLAKY
+C                                     DEAD BEFORE LINE SET TO DEAD
+	INTEGER*4 GOODSIGN(X2X_STATIONS)   !TERMINAL SIGNED ON AND RESPONDING
+	INTEGER*4 LINEERRORS(X2X_STATIONS) !NR OF ERRS DURING LAST SLOWCHK RUN
+	INTEGER*4 TOTALSIGN(X2X_STATIONS)      !TERIMINAL SIGNED ON
+C
+        INTEGER*4 SLOWUSELEN,SLOWCOMLEN,SLOWFRELEN
+        PARAMETER(SLOWUSELEN = 2*X2X_TERMS + 7*X2X_STATIONS + 1)
+        PARAMETER(SLOWCOMLEN=(SLOWUSELEN+127)/128*128)
+        PARAMETER(SLOWFRELEN=SLOWCOMLEN-SLOWUSELEN) 
+	INTEGER*4 SLOWFREE(SLOWFRELEN)
+
+	COMMON /SLOCOM1/ SLOWT1,SLOWT2,DEADLINE,FLAKYLINE,SLOWINTERVAL
+     *	                ,DEADMODE,FLAKYMODE
+     *	                ,GOODSIGN,TOTALSIGN,LINEERRORS
+     *	                ,SLOWFREE
+C
+C
+	INTEGER*4	 FRST_SLOCOM1(2)
+	EQUIVALENCE	(FRST_SLOCOM1, SLOWT1)
+	INTEGER*4	 LAST_SLOCOM1
+	EQUIVALENCE	(LAST_SLOCOM1, SLOWFREE(SLOWFRELEN))
+C

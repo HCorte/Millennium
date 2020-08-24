@@ -1,0 +1,22 @@
+    SPD.HLP                GTECH Distributed Network
+                             Speden Snapshot Help           Page 1 of 1
+ 
+    The SPD snapshot reflects the sales information the Speden game.
+    
+    The information displayed includes:
+ 
+    Game Name  - Spede (Speden Spelit)
+    draw       - draw number
+    pools are  - status for the current draw (open, closed)
+    div        - division won for winning combination
+    prize      - amount won for matching a winning combination in each 
+                 prize category
+    shares won - number and total monetary amount of winning shares in 
+                 each category 
+    fractions  - count and amount for validations on a fraction basis
+    paid
+    sales      - sales for the game listed by day
+    total      - total shares, fractions and sales applicable to the 
+                 displayed draw
+    winning    - winning numbers (for previous draws)
+    numbers

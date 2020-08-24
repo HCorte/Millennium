@@ -1,0 +1,33 @@
+C
+C SUBROUTINE CLSVAL
+C $Log:   GXAFXT:[GOLS]CLSVAL.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 12:37:16   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 15:55:04   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - valpro.for **
+C
+C
+C
+C SUBROUTINE TO CLOSE FILES FOR VALPRO
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE CLSVAL
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INTEGER*4 BUF(2048), ST
+C
+C
+	CALL ICLOSE(VLF,BUF,ST)
+	CALL ICLOSE(TCF,BUF,ST)
+	CALL ICLOSE(DCF,BUF,ST)
+	RETURN
+	END

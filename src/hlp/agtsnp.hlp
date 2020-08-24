@@ -1,0 +1,44 @@
+ AGT.HLP                 GTECH Distributed Network
+                      Agent Financial Data Snapshot Help           Page 1 of 2
+    
+    The AGT snapshot contains an Agent's financial information
+
+    The financial information displayed includes:
+ 
+    name          - Agent's name
+    address       - address of premises
+    contact       - Veikkaus contact in store
+    phone,        - telephone number of agent's premises
+    agtnum        - Agent's number
+    terminal      - terminal number assigned by Veikkaus
+    stn num       - station number
+    drop adr      - drop address of terminal
+    GAME SALES 
+    INFORMATION   - NOTE: Different games may be selected by entering !
+                    and the game number 
+    net sales     - for the selected game
+    cashes        - for the selected game
+
+
+    AGT.HLP                 Agent Financial Data Help             Page 2 of 2
+ 
+    cancels       - for the selected game
+    claims        - for the selected game
+    refunds       - for the selected game
+    sales         - sales commission earned
+    commission        
+    cash          - cash commission earned
+    adjustment    - adjustment amount
+    ticket charge - cost of ticket charge
+    amount due    - amount due to Veikkaus
+    last          - serial number of last transaction
+    transaction
+    last wager    - serial number of last wager
+    chain         - n/a
+    chnlnk        - n/a
+    *BROnum       - broadcast load.   
+    *OPStat       - operational status of terminal (signed on or signed off)
+    *REDMAX       - redemption maximum
+
+ 
+  

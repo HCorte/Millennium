@@ -1,0 +1,48 @@
+C TCPEVN.DEF
+C
+C V05 13-JUN-2000 OXK TC_EVNMASK removed from here (only used in one place) 
+C			TC_EVNQUE to COMMON
+C V04 17 Apr 1996 HXK Release of Finland for X.25, Telephone Betting, 
+C			Instant Pass Thru Phase 1
+C V03 04 Jan 1994 SYSTEM Applying PVCS header for automatic revision history
+C V02 21 Dec 1993 SYSTEM Initial revision.
+C V01 20-NOV-1991 KWP INITIAL RELEASE FOR VAX
+C
+C THIS DEF FILE CONTAIN THE GLOBAL SYSTEM EVENT FLAGS USED
+C TO COMMUNICATE BETWEEN TCPASST AND CRSPRO.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C direTCPy or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4	TC_EVNTIMER		!TIMER TRAP EVENT
+	PARAMETER      (TC_EVNTIMER=64)
+C
+	INTEGER*4	TC_MAXQUE
+	PARAMETER      (TC_MAXQUE=6)
+C
+	INTEGER*4	TC_EVNQUE(TC_MAXQUE)	!EVENT QUEUE NUMBER
+	COMMON /TC_EVNQUE/ TC_EVNQUE
+	DATA		TC_EVNQUE/70,71,72,73,74,75/
+C
+C NAME OF COMMON EVENT FLAG CLUSTER.
+C
+	CHARACTER*7	TC_EVNNAME
+	PARAMETER      (TC_EVNNAME='TCFLAGS')
+C
+C NAME OF MAILBOX USED TO COMMUNICATE BETWEEN TASKS (TCPPRO).
+C
+	CHARACTER*6     TC_MESNAME
+	PARAMETER      (TC_MESNAME='TCPMBX')
+C
+	INTEGER*2	TC_MESCHANNEL
+	COMMON /TCPEVN/	TC_MESCHANNEL

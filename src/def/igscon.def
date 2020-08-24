@@ -1,0 +1,72 @@
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C File      : IGSCON.DEF
+C Change Log:
+C
+C Ver Date       Author  Comment
+C --- ---------- ------- ----------------------------------------------
+C V01 2014.02.28 SCML    Created - PLACARD PROJECT - IGS timer list
+C                        TIMERLIST is a doubly linked list of 
+C                        transactions for which we are waiting for a 
+C                        response.  There is one entry per potential
+C                        sequence number used.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C      THIS ITEM IS THE PROPERTY OF SCML.
+C
+C      COPYRIGHT 2014 SCML. ALL RIGHTS RESERVED.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+        INTEGER*4  IGS_MAX_TIMER_LISTS
+        PARAMETER (IGS_MAX_TIMER_LISTS = 2)
+
+        INTEGER*4  IGS_TL_MAIN
+        PARAMETER (IGS_TL_MAIN = 1)
+
+        INTEGER*4  IGS_TL_CRS
+        PARAMETER (IGS_TL_CRS = 2)
+
+        INTEGER*4  IGS_TIMERTOP(IGS_MAX_TIMER_LISTS) !POINT TO TOP OF LIST (-1=EMPTY)
+        INTEGER*4  IGS_TIMERBOT(IGS_MAX_TIMER_LISTS) !POINT TO BOTTOM OF LIST
+        INTEGER*4  IGS_TIMERLIST(IGS_MAX_TIMER_LISTS,4,0:NUMPRO+2)  ! 0 ooB
+
+        INTEGER*4  IGS_TIMERNXT
+        PARAMETER (IGS_TIMERNXT = 1)        !POINTER TO NEXT LINKED ENTRY
+        INTEGER*4  IGS_TIMERPRV
+        PARAMETER (IGS_TIMERPRV = 2)        !POINTER TO PREV LINKED ENTRY
+        INTEGER*4  IGS_TIMERBEG
+        PARAMETER (IGS_TIMERBEG = 3)        !TIME STAMP WHEN BEGUN
+        INTEGER*4  IGS_TIMERSER
+        PARAMETER (IGS_TIMERSER = 4)        !CROSS REF# FOR DOUBLE CHECK
+C
+C MESSAGEQ STATUS
+C
+        INTEGER*4  PAMS__NOMOREMSG
+        PARAMETER (PAMS__NOMOREMSG      = 139756347)
+        INTEGER*4  PAMS__SUCCESS
+        PARAMETER (PAMS__SUCCESS        = 1)
+        INTEGER*4  PAMS__DECLARED
+        PARAMETER (PAMS__DECLARED       = 139761972)
+        INTEGER*4  PAMS__NOLINK
+        PARAMETER (PAMS__NOLINK         = 139759394)
+        INTEGER*4  PAMS__LINK_DOWN
+        PARAMETER (PAMS__LINK_DOWN      = 139759266)
+        INTEGER*4  PAMS__NOTACTIVE
+        PARAMETER (PAMS__NOTACTIVE      = 139759474)
+        INTEGER*4  PAMS__NETLINKLOST
+        PARAMETER (PAMS__NETLINKLOST    = 139759730)
+        INTEGER*4  PAMS__STOPPED
+        PARAMETER (PAMS__STOPPED        = 139759962)
+        INTEGER*4  PAMS__NETNOLINK
+        PARAMETER (PAMS__NETNOLINK      = 139762140)
+        INTEGER*4  PAMS__FATAL
+        PARAMETER (PAMS__FATAL          = 139762156)
+        INTEGER*4  PAMS__NETERROR 
+        PARAMETER (PAMS__NETERROR       = 139759722)
+        INTEGER*4  PAMS__STUB
+        PARAMETER (PAMS__STUB           = 139757248)
+        INTEGER*4 PAMS__TIMEOUT
+        PARAMETER (PAMS__TIMEOUT        = 139757256)
+
+        COMMON   /IGS_CON/ IGS_TIMERTOP, IGS_TIMERBOT, IGS_TIMERLIST
+        
+        VOLATILE /IGS_CON/

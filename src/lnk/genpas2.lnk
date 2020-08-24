@@ -1,0 +1,20 @@
+$! GXSRC:GENPAS2.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]GENPAS2.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:42:02   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   14 Apr 1994 13:03:32   SYSTEM
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    14 Apr 1994 9:40:14   SYSTEM
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:GENPAS2.EXE -
+OBJLIB:GENPAS2,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

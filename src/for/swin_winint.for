@@ -1,0 +1,146 @@
+C
+C SUBROUTINE SWIN_WININT
+C
+C V11 03-JUL-2000 UXN Refund too late played tickets.
+C V10 15-FEB-2000 UXN P(ODD_DRWPCK) added.
+C V09 29-DEC-1999 OXK DRWSTS checking added.
+C V08 13-DEC-1999 OXK MULTIWIN changes.
+C V07 12-JUL-1999 UXN More variables initialized making possible to re-run
+C                     WINSEL
+C V06 27-APR-1999 RXK Call of INPNUM replaced with call of PRMNUM.
+C                     Event # asked only if manual winner selection.
+C V05 10-NOV-1997 UXN WINREP_AUTO,BKKREP_AUTO ADDED FOR AUTOMATED 
+C	  	      WINREP AND BKKREP.
+C V04 03-JAN-1994 HXK INIT LWIWPO.
+C V03 04-AUG-1992 GCAN RE-RELEASED FOR THE NETHERLANDS.
+C V02 07-OCT-1991 MTK  INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C
+C SWINSUB.FOR
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE SWIN_WININT(FILES,FILCNT)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:SCRCOM.DEF'
+	INCLUDE 'INCLIB:WINCOM.DEF'
+	INCLUDE 'INCLIB:DSCREC.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:RECDAF.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+	INCLUDE 'INCLIB:STOPCOM.DEF'
+C
+	INTEGER*4 FDB(7)
+	INTEGER*4 FILCNT, GIND, GNUM, DRAW, EXT, ST, K, CDC
+	INTEGER*4 SVOL, INPLEN
+        INTEGER*4 AWNTAB(2,NUMAGT)
+C
+	CHARACTER CXSVOL*4
+	CHARACTER FILES(200)*20
+	CHARACTER STRING*50
+C
+	EQUIVALENCE (SVOL,CXSVOL)
+C
+        COMMON/BIGWIN/ AWNTAB
+C
+C
+        CALL FASTSET(0,AWNTAB,2*NUMAGT)
+	CALL FASTSET(-1000,LSCDRW,NUMSCR)
+	FILCNT=0
+	SVOL=P(ODD_DRWPCK)
+C
+C
+	DO 100 GIND = 1,NUMSCR
+	   GNUM = GTNTAB(TSCR,GIND)
+	   IF(GNUM.LT.1.OR.GNUM.GT.MAXGAM) GOTO 100
+
+           IF(STOPMOD.EQ.WINMANUAL) THEN
+	      WRITE (STRING,800) (GLNAMES(K,GNUM),K=1,4),GIND
+	      CALL PRMNUM(STRING,DRAW,1,999999,EXT)
+	      IF(EXT.LT.0) GOTO 100
+           ELSE
+              DRAW = DRWGAM(MLWININD,GNUM)
+              IF ((DRWSTS(MLWININD,GNUM).NE.WINYES).AND.
+     *            (DRWSTS(MLWININD,GNUM).NE.WINPRV)) DRAW=0
+              IF(DRAW.EQ.0) GOTO 100
+           ENDIF
+
+	   WRITE(6,930) IAM(),GTNAMES(TSCR),GIND,DRAW
+	   CALL OPENW(1,GFNAMES(1,GNUM),4,0,0,ST)
+	   CALL IOINIT(FDB,1,DSCSEC*256)
+	   IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM),1,ST,0)
+	   CALL READW(FDB,DRAW,DSCREC,ST)
+	   IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM),2,ST,DRAW)
+	   CALL LOGGAM(TSCR,GIND,DSCREC,LSCSTS)
+	   IF(LSCSTS(GIND).LT.GAMENV.OR.
+     *	      LSCSTS(GIND).EQ.GFINAL.OR.
+     *	      LSCSTS(GIND).EQ.GAMREF) THEN
+	      WRITE(6,920) IAM(),GTNAMES(TSCR),GIND,LSCSTS(GIND),GAMENV
+	      CALL GPAUSE
+	   ENDIF
+           IF(LSCSTS(GIND).EQ.GAMREF) LSCSTS(GIND) = GAMCAN
+	
+	   LSCLAT(LATCNT,GIND) = 0
+	   LSCLAT(LATAMT,GIND) = 0
+
+	   LSCSAL(GIND)=0
+	   LSCWON(GIND)=0
+	   LSCTAX(GIND)=0
+           LSCREF(GIND)=0
+
+           CALL FASTSET(0,LSCWRA(1,1,GIND),NUMTOT*2)
+           CALL FASTSET(0,LSCWPR(1,1,GIND),NUMTOT*2)
+           CALL FASTSET(0,LSCWRO(1,1,GIND),NUMTOT*2)
+           CALL FASTSET(0,LSCWPA(1,1,GIND),NUMTOT*2)
+
+           CALL FASTSET(0,LSCWPO(1,1,GIND),NUMTOT*2)
+	   IF(SVOL.EQ.0) THEN
+	      WRITE(STRING,810) (GLNAMES(K,GNUM),K=1,4),GIND
+	      CALL PRMTEXT(STRING,CXSVOL,INPLEN)
+	   ENDIF
+	   CALL CLOSEFIL(FDB)
+C
+C
+	   CALL OPENW(1,SFNAMES(1,DAF),4,0,0,ST)
+	   CALL IOINIT(FDB,1,DAFSEC*256)
+	   IF(ST.NE.0) CALL FILERR(SFNAMES(1,DAF),1,ST,0)
+	   DO 90 CDC=LSCBSD(GIND),LSCESD(GIND)
+	      CALL READW(FDB,CDC,DAFREC,ST)
+	      IF(ST.NE.0) CALL FILERR(SFNAMES(1,DAF),2,ST,CDC)
+	      IF(DAFSTS.EQ.DNOSAL) GOTO 90
+	      IF(DAFSTS.EQ.DSOPEN) GOTO 90
+	      FILCNT=FILCNT+1
+	      WRITE (FILES(FILCNT),900) SVOL,GSNAMES(GNUM),CDC
+90	   CONTINUE
+	   CALL CLOSEFIL(FDB)
+	   WINREP_AUTO(GNUM) = DRAW
+	   BKKREP_AUTO(GNUM) = DRAW
+100	CONTINUE
+C
+C
+800	FORMAT('Enter ',4A4,I1,' event code (E-none) ')
+810	FORMAT('Enter ',4A4,I1,' draw pack volume name: ')
+900	FORMAT(A4,':',A4,I4.4,'.FIL')
+920	FORMAT(1X,A,1X,A8,I1,' invalid game status> ',I4,' should be> ',I4)
+930	FORMAT(1X,A,1X,'Loading game date for ',A8,I1,' event> ',I4,
+     *	       ' winner selection')
+940	FORMAT(A4)
+	END

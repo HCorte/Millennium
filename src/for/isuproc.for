@@ -1,0 +1,307 @@
+C  GXSRC:ISUPROC.FOR
+C
+C V06 06-OCT-2000 UXN AlphaIPS release.
+C V05 11-MAY-1998 DXA Added pass number offset - author unknown.
+C V04 01-SEP-1994 MCM SWAPPING BYTES IS NO LONGER NECESSARY FOR THE DEC LMS
+C V03 25-AUG-1994 MCM MODIFIED PER UK PASS-THRU MESSAGE FORMATS
+C V03 20-JUL-1993 TZK CORRECTED GVTID PER MCM.
+C V02 13-JUL-1993 MCM ADDED GVTID UPDATES 
+C V01 14-MAY-1993 TJR INITIAL RELEASE  FOR GEORGIA PER DSGN DOC CDH0001
+C
+C SUBROUTINE TO PROCESS UNSOLICITED STRATUS INTRASYSTEM MSGS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE ISUPROC(INTAB,BLEN)
+	IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:PROCOM.DEF'
+        INCLUDE 'INCLIB:CRSCOM.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:QUECOM.DEF'
+        INCLUDE 'INCLIB:TASKID.DEF'
+        INCLUDE 'INCLIB:PRMLOG.DEF'
+        INCLUDE 'INCLIB:AGTCOM.DEF'
+        INCLUDE 'INCLIB:X2XCOM.DEF'
+
+        INTEGER*4 IND, BUF, ISTRTYP, TER, ST, STN, PASSNBR, PASSOFF
+	INTEGER*4 BLEN			    !INPUT MSG BUFFER BYTE LENGTH
+	INTEGER*4 OUTTBL(CDLEN)		    !OUTPUT BUFFER FOR VALID CMD 
+	BYTE      INTAB(*)		    !INPUT MSG BUFFER
+CCC
+        CHARACTER*12 ABUF
+        INTEGER*4 STR(2)
+        INTEGER*4 TOMEK
+CCC
+	INTEGER*4   I4TEMP, I
+	INTEGER*2   I2TEMP(2)
+	BYTE	    I1TEMP(4)
+	EQUIVALENCE (I4TEMP,I2TEMP,I1TEMP)
+C
+C GET TRANSACTION TYPE
+C
+	IND=9
+        I4TEMP=0
+        I1TEMP(1)=INTAB(IND+0)
+        I1TEMP(2)=INTAB(IND+1)
+        ISTRTYP = I4TEMP
+C
+C PROCESS EACH TRNSCTN TYPE
+C
+C PROCESS UNSOLICITED AGENT TYPE UPDATE MSG
+C
+	IF (ISTRTYP.EQ.19) THEN		    
+C
+C VALIDITY SCREEN INCOMING
+C   CHECK TRNSCTN LNGTH
+C
+	  IND=1
+	  I4TEMP=0
+	  I1TEMP(1)=INTAB(IND+0)
+	  I1TEMP(2)=INTAB(IND+1)
+	  IF (I4TEMP .NE. 24) GOTO 2000   !ROUTE BAD MSG TO SPESRV
+C
+C CHECK TERMINAL NUMBER
+C
+          IND=17
+          I4TEMP=0
+	  I1TEMP(1)=INTAB(IND+0)
+	  I1TEMP(2)=INTAB(IND+1)
+          I1TEMP(3)=INTAB(IND+2)
+          I1TEMP(4)=INTAB(IND+3)
+          IF (I4TEMP.LT.1.OR.I4TEMP.GT.NUMAGT) THEN
+	    GOTO 2000	!ROUTE BAD MSG TO SPESRV
+	  ELSE 
+	    TER=I4TEMP
+	  END IF
+C
+C CHECK RETAILER NUMBER 
+C
+	  IND=13
+	  I4TEMP=0
+	  I1TEMP(1)=INTAB(IND+0)
+	  I1TEMP(2)=INTAB(IND+1)
+	  I1TEMP(3)=INTAB(IND+2)
+	  I1TEMP(4)=INTAB(IND+3)
+          IF (I4TEMP.NE.AGTTAB(AGTNUM,TER)) GOTO 2000 !ROUTE BAD MSG TO SPESRV
+C
+C  VALID MSG: BUILD AND QUE CMD BUFFER
+C 
+C GET AGTTYP BITMAP
+C
+	  IND=21
+	  I4TEMP=0
+          I1TEMP(1)=INTAB(IND+0)
+          I1TEMP(2)=INTAB(IND+1)
+          I1TEMP(3)=INTAB(IND+2)
+          I1TEMP(4)=INTAB(IND+3)
+C
+	  OUTTBL(1)= 3		    !CMD NUMBER
+	  OUTTBL(2)=I4TEMP	    !AGTTYP BITMAP
+	  OUTTBL(3)=TCAGT	    !CMD TYPE
+	  OUTTBL(5)=TER		    !TERMINAL
+	  OUTTBL(6)=CRS		    !TASKID
+C
+	  CALL QUECMD(OUTTBL,ST)
+	  RETURN
+C
+C PROCESS UNSOLICITED PASSNUM UPDATE MSG
+C
+        ELSE IF (ISTRTYP.EQ.20) THEN             
+C
+C VALIDITY SCREEN INCOMING
+C
+C CHECK TRNSCTN LNGTH
+C
+          IND=1
+          I4TEMP=0
+          I1TEMP(1)=INTAB(IND+0)
+          I1TEMP(2)=INTAB(IND+1)
+          IF (I4TEMP .NE. 24) GOTO 2000   !ROUTE BAD MSG TO SPESRV
+C
+C CHECK TERMINAL NUMBER
+C
+          IND=17
+          I4TEMP=0
+          I1TEMP(1)=INTAB(IND+0)
+          I1TEMP(2)=INTAB(IND+1)
+          I1TEMP(3)=INTAB(IND+2)
+	  I1TEMP(4)=INTAB(IND+3)
+          IF (I4TEMP.LT.1.OR.I4TEMP.GT.NUMAGT) THEN
+            GOTO 2000   !ROUTE BAD MSG TO SPESRV
+          ELSE 
+	    TER=I4TEMP
+	  END IF
+C
+C CHECK RETAILER NUMBER
+C
+          IND=13
+          I4TEMP=0
+          I1TEMP(1)=INTAB(IND+0)
+          I1TEMP(2)=INTAB(IND+1)
+          I1TEMP(3)=INTAB(IND+2)
+          I1TEMP(4)=INTAB(IND+3)
+          IF (I4TEMP.NE.AGTTAB(AGTNUM,TER)) GOTO 2000 !ROUTE BAD MSG TO SPESRV
+C	  
+C GET PASS NUMBER 
+C
+          IND=21
+          I4TEMP=0
+          I1TEMP(1)=INTAB(IND+0)
+          I1TEMP(2)=INTAB(IND+1)
+          I1TEMP(3)=INTAB(IND+2)
+          I1TEMP(4)=INTAB(IND+3)
+          PASSNBR=I4TEMP
+C
+C GET PASS NUMBER OFFSET
+C
+          IND=11
+          I4TEMP=0
+          I1TEMP(1)=INTAB(IND+0)
+          I1TEMP(2)=INTAB(IND+1)
+          PASSOFF=I4TEMP
+          IF (PASSOFF.LE.0.OR.PASSOFF.GT.NUMCLERK+2) GOTO 2000
+C
+C VALID MSG: BUILD AND QUE CMD BUFFER
+C
+          OUTTBL(1)= 2              !CMD NUMBER
+          OUTTBL(2)=PASSNBR         !PASS NUMBER
+          OUTTBL(3)=TCAGT           !CMD TYPE
+          OUTTBL(4)=PASSOFF         !PASS NUMBER OFFSET
+          OUTTBL(5)=TER             !TERMINAL
+          OUTTBL(6)=CRS             !TASKID
+          CALL QUECMD(OUTTBL,ST)
+	  RETURN
+C
+C
+C PROCESS UNSOLICITED GVTID UPDATE MSG
+C
+        ELSE IF (ISTRTYP.EQ.23) THEN             
+C
+C VALIDITY SCREEN INCOMING
+C
+C CHECK TRNSCTN LNGTH
+C
+          IND=1
+          I4TEMP=0
+          I1TEMP(1)=INTAB(IND+0)
+          I1TEMP(2)=INTAB(IND+1)
+          IF (I4TEMP .NE. 32) GOTO 2000   !ROUTE BAD MSG TO SPESRV
+C
+C CHECK TERMINAL NUMBER
+C
+          IND=17
+          I4TEMP=0
+          I1TEMP(1)=INTAB(IND+0)
+          I1TEMP(2)=INTAB(IND+1)
+          I1TEMP(3)=INTAB(IND+2)
+	  I1TEMP(4)=INTAB(IND+3)
+          IF (I4TEMP.LT.1.OR.I4TEMP.GT.NUMAGT) THEN
+            GOTO 2000   !ROUTE BAD MSG TO SPESRV
+          ELSE 
+	    TER=I4TEMP
+            STN=X2XT_STATION_NO(TER)
+            IF(STN.LT.1.OR.STN.GT.X2X_STATIONS)
+     *        GOTO 2000                !ROUTE BAD MSG TO SPESRV
+	  END IF
+C
+C CHECK RETAILER NUMBER
+C
+          IND=13
+          I4TEMP=0
+          I1TEMP(1)=INTAB(IND+0)
+          I1TEMP(2)=INTAB(IND+1)
+          I1TEMP(3)=INTAB(IND+2)
+          I1TEMP(4)=INTAB(IND+3)
+          IF (I4TEMP.NE.AGTTAB(AGTNUM,TER)) GOTO 2000 !ROUTE BAD MSG TO SPESRV
+C
+C VALID MSG: BUILD AND QUE CMD BUFFER
+C	  
+C GET GVTID
+C
+C          IND=23
+C          I4TEMP=0
+C          I1TEMP(1)=INTAB(IND+0)
+C          I1TEMP(2)=INTAB(IND+1)
+C          I1TEMP(3)=INTAB(IND+2)
+C          I1TEMP(4)=INTAB(IND+3)
+C          IND=IND+4
+           
+	   IND=21
+           DO 100, I=1,12           
+             ABUF(I:I)=CHAR(INTAB(IND+I-1))
+100        CONTINUE
+
+           CALL ATOH(ABUF,1,12,STR,TOMEK)
+
+           OUTTBL(10)=STR(1)
+           OUTTBL(11)=STR(2)
+C           TYPE *,' first  6 ',OUTTBL(10)
+C           TYPE *,' second 6 ',OUTTBL(11)
+C           TYPE *,' ABUF ',ABUF
+C
+C          I4TEMP=0
+C          I1TEMP(1)=INTAB(IND+0)
+C          I1TEMP(2)=INTAB(IND+1)
+C          I1TEMP(3)=INTAB(IND+2)
+C          I1TEMP(4)=INTAB(IND+3)
+C          OUTTBL(11)=I4TEMP
+        
+C
+          OUTTBL(1)=1               !CMD NUMBER
+          OUTTBL(2)=1               !ADD FLAG
+          OUTTBL(3)=TCX2X           !CMD TYPE
+          OUTTBL(4)=-1              !ONLY 2 WORDS NEEDED
+          OUTTBL(5)=-1              !ONLY 2 WORDS NEEDED
+          OUTTBL(6)=CRS             !TASKID
+          OUTTBL(7)=0               !DO NOT UPDATE FILE
+          OUTTBL(8)=XSTN            !STATION FILE
+          OUTTBL(9)=38              !FIELD OFFSET
+          OUTTBL(12)=STN
+          CALL QUECMD(OUTTBL,ST)
+	  RETURN
+C
+	ELSE 
+	  GOTO 2000		!INVALID MSG TYPE, ROUTE TO SPESRV     
+	ENDIF
+C
+C BOGUS MSGS GET LOGGED IN SPESRV
+C
+C	GET BUFFER, IF AVAILABLE
+2000	CONTINUE
+        CALL GETBUF(BUF)
+        IF(BUF.EQ.0) THEN
+           RETURN
+        ENDIF
+C
+C INITIALIZE PROCOM BUFFER
+C
+        HPRO(TRCODE,BUF)=TYPSSU
+        HPRO(INPLEN,BUF)=(BINSTAB+BLEN)-(BINPTAB)+1
+C
+C MOVE INPUT MSG TO PROCOM BUFFER
+C
+	CALL LIB$MOVC3(BLEN, INTAB(1), BPRO(BINSTAB+1,BUF)) 
+C
+C QUEUE THE RESPONSE BACK TO DISPAT.
+C
+        CALL ABL(BUF,QUETAB(1,DIS),ST)
+C        
+	RETURN
+	END

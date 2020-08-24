@@ -1,0 +1,127 @@
+C GUI_025.FOR
+C
+C V01 ??-???-2000 XXX ININTIAL RELEASE
+C 
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C This subroutine returns GUI FUNCTION.
+C
+C Input parameters:
+C	NONE               
+C
+C Output parameters:
+C
+C	BYTE		OUTBUF(*)    OUTPUT MESSAGE
+C	INTEGER*4	MES_LEN	     MESSAGE LENGTH
+C	INTEGER*4	RET_CODE:
+C		0		-  no error, message accepted;
+C		value >= 11	-  error number to be sent to Client.
+C
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GUI_025(OUTBUF,MES_LEN,RET_CODE)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:GUIMPRM.DEF'
+	INCLUDE 'INCLIB:GUIARGS.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+C
+C
+	BYTE		OUTBUF(*)
+	INTEGER*4	MES_LEN,RET_CODE
+C
+	INTEGER*4 NUM_COLS,NUM_ROWS
+C
+        INTEGER*4  GNUM,GTYP
+        INTEGER*4  I
+	INTEGER*4  TOTWAG,TOTVAL,TOTCAN,TOTINS
+	INTEGER*4  PTAB(MAXTYP)
+	INTEGER*4  TOTALS(NUMTOT,NUMFIN)
+	INTEGER*4  ACT_GTYP(MAXTYP)/MAXTYP*0/
+C
+	RET_CODE = 0
+C
+        CALL FASTSET(0,PTAB,MAXTYP)
+        CALL FASTSET(0,TOTALS,NUMTOT*NUMFIN)
+C
+C GET PERFORMANCE TOTALS BY GAME TYPE
+C
+	TOTWAG = 0
+        TOTCAN = PERFRM(3,PERCAN)
+        TOTVAL = PERFRM(3,PERVAL)
+        TOTINS = PERFRM(3,PERINS)
+
+	DO 20 GNUM=1,MAXGAM
+	   GTYP = GNTTAB(GAMTYP,GNUM)
+	   IF(GTYP.LT.1.OR.GTYP.GT.MAXTYP) GOTO 20
+           PTAB(GTYP) = PTAB(GTYP) + PERFRM(3,GNUM)
+	   TOTWAG     = TOTWAG + PERFRM(3,GNUM)
+	   ACT_GTYP(GTYP) = 1
+           DO I=1,NUMFIN
+              TOTALS(TRACNT,I) = TOTALS(TRACNT,I) + DAYTYP(TRACNT,I,GNUM)
+              TOTALS(DOLAMT,I) = TOTALS(DOLAMT,I) + DAYTYP(DOLAMT,I,GNUM)
+           END DO
+20      CONTINUE
+C
+C INITIALIZE OUTPUT 
+C
+	CALL GUIARG_INIT()
+C
+C RESULT SET 1
+C
+	NUM_COLS = 12
+	NUM_ROWS = 1
+	CALL GUIARG_NEXT_SET(OUTBUF,NUM_COLS)
+
+	CALL GUIARG_INT4(OUTBUF,TOTWAG)
+	CALL GUIARG_INT4(OUTBUF,TOTCAN)
+	CALL GUIARG_INT4(OUTBUF,TOTVAL)
+	CALL GUIARG_INT4(OUTBUF,TOTINS)
+
+        CALL GUIARG_INT4(OUTBUF,TOTALS(TRACNT,TWAG))
+        CALL GUIARG_MONY(OUTBUF,TOTALS(DOLAMT,TWAG))
+
+        CALL GUIARG_INT4(OUTBUF,TOTALS(TRACNT,TCAN))
+        CALL GUIARG_MONY(OUTBUF,TOTALS(DOLAMT,TCAN))
+
+        CALL GUIARG_INT4(OUTBUF,TOTALS(TRACNT,TVAL))
+        CALL GUIARG_MONY(OUTBUF,TOTALS(DOLAMT,TVAL))
+
+        CALL GUIARG_INT4(OUTBUF,TOTALS(TRACNT,TREF))
+        CALL GUIARG_MONY(OUTBUF,TOTALS(DOLAMT,TREF))
+C
+C RESULT SET 2
+C
+	NUM_COLS = 2
+	NUM_ROWS = MAXTYP
+	CALL GUIARG_NEXT_SET(OUTBUF,NUM_COLS)
+	DO I=1,MAXTYP
+	   IF(ACT_GTYP(I).EQ.1) THEN
+	      CALL GUIARG_BYTE(OUTBUF,I)
+	      CALL GUIARG_INT4(OUTBUF,PTAB(I))
+	   ENDIF
+	END DO
+C
+C FINALLY SET OUTPUT MESSAGE LENGTH 
+C
+	CALL GUIARG_SET_MESLEN(MES_LEN)
+C
+	RETURN
+C
+	END

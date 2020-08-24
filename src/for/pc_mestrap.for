@@ -1,0 +1,203 @@
+C
+C SUBROUTINE PC_MESTRAP
+C $Log:   GXAFXT:[GOLS]PC_MESTRAP.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:22:46   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 17:16:26   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - pc_mestrap.for **
+C
+C PC_MESTRAP.FOR
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C THIS SUBROUTINE WILL INTERCEPT A COMMAND FROM A CONSOLE
+C      DECODE AND EXECUTE IT
+C
+C      OS ENDS MESSAGE WITH 0D
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE PC_MESTRAP
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:PCCOM.DEF'
+	INCLUDE 'INCLIB:PCEVN.DEF'
+C
+	INCLUDE '($IODEF)'
+        INCLUDE '($SSDEF)'
+        INCLUDE '($SYSSRVNAM)'
+C
+	INTEGER*4 MESS(18),LMESS(18)
+	INTEGER*4 NUM, TYP, ST, CMD, PNT, K
+	CHARACTER*64 CH
+	CHARACTER*1 C1(64)
+C
+	CHARACTER*80 MNEM
+C
+	INTEGER*4   FUNCOD, STATUS
+        RECORD /PC_IOSSTRUCT/ LOCAL_IOSB
+C
+	EQUIVALENCE(LMESS(1),CH,C1)
+C
+	DATA MNEM(1:1)    /Z03/
+	DATA MNEM(2:5)    /'STOP'/
+	DATA MNEM(6:6)    /Z04/
+	DATA MNEM(7:11)   /'START'/
+	DATA MNEM(12:12)  /Z02/
+	DATA MNEM(13:16)  /'KILL'/
+	DATA MNEM(17:17)  /Z02/
+	DATA MNEM(18:24)  /'DISPLAY'/
+	DATA MNEM(26:26)  /Z00/
+	DATA MNEM(27:27)  /Z00/
+	DATA MNEM(28:28)  /Z00/
+C
+	PC_CNTMES=PC_CNTMES+1	    !KEEP STATISTICS
+C
+C READ THE MESSAGE FROM THE MAILBOX.
+C
+        FUNCOD=IO$_READVBLK
+        STATUS=SYS$QIOW(,%VAL(PC_MESCHANNEL),%VAL(FUNCOD),
+     *                  LOCAL_IOSB,,,MESS,%VAL(64),,,,)
+        IF(.NOT.STATUS) THEN
+D         TYPE *,'ERROR READING MESSAGE '
+          CALL LIB$SIGNAL(%VAL(STATUS))
+        ENDIF
+C
+D	TYPE*,'***** MESSAGE ACCEPTED *****'
+C
+	DO 5 K=1,18
+	  LMESS(K)=MESS(K)
+5	CONTINUE
+C
+	PNT=1
+	CALL SCAN(CH,PNT,MNEM,CMD)
+	GOTO (210,220,230,240), CMD
+	GOTO 300
+C
+C CALL GSTOP(GEXIT_SUCCESS)
+C
+210	CONTINUE
+	    TSKSTAT=INACTIVE
+C
+C HALT IO'S ???
+C HALT TIMER'S ???
+C
+C
+C CLOSE CONNECTION TO PC VIA THE DEC SERVER
+C
+	    CALL LAT_CLOSE(LAT_CHANNEL,ST)
+C
+	    GOTO 400
+C
+C START
+C
+220	CONTINUE
+	    IF(TSKSTAT.EQ.ACT) THEN
+	      TYPE*,'TASK IS ALREADY ACTIVE'
+	      GOTO 400
+	    ENDIF
+C
+C OPEN CONNECTION TO PC VIA THE DEC SERVER
+C
+	    CALL LAT_OPEN(LAT_NAME,LAT_CHANNEL,ST)
+C
+	    IF(TSKSTAT.EQ.INACTIVE) TSKSTAT=ACT
+C
+	    DO 10 K=1,NUMMES
+	      IF(TIMINPROG(K).EQ.0.AND.INTVAL(K).GT.0) THEN
+		CALL PC_START_TIME(K)
+	        TIMINPROG(K)=1
+ 		CALL XWAIT(100,1,ST)  !WAIT 100 MS BETWEEN TIMER TRAPS
+	      ENDIF
+10	    CONTINUE
+	    GOTO 400
+C
+C KILL
+C
+230	CONTINUE
+	    TYPE*,'***** SHUTTING DOWN *****'
+C
+C CLOSE CONNECTION TO PC VIA THE DEC SERVER
+C
+	    CALL LAT_CLOSE(LAT_CHANNEL,ST)
+	    CALL GSTOP(GEXIT_SUCCESS)
+C
+C DELAY
+C
+240	CONTINUE
+	    TYPE*,'STATUS INTERVAL IS ',INTVAL(1)/1000,' SEC'
+	    TYPE*,'COM INTERVAL IS    ',INTVAL(2)/1000,' SEC'
+	    TYPE*,'SAL/TYP INT IS     ',INTVAL(3)/1000,' SEC'
+C**       TYPE*,'SAL/DRAW INT IS    ',INTVAL(4)/1000,' SEC'
+C**       TYPE*,'SAL POOLS INT IS   ',INTVAL(5)/1000,' SEC'
+C**       TYPE*,'SAL IN FUT INT IS  ',INTVAL(6)/1000,' SEC'
+	    TYPE*,'CONF INT IS        ',INTVAL(7)/1000,' SEC'
+	    TYPE*,'QUEUE INT IS       ',INTVAL(8)/1000,' SEC'
+C**       TYPE*,'GTRK INT IS        ',INTVAL(9)/1000,' SEC'
+	    TYPE*,'SAL/HOURLY INT IS  ',INTVAL(10)/1000,' SEC'
+	    TYPE*,'TEST FLAG IS       ',TESTFLG
+	    IF(TSKSTAT.EQ.ACT) THEN
+	       TYPE*,'TASK IS ACTIVE'
+	    ELSE
+	       TYPE*,'TASK IS INACTIVE'
+	    ENDIF
+	    TYPE *
+	    DO 241 K=1,NUMMES
+	      TYPE *,'MESSAGE # ',K,' TIMERS=',PC_CNTTIM(K),
+     *		     '  WRITES=',PC_CNTIO(K)
+241	    CONTINUE
+	    TYPE *
+	    TYPE *,'# OF MESSAGE TRAPS     =',PC_CNTMES
+	    TYPE *,'# OF SHORT TIMER TRAPS =',PC_CNTSTIM
+	    GOTO 400
+300	CONTINUE
+	   CALL SCANL(LMESS,TYP,NUM,ST)
+	   IF(ST.EQ.0) THEN
+	     IF(TYP.EQ.MTEST) THEN
+	        TESTFLG=NUM/1000
+	        TYPE*,'***** TEST FLAG SET TO ',TESTFLG,' *****'
+	     ELSE
+	        INTVAL(TYP)=NUM
+	        IF(INTVAL(TYP).GT.0) THEN
+		    PC_INIT(TYP)=-1
+		    IF(TSKSTAT.EQ.ACT .AND. TIMINPROG(TYP).EQ.0) THEN
+		      CALL PC_START_TIME(TYP)
+	              TIMINPROG(TYP)=1
+		    ENDIF
+	        ENDIF
+	        TYPE*,'***** TIME INTERVAL CHANGED TO ',NUM,' *****'
+	        TYPE*,'***** FOR MESSAGE TYPE ',TYP,' *****'
+	     ENDIF
+	   ELSE
+	     TYPE*,'***** INVALID ENTRY *****'
+	   ENDIF
+C
+C SINGLE EXIT POINT
+C
+400	CONTINUE
+	CALL PC_START_MESS  !START ANOTHER MESSAGE TRAP
+C
+	RETURN
+	END

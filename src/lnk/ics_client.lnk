@@ -1,0 +1,13 @@
+$!  CMS REPLACEMENT HISTORY, Element ICS_CLIENT.LNK
+$!  *1    31-AUG-1998 09:34:04 PROSYS "Starting using CMS"
+$!  CMS REPLACEMENT HISTORY, Element ICS_CLIENT.LNK
+$! ics_client.lnk
+$!
+$! V01 01-jul-96 mf
+$!
+$ link 'p1' /exe=gxutl:ics_client.exe -
+objlib:ics_client, -
+ioctl, -
+prosys,-
+crc,-
+stdlib:normlib/lib

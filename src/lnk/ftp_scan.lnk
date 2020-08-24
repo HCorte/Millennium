@@ -1,0 +1,21 @@
+$! GXSRC:FTP_SCAN.LNK
+$!
+$! $Log:   GXAFXT:[GOLS]FTP_SCAN.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 20:41:24   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$!
+$!    Rev 1.1   02 Dec 1994 15:49:36   JXP
+$! Applying PVCS header for automatic revision history
+$!
+$!    Rev 1.0    02 Dec 1994 15:48:44   JXP
+$! Initial revision.
+$!
+$ LINK 'P1' -
+/EXE=TSKLIB:FTP_SCAN.EXE -
+OBJLIB:ftp_scan,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXAPPCOM.ESH/SHAREABLE,-
+TSKLIB:GXRESCOM.ESH/SHAREABLE

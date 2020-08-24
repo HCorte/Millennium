@@ -1,0 +1,49 @@
+$! GXSRC:X2RELOAD.LNK
+$! 
+$! $Log:   GXAFXT:[GOLS]X2RELOAD.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 21:01:54   HXK
+$! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
+$! 
+$!    Rev 1.0   15 Oct 1994  5:07:28   DJO
+$! Initial revision.
+$! 
+$!    Rev 1.2   31 Mar 1994 14:46:44   GPR
+$! Change Copyright date
+$! 
+$!    Rev 1.1   04 Jan 1994 11:59:28   SYSTEM
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    21 Dec 1993 19:49:44   SYSTEM
+$! Initial revision.
+$!
+$! V01 01-AUG-90 XXX RELEASED FOR VAX
+$!
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! This item is the property of GTECH Corporation, Providence, Rhode
+$! Island, and contains confidential and trade secret information. It
+$! may not be transferred from the custody or control of GTECH except
+$! as authorized in writing by an officer of GTECH. Neither this item
+$! nor the information it contains may be used, transferred,
+$! reproduced, published, or disclosed, in whole or in part, and
+$! directly or indirectly, except as expressly authorized by an
+$! officer of GTECH, pursuant to written agreement.
+$!
+$! Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:X2RELOAD.EXE -
+OBJLIB:X2RELOAD,-
+REDLL,-
+X2RELMOD,-
+X2ADDPRO,-
+I4TOHEX,-
+STDLIB:NORMLIB/LIB, -
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXX2XCOM.ESH/SHAREABLE, -
+TSKLIB:gxreqcom.ESH/SHAREABLE, -
+TSKLIB:gxcplcom.ESH/SHAREABLE, -
+TSKLIB:GXAPPCOM.ESH/SHAREABLE

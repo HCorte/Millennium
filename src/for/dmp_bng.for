@@ -1,0 +1,380 @@
+C DMP_LTO.FOR
+C
+C V01 15-JUN-2000 PXO
+C 
+C SUBROUTINE TO DUMP BINGO GAME FILE
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+
+
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+	SUBROUTINE DMP_BNG(RLU,FILE,DRAW,MONEY_UNIT)
+	IMPLICIT NONE
+
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DBNREC.DEF'
+
+        ! arguments
+	INTEGER*4  RLU				!
+	INTEGER*4  FILE(5)			!
+        INTEGER*4  DRAW                         !
+	INTEGER*4  MONEY_UNIT			!
+
+	INTEGER*4 LUN
+	INTEGER*4 I,J,K
+
+	CHARACTER DESCR(71)*30
+
+        DATA DESCR/
+     *            'STATUS                        ',
+     *            'ACTUAL TIME WHEN CLOSED       ',
+     *            'TIME WHEN GAME SHOULD CLOSE   ',
+     *            'DRAW NUMBER                   ',
+     *            'BINGO BEGGINING DRAW DATE     ',
+     *            'BINGO ENDING DRAW DATE        ',
+     *            'LAST PURGE UPDATE             ',
+     *            'LAST FILE UPDATE              ',
+     *            'DRAW DATES                    ',
+     *            'ADVANCE DRAW DATES            ',
+     *            'SALES DATA                    ',
+     *            'SHARE VALUES                  ',
+     *            'SHARES                        ',
+     *            'POOL CARRIED OVER             ',
+     *            'AMOUNT PAID                   ',
+     *            'AMOUNT PURGED                 ',
+     *            'ANNUITY PRIZES                ',
+     *            'BREAKAGE AMOUNT BY POOL       ',
+     *            'OLD SHARE VALUES              ',
+     *            'DIVISION PAYOUT FROZEN FLAGS  ',
+     *            'WINNING RESULTS (FULL HOUSE)  ',
+     *            'WINNING RESULTS HOLD (FULL H) ',
+     *            'WINNING RESULTS (A,B)         ',
+     *            'WINNING RESULTS HOLD (A,B)    ',
+     *            'WINNING RESULTS (LUCKY)       ',
+     *            'WINNING RESULTS HOLD (LUCKY)  ',
+     *            'ANNUITY FACTOR                ',
+     *            'ANNUITY CUT-IN                ',
+     *            'LOTTERY TAX                   ',
+     *            'RESERVE POOL                  ',
+     *            'ADDITIONAL POOL               ',
+     *            'MINIMUM POOL                  ',
+     *            'LAST SERIAL NUMBER            ',
+     *            'OVER-RIDE POOL AMOUNT         ',
+     *            'PRICE/SINGLE COMBINATION      ',
+     *            'MAXIMUM NUMBER OF EVENTS      ',
+     *            'MULTI-DRAW ENABLE FLAG        ',
+     *            'MULTI-DRAW SELECTED TABLE     ',
+     *            '# OF DIVISIONS                ',
+     *            'DIVISION MATCH TABLE          ',
+     *            'DIVISION PERCENTAGES          ',
+     *            'SALES PERCENTAGE              ',
+     *            'TOTAL SHARE COUNT             ',
+     *            'BINGO REVISION NUMBER         ',
+     *            'ADDITIONAL POOL BY DIV.       ',
+     *            'FLAG FOR FREE GAME (PRICE=0)  ',
+     *            'WIN RESERVE FUND              ',
+     *            'BEST MATCH FLAG (ADJUST DIVS) ',
+     *            'BALANCE SALES INFO. BY DRAW   ',
+     *            'FULL HOUSE SEED               ',
+     *            'LUCKY NUMBER BASE             ',
+     *            '#s DRAWN PER PHASE (FH)       ',
+     *            '#s DRAWN PER PHASE (FH) HOLD  ',
+     *            '#s DRAWN FOR 1st BNG,DBL,(FH) ',
+     *            '#s MATCHED FOR WORST WIN (FH) ',
+     *            '#s MATCHED FOR WORST HOLD (FH)',
+     *            'MAX BITMAPS TO WIN ON         ',
+     *            'WIN ALLOWED FOR OVERLAP FLAG  ',
+     *            '# ADDIT. BITMAPS FOR DIVS WON ',
+     *            '# OF MATCH A PHASE TO COMPLETE',
+     *            '# OF LAST BINGO WITH AB BRDS  ',
+     *            '#s MATCHED FOR SECOND WORST   ',
+     *            '#s MATCH. FOR SECOND WORST HLD',
+     *            '#s DRAWN FOR FIRST MATCH (FH) ',
+     *            '#s DRAWN FOR FIRST MATCH HOLD ',
+     *            'FLAGS DIVISIONS OF FRST MATCH ',
+     *            'OTHER DIV WHICH WINS          ',
+     *            'DIV NUMBERS IN LOTTERY 1..20  ',
+     *            'NUMBER OF SUBPHASES(INCL.FH)  ',
+     *            '#s DRAWN PER SUBPHASE (FH)    ',
+     *            '#s DRAWN PER SUBPHASE(FH)HOLD '/
+
+
+
+C
+C READ GAME FILE
+C
+	LUN = 9     ! ?
+        CALL READGFL(LUN,FILE,DBNSEC,DRAW,DBNREC)
+C
+C DUMP RECORD
+C
+	WRITE(RLU,900) DBNSTS_OFF, DBNSTS, 'DBNSTS', DESCR(1)
+	WRITE(RLU,908) DBNCTM_OFF, DISTIM(DBNCTM), 'DBNCTM', DESCR(2)
+	WRITE(RLU,908) DBNTIM_OFF, DISTIM(DBNTIM), 'DBNTIM', DESCR(3)
+	WRITE(RLU,900) DBNDRW_OFF, DBNDRW, 'DBNDRW', DESCR(4)
+	WRITE(RLU,900) DBNBSD_OFF, DBNBSD, 'DBNBSD', DESCR(5)
+	WRITE(RLU,900) DBNESD_OFF, DBNESD, 'DBNESD', DESCR(6)
+	WRITE(RLU,900) DBNPUP_OFF, DBNPUP, 'DBNPUP', DESCR(7)
+	WRITE(RLU,900) DBNUPD_OFF, DBNUPD, 'DBNUPD', DESCR(8)
+	DO 100 I=1,DATLEN
+	  WRITE(RLU,901) DBNDAT_OFF+I-1, DBNDAT(I), 'DBNDAT', I, DESCR(9)
+100	CONTINUE
+	DO 110 I=1,NUMADV
+	  WRITE(RLU,901) DBNADV_OFF+I-1, DBNADV(I), 'DBNADV', I, DESCR(10)
+110	CONTINUE
+	DO 120 I=1,BGOENT
+	  WRITE(RLU,910) DBNSAL_OFF+I-1, CSMONY(DBNSAL(I),12,MONEY_UNIT),
+     *                'DBNSAL', I, DESCR(11)
+120	CONTINUE
+	DO 130 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,911) DBNSHV_OFF+(I-1)*BGODIV+J-1, 
+     *                   CSMONY(DBNSHV(J,I),12,MONEY_UNIT),
+     *                  'DBNSHV', J, I, DESCR(12)
+	  ENDDO
+130	CONTINUE
+	DO 140 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,903) DBNSHR_OFF+(I-1)*BGODIV+J-1, DBNSHR(J,I),
+     *                 'DBNSHR', J, I, DESCR(13)
+	  ENDDO
+140	CONTINUE
+	DO 150 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,911) DBNPOL_OFF+(I-1)*BGODIV+J-1, 
+     *                   CSMONY(DBNPOL(J,I),12,MONEY_UNIT),
+     *                  'DBNPOL', J, I, DESCR(14)
+	  ENDDO
+150	CONTINUE
+	DO 160 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,911) DBNPAD_OFF+(I-1)*BGODIV+J-1,
+     *                   CSMONY(DBNPAD(J,I),12,MONEY_UNIT),
+     *                  'DBNPAD', J, I, DESCR(15)
+	  ENDDO
+160	CONTINUE
+	DO 170 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,911) DBNPRG_OFF+(I-1)*BGODIV+J-1,
+     *                   CSMONY(DBNPRG(J,I),12,MONEY_UNIT),
+     *                  'DBNPRG', J, I, DESCR(16)
+	  ENDDO
+170	CONTINUE
+	DO 180 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,911) DBNANU_OFF+(I-1)*BGODIV+J-1,
+     *                   CSMONY(DBNANU(J,I),12,MONEY_UNIT),
+     *                  'DBNANU', J, I, DESCR(17)
+	  ENDDO
+180	CONTINUE
+	DO 190 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,911) DBNBRK_OFF+(I-1)*BGODIV+J-1,
+     *                   CSMONY(DBNBRK(J,I),12,MONEY_UNIT),
+     *                  'DBNBRK', J, I, DESCR(18)
+	  ENDDO
+190	CONTINUE
+	DO 200 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,911) DBNOSV_OFF+(I-1)*BGODIV+J-1, 
+     *                   CSMONY(DBNOSV(J,I),12,MONEY_UNIT),
+     *                  'DBNOSV', J, I, DESCR(19)
+	  ENDDO
+200	CONTINUE
+	DO 210 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,903) DBNFRZ_OFF+(I-1)*BGODIV+J-1, DBNFRZ(J,I),
+     *                 'DBNFRZ', J, I, DESCR(20)
+	  ENDDO
+210	CONTINUE
+	DO 220 I=1,BGONBR
+	  WRITE(RLU,901) DBNWIN_OFF+I-1, DBNWIN(I), 'DBNWIN', I, DESCR(21)
+220	CONTINUE
+	DO 230 I=1,BGONBR
+	  WRITE(RLU,901) DBNHLD_OFF+I-1, DBNHLD(I), 'DBNHLD', I, DESCR(22)
+230	CONTINUE
+	DO 240 I=1,BGONAB
+	  WRITE(RLU,901) DBNWAB_OFF+I-1, DBNWAB(I), 'DBNWAB', I, DESCR(23)
+240	CONTINUE
+	DO 250 I=1,BGONAB
+	  WRITE(RLU,901) DBNHAB_OFF+I-1, DBNHAB(I), 'DBNHAB', I, DESCR(24)
+250	CONTINUE
+	DO 260 I=1,BGONLN
+	  WRITE(RLU,901) DBNWLN_OFF+I-1, DBNWLN(I), 'DBNWLN', I, DESCR(25)
+260	CONTINUE
+	DO 270 I=1,BGONLN
+	  WRITE(RLU,901) DBNHLN_OFF+I-1, DBNHLN(I), 'DBNHLN', I, DESCR(26)
+270	CONTINUE
+	WRITE(RLU,900) DBNFAC_OFF, DBNFAC, 'DBNFAC', DESCR(27)
+	WRITE(RLU,900) DBNCUT_OFF, DBNCUT, 'DBNCUT', DESCR(28)
+	WRITE(RLU,909) DBNTAX_OFF, CSMONY(DBNTAX,12,MONEY_UNIT), 
+     *              'DBNTAX', DESCR(29)
+	WRITE(RLU,910) DBNRES_OFF,   CSMONY(DBNRES(1),12,MONEY_UNIT),
+     *              'DBNRES', 1, DESCR(30)
+	WRITE(RLU,910) DBNRES_OFF+1, CSMONY(DBNRES(2),12,MONEY_UNIT),
+     *              'DBNRES', 2, DESCR(30)
+	WRITE(RLU,909) DBNAPL_OFF, CSMONY(DBNAPL,12,MONEY_UNIT), 
+     *              'DBNAPL', DESCR(31)
+	WRITE(RLU,909) DBNMIN_OFF, CSMONY(DBNMIN,12,MONEY_UNIT),
+     *              'DBNMIN', DESCR(32)
+	WRITE(RLU,900) DBNSER_OFF, DBNSER, 'DBNSER', DESCR(33)
+	WRITE(RLU,909) DBNOPA_OFF, CSMONY(DBNOPA,12,MONEY_UNIT), 
+     *              'DBNOPA', DESCR(34)
+	WRITE(RLU,909) DBNPRC_OFF, CSMONY(DBNPRC,12,MONEY_UNIT),
+     *                'DBNPRC', DESCR(35)
+	WRITE(RLU,900) DBNMAX_OFF, DBNMAX, 'DBNMAX', DESCR(36)
+	WRITE(RLU,900) DBNMLT_OFF, DBNMLT, 'DBNMLT', DESCR(37)
+	DO 280 I=1,MAXMLTD_AVL
+	  WRITE(RLU,901) DBNMDS_OFF+I-1, DBNMDS(I), 'DBNMDS', I, DESCR(38)
+280	CONTINUE
+	DO 290 I=1,BGOSUB
+	  WRITE(RLU,901) DBNDIV_OFF+I-1, DBNDIV(I), 'DBNDIV', I, DESCR(39)
+290	CONTINUE
+	DO 300 I=1,BGOSUB
+	  DO J=1,BGOMAXMAP+2+BGOCOL*BGOROW
+	    WRITE(RLU,903) DBNMAT_OFF+(I-1)*(BGOMAXMAP+2+BGOCOL*BGOROW)+J-1, 
+     *                   DBNMAT(J,I), 'DBNMAT', J, I, DESCR(40)
+	  ENDDO
+300	CONTINUE
+	DO 310 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,912) DBNPER_OFF+(I-1)*BGODIV+J-1, DISPER(DBNPER(J,I)),
+     *                 'DBNPER', J, I, DESCR(41)
+	  ENDDO
+310	CONTINUE
+	WRITE(RLU,913) DBNSPR_OFF, DISPER(DBNSPR), 'DBNSPR', DESCR(42)
+	DO 320 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,903) DBNTSR_OFF+(I-1)*BGODIV+J-1, DBNTSR(J,I),
+     *                 'DBNTSR', J, I, DESCR(43)
+	  ENDDO
+320	CONTINUE
+	WRITE(RLU,900) DBNREV_OFF, DBNREV, 'DBNREV', DESCR(44)
+	DO 330 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,911) DBNASH_OFF+(I-1)*BGODIV+J-1, 
+     *                   CSMONY(DBNASH(J,I),12,MONEY_UNIT),
+     *                  'DBNASH', J, I, DESCR(45)
+	  ENDDO
+330	CONTINUE
+	WRITE(RLU,900) DBNFRG_OFF, DBNFRG, 'DBNFRG', DESCR(46)
+	DO 340 I=1,POSTED
+	  WRITE(RLU,901) DBNWRF_OFF+I-1, DBNWRF(I), 'DBNWRF', I, DESCR(47)
+340	CONTINUE
+	WRITE(RLU,900) DBNBST_OFF, DBNBST, 'DBNBST', DESCR(48)
+	DO 350 I=1,MAXDRW
+	  WRITE(RLU,910) DBNBAL_OFF+I-1, CSMONY(DBNBAL(I),12,MONEY_UNIT), 
+     *                'DBNBAL', I, DESCR(49)
+350	CONTINUE
+	WRITE(RLU,900) DBNSED_OFF, DBNSED, 'DBNSED', DESCR(50)
+	WRITE(RLU,900) DBNBAS_OFF, DBNBAS, 'DBNBAS', DESCR(51)
+	DO 360 I=1,BGOPHS
+	  WRITE(RLU,901) DBNPHS_OFF+I-1, DBNPHS(I), 'DBNPHS', I, DESCR(52)
+360	CONTINUE
+	DO 370 I=1,BGOPHS
+	  WRITE(RLU,906) DBNPHSH_OFF+I-1, DBNPHSH(I), 'DBNPHSH', I, DESCR(53)
+370	CONTINUE
+	DO 380 I=1,BGO1ST
+	  WRITE(RLU,901) DBN1ST_OFF+I-1, DBN1ST(I), 'DBN1ST', I, DESCR(54)
+380	CONTINUE
+	WRITE(RLU,900) DBNWST_OFF, DBNWST, 'DBNWST', DESCR(55)
+	WRITE(RLU,907) DBNWSTH_OFF, DBNWSTH, 'DBNWSTH', DESCR(56)
+	DO 390 I=1,BGOSUB
+	  DO J=1,BGOMAXMAP
+	    WRITE(RLU,903) DBNMAP_OFF+(I-1)*BGOMAXMAP+J-1, DBNMAP(J,I),
+     *                  'DBNMAP', J, I, DESCR(57)
+	  ENDDO
+390	CONTINUE
+	DO 400 I=1,BGOSUB
+	  DO J=1,BGOMAXMAP
+	    WRITE(RLU,903) DBNMPF_OFF+(I-1)*BGOMAXMAP+J-1, DBNMPF(J,I),
+     *                  'DBNMPF', J, I, DESCR(58)
+	  ENDDO
+400	CONTINUE
+	DO 410 I=1,BGOSUB
+	  DO J=1,BGOMAXMAP
+            DO K=1,BGODIV
+	    WRITE(RLU,904) DBNAMP_OFF+(I-1)*BGOMAXMAP*BGODIV+(J-1)*BGODIV+K-1, 
+     *                   DBNAMP(K,J,I), 'DBNAMP', K, J, I, DESCR(59)
+	    ENDDO
+	  ENDDO
+410	CONTINUE
+	DO 420 I=1,3
+	  DO J=1,BGOPHS
+	    WRITE(RLU,903) DBNPMT_OFF+(I-1)*BGOPHS+J-1, DBNPMT(I,J),
+     *                  'DBNPMT', I, J, DESCR(60)
+	  ENDDO
+420	CONTINUE
+	WRITE(RLU,900) DBNLOB_OFF, DBNLOB, 'DBNLOB', DESCR(61)
+	WRITE(RLU,900) DBNWS2_OFF, DBNWS2, 'DBNWS2', DESCR(62)
+	WRITE(RLU,907) DBNWS2H_OFF, DBNWS2H, 'DBNWS2H', DESCR(63)
+	DO 430 I=1,BGODIV
+	  WRITE(RLU,901) DBNNDF_OFF+I-1, DBNNDF(I), 'DBNNDF', I, DESCR(64)
+430	CONTINUE
+	DO 440 I=1,BGODIV
+	  WRITE(RLU,906) DBNNDFH_OFF+I-1, DBNNDFH(I), 'DBNNDFH', I, DESCR(65)
+440	CONTINUE
+	DO 450 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,903) DBNFST_OFF+(I-1)*BGODIV+J-1, DBNFST(J,I),
+     *                 'DBNFST', J, I, DESCR(66)
+	  ENDDO
+450	CONTINUE
+	DO 460 I=1,BGOSUB
+	  DO J=1,BGODIV
+	    WRITE(RLU,903) DBNOTH_OFF+(I-1)*BGODIV+J-1, DBNOTH(J,I),
+     *                 'DBNOTH', J, I, DESCR(67)
+	  ENDDO
+460	CONTINUE
+	DO 470 I=1,BGODIV
+	  WRITE(RLU,901) DBNDNR_OFF+I-1, DBNDNR(I), 'DBNDNR', I, DESCR(68)
+470	CONTINUE
+	WRITE(RLU,900) DBNNSP_OFF, DBNNSP, 'DBNNSP', DESCR(69)
+	DO 480 I=1,BGOSPH
+	  WRITE(RLU,901) DBNSPH_OFF+I-1, DBNSPH(I), 'DBNSPH', I, DESCR(70)
+480	CONTINUE
+	DO 490 I=1,BGOSPH
+	  WRITE(RLU,906) DBNSPHH_OFF+I-1, DBNSPHH(I), 'DBNSPHH', I, DESCR(71)
+490	CONTINUE
+
+
+
+
+	RETURN  
+C
+C
+900	FORMAT(1X,I5,1X,I12,1X,15X,A6,9X,A30)
+901	FORMAT(1X,I5,1X,I12,1X,15X,A6,'(',I2,')',5X,A30)
+902	FORMAT(1X,I5,1X,I12,1X,I12,3X,A6,'(',I2,',*)',3X,A30)
+903	FORMAT(1X,I5,1X,I12,1X,12X,3X,A6,'(',I2,',',I2,')',2X,A30)
+904	FORMAT(1X,I5,1X,I12,1X,12X,3X,A6,'(',I2,',',I2,',',I2,')',1X,A28)
+905	FORMAT(1X,I5,1X,I12,1X,12X,3X,A11,4X,A30)
+906	FORMAT(1X,I5,1X,I12,1X,15X,A7,'(',I2,')',4X,A30)
+907	FORMAT(1X,I5,1X,I12,1X,15X,A7,8X,A30)
+908	FORMAT(1X,I5,1X,4X,A8,1X,15X,A6,9X,A30)
+909	FORMAT(1X,I5,1X,A12,1X,15X,A6,9X,A30)
+910	FORMAT(1X,I5,1X,A12,1X,15X,A6,'(',I2,')',5X,A30)
+911	FORMAT(1X,I5,1X,A12,1X,14X,1X,A6,'(',I2,',',I2,')',2X,A30)
+912     FORMAT(1X,I5,1X,5X,F7.3,1X,14X,1X,A6,'(',I2,',',I2,')',2X,A30)
+913	FORMAT(1X,I5,1X,5X,F7.3,1X,15X,A6,9X,A30)
+
+
+C
+	END

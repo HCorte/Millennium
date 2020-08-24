@@ -1,0 +1,61 @@
+C SLOCOM.DEF
+C
+C V06 23-FEB-11 RXK CSB RECALCULATED FOR NUMAGT=12288
+C  
+C     Rev 1.1   07 Jan 1997 18:36:46   HXK
+C  Increased SLOCSB from 2 to 3
+C  
+C     Rev 1.0   17 Apr 1996 15:08:26   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:52:46   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V02 05-MAR-91 MTK INITIAL RELEASE FOR MARYLAND
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C FORTRAN SLOCOM DESCRIPTION
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*2 SLOTAB(NUMAGT)               !6144 WORDS           
+        INTEGER*4 SLOBIT(384)                  ! 384
+C                                              ====== 
+C                                     USED     !6528
+C                                     FREE     !1664
+C                                              ======
+C                             SIZE OF COMMON   !8192   
+	COMMON/SLOCOM/ SLOTAB,SLOBIT
+C
+C EQUIVALENCE FOR CHECKPOINT
+C
+	INTEGER*4  SLOCSB
+	PARAMETER (SLOCSB=4)        !# OF CHECKPOINT BLOCKS IN SLOCOM
+C
+	INTEGER*4 SLOBLK(2048,SLOCSB)
+	EQUIVALENCE (SLOTAB(1),SLOBLK(1,1))
+C
+C
+	INTEGER*4	 FRST_SLOCOM(2)
+	EQUIVALENCE	(FRST_SLOCOM, SLOBLK(1,1))
+	INTEGER*4	 LAST_SLOCOM
+	EQUIVALENCE	(LAST_SLOCOM, SLOBLK(2048,SLOCSB))
+C
+	VOLATILE /SLOCOM/
+C

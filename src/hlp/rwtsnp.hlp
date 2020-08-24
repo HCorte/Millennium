@@ -1,0 +1,37 @@
+    RWT.HLP                 GTECH Distributed Network
+                           Voittaja Results Snapshot Help       Page 1 of 2
+ 
+    The RWT snapshot contains odds information for each game and selected
+    event
+
+
+    The information displayed includes:
+ 
+
+    game          - Voittaja game index (1-6)
+    week          - week number
+    signature     - place for customer signature
+    event         - Voittaja draw number
+    closing time  - actual closing time for displayed draw   
+    changing odds - Voittaja game index
+    event         - Voittaja event name
+    nr            - number of each row
+    name          - participant name associated with row number
+    odds          - odds on outcome predicted 
+    
+
+
+    RWT.HLP                 GTECH Distributed Network
+                           Voittaja Results Snapshot Help       Page 2 of 2
+
+
+
+    Fields Shown Only When The Event is Final
+    
+    winner        - outcome of the event
+    odds          - odds used for the payouts calculation
+    total winnings- total amount for validations
+    total sales   - total sales for the event
+    number of     - winners count
+    winners
+

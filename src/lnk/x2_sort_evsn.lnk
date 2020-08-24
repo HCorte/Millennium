@@ -1,0 +1,42 @@
+$! GXSRC:X2_SORT_EVSN.LNK
+$! 
+$! $Log:   GXAFXT:[GOLS]X2_SORT_EVSN.LNV  $
+$! 
+$!    Rev 1.1   14 Jul 1996 22:23:24   HXK
+$! Applying PVCS header for automatic revision history
+$! 
+$!    Rev 1.0    14 Jul 1996 22:20:56   HXK
+$! Initial revision.
+$! 
+$! X2_SORT_EVSN.LNK
+$! 
+$!************************** START X2X PVCS HEADER ****************************
+$!
+$! $Logfile::   GXAFXT:[GOLS]X2_SORT_EVSN.LNV                             $
+$! $Date::   14 Jul 1996 22:23:24                                         $
+$! $Revision::   1.1                                                      $
+$! $Author::   HXK                                                        $
+$!
+$!*************************** END X2X PVCS HEADER *****************************
+$!
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$! This item is the property of GTECH Corporation, Providence, Rhode
+$! Island, and contains confidential and trade secret information. It
+$! may not be transferred from the custody or control of GTECH except
+$! as authorized in writing by an officer of GTECH. Neither this item
+$! nor the information it contains may be used, transferred,
+$! reproduced, published, or disclosed, in whole or in part, and
+$! directly or indirectly, except as expressly authorized by an
+$! officer of GTECH, pursuant to written agreement.
+$!
+$! Copyright 1994 GTECH Corporation. All rights reserved.
+$!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$!
+LINK'P1' -
+/EXE=TSKLIB:X2_SORT_EVSN.EXE -
+OBJLIB:X2_SORT_EVSN,-
+I4XSORT,-
+STDLIB:NORMLIB/LIBRARY,-
+OBJLIB:PSECT.OPT/OPTION,-
+SYS$INPUT/OPTION
+TSKLIB:GXX2XCOM.ESH/SHAREABLE

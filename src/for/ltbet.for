@@ -1,0 +1,79 @@
+C
+C SUBROUTINE LTBET
+C $Log:   GXAFXT:[GOLS]LTBET.FOV  $
+C  
+C V02 07-DEC-2010 MAC LUCKY NUMBER
+C
+C     Rev 1.0   17 Apr 1996 13:57:48   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   12 Jul 1993 13:10:36   SXH
+C  RELEASED FOR FINLAND
+C  
+C     Rev 1.0   21 Jan 1993 16:57:02   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - vis_trnsnp.for **
+C
+C
+C FORMAT LOTTO BET DATA
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE LTBET(TRABUF,BIMAGE)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:DESTRA.DEF'
+
+
+        ! argument
+	CHARACTER*56 BIMAGE(12)
+
+        ! variables
+	INTEGER*4  K 
+	INTEGER*4  I 
+	INTEGER*4  ST 
+	INTEGER*4  MARKS
+	INTEGER*4  FLAGS(32)
+	INTEGER*4  BDS(24)
+	INTEGER*4  QP(2)
+
+	INTEGER*2  BOARD(4,12)
+
+	DATA QP/'    ','QP  '/
+C
+C
+	CALL GETFLG(TRABUF(TWQPF),FLAGS,TRABUF(TWNBET))
+	CALL SINTMAP(TRABUF(TWBORD),1,TRABUF(TWNBET),TRABUF(TWNMRK),
+     *	             64,BOARD,ST)
+	IF(ST.NE.0) GOTO 10000
+C
+	DO I = 1, TRABUF(TWNBET)
+
+	    MARKS = TRABUF(TWNMRK+I-1) 
+            IF (MARKS.GT.24)MARKS=24
+	    CALL UNMAP(BOARD(1,I),8,BDS,MARKS)
+	    IF(MARKS.GT.15)THEN
+	        WRITE (BIMAGE(I),901) QP(FLAGS(I)+1),(BDS(K),K=1,15)
+	        WRITE (BIMAGE(I+1),902) (BDS(K),K=16,MARKS)
+	    ELSE
+	        WRITE (BIMAGE(I),901) QP(FLAGS(I)+1),(BDS(K),K=1,MARKS)
+	    ENDIF
+        END DO
+C
+        IF (TRABUF(TWLUCK).GT.0) THEN       !V02...
+          WRITE (BIMAGE(I),903) TRABUF(TWLUCK)
+        ENDIF                               !...V02
+C
+10000	CONTINUE
+
+	RETURN
+
+901	FORMAT(1X,A4,15(I2.2,1X)) 
+902	FORMAT(1X,'    ',9(I2.2,1X))
+903     FORMAT(1X,'Lucky Number ',I2)      !V02
+	END

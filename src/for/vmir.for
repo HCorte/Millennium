@@ -1,0 +1,555 @@
+C VMIR.FOR
+C
+C V07 23-DEC-2013 SCML Fix: added one dimension to TOTALS array regarding net amount
+C V06 05-DEC-2013 SCML Added support for removal of pay orders
+C V05 04-NOV-2013 SCML Size of V4BUF_PAS changed to 44
+C V04 07-OCT-2013 SCML Net amount added
+C V03 18-OCT-2010 FJG  Round problem in Passive
+C V02 14-SEP-2010 FJG  Include VBANK payment
+C V01 08-DEC-2000 ANG  INITIAL RELEASE FOR PORTUGAL
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1992 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	PROGRAM VMIRPT
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMLOG.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:DESLOG.DEF'
+	INCLUDE 'INCLIB:TNAMES.DEF'
+	INCLUDE 'INCLIB:GTNAMES.DEF'
+	INCLUDE 'INCLIB:PRMLVL.DEF'
+	INCLUDE 'INCLIB:RECUSE.DEF'
+	INCLUDE 'INCLIB:PRMHSH.DEF'
+	INCLUDE 'INCLIB:DESVAL.DEF'
+	INCLUDE 'INCLIB:VDETAIL.DEF'
+	INCLUDE 'INCLIB:VALFIL.DEF'
+C
+C  CONSTANT DEFINITIONS
+C
+        INTEGER*4 TUBSIZ
+        PARAMETER (TUBSIZ=I4BUCSIZ*7)
+
+	INTEGER*4 MAXPRTLN
+	PARAMETER (MAXPRTLN=59)
+C
+        INTEGER*4 TOT_CNT, TOT_AMT, TOT_NETAMT
+        PARAMETER(TOT_CNT = 1)               ! TOTAL COUNTER
+        PARAMETER(TOT_AMT = 2)               ! TOTAL AMOUNT
+        PARAMETER(TOT_NETAMT = 3)            ! TOTAL NET AMOUNT !V04
+C
+C LOCAL VARIABLES
+C
+	CHARACTER*3 CVERSION /'V  '/
+	CHARACTER*8 AGTOPT, DRAWOPT, SCDCOPT, VCDCOPT, CTEROPT
+	CHARACTER*9 AGTOPT2	
+	CHARACTER*10 STAUX(2,2), STATOPT
+	CHARACTER*16 GAMOPT
+	CHARACTER*7 PASS
+	CHARACTER*1  CRLN
+
+	DATA CRLN /'0D'X/
+C
+        INTEGER*4 MAXENT
+        PARAMETER (MAXENT = 16)    ! Maximum status to control 15 + Grand Total
+C        
+        INTEGER*4 VERSION  /10/
+	INTEGER*4 FILNAM(7)
+C	INTEGER*4 TOTALS(0:MAXENT, 2)
+	INTEGER*4 TOTALS(0:MAXENT, 3) !V07
+        INTEGER*4 TOTSHR(0:MAXENT, PAGDIV)
+	INTEGER*4 PAGE, K, I, Y, DRWEND
+	INTEGER*4 TER, DRWN, SCDC, VCDC, EXT, ST, NOCHECK0
+	INTEGER*4 PUNIT, CSTAT, AGT, GAUX, CSHTER
+	INTEGER*4 GNUM, GTYP, GIND, GAM
+	INTEGER*4 VLFBUF(TUBSIZ),LINCNT
+	INTEGER*4 FLGTOT, INDDRW, DRWVDT
+	INTEGER*4 FLGPAS
+!	INTEGER*4 V4BUF_PAS(40)
+	INTEGER*4 V4BUF_PAS(44) !V05
+        INTEGER*4 VSTS                       ! VALIDATION STATUS
+        INTEGER*4 DIV                        ! DIVISION NUMBER
+C
+	INTEGER*4 TOTOPSAMT, TOTKOPSAMT
+C
+        CHARACTER * 28 REPFILNAM             ! REPORT FILE NAME
+C
+	LOGICAL VALDRW
+C
+	INTEGER*4 I4TEMP
+	INTEGER*2 I2TEMP(2)
+	BYTE      I1TEMP(4)
+	EQUIVALENCE(I4TEMP,I2TEMP,I1TEMP)
+C
+	DATA GTYP/0/
+	DATA AGT/0/
+	DATA VCDC/0/
+	DATA PUNIT/7/
+	DATA STAUX/'NO PAGADOS',' PAGADOS  ',
+     *		   ' UNCASHED ','  CASHED  '/
+C
+C COMMON AREA
+C
+	COMMON /NOCHECK0/ NOCHECK0
+	COMMON /VMIR/ LINCNT
+
+C
+C**********************************************
+C           CODE STARTS HERE
+C**********************************************
+	CALL COPYRITX(5)
+C
+	TOTOPSAMT  = 0
+	TOTKOPSAMT = 0
+	LINCNT     = 100
+C
+C SHOW TITLE
+C
+	CALL CLRSCR(5)
+	TYPE *, IAM()
+	WRITE(CVERSION(2:3), FMT='(I2.2)') VERSION
+	TYPE *, IAM(), '<<<<< VMIR Validation File Inquiry ',CVERSION,' >>>>>'
+        TYPE *, IAM()
+C
+C PROMPT USER TO SIGNON
+C
+	CALL PASSWORD(7,PASS)
+	IF (PASS.NE.'BRASIL'//CRLN) THEN
+            TYPE *, IAM()
+	    TYPE *, IAM(),'* * * INVALID PASSWORD ENTERED * * *'
+            TYPE *, IAM()
+	    CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+C
+C
+	PAGE = 0
+	NOCHECK0=-1
+C
+C GET FILE NAME
+C
+        TYPE *, IAM()
+	CALL PRMYESNO('Is This VMIR For A Passive Game Type [Y/N]?', FLGPAS)
+        IF (FLGPAS .EQ. 3) CALL GSTOP(GEXIT_OPABORT)
+C
+        WRITE(REPFILNAM, 916)
+	CALL WIMG(5,'Enter Validation File Name:')
+	READ(5,901) FILNAM
+	CALL WIMG(5,'Enter Report File Name [Enter=''Vmir.rep'']:')
+	READ(5, 915) REPFILNAM
+C
+C OPEN REPORT FILE
+C
+        IF(REPFILNAM(1:1) .EQ. ' ') REPFILNAM(1:8) = 'VMIR.REP'
+        OPEN(UNIT = PUNIT,
+     *       FILE = REPFILNAM,
+     *       IOSTAT = ST,
+     *       FORM = 'FORMATTED',
+     *       RECL = 135,
+     *       STATUS = 'NEW',
+     *       RECORDTYPE = 'STREAM_CR')
+C
+	IF(ST.NE.0) THEN
+          TYPE *, IAM()
+	  TYPE *, IAM(), 'Error Openning File Name: ', REPFILNAM
+          TYPE *, IAM()
+	  CALL USRCLOS1(PUNIT)
+	  CALL GSTOP(GEXIT_SUCCESS)
+	ENDIF
+C
+C GET OPTIONS
+C
+150	    CALL INPNUM('Enter Terminal Number [A=All]:',
+     *	            TER,0,NUMAGT,EXT)
+	    IF(EXT.EQ.-4) TER=-1
+	    IF(EXT.EQ.-1) CALL GSTOP(GEXIT_OPABORT)
+	    IF(EXT.LT.0 .AND. EXT.NE.-4) GOTO 150
+C 
+	    IF(TER.EQ.0) THEN
+160		CALL INPNUM('Enter Agent Number [A=All]:',        
+     *	                AGT,1,999999999,EXT)
+		IF(EXT.EQ.-1) CALL GSTOP(GEXIT_OPABORT)
+		IF(EXT.LT.0.AND.EXT.NE.-4) GOTO 160
+		IF(EXT.EQ.-4) AGT=-1
+	    ENDIF
+C
+	    TYPE *, IAM()
+	    TYPE *, IAM(), '       Status Values Are:'
+	    TYPE *, IAM()
+	    TYPE *, IAM(), ' 0 Is Not Winner'
+	    TYPE *, IAM(), ' 1 Is Uncashed'
+	    TYPE *, IAM(), ' 2 Is Cashed'
+	    TYPE *, IAM(), ' 3 Is Cashed With Exchange'
+	    TYPE *, IAM(), ' 4 Is Deleted Winner'
+	    TYPE *, IAM(), ' 5 Is Cancelled Winner'
+            TYPE *, IAM(), '15 Is Paid by Bank'
+	    TYPE *, IAM(), ' A Is All Status'
+	    TYPE *, IAM()
+
+165	    CALL INPNUM('Enter Status:',CSTAT,0,15,EXT)
+	    IF(EXT.EQ.-1) CALL GSTOP(GEXIT_OPABORT)
+	    IF(EXT.EQ.-4) CSTAT=-1
+	    IF(EXT.LT.0.AND.EXT.NE.-4) THEN
+		TYPE *,IAM(),'Invalid entry'
+		GOTO 165
+	    ENDIF
+C
+	    CALL INPNUM('Do You Want All Games [1:Yes, 2:No]:',
+     *	            GAUX,1,2,EXT)
+	    IF(EXT.EQ.-1) CALL GSTOP(GEXIT_OPABORT)
+	    IF(GAUX.EQ.1.OR.EXT.EQ.-4) THEN
+		GNUM=-1
+	    ELSE	
+		CALL GAME_TYPNDX(GNUM, GTYP, GIND, ST)
+		IF (ST.NE.0) CALL GSTOP(GEXIT_OPABORT)
+	    ENDIF
+C
+170	    CALL INPNUM('Enter Draw / Emission Number [A=All]:',        
+     *	                DRWN,1,999999,EXT)
+	    IF(EXT.EQ.-1) CALL GSTOP(GEXIT_OPABORT)
+	    IF(EXT.LT.0.AND.EXT.NE.-4) GOTO 170
+	    IF(EXT.EQ.-4) DRWN=-1
+
+            IF (DRWN.NE.-1) THEN
+175            CALL INPNUM('Enter Last Draw / Emission Number:',
+     *                     DRWEND,DRWN,999999,EXT)
+               IF (EXT.EQ.-1) CALL GSTOP(GEXIT_OPABORT)
+               IF (EXT.LT.0) GOTO 170
+            ENDIF                
+C
+180	    CALL INPNUM('Enter Selling CDC [A=All]:',        
+     *	                SCDC,1,9999,EXT)
+	    IF(EXT.EQ.-1) CALL GSTOP(GEXIT_OPABORT)
+	    IF(EXT.LT.0.AND.EXT.NE.-4) GOTO 180
+	    IF(EXT.EQ.-4) SCDC=-1
+C
+	    IF (CSTAT.NE.1) THEN
+190		CALL INPNUM('Enter Cashing CDC [A=All]:',        
+     *	                VCDC,1,9999,EXT)
+		IF(EXT.EQ.-1) CALL GSTOP(GEXIT_OPABORT)
+		IF(EXT.LT.0.AND.EXT.NE.-4) GOTO 190
+		IF(EXT.EQ.-4) VCDC=-1
+
+200	        CALL INPNUM('Enter Cashing Terminal [A=All]:',
+     *                  CSHTER,0,NUMAGT,EXT)
+	        IF(EXT.EQ.-1) CALL GSTOP(GEXIT_OPABORT)
+		IF(EXT.LT.0.AND.EXT.NE.-4) GOTO 200
+		IF(EXT.EQ.-4) CSHTER=-1
+	    ENDIF
+
+	    ! ASK FOR GRAND TOTALS
+	    CALL PRMYESNO('Only Grand Totals [Y/N]?', FLGTOT)
+            TYPE *, IAM()
+	    IF (FLGTOT .EQ. 3) CALL GSTOP(GEXIT_OPABORT)
+C
+C OPEN VALIDATION FILE
+C
+	IF (FLGPAS.EQ.2) THEN
+            CALL IOPEN(FILNAM,VLF,VFLEN*2,VFSCDC,VFSSER*2-1,ST)
+            IF(ST.NE.0) CALL FILERR(SFNAMES(1,VLF),1,ST,0)
+            CALL ITUBSIZE(VLF,TUBSIZ)
+	ELSE
+	    CALL OPENVMPAS(FILNAM,VLF,ST)
+            IF(ST.NE.0) CALL FILERR(SFNAMES(1,VPF),1,ST,0)
+            CALL ITUBSIZE(VLF,TUBSIZ)
+	ENDIF
+C
+C READ TRANSACTION
+C
+	CALL TITLE('VALIDATION FILE REPORT','    VMIR',VERSION,
+     *	             PUNIT,PAGE,DAYCDC,0,0)
+        WRITE(PUNIT, 908)
+C
+	IF(AGT.GT.0.AND.AGT.LT.99999999) WRITE (AGTOPT2,904) AGT
+	IF(TER.GT.0.AND.TER.LE.NUMAGT)   WRITE (AGTOPT,902) TER
+ 	IF(GNUM.GT.0.AND.GNUM.LE.MAXGAM) 
+     *       WRITE (GAMOPT, 906) (GLNAMES(I,GNUM),I=1,4)
+	WRITE (DRAWOPT,902) DRWN
+	WRITE (SCDCOPT,902) SCDC
+	WRITE (VCDCOPT,902) VCDC
+	WRITE (CTEROPT,902) CSHTER
+C
+	IF(CSTAT.EQ.1.OR.CSTAT.EQ.2) WRITE (STATOPT,907) STAUX(CSTAT,2)
+	IF(CSTAT.EQ.-1) WRITE (STATOPT,903)
+	IF(TER.EQ.-1) WRITE (AGTOPT,903)
+	IF(AGT.EQ.-1) WRITE (AGTOPT2,903)
+	IF(GNUM.EQ.-1) WRITE(GAMOPT,903) 
+	IF(DRWN.EQ.-1) WRITE (DRAWOPT,903)
+	IF(SCDC.EQ.-1) WRITE (SCDCOPT,903)
+	IF(VCDC.EQ.-1) WRITE (VCDCOPT,903)
+	IF(CSHTER.EQ.-1) WRITE(CTEROPT,903)
+C
+        IF(AGT.EQ.0) WRITE (AGTOPT2,905)
+	IF(VCDC.EQ.0) VCDCOPT='        '
+C
+	WRITE(PUNIT,10000) (AGTOPT(Y:Y),Y=1,5), AGTOPT2, 
+     *	      STATOPT, GAMOPT,
+     *	      (DRAWOPT(Y:Y),Y=1,5),        
+     *	      (SCDCOPT(Y:Y),Y=1,5),        
+     *	      (VCDCOPT(Y:Y),Y=1,5),
+     *        (CTEROPT(Y:Y),Y=1,5)
+C
+C
+C READ TRANSACTION
+C
+C
+!	CALL FASTSET(0, TOTALS, (MAXENT+1) * 2)
+        CALL FASTSET(0, TOTALS, (MAXENT+1) * 3) !V04
+        CALL FASTSET(0, TOTSHR, (MAXENT+1) * PAGDIV)
+300	CONTINUE
+	IF (FLGPAS.EQ.2) THEN
+	    CALL ISREAD(V4BUF,VLF,VLFBUF,ST)
+        ELSE
+	    CALL ISREAD(V4BUF_PAS,VLF,VLFBUF,ST)
+	ENDIF
+
+        IF (ST.EQ.ERREND) THEN
+           CALL ICLOSE(VLF,VLFBUF,ST)
+	   GOTO 1000
+	ENDIF
+
+	IF (ST.NE.0) THEN
+           CALL FILERR(SFNAMES(1,VLF),2,ST,0)
+           CALL GPAUSE
+           GOTO 300
+        ENDIF
+
+	IF (FLGPAS.EQ.1) THEN
+	  CALL LOGPAS(VALREC,V4BUF_PAS)
+	ELSE
+	  CALL LOGVAL(VALREC,V4BUF)
+	ENDIF
+	  
+	GAM=VALREC(VGAM)
+C
+C CHECK IF TRANSACTION SHOULD BE PRINTED
+C
+	IF(VALREC(VSTER).NE.TER.AND.TER.GT.0)	      GOTO 300
+	IF(VALREC(VSCDC).NE.SCDC.AND.SCDC.GT.0)	      GOTO 300
+	IF(VALREC(VCCDC).NE.VCDC.AND.VCDC.GT.0)	      GOTO 300
+	IF (CSTAT .EQ. VUNCSH) THEN
+	  IF(VALREC(VSTAT).NE.CSTAT .AND. VALREC(VSTAT).NE.VPRPAY .AND.
+     *	     CSTAT.GT.0)   GOTO 300
+	ELSE
+	  IF(VALREC(VSTAT).NE.CSTAT .AND. CSTAT.GT.0) GOTO 300
+	ENDIF
+	IF(VALREC(VGAM).NE.GNUM.AND.GNUM.GT.0)	      GOTO 300
+	IF(VALREC(VCTER).NE.CSHTER.AND.CSHTER.GT.0)   GOTO 300
+C
+C PRINT TRANSACTION
+C
+	GTYP = VALREC(VGTYP)
+
+	! IF IT IS A PASSIVE LOTTERY GAME TYPE, PRINT OTHER LAY-OUT
+	IF (GTYP .EQ. TPAS) THEN
+	  CALL DLOGPAS(VALREC,VDETAIL)
+	ELSE
+	  CALL DLOGVAL(VALREC,VDETAIL)
+	ENDIF
+
+	VALDRW = .TRUE.
+	IF (DRWN .NE. -1) THEN
+	  
+	  VALDRW = .FALSE.
+	  DO INDDRW=1, VALREC(VPZOFF)
+
+	    DRWVDT = VDETAIL(VDRW,INDDRW)
+
+	    IF ( (DRWVDT .GE. DRWN).AND.(DRWVDT .LE. DRWEND) ) VALDRW = .TRUE.
+
+	  ENDDO
+	ENDIF
+
+	! CHECK IF WE HAVE TO ACCEPT THIS TRANSACTION
+	IF (VALDRW) THEN
+C
+	  ! PRINT OR NOT TRANSACTION
+	  IF(FLGTOT .NE. 1) CALL VPRINTRA(VALREC,PUNIT,VDETAIL,VERSION)
+
+C----+------------------------------------------------------------------
+C V06| Added support for removal of pay orders
+C----+------------------------------------------------------------------
+          IF(VALREC(VOPSCNT) .NE. 0) THEN
+             VSTS = VALREC(VSTAT)
+             TOTALS(VSTS, TOT_CNT) = TOTALS(VSTS, TOT_CNT) + 1
+             TOTALS(VSTS, TOT_AMT) = TOTALS(VSTS, TOT_AMT) + VALREC(VPAMT)
+             TOTALS(VSTS, TOT_AMT) = TOTALS(VSTS, TOT_AMT) + VALREC(VKPAMT)
+             TOTALS(VSTS, TOT_NETAMT) = TOTALS(VSTS, TOT_NETAMT) + VALREC(VOPSAMT)  !V04
+             TOTALS(VSTS, TOT_NETAMT) = TOTALS(VSTS, TOT_NETAMT) + VALREC(VKOPSAMT) !V04
+             TOTOPSAMT  = TOTOPSAMT  + VALREC(VOPSAMT)
+             TOTKOPSAMT = TOTKOPSAMT + VALREC(VKOPSAMT)
+!+++++++++   ADD A GRAND TOTAL       
+             TOTALS(MAXENT, TOT_CNT) = TOTALS(MAXENT, TOT_CNT) + 1
+             TOTALS(MAXENT, TOT_AMT) = TOTALS(MAXENT, TOT_AMT) + VALREC(VPAMT)
+             TOTALS(MAXENT, TOT_AMT) = TOTALS(MAXENT, TOT_AMT) + VALREC(VKPAMT)      
+             TOTALS(MAXENT, TOT_NETAMT) = TOTALS(MAXENT, TOT_NETAMT) + VALREC(VOPSAMT)  !V04
+             TOTALS(MAXENT, TOT_NETAMT) = TOTALS(MAXENT, TOT_NETAMT) + VALREC(VKOPSAMT) !V04
+             DO INDDRW = 1, VALREC(VPZOFF)
+               DIV = VDETAIL(VDIV, INDDRW)
+               TOTSHR(VSTS, DIV) = TOTSHR(VSTS, DIV) + VDETAIL(VSHR, INDDRW)
+               TOTSHR(MAXENT, DIV) = TOTSHR(MAXENT, DIV) + VDETAIL(VSHR, INDDRW)            
+             ENDDO
+          ELSE
+             VSTS = VALREC(VSTAT)
+             TOTALS(VSTS, TOT_CNT) = TOTALS(VSTS, TOT_CNT) + 1
+             TOTALS(VSTS, TOT_AMT) = TOTALS(VSTS, TOT_AMT) + VALREC(VPAMT)
+             TOTALS(VSTS, TOT_AMT) = TOTALS(VSTS, TOT_AMT) + VALREC(VKPAMT)
+
+             IF (VALREC(VOPSAMT) .EQ. 0) THEN
+                TOTALS(VSTS, TOT_NETAMT) = TOTALS(VSTS, TOT_NETAMT) + VALREC(VPAMT)
+             ELSE
+                TOTALS(VSTS, TOT_NETAMT) = TOTALS(VSTS, TOT_NETAMT) + VALREC(VOPSAMT)  !V04
+             ENDIF
+
+             IF (VALREC(VKOPSAMT) .EQ. 0) THEN
+                TOTALS(VSTS, TOT_NETAMT) = TOTALS(VSTS, TOT_NETAMT) + VALREC(VKPAMT)
+             ELSE
+                TOTALS(VSTS, TOT_NETAMT) = TOTALS(VSTS, TOT_NETAMT) + VALREC(VKOPSAMT)  !V04
+             ENDIF
+!+++++++++   ADD A GRAND TOTAL       
+             TOTALS(MAXENT, TOT_CNT) = TOTALS(MAXENT, TOT_CNT) + 1
+             TOTALS(MAXENT, TOT_AMT) = TOTALS(MAXENT, TOT_AMT) + VALREC(VPAMT)
+             TOTALS(MAXENT, TOT_AMT) = TOTALS(MAXENT, TOT_AMT) + VALREC(VKPAMT)      
+
+             IF (VALREC(VOPSAMT) .EQ. 0) THEN
+                TOTALS(MAXENT, TOT_NETAMT) = TOTALS(MAXENT, TOT_NETAMT) + VALREC(VPAMT)
+             ELSE
+                TOTALS(MAXENT, TOT_NETAMT) = TOTALS(MAXENT, TOT_NETAMT) + VALREC(VOPSAMT)  !V04
+             ENDIF
+
+             IF (VALREC(VKOPSAMT) .EQ. 0) THEN
+                TOTALS(MAXENT, TOT_NETAMT) = TOTALS(MAXENT, TOT_NETAMT) + VALREC(VKPAMT)
+             ELSE
+                TOTALS(MAXENT, TOT_NETAMT) = TOTALS(MAXENT, TOT_NETAMT) + VALREC(VKOPSAMT) !V04
+             ENDIF
+
+             DO INDDRW = 1, VALREC(VPZOFF)
+               DIV = VDETAIL(VDIV, INDDRW)
+               TOTSHR(VSTS, DIV) = TOTSHR(VSTS, DIV) + VDETAIL(VSHR, INDDRW)
+               TOTSHR(MAXENT, DIV) = TOTSHR(MAXENT, DIV) + VDETAIL(VSHR, INDDRW)            
+             ENDDO
+          ENDIF
+C----+------------------------------------------------------------------
+C V06| Added support for removal of pay orders
+C----+------------------------------------------------------------------
+	  
+	ENDIF
+
+	GOTO 300
+C
+1000	CONTINUE
+C
+C  CHECK IF NEW PAGE IS NEEDED
+C
+        CALL TITLE('VALIDATION FILE REPORT','    VMIR',
+     *                    VERSION,PUNIT,PAGE,DAYCDC,0,0)
+        WRITE(PUNIT, 908)
+
+        WRITE(PUNIT, 909)
+        WRITE(PUNIT, 910)
+        DO K = 0, 15
+          WRITE(PUNIT, 9001) VALST(K),
+     *                       TOTALS(K, TOT_CNT),
+     *                       CMONY(TOTALS(K, TOT_AMT), 14, VALUNIT),
+     *                       CMONY(TOTALS(K, TOT_NETAMT), 14, VALUNIT) !V04
+        ENDDO
+        WRITE(PUNIT, 9011) TOTALS(K, TOT_CNT),CMONY(TOTALS(K, TOT_AMT), 14, VALUNIT),
+     *                     CMONY(TOTALS(K, TOT_NETAMT), 14, VALUNIT) !V04
+        
+C
+	WRITE(PUNIT,12000) CMONY(TOTOPSAMT,  17, VALUNIT),	    
+     *                     CMONY(TOTKOPSAMT, 17, VALUNIT)	    
+C
+C WRITE TOTAL SHARES BY DIVISION AND STATUS
+C
+        WRITE(PUNIT, 911)
+        WRITE(PUNIT, 912) (VALST(K), K = 0, 15),'TOTS'
+        WRITE(PUNIT, 913)
+        DO DIV = 1, PAGDIV
+          WRITE(PUNIT, 914) DIV, (TOTSHR(K, DIV), K = 0, MAXENT)
+        ENDDO
+C
+C CLOSE REPORT
+C
+	CALL USRCLOS1(PUNIT)
+C
+        CALL GSTOP(GEXIT_SUCCESS)
+C
+C*********************************************
+C              FORMAT MESSAGES
+C*********************************************
+C
+900	FORMAT(A1)
+901	FORMAT(7A4)
+902	FORMAT(I5)
+903	FORMAT(' ALL ')
+904 	FORMAT(I9)
+905	FORMAT('         ')
+906     FORMAT(4A4)
+907  	FORMAT(A10)
+908     FORMAT(X, 132('='))
+!909     FORMAT(///, 15X, 'STATUS', 10X,  'N. REGISTERS', 10X, 'TOTAL AMOUNT')
+!910     FORMAT(15X, 50('-'))
+909     FORMAT(///, 15X, 'STATUS', 10X,  'N. REGISTERS', 10X, 'TOTAL AMOUNT',
+     *        6X, 'TOTAL NET AMOUNT') !V04
+910     FORMAT(15X, 72('-')) !V04
+911     FORMAT(///, 47X, 'TOTAL NUMBER OF SHARES BY DIVISION BY STATUS', /)
+912     FORMAT(9X, <MAXENT+1>(3X, A4))
+913     FORMAT(9X, 119('-'))
+914     FORMAT(X,'DIV: ', I2, 1X, <MAXENT+1>(I7))
+915     FORMAT(A28)
+916     FORMAT(28(' '))
+!9001	FORMAT(3X, ' Total ', A10, 12X, I10, 8X, A14)
+9001	FORMAT(3X, ' Total ', A10, 12X, I10, 8X, A14, 8X, A14) !V04
+!9011	FORMAT(/,3X, ' Total ', 10X, 12X, I10, 8X, A14)
+9011	FORMAT(/,3X, ' Total ', 10X, 12X, I10, 8X, A14, 8X, A14) !V04
+9002	FORMAT(1X,A,' Generating reports for ',A8,I1,' draw ',I5)
+10000	FORMAT(///,' R E P O R T    B A S E D   O N   F O L L O W I',
+     *	      ' N G   P A R A M E T E R S',////,
+     *	      5X,'TERMINAL NUMBER ------> ',5A1,/,
+     *	      5X,'AGENT NUMBER ---------> ',A9,/,
+     *	      5X,'STATUS ---------------> ',A10,/,
+     *	      5X,'GAME -----------------> ',A16,/,
+     *	      5X,'DRAW -----------------> ',5A1,/,
+     *	      5X,'SELLING CDC ----------> ',5A1,/,
+     *	      5X,'CASHING CDC ----------> ',5A1,/,
+     *        5X,'CASHING TERMINAL -----> ',5A1)
+12000   FORMAT(//,1X,'OPS AMT TOTAL:  ',3X,A17/,
+     *		  1X,'KIK OPS TOTAL:  ',3X,A17)
+C
+	END
+
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE OPENVMPAS(FILNAM,UNIT,ST)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:VALPASFIL.DEF'
+
+	INTEGER*4 FILNAM(7),UNIT,ST
+        CALL IOPEN(FILNAM,UNIT,VPFLEN*2,VFSCDC,VFSSER*2-1,ST)
+        CALL FASTSET(0, V4BUF_PAS, VPFLEN * VPFMAXREC)
+
+	RETURN
+	END
+

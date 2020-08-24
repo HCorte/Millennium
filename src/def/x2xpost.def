@@ -1,0 +1,40 @@
+C
+C  GXSRC:X2XPOST.DEF
+C  
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XPOST.DEV                                  $
+C  $Date::   17 Apr 1996 16:43:40                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C  
+C V01 13-DEC-94 GPR RELEASED FOR UK
+C
+C Common to use for fast posting of edit check changes
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 X2POST_COMMON_STATUS	!GAME ONLINE STATUS
+	INTEGER*4 X2POST_COMMONS_ONLINE	!COMMONS INITIALIZED
+		PARAMETER (X2POST_COMMONS_ONLINE=-12345)
+C
+C
+	INTEGER*4 X2POST_QUEUE_ENTRIES	!SO MANY OUTSTANDING UPDATES
+		PARAMETER(X2POST_QUEUE_ENTRIES=1000)
+	INTEGER*4 X2POST_QUE(X2POST_QUEUE_ENTRIES+QHEDSZ,
+     *			      X2X_MAX_X2X_FILES)
+C
+	COMMON /X2POST/ X2POST_COMMON_STATUS,X2POST_QUE

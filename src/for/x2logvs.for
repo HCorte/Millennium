@@ -1,0 +1,130 @@
+C SUBROUTINE X2LOGVS
+C
+C V03 15-JUN-2000 OXK CLEANUP W/ WARNINGS=ALL
+C V02 05-DEC-1994 SCD Integrate UK changes into X2X Baseline
+C V01 05-APR-1994 GPR USE X2X_I4_STATION TO DETERMINE STATION AND TERNUM
+C
+C   PURPOSE: WHEN A VERIFICATION SEQUENCE NUMBER IS PRESENT WE WANT TO
+C            KEEP A RECORD OF THIS TRANSACTION. IF A BAD VS IS PRESENT
+C            THIS WILL BE HANDLE AS AN ERROR (SIMILIAR TO BAD_ADDRESS)
+C            AND WILL BE LOGGED ACCORDINGLY. A GOOD VSP HOWEVER WILL
+C            BE PIGGY BACKED WITH OTHER INFORMATION AND NOT NORMALLY
+C            BE NOTED AS SUCH. A GOOD VSP WILL GENERATE A X2X MESSAGE
+C            WITH A STATUS OF X2ERR_GOODVS AND WILL BE QUEUED TO X2XPRO
+C            THROUGH THE INPUT QUE AND REGISTERED AS A SEPARATE TRANSACTION.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE X2LOGVS(STATION_NO,TERMINAL_NO,BUFFER,DEST_LAYER,
+     *                     UNIT_LEN,MESSAGE,BUF_SSAP,MESSAGE_LEN)
+C
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:X2XCOM.DEF'
+        INCLUDE 'INCLIB:PROCOM.DEF'
+C
+        INTEGER*4 STATION_NO, TERMINAL_NO, DEST_LAYER
+        INTEGER*4 UNIT_LEN, BUF_SSAP, MESSAGE_LEN
+        INTEGER*4 PROBUF, STATUS, ST, LAYER, MLEN
+        INTEGER*2 BUFFER(*),MESSAGE(*)
+	INTEGER*4 EVSN_LEN,EVSN_ADR(2)				!V02
+
+C
+C
+C     TRY TO GET A PROCOM BUFFER
+C
+10      CONTINUE
+        CALL  GETBUF(PROBUF)
+C
+C     DEBUG INFO
+C
+        IF (IAND(X2X_DEBUG,X2X_DEBUG_SUBS).NE.0)
+     *        TYPE *,'IN X2RCVBUF, PROBUF ',PROBUF
+C
+C
+C     TO AVOID DEADLOCK, TRY TO GET BUFFERS TO OUTPUT WHEN NO BUFFERS
+C     ARE AVAILABLE
+C
+        IF (PROBUF.LE.0) THEN       ! COULD IT BE A DEADLOCK ?
+            CALL X2SNDBUF(STATUS)   ! TRY TO DEQUE ANY BUFFERS TO OUTPUT
+            IF(STATUS.NE.0) THEN
+              CALL XWAIT(50,1,ST)
+              X2X_LOOP_TIME=X2X_LOOP_TIME+50
+            ENDIF
+            GOTO 10                 !TRY AGAIN
+           ENDIF
+C
+C     NOW THAT YOU HAVE THE BUFFER CONSTRUCT THE APPROPRIATE MESSAGE
+C     FOR X2XPRO IN PRO(INPTAB,BUFNO)
+C
+	EVSN_LEN=X2XS_EVSN_LEN(STATION_NO)			!V02
+	EVSN_ADR(1)=X2XS_EVSN(1,STATION_NO)			!V02
+	EVSN_ADR(2)=X2XS_EVSN(2,STATION_NO)			!V02
+        MLEN = MESSAGE_LEN
+        STATUS=X2ERR_GOODVS     
+        LAYER='00010000'X*X2X_MESTYP_CMD+256*X2X_TRATYP_FE
+        CALL X2MSG(LAYER,STATUS,STATION_NO,TERMINAL_NO,BUFFER,
+     *             UNIT_LEN,PRO(INPTAB,PROBUF),BUF_SSAP,MLEN,	!V02
+     *		   EVSN_LEN,EVSN_ADR)				!V02
+C
+C     SETUP THE REST OF THE REQUIRED INFORMATION IN THE PROCOM BUFFER
+C
+        HPRO(TRCODE,PROBUF)=TYPX2X_PRO
+
+C       ***** Start V01 changes *****
+
+        IF (X2X_I4_STATION) THEN
+           PRO(TERNUM,PROBUF)=TERMINAL_NO
+           PRO(LINENO,PROBUF)=STATION_NO
+	ELSE
+           HPRO(TERNUM,PROBUF)=TERMINAL_NO
+           HPRO(LINENO,PROBUF)=STATION_NO
+	ENDIF
+
+C       ***** End V01 changes *****
+
+        HPRO(PRCSRC,PROBUF)=X2X_COM
+        HPRO(PRCDST,PROBUF)=0
+        HPRO(X2X_CONNCTL_OVR,PROBUF)=0
+        HPRO(X2X_DELIVER_OVR,PROBUF)=0
+        HPRO(X2X_HOST_ID,PROBUF)=0
+        HPRO(QUENUM,PROBUF)=QIN
+        HPRO(MSGNUM,PROBUF)=0
+        PRO(TIMOFF,PROBUF)=X2X_LOOP_TIME
+        HPRO(INPLEN,PROBUF)=MLEN
+        HPRO(X2X_DEST,PROBUF)=DEST_LAYER
+        HPRO(X2X_LINK,PROBUF)=0
+
+C       ***** Start V01 changes *****
+
+        IF (X2X_I4_STATION) THEN
+           IF (IAND(DEST_LAYER,X2DEST_STATION).EQ.0)
+     *        PRO(LINENO,PROBUF)=BUF_SSAP
+	ELSE
+           IF (IAND(DEST_LAYER,X2DEST_STATION).EQ.0)
+     *        HPRO(LINENO,PROBUF)=BUF_SSAP
+	ENDIF
+
+C       ***** End V01 changes *****
+
+C
+        CALL QUEINP(PROBUF,ST)
+        PROBUF=0
+C
+        RETURN
+        END

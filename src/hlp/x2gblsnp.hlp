@@ -1,0 +1,110 @@
+ X2GBLSNP.HLP             GTECH Distributed Network
+                       X2X Global Parameters Snapshot             Page 1 of 5
+ 
+    This snapshot will list information on the Distributed Network global
+    parameters.  Changeable parameters are indicated by an asterisk (*).
+    To change the value of any of these parameters at the command line
+    enter the parameter indicator followed by the value to be assigned.
+ 
+    Game SAP       - Service Access Point number assigned to the game.
+   *Game State     - Changes X2X network game state.
+                     Parameter indicator: GAMstas
+                     Valid entry values : 0=down    1=idle     2=req MGR
+                                          3=online  4=shutdown
+    System time    - Current system time as updated by X2XMGR.
+   *FE Disconnect  - Changes the Front End default disconnection mode.
+                     Parameter indicator: FEDis
+                     Valid entry values : 0=Response 1=Outcall 2=Unc Out
+                                          3=Fast Sel 4=Conn Acc
+ 
+ 
+ 
+ 
+ X2GBLSNP.HLP            GTECH Distributed Network
+                       X2X Global Parameters Snapshot             Page 2 of 5
+ 
+   *STN Disconnect - Changes the station default disconnection mode.
+                     Parameter indicator: STNDis
+                     Valid entry values : 0=Def Mode 7=Unc Disc 8=Time*1
+                      9=Time*2 10=Time*3 11=Time*4  12=Time*5  13=Time*6
+                     14=Time*7 15=Rem Cnct
+   *DELivery ACK   - Front End to generate an acknowlegement when it
+                     has successfully sent a message to a station.
+                     Parameter indicator: DELACK
+                     Valid entry values : 0=enable 1=disable
+   *NETwork stats  - Informs stations to collect network statistics.
+                     Parameter indicator: NETstats
+                     Valid entry values : 0=yes    1=no
+   *AUTO stn stats - Informs stations to send stats when polling status changed
+                     Parameter indicator: AUTOstat
+                     Valid entry values : 0=yes    1=no
+ 
+ 
+ 
+ 
+ X2GBLSNP.HLP             GTECH Distributed Network
+                       X2X Global Parameters Snapshot             Page 3 of 5
+ 
+   *DELivery ERR    - Front End to generate an error message if a message
+                      cannot be sent to a destined station.
+                      Parameter indicator: DELERR
+                      Valid entry values : 0=enable 1=disable
+    Total alarms    - Total number of alarm messages.
+    Last alarm stn  - Last station to alarm.
+    Active Stns     - Number of active stations on the X2x network.
+    Active SAPs     - Number of active Front Ends on the network.
+    Active relays   - Number of active relays (dowloads,odds uppdates)
+    Active netprt   - Number of active network ports.
+    Active locprt   - Number of active local ports.
+    Last active     - Last time anything passed through X2X occured.
+    Resp time(min)  - Minimum response time (backend throughput only)
+    Resp time(max)  - Maximum response time.(backend throughput only)
+    Resp time(avg)  - Average response time.(backend throughput only)
+    Active Buf      - Number of active input buffers.
+    Removed Buf     - Removed buffer count.
+ 
+ 
+ 
+ 
+ X2GBLSNP.HLP             GTECH Distributed Network
+                       X2X Global Parameters Snapshot       Page 4 of 5
+ 
+    Game buf wait   - Number of game buffers on X2XMGR output queue.
+    X2X in buf      - Number of buffers from LANPRO for X2XMGR to read.
+    X2X free buf    - Number of free buffers for communication between
+                      LANPRO and X2XMGR.
+    Lan out buf     - Number of buffers LANPRO has to service for X2XMGR.
+ 
+    Bottom portion of the screen displays Local Area Network information.
+    This information consists of the following:
+ 
+    Active SAPs     - Number of active SAPs (Front Ends) on the LAN.
+    Local Status    - Status of the LAN (ONLINE/DOWN)
+    Write queue     - Number of LANPRO buffers to be written to Ethernet.
+    Done Read       - Number of LANPRO input buffers read from Ethernet.
+    Done Write      - Number of LANPRO buffers written to Ethernet.
+ 
+ 
+ 
+ 
+ 
+ X2GBLSNP.HLP             GTECH Distributed Network
+                       X2X Global Parameters Snapshot       Page 5 of 5
+ 
+   X2X Queques:           --------       -------
+                         !        ! <---! Input !
+    --------             !        !     ! Queue !
+   !  X2X   !----------> ! X2XMGR !      -------
+   ! Output !            !        !      -------
+   ! Queue  !            !        ! <---! Free  !
+    --------              --------      ! Queue !
+                             !           -------         ------
+                             !           --------       ! Done !
+                             !          !        ! <--- ! Read !
+                           ------       !        !      ! Queue!
+                          !LANPRO!      ! LANPRO !       ------
+                          !Output!----> !        !        ------
+                          !Queue !      !        ! <--   ! Done !
+                           ------        --------        ! Write!
+                                                         ! Queue!
+                                                          ------

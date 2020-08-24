@@ -1,0 +1,52 @@
+C  GXSRC:INSCOM.DEF
+C  
+C  $Log:   GXAFXT:[GOLS]INSCOM.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:38:14   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.2   06 Jul 1994 17:02:28   MCM
+C  ADDED CLRKFDB FOR CLERK ACCOUNTING
+C  
+C     Rev 1.1   04 Jan 1994  0:08:46   SYSTEM
+C  Applying PVCS header for automatic revision history
+C  
+C     Rev 1.0    21 Dec 1993 19:17:14   SYSTEM
+C  Initial revision.
+C
+C
+C
+C V01 05-MAY-93 MCM RELEASED FOR GEORGIA
+C
+C
+C INSOUT COMMON BLOCK
+C
+	INCLUDE 'INCLIB:RECAGT.DEF'
+	INCLUDE 'INCLIB:CLERK.DEF'
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 ASFFDB(7)              !AGENT SALES FILE
+	INTEGER*4 CLRKFDB(7)             !CLERK ACCOUNTING FILE
+C
+C FILE FDB
+C
+	COMMON/INSCPM/
+     *	   ASFFDB,
+     *     CLRKFDB
+C
+C END INSCOM.DEF
+C

@@ -1,0 +1,110 @@
+C
+C SUBROUTINE X2DUMCLR
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2DUMCLR.FOV                                 $
+C  $Date::   17 Apr 1996 16:15:48                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C
+C X2X Upgrade: 22-FEB-96 wsm Added AGTINF.DEF for Finland.
+C
+C     X2DUMCLR                 ;CLEARS OUT THE EVSN OF PREVIOUSLY ASSIGNED 
+C			       ;DUMMY STATIONS WHICH ARE NO LONGER IN USE
+C
+C     X2DUMCLR(EVSNNUM,CONN_TYPE,STATUS)
+C              
+C     IN:
+C        EVSNNUM - EVSN (GVT ID) RECEIVED IN THE UPLINE HELP/
+C                  DEFAULT CONFIGURATION REQUEST
+C        CONN_TYPE - CONNECTION TYPE.  THERE IS AN ASSUMED 1 TO 1 MAPPING
+C                    BETWEEN STATION CLASS AND CONNECTION TYPE.
+C     OUT:
+C        STATUS  - STATUS
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE X2DUMCLR(EVSNNUM,CONN_TYPE,STATUS)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:X2BLDNET.DEF'
+C
+C	INTEGER*4 X2XS_TERMS(X2X_MAXTERMS,X2X_MAXPORT,X2X_STATIONS)
+
+        INTEGER*4 EVSNNUM(X2X_EVSN_MAXLEN)
+	INTEGER*4 CONN_TYPE
+	INTEGER*4 STATUS
+
+	INTEGER*4 DUMMY_CLASS,DUMMY_OFFSET_COUNTER
+	INTEGER*4 STN, OFF1
+
+
+	STATUS = -1
+C 
+C       THERE IS AN ASSUMED 1 TO 1 MAPPING BETWEEN STATION CLASS AND 
+C	CONNECTION TYPE.  CURRENTLY, GVTS ARE ONLY ALLOWED ON GTECH
+C	DIAL OR X28 PAD.THE ONLY VALID (STATION CLASS,CONNECTION TYPE) 
+C	PAIRS ARE (GTECH DIAL,GTECH DIAL) AND (X28GVT, X28 PAD).  IF ANY 
+C	OTHER MAPPING IS ADDED IN THE FUTURE, THEN THE FOLLOWING LOGIC 
+C	WILL REQUIRE MODIFICATION.
+
+	IF (CONN_TYPE.EQ.X2XSCT_GTECH_DIAL) THEN
+            DUMMY_CLASS = CLASS_GVT
+	ELSEIF (CONN_TYPE.EQ.X2XSCT_X28PAD) THEN
+            DUMMY_CLASS = CLASS_X28
+	ELSE				!INVALID CLASS
+	   STATUS = -1
+	   RETURN
+	ENDIF
+
+C	NOTE: THE X2XC_DUMMY_FREE_LIST VECTOR IS INDEXED FROM 
+C	(1...X2XC_DUMMY_STN_COUNT(CLASS)).  THE DUMMY_STN_NO WILL BE IN THE 
+C	RANGE OF (X2XC_DUMMY_START_STN(CLASS)...X2XC_DUMMY_END_STN(CLASS)). 
+C	THEREFORE, THE ENTRIES IN X2XC_DUMMY_FREE_LIST(1...X2XC_DUMMY_STN_COUNT(CLASS))
+C	MAP TO DUMMY STATION VALUES IN THE RANGE OF 
+C	(X2XC_DUMMY_START_STN(CLASS)...X2XC_DUMMY_END_STN(CLASS)).  
+C	CONSEQUENTLY, WE NEED AN OFFSET VARIABLE TO GET THE CORRECT INDEX INTO 
+C	X2XC_DUMMY_FREE_LIST BASED ON THE VALUE OF STN.
+
+	DUMMY_OFFSET_COUNTER = 0	!INITIALIZE X2XC_DUMMY_FREE_LIST OFFSET
+	DO 120 STN = X2XC_DUMMY_START_STN(DUMMY_CLASS),
+     *		     X2XC_DUMMY_END_STN(DUMMY_CLASS)
+	   DUMMY_OFFSET_COUNTER = DUMMY_OFFSET_COUNTER + 1
+           IF(X2XS_EVSN(1,STN).EQ.0 .AND.
+     *        X2XS_EVSN(2,STN).EQ.0) GOTO 120
+           DO 110 OFF1=1,X2X_EVSN_MAXLEN
+              IF(X2XS_EVSN(OFF1,STN).NE.EVSNNUM(OFF1))GOTO 120
+110        CONTINUE
+C	IF WE REACH THE FOLLOWING STATEMENT, THEN EVSNNUM MATCHES X2XS_EVSN
+C	FOR STATION 'STN'
+	   IF (X2XC_DUMMY_FREE_LIST(DUMMY_OFFSET_COUNTER,DUMMY_CLASS) .EQ. 
+     *	       X2XC_DUMMY_AVAILABLE) THEN		!ZERO OUT EVSN FOR THE
+	       DO 140 OFF1=1,X2X_EVSN_MAXLEN		!OLD DUMMY STATION
+	          X2XS_EVSN(OFF1,STN) = 0
+140            CONTINUE
+	   ENDIF
+120	CONTINUE
+
+	STATUS = 0
+
+	RETURN
+	END

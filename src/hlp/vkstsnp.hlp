@@ -1,0 +1,21 @@
+    VKST.HLP                GTECH Distributed Network
+                        Vakio Statistics Snapshot Help     Page 1 of 1
+    
+    The VKST snapshot shows statistical information for Vakio Veikkaus. 
+   
+    The information displayed includes:
+ 
+    total coupons - total number of coupons played for current Vakio draw
+    total boards  - total number of boards played
+    sales         - total sales for current draw
+    match         - all possible combinations that can be played
+    1, 2.....13   - event number. The total number of all posssible
+                    combinations that were marked for corresponding
+                    event numbers is displayed in the same line.
+		    
+
+
+
+
+
+

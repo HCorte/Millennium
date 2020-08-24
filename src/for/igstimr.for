@@ -1,0 +1,312 @@
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C File      : IGSTIMR.FOR
+C Change Log:
+C
+C Ver Date       Author  Comment
+C --- ---------- ------- ----------------------------------------------
+C V01 2014.02.28 SCML    Created - module that handles timer operations
+C                        for IGS - PLACARD PROJECT
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C      THIS ITEM IS THE PROPERTY OF SCML.
+C
+C      COPYRIGHT 2014 SCML. ALL RIGHTS RESERVED.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C SUBROUTINE ADDTIMER(LIST_INDEX,XRFNUM,BUF)
+C
+C This subroutine adds a buffer to the timer queue
+C        
+C INPUTS:
+C   LIST_INDEX - list index
+C   XRFNUM     - reference # to store in table (cross reference #)
+C   BUF        - PROCOM buffer #      
+C
+C OUTPUTS:
+C   
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE ADDTIMER(LIST_INDEX,XRFNUM,BUF)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:PRMPRO.DEF'
+        INCLUDE 'INCLIB:IGSCON.DEF'
+C
+        INTEGER*4 XRFNUM
+        INTEGER*4 BUF
+        INTEGER*4 OLDBOT
+        INTEGER*4 LIST_INDEX
+C
+C
+        IF (IGS_TIMERTOP(LIST_INDEX) .EQ. -1) THEN
+           IGS_TIMERTOP(LIST_INDEX) = BUF
+           IGS_TIMERBOT(LIST_INDEX) = BUF
+           IGS_TIMERLIST(LIST_INDEX,IGS_TIMERNXT,BUF)=-1
+           IGS_TIMERLIST(LIST_INDEX,IGS_TIMERPRV,BUF)=-1
+        ELSE
+           OLDBOT=IGS_TIMERBOT(LIST_INDEX)
+           IGS_TIMERLIST(LIST_INDEX,IGS_TIMERNXT,OLDBOT) = BUF
+           IGS_TIMERLIST(LIST_INDEX,IGS_TIMERPRV,BUF) = OLDBOT
+           IGS_TIMERLIST(LIST_INDEX,IGS_TIMERNXT,BUF) = -1
+           IGS_TIMERBOT(LIST_INDEX) = BUF
+        ENDIF
+C
+        IGS_TIMERLIST(LIST_INDEX,IGS_TIMERBEG,BUF)=P(ACTTIM)       !CURRENT TIME
+        IGS_TIMERLIST(LIST_INDEX,IGS_TIMERSER,BUF)=XRFNUM          !SERIAL #
+C
+        RETURN
+        END
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C SUBROUTINE REMTIMER(LIST_INDEX,XRFNUM,BUF,STATUS)
+C
+C This subroutine removes a buffer from the timer queue
+C        
+C INPUTS:
+C   LIST_INDEX - list index
+C   XRFNUM     - reference # to store in table (cross reference #)
+C   BUF        - PROCOM buffer #      
+C
+C OUTPUTS:
+C   STATUS  - remove status (-1: not in queue
+C             , -2: serial # doesn't match)        
+C   
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE REMTIMER(LIST_INDEX,XRFNUM,BUF,STATUS)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:PRMPRO.DEF'
+        INCLUDE 'INCLIB:IGSCON.DEF'
+C
+        INTEGER*4 XRFNUM
+        INTEGER*4 BUF
+        INTEGER*4 NXT
+        INTEGER*4 PRV
+        INTEGER*4 STATUS
+        INTEGER*4 LIST_INDEX
+C
+C CHECK FOR AN INVALID BUFFER NUMBER.
+C
+        STATUS=0
+        IF(BUF.LT.1 .OR. BUF.GT.NUMPRO) THEN
+          STATUS=-3
+          CALL OPS('CHECK FOR AN INVALID BUFFER NUMBER',STATUS,0)
+          GOTO 9000
+        ENDIF
+C
+C If the buffer # is no longer linked in the list, then return
+C with error code -1.
+C
+        IF(IGS_TIMERLIST(LIST_INDEX,IGS_TIMERNXT,BUF).EQ.0 .OR.
+     *     IGS_TIMERLIST(LIST_INDEX,IGS_TIMERPRV,BUF).EQ.0) THEN
+          STATUS=-1
+          GOTO 9000
+        ENDIF
+C
+C If serial # doesn't match, return with error code -2
+C
+        IF(IGS_TIMERLIST(LIST_INDEX,IGS_TIMERSER,BUF).NE.XRFNUM) THEN
+          STATUS=-2
+          GOTO 9000
+        ENDIF
+C
+C Otherwise, remove from linked list.
+C
+        NXT = IGS_TIMERLIST(LIST_INDEX,IGS_TIMERNXT,BUF)
+        PRV = IGS_TIMERLIST(LIST_INDEX,IGS_TIMERPRV,BUF)
+C
+        IF(PRV.NE.-1)THEN
+          IGS_TIMERLIST(LIST_INDEX,IGS_TIMERNXT,PRV) = NXT
+        ELSE
+          IGS_TIMERTOP(LIST_INDEX) = NXT
+        ENDIF
+C
+        IF(NXT.NE.-1)THEN
+          IGS_TIMERLIST(LIST_INDEX,IGS_TIMERPRV,NXT) = PRV
+        ELSE
+          IGS_TIMERBOT(LIST_INDEX) = PRV
+        ENDIF
+C
+        IGS_TIMERLIST(LIST_INDEX,IGS_TIMERNXT,BUF) = 0
+        IGS_TIMERLIST(LIST_INDEX,IGS_TIMERPRV,BUF) = 0
+C
+        GOTO 9000
+C
+9000    CONTINUE
+        RETURN
+        END
+
+        
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C SUBROUTINE CHKTIMER(LIST_INDEX,XRFNUM,BUF)
+C
+C This subroutine checks a buffer in the timer queue
+C        
+C INPUTS:
+C   LIST_INDEX - list index
+C   XRFNUM     - internal serial # of the timed-out transaction
+C   BUF        - PROCOM buffer # to check for timeout     
+C
+C OUTPUTS:
+C   
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE CHKTIMER(LIST_INDEX,XRFNUM,BUF)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:PRMPRO.DEF'
+        INCLUDE 'INCLIB:IGSCON.DEF'
+C
+        INTEGER*4 XRFNUM
+        INTEGER*4 BUF
+        INTEGER*4 PASTIM
+        INTEGER*4 LIST_INDEX
+        INTEGER*4 WHICH_PARAM
+C
+        IF(IGS_TIMERTOP(LIST_INDEX) .EQ. -1) THEN
+          BUF = 0                             !NOTHING IN LIST
+          GOTO 9000
+        ENDIF
+C
+        IF(LIST_INDEX .EQ. IGS_TL_MAIN) THEN
+C            WHICH_PARAM = ODTIMOUT
+            WHICH_PARAM = IGSTOUT !PARAMETER (IGSTOUT  = 482)  ! IGS - TIME FOR TIME OUT IGS MESSAGES
+        ELSEIF (LIST_INDEX .EQ. IGS_TL_CRS) THEN
+C            WHICH_PARAM = ODFRTOUT
+            WHICH_PARAM = PLAFINTO!PARAMETER (PLAFINTO = 492)  ! PLACARD - TIME FOR TIME OUT FIN REPORTS
+        ELSE
+C            WHICH_PARAM = ODTIMOUT
+            WHICH_PARAM = IGSTOUT !PARAMETER (IGSTOUT  = 482)  ! IGS - TIME FOR TIME OUT IGS MESSAGES
+        ENDIF
+
+        !P(ACTTIM)  = 0 !START TIME
+        IF (P(WHICH_PARAM) .LT. 1) THEN  !alguma vez entraria nesta condição??? não pois em cima if else têm o default caso não acha um match que é (IGSTOUT  = 482)
+           PASTIM=P(ACTTIM)-1                   !TIME TO CHECK FOR
+        ELSE IF (P(WHICH_PARAM) .GT. 50) THEN 
+           PASTIM=P(ACTTIM)-50                  !TIME TO CHECK FOR
+        ELSE
+           PASTIM=P(ACTTIM)-P(WHICH_PARAM)      !TIME TO CHECK FOR (between 1 and 50)
+        ENDIF
+C
+C Note that this is a FIFO queue.  If the first one on the list
+C has not timed out, it is safe to assume that none of the others
+C has timed out either.
+C
+        BUF = IGS_TIMERTOP(LIST_INDEX)
+        IF(IGS_TIMERLIST(LIST_INDEX,IGS_TIMERBEG,BUF) .GE. PASTIM)THEN
+          BUF = 0
+        ELSE
+          XRFNUM = IGS_TIMERLIST(LIST_INDEX,IGS_TIMERSER,BUF)
+C
+          IGS_TIMERTOP(LIST_INDEX) = 
+     *       IGS_TIMERLIST(LIST_INDEX,IGS_TIMERNXT,BUF)
+          IF(IGS_TIMERTOP(LIST_INDEX) .EQ. -1)THEN
+            IGS_TIMERBOT(LIST_INDEX) = -1
+          ELSE
+            IGS_TIMERLIST(LIST_INDEX,IGS_TIMERPRV,IGS_TIMERTOP) = -1
+          ENDIF
+          IGS_TIMERLIST(LIST_INDEX,IGS_TIMERNXT,BUF) = 0
+          IGS_TIMERLIST(LIST_INDEX,IGS_TIMERPRV,BUF) = 0
+        ENDIF
+C
+9000    CONTINUE
+        RETURN
+        END
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C SUBROUTINE VERTIMER(LIST_INDEX,BUF,STATUS)
+C
+C This subroutine will check to determine if a buffer
+C still exists in the timer queue.      
+C        
+C INPUTS:
+C   LIST_INDEX - list index
+C   BUF     - PROCOM buffer # 
+C
+C OUTPUTS:
+C   STATUS  -  0: Buffer exists
+C             -1: Nothing in queue
+C             -2: Buffer not in timer list        
+C   
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C=======OPTIONS /CHECK=NOOVERFLOW
+        SUBROUTINE VERTIMER(LIST_INDEX,BUF,STATUS)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:PRMPRO.DEF'
+        INCLUDE 'INCLIB:IGSCON.DEF'
+C
+        INTEGER*4 STATUS
+        INTEGER*4 BUF
+        INTEGER*4 LIST_INDEX
+C
+C IF NOTHING OF QUEUE, SET STATUS AND RETURN.
+C
+        STATUS=0
+        IF(IGS_TIMERTOP(LIST_INDEX) .EQ. -1) THEN
+          STATUS=-1
+          GOTO 9000
+        ENDIF
+C
+C IF THE BUFFER IS NO LONGER IN THE LINKED LIST, RETURN WITH
+C AN ERROR CODE OF -2
+C
+        IF(IGS_TIMERLIST(LIST_INDEX,IGS_TIMERNXT,BUF) .EQ. 0 .OR.
+     *     IGS_TIMERLIST(LIST_INDEX,IGS_TIMERPRV,BUF) .EQ. 0) THEN
+          STATUS=-2
+        ENDIF
+C
+9000    CONTINUE
+        RETURN
+        END
+C----+-----------------------------------------------------------------
+C    | SUBROUTINE RESET_TIMERS
+C    |    This subroutine resets all IGS timer structures. It is 
+C    |    called at the start of the COMIGS program to initialize the 
+C    |    structures
+C----+-----------------------------------------------------------------
+        SUBROUTINE RESET_TIMERS
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:PRMPRO.DEF'
+        INCLUDE 'INCLIB:IGSCON.DEF'
+C
+C ZERO OUT THE TIMER LIST
+C
+        INTEGER*4 I,J,K
+        DO I = 1, IGS_MAX_TIMER_LISTS
+           IGS_TIMERTOP(I) = -1
+           IGS_TIMERBOT(I) = -1
+           DO J = 1, 4
+              DO K = 0, NUMPRO + 2
+                  IGS_TIMERLIST(I,J,K) = 0
+              ENDDO
+           ENDDO
+        ENDDO
+        RETURN
+        END

@@ -1,0 +1,44 @@
+                          GTECH Distibuted Network
+                           Local Port Update Help                 Page 1 of 2
+ 
+      This help screen describes each of the fields associated with
+      updating Local Port Configurations.  For specific instructions
+      on how to use the Add and Modify screens, refer to the Local
+      Port Menu Help.
+ 
+      The following describes each of the local port configuration
+      parameters:
+ 
+      1) Local Port   - the identification number associated with this
+              local port.  The port number can only be input from the
+              menu and can not be modified.
+      2) SAP  - this identifies which Service Access Point (Front End)
+              that this Local Port is connected to.
+      3) SAP Port - this field describes which port on the SAP (Front End)
+              that this Local Port is connected to.
+ 
+ 
+ 
+ 
+                          GTECH Distibuted Network
+                           Local Port Update Help                 Page 2 of 2
+ 
+      4) State    - this field describes the setup state of the port.
+              The valid values are defined as:
+                  0=not defined       1=idle
+                  2=online            3=down
+      5) Network Port - this identifies which network port that the
+              local port is connected to.
+      6) Site - local of port (1=primary location, 2=backup location)
+      7) Last Updated - this is the CDC date of the last time this
+              record was modified.  This is not a changeable parameter.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,153 @@
+C
+C SUBROUTINE LOGVAL
+C
+C V09 18-MAR-99 RXK Gtyp+gind in 5+3 bits change.
+C  
+C     Rev 1.0   17 Apr 1996 13:55:20   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.4   02 Sep 1994 18:07:36   HXK
+C  Merge of May,June RFSS batch 
+C  
+C     Rev 1.4   07 Apr 1994 19:34:56   HXK
+C  FOLLOWING FIELDS ARE NO LONGER KEPT ON PHYSICAL DISK
+C  1. TAX AMOUNT 
+C  2. CLAIM SERIAL
+C  3. KIKTAX AMOUNT
+C  4. CLAIM CDC
+C  5. CLAIM TER
+C  
+C     Rev 1.3   18 May 1993 15:08:02   GXA
+C  Released for Finland Dec Conversion / Oddset.
+C  
+C     Rev 1.2   17 May 1993 17:45:08   GXA
+C  Restored Baseline version.
+C  
+C     Rev 1.0   21 Jan 1993 16:55:16   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nrm_logval.for **
+C
+C LOGVAL.FOR
+C
+C V04 22-FEB-01 EPH FIX WRONG INDEXING 
+C V03 09-JAN-01 EPH CHANGE VFTBSF BY VOPSCNT AND VFCOPAMT PER VOPSAMT 
+C                   AND VFK2PAMT BY VFKOPSAMT
+C V02 07-OCT-91 MTK INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C SUBROUTINE TO CONVERT VALIDATION FILE RECORD TO
+C INTERNAL VALIDATION RECORD.
+C
+C CALLING SEQUENCE:
+C CALL LOGVAL(VALREC,V4BUF)
+C INPUT
+C     V4BUF   - VALIDATION FILE RECORD.
+C OUTPUT
+C     VALREC - VALIDATION INTERNAL FORMAT.
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1999 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE LOGVAL(VALREC,V4BUF)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:DESVAL.DEF'
+	INCLUDE 'INCLIB:VALFIL.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INTEGER*4 SERMSK, INDMSK, I4TEMP, X
+	INTEGER*2 I2TEMP(2)
+	BYTE      I1TEMP(4)
+	EQUIVALENCE(I4TEMP,I2TEMP,I1TEMP)
+C	INTEGER*4 INDLEN(4)
+C	DATA INDLEN/Z00000000,Z40000000,Z80000000,ZC0000000/
+	DATA INDMSK/ZC0000000/
+	DATA SERMSK/Z3FFFFFFF/
+C
+C
+	I4TEMP=IAND(V4BUF(1),INDMSK)
+C
+C
+	CALL FASTSET(0,VALREC,VALLEN)
+	VALREC(VSSER)  = IAND(V4BUF(1),SERMSK)
+C 
+C 
+	I4TEMP=V4BUF(2)
+	VALREC(VSCDC)  = ZEXT( I2TEMP(1) )
+	VALREC(VWCDC)  = ZEXT( I2TEMP(2) )
+C
+	I4TEMP=V4BUF(3)
+	VALREC(VEXP)   = ZEXT( I2TEMP(1) )
+	VALREC(VKEXP)  = ZEXT( I2TEMP(2) )
+C 
+	VALREC(VPAMT)    = V4BUF(VFPAMT)
+	VALREC(VKPAMT)   = V4BUF(VFKPAMT)
+C	VALREC(VK2PAMT)  = V4BUF(VFK2PAMT)   !V03
+	VALREC(VKOPSAMT) = V4BUF(VFKOPSAMT)  !V03
+        VALREC(VRAMT)    = V4BUF(VFRAMT)
+
+C***	VALREC(VTAMT)    = V4BUF(VFTAMT)
+        VALREC(VTAMT)    = 0
+
+C	VALREC(VFCOPAMT) = V4BUF(VFFCOPAMT) !V03
+	VALREC(VOPSAMT)  = V4BUF(VFOPSAMT)  !V03    !V04
+	VALREC(VCSER)    = V4BUF(VFCSER)
+
+C***	VALREC(VLSER )   = V4BUF(VFLSER)
+        VALREC(VLSER )   = 0
+ 
+C***	VALREC(VKTAMT)   = V4BUF(VFKTAMT)
+        VALREC(VKTAMT)   = 0
+C 
+C***	I4TEMP         = V4BUF(??)
+C***	VALREC(VLCDC)  = ZEXT( I2TEMP(1) )
+        VALREC(VLCDC)  = 0
+C***	VALREC(VLTER)  = ZEXT( I2TEMP(2) )
+        VALREC(VLTER)  = 0
+C
+	I4TEMP         = V4BUF(10)
+	VALREC(VSTER)  = ZEXT( I2TEMP(1) )
+	VALREC(VCTER)  = ZEXT( I2TEMP(2) )
+C 
+	I4TEMP         = V4BUF(11)
+	VALREC(VCCDC)  = ZEXT( I2TEMP(1) )
+        X              = ZEXT( I1TEMP(3) )
+        VALREC(VGAM)   = IAND( X,'7F'X )
+C        VALREC(V5P3FLG)= ISHFT( X,-7 )
+        X              = ZEXT( I1TEMP(4) )
+        VALREC(VGTYP)  = ISHFT( X,-3 )
+C        VALREC(VGTYP)  = ISHFT( X,(-4+VALREC(V5P3FLG)) )
+        VALREC(VGIND)  = IAND( X,'07'X )
+C	
+	I4TEMP         = V4BUF(12)
+	VALREC(VPZOFF) = ZEXT( I1TEMP(1) )
+	VALREC(VSTAT)  = ZEXT( I1TEMP(2) )
+	VALREC(VKGME)  = ZEXT( I1TEMP(3) )
+	VALREC(VFRAC)  = ZEXT( I1TEMP(4) )
+C
+	VALREC(VBNKID) = IAND(V4BUF(VFBNKID),'00FFFFFF'X)
+C	VALREC(VFTBSF) = ISHFT(V4BUF(VFTBSFL),-24)   !V03
+	VALREC(VOPSCNT)= ISHFT(V4BUF(VFOPSCNT),-24)  !V03    !V04
+C
+	VALREC(VBNKNUM)= V4BUF(VFBNKNUM)
+C
+	CALL FASTMOV(V4BUF(VFPDATA),VALREC(VPDATA),VFPLEN)
+	RETURN
+	END

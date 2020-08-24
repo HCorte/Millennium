@@ -1,0 +1,78 @@
+C PRMTSL.DEF
+C
+C V08 05-MAY-1999 UXN  TTIM_LEN added.
+C V07 27-NOV-1997 UXN  TSLDIV changed from 4 to 6
+C V06 06-JAN-1997 HXK  Increased abent database from 4096 to 6144
+C V05 17-APR-1996 HXK  Release of Finland for X.25, Telephone Betting, 
+C                      Instant Pass Thru Phase 1
+C V04 10-JUN-1993 GXA  Released for Finland Dec Conversion / Oddset.
+C V03 21-JAN-1993 DAB  Initial Release
+C                      Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                      DEC Baseline
+C V02 30-JUN-1992 GCAN INCREASED TO 3000 AGENTS.
+C V01 07-OCT-1991 GCAN INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX  RELEASED FOR VAX
+C
+C TOTO SELECT GAME AND POOL PARAMETERS
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1990 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4 NUMTSL, TSLDIV, MAXSRW
+	PARAMETER (NUMTSL = 1)       !NUMBER OF SELECT GAMES
+	PARAMETER (TSLDIV = 6)       !NUMBER OF DIVISIONS
+	PARAMETER (MAXSRW =40)       !MAXIMUM NUMBER OF ROWS TO BET ON
+C
+C NAME FILELD LENGTH PARAMETERS
+C
+	INTEGER*4 TNMS_LEN, TODS_LEN, TDAT_LEN, TTIM_LEN, TTVC_LEN
+	PARAMETER (TNMS_LEN =16)     !LENGHT IN BYTES OF NAME FILED
+	PARAMETER (TODS_LEN = 2)     !LENGTH IN BYTES OF ODDS FIELD
+	PARAMETER (TDAT_LEN = 2)     !LENGTH IN BYTES OF DATE FIELD
+	PARAMETER (TTIM_LEN = 3)     !LENGTH IN BYTES OF TIME FIELD
+	PARAMETER (TTVC_LEN = 4)     !LENGTH IN BYTES OF TV CHANEL FIELD
+C
+C TRANSACTION ROW STATUS DEFINITIONS
+C
+	INTEGER*4 DONTNO, RWON, NOPLAY, RLOST
+	PARAMETER (DONTNO = 0)       !NOT DRAWN YET
+	PARAMETER (RWON   = 1)       !ROW WON
+	PARAMETER (NOPLAY = 2)       !ROW CANCELLED
+	PARAMETER (RLOST  = 3)       !ROW LOST
+C
+C ROW BET POOL DEFINITIONS
+C
+	INTEGER*4 ROWWIN, ROWTIE, ROWLOS, ROWCAN
+	PARAMETER (ROWWIN = 1)       !WIN BET  (HOME WIN)
+        PARAMETER (ROWLOS = 2)       !LOSE BET (AWAY WIN)
+	PARAMETER (ROWTIE = 3)       !TIE  BET (DRAW)
+	PARAMETER (ROWCAN = 4)       !ROW CANCELLED
+C
+C MAXIMUM NUMBER OF TEXT MESSAGES
+C
+	INTEGER*4 TTXMAX
+	PARAMETER(TTXMAX = 6)        !MAXIMUM TEXT MESSAGES
+C
+C TOP 5 AGENT COMBINATIONS
+C
+	INTEGER*4 ATSNPA, ATSOFF, ATSAMT, ATSTIM
+	INTEGER*4 ATSTOP, ATSAGT, ATSWRN
+        PARAMETER(ATSNPA   = 3)      ! DIMENSION 3
+          PARAMETER(ATSOFF = 1)      ! OFFSET TO COMBINATION OFFSET
+          PARAMETER(ATSAMT = 2)      ! AMOUNT OFFSET (ROWCNT ALSO STORD HERE)
+          PARAMETER(ATSTIM = 3)      ! TIME STAMP OF FIRST BET
+        PARAMETER(ATSTOP   = 5)      ! TOP 5 COMBINATIONS
+        PARAMETER(ATSAGT =6144)      ! NUMBER OF AGENTS
+	PARAMETER(ATSWRN=15000)      ! TOTO SELECT WARNING LIMIT
+C

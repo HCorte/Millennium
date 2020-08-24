@@ -1,0 +1,11 @@
+$link /exec=gxutl:load_text.exe -
+objlib:load_text.obj,-
+lodtxt,-
+addmsg,-
+delmsg,-
+getfre,-
+stdlib:normlib/lib,-
+OBJLIB:PSECT.OPT/OPTION,-
+sys$input:/option
+tsklib:gxappcom.esh/share
+tsklib:gxctmcom.esh/share

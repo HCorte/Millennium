@@ -1,0 +1,51 @@
+C
+C PROMO/DISCOUNT FILE RECORD DESCRIPTION
+C 
+C
+C V02 28-FEB-2000 RXK Cleaned up, record length calculated.
+C V01 20-MAR-1991 MTK INITIAL RELEASE FOR MARYLAND
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2000 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C PRMTAB(3,MAXGAM)            !DISCOUNT/PROMOS BY GAME 
+C PRMAFL(2,NUMAGT)            !AGENT PROMO FLAGS       
+C
+C
+        INTEGER*4 PRMTAB_OFF, PRMAFL_OFF
+        PARAMETER (PRMTAB_OFF = 1)  
+        PARAMETER (PRMAFL_OFF = PRMTAB_OFF + 3*MAXGAM)  
+
+        INTEGER*4 PRMFRE_OFF
+        PARAMETER (PRMFRE_OFF = PRMAFL_OFF + 2*NUMAGT)  
+
+
+        INTEGER*4  PRMSEC_VAX, PRMSEC_NUM
+        PARAMETER (PRMSEC_VAX=SECSIZE/4)
+        PARAMETER (PRMSEC_NUM=NINT(FLOAT((PRMFRE_OFF-2)/
+     *                                   PRMSEC_VAX)+.5))
+        INTEGER*4  PRMLEN   
+        INTEGER*4  PRMSEC   
+        PARAMETER  (PRMLEN = PRMSEC_VAX*PRMSEC_NUM) !EVEN SECTOR SIZE
+        PARAMETER  (PRMSEC = PRMLEN/64)
+
+
+        INTEGER*4  PRMREC(PRMLEN)
+
+        INTEGER*4 PRMTAB(3,MAXGAM)
+        INTEGER*4 PRMAFL(2,NUMAGT)
+C
+        EQUIVALENCE (PRMTAB, PRMREC(PRMTAB_OFF))
+        EQUIVALENCE (PRMAFL, PRMREC(PRMAFL_OFF))
+

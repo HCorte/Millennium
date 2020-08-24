@@ -1,0 +1,88 @@
+    TYP.HLP                GTECH Distributed Network
+                            Agent Type Snapshot Help          Page 1 of 4
+ 
+    The Agent Type snapshot shows the current status of wagering functions 
+    for a partcular agent. The snapshot enables a user to activate or 
+    deactivate a particular agent's terminal characteristics.  For example
+    an operator may globally suppress wagering for a particular terminal 
+    for all games or for particular games, by changing the status of 
+    wagering in the TYP snapshot.  Fields that contain an asterisk (*),
+    denote fields which may be modified.
+ 
+    Information in the snapshot includes:
+
+    name          - agent's name
+    address       - address of the agent store or outlet
+    phone         - agent's telephone number
+    agtnum        - agent's number
+    terminal      - terminal number assigned by Veikkaus to the agent
+    stn           - station number
+    drop address  - drop address of terminal
+    value         - number representing specific terminal set up.
+
+    TYPSNP.HLP             GTECH Distributed Network
+                           Agent Type Snapshot Help            Page 2 of 4
+ 
+ 
+     *OPStat      - changes the operating status of the terminal.
+                    (1=signed off, 2=signed on, 3=terminal disable, 
+                    4=security violation, 5=clear security violation)
+     *BROnum      - sends an unsolicted broadcast to the terminal.
+                    (1= hard terminal reset, 2=not used, 3=ultimate  
+                    terminal reset, 4=soft terminal reset)
+     *PRVter      - enables/disables  a privileged terminal. A privileged 
+                    terminal is one which can cash/validate high tier 
+                    winners and is usually located in the Lottery offices. 
+                    0=not a privileged terminal 
+                    1=yes it is a privileged terminal
+     *CANtim      - Enables/disables cancellation time limit (0=disable, 
+                    1=enabled)
+
+
+
+
+
+     TYPSNP.HLP             GTECH Distributed Network
+                            Agent Type Snapshot Help           Page 3 of 4
+
+      *SUPWag     - Enables/disables wagering functions for a selected 
+                    terminal. A global suppresion is the default.  To 
+                    suppress a specific game the game number should be 
+                    entered first using the SUPW1 command. 
+                    Values are (0=active, 1=suppressed)
+      *SUPCan     - Enables/disables cancel functions for a selected 
+                    terminal. A global suppresion is the default.  To 
+                    suppress a specific game the game number should be 
+                    entered first by using the SUPC1 command. (0=active, 
+                    1=suppressed)
+      *SUPVal     - Enables/disables validation functions for a selected 
+                    terminal. A global suppresion is the default.  To 
+                    suppress a specific game the game number should be 
+                    entered first by using the SUPV1 command. 
+                    (0=active, 1=suppressed)
+      *DESenc     - a changable parameter that enables/disables data   
+                    encryption for a specific terminal.
+                    Values are 0=disabled, 1=enabled
+
+   TYPSNP.HLP              GTECH Distributed Network
+                           Agent Type Snapshot Help           Page 4 of 4
+ 
+ 
+    
+       *SUPSpe   - enables/disables special functions for a specific 
+                   terminal
+                   0=active   1=suppressed
+       *COMMis   - commission status (0=yes, 1=no)                   
+       *TKTmes   - ticket messsage status (0=yes, 1=no)
+       *SONsmrt  - enables/disables sign-on with smart card
+                   (0=yes, 1=no)
+       *LANGuag  - sets default language on the terminal.
+                   (0=Swedish, 1=Finnish, 2=English) 
+       *RAMset   - resets text in terminal memory (0=no, 1=yes)
+
+
+
+
+
+
+

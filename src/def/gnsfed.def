@@ -1,0 +1,87 @@
+* GNSFED.DXX
+C $Log:   GXAFXT:[GOLS]GNSFED.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:27:02   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 18:44:16   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+*
+* V01 01-AUG-90 XXX RELEASED FOR VAX
+*
+* GNSFED.DEF
+*
+* V01 01-AUG-90 XXX RELEASED FOR VAX
+*
+* V01 03-JUN-90 MRM INITIAL RELEASE.
+*
+* The DEF describes the variables which are used to store
+* the Front End Statistics by time interval.
+*
+* NOTE:  If you add a field to this file remember to update
+*        the GNSFED_ENTRIES counter, the GNSFED_FIELD, and
+*        the GNSFED_RANGE tables.
+*
+* DECLARE THE RECORD VARIABLES.
+* NOTE: RECORD SIZE = 16 BYTES FE INFOR (FIXED) + 16 BYTES
+* ADDITIONAL USE = 32 BYTES PER PORT
+*
+*
+*
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+* This item is the property of GTECH Corporation, Providence, Rhode
+* Island, and contains confidential and trade secret information. It
+* may not be transferred from the custody or control of GTECH except
+* as authorized in writing by an officer of GTECH. Neither this item
+* nor the information it contains may be used, transferred,
+* reproduced, published, or disclosed, in whole or in part, and
+* directly or indirectly, except as expressly authorized by an
+* officer of GTECH, pursuant to written agreement.
+*
+* Copyright 1990 GTECH Corporation. All rights reserved.
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*
+	INTEGER*4   GNSFED_RECSIZ
+	PARAMETER  (GNSFED_RECSIZ=8)    !Size of each port record
+	INTEGER*4   GNSFED_SECT         !Number of sectors per rec
+	INTEGER*4   GNSFED_TEMP
+	PARAMETER  (GNSFED_TEMP=((X2X_SAP_PORTS*GNSFED_RECSIZ/64)+1))
+	PARAMETER  (GNSFED_SECT=GNSFED_TEMP+
+     *                         (GNSFED_TEMP-((GNSFED_TEMP/2)*2)))
+	CHARACTER   GNSFED_NAME*10      !Global Setup file name
+	DATA        GNSFED_NAME /'GNSFED.FIL'/
+	INTEGER*4   GNSFED_FDB(7)       !File descriptor block
+	DATA        GNSFED_FDB /7*0/
+*
+	INTEGER*4   GNSFED_REC(GNSFED_SECT*64)     !Record buffer
+	INTEGER*4   GNSFED_BUF(GNSFED_RECSIZ)      !Record buffer
+	CHARACTER   GNSFED_CREC(GNSFED_SECT*256)*1 !Record buffer
+	EQUIVALENCE (GNSFED_REC, GNSFED_CREC)
+*
+* DECLARE VARIABLES.
+*
+	INTEGER*4   GNSFED_TIME         !Time updated
+	INTEGER*4   GNSFED_MAXCAP	!Maximum capacity
+	INTEGER*4   GNSFED_FREE(2)      !Free for use
+	INTEGER*4   GNSFED_FEMSG(4)     !Front end message info
+*
+* EQUIVALENCE FIELD VARIABLES INTO RECORD.
+*
+	EQUIVALENCE (GNSFED_BUF(1),  GNSFED_TIME)
+	EQUIVALENCE (GNSFED_BUF(2),  GNSFED_MAXCAP)
+	EQUIVALENCE (GNSFED_BUF(3),  GNSFED_FREE)
+	EQUIVALENCE (GNSFED_BUF(5),  GNSFED_FEMSG)
+*
+* COMMON THE RECORD BUFFER.
+*
+	VOLATILE /GNSFED_COMMON/
+	COMMON /GNSFED_COMMON/ GNSFED_REC,   GNSFED_FDB, GNSFED_BUF
+*
+*
+*
+*
+*
+*
+*

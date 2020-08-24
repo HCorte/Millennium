@@ -1,0 +1,352 @@
+C
+C X2XGBL.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XGBL.DEV                                   $
+C  $Date::   17 Apr 1996 16:42:50                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C	4-MAR-94    JWE	Broadcast server
+C
+C V10 15-JUN-00 UXN COMMON/X2XGBL_NAME/ X2XGBL_NAME and 	
+C                   COMMON/X2XGBL_INDEX/ X2XGBL_INDEX added.
+C V09 18-AUG-95 DAS ADDED SUPPORT FOR BACKGROUND DOWNLOADS
+C V08 29-DEC-94 WJK MOVE UNSOLICITED STATION CONNECT AND DISCONNECT FROM GLOBAL
+C                   TO STATION CLASS
+C V07 20-DEC-94 GPR Integrate UK changes into X2X Baseline
+C V06 01-NOV-94 GPR Add ! to fields which require RUNSYS and $ to
+C		    fields which require X2BLDNET to take effect
+C		    and get rid of X2XGBL_COMTYP
+C V05 26-OCT-94 GPR Change to Maint Options instead of Flow Control
+C V04 20-OCT-94 GPR Get rid X2XGBL_FECON
+C V03 25-JUL-94 SCD Allow configuration of new GVTs during an online game
+C V02 19-JUL-94 WS MULTINETWORK CHANGES
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C The DEF describes the variables which are contained in the
+C X2X Global Setup File.
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XGBL_ENTRIES counter, the X2XGBL_FIELD, and
+C        the X2XGBL_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1995 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   X2XGBL_REC(128)     !Record buffer
+	INTEGER*4   X2XGBL_SECT         !Number of sectors per rec
+	PARAMETER  (X2XGBL_SECT=2)
+	CHARACTER   X2XGBL_NAME*10      !Global Setup file name
+	DATA        X2XGBL_NAME /'X2XGBL.FIL'/
+	COMMON/X2XGBL_NAME/ X2XGBL_NAME
+	INTEGER*4   X2XGBL_FDB(7)       !File descriptor block
+	DATA        X2XGBL_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XGBL_SAP          !Game service access point
+	INTEGER*4   X2XGBL_DEBUG        !System debug flag
+	INTEGER*4   X2XGBL_STNDIS       !Station disconnect
+	INTEGER*4   X2XGBL_FEDIS        !Front End disconnect
+	INTEGER*4   X2XGBL_DELACK       !Delivery Acknowledge
+	INTEGER*4   X2XGBL_DELERR       !Delivery Error
+	INTEGER*4   X2XGBL_RTYLIM       !Network outcall retry limit
+	INTEGER*4   X2XGBL_RTYTIM       !Network outcall retry time
+	INTEGER*4   X2XGBL_OUTTIM       !Network outcall timeout
+	INTEGER*4   X2XGBL_INTIM        !Network incall timeout
+	INTEGER*4   X2XGBL_XMAXSIZ      !SAP max xport block size
+	INTEGER*4   X2XGBL_XMAXCNT      !SAP max xport block count
+	INTEGER*4   X2XGBL_XSNDINT      !SAP send interval for remotes
+	INTEGER*4   X2XGBL_MAINT_OPTIONS !SAP Maintenance Options	!V05
+	INTEGER*4   X2XGBL_XSNDBEG      !SAP send begin time
+	INTEGER*4   X2XGBL_UNSFECON     !Unsolicited FE connect mode
+	INTEGER*4   X2XGBL_UNSFEDIS     !Unsolicited FE disconnect mode
+	INTEGER*4   X2XGBL_UNSDEL       !Unsolicited delivery flag
+	INTEGER*4   X2XGBL_MAXMES       !Max mess per Transport blk
+	INTEGER*4   X2XGBL_MESLEN       !Max mess length
+	INTEGER*4   X2XGBL_DELAY        !Max mess before being xmitted
+	INTEGER*4   X2XGBL_GAMSTAT      !Game state
+	INTEGER*4   X2XGBL_PROTIM       !X2XPRO flush interval (msec)
+	INTEGER*4   X2XGBL_MGRTIM       !X2XMGR loop delay
+	INTEGER*4   X2XGBL_SAPTIM       !SAP loop delay
+	INTEGER*4   X2XGBL_MANTIM       !Maintainence loop delay
+	INTEGER*4   X2XGBL_STSTIM       !Statistics interval
+	INTEGER*4   X2XGBL_THRES1       !SAP threshold level 1
+	INTEGER*4   X2XGBL_THRES2       !SAP threshold level 2
+	INTEGER*4   X2XGBL_THRES3       !SAP threshold level 3
+	INTEGER*4   X2XGBL_THRES4       !SAP threshold level 4
+	INTEGER*4   X2XGBL_GAMQUE       !X2XMGR application queue
+	INTEGER*4   X2XGBL_NETSTAT      !Station send network delay
+	INTEGER*4   X2XGBL_AUTOUPD      !Station send Stats when new status
+	INTEGER*4   X2XGBL_MAXSEG       !RELAY Max segments per call
+	INTEGER*4   X2XGBL_RTYCNT       !RELAY Call retry count
+	INTEGER*4   X2XGBL_RTYINT       !RELAY Call retry interval (secs)
+	INTEGER*4   X2XGBL_ACKTIM       !RELAY Acknowledgement timeout (secs)
+	INTEGER*4   X2XGBL_FWDTIM       !RELAY Forwarding timeout (secs)
+	INTEGER*4   X2XGBL_CHK_NEW_STATIONS_CONNECT !Check if we update connect
+C					!status for new stations
+	INTEGER*4   X2XGBL_NUMNODES     !Number of network nodes
+	INTEGER*4   X2XGBL_DEFCHK       !Check default param checksums
+	INTEGER*4   X2XGBL_DISMESS      !FE to send disconnect messages
+	INTEGER*4   X2XGBL_DISMESS_TIMOUT !FE timeout to disconnect
+	INTEGER*4   X2XGBL_UPDATE       !CDC last updated (based on sys time)
+        INTEGER*4   X2XGBL_RELPRI       !Relay priority
+        INTEGER*4   X2XGBL_GROUP_LEN    !Relay group length 
+C
+C V06
+        INTEGER*4   X2XGBL_BCST_ENABLE         !BCST enable flag
+        INTEGER*4   X2XGBL_BCST_RETRY_INTERVAL !RETRY INTERVAL IN SECS
+        INTEGER*4   X2XGBL_BCST_RETRY_LIMIT    !MAX NO OF TRIES (0 FOR EVER)
+        INTEGER*4   X2XGBL_BCST_AUTO_REPORT    !STATION REPORTS BCST CONNECT
+C                                            !STATUS                   @
+        INTEGER*4   X2XGBL_BCST_ROUTE          !DESTINATION FOR BROADCAST SERVICE
+C END V06
+
+	INTEGER*4   X2XGBL_X2X_LOG_ENABLE	!LOG TO X2X FILE
+	INTEGER*4   X2XGBL_RELAY_LOG_ENABLE	!LOG RELAY MESSAGES
+
+        INTEGER*4   X2XGBL_GVT_CFG_ENABLE       !ENABLE/DISABLE FLAG FOR ONLINE
+                                                !GVT CONFIGURATION - V03
+        INTEGER*4   X2XGBL_DLL_USE_ENVELOPE     !Use "envelope" for downloading
+        INTEGER*4   X2XGBL_REQ_BACKGROUND_DELAY !Delay before next request
+        INTEGER*4   X2XGBL_DLL_ENABLE_BACKGROUND!Stop bAckground download
+        INTEGER*4   X2XGBL_DLL_BACKGROUND_FLAG  !Use background download mode
+        INTEGER*4   X2XGBL_ENABLE_TEST_DLL      !Enable test load, both
+        INTEGER*4   X2XGBL_DLL_ENABLE_FORGROUND !Stop forground loading
+        INTEGER*4   X2XGBL_REQ_FORGROUND_DELAY  !Delay before next request
+C                                              !global and station class has
+C                                              !to be enabled	
+C....	INTEGER*4   X2XGBL_FREE(67)     !Free space
+	INTEGER*4   X2XGBL_BITMAP       !Bitmap of updated fields
+	INTEGER*4   X2XGBL_BITMAP2      !Bitmap of updated fields
+	INTEGER*4   X2XGBL_BITMAP3      !Bitmap of updated fields
+	INTEGER*4   X2XGBL_BITMAP4      !Bitmap of updated fields
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C	
+C	***** Start V07 changes *****
+C
+	EQUIVALENCE (X2XGBL_REC(1),  X2XGBL_SAP)
+	EQUIVALENCE (X2XGBL_REC(2),  X2XGBL_DEBUG)
+	EQUIVALENCE (X2XGBL_REC(3),  X2XGBL_STNDIS)
+	EQUIVALENCE (X2XGBL_REC(4),  X2XGBL_FEDIS)
+	EQUIVALENCE (X2XGBL_REC(5),  X2XGBL_DELACK)
+	EQUIVALENCE (X2XGBL_REC(6),  X2XGBL_DELERR)
+	EQUIVALENCE (X2XGBL_REC(7),  X2XGBL_RTYLIM)
+	EQUIVALENCE (X2XGBL_REC(8),  X2XGBL_RTYTIM)
+	EQUIVALENCE (X2XGBL_REC(9),  X2XGBL_OUTTIM)
+	EQUIVALENCE (X2XGBL_REC(10), X2XGBL_INTIM)
+	EQUIVALENCE (X2XGBL_REC(11), X2XGBL_XMAXSIZ)
+	EQUIVALENCE (X2XGBL_REC(12), X2XGBL_XMAXCNT)
+	EQUIVALENCE (X2XGBL_REC(13), X2XGBL_XSNDINT)
+	EQUIVALENCE (X2XGBL_REC(14), X2XGBL_MAINT_OPTIONS)
+	EQUIVALENCE (X2XGBL_REC(15), X2XGBL_XSNDBEG)
+	EQUIVALENCE (X2XGBL_REC(16), X2XGBL_UNSFECON)
+	EQUIVALENCE (X2XGBL_REC(17), X2XGBL_UNSFEDIS)
+	EQUIVALENCE (X2XGBL_REC(18), X2XGBL_UNSDEL)
+	EQUIVALENCE (X2XGBL_REC(19), X2XGBL_MAXMES)
+	EQUIVALENCE (X2XGBL_REC(20), X2XGBL_MESLEN)
+	EQUIVALENCE (X2XGBL_REC(21), X2XGBL_DELAY)
+	EQUIVALENCE (X2XGBL_REC(22), X2XGBL_GAMSTAT)
+	EQUIVALENCE (X2XGBL_REC(23), X2XGBL_PROTIM)
+	EQUIVALENCE (X2XGBL_REC(24), X2XGBL_MGRTIM)
+	EQUIVALENCE (X2XGBL_REC(25), X2XGBL_SAPTIM)
+	EQUIVALENCE (X2XGBL_REC(26), X2XGBL_MANTIM)
+	EQUIVALENCE (X2XGBL_REC(27), X2XGBL_STSTIM)
+	EQUIVALENCE (X2XGBL_REC(28), X2XGBL_THRES1)
+	EQUIVALENCE (X2XGBL_REC(29), X2XGBL_THRES2)
+	EQUIVALENCE (X2XGBL_REC(30), X2XGBL_THRES3)
+	EQUIVALENCE (X2XGBL_REC(31), X2XGBL_THRES4)
+	EQUIVALENCE (X2XGBL_REC(32), X2XGBL_GAMQUE)
+	EQUIVALENCE (X2XGBL_REC(33), X2XGBL_NETSTAT)
+	EQUIVALENCE (X2XGBL_REC(34), X2XGBL_AUTOUPD)
+	EQUIVALENCE (X2XGBL_REC(35), X2XGBL_MAXSEG)
+	EQUIVALENCE (X2XGBL_REC(36), X2XGBL_RTYCNT)
+	EQUIVALENCE (X2XGBL_REC(37), X2XGBL_RTYINT)
+	EQUIVALENCE (X2XGBL_REC(38), X2XGBL_ACKTIM)
+	EQUIVALENCE (X2XGBL_REC(39), X2XGBL_FWDTIM)
+	EQUIVALENCE (X2XGBL_REC(40), X2XGBL_CHK_NEW_STATIONS_CONNECT)
+	EQUIVALENCE (X2XGBL_REC(41), X2XGBL_NUMNODES)
+	EQUIVALENCE (X2XGBL_REC(42), X2XGBL_DEFCHK)
+	EQUIVALENCE (X2XGBL_REC(43), X2XGBL_DISMESS)
+	EQUIVALENCE (X2XGBL_REC(44), X2XGBL_DISMESS_TIMOUT)
+        EQUIVALENCE (X2XGBL_REC(45), X2XGBL_RELPRI)
+        EQUIVALENCE (X2XGBL_REC(46), X2XGBL_GROUP_LEN)
+C
+C V06
+	EQUIVALENCE (X2XGBL_REC(47), X2XGBL_BCST_ENABLE)
+	EQUIVALENCE (X2XGBL_REC(48), X2XGBL_BCST_RETRY_INTERVAL)
+	EQUIVALENCE (X2XGBL_REC(49), X2XGBL_BCST_RETRY_LIMIT)
+	EQUIVALENCE (X2XGBL_REC(50), X2XGBL_BCST_AUTO_REPORT)
+	EQUIVALENCE (X2XGBL_REC(51), X2XGBL_BCST_ROUTE)
+C END V06
+C
+	EQUIVALENCE (X2XGBL_REC(52), X2XGBL_GVT_CFG_ENABLE)	!V03
+	EQUIVALENCE (X2XGBL_REC(53), X2XGBL_X2X_LOG_ENABLE)
+	EQUIVALENCE (X2XGBL_REC(54), X2XGBL_RELAY_LOG_ENABLE)
+C END V08
+C
+        EQUIVALENCE (X2XGBL_REC(55),X2XGBL_DLL_USE_ENVELOPE)
+        EQUIVALENCE (X2XGBL_REC(56),X2XGBL_REQ_BACKGROUND_DELAY)
+        EQUIVALENCE (X2XGBL_REC(57),X2XGBL_DLL_ENABLE_BACKGROUND)
+        EQUIVALENCE (X2XGBL_REC(58),X2XGBL_DLL_BACKGROUND_FLAG)
+        EQUIVALENCE (X2XGBL_REC(59), X2XGBL_ENABLE_TEST_DLL)            !V03
+        EQUIVALENCE (X2XGBL_REC(60),X2XGBL_REQ_FORGROUND_DELAY)
+        EQUIVALENCE (X2XGBL_REC(61),X2XGBL_DLL_ENABLE_FORGROUND)
+	EQUIVALENCE (X2XGBL_REC(62), X2XGBL_UPDATE)		!V03
+	EQUIVALENCE (X2XGBL_REC(125),X2XGBL_BITMAP)
+ 	EQUIVALENCE (X2XGBL_REC(126),X2XGBL_BITMAP2)
+	EQUIVALENCE (X2XGBL_REC(127),X2XGBL_BITMAP3)
+	EQUIVALENCE (X2XGBL_REC(128),X2XGBL_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XGBL_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XGBL_ENTRIES
+	PARAMETER (X2XGBL_ENTRIES=62)					!V08
+C
+	CHARACTER X2XGBL_FIELD(X2XGBL_ENTRIES)*15
+	INTEGER*4 IXCNT2, JXCNT1
+	DATA     (X2XGBL_FIELD(IXCNT2),IXCNT2=1,45)
+     *	    /'!Game SAP      ','Debug Flag     ','Stn Disconnect ',
+     *	     'FE Disconnect  ','Delivery ACK   ','Delivery ERR   ',	!V04
+     *	     'Out retry limit','Out retry time ','Outcall timeout',
+     *	     'Incall timeout ','SAP xblk size  ','SAP xblk count ',
+     *	     'SAP send intval','Maint Options  ','SAP begin time ',
+     *	     'Uns FE connect ','Uns FE discnct ','Uns deliver flg',	!V08
+     *       'Max Messages   ',						!V08
+     *	     'Max Mess Length','Max Mess Delay ','Game state     ',	!V06
+     *	     'X2XPRO flush   ','X2XMGR delay   ','SAP loop delay ',
+     *	     'Maintain delay ','Statistics time','SAP threshold 1',
+     *	     'SAP threshold 2','SAP threshold 3','SAP threshold 4',
+     *	     'Game appl queue','Network stats  ','Stats auto upd ',
+     *	     'Max segments   ','Retry count    ','Retry interval ',
+     *	     'ACK timeout    ','Forward timeout','Status new stns',
+     *	     'Network nodes  ','Default chksum ','FE disc mess   ',	!V08
+     *	     'FE disc timeout','Relay priority '/			!V08
+
+	DATA    (X2XGBL_FIELD(IXCNT2),IXCNT2=46,X2XGBL_ENTRIES)
+     *	    /'!Relay grp len ',						!V08
+     *       'BCST enable    ','BCST retry intv','BCST retries   ',	!V06
+     *	     'BCST auto upd  ','BCST routing   ','GVT Cfg Enable ',
+     *       'X2X log enable ','Relay log enabl','Download envlop',
+     *       'Req bgrnd delay','Dll enbl bkgrnd','Dll use forgrnd',
+     *       'Enable test dll','Req fgrnd delay','Dll enbl frgrnd',
+     *       'Last updated   '/	!V03
+C
+C STORE THE VALID INPUT RANGE FOR EACH VARIABLE.
+C
+	INTEGER*4 X2XGBL_RANGE(2,X2XGBL_ENTRIES)
+	DATA     ((X2XGBL_RANGE(JXCNT1,IXCNT2),JXCNT1=1,2),IXCNT2=1,45)
+     *	    /10,32,      0,32768,   0,15,
+     *	     0,3,        0,1,       0,1,			!V04
+     *	     0,100,      0,50000,   0,99999000,
+     *	     0,99999000, 0,10000,   0,1000,
+     *	     0,50000,    0,255,     0,50000,
+     *	     0,4,                   0,3,			!V08
+     *	                 64,96,     1,5000,			!V08
+     *	     1,5000,     1,5000,    1,4,			!V06
+     *	     0,50000,    10,10000,  0,20000,
+     *	     0,50000,    0,50000,   0,400,
+     *	     0,100,      0,50,      0,25,			!V02
+     *	     1,4,        0,1,       0,1,			!V02
+     *	     1,255,      1,100,     1,1000,
+     *	     1,500,      1,500,     0,1,
+     *	     1,10,       0,1,       0,1,			!V08
+     *	     0,255,      0,2/  					!V08
+	DATA   ((X2XGBL_RANGE(JXCNT1,IXCNT2),JXCNT1=1,2),
+     *	      IXCNT2=46,X2XGBL_ENTRIES)
+     *	    /1,X2X_LIST_LEN,		                        !V08
+     *       0,1,        0,360000,  0,9999,
+     *	     0,1,        0,3,       0,1,			!V02
+     *       0,1,        0,1,       0,1, 
+     *       0,600,      0,1,       0,1,
+     *       0,1,        0,600,     0,1,
+     *       0,0/
+C	
+C	***** End V07 changes *****
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XGBL_INDEX(X2XGBL_ENTRIES)
+	COMMON/X2XGBL_INDEX/ X2XGBL_INDEX
+	DATA      X2XGBL_INDEX
+     *	    /1,   2,   3,   4,   5,   6,
+     *	     7,   8,   9,  10,  11,  12,
+     *	    13,  14,  15,  16,  17,  18,
+     *	    19,  20,  21,  22,  23,  24,
+     *	    25,  26,  27,  28,  29,  30,
+     *	    31,  32,  33,  34,  35,  36,
+     *	    37,  38,  39,  40,  41,  42,
+     *	    43,  44,  45,  46,  47,  48,
+     *	    49,  50,  51,  52,  53,  54,
+     *	    55,  56,  57,  58,  59,  60,
+     *      61,  62/						!V08
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C	
+C	***** Start V07 changes *****
+C
+	INTEGER*4 X2XGBL_VALUE(15,X2XGBL_ENTRIES)
+      DATA     ((X2XGBL_VALUE(JXCNT1,IXCNT2),JXCNT1=1,15),IXCNT2=1,45)
+     *	    /15*-1, 15*-1, 0,7,8,9,10,11,12,13,14,15,5*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1,					!V08
+     *	     64,96, 13*-1, 15*-1,	!V08
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,					!V08
+     *       15*-1, 15*-1/						!V08
+      DATA    ((X2XGBL_VALUE(JXCNT1,IXCNT2),JXCNT1=1,15),IXCNT2=46,
+     *		  X2XGBL_ENTRIES)
+     *	    /15*-1, 15*-1,					!V08
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1/
+C	
+C	***** End V07 changes *****
+C
+	INTEGER*4 X2XGBL_INDX
+C
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XGBL_COMMON/
+	COMMON /X2XGBL_COMMON/ X2XGBL_REC,    X2XGBL_FDB,
+     *	                       X2XGBL_RANGE,  X2XGBL_INDX,
+     *	                       X2XGBL_VALUE,  X2XGBL_FIELD

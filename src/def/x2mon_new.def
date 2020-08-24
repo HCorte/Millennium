@@ -1,0 +1,92 @@
+C
+C X2MON_NEW
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2MON_NEW.DEV                                $
+C  $Date::   17 Apr 1996 16:23:58                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  GXSRC:X2MON_NEW.DEF
+C
+C V01 13-DEC-94 GPR RELEASED FOR UK
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INTEGER*4 END_SCREEN
+        PARAMETER (END_SCREEN = 21)
+C
+        INTEGER*4 SCREEN_LINE
+	INTEGER*4 NUM_ALARMS
+	INTEGER*4 NUM_COMMANDS,LEN_COMMAND
+	PARAMETER (NUM_COMMANDS=20,LEN_COMMAND=8)
+C
+        LOGICAL     BEGIN
+        LOGICAL     UPDATE_SCREEN
+	LOGICAL	    HISTORY /.FALSE./
+C
+	CHARACTER*8	STR_COMMANDS(NUM_COMMANDS)
+	CHARACTER*1	COMMANDS(LEN_COMMAND,NUM_COMMANDS)
+	EQUIVALENCE (COMMANDS,STR_COMMANDS)
+C
+	INTEGER*4  MAX_INFO,MAX_BUFFER
+C
+	PARAMETER (MAX_INFO=8,
+     *		   MAX_BUFFER=500)
+C
+	CHARACTER*8	STR_COMMANDS_NUM(NUM_COMMANDS)
+	CHARACTER*1	COMMANDS_NUM(LEN_COMMAND,NUM_COMMANDS)
+	EQUIVALENCE (COMMANDS_NUM,STR_COMMANDS_NUM)
+	INTEGER*4 MESSAGE(MAX_INFO,MAX_BUFFER)
+	INTEGER*4 HISTORY_MESS(MAX_INFO,MAX_BUFFER)
+	INTEGER*4 START_HISTORY
+C
+C
+        COMMON /GLOBALSCREEN/ SCREEN_LINE,NUM_ALARMS,BEGIN,
+     *		UPDATE_SCREEN,MESSAGE,START_HISTORY,HISTORY_MESS,
+     *		HISTORY
+C
+	DATA STR_COMMANDS/'STOP    ','TOP     ','END     ','HISTORY ',
+     *		          'LIVE    ','SPARE   ','SPARE   ','SPARE   ',
+     *		          'SPARE   ','SPARE   ','SPARE   ','SPARE   ',
+     *		          'SPARE   ','SPARE   ','SPARE   ','SPARE   ',
+     *		          'SPARE   ','SPARE   ','SPARE   ','SPARE   '/
+C
+	DATA STR_COMMANDS_NUM/'INTERV  ','THRESH  ','DOWN    ','UP      ',
+     *		              'SPARE   ','SPARE   ','SPARE   ','SPARE   ',
+     *		              'SPARE   ','SPARE   ','SPARE   ','SPARE   ',
+     *		              'SPARE   ','SPARE   ','SPARE   ','SPARE   ',
+     *		              'SPARE   ','SPARE   ','SPARE   ','SPARE   '/
+C
+	INTEGER*4 BUF_MESSAGE_TYPE,
+     *		  BUF_SAP,
+     *		  BUF_PORT,
+     *		  BUF_OLD_VALUE,
+     *		  BUF_NEW_VALUE,
+     *		  BUF_TIME1,
+     *		  BUF_TIME2,
+     *		  BUF_NUMBER
+C
+	PARAMETER (BUF_MESSAGE_TYPE=1,
+     *		  BUF_SAP=2,
+     *		  BUF_PORT=3,
+     *		  BUF_OLD_VALUE=4,
+     *		  BUF_NEW_VALUE=5,
+     *		  BUF_TIME1=6,
+     *		  BUF_TIME2=7,
+     *		  BUF_NUMBER=8)
+C

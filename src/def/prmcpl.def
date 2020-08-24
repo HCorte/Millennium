@@ -1,0 +1,73 @@
+C  GXSRC:PRMCPL.DEF
+C  
+C  $Log:   GXAFXT:[GOLS]PRMCPL.DEV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:30:10   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.4   12 Dec 1995 15:02:44   PXB
+C  Event name length ghanged from 28 to 16.
+C  
+C     Rev 1.3   15 Nov 1995 13:00:30   PXB
+C  
+C     Rev 1.2   07 Nov 1995 22:14:26   HXK
+C  Changes for Double, Couple install
+C  
+C     Rev 1.1   06 Nov 1995  9:17:42   PXB
+C  Applying PVCS header for automatic revision history
+C  
+C     Rev 1.0    06 Nov 1995 9:16:42   PXB
+C  Initial revision.
+C  
+C PRMCPL.DEF
+C
+C  Initial Release
+C  DEC Baseline
+C
+C TODAYS COUPLE GAME AND POOL PARAMETERS
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1996 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	INTEGER*4 NUMCPL, MAXCPLRW, MAXCPLTI
+	PARAMETER(NUMCPL=6)             ! NUMBER OF SUPER DOUBLE GAMES
+	PARAMETER(MAXCPLRW=36)          ! MAX NUMBER OF WINNERS ROWS
+	PARAMETER(MAXCPLTI=16)	        ! MAX NUMBER OF TIES
+
+C NAME FILED LNGTH PARAMETERS
+
+	INTEGER*4 CPLENM_LEN, CPLDES_LEN , CPLNMS_LEN, CPLTVC_LEN
+	PARAMETER (CPLENM_LEN=16)	! EVENT NAME LENGTH IN BYTES
+	PARAMETER (CPLDES_LEN=120)      ! EVENT DESCRIPTION LENGTH IN BYTES     
+	PARAMETER (CPLNMS_LEN=16)	! ROW NAME LENGTH IN BYTES
+	PARAMETER (CPLTVC_LEN= 4)       ! LENGTH IN BYTES OF TC-CHANEL NAME.
+
+C TODAYS COUPLE POOL PARAMETERS
+
+	INTEGER*4 VALCPL, CPLPODDS, CPLPAMNT
+	PARAMETER(VALCPL=2)
+	  PARAMETER(CPLPODDS=1)         ! WINNERS POOL ODDS INDEX
+	  PARAMETER(CPLPAMNT=2)         ! WINNERS POOL AMOUNT INDEX
+
+	INTEGER*4 TYPCPL, CPLPDYNM, CPLPSTAT
+	PARAMETER(TYPCPL=2)
+	  PARAMETER(CPLPDYNM=1)         ! WINNERS DYNAMIC POOL INDEX
+	  PARAMETER(CPLPSTAT=2)         ! WINNERS STATIC POOL INDEX
+
+C TODAYS COUPLE MAXIMUM NUMBER OF TEXT MESSAGES
+
+	INTEGER*4 CPLTXMAX
+	PARAMETER(CPLTXMAX=3)           ! MAXIMUM TEXT MESSAGES
+
+	INTEGER*4 CPLMAXD		
+	PARAMETER(CPLMAXD=45)		! # OF ODDS TO DISPLAY.

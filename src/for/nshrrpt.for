@@ -1,0 +1,175 @@
+C
+C SUBROUTINE NSHRRPT
+C $Log:   GXAFXT:[GOLS]NSHRRPT.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 14:14:50   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.1   18 Oct 1993 14:09:20   HXK
+C  CHANGE REPORT NAME
+C  
+C     Rev 1.0   21 Jan 1993 17:09:48   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - nshrrpt.for **
+C
+C NSHRRPT.FOR
+C
+C V02 12-NOV-91 MTK INITIAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE NSHRRPT(GNUM,GIND,DRAW,COPY)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:DNBREC.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+
+	INTEGER*4 J, ST, DRAW, GIND, GNUM, PAGE, BNS, I
+	INTEGER*4 COPY,IND,N,NTYP
+	INTEGER*2 DATE(LDATE_LEN)
+	INTEGER*4 FDB(7),N3IND(10),N4IND(16),DIG(4)
+	INTEGER*4 ASALES(2,8),TSALES(2,8),WON(2,8),PRIZE(7),SALES(2,8)
+	CHARACTER*9 WHEN(3),DTYPE(2)
+	CHARACTER*47 HEAD
+	CHARACTER*11 REPNAM
+        DATA N3IND/1,2,3,4,5,5,6,6,7,7/
+        DATA N4IND/1,2,3,4,5,5,5,5,6,6,6,6,7,7,7,7/
+	DATA WHEN/'(TODAY  )','(ADVANCE)','(TOTAL  )'/
+	DATA DTYPE/'         ','<<BONUS>>'/
+C
+C
+C
+	PAGE = 0
+	CALL FASTSET(0,ASALES,16)
+	CALL FASTSET(0,TSALES,16)
+	CALL FASTSET(0,SALES,16)
+	CALL FASTSET(0,WON,16)
+	CALL FASTSET(0,PRIZE,7)
+	CALL OPENW(3,GFNAMES(1,GNUM),4,0,0,ST)
+	CALL IOINIT(FDB,3,DNBSEC*256)
+	IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM),1,ST,0)
+	CALL READW(FDB,DRAW,DNBREC,ST)
+	IF(ST.NE.0) CALL FILERR(GFNAMES(1,GNUM),2,ST,DRAW)
+C
+C
+	DATE(5)=DNBDAT(CURDRW)
+	CALL LCDATE(DATE)
+	WRITE(REPNAM,800) GIND
+	WRITE(HEAD,801) (GLNAMES(I,GNUM),I=1,4),(DATE(I),I=7,13)
+	CALL ROPEN(REPNAM,6,ST)
+	IF(ST.NE.0) THEN
+	  TYPE*,IAM(),REPNAM,' Open error  st - ',ST
+	  CALL USRCLOS1(6)
+	  RETURN
+	ENDIF
+C
+	CALL TITLE(HEAD,'NWINRP  ',GIND,6,PAGE,DAYCDC)
+	BNS=1
+	IF(DNBBDR.NE.0) BNS=2
+        DO 110 I=1,DNBPOL
+        IND=N4IND(I)
+        IF(DNBTYP.EQ.NB3TYP) IND=N3IND(I)
+        SALES(1,IND)=SALES(1,IND)+DNBSAL(1,I)
+	SALES(2,IND)=SALES(2,IND)+DNBSAL(2,I)
+	ASALES(1,IND)=ASALES(1,IND)+DNBASL(1,I)
+	ASALES(2,IND)=ASALES(2,IND)+DNBASL(2,I)
+	TSALES(1,IND)=TSALES(1,IND)+DNBSAL(1,I)-DNBASL(1,I)
+	TSALES(2,IND)=TSALES(2,IND)+DNBSAL(2,I)-DNBASL(2,I)
+110	CONTINUE
+	IF(DNBTYP.EQ.NB3TYP) WRITE(6,902)
+	IF(DNBTYP.EQ.NB4TYP) WRITE(6,903)	
+	WRITE(6,905) WHEN(1),(TSALES(1,I),I=1,8)
+	WRITE(6,906) (CMONY(TSALES(2,I),12,BETUNIT),I=1,8)
+        WRITE(6,905) WHEN(2),(ASALES(1,I),I=1,8)
+        WRITE(6,906) (CMONY(ASALES(2,I),12,BETUNIT),I=1,8)
+        WRITE(6,905) WHEN(3),(SALES(1,I),I=1,8)
+        WRITE(6,906) (CMONY(SALES(2,I),12,BETUNIT),I=1,8)
+	DO 200 I=1,BNS
+	N=DNBWIN(TNB3ST,I)
+        IF(DNBTYP.EQ.NB3TYP) THEN
+          NTYP=TNB3B6
+          N=DNBWIN(TNB3ST,I)
+          DO 120 J=1,3
+          DIG(J)=MOD(N,10)
+          N=N/10
+120       CONTINUE
+          CALL BOXTYP(DIG,NTYP,NB3TYP)
+          PRIZE(1)=DNBPRZ(1,I)
+          PRIZE(2)=DNBPRZ(2,I)
+          PRIZE(3)=DNBPRZ(3,I)
+          PRIZE(4)=DNBPRZ(TNB3ST,I)
+	  IF(NTYP.NE.0) THEN
+            PRIZE(5)=DNBPRZ(NTYP,I)
+            PRIZE(6)=DNBPRZ(NTYP+2,I)
+	  ENDIF
+          PRIZE(7)=DNBPRZ(TNB3ST,I)
+	ELSE
+          NTYP=TNB4B24
+          N=DNBWIN(TNB4ST,I)
+          DO 130 J=1,4
+          DIG(J)=MOD(N,10)
+          N=N/10
+130       CONTINUE
+          CALL BOXTYP(DIG,NTYP,NB4TYP)
+          PRIZE(1)=DNBPRZ(1,I)
+          PRIZE(2)=DNBPRZ(2,I)
+          PRIZE(3)=DNBPRZ(3,I)
+          PRIZE(4)=DNBPRZ(TNB4ST,I)
+	  IF(NTYP.NE.0) THEN
+            PRIZE(5)=DNBPRZ(NTYP,I)
+            PRIZE(6)=DNBPRZ(NTYP+4,I)
+	  ENDIF
+          PRIZE(7)=DNBPRZ(TNB4ST,I)
+	ENDIF
+        DO 140 J=1,DNBPOL
+        IND=N4IND(J)
+        IF(DNBTYP.EQ.NB3TYP) IND=N3IND(J)
+        WON(1,IND)=WON(1,IND)+DNBWON(1,J,I)
+	WON(2,IND)=WON(2,IND)+DNBWON(2,J,I)
+        WON(1,8)=WON(1,8)+DNBWON(1,J,I)
+        WON(2,8)=WON(2,8)+DNBWON(2,J,I)
+140     CONTINUE
+	WRITE(6,907) DTYPE(I),(WON(1,J),J=1,8)
+	WRITE(6,908) (CMONY(WON(2,J),12,VALUNIT),J=1,8)
+	WRITE(6,909) (CMONY(PRIZE(J),12,VALUNIT),J=1,7)
+200	CONTINUE
+	CALL USRCLOS1(     6)
+	CALL SPOOL(REPNAM,COPY,ST)
+	CALL CLOSEFIL(FDB)
+	RETURN
+C
+C
+800	FORMAT('N',I1,'WINRP.REP')
+801	FORMAT(4A4,' GAME REPORT FOR ',7A2)
+902     FORMAT(25X,'FRONT 2     BACK  2     SPLIT 2    STRAIGHT',
+     *         '         BOX     STR/BOX       COMBO       TOTAL'//)
+903     FORMAT(25X,'FRONT 2    MIDDLE 2      BACK 2    STRAIGHT',
+     *         '         BOX     STR/BOX       COMBO       TOTAL'//)
+905	FORMAT(1X,A9,' CNT SOLD ',8(I12))
+906	FORMAT(10X,' AMT SOLD ',8(A12),//)
+907     FORMAT(1X,A9,' CNT WON  ',8(I12))
+908     FORMAT(10X,' AMT WON  ',8(A12),//)
+909     FORMAT(10X,' PRIZE    ',8(A12),//)
+	END

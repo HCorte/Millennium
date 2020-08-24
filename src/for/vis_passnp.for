@@ -1,0 +1,403 @@
+C VIS_PASSNP.FOR
+C
+C V08 06-JUN-2014 FRP Display totals prize and paid amounts as 8 bytes
+C V07 10-OCT-2012 FRP GETWEEK: AAAACCC FORMAT INSTEAD OF YYYYWW FORMAT
+C V06 01-NOV-2010 FJG  Loto2 Batch: RFSS#0163 PRETTIM
+C V05 01-JAN-2010 FJG ePASSIVE
+C V04 01-AUG-2009 FJG Portugal Fiscal Legislation changes
+C V03 25-AUG-05 FRP Modify for Natal 2005: Correct totals for page #3.
+C V02 29-JUL-2004  FRP  Display 9 winning numbers per line for each division.
+C V01 27-DEC-00 CS  INITIAL RELEASE FOR PORTUGAL
+C
+C PASSIVE LOTTERY SNAPSHOT
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1990,1993,1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE PASSNP(DRAW, CLINE, GIND, PAG_NUM)
+	IMPLICIT NONE
+
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:PASCOM.DEF'
+	INCLUDE 'INCLIB:DPAREC.DEF'
+	INCLUDE 'INCLIB:TASKID.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:VISCOM.DEF'
+	INCLUDE 'INCLIB:ENCCOM.DEF'
+	INCLUDE 'INCLIB:QUECOM.DEF'
+	INCLUDE 'INCLIB:X2XQUE.DEF'
+	INCLUDE 'INCLIB:DATBUF.DEF'
+	INCLUDE 'INCLIB:PASNAM.DEF'
+C
+C SNAPSHOT PARAMETERS
+C
+	INTEGER * 4 DRAW, PAG_NUM
+C
+C SNAPSHOT FUNCTIONS
+C
+        INTEGER * 4 PAS_ROUND_VALUE
+C
+C LOCAL VARIABLES
+C
+        INTEGER*4    PREIND
+	INTEGER*4    KCMDNUM               !NUMBER OF COMMANDS IN PASSNP
+	PARAMETER    (KCMDNUM=2)
+
+	CHARACTER*11 STATUS
+	INTEGER*4    CLINE(20)
+	CHARACTER*18 NMSER(0:1)
+	CHARACTER*18 NMSER_EXT(0:1)
+
+	INTEGER*4    GIND,GNUM,ST,K,FDB(7),LIN,DIVS
+	INTEGER*4    BEGDIV,ENDDIV
+	INTEGER*4    CNTPRIZES,CNTPAID,INDDATE
+	INTEGER*4    EMIOFF,INDEMI
+	INTEGER*4    PRZAMT
+	INTEGER*8    AMTPRIZES,AMTPAID
+	INTEGER*2    DATEBUF(12)                 ! Auxiliary Cdate buffer
+
+	LOGICAL	     ON_MEMORY,FPOP,FEXT
+	INTEGER*4    EXTRA,TOTSHR, TOTPAD, GETDRW !FUNCTION
+	INTEGER*4    WEEK,YEAR,DAT  
+	INTEGER*4    TIME    
+	CHARACTER*10 TIMETEXT        
+	INTEGER*4    TOTCNT
+	INTEGER*8    TOTAMT
+
+	DATA NMSER /'winning/all series','not winning serie'/
+	DATA NMSER_EXT /'not winning serie','winning/all series'/
+C
+C INITIALIZE VARIABLES
+C
+
+	CNTPRIZES = 0
+	AMTPRIZES = 0
+	CNTPAID   = 0
+	AMTPAID   = 0
+	FPOP      = .FALSE.
+	FEXT      = .FALSE.
+
+C
+C CHECK GAME INDEX
+C
+	IF (GIND.LT.1 .OR. GIND.GT.NUMPAS) THEN
+	    WRITE(CLIN23,3000)
+	    RETURN
+	ENDIF
+C
+C CHECK GAME NUMBER
+C
+	GNUM = GTNTAB(TPAS,GIND)
+	IF (GNUM.LT.1) THEN
+	    WRITE(CLIN23,3010) GIND
+	    RETURN
+	ENDIF
+
+        CALL GETWEEK(CLINE,DAT)
+        IF (DAT.GT.0) THEN
+           WEEK = MOD(DAT,1000)
+           YEAR = INT(DAT/1000)
+           DRAW = GETDRW(YEAR,WEEK,GNUM)
+           IF (DRAW.LE.0) THEN
+              WRITE(CLIN23,3044)
+              RETURN
+           ENDIF
+        ENDIF
+C
+C
+C VERIFY EMISSION NUMBER
+C
+	IF(DRAW.LE.0) DRAW = DAYDRW(GNUM)
+	IF(PREIND.NE.GIND) THEN
+	  PREIND = GIND
+	  DRAW = DAYDRW(GNUM)
+	ENDIF
+C
+C GET DATA FROM COMMON OR DISK 
+C
+	ON_MEMORY = .FALSE.
+	DO INDEMI = 1, PAGEMI
+	    IF(DRAW.EQ.PASEMIS(INDEMI,GIND)) THEN
+		ON_MEMORY = .TRUE.
+		EMIOFF = INDEMI
+	    ENDIF
+	ENDDO
+
+	IF (ON_MEMORY) THEN
+	  CALL GAMLOGPAS(EMIOFF,GIND,DPAREC,PASSTS)
+	ELSE
+
+	  CALL OPENW(1,GFNAMES(1,GNUM),4,0,0,ST)
+
+	  CALL IOINIT(FDB,1,DPASEC*256)
+	  IF (ST.NE.0) THEN
+	      WRITE(CLIN23,3020) (GFNAMES(K,GNUM),K=1,5),ST
+	      CALL CLOSEFIL(FDB)
+	      RETURN
+	  ENDIF
+
+	  CALL READW(FDB,(DRAW-PAS_DRW_OFFSET),DPAREC,ST)
+	  IF (ST.NE.0) THEN
+	      WRITE(CLIN23,3030) (GFNAMES(K,GNUM),K=1,5),ST,DRAW
+	      CALL CLOSEFIL(FDB)
+	      RETURN
+	  ENDIF
+
+	  CALL CLOSEFIL(FDB)
+	ENDIF
+
+	IF (GIND.EQ.PSBPOP)   FPOP = .TRUE.
+	IF (DPAEMT.EQ.EM_EXT) FEXT = .TRUE.
+
+C CHECK PAGE NUMBER
+C
+	IF(PAG_NUM.LT.1 .OR. PAG_NUM.GT.5) PAG_NUM = 1
+	
+	IF(PAG_NUM.EQ.1 .OR. DPADIV.LE.13) THEN
+	    BEGDIV = 1
+	    ENDDIV = MIN(13,DPADIV)
+	ELSE
+	    BEGDIV = 14
+	    ENDDIV = MIN(26,DPADIV)
+	ENDIF
+
+	IF(PAG_NUM.EQ.3.AND.(FPOP.OR.FEXT)) THEN
+	   BEGDIV = 1
+	   ENDDIV = MIN(13,PAGEDV)
+           EXTRA = 1
+	ELSE
+	   EXTRA = 0
+	ENDIF
+C
+C PREPARE VISION SCREEN
+C
+	STATUS = 'is closed  '
+	IF(DPASTS.LT.GAMOPN) STATUS = 'NOT defined'
+	IF(DPASTS.EQ.GAMOPN) STATUS = 'is open    '  
+	IF(DPASTS.EQ.GAMBFD) STATUS = 'WaitForDraw'  
+	IF(DPASTS.EQ.GFINAL) STATUS = 'is final   '
+C
+C	SHOW END EMISSION DATE
+C
+	DATEBUF(5) = DPAESD
+	CALL CDATE(DATEBUF)
+C
+CC	IF (GIND.EQ.PSBPOP) THEN
+CC	   CALL FIGWEK (DPAESD,WEEK,YEAR)
+CC	ELSE
+CC	   CALL FIGWEK (DPABSD,WEEK,YEAR)
+CC	ENDIF
+C
+	CALL GETPASDRW(DPADRAW,WEEK,YEAR)
+C
+	WRITE(CLIN1,9000) GIND, YEAR, WEEK, (DATEBUF(INDDATE),INDDATE=VDNAM,12)
+	WRITE(CLIN2,9010) (GLNAMES(K,GNUM),K=1,4),
+     *			  CMONY(DPAPRC,8,BETUNIT),
+     *                    NAMPLANTYP(DPAEMT),
+     *                    DRAW
+	WRITE(CLIN3,9015) DPAPLAN,DPANUMSER,DPANOFFRA,DPANUMTCK
+C+++++++V06+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        IF(DPAESD.EQ.DAYCDC.AND.DPASTS.EQ.GAMBFD) THEN
+          IF(DPATIM.GT.'40000000'X) then
+            TIME = DPATIM - '40000000'X
+          ELSE
+            TIME = DPATIM
+          ENDIF
+          TIME = (P(ACTTIM) - TIME)/60
+          IF(TIME.LT.0) THEN
+            TIMETEXT = ' TimeERROR'
+          ELSE
+            IF(TIME.GE.P(PRETTIM)) THEN
+              TIMETEXT = ' NoReturns'            
+            ELSE
+              TIME = P(PRETTIM) - TIME
+              WRITE(TIMETEXT,9021) TIME
+            ENDIF
+          ENDIF
+        ELSE
+          TIMETEXT = '          '
+        ENDIF
+C+++++++V06+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+	IF(FEXT) THEN
+	  WRITE(CLIN4,9020) DISTIM(DPATIM),TIMETEXT,STATUS,NMSER_EXT(EXTRA)
+	ELSE
+	  WRITE(CLIN4,9020) DISTIM(DPATIM),TIMETEXT,STATUS,NMSER(EXTRA)
+	ENDIF
+	IF (PAG_NUM.EQ.4) THEN
+	  WRITE(CLIN5,9031)
+        ELSE
+	  WRITE(CLIN5,9030)
+	ENDIF
+	
+	DO LIN = 6,22
+	    WRITE(XNEW(LIN),9060)
+	ENDDO
+
+ 	IF(PAG_NUM.EQ.5) THEN
+ 	  LIN    = 5
+          TOTCNT = 0
+          TOTAMT = 0	 	  
+          DO DIVS = 1,17    ! PAGDIV+PAGEDV/2 = 17,5
+            TOTCNT = TOTCNT + DPADIVPLN(2,DIVS)
+            TOTAMT = TOTAMT + (DPADIVPLN(1,DIVS)*DPADIVPLN(2,DIVS))
+            TOTCNT = TOTCNT + DPADIVPLN(2,DIVS+18)
+            TOTAMT = TOTAMT + (DPADIVPLN(1,DIVS+18)*DPADIVPLN(2,DIVS+18))    
+!                    
+            WRITE(XNEW(LIN),9033) CMONY(DPADIVPLN(1,DIVS),18,VALUNIT),DPADIVPLN(2,DIVS),
+     *                            CMONY(DPADIVPLN(1,DIVS+18),18,VALUNIT),DPADIVPLN(2,DIVS+18)
+            LIN = LIN + 1
+	  ENDDO
+
+          TOTCNT = TOTCNT + DPADIVPLN(2,18)
+          TOTAMT = TOTAMT + (DPADIVPLN(1,18)*DPADIVPLN(2,18))
+!                    
+          WRITE(XNEW(LIN),9034) CMONY(DPADIVPLN(1,18),18,VALUNIT),DPADIVPLN(2,18),
+     *                          CMONYI8(TOTAMT,18,VALUNIT),TOTCNT
+ 	  RETURN
+ 	ENDIF
+ 	LIN = 6
+	DO DIVS = BEGDIV,MIN(ENDDIV, DPADIV)
+	    IF ((FPOP.OR.FEXT).AND.EXTRA.EQ.1.AND.DIVS.LE.PAGEDV) THEN
+               PRZAMT = PAS_ROUND_VALUE(DPAEXSHV(DIVS))
+	       TOTSHR = DPAEXSHR(DIVS)
+	    ELSE
+               PRZAMT = PAS_ROUND_VALUE(DPASHV(DIVS))
+	       TOTSHR = DPASHR(DIVS)
+	    ENDIF
+	    IF (PRZAMT.NE.0) THEN
+		TOTPAD = PRZAMT/DPANOFFRA
+	        WRITE (XNEW(LIN),9040) DIVS,CMONY(PRZAMT,12,VALUNIT), 
+     *				       TOTSHR*DPANUMSER,
+     *				       CMONY((PRZAMT*TOTSHR*
+     *					        DPANUMSER),
+     *					        12,VALUNIT),
+     *				       DPAPAD(DIVS),
+     *				      CMONY((DPAPAD(DIVS)*TOTPAD),12,VALUNIT)
+	        LIN = LIN + 1
+	    ENDIF
+
+	ENDDO
+C
+C PRINT TOTALS
+C
+	ENDDIV=DPADIV
+	IF((FPOP.OR.FEXT).AND.EXTRA.EQ.1) ENDDIV=PAGEDV
+	DO DIVS = 1,ENDDIV
+	    IF ((FPOP.OR.FEXT).AND.EXTRA.EQ.1) THEN
+               PRZAMT = PAS_ROUND_VALUE(DPAEXSHV(DIVS))
+	       TOTSHR = DPAEXSHR(DIVS)
+	    ELSE
+               PRZAMT = PAS_ROUND_VALUE(DPASHV(DIVS))
+	       TOTSHR = DPASHR(DIVS)
+	    ENDIF
+	    IF (PRZAMT.NE.0) THEN
+	       TOTPAD = PRZAMT/DPANOFFRA
+	       CNTPRIZES = CNTPRIZES + TOTSHR  * DPANUMSER
+	       AMTPRIZES = AMTPRIZES + KZEXT((PRZAMT * TOTSHR * DPANUMSER))
+	       CNTPAID   = CNTPAID   + DPAPAD(DIVS)
+	       AMTPAID   = AMTPAID   + KZEXT((DPAPAD(DIVS) * TOTPAD))
+	    ENDIF
+	ENDDO
+
+	WRITE(XNEW(LIN),9050) CNTPRIZES,
+     *			      CMONYK8(AMTPRIZES,12,VALUNIT),
+     *			      CNTPAID,
+     *			      CMONYK8(AMTPAID,12,VALUNIT)
+	LIN = LIN + 1
+C
+C DISPLAY WINNING NUMBERS, IF AVAILABLE
+C
+	IF(PAG_NUM .EQ. 4) THEN !DPASTS .GE. GAMENV .AND.
+	    DO LIN = 6,22
+	       WRITE(XNEW(LIN),9060)
+	    ENDDO
+	    LIN = 6
+	    DO DIVS=1,DPADIV
+	       IF (DPAWNUM(DIVS).GT.0) THEN
+	          WRITE(XNEW(LIN),9400) DIVS, (DPAWIN(K,DIVS),K=1,MIN(DPAWNUM(DIVS),9))
+	          LIN = LIN + 1
+	          IF (DPAWNUM(DIVS).GT.9) THEN
+	             WRITE(XNEW(LIN),94051) (DPAWIN(K,DIVS),K=10,MIN(DPAWNUM(DIVS),18))
+                     LIN = LIN + 1
+	             IF (DPAWNUM(DIVS).GT.18) THEN
+	                WRITE(XNEW(LIN),9405) (DPAWIN(K,DIVS),K=19,MIN(DPAWNUM(DIVS),PAGNBR))
+                        LIN = LIN + 1
+	             ENDIF
+	          ENDIF
+	       ENDIF
+	    ENDDO
+	
+        ELSEIF (PAG_NUM.EQ.4) THEN
+	    WRITE(XNEW(10),9421)
+	ENDIF
+	RETURN
+C
+C FORMAT STATEMENTS
+C
+3000	FORMAT('Enter !passive game index ')
+3001    FORMAT('Ingrese !indice ')
+3010	FORMAT('Passive ',I1,' game not active')
+3011    FORMAT('Billetes ',I1,' juego no esta activo')
+3020	FORMAT(5A4,' open error ',I4)
+3021    FORMAT(5A4,' error de apertura ',I4)
+3030	FORMAT(5A4,' read error ',I4,' record > ',I10)
+3031    FORMAT(5A4,' error de lectura ',I4,' registro > ',I10)
+3042	FORMAT('Valor erroneo')
+3043	FORMAT('Value error')
+3044	FORMAT('Input Error')
+3045	FORMAT('Error de Lectura')
+
+C
+C PORTUGUESE FORMATS
+C
+
+9000	FORMAT('Passive ',I1,' Extraction:',I4,'/',I2,6A2)
+9010    FORMAT(4A4,2X,'Fraction price: ',A8,2X,' Type: ',A14, ' DRAW: ', I5)
+9015	FORMAT('Plan ',I6,2X,'Serie(s): ',I2,2X,'# Fractions: ',I2,2X,
+     *         ' Tickets per serie:',I9)
+9020	FORMAT('Close ',A8,A10,' Extraction ',A11,' Prize: ',A18)
+9021    FORMAT(' +R:',I4,'m ')
+9030	FORMAT(1X,'DIVISION',1X,'---PRIZE----',
+     *	       1X,'-----WINNERS--------',1X,'---FRACTIONS PAIDS--')
+9031	FORMAT(1X,'--DIVISION--',1X,'-----WINNING NUMBERS----')
+9033    FORMAT(2(1X,A18,1X,I18,1X))
+9034    FORMAT(1X,A18,1X,I18,1X'>',A18,'*',I18,'<')
+9040	FORMAT(5X,I2,4X,A12,1X,I6,2X,A12,1X,I6,2X,A12)
+9050	FORMAT(3X,'TOTALS',15X,I6,2X,A12,1X,I6,2X,A12)
+9060	FORMAT(78X)
+
+C9400	FORMAT('Winning Numbers       ',7(I6.6,2X))
+C9405	FORMAT(22X,7(I6.6,2X))
+C9420	FORMAT(22X,<MIN(12,DPASNUM)-6>(I6.6,2X))
+9400	FORMAT(6X,I2,6X,<MIN(DPAWNUM(DIVS),9)>(I5.5,2X))
+94051	FORMAT(14X,<MIN(DPAWNUM(DIVS),9)>(I5.5,2X))
+9405	FORMAT(14X,<MIN(DPAWNUM(DIVS),PAGNBR)>(I5.5,2X))
+9421	FORMAT(22X,'Results NOT in')
+
+9500    FORMAT('Entre !indice ')
+9510	FORMAT('Federal ',I1,' jogo nao esta ativo')
+9520	FORMAT('Jogo ',I2,' nao disponivel ao usuario ',I1)
+9530	FORMAT(5A4,' erro ao obter ultima emissao apurada, status ',I4)
+9540	FORMAT(5A4,' erro de abertura ',I4)
+9550	FORMAT(5A4,' erro de leitura ',I4,' registro > ',I10)
+9560	FORMAT('Valor Invalido')
+9570	FORMAT('Erro de Digitacao')
+9580	FORMAT('Operacao Valida Somente p/ Extracao ATUAL')
+	END

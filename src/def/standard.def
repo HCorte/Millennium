@@ -1,0 +1,67 @@
+C  STANDARD.DEF
+C
+C  V03 23-DEC-00 CS  INITIAL INSTALLATION FOR PORTUGAL
+C  V02 09-DEC-93 JYC ADDED DISABLED AND INACTIVE
+C  V01 16-JUN-93 JYC INITIAL INSTALLATION FOR ARGENTINA
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1990,1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C
+C  CONTAINS VERY GENERAL CONSTANTS TO BE USED BY ALL PROGRAMS
+C   
+	INTEGER*4         ACTIVE
+	INTEGER*4         CONSOLE
+	INTEGER*4         DISABLED
+	INTEGER*4         ENABLED
+	INTEGER*4         EOF
+	INTEGER*4         ESCAPE
+	INTEGER*4         EXIT
+        INTEGER*4         INACTIVE
+	INTEGER*4         MAXI4
+	INTEGER*4         NEXT
+	INTEGER*4         NO
+        INTEGER*4         NOT_USED
+	INTEGER*4         OK
+	INTEGER*4         YES
+	INTEGER*4         PREVIOUS
+	INTEGER*4         HANDLE_ERROR
+	INTEGER*4         OPEN_ERROR
+	INTEGER*4         READ_ERROR
+	INTEGER*4         WRITE_ERROR
+	INTEGER*4         CLOSE_ERROR
+	INTEGER*4         DELETE_ERROR
+C
+	PARAMETER         (ACTIVE = 1)
+	PARAMETER         (CONSOLE = 5)
+        PARAMETER         (DISABLED = 0)
+	PARAMETER         (ENABLED = 1)
+	PARAMETER         (EOF = 144)
+	PARAMETER         (ESCAPE = 3)
+	PARAMETER         (EXIT = 3)
+	PARAMETER         (INACTIVE = 0)
+	PARAMETER         (MAXI4 = 2147483647)
+        PARAMETER         (NEXT = -8)
+	PARAMETER         (PREVIOUS = -2)
+	PARAMETER         (NOT_USED = 0)
+	PARAMETER         (OK  = 0)
+	PARAMETER         (YES = 1)
+	PARAMETER         (NO  = 2)
+	PARAMETER         (HANDLE_ERROR = 0)
+	PARAMETER         (OPEN_ERROR   = 1)
+	PARAMETER         (READ_ERROR   = 2)
+	PARAMETER         (WRITE_ERROR  = 3)
+	PARAMETER         (CLOSE_ERROR  = 4)
+	PARAMETER         (DELETE_ERROR = 5)
+C
+C  END OF STANDARD.DEF

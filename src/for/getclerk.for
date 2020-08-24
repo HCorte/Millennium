@@ -1,0 +1,115 @@
+C
+C SUBROUTINE GETCLERK
+C $Log:   GXAFXT:[GOLS]GETCLERK.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:19:12   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:24:36   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - vis_getclerk.for **
+C
+C GETCLERK.FOR
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C
+C SUBROUTINE TO READ AGENTS RECORD FROM CLERK FILE AND EXTRACT
+C SALES FOR A GIVEN CLERK OR ALL CLERKS.
+C
+C CALLING SEQUENCE:
+C      CALL GETCLERK(TERMINAL,CLERK,FUNC,INDVTAB)
+C INPUT
+C     TERMINAL - TERMINAL NUMBER.
+C     CLERK    - CLERK NUMBER TO EXTRACT.
+C     FUNC     - 0=INDIVIDUAL , 1 = ALL
+C OUTPUT
+C     INDVTAB  - TABLE OF SALES (AS IN PRMAGT.DEF)
+C
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GETCLERK(TERMINAL,CLERK,FUNC,INDVTAB)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:PRMAGT.DEF'
+	INCLUDE 'INCLIB:CLERK.DEF'
+C
+	INTEGER*4 INDVTAB(AGAMLEN,MAXGAM) !SALES TRANSACTIONS, GAME
+	INTEGER*4 FDB(7)
+C
+	INTEGER*4 L, J, K, I, CLRKEND, CLRKBEG, ST, FUNC
+	INTEGER*4 CLERK, TERMINAL
+C
+	LOGICAL EXCLUDE                   !EXCLUDE CLERK IN MEMORY
+C
+	CALL FASTSET(0,INDVTAB,AGAMLEN*MAXGAM)
+	EXCLUDE=.FALSE.
+C
+	IF(TERMINAL.LE.0.OR.TERMINAL.GT.NUMAGT) RETURN
+	IF(CLERK.LT.0.OR.CLERK.GT.8) RETURN      !OUT OF RANGE
+C
+C OPEN AND READ CLERK FILE
+C
+	CALL OPENW(8,SFNAMES(1,CLK),4,0,0,ST)
+	CALL IOINIT(FDB,8,CLRKSEC*256)
+	IF(ST.NE.0) THEN
+	   CALL FILERR(SFNAMES(1,CLK),1,ST,0)
+	   CALL CLOSEFIL(FDB)
+	   RETURN
+	ENDIF
+C
+	CALL READW(FDB,TERMINAL,CLRKREC,ST)
+	IF(ST.NE.0) THEN
+	   CALL FILERR(SFNAMES(1,CLK),2,ST,TERMINAL)
+	   CALL CLOSEFIL(FDB)
+	   RETURN
+	ENDIF
+	CALL CLOSEFIL(FDB)
+C
+C FILL IN TABLE FROM RECORD
+C
+	CLRKBEG=CLERK
+	CLRKEND=CLERK
+C
+	IF(FUNC.EQ.1) THEN
+	  CLRKBEG=1
+	  CLRKEND=8
+	  EXCLUDE=.TRUE.
+	ENDIF
+	IF(CLRKBEG.EQ.0) RETURN
+C
+	DO 70 I=1,AGAMLEN               !AS IN PRMAGT.DEF
+	DO 60 K=1,MAXGAM                !FOR EVERY GAME
+	   DO 50 J=CLRKBEG,CLRKEND      !FOR EACH CLERK
+	   IF(EXCLUDE) THEN
+	      IF(J.EQ.CLERK) GOTO 50    !EXCLUDE CLERK IN MEMORY
+	   ENDIF
+	   INDVTAB(I,K)=INDVTAB(I,K)+CLRKDAY(I,K,J)
+50	   CONTINUE
+60	CONTINUE
+70	CONTINUE
+	RETURN
+	END

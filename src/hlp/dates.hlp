@@ -1,0 +1,22 @@
+    DAT.HLP                GTECH Distributed Network
+                            Draw Date Snapshot Help          Page 1 of 1
+ 
+    The DAT snapshot contains draw date information for each acitve game
+    on the system.  For the selected game, the snapshot shows closing 
+    dates for all future initialized draws.
+
+    Information displayed includes:
+
+    game          - Name of the displayed game.
+    draw          - number of each draw including current and future   
+    dates         - dates when the sales are opened for the event
+    cdc           - today's system sales date as well as the cdc of each
+                    draw listed for the future
+    julian        - julian date for current date as well as for each draw
+                    listed for the future.
+
+
+
+
+
+

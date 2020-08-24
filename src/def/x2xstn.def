@@ -1,0 +1,303 @@
+C
+C X2XSTN.DEF
+C
+C*************************** START X2X PVCS HEADER ****************************
+C
+C  $Logfile::   GXAFXT:[GOLS]X2XSTN.DEV                                   $
+C  $Date::   17 Apr 1996 16:45:18                                         $
+C  $Revision::   1.0                                                      $
+C  $Author::   HXK                                                        $
+C
+C**************************** END X2X PVCS HEADER *****************************
+C
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C V06 14-JUN-00 UXN COMMON added to X2XSTN_NAME, X2XSTN_FILFLDS
+C V05 12-DEC-94 DAS Integrate UK changes into X2X Baseline
+C V04 03-MAR-93 JWE Add broadcast server code
+C V03 22-AUG-94 GPR REMOVE FIELDS WHICH ARE IN THE STATION CLASS:
+C		    BAUD, CLOCK, SYNC, DIAL ENABLE, PORT COUNT,
+C		    POLL TIME, PROTOCOL
+C V02 19-JUL-94 WS MULTINETWORK CHANGES
+C V01 01-DEC-91 DAS RELEASED FOR VAX (NETHERLANDS)
+C
+C The DEF describes the variables which are contained in the
+C X2X Station file.
+C
+C NOTE:  If you add a field to this file remember to update
+C        the X2XSTN_ENTRIES counter, the X2XSTN_FIELD, and
+C        the X2XSTN_RANGE tables.
+C
+C DECLARE THE RECORD VARIABLES.
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, W. Greenwich, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1994 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+	INTEGER*4   X2XSTN_REC(128)     !Record buffer
+	CHARACTER   X2XSTN_CREC(512)*1  !Record buffer
+	EQUIVALENCE (X2XSTN_REC, X2XSTN_CREC)
+C
+	INTEGER*4   X2XSTN_SECT         !Number of sectors per rec
+	PARAMETER  (X2XSTN_SECT=2)
+	CHARACTER   X2XSTN_NAME*10      !Global Setup file name
+	DATA        X2XSTN_NAME /'X2XSTN.FIL'/
+	COMMON/X2XSTN_NAME/ X2XSTN_NAME
+	INTEGER*4   X2XSTN_FDB(7)       !File descriptor block
+	DATA        X2XSTN_FDB /7*0/
+C
+C DECLARE VARIABLES.
+C
+	INTEGER*4   X2XSTN_STN              !Station number
+	INTEGER*4   X2XSTN_ADDLEN           !Address length
+	INTEGER*4   X2XSTN_ADDRES(2)        !Address in BCD format
+	INTEGER*4   X2XSTN_SERIAL           !Station serial number
+	INTEGER*4   X2XSTN_TYPE             !Type of station (x.25,x.21,etc.)
+	INTEGER*4   X2XSTN_DELACK           !Delivery acknowledgement
+	INTEGER*4   X2XSTN_ERRREP           !Error reporting
+	INTEGER*4   X2XSTN_STNDIS           !Station Disconnect control
+	INTEGER*4   X2XSTN_FEDIS            !FE Disconnect control
+	INTEGER*4   X2XSTN_GROUP            !Relay group
+	INTEGER*4   X2XSTN_STNCLS           !Station class
+	INTEGER*4   X2XSTN_STATE            !Station state
+	INTEGER*4   X2XSTN_NETPT1           !Network port (specific)
+	INTEGER*4   X2XSTN_NETPT2           !Network port (specific)
+	INTEGER*4   X2XSTN_NETPT3           !Network port (specific)
+	INTEGER*4   X2XSTN_NETPT4           !Network port (specific)
+	INTEGER*4   X2XSTN_NETPT5           !Network port (specific)
+	INTEGER*4   X2XSTN_NETPT6           !Network port (specific)
+	INTEGER*4   X2XSTN_NETPT7           !Network port (specific)
+	INTEGER*4   X2XSTN_PVC              !PVC Channel number
+	INTEGER*4   X2XSTN_PVCPORT          !PVC Port number
+	INTEGER*4   X2XSTN_PRTFLG           !Debug print flag
+	INTEGER*4   X2XSTN_NETSTAT          !Network statistics
+	INTEGER*4   X2XSTN_AUTOUPD          !Auto stats update
+	INTEGER*4   X2XSTN_DEF_PORT1        !Default network port 1
+	INTEGER*4   X2XSTN_DEF_PORT2        !Default network port 1
+	INTEGER*4   X2XSTN_DEF_PORT3        !Default network port 1
+	INTEGER*4   X2XSTN_DEF_PORT4        !Default network port 1
+	INTEGER*4   X2XSTN_DIAL_PORT1       !Dialup port (specific)
+	INTEGER*4   X2XSTN_DIAL_PORT2       !Dialup port (specific)
+	INTEGER*4   X2XSTN_RANK             !Station sales ranking
+	INTEGER*4   X2XSTN_POLL		    !Enable polling flag
+        INTEGER*4   X2XSTN_X32_PORT1        !X32 port 1
+        INTEGER*4   X2XSTN_X32_PORT2        !X32 port 2
+        INTEGER*4   X2XSTN_VSP              !VER. SEQ. NUMBER
+        INTEGER*4   X2XSTN_EVSN_LEN         !Extended Verification Seq. len
+        INTEGER*4   X2XSTN_EVSN(2)          !Extended Verification Seq. #
+C
+C
+	INTEGER*4   X2XSTN_UPDATE           !Last date updated
+	INTEGER*4   X2XSTN_FREE(82)         !Free space			!V03
+	INTEGER*4   X2XSTN_BITMAP           !Modified fields flag
+	INTEGER*4   X2XSTN_BITMAP2          !Modified fields flag
+	INTEGER*4   X2XSTN_BITMAP3          !Modified fields flag
+	INTEGER*4   X2XSTN_BITMAP4          !Modified fields flag
+C
+	INTEGER*4   X2XSTN_MAXNET
+	PARAMETER  (X2XSTN_MAXNET=7)
+	INTEGER*4   X2XSTN_MAXDIAL
+	PARAMETER  (X2XSTN_MAXDIAL=2)
+	INTEGER*4   X2XSTN_MAXDEF
+	PARAMETER  (X2XSTN_MAXDEF=4)
+        INTEGER*4   X2XSTN_MAXX32
+        PARAMETER  (X2XSTN_MAXX32=2)
+C
+C
+	INTEGER*4   X2XSTN_NETPORT(X2XSTN_MAXNET)
+	EQUIVALENCE (X2XSTN_NETPORT, X2XSTN_NETPT1)
+	INTEGER*4   X2XSTN_DEF_PORT(X2XSTN_MAXDEF)
+	EQUIVALENCE (X2XSTN_DEF_PORT,X2XSTN_DEF_PORT1)
+	INTEGER*4   X2XSTN_DIAL_PORT(X2XSTN_MAXDIAL)
+	EQUIVALENCE (X2XSTN_DIAL_PORT,X2XSTN_DIAL_PORT1)
+        INTEGER*4   X2XSTN_X32_PORT(X2XSTN_MAXX32)
+        EQUIVALENCE (X2XSTN_X32_PORT,X2XSTN_X32_PORT1)
+C
+      INTEGER*4   X2XSTN_BCST_ENABLE			!V02
+      INTEGER*4	  X2XSTN_STATION_TYPE			!V02
+C
+C ***** Start V03 changes *****
+C
+C EQUIVALENCE FIELD VARIABLES INTO RECORD.
+C
+	EQUIVALENCE (X2XSTN_REC(1),  X2XSTN_STN)
+	EQUIVALENCE (X2XSTN_REC(2),  X2XSTN_ADDLEN)
+	EQUIVALENCE (X2XSTN_REC(3),  X2XSTN_ADDRES)
+	EQUIVALENCE (X2XSTN_REC(5),  X2XSTN_SERIAL)
+	EQUIVALENCE (X2XSTN_REC(6),  X2XSTN_TYPE)
+	EQUIVALENCE (X2XSTN_REC(7),  X2XSTN_DELACK)
+	EQUIVALENCE (X2XSTN_REC(8),  X2XSTN_ERRREP)
+	EQUIVALENCE (X2XSTN_REC(9), X2XSTN_STNDIS)
+	EQUIVALENCE (X2XSTN_REC(10), X2XSTN_FEDIS)
+	EQUIVALENCE (X2XSTN_REC(11), X2XSTN_GROUP)
+	EQUIVALENCE (X2XSTN_REC(12), X2XSTN_STNCLS)
+	EQUIVALENCE (X2XSTN_REC(13), X2XSTN_STATE)
+	EQUIVALENCE (X2XSTN_REC(14), X2XSTN_NETPT1)
+	EQUIVALENCE (X2XSTN_REC(15), X2XSTN_NETPT2)
+	EQUIVALENCE (X2XSTN_REC(16), X2XSTN_NETPT3)
+	EQUIVALENCE (X2XSTN_REC(17), X2XSTN_NETPT4)
+	EQUIVALENCE (X2XSTN_REC(18), X2XSTN_NETPT5)
+	EQUIVALENCE (X2XSTN_REC(19), X2XSTN_NETPT6)
+	EQUIVALENCE (X2XSTN_REC(20), X2XSTN_NETPT7)
+	EQUIVALENCE (X2XSTN_REC(21), X2XSTN_PVC)
+	EQUIVALENCE (X2XSTN_REC(22), X2XSTN_PVCPORT)
+	EQUIVALENCE (X2XSTN_REC(23), X2XSTN_PRTFLG)
+	EQUIVALENCE (X2XSTN_REC(24), X2XSTN_NETSTAT)
+	EQUIVALENCE (X2XSTN_REC(25), X2XSTN_AUTOUPD)
+	EQUIVALENCE (X2XSTN_REC(26), X2XSTN_DEF_PORT1)
+	EQUIVALENCE (X2XSTN_REC(27), X2XSTN_DEF_PORT2)
+	EQUIVALENCE (X2XSTN_REC(28), X2XSTN_DEF_PORT3)
+	EQUIVALENCE (X2XSTN_REC(29), X2XSTN_DEF_PORT4)
+	EQUIVALENCE (X2XSTN_REC(30), X2XSTN_DIAL_PORT1)
+	EQUIVALENCE (X2XSTN_REC(31), X2XSTN_DIAL_PORT2)
+	EQUIVALENCE (X2XSTN_REC(32), X2XSTN_RANK)
+	EQUIVALENCE (X2XSTN_REC(33), X2XSTN_POLL)
+        EQUIVALENCE (X2XSTN_REC(34), X2XSTN_X32_PORT1)
+        EQUIVALENCE (X2XSTN_REC(35), X2XSTN_X32_PORT2)
+        EQUIVALENCE (X2XSTN_REC(36), X2XSTN_VSP)
+        EQUIVALENCE (X2XSTN_REC(37), X2XSTN_EVSN_LEN)
+        EQUIVALENCE (X2XSTN_REC(38), X2XSTN_EVSN)
+C
+C Broadcast server
+C
+	EQUIVALENCE (X2XSTN_REC(40), X2XSTN_BCST_ENABLE)	!V02
+C
+	EQUIVALENCE (X2XSTN_REC(41), X2XSTN_STATION_TYPE)	!V02
+	EQUIVALENCE (X2XSTN_REC(42), X2XSTN_UPDATE)		!V02
+	EQUIVALENCE (X2XSTN_REC(43), X2XSTN_FREE)		!V02
+	EQUIVALENCE (X2XSTN_REC(125),X2XSTN_BITMAP)
+	EQUIVALENCE (X2XSTN_REC(126),X2XSTN_BITMAP2)
+	EQUIVALENCE (X2XSTN_REC(127),X2XSTN_BITMAP3)
+	EQUIVALENCE (X2XSTN_REC(128),X2XSTN_BITMAP4)
+C
+C STORE FIELD NAMES FOR VISION/SETUP.
+C NOTE:!!!! LAST ENTRY IN THE X2XSTN_ENTRIES TABLE
+C SHOULD ALWAYS BE USED FOR LAST UPDATED DATE TO PREVENT
+C THE USER FROM CHANGING ITS VALUE.
+C
+	INTEGER*4 X2XSTN_ENTRIES
+	PARAMETER (X2XSTN_ENTRIES=40)
+C
+	INTEGER*2   CNT1, CNT2
+	CHARACTER X2XSTN_FIELD(X2XSTN_ENTRIES)*15
+	DATA      (X2XSTN_FIELD(CNT1),CNT1=1,X2XSTN_ENTRIES)
+     *	    /'Station        ','Address length ','Address        ',
+     *	     'Physical id    ','Connection type','Delivery ACK   ',
+     *	     'Error report   ','Station discont','FE disconnect  ',
+     *	     'Relay group    ','Station class  ','Station state  ',
+     *	     'Network port 1 ','Network port 2 ','Network port 3 ',
+     *	     'Network port 4 ','Network port 5 ','Network port 6 ',
+     *	     'Network port 7 ','PVC Circuit    ','PVC Port       ',
+     *	     'Print Flag     ','Network stats  ','Auto stats upd ',
+     *	     'Default port 1 ','Default port 2 ','Default port 3 ',
+     *	     'Default port 4 ','Dialup port 1  ','Dialup port 2  ',
+     *	     'Sales rank     ','Poll enable    ','X32 port 1-Def5',
+     *	     'X32 port 2-Def6','Ver. Sequence  ','Ext Ver Seq Len',
+     *	     'Ext. Ver. Seq. ','Enable BCST    ','Station Type   ',
+     *	     'Last updated   '/
+C
+C STORE THE VALID BOT AND TOP RANGE FOR EACH VARIABLE.
+C NOTE: A -1 IN THE BOT RANGE DESIGNATES A CHARACTER
+C       VARIABLE AND THE TOP RANGE INDICATES THE LENGTH,
+C       A -2 IN THE BOTTOM RANGE DESIGNATES BCD INPUT.
+C
+	INTEGER*4 X2XSTN_RANGE(2,X2XSTN_ENTRIES)
+	DATA      ((X2XSTN_RANGE(CNT1,CNT2),CNT1=1,2),
+     *		    CNT2=1,X2XSTN_ENTRIES)
+     *	    /1,X2X_STATIONS,     0,16,    -2,16,
+     *	     0,99999999, 1,X2XSCT_MAX_TYPE, 0,1,
+     *	     0,1,        0,15,    0,3,
+     *	     0,X2X_NUM_GROUPS,   1,255,     0,3,
+     *	     0,X2X_NETWORK_PORTS, 0,X2X_NETWORK_PORTS,
+     *       0,X2X_NETWORK_PORTS, 0,X2X_NETWORK_PORTS,
+     *       0,X2X_NETWORK_PORTS, 0,X2X_NETWORK_PORTS,
+     *	     0,X2X_NETWORK_PORTS, 0,X2X_MAXPVC_CKTS,
+     *       0,X2X_NETWORK_PORTS,
+     *	     1,3,        0,1,     0,1,      
+     *	     0,X2X_NETWORK_PORTS, 0,X2X_NETWORK_PORTS,
+     *	     0,X2X_NETWORK_PORTS, 0,X2X_NETWORK_PORTS,
+     *	     0,X2X_NETWORK_PORTS,      0,X2X_NETWORK_PORTS,   1,10,
+     *	     0,1, 0,X2X_NETWORK_PORTS,   0,X2X_NETWORK_PORTS,
+     *       0,65536,   0,12,    -3,12,
+     *       0,1,	0,3,	  0,0/
+C
+C THIS ARRAY STORES THE INDEX INTO THE RECORD FOR EACH
+C FIELD.  THIS IS NECESSARY BECAUSE NOT ALL FIELDS ARE INT*4.
+C
+	INTEGER*4 X2XSTN_INDEX(X2XSTN_ENTRIES)
+	DATA      X2XSTN_INDEX
+     *	    /1,   2,   3,
+     *	     5,   6,   7,
+     *	     8,   9,  10,
+     *	    11,  12,  13,
+     *	    14,  15,  16,
+     *	    17,  18,  19,
+     *	    20,  21,  22,
+     *	    23,  24,  25,
+     *	    26,  27,  28,
+     *	    29,  30,  31,
+     *	    32,  33,  34,
+     *	    35,  36,  37,
+     *	    38,  40,  41,
+     *	    42/
+C
+C THIS ARRAY STORES THE POSSIBLE SPECIFIC VALUES FOR EACH
+C OF THE FIELDS. A MAX OF 15 SPECIFIC VALUES IS PERMITTED.
+C -1 INDICATES NO SPECIFIC VALUES.
+C
+	INTEGER*4 X2XSTN_VALUE(15,X2XSTN_ENTRIES)
+	DATA      X2XSTN_VALUE
+     *	    /15*-1, 15*-1, 15*-1,
+     *	     15*-1,
+     *       X2XSCT_X21SWC,X2XSCT_X25SVC,                    ! 1, 2
+     *       X2XSCT_X25PVC,                                  ! 3, (BCST)
+     *       X2XSCT_X28PAD,X2XSCT_ASYPVC,                    ! 4, 6
+     *       X2XSCT_GTECH_DIAL,X2XSCT_USAT_PVC,8*-1,         ! 9,10
+     *       15*-1, 15*-1,
+     *	     0,7,8,9,10,11,12,13,14,15,5*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *	     15*-1, 15*-1, 15*-1,
+     *       15*-1, 15*-1, 15*-1,
+     *       0,3,13*-1,   15*-1/
+C
+C THIS ARRAY CONTAINS THE FIELD NUMBERS WHICH MUST BE INPUT
+C FROM THE ADD FUNCTION - THE OTHER FIELDS ARE OBTAINED FROM
+C THE STATION CLASS FILE.
+C
+	INTEGER*4   X2XSTN_FILFLDS(X2XSTN_ENTRIES)
+	COMMON/X2XSTN_FILFLDS/ X2XSTN_FILFLDS
+	DATA        X2XSTN_FILFLDS
+     *	    / 0, 1, 0, 0, 1, 1, 1, 1,
+     *	      1, 0, 1, 0, 1, 1, 1, 1, 1,
+     *	      1, 1, 0, 0, 0, 0, 0, 
+     *	      1, 1, 1, 1, 1, 1, 1, 1,
+     *        1, 1, 1, 1, 1, 1, 1, 0/	!V02
+C
+C ***** End V03 changes *****
+C
+C COMMON THE RECORD BUFFER.
+C
+	VOLATILE /X2XSTN_COMMON/
+	COMMON /X2XSTN_COMMON/ X2XSTN_REC,   X2XSTN_FDB,
+     *	                       X2XSTN_RANGE, X2XSTN_INDEX,
+     *	                       X2XSTN_VALUE, X2XSTN_FIELD
+C
+C

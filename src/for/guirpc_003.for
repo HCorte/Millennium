@@ -1,0 +1,114 @@
+C
+C SUBROUTINE GUIRPC_003
+C
+C V05 08-NOV-2000 UXN  GUIOPN,GUICLS used for opening/closing files.
+C V04 24-JUN-2000 ANDY Start of Changes for Rolldown
+C V03 18-APR-2000 AMY  USE COMMONS FOR LOCATION OF ASF
+C V02 07-APR-2000 XXX  MOVED RPC PARAMETERS TO SERVCOM
+C V01 06-JAN-2000 AMY  Initial revision.
+C  
+C GUIRPC_003.FOR
+C
+C This subroutine returns the terminal record.
+C
+C Input parameters:
+C	NONE               
+C
+C Output parameters:
+C
+C	BYTE		OUTBUF(*)	OUTPUT MESSAGE
+C	INTEGER*4	MES_LEN	MESSAGE LENGTH
+C	INTEGER*4	RET_CODE:
+C		0		-  no error, message accepted;
+C		value >= 11	-  error number to be sent to Client.
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1993 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GUIRPC_003(OUTBUF,MES_LEN,RET_CODE)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:CONCOM.DEF'
+	INCLUDE 'INCLIB:AGTCOM.DEF'
+	INCLUDE 'INCLIB:DESNET.DEF'
+	INCLUDE 'INCLIB:PROCOM.DEF'
+	INCLUDE 'INCLIB:X2XCOM.DEF'
+	INCLUDE 'INCLIB:AGTINF.DEF'
+	INCLUDE 'INCLIB:RECAGT.DEF'
+	INCLUDE 'INCLIB:DISKIO.DEF'
+	INCLUDE 'INCLIB:GUIMCOM.DEF'
+	INCLUDE 'INCLIB:GUIFIL.DEF'
+C
+	BYTE		OUTBUF(*)
+	INTEGER*4	MES_LEN,RET_CODE,TERM,AGT_NR
+C
+	INTEGER*4	ST
+	INTEGER*4	NUM_COLS,NUM_ROWS
+C
+	BYTE		I1TEMP(4)
+	INTEGER*4	I4TEMP
+	EQUIVALENCE	(I1TEMP,I4TEMP)
+C
+	CHARACTER*31 LETTERS
+	BYTE		BLETTER(31)
+	EQUIVALENCE (BLETTER,LETTERS)
+C
+C  GET TERMINAL NUMBER 
+C
+	CALL MOVBYT(OUTBUF,10,I1TEMP,1,4)
+	AGT_NR = I4TEMP
+	CALL FIND_AGENT(AGT_NR,TERM,ST)
+C
+C  IF INVALID TERMINAL NUMBER, RETURN WITH ERROR
+C
+	IF (TERM.LT.1.OR.TERM.GT.X2X_TERMS.OR.ST.NE.0) THEN
+	  RET_CODE = 11
+	  RETURN
+	ENDIF
+	IF (AGTTAB(AGTNUM,TERM).EQ.0) THEN
+	  RET_CODE = 11
+	  RETURN
+	ENDIF
+C
+C READ THE AGENT RECORD
+C
+	CALL READW(ASFFDB, TERM, ASFREC, ST)
+	IF (ST .NE. 0) THEN
+	  CALL OPS('Failed to read ASF file',ST,TERM)
+	  RET_CODE = 11
+	  RETURN
+	ENDIF
+C
+C BUILD RPC MESSAGE
+C
+	CALL RPCARG_INIT()  ! USE RPC FORMAT
+
+	NUM_COLS=5
+	NUM_ROWS=1
+	CALL GUIARG_NEXT_SET(OUTBUF,NUM_COLS)
+C
+	CALL GUIARG_CHAR(OUTBUF,%REF(ASFBYT(SSTRT)),LSTRT) ! ADDRESS 1
+	CALL GUIARG_CHAR(OUTBUF,%REF(ASFBYT(SCITY)),LCITY) ! ADDRESS 2
+	CALL GUIARG_CHAR(OUTBUF,%REF(ASFBYT(STELE)),LTELE) ! PHONE NUMBER
+	CALL GUIARG_INT4(OUTBUF,AGT_NR)                    ! AGENT NUMBER
+	CALL GUIARG_INT4(OUTBUF,TERM)                      ! TERMINAL NUMBER
+C
+	CALL GUIARG_SET_MESLEN(MES_LEN)
+C
+	RETURN
+	END

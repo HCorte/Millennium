@@ -1,0 +1,245 @@
+C
+C SUBROUTINE GTSKTRAP
+C $Log:   GXAFXT:[GOLS]GTSKTRAP.FOV  $
+C  
+C     Rev 1.0   17 Apr 1996 13:28:22   HXK
+C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
+C  
+C     Rev 1.0   21 Jan 1993 16:33:42   DAB
+C  Initial Release
+C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C  DEC Baseline
+C
+C ** Source - gtsktrap.for **
+C
+C GTSKTRAP.FOR
+C
+C V01 01-AUG-90 XXX RELEASED FOR VAX
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 1991 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GTSKTRAP(PARAM)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:LANCOM.DEF'
+	INCLUDE 'INCLIB:X2TDBH.DEF'
+C
+	INTEGER*4 CAMER,TIME,CURTIM
+	INTEGER*4 CSEQI(3)
+	INTEGER*4 BUF,MYQUEUE,ST,MARK,BLTYP,DLEN,DSAP,SSAP
+	INTEGER*4 FEID,BCOUNT,GLOCNT,SEQERR,INTER,BLAST
+	INTEGER*4 MMODE,CFLAG,SBUF,DELAY,DEL1,SEQNUM,BLSIZ
+	INTEGER*4 DOFF,FLAGS,PROT,DEL2,PARAM
+	CHARACTER*12 CSEQ
+	EQUIVALENCE (CSEQ,CSEQI)
+C
+      COMMON MYQUEUE,BCOUNT(MAXSAP),BLAST(MAXSAP),SEQNUM(MAXSAP),GLOCNT
+     *       ,DELAY,MMODE(MAXSAP),PROT,CSEQ,FEID(MAXSAP),CFLAG(MAXSAP)
+     *	       ,TIME,DEL1,DEL2,SEQERR(MAXSAP)
+C
+D	TYPE*,'GETTING THE BUFFER ',PARAM
+C
+100	CONTINUE
+	CALL RTL(BUF,LANAPP(1,MYQUEUE),ST)
+	IF(ST.EQ.2) THEN
+D	   TYPE*,'QUEUE EMPTY',ST,MYQUEUE
+	   RETURN
+	ENDIF
+C
+	LANBUF(LANOWN,BUF)=OWNFAPPL
+C
+	IF(LANBUF(LANBTYP,BUF).EQ.LTYPDATA) THEN
+	   MARK=LANBUF(LANDATAF,BUF)
+	   IF(MARK.EQ.X2TDBH_TDBH) THEN
+C
+	     CALL ILBYTE(BLTYP,LANBUF(LANDATAF,BUF),X2TDBH_BLKTYP-1)
+	     IF(BLTYP.EQ.X2TDBHT_LOOPBACK) THEN
+C
+	       DLEN=LANBUF(LANDLEN,BUF)
+	       DSAP=LANBUF(LANDORG,BUF)
+	       SSAP=LANBUF(LANDDES,BUF)
+C
+             CALL MOV2TOI4(CAMER,LANBUF(LANDATAF,BUF),X2TDBH_BLKSEQ-1)
+             CALL ILBYTE(FEID(DSAP),LANBUF(LANDATAF,BUF),X2TDBH_FE_ID-1)
+C
+	       BCOUNT(DSAP)=BCOUNT(DSAP)+1
+	       GLOCNT=GLOCNT+1
+	       IF(MOD(BCOUNT(DSAP),10000).EQ.0) THEN
+	          TYPE*,'RECEIVED: ',BCOUNT(DSAP),'BUFFERS FROM ',DSAP
+	          TYPE*,'BUFFER LENGTH: ',DLEN
+	          TYPE*,'TOTAL SEQUENCE ERRORS: ',SEQERR(DSAP)
+	          CALL GETTIM(CURTIM)    !IN SECONDS FROM MIDNIGHT
+	          INTER=CURTIM-TIME
+	          TYPE*,'LAST ',10000,' IN: ',CURTIM-TIME,' SECONDS'
+                TYPE*,'WHICH IS: ',(10*DLEN*8)/INTER,' Kbps (RECEIVED)'
+	          TIME=CURTIM
+	       ENDIF
+C
+	       IF(CAMER.NE.BLAST(DSAP)) THEN
+	       CALL OPS('SEQUENCE ERROR',BLAST(DSAP)-CAMER,DSAP)
+	          BLAST(DSAP)=CAMER
+	          SEQERR(DSAP)=SEQERR(DSAP)+1
+	       ENDIF
+C
+D            TYPE*,'DATA ',DLEN,SSAP,DSAP,CAMER,BLAST(DSAP),SEQNUM(DSAP)
+C
+	       BLAST(DSAP)=MOD(BLAST(DSAP)+1,256)
+C
+	       IF(MMODE(DSAP).EQ.2) THEN
+	          IF(CFLAG(DSAP).EQ.1) THEN
+C
+200	             CONTINUE
+	             CALL LANGETA(SBUF,MYQUEUE,ST)
+	             IF (ST.EQ.2) THEN
+	                CALL OPS('NO BUFFERS TO SEND',DSAP,DELAY)
+	                IF(DEL1.NE.0) CALL XWAIT(DEL1,1,ST)
+	                GOTO 200
+	             ENDIF
+	             CALL MOVBYT(LANBUF(LANDATAF,BUF),1,
+     *	                                  LANBUF(LANDATAF,SBUF),1,DLEN)
+C
+	             CALL LANRELB(BUF)
+	          ELSE
+	             SBUF=BUF
+	          ENDIF
+C
+	          IF(DELAY.GT.0) CALL XWAIT(DELAY,1,ST)
+C
+	          LANBUF(LANBTYP,SBUF)=LTYPDATA
+                  CALL NI4TOBUF4(X2TDBH_TDBH,LANBUF(LANDATAF,SBUF),
+     *                 X2TDBH_BLKCHK-1)
+                  CALL I4TOBUF2(SEQNUM(DSAP),LANBUF(LANDATAF,SBUF),
+     *                X2TDBH_BLKSEQ-1)
+                  CALL ISBYTE(DSAP,LANBUF(LANDATAF,SBUF),
+     *                X2TDBH_DSAP-1)
+                  CALL ISBYTE(SSAP,LANBUF(LANDATAF,SBUF),
+     *                X2TDBH_SSAP-1)
+                  CALL ISBYTE(0,LANBUF(LANDATAF,SBUF),
+     *                X2TDBH_FLAGS-1)
+                  BLSIZ=41
+                  CALL I4TOBUF2(BLSIZ,LANBUF(LANDATAF,SBUF),
+     *                X2TDBH_BLKSIZ-1)
+                  BLTYP=255
+                  CALL ISBYTE(X2TDBHT_LOOPBACK,LANBUF(LANDATAF,SBUF),
+     *                X2TDBH_BLKTYP-1)
+                  DOFF=21
+                  CALL ISBYTE(DOFF,LANBUF(LANDATAF,SBUF),
+     *                X2TDBH_DATAOFF)
+	          CALL SNDLAN(SSAP,DSAP,SBUF,DLEN)
+	          SEQNUM(DSAP)=MOD(SEQNUM(DSAP)+1,256)
+	       ENDIF
+	     ELSE
+	       TYPE*,'TRANSPORT DATA BLOCK TYPE ',BLTYP
+	       CALL LANRELB(BUF)
+	     ENDIF
+	   ELSE
+	     TYPE*,'BAD BLOCK MARK ',MARK
+	     CALL LANRELB(BUF)
+	   ENDIF
+C
+	ELSEIF(LANBUF(LANBTYP,BUF).EQ.LTYPCMD) THEN
+C
+	  TYPE*,'COMMAND ARRIVED WITH REPLY CODE ',LANBUF(LANDATAF+1,
+     *	         BUF)
+	  DSAP=LANBUF(LANDATAF+2,BUF)
+	  SSAP=LANBUF(LANDATAF+3,BUF)
+	  TYPE*,'SENDING SAP ',DSAP,' LOCAL SAP ',SSAP! REVERSED
+C
+	  IF(LANBUF(LANDATAF,BUF).EQ.CCONREQ) THEN
+C
+	      TYPE*,'CONNECT REQUEST '
+C
+	  ELSEIF(LANBUF(LANDATAF,BUF).EQ.CDISREQ) THEN
+C
+	      TYPE*,'DISCONNECT REQUEST'
+C
+	  ELSEIF(LANBUF(LANDATAF,BUF).EQ.CCONNIND) THEN
+C
+	      TYPE*,'CONNECT INDICATE'
+C
+	      BCOUNT(DSAP)=0
+	      BLAST(DSAP)=0
+	      SEQNUM(DSAP)=0
+	      SEQERR(DSAP)=0
+C
+300	      CONTINUE
+	      CALL LANGETA(SBUF,MYQUEUE,ST)
+	      IF (ST.EQ.2) THEN
+	         TYPE*,'**** NO BUFFERS TO SEND ****'
+	         IF(DEL1.NE.0) CALL XWAIT(DEL1,1,ST)
+	         GOTO 300
+	      ENDIF
+C
+	      LANBUF(LANDATAF,SBUF)=X2TDBH_TDBH
+C
+	      CALL I4TOBUF2(SEQNUM(DSAP),
+     *	                    LANBUF(LANDATAF,SBUF),X2TDBH_BLKSEQ-1)
+C
+	      CALL ISBYTE(DSAP,LANBUF(LANDATAF,SBUF),
+     *	                           X2TDBH_DSAP-1)
+	      CALL ISBYTE(SSAP,LANBUF(LANDATAF,SBUF),
+     *	                           X2TDBH_SSAP-1)
+	      BLSIZ=21
+	      CALL I4TOBUF2(BLSIZ,LANBUF(LANDATAF,SBUF),
+     *	                           X2TDBH_BLKSIZ-1)
+	      FLAGS='000000E0'X !FE ON-LINE
+	      CALL ISBYTE(FLAGS,LANBUF(LANDATAF,SBUF),
+     *	                           X2TDBH_FLAGS-1)
+	      BLTYP=X2TDBHT_BEGIN
+	      CALL ISBYTE(BLTYP,LANBUF(LANDATAF,SBUF),
+     *	                           X2TDBH_BLKTYP-1)
+	      DOFF=21
+	      CALL ISBYTE(DOFF,LANBUF(LANDATAF,SBUF),
+     *	                           X2TDBH_DATAOFF-1)
+	      CALL ISBYTE(0,LANBUF(LANDATAF,SBUF),
+     *	                           X2TDBH_MSGCNT-1)
+	      CALL ISBYTE(FEID(DSAP),LANBUF(LANDATAF,SBUF),
+     *	                           X2TDBH_FE_ID-1)
+	      CALL ISBYTE(0,LANBUF(LANDATAF,SBUF),
+     *	                           X2TDBH_CNFSUM-1)
+	      LANBUF(LANBTYP,SBUF)=LTYPDATA
+	      CALL SNDLAN(SSAP,DSAP,SBUF,BLSIZ)
+C
+	      SEQNUM(DSAP)=MOD(SEQNUM(DSAP)+1,256)
+C
+	  ELSEIF(LANBUF(LANDATAF,BUF).EQ.CDISIND) THEN
+C
+	      TYPE*,'DISCONNECT INDICATE'
+C
+	  ELSEIF(LANBUF(LANDATAF+1,BUF).EQ.COPEN) THEN
+C
+	      TYPE*,'OPEN SAP REQUEST'
+C
+	  ELSEIF(LANBUF(LANDATAF+1,BUF).EQ.CCLOSE) THEN
+C
+	      TYPE*,'CLOSE SAP REQUEST'
+C
+	  ENDIF
+C
+	  CALL LANRELB(BUF)
+C
+	ELSE
+	   TYPE*,'BAD BUFFER'
+	   CALL LANRELB(BUF)
+	ENDIF
+C
+C GET THEM ALL
+C
+	GOTO 100
+	END

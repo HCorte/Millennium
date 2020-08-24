@@ -1,0 +1,140 @@
+C GUIPASS_021.FOR
+C
+C V04 06-FEB-2001 HXK ADDED FUNCTIONS 5,10,13,14
+C V03 02-FEB-2001 HXK FUNCTION 13 RENAMED TO 15
+C V02 01-FEB-2001 HXK ADDED FUNCTIONS 4 AND 13
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2001 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C This subroutine accepts Path Thru message(s) from GUIRECV routine, 
+C and passes them to the appropriate GUI function.
+C
+C Input parameters:
+C
+C	BYTE	  MESSAGE(*)	- message
+C
+C Output parameters:
+C
+C	INTEGER*4 MES_LEN		- MESSAGE LENGTH
+C	INTEGER*4 RET_CODE:
+C		   0		-  no error, message accepted;
+C		 value >= 11	-  error number to be sent to Client.
+C
+C=======OPTIONS /CHECK=NOOVERFLOW
+	SUBROUTINE GUIPASS_021(MESSAGE, MES_LEN, RET_CODE)
+	IMPLICIT NONE
+C
+	INCLUDE 'INCLIB:SYSPARAM.DEF'
+	INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+	INCLUDE 'INCLIB:GLOBAL.DEF'
+	INCLUDE 'INCLIB:GUIMPRM.DEF'
+C
+	BYTE	    MESSAGE(*)  ! message
+	INTEGER*4   MES_LEN, RET_CODE
+C
+	INTEGER*4 GUI_FUNCTION
+C
+	RET_CODE = 0
+C
+C  GET GUI FUNCTION
+C
+
+	GUI_FUNCTION = MESSAGE(9)
+        GOTO (     10, 20, 30, 40, 50, 60, 70, 80, 90,
+     *        100,110,120,130,140,150,160,170,180,190,
+     *        200,210,220,230,240,250,260,270,280,290) GUI_FUNCTION
+C
+C INVALID FUNCTION
+C
+	GOTO 999
+C
+10	CONTINUE
+        CALL GUICMD_001(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+20	CONTINUE
+        CALL GUICMD_002(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+30	CONTINUE
+        CALL GUICMD_003(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+40	CONTINUE
+        CALL GUICMD_004(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+50	CONTINUE
+	CALL GUICMD_005(MESSAGE,MES_LEN,RET_CODE)
+	RETURN
+60	CONTINUE
+70	CONTINUE
+	CALL GUICMD_007(MESSAGE,MES_LEN,RET_CODE)
+	RETURN
+80	CONTINUE
+	CALL GUICMD_008(MESSAGE,MES_LEN,RET_CODE)
+	RETURN
+90	CONTINUE
+	CALL GUICMD_009(MESSAGE,MES_LEN,RET_CODE)
+	RETURN
+100	CONTINUE
+	CALL GUICMD_010(MESSAGE,MES_LEN,RET_CODE)
+	RETURN
+110	CONTINUE
+	CALL GUICMD_011(MESSAGE,MES_LEN,RET_CODE)
+	RETURN
+120	CONTINUE
+	CALL GUICMD_012(MESSAGE,MES_LEN,RET_CODE)
+	RETURN
+130	CONTINUE
+        CALL GUICMD_013(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+140	CONTINUE
+        CALL GUICMD_014(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+150	CONTINUE
+        CALL GUICMD_015(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+160	CONTINUE
+        CALL GUICMD_016(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+170	CONTINUE
+        CALL GUICMD_017(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+180	CONTINUE
+        CALL GUICMD_018(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+190	CONTINUE
+        CALL GUICMD_019(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+200	CONTINUE
+        CALL GUICMD_020(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+210	CONTINUE
+        CALL GUICMD_021(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+220	CONTINUE
+        CALL GUICMD_022(MESSAGE,MES_LEN,RET_CODE)
+        RETURN
+230	CONTINUE
+240	CONTINUE
+250	CONTINUE
+260	CONTINUE
+270	CONTINUE
+280	CONTINUE
+290	CONTINUE
+	GOTO 999
+C
+999	CONTINUE
+	RET_CODE=11
+	RETURN
+C
+	END
