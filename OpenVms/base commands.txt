@@ -252,3 +252,7 @@ $ COPY [SMITH]CATS.DIR [SMITH]DOGS.DIR
 
 Changing the Screen Height and Width
 DBG> SET TERMINAL/PAGE:35/WIDTH:110
+
+To print something to the DCL command use: WRITE SYS$OUTPUT "Message to show"
+
+To Concatenate two strings in DCL: "string1" + "string2" (basicaly its the same way as in javascript)
