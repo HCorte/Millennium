@@ -200,7 +200,18 @@ FORTRAN/'bnds'/NOOPT/NODIAG/EXT/LIST'plat''q' 'fil'
 Criar um COMMAND PROCEDURE (como se fosse um bash file in unix)
 	CREATE procedurename.com
 
-correr o command procedur:
+Commands for COMMAND PROCEDURE
+	SET VERIFY
+		Displays each line before it is executed. When an error occurs with verification set, you see the error and the line that generated the error. You can use keywords with the SET VERIFY command to indicate that only command lines or data lines are to be verified.
+		The SET VERIFY command remains in effect until you log out, you enter the SET NOVERIFY command, or you use the F$VERIFY lexical function to change the verification setting. (Chapter 15 contains more information on changing verification settings.)
+
+	SET PREFIX
+		If verification is in effect, you can also use the DCL command SET PREFIX to time-stamp a procedure log file by prefixing each command line with the time it is executed.
+
+	SHOW SYMBOL
+		The SHOW SYMBOL command can be used to determine how symbols in the procedure are defined.
+
+correr o command procedur/RUN COMMAND PROCEDURE:
 	@procedurename
 
 Editar um ficheiro e salvar a alteração
@@ -255,4 +266,4 @@ DBG> SET TERMINAL/PAGE:35/WIDTH:110
 
 To print something to the DCL command use: WRITE SYS$OUTPUT "Message to show"
 
-To Concatenate two strings in DCL: "string1" + "string2" (basicaly its the same way as in javascript)
+To Concatenate two strings in DCL: "string1" + "string2" or "''string1' ''string2'" (é melhor a segunda forma mais clean)
