@@ -5,7 +5,12 @@ BATCH JOB/ SUBMIT:
     http://h30266.www3.hpe.com/odl/vax/opsys/vmsos73/vmsos73/6017/6017pro_064.html#requeue_pend
     https://community.hpe.com/t5/operating-system-openvms/how-to-schedule-command-procedure-to-run-daily/td-p/5242334#.X0Pj-chKiUk
     http://h30266.www3.hpe.com/odl/vax/opsys/vmsos73/vmsos73/6489/6489pro_006.html -> important datas para correr batch job/submit
-
+    Logs configuration:
+        http://h30266.www3.hpe.com/odl/vax/opsys/vmsos73/vmsos73/6489/6489pro_049.html
+ 
 DEBUGGER FLAGS AND INFO:
     http://h30266.www3.hpe.com/odl/axpos/opsys/vmsos84/4538/4538pro_001.html
     http://h30266.www3.hpe.com/odl/axpos/opsys/vmsos84/4538/4538pro_002.html#start_run_prog_sec
+
+System time format
+    http://h30266.www3.hpe.com/odl/vax/opsys/vmsos73/vmsos73/6489/6489pro_006.html

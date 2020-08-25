@@ -270,7 +270,9 @@ To Concatenate two strings in DCL: "string1" + "string2" or "''string1' ''string
 
 Create a simple Job (without Scheduler) only runs once unless it calls again a submit in the command procedure itself
 	$submit/after="+:5" runswap.com
-	$submit/after="+:1" runswap.com
+	$submit/LOG_FILE=DKD10:[DMIL.WRK.HMC.EXAMPLES]/NOPRINTER/after="+:1" runswap.com
+	$submit/LOG_FILE=DKD10:[DMIL.WRK.HMC.EXAMPLES]/NOPRINTER/after="+:1" -
+	GXPROJ:[WRK.HMC.EXAMPLES]runswap.com
 	$Job RUNSWAP (queue SYS$BATCH, entry 379) holding until 24-AUG-2020 17:38 <------ result job created
 
 See the openvms System time:
