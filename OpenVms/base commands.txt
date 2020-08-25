@@ -267,3 +267,21 @@ DBG> SET TERMINAL/PAGE:35/WIDTH:110
 To print something to the DCL command use: WRITE SYS$OUTPUT "Message to show"
 
 To Concatenate two strings in DCL: "string1" + "string2" or "''string1' ''string2'" (é melhor a segunda forma mais clean)
+
+Create a simple Job (without Scheduler) only runs once unless it calls again a submit in the command procedure itself
+	$submit/after="+:5" runswap.com
+	$submit/after="+:1" runswap.com
+	$Job RUNSWAP (queue SYS$BATCH, entry 379) holding until 24-AUG-2020 17:38 <------ result job created
+
+See the openvms System time:
+	$SH TIME
+
+show Queue batch jobs:
+	$sh queue SYS$BATCH
+	$Batch queue SYS$BATCH, idle, on PODEV1:: <----- response
+
+	Batch queue SYS$BATCH, idle, on PODEV1::
+
+  	Entry  Jobname         Username             Status
+  	-----  -------         --------             ------
+    	380  RUNSWAP         CONSOLE              Holding until 24-AUG-2020 18:01:44
