@@ -19,3 +19,13 @@ System time format
 
 !!!!!!!!!!!!!!!!!!!!!!IMPORTANTE VER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     https://www.itec.suny.edu/scsys/vms/ovmsdoc073/v73/5639/5639motifpro_024.html
+
+
+COMPILATION INFORMATION AND QUALIFIERS/FLAGS
+    http://h30266.www3.hpe.com/odl/axplp/progtool/for9590v82/forti64um_001.html#ch_compile
+    http://h30266.www3.hpe.com/odl/axplp/progtool/for9590v82/forti64um_007.html#sec_qual_lib_short
+    http://h30266.www3.hpe.com/odl/axplp/progtool/for9590v82/forti64um_009.html#sec_text_libs
+
+debugger built-in symbols %VAL:
+    http://h30266.www3.hpe.com/odl/axpos/opsys/vmsos84/4538/4538pro_060.html
+    https://www.itec.suny.edu/scsys/vms/ovmsdoc073/v73/9996/9996pro_005.html <-- CALL

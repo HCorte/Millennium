@@ -310,3 +310,13 @@ Debugging an Already Running Program:
 
 			$RUN SYS$SYSTEM:LOGINOUT.EXE /UIC=uic /INPUT=command_procedure /OUTPUT=log_file /ERROR=error_file
 			If you want to run it under your username, use /DETACHED instead of /UIC.
+
+Detach Process
+	Backgroud Process/program not dependent of user Session so even if the user logs out the process/program
+	still continues to run.
+
+Call debugger in the app/code itself
+	INCLUDE '($SSDEF)'
+	CALL LIB$SIGNAL (%VAL(SS$_DEBUG))
+	call a debug command something like this???
+		CALL LIB$SIGNAL (%VAL('SET BREAK %LINE 5'))
