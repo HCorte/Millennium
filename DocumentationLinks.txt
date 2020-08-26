@@ -11,6 +11,11 @@ BATCH JOB/ SUBMIT:
 DEBUGGER FLAGS AND INFO:
     http://h30266.www3.hpe.com/odl/axpos/opsys/vmsos84/4538/4538pro_001.html
     http://h30266.www3.hpe.com/odl/axpos/opsys/vmsos84/4538/4538pro_002.html#start_run_prog_sec
-
+    https://www.itec.suny.edu/scsys/vms/ovmsdoc073/v73/5639/5639motifpro_024.html
+    https://vmssoftware.com/pdfs/HP_branded_docs_1st_batch/HP_OpenVMS_Debugger.pdf ---> B-1 (Its at the end of the file)
 System time format
     http://h30266.www3.hpe.com/odl/vax/opsys/vmsos73/vmsos73/6489/6489pro_006.html
+
+
+!!!!!!!!!!!!!!!!!!!!!!IMPORTANTE VER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    https://www.itec.suny.edu/scsys/vms/ovmsdoc073/v73/5639/5639motifpro_024.html

@@ -287,3 +287,26 @@ show Queue batch jobs:
   	Entry  Jobname         Username             Status
   	-----  -------         --------             ------
     	380  RUNSWAP         CONSOLE              Holding until 24-AUG-2020 18:01:44
+
+Debugging an Already Running Program:
+	https://vmssoftware.com/pdfs/HP_branded_docs_1st_batch/HP_OpenVMS_Debugger.pdf
+		Start debugging a running program -> 9.5 Debugging an Already Running Program
+			The second requirement effectively means that the program must have been started with a command similar to this:
+			$ RUN/DETACH/INPUT=xxx.com SYS$SYSTEM:LOGINOUT
+			where xxx.com is a command procedure that starts the program with
+			/NODEBUG.
+		15.9 Connecting to Another Program
+			You can bring a debuggable program under control of the debugger from a kept debugger session. This could be a client program that runs independently in
+			another process. Because the debugger is not yet aware of that process, you	cannot obtain information about it from a SHOW PROCESS command. Enter the
+			CONNECT command and specify the process name of the client program with the	debugger %PROCESS_NAME lexical function. For example:
+				all> CONNECT %PROCESS_NAME CLIENT2
+					process 3
+					predefined trace on activation at 0FFFFFFFF800F7A20
+
+"CONSOLE"			
+	https://wiki.vmssoftware.com/Detached_Process
+		Running Command Procedures as a Detached Process
+			You can run command procedures as a detached but not batch process as follows:
+
+			$RUN SYS$SYSTEM:LOGINOUT.EXE /UIC=uic /INPUT=command_procedure /OUTPUT=log_file /ERROR=error_file
+			If you want to run it under your username, use /DETACHED instead of /UIC.
