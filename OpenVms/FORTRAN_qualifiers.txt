@@ -1,0 +1,5 @@
+FORTRAN
+    /SYNTAX_ONLY 
+    /NOOBJECT
+
+    Both validate for error or stntax without generating a object (still generate the .F90$MOD)

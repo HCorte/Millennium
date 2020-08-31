@@ -29,3 +29,7 @@ COMPILATION INFORMATION AND QUALIFIERS/FLAGS
 debugger built-in symbols %VAL:
     http://h30266.www3.hpe.com/odl/axpos/opsys/vmsos84/4538/4538pro_060.html
     https://www.itec.suny.edu/scsys/vms/ovmsdoc073/v73/9996/9996pro_005.html <-- CALL
+
+
+Openvms Delete DCL command:
+    http://h30266.www3.hpe.com/odl/vax/opsys/vmsos73/vmsos73/6489/6489pro_009.html
