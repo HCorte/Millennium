@@ -2,8 +2,11 @@
 Ver a listagem de ficheiros e directorias na directoria corrente:
 	$DIR /SIZE /OWNER /DATE /PROTECTION <------- basta o DIR o resto são flags optcionais
 
-Fazer pesquisa de um ficheiro no sistema:
+Fazer pesquisa de um ficheiro/ na directoria corrente:
 	DIR filename.extension
+
+Fazer uma pesquisa de um ficheiro/s na directoria corrente e nas suas subdirectorias também usar [...]
+	dir [...]*iswap_* ## neste caso todos os ficheiros que contenham iswap_ no nome
 
 Ir para uma directoria:
 	A directory specification has the following format:
