@@ -436,21 +436,21 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V72| Adding support for IGS
 C----+------------------------------------------------------------------
-        PARAMETER (TWAG=1)           !WAGER
-        PARAMETER (TCAN=2)           !CANCELLATION
-        PARAMETER (TINC=3)           !INTERNAL CANCELLATION
-        PARAMETER (TVAL=4)           !VALIDATION
+        PARAMETER (TWAG=1)           !WAGER <- aposta mutua (ver)
+        PARAMETER (TCAN=2)           !CANCELLATION <- cancelamento de aposta mutua (ver)
+        PARAMETER (TINC=3)           !INTERNAL CANCELLATION (not used)
+        PARAMETER (TVAL=4)           !VALIDATION <- validação e pagamento de prem (ver)
         PARAMETER (TRET=5)           !RETURN (PPASSIVE)     
         PARAMETER (TREF=6)           !REFUND
-        PARAMETER (TSPE=7)           !SPECIAL FUNCTION
+        PARAMETER (TSPE=7)           !SPECIAL FUNCTION <- (um exemplo: relatorio)
         PARAMETER (TCMD=8)           !COMMAND
-        PARAMETER (TCRS=9)           !CROSS SYSTEM
+        PARAMETER (TCRS=9) -> subtipo  (TVAL)        !CROSS SYSTEM <- que vão para IPS (lotaria instantania) (subtipo: ival, etc)
         PARAMETER (TGUI=10)          !GUI
-        PARAMETER (TEUR=11)          !EURO MIL
+        PARAMETER (TEUR=11) -> subtipo          !EURO MIL <- ignorar
 C----+------------------------------------------------------------------
 C V72| Adding support for IGS
 C----+------------------------------------------------------------------
-        PARAMETER (TIGS=12)          !IGS
+        PARAMETER (TIGS=12)          !IGS <- vão para IGS
 C----+------------------------------------------------------------------
 C V72| Adding support for IGS
 C----+------------------------------------------------------------------
@@ -464,7 +464,7 @@ C
 C----+------------------------------------------------------------------
 C V72| Adding support for IGS
 C----+------------------------------------------------------------------
-        INTEGER*4  TODS              ! IGS - Odds Set 
+        INTEGER*4  TODS              ! IGS - Odds Set -> Placard
 C----+------------------------------------------------------------------
 C V72| Adding support for IGS
 C----+------------------------------------------------------------------
@@ -586,7 +586,7 @@ C
         PARAMETER (INVL=1)           !INVALID
         PARAMETER (SYNT=2)           !SYNTAX ERROR
         PARAMETER (SUPR=3)           !FUNCTION SUPRESSED
-        PARAMETER (NOTON=4)          !NOT SIGNED ON
+        PARAMETER (NOTON=4)          !NOT SIGNED ON -> (sh log gx* <-gxutl utilities) ficheiro agents sales file asf.fil <-(mediador (6 digitos) (4000)-> estabelecimento (2 digitos Millennium) (4100) ->  terminal (7 digitos-> 03-00006) 5000) 01-> destrito de Lisboa | destrito DJ
         PARAMETER (SDOR=5)           !SYSTEM DORMANT
         PARAMETER (SDRW=6)           !DRAWING BREAK
 C

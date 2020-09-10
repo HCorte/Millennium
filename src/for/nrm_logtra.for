@@ -146,12 +146,12 @@ C
         CALL FASTSET( 0, TRABUF, TRALEN )
 C
 C DECODE TRANSACTION HEADER INFORMATION
-C
+C       !filters the two most signification bits
         TRABUF(TSER)     = IAND(LOGBUF(1),'3FFFFFFF'X)!(TSER=4) - SERIAL NUMBER (AGENT NUMBER | CROSS REFERENCE NUMBER)
 C
         I4TEMP           = LOGBUF(2)
-        TRABUF(TCDC)     = ZEXT( I2TEMP(1) ) !(TCDC=3) - CDC date
-        TRABUF(TTER)     = I2TEMP(2) !TTER - TERMINAL Number
+        TRABUF(TCDC)     = ZEXT( I2TEMP(1) ) !(TCDC=3) - CDC date YY MM DD
+        TRABUF(TTER)     = I2TEMP(2) !(TTER=6) - TERMINAL Number
 
 C       !se é um and e sendo o segundo valor é só bits a 1 mantêm sempre o valor porque fazer o AND ou está limpar bits mais significativos???
         !espera o LOGBUF(3) é só um byte????
@@ -178,7 +178,7 @@ C       filtra os 3 bytes menos signaficativos
         TRABUF(TERR)     = ZEXT(I1TEMP(3)) !1 byte
         X                = ZEXT(I1TEMP(4)) !1 byte
         !(TGAM=10) GAME NUMBER
-        TRABUF(TGAM)     = IAND (X,'7F'X ) !filtra só os 4 bits mais significativos
+        TRABUF(TGAM)     = IAND (X,'7F'X ) !filtra só 7 bits menos significativo 
 C
         I4TEMP           = LOGBUF(6)
         !(TSTAT=1) STATUS
@@ -634,21 +634,26 @@ C----+------------------------------------------------------------------
                 I4TEMP     = LOGBUF(15)
 !(TIGSC_WRDY=TIGSC_MIDH+1)(33)        !BET REFERENCE DATE YEAR(YY, LAST TWO DIGITS ONLY)                
                 TRABUF (TIGSC_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)
+!(TIGSC_WRDM=TIGSC_WRDY+1)(34)        !BET REFERENCE DATE MONTH(MM)                             
                 TRABUF (TIGSC_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)
+!(TIGSC_WRDD=TIGSC_WRDM+1)(35)        !BET REFERENCE DATE DAY(DD)                                       
                 TRABUF (TIGSC_WRDD) = ZEXT(I1TEMP(3)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: BET REFERENCE GAME
 C    | - Be careful when placing information here, because bytes #4 of -
 C    | - words #16,#32,#48 are used for record extension               -
 C----+------------------------------------------------------------------
+!               (TIGSC_WRGM=TIGSC_WRDD+1)(36)        !BET REFERENCE GAME
                 I4TEMP     = LOGBUF(16)
                 TRABUF (TIGSC_WRGM) = ZEXT(I1TEMP(1)) ! (1 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: BET REFERENCE SERIAL NUMBER (LOW FOUR BYTES)
 C----+------------------------------------------------------------------
+                !(TIGSC_WRSL=TIGSC_WRGM+1)(37)        !BET REFERENCE SERIAL NUMBER (LOW FOUR BYTES)     
                 TRABUF (TIGSC_WRSL) = LOGBUF(17) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE)
+!(TIGSC_WRSH=TIGSC_WRSL+1)(38)        !BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE)      
 C----+------------------------------------------------------------------
                 TRABUF (TIGSC_WRSH) = LOGBUF(18) ! (1 byte)
 C----+------------------------------------------------------------------
@@ -658,6 +663,7 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: CANCEL STATUS, CANCEL REFERENCE GAME
 C----+------------------------------------------------------------------
+!(TIGSC_WRCD=TIGSC_WRSH+1)(39)        !BET REFERENCE CHECK DIGITS                       
                 I4TEMP     = LOGBUF(20)
                 TRABUF (TIGSC_CRGM) = ZEXT(I1TEMP(2)) ! (1 byte)
 C----+------------------------------------------------------------------
