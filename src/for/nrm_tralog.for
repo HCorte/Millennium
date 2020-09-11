@@ -2673,7 +2673,7 @@ C
      *            TRABUF(TITYP).EQ.IINV.OR.
      *            TRABUF(TITYP).EQ.ISET) THEN
 C
-	    I2TEMP(1)  = IOR( ISHFT(TRABUF(TRGAM),4), TRABUF(TRCLS) )
+	    I2TEMP(1)  = IOR( ISHFT(TRABUF(TRGAM),4), TRABUF(TRCLS) ) 1111 1111 1111 0000 + 1111
             I2TEMP(2)  = TRABUF(TRNXT1)
             LOGBUF(8)  = I4TEMP
 C
@@ -2721,7 +2721,7 @@ C
             IND=1
             DO X = 0, TRABUF(TIBCH)-1	  !t(TIBCH) can be up to TSMAX=40
 C
-                GNUM = IAND(TRABUF(TSGAM+X),'0FFF'X)
+                GNUM = IAND(TRABUF(TSGAM+X),'0FFF'X) !(TSGAM=31)            !GAME (REQUESTED)
                 GNUM = GNUM*1000 + TRABUF(TSQTY+X)  !join gnum and quantity
                 GTYP = ISHFT(TRABUF(TSGAM+X),-12)
 C
