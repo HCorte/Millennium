@@ -95,9 +95,15 @@ C
 C
 C CREATE THE COMMON EVENT FLAG CLUSTER.
 C
-        STATUS=SYS$ASCEFC(%VAL(DN_EVNTIMER),
-	1 GXEVNNAM()//DN_EVNNAME,0,0)
-        IF(.NOT.STATUS) CALL LIB$SIGNAL(%VAL(STATUS))
+        !A permanent event flag cluster continues to exist until it is marked explicitly for deletion with the Delete Common Event Flag Cluster (SYS$DLCEFC) 
+        STATUS=SYS$ASCEFC(%VAL(DN_EVNTIMER), !(DN_EVNTIMER=64) cluster
+	1 GXEVNNAM()//DN_EVNNAME,0,0) !-> XXXXXDNFLAGS
+		IF(.NOT.STATUS) CALL LIB$SIGNAL(%VAL(STATUS)) !Signal Exception Condition
+		!A routine calls LIB$SIGNAL to indicate an exception condition or output a
+		!message rather than return a status code to its caller
+		!LIB$SIGNAL also creates a mechanism argument vector that contains the state
+		!of the process at the time of the exception. LIB$SIGNAL then searches for a
+		!condition handler to process the exception condition.
 C
 C  WAIT FOR SOMETHING TO DO
 C
@@ -133,7 +139,8 @@ C
 		IF(IGSDEBUG(IA_DISPAT)) THEN
         	CALL OPS('124:DISPAT: TOSEND', TOSEND,TOSEND)
 		ENDIF
-	    STATUS=SYS$SETEF(%VAL(NET_EVENT))
+	    STATUS=SYS$SETEF(%VAL(NET_EVENT)) !(NET_EVENT = 67) !BIT 3 OF DN_EVNMASK, The Set Event Flag (SYS$SETEF) and Clear Event Flag (SYS$CLREF) 
+		!The codes returned are SS$_WASSET and SS$_WASCLR.
 		IF(IGSDEBUG(IA_DISPAT)) THEN
 			CALL OPS('126:DISPAT: STATUS', STATUS,STATUS)
 		ENDIF
@@ -150,13 +157,15 @@ C
 	IF(P(CMDFRZ).NE.0) THEN
 	  IF(IGSDEBUG(IA_DISPAT)) THEN
 		  CALL OPS('138:DISPAT: CMD FRZ', 0,0)
-	  ENDIF
-	  CALL RELSE(TSKNAM(CMD),ST)
+	  ENDIF !NAMES FOR ALL SYSTEM TASKS ---- (CMD=9) !COMMAND TASK #
+	  CALL RELSE(TSKNAM(CMD),ST) !TSKNAM(NUMTSK) TASK NAMES) -> taskid.def
 	  GOTO 10
 	ENDIF
 C
 C     FLUSH IMPLEMENTATION
 C
+!NETWORK MANAGER TASK:
+!	THIS TASK WILL SERVICE ALL I/O DONE REQUESTS AND COMMANDS
 	IF(P(NETFLU).EQ.FLUSHED) GOTO 10 !WAIT UNTIL NETMGR LET YOU GO
 	IF(P(NETFLU).EQ.FLUREQ.OR.P(NETFLU).EQ.FLURQ1)GOTO 300!REQ FLUS
 C
@@ -217,7 +226,7 @@ C
             CALL OPSTXT('DUMP WRKTAB MESSAGE:')
             CALL DUMP_MESSAGE(0,0,BPRO(WRKTAB*4-3+1,BUF),HPRO(OUTLEN,BUF))
         ENDIF
-	IF(BYPASS) THEN
+	IF(BYPASS) THEN !if transaction already haves serial number???
 	  IF(HPRO(TRCODE,BUF).EQ.TYPREG.AND.QUE.EQ.INI) GOTO 30
 	  IF(HPRO(TRCODE,BUF).EQ.TYPREG.AND.QUE.EQ.EUI) GOTO 30
 C----+------------------------------------------------------------------
@@ -269,10 +278,10 @@ C THEN SET THE MESSAGE FULL FLAG AND RELEASE THE BUFFER.
 C
 	  IF(QUE.EQ.ERR) THEN
 	    IF(ACTTSK(ERR).GE.P(MAXMES)) THEN
-	      CALL RELBUF(BUF)
-	      P(MESFUL)=1
+	      CALL RELBUF(BUF)!RELEASE THE BUFFER
+	      P(MESFUL)=1 !SET THE MESSAGE FULL FLAG
 	    ELSE
-	      CALL QUETRA(ERR,BUF)
+	      CALL QUETRA(ERR,BUF) !QUEUE IT TO ERROR QUEUE WITHOUT ASSIGNING A SERIAL NUMBER
 	    ENDIF
 	    GOTO 100
 	  ENDIF
@@ -292,7 +301,7 @@ C----+------------------------------------------------------------------
             CALL OPS('285:DISPAT:HPRO(TRCODE,BUF)',ZEXT(HPRO(TRCODE,BUF)),ZEXT(HPRO(TRCODE,BUF)))
         ENDIF
 C----+------------------------------------------------------------------
-C V11| Bugfix with transaction recording while in Duplex Mode
+C V11| Bugfix with transaction recording while in Duplex Mode (Primario e Secundario(backup))
 C----+------------------------------------------------------------------
 	IF(P(SYSTYP).EQ.LIVSYS) THEN
 	   IF(QUE.NE.CMD.OR.

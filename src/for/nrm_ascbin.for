@@ -72,7 +72,7 @@ C
 C
 	TEMP = 0
 	DO 1100 K = OFF, OFF+LEN-1
-	  X = BYTARY(K) - ICHAR('0')
+	  X = BYTARY(K) - ICHAR('0') ! ICHAR('0') -> 48 decimal -> write 2 then its 50 decimal - 48 decimal gets the 2 values corresponding to the 2 char
 	  IF(X.LT.0 .OR. X.GT.9)GOTO 7000
 	  IF(TEMP.GT.214748364)GOTO 7000    !214748364 = '7FFFFFFF'X/10
 	  TEMP = TEMP*10
