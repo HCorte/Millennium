@@ -33,9 +33,10 @@ C
 C
 C
 	CHARACTER STRING*(*),CBUF(20)
-	CHARACTER CXINBUF*(20)
+	CHARACTER CXINBUF*(20) !1 CHARACTER -> 1 Byte maximo de 20 caracteres
 	INTEGER*4 INLEN
-	INTEGER*4 INBUF(5), EXT, ST, FLG, NUM, SIGN, I
+	INTEGER*4 INBUF(5), EXT, ST, FLG, NUM, SIGN, I !INBUF têm o tamanho de 5 ou seja
+	!1 Byte -> 255 decimal ASCII the extended version ( uses 255 decimal -> Byte) 
 	INTEGER*4 DIG, HIGH, LOW, POS
 C
 	EQUIVALENCE(INBUF,CBUF,CXINBUF)
@@ -176,7 +177,7 @@ C
 	      GOTO 30
 	    ENDIF
 	    FLG=1
-	    NUM=NUM*10+DIG
+	    NUM=NUM*10+DIG !move uma posição para a esquerda e adiciona o digito acabado de ler
 20	  CONTINUE
 	  NUM=NUM*SIGN
 	ENDIF

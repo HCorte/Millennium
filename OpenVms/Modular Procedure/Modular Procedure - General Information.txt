@@ -1,0 +1,53 @@
+Facility Prefixes As Used in Procedure Names
+Note: the first three (or sometimes four) characters of a procedure name are used to 
+indicate the facility of a run-time library (RTL) procedure.
+	- STR$APPEND -> Facility Prefix for String Manipulation Procedures
+	- BAS$STRING -> Facility Prefix for BASIC−Specific Support Procedures
+	
+Rules to Create a Facility Name:
+		You can create your own facilities by defining a unique facility name and facility
+	number. The name for your facility should be a unique name between 1 and 27
+	characters. Facility names supplied by Compaq all contain a dollar sign ( $ ) after
+	the prefix. User-supplied facility names should use an underscore ( _ ) rather than
+	a dollar sign ( $ ) to avoid any name conflicts.
+
+		The facility number is used in defining condition values for the facility. Bit 27
+	(STS$V_CUST_DEF) of a condition value indicates whether the value is supplied
+	by Compaq or by the user. This bit must be 1 if the facility number is created
+	by the user. For more information, use the Help Message utility (MSGHLP) to
+	access online descriptions of system messages from the DCL ($) prompt. For
+	more information about using MSGHLP, refer to the OpenVMS System Messages:
+	Companion Guide for Help Message Users.
+	
+Thums up rules:
+		When you create a procedure and make its name global, you allow other
+	procedures in the same image to call that procedure
+	
+	The rules for naming entry points to procedures have the following general form:
+	• fac$symbol (Compaq supplied)
+	• fac_symbol (user-supplied)
+	
+	where:
+	fac is a two- to four-character facility name.
+	symbol is a symbol from 1 to 27 characters long. (The entire procedure name may
+	not exceed 31 characters in length.)
+	
+	Some procedures, even though they have global names, are not intended to be
+	called from outside the facility in which they are located. These procedures are
+	only available internally, within a set of procedures, and do not by themselves
+	provide any functionality for the facility. The names for these procedures contain
+	a double dollar sign ( $$ ) if they are supplied by Compaq or a triple underscore
+	( _ __ __ ) if they are supplied by the user. (Three underscores are necessary to 
+	avoid conflict with user-defined condition value symbols, which use two underscores.)
+	
+	Status Code and Condition Value Naming Conventions (Required)
+	The format of status codes and condition values is as follows:
+	• fac$_status (Compaq supplied)
+	• fac_ _status (user-supplied)
+	
+	
+NOTE: (For information about the procedures available in the Run-Time Library, see the 
+OpenVMS Programming Concepts Manual.)
+
+NOTE2:For more information about creating libraries and shareable images,
+ use the guidelines in the OpenVMS Linker Utility Manual
