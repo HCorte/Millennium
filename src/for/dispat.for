@@ -154,7 +154,7 @@ C
 C
 C  CHECK IF A COMMAND WITH SYSTEM FREEZE BEING PROCESSED
 C
-	IF(P(CMDFRZ).NE.0) THEN
+	IF(P(CMDFRZ).NE.0) THEN !não processa nenhum pedido/mensagem enquanto o systema estiver em modo freeze
 	  IF(IGSDEBUG(IA_DISPAT)) THEN
 		  CALL OPS('138:DISPAT: CMD FRZ', 0,0)
 	  ENDIF !NAMES FOR ALL SYSTEM TASKS ---- (CMD=9) !COMMAND TASK #
@@ -175,8 +175,13 @@ C
 	CALL GETTIM(P(ACTTIM))
 20	CONTINUE
 	DO 100 J=1,MBATCH
-	CALL RTL(BUF,QUETAB(1,DIS),ST)    !DEQUE NEXT TRANSACTION
-	IF(ST.EQ.2) BUF=0
+C
+C STATUS = GLIST_STAT_EMPTY <-> PARAMETER	(GLIST_STAT_EMPTY = 2)	!List empty (RTL,RBL)
+C STATUS = GLIST_STAT_LASTONE <-> PARAMETER	(GLIST_STAT_FULL = 1)	!List is full (ABL,ATL)
+C STATUS = GLIST_STAT_GOOD <-> PARAMETER	(GLIST_STAT_GOOD = 0)	!Success (all routines)
+C		
+	CALL RTL(BUF,QUETAB(1,DIS),ST)    !DEQUE NEXT TRANSACTION Remove top of the list
+	IF(ST.EQ.2) BUF=0 !List empty (RTL,RBL)
 C
 C IF FLUSH FLAG IS SET THEN DEQUEUE AND DISPATCH SECOND
 C PHASE TRANSACTIONS ONLY.
@@ -185,25 +190,25 @@ C
       IF(IGSDEBUG(IA_DISPAT)) THEN
           CALL OPS('162:DISPAT:FLUSH BUF', BUF,BUF)
 	  ENDIF
-	  IF(BUF.EQ.0) GOTO 300
+	  IF(BUF.EQ.0) GOTO 300 !List empty (RTL,RBL) -> FREEZE INPUT AND FLUSH ALL TRANSACTIONS IN PROCESS ?? acabar o processamento das transactions que já estão a meio do processamento???
       IF(IGSDEBUG(IA_DISPAT)) THEN
           CALL OPS('164:DISPAT:FLUSH BUF', BUF,BUF)
 	  ENDIF
-	  TYPE=HPRO(TRCODE,BUF)
-	  IF(TYPE.NE.TYPWCN.AND.TYPE.NE.TYPWDL.AND.
-     *       TYPE.NE.TYPNCN.AND.TYPE.NE.TYPNDL.AND.
-     *       TYPE.NE.TYPOCN.AND.TYPE.NE.TYPODL.AND.
-     *	     TYPE.NE.TYPPCN.AND.TYPE.NE.TYPPDL.AND.
-     *	     TYPE.NE.TYPGUI.AND.TYPE.NE.TYPECH.AND.
-     *       TYPE.NE.TYPFRA.AND.TYPE.NE.TYPUNF) THEN
-	    CALL ATL(BUF,QUETAB(1,DIS),ST)
+	  TYPE=HPRO(TRCODE,BUF) ! lê do buffer o campo TRCODE (TRANSACTION CODE)
+	  IF(TYPE.NE.TYPWCN.AND.TYPE.NE.TYPWDL.AND. ! (TYPWCN=9) !LOTTO/SPORTS CANCELLATION && (TYPWDL=10) !LOTTO/SPORTS DELETION 
+     *       TYPE.NE.TYPNCN.AND.TYPE.NE.TYPNDL.AND. !(TYPNCN=11) !NUMBERS CANCELLATION && (TYPNDL=12) !NUMBERS DELETION
+     *       TYPE.NE.TYPOCN.AND.TYPE.NE.TYPODL.AND. !(TYPOCN=23) !ODDS GAME CANCELLATION && (TYPODL=24) !ODDS GAME DELETION
+     *	     TYPE.NE.TYPPCN.AND.TYPE.NE.TYPPDL.AND. !(TYPPCN=25) !BINGO GAME CANCELLATION && (TYPPDL=26) !BINGO GAME DELETION
+     *	     TYPE.NE.TYPGUI.AND.TYPE.NE.TYPECH.AND. !PARAMETER (TYPGUI=34) !GUIMGR && (TYPECH=8)  !EXCHANGE TRANSACTION
+     *       TYPE.NE.TYPFRA.AND.TYPE.NE.TYPUNF) THEN !(TYPFRA=16) !FRACTION WAGER 2ND PHASE &&  PARAMETER (TYPUNF=35) !UNFRACTION WAGER 2ND PHASE
+	    CALL ATL(BUF,QUETAB(1,DIS),ST) !obter o BUF que é PROCOM buffer number -> Probuf
 		IF(IGSDEBUG(IA_DISPAT)) THEN
              CALL OPS('173:DISPAT:TYPE', TYPE,TYPE)
 		ENDIF
-	    GOTO 300
+	    GOTO 300 !P(CMDFLU)=1 -> FREEZE INPUT AND FLUSH ALL TRANSACTIONS IN PROCESS
 	  ENDIF
 	ENDIF
-	IF(BUF.EQ.0) GOTO 110
+	IF(BUF.EQ.0) GOTO 110 !List empty (RTL,RBL) aviza pela network que a queue está vazia os pedidos/mensagens foram processados
 C
 C GET APPLICATIONS QUEUE NUMBER AND NUMBER OF LOG RECORDS
 C REQUIRED FOR THIS TRANSACTION. IF TRANSACTION ALREADY
@@ -213,8 +218,10 @@ C
 C EURO MIL PROJECT - IF QUE IS EUI AND TYPE IS TYPREG SO DON'T SEND TO OTHER MACHINES
 C                    IF QUE IS SPE AND TYPE IS TYPREG SO DON'T SEND TO OTHER MACHINES
 C
-        IF(HPRO(TRCODE,BUF).EQ.TYPREG) PRO(TIMINOFF,BUF) = P(ACTTIM)
-        CALL GETQUE(BUF,QUE,SIZE,BYPASS)
+		!ACTUAL SYS TIME SET BY DISPAT IN SECS
+        IF(HPRO(TRCODE,BUF).EQ.TYPREG) PRO(TIMINOFF,BUF) = P(ACTTIM) !gets timestamp de agora (por dia só por o stopsys ser diario que limpa TMF do registo das transações)
+		CALL GETQUE(BUF,QUE,SIZE,BYPASS) !obtêm QUE (application task queue number) do PROCOM/PROBUF
+		!CODE = HPRO(TRCODE,BUF)
         IF(IGSDEBUG(IA_DISPAT)) THEN 
             CALL OPS('188:DISPAT:GETQUE BUF', BUF,BUF)
             CALL OPS('188:DISPAT:GETQUE QUE', QUE,QUE)
@@ -226,9 +233,9 @@ C
             CALL OPSTXT('DUMP WRKTAB MESSAGE:')
             CALL DUMP_MESSAGE(0,0,BPRO(WRKTAB*4-3+1,BUF),HPRO(OUTLEN,BUF))
         ENDIF
-	IF(BYPASS) THEN !if transaction already haves serial number???
-	  IF(HPRO(TRCODE,BUF).EQ.TYPREG.AND.QUE.EQ.INI) GOTO 30
-	  IF(HPRO(TRCODE,BUF).EQ.TYPREG.AND.QUE.EQ.EUI) GOTO 30
+	IF(BYPASS) THEN !needs to pass thrue
+	  IF(HPRO(TRCODE,BUF).EQ.TYPREG.AND.QUE.EQ.INI) GOTO 30 !QUEUE TRANSACTION TO APPROPIATE APPLICATIONS TASK
+	  IF(HPRO(TRCODE,BUF).EQ.TYPREG.AND.QUE.EQ.EUI) GOTO 30 !QUEUE TRANSACTION TO APPROPIATE APPLICATIONS TASK
 C----+------------------------------------------------------------------
 C V10| Added support to PLACARD Project - IGS
 C----+------------------------------------------------------------------
@@ -236,7 +243,7 @@ C----+------------------------------------------------------------------
               IF(IGSDEBUG(IA_DISPAT)) THEN 
                  CALL OPS('186:DISPAT QUE = IGI', QUE, IGI)
               ENDIF
-              GOTO 30
+              GOTO 30 !QUEUE TRANSACTION TO APPROPIATE APPLICATIONS TASK
           ENDIF
 C----+------------------------------------------------------------------
 C V10| Added support to PLACARD Project - IGS
@@ -250,7 +257,7 @@ C         IF(P(SYSTYP).EQ.LIVSYS)  CALL WNET(BUFNET,BUF,ST)
               IF(IGSDEBUG(IA_DISPAT)) THEN 
                  CALL OPS('243:DISPAT TYPREG AND QUE = SPE', QUE, SPE)
               ENDIF
-              GOTO 30
+              GOTO 30 !QUEUE TRANSACTION TO APPROPIATE APPLICATIONS TASK
           ENDIF
           IF(P(SYSTYP).EQ.LIVSYS) THEN
               IF(IGSDEBUG(IA_DISPAT)) THEN 
@@ -258,7 +265,7 @@ C         IF(P(SYSTYP).EQ.LIVSYS)  CALL WNET(BUFNET,BUF,ST)
      *                    ZEXT(HPRO(TRCODE,BUF)), ZEXT(HPRO(TRCODE,BUF)))
                  CALL OPS('243:DISPAT ANTE WNET - BUFNET,BUF', BUFNET, BUF)
               ENDIF
-              CALL WNET(BUFNET,BUF,ST)
+              CALL WNET(BUFNET,BUF,ST) !envia o buffer para newtwork de modo a outros sistemas/maquinas
               IF(IGSDEBUG(IA_DISPAT)) THEN 
                  CALL OPS('243:DISPAT POST WNET - ST', ST, ST)
               ENDIF
@@ -283,7 +290,7 @@ C
 	    ELSE
 	      CALL QUETRA(ERR,BUF) !QUEUE IT TO ERROR QUEUE WITHOUT ASSIGNING A SERIAL NUMBER
 	    ENDIF
-	    GOTO 100
+	    GOTO 100 !acaba aqui não faz mais nada no dispatch
 	  ENDIF
 C
 C
@@ -309,14 +316,15 @@ C----+------------------------------------------------------------------
      *	      PRO(CTYP,BUF).EQ.TCX2X)    THEN
 C
 	      IF(HPRO(TRCODE,BUF).EQ.TYPFRA) THEN    !GET ALL FRACTION SERIAL #
-	         NUMTKT = HPRO(NBRTRA,BUF)
+	         NUMTKT = HPRO(NBRTRA,BUF) !PARAMETER (NBRTRA=41)  !# OF TRANSACTIONS IN BUFFER
 	         DO I = 0,NUMTKT - 1
                     IF(IGSDEBUG(IA_DISPAT)) THEN
                         CALL OPSTXT('260:DISPAT:GETSER')
                     ENDIF
-	            CALL GETSER(PRO(SERIAL,BUF),SIZE)
-		    PRO(FRA_FRC+I,BUF) = PRO(SERIAL,BUF)
-	         END DO
+				CALL GETSER(PRO(SERIAL,BUF),SIZE) !gets the next serial number
+				!PARAMETER (FRA_FRC    = WRKTAB+2)  ! serial #s of fractioned tickets
+		    PRO(FRA_FRC+I,BUF) = PRO(SERIAL,BUF) !defines the serial of this factioned tickets as the serial generated above (o conjunto de de bilhetes/frações ficam com um range de numeros de série)
+	         END DO !confirmar o numero de serie aqui é o interno? pois o serial number se for 3 segmentos incrementa 3 se for 2 segmentos incrementa 2 e se for 1 segemento incrementa 1 em relação ao serial number anterior
 	      ELSE
                  IF(IGSDEBUG(IA_DISPAT)) THEN
                      CALL OPSTXT('267:DISPAT:GETSER')
@@ -335,7 +343,7 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V11| Bugfix with transaction recording while in Duplex Mode
 C----+------------------------------------------------------------------
-	      CALL WNET(BUFNET,BUF,STATUS)
+	      CALL WNET(BUFNET,BUF,STATUS) !passa a informação/mensagem para a maquina B/secundario para ser processado?
 C----+------------------------------------------------------------------
 C V11| Bugfix with transaction recording while in Duplex Mode
 C----+------------------------------------------------------------------
@@ -352,16 +360,17 @@ C----+------------------------------------------------------------------
 	   ENDIF
 	ELSE
 	   IF(PRO(SERIAL,BUF).EQ.0) THEN
-	      CALL RELBUF(BUF)
+	      CALL RELBUF(BUF) !liberta o buffer sendo enviado para o campo de PROCOM que é FREEQ(NUMPRO+QHEDSZ) que é um array de buffers livres/zerados
 	      GOTO 100
-	   ELSE
+	   ELSE 
 	      IF(HPRO(TRCODE,BUF).EQ.TYPFRA) THEN
-	         NUMTKT = HPRO(NBRTRA,BUF)
+	         NUMTKT = HPRO(NBRTRA,BUF) !PARAMETER (NBRTRA=41)   !# OF TRANSACTIONS IN BUFFER
 		 DO I = 0,NUMTKT - 1
-		    CALL CHKSER(PRO(FRA_FRC+I,BUF),SIZE)
+			!confirmar se está a ser dado o offset 32.000.000 entre o sistema principal e o sistema secundario
+		    CALL CHKSER(PRO(FRA_FRC+I,BUF),SIZE) !SUBROUTINE TO CHECK SERIAL NUMBERS IN SECONDARY SYSTEMS
 		 END DO
 	      ELSE
-	         CALL CHKSER(PRO(SERIAL,BUF),SIZE)
+	         CALL CHKSER(PRO(SERIAL,BUF),SIZE) !SUBROUTINE TO CHECK SERIAL NUMBERS IN SECONDARY SYSTEMS
 	      ENDIF
 	   ENDIF
 	ENDIF
@@ -370,8 +379,8 @@ C IF TRANSACTION IS A COMMAND REQUIREING SYSTEM FREEZE THEN
 C STOP DEQUEING TRANSACTIONS, AND PROCESS COMMAND.
 C NOTE: X2X COMMANDS WILL NOT FREEZE SYSTEM.
 C
-	IF(QUE.EQ.CMD.AND.PRO(CTYP,BUF).EQ.TCX2X) GOTO 30
-	IF(QUE.EQ.CMD.AND.PRO(CTYP,BUF).NE.TCSPE) GOTO 300
+	IF(QUE.EQ.CMD.AND.PRO(CTYP,BUF).EQ.TCX2X) GOTO 30 !envia o buffer/probuf para a aplicação/processo
+	IF(QUE.EQ.CMD.AND.PRO(CTYP,BUF).NE.TCSPE) GOTO 300 !FREEZE INPUT AND FLUSH ALL TRANSACTIONS IN PROCESS
 C
 C QUEUE TRANSACTION TO APPROPIATE APPLICATIONS TASK
 C AND INCREMENT ACTIVE TASK LIST.
@@ -392,7 +401,7 @@ C
 	   IF(DMPDBG) CALL PRTOUT(BUF)
 	ENDIF
 	CALL TRNTRACE(BUF,0)       !TRY TO TRACE INPUT BUF
-	CALL QUETRA(QUE,BUF)
+	CALL QUETRA(QUE,BUF) !envia o buffer/probuf para a aplicação/processo???
 100	CONTINUE
 C
 C END OF TRANSACTION INPUT

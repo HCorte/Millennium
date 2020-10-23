@@ -179,7 +179,7 @@ C    | Call CheckTimeout function to see if there are any messages sent
 C    | to IGS that do not have response. If so, delete buffer and send
 C    | to Altura terminal an error message
 C----+------------------------------------------------------------------
-        CALL CHKTIMEOUT !excedeu o tempo de retornar a resposta ao terminal logo algo correo mal e devolve ao terminal uma mensagem de erro e remove o buffer
+        CALL CHKTIMEOUT !excedeu o tempo de retornar a resposta ao terminal logo algo correu mal e devolve ao terminal uma mensagem de erro e remove o buffer
 
 C----+------------------------------------------------------------------
 C    | If there are no more response messages, then start sending all
@@ -187,7 +187,7 @@ C    | messages to IGS until there are no more buffers to process
 C----+------------------------------------------------------------------
 20      CONTINUE
         CALL IGS_TOPQUE(BUF) ! This subroutine returns the top element of the queue, or zero, if none the internal queue from openvms/millennium
-        IF(BUF .EQ. 0) THEN !in case the queue is empty returns to alias 10 (Entry Point)
+        IF(BUF .EQ. 0) THEN !in case the queue is empty returns to alias 10 (Entry Point) and waits for 250ms before trying to fetch more messages
             GOTO 10
         ELSE
             IF(IGSDEBUG(IA_COMIGS)) THEN

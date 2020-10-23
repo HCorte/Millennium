@@ -4,5 +4,11 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"*.def": "fortran_fixed-form",
+			"*.h_file_content": "c"
+		},
+		"vmssoftware.project-dep.buildName": "DEBUG"
+	}
 }

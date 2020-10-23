@@ -851,7 +851,7 @@ C          ENDDO
           I1TEMP(2) = ZEXT (MESS_FROM_EUROMIL(7))
           I1TEMP(3) = ZEXT (MESS_FROM_EUROMIL(6))
           I1TEMP(4) = ZEXT (MESS_FROM_EUROMIL(5))
-          XRFNUM = I4TEMP
+          XRFNUM = I4TEMP !cross reference number
 C
 C CLEAR VAR MEMORY
 C          
