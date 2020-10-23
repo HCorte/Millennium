@@ -75,10 +75,10 @@ C
 C CALLING SEQUENCE:
 C     CALL GETQUE(BUF,QUE,SIZE,BYPASS)
 C INPUT
-C     BUF    - PROCOM BUFFER NUMBER
+C     BUF    - PROCOM BUFFER NUMBER (pointer)
 C OUTPUT
-C     QUE    - APPLICATIONS TASK QUEUE NUMBER
-C     SIZE   - NUMBER OF LOG RECORDS REQUIRED
+C     QUE    - APPLICATIONS TASK QUEUE NUMBER (pointer)
+C     SIZE   - NUMBER OF LOG RECORDS REQUIRED (segmentos)
 C     BYPASS - TRANSACTION ALREADY HAS SERIAL NUMBER (SECOND PHASE)
 C
 C
@@ -437,8 +437,8 @@ C
 C DETERMINE APPROPIATE PROCESSING TASK FROM INPUT MESSAGE
 C
         TYPE = ZEXT(BPRO(BINPTAB+1,BUF))
-        SUBTYP = IAND(TYPE,15)
-        TYPE = ISHFT(TYPE,-4)
+        SUBTYP = IAND(TYPE,15) ! 0000 XXXX (4 bits menos significativos)
+        TYPE = ISHFT(TYPE,-4) ! XXXX 0000 (4 bits mais significativos)
 C----+------------------------------------------------------------------
 C V52| Added support to PLACARD Project - IGS - Financial Reports
 C----+------------------------------------------------------------------
@@ -713,8 +713,8 @@ C
 C EURO MIL PROJECT - GAME TYPE 17 (TEUM)
 C It's BYPASS - First time... do not send to others systems
 C 
-        IF(SUBTYP .EQ. TEUM) THEN                     !EURO MIL
-          QUE = EUI
+        IF(SUBTYP .EQ. TEUM) THEN  !TEUM = 17 (!EURO MIL GAME TYPE) - EURO MIL
+          QUE = EUI !INMGR
           BYPASS= .TRUE.
           GOTO 9000
         ENDIF

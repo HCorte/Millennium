@@ -116,18 +116,18 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
         VALUE = 0
         TEMP  = 0
         POS   = 1
-        CALL KEY(CLINE,K,MAXPRM,POS,KEYNUM)
+        CALL KEY(CLINE,K,MAXPRM,POS,KEYNUM)!SUPWAg     1 (here finds continues reading until reach empty space and gets SUPWAg and compares to K values if exists validates the value
 C
         IF(POS.GT.40) GOTO 300                                                  !NO INPUT
         IF(KEYNUM.EQ.0)GOTO 200                                                 !INPUT ERROR
 C
-        CALL NUMB(CLINE,POS,VALUE)                                              !GET VALUE
-        IF(VALUE.LT.0)  GOTO 205
+        CALL NUMB(CLINE,POS,VALUE) !!SUPWAg     1 (here continues reading until 1 unless one in position greater then 40)              !GET VALUE
+        IF(VALUE.LT.0)  GOTO 205 !Value error (inserted value is invalid)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       CLEAR COMMAND MESSAGE BUFFER
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 2       CONTINUE
-        CALL FASTSET(0,BUF,CDLEN)
+        CALL FASTSET(0,BUF,CDLEN) !INMGR   ','COMMGR  ','OUTMGR  são informativos dai o Input error se receber como input do command line
         GOTO(200,200,200,504,
      *       505,506,507,508,
      *       509,510,511,512,

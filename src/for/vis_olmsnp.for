@@ -1,0 +1,209 @@
+C
+C SUBROUTINE OLMSNP
+C
+C
+C VIS_OLMSNP.FOR
+C
+C V03 30-MAR-2016 SCML M16 PROJECT
+C V02 20-JUL-2015 SCML Adding support for IGS internal cancel flags
+C V01 08-APR-2014 SCML Placard Project
+C
+C EUR SYSTEM CONTROL SNAPSHOT
+C
+C
+C ERROR MESSAGE #  DESCRIPTION
+C ---------------  -----------------------------------------------------
+C       5          PASSWORD ERROR WHILE TRYING TO CHANGE EM TIMEOUT
+C       6          PASSWORD ERROR WHILE TRYING TO CHANGE EM FIN TIMEOUT
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Copyright 2016 SCML Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
+        SUBROUTINE OLMSNP(CLINE, EGAM)
+        IMPLICIT NONE
+C
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C
+        INCLUDE 'INCLIB:GLOBAL.DEF'
+        INCLUDE 'INCLIB:PRMLOG.DEF'
+        INCLUDE 'INCLIB:AGTINF.DEF'
+        INCLUDE 'INCLIB:PRMAGT.DEF'
+        INCLUDE 'INCLIB:VISCOM.DEF'
+        INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:PROCOM.DEF'
+        INCLUDE 'INCLIB:TASKID.DEF'
+        INCLUDE 'INCLIB:ENCCOM.DEF'
+        INCLUDE 'INCLIB:QUECOM.DEF'
+        INCLUDE 'INCLIB:X2XQUE.DEF'
+        INCLUDE 'INCLIB:GTNAMES.DEF'
+        INCLUDE 'INCLIB:OLMCOM.DEF' !New Memory for Olimpo Communication channel          
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       INPUT ARGUMENTS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        INTEGER*4  CLINE(20)
+        INTEGER*4  EGAM    !EXTERNAL GAME NUMBER (IN EUROMILLIONS SYSTEM)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       LOCAL VARIABLES
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+        INTEGER*4  GSLIWAG,GSLOTOWAG,GSBALLWAG    !GAME SUPRESS WAGER (3 games)
+        INTEGER*4  GSGRR    !GAME SUPRESS GAME RESULTS REPORT
+        INTEGER*4  GSICA    !GAME SUPRESS INTERNAL CANCELLATION
+
+        
+        INTEGER*4  BUF(CDLEN)     
+        INTEGER*4  MESS(EDLEN)          
+        CHARACTER*7  DEFTPASS                                                   !DEFAULT PASSWORD
+        CHARACTER*7  PASSENT                                                    !ENTERED PASSWORD
+        INTEGER*4  VALUE
+        INTEGER*4  POS
+C
+        INTEGER*4  MAXPRM
+        PARAMETER (MAXPRM=22)
+C
+        REAL*8       K(MAXPRM)                                                  !SNAPSHOT PARAMETER DESCRIPTION
+C
+
+C
+        DATA   K/'COMOLM  ','OLMCOn  ','OLMTMo  ','FINTMo  ',
+     *           'GSLIwag ','GSLOTwag','GSBALwag','SUPCAn  ', !(SUPCAn) desdobrar supreção de cancelamento em 3 para cada tipo de jogo?
+     *           'SUPVAl  ','SUPGRrep','SUPFIrep','SUPBIrep', !(SUPVAl) desdobrar supreção da validação em 3 para cada tipo de jogo?
+     *           'SUPICan '/
+        DATA DEFTPASS/'SUPORTE'/
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       BEGIN PROCESS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        MESS(1) = 63 !que é este valor do euromil???
+        MESS(2) = TEOLM
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C EURSNP INPUT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  
+        VALUE = 0
+        !TEMP  = 0 parece que esta variavel não está a ser usada no euromil
+        POS   = 1      
+        CALL KEY(CLINE,K,MAXPRM,POS,KEYNUM)
+C
+        IF(POS.GT.40) GOTO 300                                                  !NO INPUT
+        IF(KEYNUM.EQ.0)GOTO 200                                                 !INPUT ERROR        
+C
+        CALL NUMB(CLINE,POS,VALUE)                                              !GET VALUE
+        IF(VALUE.LT.0)  GOTO 205        
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       BUILD EURSNP SCREEN IMAGE
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+300     CONTINUE
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       GET BUFFER UTILIZATION INFORMATION
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        !CALL LISTSIZE(QUETAB(1,EUI), EURQUE_LIST(1))                            !INMGR
+        CALL LISTSIZE(QUETAB(1,EUC), EURQUE_LIST(2))                            !COMOLM
+        !CALL LISTSIZE(QUETAB(1,EUO), EURQUE_LIST(3))                            !OUTMGR
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C      GET GAME FLAGS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        IF(EGAM.NE.0) THEN
+          GSWAG = 0
+          GSGRR = 0
+          GSICA = 0
+          IF(TSBIT(P(EUSPGWAG),EGAM-1)) GSWAG = 1
+          IF(TSBIT(P(EUSPGGRR),EGAM-1)) GSGRR = 1
+          IF(TSBIT(P(EUSPGICA),EGAM-1)) GSICA = 1
+        ENDIF
+        WRITE(CLIN1,901)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       DISPLAY EUR SYSTEM APP QUEUES
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        WRITE(CLIN3,903) K(1), EURQUE_LIST(1),
+     *                   K(2), EURQUE_LIST(2),
+     *                   K(3), EURQUE_LIST(3)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       DISPLAY EUR SYSTEM PARAMETERS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        ST = 0
+        CALL STTSK(8HCOMMGR  ,TSKST,ST)                                         !VERIFY IF COMMGR IS OK
+        IF(ST.NE.4) THEN                                                        !IF COMMGR OK
+          IF(EURS_ATTACHSTS.NE.0) THEN                                          !ATTACH HAS BEEN DONE
+            WRITE(CLIN6,910)  K(4), P(EUMILF)                                   !EURCOn PARAMETER
+            WRITE(CLIN7,9101) K(5), P(EUTIMOUT),                                !EUR TIMEOUT (SEC)
+     *                        EURS_ATTACHDAT(3),                                !DAY ATTACHED (DD)
+     *                        EURS_ATTACHDAT(2),                                !MONTH ATTACHED (MM)
+     *                        EURS_ATTACHDAT(1),                                !YEAR ATTACHED (YYYY)
+     *                        EURS_ATTACHTIM                                    !TIME ATTACHED (H24:MI:SS)
+          ELSE                                                                  !ATTACH HAS NOT BEEN DONE
+            WRITE(CLIN6,9102) K(4), P(EUMILF)                                   !EURCOn PARAMETER
+            WRITE(CLIN7,9103) K(5), P(EUTIMOUT)                                 !EUR TIMEOUT (SEC)
+          ENDIF
+C
+          IF(EURS_DETACHFLG.NE.0) THEN                                          !A DETACH HAS OCCURRED
+            WRITE(CLIN8,9104) K(6), P(EUFINTO),                                 !FIN TIMEOUT (SEC)
+     *                        EURS_DETACHDAT(3),                                !LAST DAY DETACHED (DD)
+     *                        EURS_DETACHDAT(2),                                !LAST MONTH DETACHED (MM)
+     *                        EURS_DETACHDAT(1),                                !LAST YEAR DETACHED (YYYY)
+     *                        EURS_DETACHTIM                                    !LAST TIME DETACHED (H24:MI:SS)
+          ELSE                                                                  !DETACH HAS NOT BEEN DONE
+            WRITE(CLIN8,9105) K(6), P(EUFINTO)                                  !FIN TIMEOUT (SEC)
+          ENDIF
+        ELSE                                                                    !IF COMMGR NOT RUNNING DO NOT DISPLAY ATTACH AND DETACH TIME STAMP
+          WRITE(CLIN6,9102) K(4), P(EUMILF)                                     !EURCOn PARAMETER
+          WRITE(CLIN7,9103) K(5), P(EUTIMOUT)                                   !EUR TIMEOUT (SEC)
+          WRITE(CLIN8,9105) K(6), P(EUFINTO)                                    !FIN TIMEOUT (SEC)
+        ENDIF
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C-      DISPLAY EUR SYSTEM GAMES GLOBAL PARAMETERS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        IF(EGAM.EQ.0) THEN
+          WRITE(CLIN12,911) K(7), P(EUSPWAG),K(8) , P(EUSPCAN),
+     *                      K(9), P(EUSPVAL),K(10), P(EUSPGRR)
+          WRITE(CLIN13,9111) K(11), P(EUSPFIR), 
+     *                       K(12), P(EUSPBIR),
+     *                       K(13), P(EUSPICA)
+        ELSE
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       DISPLAY EUR SYSTEM GAMES SPECIFIC PARAMETERS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+          IF(GTYP.EQ.TEUM) THEN
+            WRITE(CLIN12,912) EGAMNAM,
+     *                        K(7) , GSWAG,
+     *                        K(10), GSGRR,
+     *                        K(13), GSICA
+            WRITE(CLIN13,900)
+          ELSEIF(GTYP.EQ.TRAF) THEN
+            WRITE(CLIN12,913) EGAMNAM,
+     *                        K(10), GSGRR
+            WRITE(CLIN13,900)
+          ENDIF
+        ENDIF
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       DISPLAY SYSTEM STATS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+        WRITE(CLIN16,950)
+        WRITE(CLIN17,9501) EURS_NXTXRF,                                         !NEXT CROSS REFERENCE NUMBER
+     *                     EURS_TOTEURTMO,                                      !TOTAL # OF MESSAGES TIMED OUT
+     *                     EURS_TOTEURATO                                       !TOTAL # OF MESSAGES ALREADY TIMED OUT
+        WRITE(CLIN18,9502) EURS_TOTOKYPUT,                                      !TOTAL # OF MESSAGES SENT TO EUROMILLIONS SYSTEM
+     *                     EURS_TOTOKYGET,                                      !TOTAL # OF MESSAGES RECEIVED FROM EUROMILLIONS SYSTEM
+     *                     EURS_TOTWAGTMO,                                      !TOTAL # OF WAGERS TIMED OUT
+     *                     EURS_TOTWAGATO                                       !TOTAL # OF WAGERS ALREADY TIMED OUD
+        WRITE(CLIN19,9503) EURS_TOTERRPUT,                                      !TOTAL # OF ERRORS WHILE SENDING MESSAGES TO EUROMILLIONS SYSTEM
+     *                     EURS_TOTERRGET,                                      !TOTAL # OF ERRORS WHILE GETTING MESSAGES FROM EUROMILLIONS SYSTEM
+     *                     EURS_TOTCANTMO,                                      !TOTAL # OF CANCELS TIMED OUT
+     *                     EURS_TOTCANATO                                       !TOTAL # OF CANCELS ALREADY TIMED OUT
+        WRITE(CLIN20,9504) EURS_TOTICANOK,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES SENT
+     *                     EURS_TOTICANER,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES FAILED TO SEND
+     *                     EURS_TOTVALTMO,                                      !TOTAL # OF VALIDATIONS TIMED OUT
+     *                     EURS_TOTVALATO                                       !TOTAL # OF VALIDATIONS ALREADY TIMED OUT
+        WRITE(CLIN21,9505) EURS_TOTICANNS,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES NOT SENT
+     *                     EURS_TOTPAYTMO,                                      !TOTAL # OF PAYMENTS TIMED OUT
+     *                     EURS_TOTPAYATO                                       !TOTAL # OF PAYMENTS ALREADY TIMED OUT
+        WRITE(CLIN22,9506) EURS_TOTFINTMO,                                      !TOTAL # OF FINANCIAL REPORTS TIMED OUT (OTHER THAN THE BILLING REPORT)
+     *                     EURS_TOTFINATO                                       !TOTAL # OF FINANCIAL REPORTS ALREAYD TIMED OUT (OTHER THAN THE BILLING REPORT)
+C
+        RETURN        

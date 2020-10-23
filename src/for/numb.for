@@ -79,10 +79,10 @@ C
 	ENDIF
 30	CONTINUE
 	IF((CLINE(POS).LT.ZERO.OR.CLINE(POS).GT.NINE).AND.
-     *	 CLINE(POS).NE.'-') GOTO 40
-	IF(CLINE(POS).EQ.'-') GOTO 35
-	CALL ASCBIN(DLINE,POS,1,DIGIT,ERR)
-	NUM=NUM*10+DIGIT
+     *	 CLINE(POS).NE.'-') GOTO 40 !means its not a number
+	IF(CLINE(POS).EQ.'-') GOTO 35 !hum maybe negative value ???
+	CALL ASCBIN(DLINE,POS,1,DIGIT,ERR) !gets number value from the keyboard key pressed (ASCII)
+	NUM=NUM*10+DIGIT!increments depending the number of digits
 	OK=1
 35	CONTINUE
 	POS=POS+1
@@ -90,6 +90,6 @@ C
 	GOTO 30
 C
 40	CONTINUE
-	IF(OK.NE.1)NUM=-1
+	IF(OK.NE.1)NUM=-1 !thats error in reading value
 50	RETURN
 	END
