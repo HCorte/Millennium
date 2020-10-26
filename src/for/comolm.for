@@ -565,9 +565,35 @@ C                 Special function
 C                 Index terminal list     
                   !HPRO(TRMNDX,PROBUF)=TRMNDX !not used/defined in x2rcvbuf.for
 
+C                 Number of transactions in buffer -> NBRTRA=41 --> getque.for
+C                 HPRO(NBRTRA,BUF) = 1 ---------Default 
+C                 HPRO(NBRTRA,BUF) = NUMTKT -------- CHECK FOR FRACTION WAGER (2ND PHASE)
+C
+
+C                 Number of log records for the this transaction -> NUMLRC=42 --> getque.for
+C                 HPRO(NUMLRC,BUF)=SIZE
+
+C                 Number of log records skipped in TMF -> NUMLSK=43
+
+C                 Time at which transaction has entered the system -> TIMOFF=29 -- x2rcvbuf.for
+                  PRO(TIMOFF,PROBUF)=X2X_LOOP_TIME
+
+C                 Transaction serial number  -> SERIAL=30   
+C                 getser.for -> CALL GETSER(PRO(SERIAL,COMMAND_BUFFER),COMMAND_SIZE) -- dispat.for             
+
+C                 Time stamp -> TSTAMP=31
+C                 PRO(TSTAMP,BUF)=P(ACTTIM) -- dispat.for
+C                 PRO(TSTAMP,COMMAND_BUFFER)=P(ACTTIM) -- dispat.for
+
+
+C                 Remote system serial number --> REMSER=32
+
                   BPRO(NEWTER,PROBUF)=1 !flag for New terminal so that in dispatch knows that the message comes from Olimpo to reponde to this process 'comolm'
 
                   !BPRO((WRKTAB*4-3+15)+ I,BUF)
+C                 INPTAB=33-> 129 && WRKTAB=81 -> 321                 
+C                 max length -> 321-129=192bytes 
+C                 Mess_From_len returned from messageq_olm.c -> MESSQ_GET function                 
                   DO I=1, MESS_FROM_LEN    
                         BPRO(BINPTAB+I,RBUF) = MESS_FROM_OLM(I) !BPRO(WRKTAB*4-3+I,RBUF)
                   ENDDO
