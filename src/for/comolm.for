@@ -463,19 +463,19 @@ C-----+-----------------------------------------------
       IMPLICIT NONE
 C**************************************************
             INCLUDE 'INCLIB:SYSPARAM.DEF'
-!            INCLUDE 'INCLIB:SYSEXTRN.DEF'
+            INCLUDE 'INCLIB:SYSEXTRN.DEF'
             INCLUDE 'INCLIB:GLOBAL.DEF'
-!            INCLUDE 'INCLIB:CONCOM.DEF'
-!            INCLUDE 'INCLIB:PROCOM.DEF'
-!            INCLUDE 'INCLIB:AGTCOM.DEF'
-!            INCLUDE 'INCLIB:TASKID.DEF'
+            INCLUDE 'INCLIB:CONCOM.DEF'
+            INCLUDE 'INCLIB:PROCOM.DEF'
+            INCLUDE 'INCLIB:AGTCOM.DEF'
+            INCLUDE 'INCLIB:TASKID.DEF'
             INCLUDE 'INCLIB:PRMLOG.DEF'
             INCLUDE 'INCLIB:CHKSUMCM.DEF'
-!            INCLUDE 'INCLIB:QUECOM.DEF'
-!            INCLUDE 'INCLIB:DESTRA.DEF'
-!            INCLUDE 'INCLIB:APUCOM.DEF'
-!            INCLUDE 'INCLIB:EURCON.DEF'
-!            INCLUDE 'INCLIB:DATBUF.DEF'
+            INCLUDE 'INCLIB:QUECOM.DEF'
+            INCLUDE 'INCLIB:DESTRA.DEF'
+            INCLUDE 'INCLIB:APUCOM.DEF'
+            INCLUDE 'INCLIB:EURCON.DEF'
+            INCLUDE 'INCLIB:DATBUF.DEF'
             !INCLUDE 'INCLIB:IGSDEBUG.DEF'
 
             INTEGER*4  MESS(EDLEN)
@@ -536,19 +536,33 @@ C                        X2X_LOOP_TIME=X2X_LOOP_TIME+50 !x2rcvbuf.for
                   ENDIF
 
                   HPRO(PRCSRC,PROBUF)=X2X_COM
-                  HPRO(PRCDST,PROBUF)=0
+C                 Applications processor id                  
+                  HPRO(PRCDST,PROBUF)=0 
+C                 Communications queue number                  
                   HPRO(QUENUM,PROBUF)=QIN
+C                 Transaction code                  
                   HPRO(TRCODE,PROBUF)=TYPREG
+C                 Terminal number                  
                   PRO(TERNUM,PROBUF)=TERMINAL_NO
+C                 Line number or sap number                  
                   PRO(LINENO,PROBUF)=STATION_NO
+C                 Simulation mode (-999 for SIM)                  
                   !PRO(SIMMOD,PROBUF)=SIMMOD !not used/defined in x2rcvbuf.for
+C                 X2X communication subsystem
                   HPRO(PRCSRC,PROBUF)=X2X_COM
+C                 Message number                  
                   HPRO(MSGNUM,PROBUF)=0
+C                 MXSRV                  
                   !HPRO(MXS_COM,PROBUF)=MXS_COM !not used/defined in x2rcvbuf.for
+C                 Output/Input message length
                   HPRO(INPLEN,PROBUF)=MES_LEN
+C                 Encryption override flag                  
                   !HPRO(ENCOVR,PROBUF)=ENCOVR !not used/defined in x2rcvbuf.for
+C                 Buffer output status
                   !HPRO(BUFSTA,PROBUF)=BUFSTA !not used/defined in x2rcvbuf.for
+C                 Special function
                   !HPRO(SPCFUN,PROBUF)=SPCFUN !not used/defined in x2rcvbuf.for
+C                 Index terminal list     
                   !HPRO(TRMNDX,PROBUF)=TRMNDX !not used/defined in x2rcvbuf.for
 
                   BPRO(NEWTER,PROBUF)=1 !flag for New terminal so that in dispatch knows that the message comes from Olimpo to reponde to this process 'comolm'
