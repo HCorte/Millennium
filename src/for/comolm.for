@@ -536,33 +536,33 @@ C                        X2X_LOOP_TIME=X2X_LOOP_TIME+50 !x2rcvbuf.for
                   ENDIF
 
                   HPRO(PRCSRC,PROBUF)=X2X_COM
-C                 Applications processor id                  
+C                 Applications processor id  (Na pesquisa é sempre 0 por isso manter 0...)                
                   HPRO(PRCDST,PROBUF)=0 
-C                 Communications queue number                  
+C                 Communications queue number --- (SUBROUTINE TCPQUEUE(QUENUM,ST)) --- used only in tcp communications protocal mostlikely not gona needed in the new terminal (messageq)                
                   HPRO(QUENUM,PROBUF)=QIN
-C                 Transaction code                  
+C                 Transaction code  (defenido em comigs,commgr e comolm)            
                   HPRO(TRCODE,PROBUF)=TYPREG
-C                 Terminal number                  
+C                 Terminal number --- (usado no in dos com que são: ings, inmgr, etc) neste caso deve vir ou pode vir do Olimpo em vez do x2rcvbuf.for -- PRO(TERNUM,PROBUF) = TERMINAL_NO                
                   PRO(TERNUM,PROBUF)=TERMINAL_NO
-C                 Line number or sap number                  
+C                 Line number or sap number --- PRO(LINENO,PROBUF)=STATION_NO in x2rcvbuf.for                
                   PRO(LINENO,PROBUF)=STATION_NO
 C                 Simulation mode (-999 for SIM)                  
-                  !PRO(SIMMOD,PROBUF)=SIMMOD !not used/defined in x2rcvbuf.for
-C                 X2X communication subsystem
+                  !PRO(SIMMOD,PROBUF)=SIMMOD !not used/defined in x2rcvbuf.for não vai ser usado pois não se quer estas simulações
+C                 X2X communication subsystem (Não se ve onde se está a ser usado este campo talvez na comunicação de volta se for o caso deixa de ser necessario)
                   HPRO(PRCSRC,PROBUF)=X2X_COM
-C                 Message number                  
+C                 Message number --- HPRO(MSGNUM,PROBUF)=0 in x2rcvbuf.for                
                   HPRO(MSGNUM,PROBUF)=0
 C                 MXSRV                  
                   !HPRO(MXS_COM,PROBUF)=MXS_COM !not used/defined in x2rcvbuf.for
-C                 Output/Input message length
+C                 Output/Input message length passa a vir do messageq message
                   HPRO(INPLEN,PROBUF)=MES_LEN
 C                 Encryption override flag                  
                   !HPRO(ENCOVR,PROBUF)=ENCOVR !not used/defined in x2rcvbuf.for
-C                 Buffer output status
+C                 Buffer output status --- não existe em lado nenhum deve ter sido descontinuado logo não usar
                   !HPRO(BUFSTA,PROBUF)=BUFSTA !not used/defined in x2rcvbuf.for
-C                 Special function
+C                 Special function -> HPRO(SPCFUN,BUF)=1 --- getenc.for (PROCESS ECRYPTION KEY REQUESTS---spesrvf.for)
                   !HPRO(SPCFUN,PROBUF)=SPCFUN !not used/defined in x2rcvbuf.for
-C                 Index terminal list     
+C                 Index terminal list --- não existe em lado nenhum deve ter sido descontinuado logo não usar    
                   !HPRO(TRMNDX,PROBUF)=TRMNDX !not used/defined in x2rcvbuf.for
 
 C                 Number of transactions in buffer -> NBRTRA=41 --> getque.for
