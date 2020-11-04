@@ -51,7 +51,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       LOCAL VARIABLES
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-        INTEGER*4  GSLIWAG,GSLOTOWAG,GSBALLWAG    !GAME SUPRESS WAGER (3 games)
+        INTEGER*4  GSOLM    !GAME SUPRESS (LI, Totoloto and Totobola from Olimpo)
         INTEGER*4  GSGRR    !GAME SUPRESS GAME RESULTS REPORT
         INTEGER*4  GSICA    !GAME SUPRESS INTERNAL CANCELLATION
 
@@ -71,9 +71,7 @@ C
 
 C
         DATA   K/'COMOLM  ','OLMCOn  ','OLMTMo  ','FINTMo  ',
-     *           'GSLIwag ','GSLOTwag','GSBALwag','SUPCAn  ', !(SUPCAn) desdobrar supreção de cancelamento em 3 para cada tipo de jogo?
-     *           'SUPVAl  ','SUPGRrep','SUPFIrep','SUPBIrep', !(SUPVAl) desdobrar supreção da validação em 3 para cada tipo de jogo?
-     *           'SUPICan '/
+     *           'SUPOLm  '/
         DATA DEFTPASS/'SUPORTE'/
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -184,26 +182,26 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       DISPLAY SYSTEM STATS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-        WRITE(CLIN16,950)
-        WRITE(CLIN17,9501) EURS_NXTXRF,                                         !NEXT CROSS REFERENCE NUMBER
-     *                     EURS_TOTEURTMO,                                      !TOTAL # OF MESSAGES TIMED OUT
-     *                     EURS_TOTEURATO                                       !TOTAL # OF MESSAGES ALREADY TIMED OUT
-        WRITE(CLIN18,9502) EURS_TOTOKYPUT,                                      !TOTAL # OF MESSAGES SENT TO EUROMILLIONS SYSTEM
-     *                     EURS_TOTOKYGET,                                      !TOTAL # OF MESSAGES RECEIVED FROM EUROMILLIONS SYSTEM
-     *                     EURS_TOTWAGTMO,                                      !TOTAL # OF WAGERS TIMED OUT
-     *                     EURS_TOTWAGATO                                       !TOTAL # OF WAGERS ALREADY TIMED OUD
-        WRITE(CLIN19,9503) EURS_TOTERRPUT,                                      !TOTAL # OF ERRORS WHILE SENDING MESSAGES TO EUROMILLIONS SYSTEM
-     *                     EURS_TOTERRGET,                                      !TOTAL # OF ERRORS WHILE GETTING MESSAGES FROM EUROMILLIONS SYSTEM
-     *                     EURS_TOTCANTMO,                                      !TOTAL # OF CANCELS TIMED OUT
-     *                     EURS_TOTCANATO                                       !TOTAL # OF CANCELS ALREADY TIMED OUT
-        WRITE(CLIN20,9504) EURS_TOTICANOK,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES SENT
-     *                     EURS_TOTICANER,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES FAILED TO SEND
-     *                     EURS_TOTVALTMO,                                      !TOTAL # OF VALIDATIONS TIMED OUT
-     *                     EURS_TOTVALATO                                       !TOTAL # OF VALIDATIONS ALREADY TIMED OUT
-        WRITE(CLIN21,9505) EURS_TOTICANNS,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES NOT SENT
-     *                     EURS_TOTPAYTMO,                                      !TOTAL # OF PAYMENTS TIMED OUT
-     *                     EURS_TOTPAYATO                                       !TOTAL # OF PAYMENTS ALREADY TIMED OUT
-        WRITE(CLIN22,9506) EURS_TOTFINTMO,                                      !TOTAL # OF FINANCIAL REPORTS TIMED OUT (OTHER THAN THE BILLING REPORT)
-     *                     EURS_TOTFINATO                                       !TOTAL # OF FINANCIAL REPORTS ALREAYD TIMED OUT (OTHER THAN THE BILLING REPORT)
+C        WRITE(CLIN16,950)
+C        WRITE(CLIN17,9501) EURS_NXTXRF,                                         !NEXT CROSS REFERENCE NUMBER
+C     *                     EURS_TOTEURTMO,                                      !TOTAL # OF MESSAGES TIMED OUT
+C     *                     EURS_TOTEURATO                                       !TOTAL # OF MESSAGES ALREADY TIMED OUT
+C        WRITE(CLIN18,9502) EURS_TOTOKYPUT,                                      !TOTAL # OF MESSAGES SENT TO EUROMILLIONS SYSTEM
+C     *                     EURS_TOTOKYGET,                                      !TOTAL # OF MESSAGES RECEIVED FROM EUROMILLIONS SYSTEM
+C     *                     EURS_TOTWAGTMO,                                      !TOTAL # OF WAGERS TIMED OUT
+C     *                     EURS_TOTWAGATO                                       !TOTAL # OF WAGERS ALREADY TIMED OUD
+C        WRITE(CLIN19,9503) EURS_TOTERRPUT,                                      !TOTAL # OF ERRORS WHILE SENDING MESSAGES TO EUROMILLIONS SYSTEM
+C     *                     EURS_TOTERRGET,                                      !TOTAL # OF ERRORS WHILE GETTING MESSAGES FROM EUROMILLIONS SYSTEM
+C     *                     EURS_TOTCANTMO,                                      !TOTAL # OF CANCELS TIMED OUT
+C     *                     EURS_TOTCANATO                                       !TOTAL # OF CANCELS ALREADY TIMED OUT
+C        WRITE(CLIN20,9504) EURS_TOTICANOK,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES SENT
+C     *                     EURS_TOTICANER,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES FAILED TO SEND
+C     *                     EURS_TOTVALTMO,                                      !TOTAL # OF VALIDATIONS TIMED OUT
+C     *                     EURS_TOTVALATO                                       !TOTAL # OF VALIDATIONS ALREADY TIMED OUT
+C        WRITE(CLIN21,9505) EURS_TOTICANNS,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES NOT SENT
+C     *                     EURS_TOTPAYTMO,                                      !TOTAL # OF PAYMENTS TIMED OUT
+C     *                     EURS_TOTPAYATO                                       !TOTAL # OF PAYMENTS ALREADY TIMED OUT
+C        WRITE(CLIN22,9506) EURS_TOTFINTMO,                                      !TOTAL # OF FINANCIAL REPORTS TIMED OUT (OTHER THAN THE BILLING REPORT)
+C     *                     EURS_TOTFINATO                                       !TOTAL # OF FINANCIAL REPORTS ALREAYD TIMED OUT (OTHER THAN THE BILLING REPORT)
 C
         RETURN        
