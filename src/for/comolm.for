@@ -535,21 +535,21 @@ C                        X2X_LOOP_TIME=X2X_LOOP_TIME+50 !x2rcvbuf.for
 	                  GOTO 80
                   ENDIF
 
-                  HPRO(PRCSRC,PROBUF)=X2X_COM
+                  !HPRO(PRCSRC,PROBUF)=X2X_COM
 C                 Applications processor id  (Na pesquisa é sempre 0 por isso manter 0...)                
                   HPRO(PRCDST,PROBUF)=0 
 C                 Communications queue number --- (SUBROUTINE TCPQUEUE(QUENUM,ST)) --- used only in tcp communications protocal mostlikely not gona needed in the new terminal (messageq)                
                   HPRO(QUENUM,PROBUF)=QIN
 C                 Transaction code  (defenido em comigs,commgr e comolm)            
                   HPRO(TRCODE,PROBUF)=TYPREG
-C                 Terminal number --- (usado no in dos com que são: ings, inmgr, etc) neste caso deve vir ou pode vir do Olimpo em vez do x2rcvbuf.for -- PRO(TERNUM,PROBUF) = TERMINAL_NO                
+C                 Terminal number --- (usado no in dos com que são: inigs, inmgr, etc) neste caso deve vir ou pode vir do Olimpo em vez do x2rcvbuf.for -- PRO(TERNUM,PROBUF) = TERMINAL_NO                
                   PRO(TERNUM,PROBUF)=TERMINAL_NO
 C                 Line number or sap number --- PRO(LINENO,PROBUF)=STATION_NO in x2rcvbuf.for                
-                  PRO(LINENO,PROBUF)=STATION_NO
+                  PRO(LINENO,PROBUF)=0 !STATION_NO
 C                 Simulation mode (-999 for SIM)                  
                   !PRO(SIMMOD,PROBUF)=SIMMOD !not used/defined in x2rcvbuf.for não vai ser usado pois não se quer estas simulações
 C                 X2X communication subsystem (Não se ve onde se está a ser usado este campo talvez na comunicação de volta se for o caso deixa de ser necessario)
-                  HPRO(PRCSRC,PROBUF)=X2X_COM
+C                 HPRO(PRCSRC,PROBUF)=X2X_COM
 C                 Message number --- HPRO(MSGNUM,PROBUF)=0 in x2rcvbuf.for                
                   HPRO(MSGNUM,PROBUF)=0
 C                 MXSRV                  
@@ -576,7 +576,8 @@ C                 HPRO(NUMLRC,BUF)=SIZE
 C                 Number of log records skipped in TMF -> NUMLSK=43
 
 C                 Time at which transaction has entered the system -> TIMOFF=29 -- x2rcvbuf.for
-                  PRO(TIMOFF,PROBUF)=X2X_LOOP_TIME
+                  !date_and_time(date,time)!X2X_LOOP_TIME 
+                  PRO(TIMOFF,PROBUF)=P(ACTTIM)
 
 C                 Transaction serial number  -> SERIAL=30   
 C                 getser.for -> CALL GETSER(PRO(SERIAL,COMMAND_BUFFER),COMMAND_SIZE) -- dispat.for             
@@ -593,13 +594,16 @@ C                 Remote system serial number --> REMSER=32
                   !BPRO((WRKTAB*4-3+15)+ I,BUF)
 C                 INPTAB=33-> 129 && WRKTAB=81 -> 321                 
 C                 max length -> 321-129=192bytes 
-C                 Mess_From_len returned from messageq_olm.c -> MESSQ_GET function                 
+C                 Mess_From_len returned from messageq_olm.c -> MESSQ_GET function  
+C                 (validate max BINPTAB length if MESS_FROM_LEN excedess that value will cut until max allowed maybe?)              
+C                  
+C                 LIB$MOVC3 use this function instead of loop if needed and makes sense for large data trasnferes
                   DO I=1, MESS_FROM_LEN    
                         BPRO(BINPTAB+I,RBUF) = MESS_FROM_OLM(I) !BPRO(WRKTAB*4-3+I,RBUF)
                   ENDDO
 
-C Send to DIS or ENC application queue???                  
-                   CALL QUETRA(ENC,PROBUF) 
+C Send to DIS                
+                   CALL QUETRA(DIS,PROBUF) 
 C                  CALL ABL(PROBUF,QUETAB(1,ENC),STATUS)                  
 
 C----+------------------------------------------------------------------
