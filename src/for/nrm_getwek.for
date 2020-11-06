@@ -93,7 +93,7 @@ C
 	ELSE
 	  DO AUXYEAR=-4,1
 	    DO AUXWEEK=1,53
-		IF (WEKDRW(AUXYEAR,AUXWEEK,GNUM).EQ.DRAW) THEN
+		IF (WEKDRW(AUXYEAR,AUXWEEK,GNUM).EQ.DRAW) THEN !para desde que comessou o sistema têm um draw para semana de cada ano?
                     YEAR = (DAYYER - (AUXYEAR*-1)) + 2000
 		    WEEK = AUXWEEK
 		    RETURN

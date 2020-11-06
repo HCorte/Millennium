@@ -77,11 +77,11 @@ C The following is to trick LIB$CRC so it thinks it is getting a
 C character string descriptor rather than a byte array
 C
 	IF( NUMBYT.GT.1 .AND. NUMBYT.LE.'0000FFFF'X ) THEN
-	  DSCBLK(1) = '010E0000'X + NUMBYT
+	  DSCBLK(1) = '010E0000'X + NUMBYT ! NUMBYT 2 bytes menos significativos
 	  DSCBLK(2) = %LOC(BARY(BEGOFF))
 C
 	  RESULT = LIB$CRC( CRCTAB, '00000000'X, %REF(DSCBLK) )
-	  RESULT = IAND( RESULT, '0000FFFF'X)
+	  RESULT = IAND( RESULT, '0000FFFF'X) !filtra os primeiros 2 bytes
 	ELSE
 	  RESULT = 0
 	ENDIF

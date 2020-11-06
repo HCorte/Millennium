@@ -137,7 +137,7 @@ C
 	        IF(DMPDBG) CALL PRTOUT(BUF)
 	    ENDIF
 C
-            IF(P(SUPWEL) .EQ. 1) CALL PRTWEL(BUF)
+            IF(P(SUPWEL) .EQ. 1) CALL PRTWEL(BUF) !demorar mais deque x segundos
 C
 	    TERMINAL=HPRO(TERNUM,BUF)
 	    CALL TRNTRACE(BUF,-1)    !GEN TRACE TRANS

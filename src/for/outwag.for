@@ -131,24 +131,56 @@ C
         DATA ERRTYP/Z90/
 C
 C CONTROL AND SEQUENCE NUMBER
-C
-        OUTTAB(1) = '20'X + TRABUF(TTRN)
+C '20'X (CONTROL NIBBLE) -> 10 - Application Message
+        OUTTAB(1) = '20'X + TRABUF(TTRN) !TTRN=TRANSACTION SEQUENCE NUMBER
 C
 C IF TRANSACTION STATUS IS NOT GOOD
 C BUILD ERROR MESSAGE.
-C
-        IF(TRABUF(TSTAT).NE.GOOD) THEN
-            OUTTAB(2) = ERRTYP
-            OUTTAB(5) = TRABUF(TERR)
-            OUTTAB(6) = TRABUF(TSUBERR)
+C TERR -> NOER (No Error) - SYNT (Synthesis Error) - RETY (Retry Error) - DESMOD (???) - SUPR (Supression Error) - BSTS - NOTON - SDRW - SDOR
+C Values:		Description
+C 1 =		Invalid
+C 2 =		Syntax Error
+C 3 =		Function Suppressed
+C 4 =		Not Signed On
+C 5 =		System Dormant
+C 6 =		Drawing Break
+C 7 =		Liability Limit Exceeded
+C 8 =		Non-drawing Day
+C 9 =		DES Encryption Error
+C 10 =		Results Not In
+C 11 =		Invalid Terminal Number
+C 12 =		Security Violation (>10 sign-on)
+C 13 =		Bad Checksum
+C 14 =		Bad Game Status
+C 15 =		Retry Transaction
+C 18 =		Game Revision Error
+C 19 =		Can Not Fraction Ticket
+C 20 =		Already Fractioned
+C 21 =		Unfractioned
+C 22 =		Card Present (Pass # mismatch)
+C 23 =		No Card Present at SON (Do not SON)
+C 25 =		Sports, Wrong number of marks with an event cancelled
+C 26 =		Sports, The full draw has been cancelled.
+C 31 =		Combination Closed
+C 32 =		Odds exceeded
+C 36 =         	Invalid Agent Or Password In Sign On
+C 37 =		Not available passive number found
+C 38 =		Passive IO error
+C 39 =		Blocked NIF
+
+        IF(TRABUF(TSTAT).NE.GOOD) THEN !quer seja sucesso ou erro o 1º byte têm sempre Control e Sequence
+            OUTTAB(2) = ERRTYP !segundo byte têm o Type = 9 e Subtype = 0
+C           byte 3 e 4 é usado para guardar o checksum  (validado no fim pois tb é campo obrigatorio em caso de sucesso)          
+            OUTTAB(5) = TRABUF(TERR) !Error Number ou seja mensagem de erro que ficou durante o processamento
+            OUTTAB(6) = TRABUF(TSUBERR) !não está na documentação, é usado???
             OUTLEN=6
             GOTO 1000
         ENDIF
 C
-C TYPE 
+C TYPE and Subtype are both 0 the byte needs to go with value 0
 C
         OUTTAB(2) = 0                    ! #2
-C
+C Byte 3 and 4 are at the and for CHECKSUM
 C GAME TYPE AND GAME INDEX
 C
         OUTTAB(5) = TRABUF(TGAMTYP)    ! #5
@@ -158,47 +190,47 @@ C
 C SERIAL NUMBER AND CHECK DIGITS
 C
         CALL OUTGEN(TRABUF(TCDC),TRABUF(TSER),I4TEMP,CHKDIG)
-        OUTTAB(IND+0) = I1TEMP(3)        ! #7
-        OUTTAB(IND+1) = I1TEMP(2)        ! #8
-        OUTTAB(IND+2) = I1TEMP(1)        ! #9
-        OUTTAB(IND+3) = CHKDIG           ! #10
+        OUTTAB(IND+0) = I1TEMP(3)        ! #7 -> Wager Serial Number
+        OUTTAB(IND+1) = I1TEMP(2)        ! #8 -> Wager Serial Number
+        OUTTAB(IND+2) = I1TEMP(1)        ! #9 -> Wager Serial Number
+        OUTTAB(IND+3) = CHKDIG           ! #10 -> Wager Check Digits
         IND=IND+4
 C
 C OFFSET OF START AND END CDC DATES
-C
+C IND=11
         CALL GETOFF(TRABUF,OFFBEG,OFFEND)
         I4TEMP = OFFBEG
-        OUTTAB(IND+0) = I1TEMP(2)        ! #11
-        OUTTAB(IND+1) = I1TEMP(1)        ! #12
+        OUTTAB(IND+0) = I1TEMP(2)        ! #11 -> Offset to First CDC Date (OFFBEG)
+        OUTTAB(IND+1) = I1TEMP(1)        ! #12 -> Offset to First CDC Date (OFFBEG)
         I4TEMP = OFFEND
-        OUTTAB(IND+2) = I1TEMP(2)        ! #13
-        OUTTAB(IND+3) = I1TEMP(1)        ! #14
+        OUTTAB(IND+2) = I1TEMP(2)        ! #13 -> Offset to Second CDC Date (OFFEND)
+        OUTTAB(IND+3) = I1TEMP(1)        ! #14 -> Offset to Second CDC Date (OFFEND)
         IND=IND+4
 C
 C SET OFFSETS TO FIRST - SECOND WEEK / YEAR DATES
-C
-        CALL PUT_WEEK_YEAR_DRAWS(TRABUF, OUTTAB, IND)
+C IND = 15  -> until 19
+        CALL PUT_WEEK_YEAR_DRAWS(TRABUF, OUTTAB, IND) !First Week Draw Date
 C
 C Fill in time
-C
-        CALL PUTIME(TRABUF(TTIM), OUTTAB, IND)
+C IND = 19
+        CALL PUTIME(TRABUF(TTIM), OUTTAB, IND) !Time (hh:mm:ss) 19,20,21
 C
 C GET OPTIONS AND KIKER OFFSETS
 C CHECK IF OFFSETS ARE NEEDED BEFOR SETTING THE OPTIONS,
 C IF NOT NEEDED CLEAR KICKER OFFSETS OPTION BIT.
-C
+C IND = 22
         CALL OGETOPT(TRABUF,OPTION)
-        CALL KOFFGET(TRABUF,KOFFBEG,KOFFEND)
-C
+        CALL KOFFGET(TRABUF,KOFFBEG,KOFFEND) !ignore its for joker
+C ignore its for joker
         IF(OFFBEG.EQ.KOFFBEG.AND.OFFEND.EQ.KOFFEND)   !Additional Kicker offsets
      *     OPTION = IAND(OPTION,'7F'X)                !are not needed.
 C
-        OUTTAB(IND)=OPTION               ! #18
-        IND=IND+1
+        OUTTAB(IND)=OPTION               ! #18?? IND = 22 <-> #22
+        IND=IND+1                        ! IND=22+1=23
 C 
-C SET JOKER OFFSETS
-C
-        IF(IAND(OPTION,'80'X).NE.0) THEN
+C SET JOKER OFFSETS (option data data is dynamic in the length depending in the flags active from option flags)
+C no longer in use
+        IF(IAND(OPTION,'80'X).NE.0) THEN !option data if option flag haves the flag X80->(1000 0000)
             I4TEMP = KOFFBEG
             OUTTAB(IND) = I1TEMP(1)   
             I4TEMP = KOFFEND
@@ -208,8 +240,8 @@ C
         END IF
 C
 C SET JOKER 1 NUMBER
-C
-        IF(IAND(OPTION,'40'X).NE.0) THEN
+C no longer in use
+        IF(IAND(OPTION,'40'X).NE.0) THEN !option data if option flag haves the flag X40->(0100 0000)
             I4TEMP = TRABUF(TWKICK)
             OUTTAB(IND+0) = I1TEMP(4)
             OUTTAB(IND+1) = I1TEMP(3)
@@ -219,8 +251,8 @@ C
         ENDIF
 C
 C SET JOKER 2 NUMBER
-C
-        IF(IAND(OPTION,'20'X).NE.0) THEN
+C no longer in use
+        IF(IAND(OPTION,'20'X).NE.0) THEN !option data if option flag haves the flag X20->(0010 0000)
             I4TEMP = TRABUF(TWKICK2)
             OUTTAB(IND+0) = I1TEMP(4)
             OUTTAB(IND+1) = I1TEMP(3)
@@ -231,13 +263,13 @@ C
 C
 C SET NUMBER OF FRACTIONS
 C
-        IF(IAND(OPTION,'10'X).NE.0) THEN
+        IF(IAND(OPTION,'10'X).NE.0) THEN !option data if option flag haves the flag X10->(0001 0000)
             OUTTAB(IND) = TRABUF(TFRAC)
             IND=IND+1     
         ENDIF
 C
 C SET FULL HOUSE BINGO BOARD
-C
+C not used by SCML
 CC        IF(IAND(OPTION,'04'X).NE.0) THEN
         IF(TRABUF(TGAMTYP).EQ.TBNG) THEN   
            DO I=1,3
@@ -253,14 +285,14 @@ C
 C SET CANCELLATION EVENTS BITMAP -- TO PRINT "C" IN THE WAGER --
 C
         IF(IAND(OPTION, '02'X) .NE. 0) THEN
-           I4TEMP          = TRABUF(TWCEBM)
+           I4TEMP          = TRABUF(TWCEBM) ! SPORTS GAME CANCELATION EVENTS BITMAP
            OUTTAB(IND + 0) = I1TEMP(4)   ! Data is comming in The High I4 Byte Part
            OUTTAB(IND + 1) = I1TEMP(3)
            IND = IND + 2
         ENDIF
 C
 C SET LUCKY NUMBER AND BASE
-C
+C Not used
         IF(IAND(OPTION,'01'X).NE.0) THEN
             I4TEMP = TRABUF(TWBBAS)
             OUTTAB(IND+0) = I1TEMP(2)

@@ -347,11 +347,11 @@ C
         ENDIF
 
         CALL TRALOG(TRABUF,PRO(WRKTAB,BUF))
-        IF(TRABUF(TERR).EQ.TBAD) HPRO(ENCOVR,BUF)=-1
+        IF(TRABUF(TERR).EQ.TBAD) HPRO(ENCOVR,BUF)=-1!TBAD=BAD TERMINAL NUMBER | ENCOVR=encryption override flag
         IF(HPRO(SIMMOD,BUF).EQ.-999) THEN
             CALL OUTWAG(TRABUF,SIMOUTTAB,SIMOUTLEN)   !DON'T DESTROY INPUT
         ELSE
-            CALL OUTWAG(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
+            CALL OUTWAG(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF)) !afther construting the output message (OUTTAB in the buffer BUF)
         ENDIF
 C
 C IF SYNTAX ERROR THEN PRINT ERROR CODE
@@ -359,14 +359,14 @@ C ON THE CONSOLE.
 C
         IF(P(SUPSYN).EQ.0.AND.SYNTERRCOD.NE.0.AND.
      *     TRABUF(TERR).NE.NOTON) THEN
-            MESS(2) = TEGEN
+            MESS(2) = TEGEN !(TEGEN=4) !GENERAL MESSAGES
             MESS(3) = 10
-            MESS(4) = SYNTERRCOD
-            MESS(5) = TER
-            MESS(6) = TRABUF(TGAMTYP)
-            MESS(7) = TRABUF(TGAMIND)
-            MESS(8) = TRABUF(TSER)
-            CALL QUEMES(MESS)
+            MESS(4) = SYNTERRCOD !ERROR CODE IF SYNTAX ERROR
+            MESS(5) = TER !numero interno do terminal
+            MESS(6) = TRABUF(TGAMTYP) !TGAMTYP game type
+            MESS(7) = TRABUF(TGAMIND) !TGAMIND game index
+            MESS(8) = TRABUF(TSER) !TSER internal serial
+            CALL QUEMES(MESS) !QUEUE MESSAGE TO ERRLOG QUEUE
         ENDIF
 C
 C QUEUE TRANSACTION TO LOGGER OUTPUT QUEUE
@@ -378,8 +378,8 @@ C
         ELSE
             AGTHTB(ACHKSM,TER)=TRABUF(TCHK)
         ENDIF
-        CALL QUETRA(APU, BUF)
-        CALL DQUTRA(TASK,BUF)
+        CALL QUETRA(APU, BUF) !send BUF/message to APU application queue
+        CALL DQUTRA(TASK,BUF) !after sending the message to APU application queue can now remove the current application queue that is TASK=WAG
         GOTO 20
 C
 C PROCESS LOTTO/SPORTS CANCELLATIONS AND DELETIONS.

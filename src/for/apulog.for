@@ -61,7 +61,7 @@ C
 C
 C DO APU_WLOG FOR THIS TRANSACTION
 C
-	XSER = IAND(PRO(WRKTAB,BUF),'3FFFFFFF'X)
+	XSER = IAND(PRO(WRKTAB,BUF),'3FFFFFFF'X) !filters the two most significative bits of the 4 bytes/Integer (30 lower bits)
 C
 	CALL APU_WLOG(XSER,PRO(WRKTAB,BUF))
 C

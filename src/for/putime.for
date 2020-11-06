@@ -44,22 +44,22 @@ C
 	EQUIVALENCE(TEMP,I1TEMP)
 C
 	LOGICAL   HH_MM_SS_FLAG/.TRUE./		!Indicate what format.
+C   lembrar que horas, minutos e segundos são inteiros logo o resto é ignorado e só têm em conta na diferença com o TIME
+	IF(HH_MM_SS_FLAG) THEN !enters alls in this condition.... (so time is in seconds or milisenconds after all?????)
+	   HOURS = TIME/3600 !a hour is 60 minutes and a minute is 60 seconds and a second is 1000 ms so 60*60*1000=3600*1000
+	   MINS = (TIME-HOURS*3600) / 60 !converte horas em segundos e obtêm o resto em segundos e converte para minutos dai dividir por 60
+	   SECS = TIME - HOURS*3600 - MINS*60! obtêm o resto em segundos
 C
-	IF(HH_MM_SS_FLAG) THEN
-	   HOURS = TIME/3600
-	   MINS = (TIME-HOURS*3600) / 60
-	   SECS = TIME - HOURS*3600 - MINS*60
-C
-	   OUTTAB(IND+0) = HOURS
-	   OUTTAB(IND+1) = MINS
-	   OUTTAB(IND+2) = SECS
+	   OUTTAB(IND+0) = HOURS !IND = 19 + 0 -> 19
+	   OUTTAB(IND+1) = MINS !IND = 19 + 1 -> 20
+	   OUTTAB(IND+2) = SECS !IND = 19 + 2 -> 21
 	ELSE
 	   TEMP = TIME
 	   OUTTAB(IND+0) = I1TEMP(3)
 	   OUTTAB(IND+1) = I1TEMP(2)
 	   OUTTAB(IND+2) = I1TEMP(1)
 	ENDIF
-	IND = IND + 3
+	IND = IND + 3 !IND=19+3=22
 C	   
 	RETURN
 	END

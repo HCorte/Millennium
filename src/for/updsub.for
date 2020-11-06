@@ -356,8 +356,8 @@ C
 C UPDATE DAILY AND AGENT TOTALS 
 C
 !------------------>>V11 -----------------------------------------------
-        IF(TRABUF(TVTYPE) .EQ. VNDON) THEN !CASH ACCEPTED
-          IF(TRABUF(TVPAY).NE.0) THEN
+        IF(TRABUF(TVTYPE) .EQ. VNDON) THEN !CASH ACCEPTED VNDON=NEW VALIDATION INQUIRY CASH ACCEPTED !V70
+          IF(TRABUF(TVPAY).NE.0) THEN ! TVPAY=AMOUNT PAID
             DAYTYP(TRACNT,TVAL,GAME) = DAYTYP(TRACNT,TVAL,GAME) + 1
             AGTGAM(GVCNT,GAME,TER)   = AGTGAM(GVCNT,GAME,TER)   + 1
             IF(TRABUF(TVOPPAY).GT.0) THEN !V12
@@ -482,32 +482,33 @@ C
         IF(TRABUF(TITYP) .NE. IVAL) DAYCRS(OFFSET) = DAYCRS(OFFSET) + 1
 
         IF(TRABUF(TITYP).EQ.IVAL) THEN
-           CLERK = AGTHTB(AGTPASOFF,TER)
-           AGTTAB(ALSIVA,TER) = TRABUF(TSER)
-           AGTTAB(ALSVAL,TER) = TRABUF(TSER)
-           AGTTAB(ALSTRA,TER) = TRABUF(TSER)
+           CLERK = AGTHTB(AGTPASOFF,TER) !AGTPASOFF=AGENT PASSNUMBER OFFSET
+           AGTTAB(ALSIVA,TER) = TRABUF(TSER) !ALSIVA=LAST INSTANT VALIDATION SERIAL #
+           AGTTAB(ALSVAL,TER) = TRABUF(TSER) !ALSVAL=LAST VALIDATION SERIAL #
+           AGTTAB(ALSTRA,TER) = TRABUF(TSER) !ALSTRA=LAST TRANSACTION SERIAL #
 C----+------------------------------------------------------------------
 C V13| Uniforming agent prize pay amount to add only prize amounts
 C----+------------------------------------------------------------------
            IS_BANK_TRANSFER = .FALSE.
-           IF(   TRABUF(TIVMT)  .EQ. IBVMT
-     *     .AND. TRABUF(TIVALM) .EQ. IVBM_BNK ) THEN
+           IF(   TRABUF(TIVMT)  .EQ. IBVMT !IBVMT=INSTANT BANK VALIDATION MODE (NEW)
+     *     .AND. TRABUF(TIVALM) .EQ. IVBM_BNK ) THEN !IVBM_BNK  = NEW BANK VALIDATION HIGH TIER BANK TRANSFER REQUEST / BANK TRANSFER ACCEPTED
               IS_BANK_TRANSFER = .TRUE.
            ENDIF
 C----+------------------------------------------------------------------
 C V13| Uniforming agent prize pay amount to add only prize amounts
 C----+------------------------------------------------------------------
            DO I = 0,TRABUF(TIBCH) - 1
-              IF(I.LE.TIVMX) THEN
-                 IF(TRABUF(TISTS1+I).EQ.INOER) THEN
-                    DAYCRS(OFFSET) = DAYCRS(OFFSET) + 1
-                    DAYIVAL = DAYIVAL + TRABUF(TIPRZ1+I)
-                    AMOUNT=TRABUF(TIPRZ1+I)
-                    AGTMIS(CLERK,1,TER)=AGTMIS(CLERK,1,TER)+1
+              IF(I.LE.TIVMX) THEN !(TIVMX=7) !7 VALIDATION MAX IN BATCH (see Millennium->Millennium_Buffers->LOGBUF.ods->Lotaria_Instantanêa_(IPS)_-_VAL)
+                 IF(TRABUF(TISTS1+I).EQ.INOER) THEN !TISTS1=INSTANT VALIDATION STATUS |INOER=NO ERROR
+                    DAYCRS(OFFSET) = DAYCRS(OFFSET) + 1 !numero total de instant validations que correu bem
+C                   DAYIVAL = INSTANT VALIDATION AMT (total do dia)                   
+                    DAYIVAL = DAYIVAL + TRABUF(TIPRZ1+I) !TIPRZ1=INSTANT PRIZE FROM GAME PLAN 
+                    AMOUNT=TRABUF(TIPRZ1+I) !TIPRZ1=INSTANT PRIZE FROM GAME |  AGTMIS -> MISCELANIOUS SALES
+                    AGTMIS(CLERK,1,TER)=AGTMIS(CLERK,1,TER)+1 !incrementa o offset do AGENT PASSNUMBER
 C----+------------------------------------------------------------------
 C V13| Uniforming agent prize pay amount to add only prize amounts
 C----+------------------------------------------------------------------
-                    IF( IS_BANK_TRANSFER .EQ. .FALSE. ) THEN
+                    IF( IS_BANK_TRANSFER .EQ. .FALSE. ) THEN !primeiro nivel de premios (dinheiro vivo) 2,3 niveis transferencia
                         AGTMIS(CLERK,2,TER)=AGTMIS(CLERK,2,TER)+AMOUNT
                     ENDIF
 C----+------------------------------------------------------------------
@@ -516,14 +517,14 @@ C----+------------------------------------------------------------------
                  ENDIF
               ENDIF
            ENDDO
-        ELSE IF(TRABUF(TITYP).EQ.IMNU) THEN
+        ELSE IF(TRABUF(TITYP).EQ.IMNU) THEN !IMNU=INSTANT SUPPLY ORDER (se for do tipo encomenda)
            AGTTAB(ALSORD,TER) = TRABUF(TSER)
            AGTTAB(ALSTRA,TER) = TRABUF(TSER)
         ENDIF
 
         RETURN
 C
-C PASSIVE LOTTERY VALIDATIONS AND RETURNS
+C PASSIVE LOTTERY VALIDATIONS AND RETURNS - NO LONGER IN USE
 C
 700     CONTINUE
         IF(TRABUF(TERR).NE.NOER) GOTO 710                        !V09
