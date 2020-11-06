@@ -60,18 +60,18 @@ C
       GIND = TRABUF(TGAMIND)
 
 C
-C CHECK FOR KICKER GAME
-C
+C CHECK FOR KICKER GAME 
+C (no longer used)
       IF(TRABUF(TWKGME).NE.0) THEN
          OPTION = OPTION + '80'X        ! Joker Offsets (Checked in OUTWAG)
       ENDIF
 C
-      ! check joker 1 
+      ! check joker 1 (no longer used)
       IF (TRABUF(TWKICK) .NE. 0) THEN
           OPTION = OPTION + '40'X       ! joker 1 number present
       END IF
 
-      ! check joker 2 
+      ! check joker 2 (no longer used)
       IF (TRABUF(TWKICK2) .NE. 0) THEN
           OPTION = OPTION + '20'X       ! joker 2 number present
       END IF
@@ -80,7 +80,7 @@ C
       IF (TRABUF(TFRAC).NE.0.AND.TRABUF(TFRAC).NE.MAXFRC(GNUM)) THEN
           OPTION = OPTION + '10'X
       END IF
-C
+C     Bingo never used in the SCML
       IF(TRABUF(TGAMTYP).EQ.TBNG) THEN
           OPTION = OPTION + '04'X       !Bingo Full House Present
           OPTION = OPTION + '01'X       !Lucky Number Present

@@ -68,10 +68,10 @@ C
 C
 	CALL GENKEY( CDC, CDCH, CDCL, SYSIDX)   !GET CDCH, CDCL
 C
-	HINT = ISHFT( INTSER, -16)
-	HINT = IAND ( HINT, '0000007F'X)
-	LINT = IAND ( INTSER, '0000FFFF'X)
-	LINT = LINT + CDCL
+	HINT = ISHFT( INTSER, -16) !filtra os 16 bits menos sigificativos
+	HINT = IAND ( HINT, '0000007F'X)!filtra o 8º bit que na realidade é o 24º bit original do serial interno
+	LINT = IAND ( INTSER, '0000FFFF'X)!filtra 2 bytes ou seja 16 bits
+	LINT = LINT + CDCL !fica com os 16 bits menos significativos da data CDC
 	IF( LINT.GT.'0000FFFF'X)THEN        !IF CARRY
 	  HINT = HINT + 1
 	  LINT = IAND (LINT,'0000FFFF'X)
@@ -106,11 +106,11 @@ C
 C
 C Get the 24th bit from the original serial # and put into result
 C
-	X    = ISHFT( XINTSER, -16)
-	X    = IAND ( X, '00000080'X)
-	HINT = IOR  ( HINT, X)
+	X    = ISHFT( XINTSER, -16) !filtra os 2 bytes menos significativos X fica com os 2 bytes mais significativos
+	X    = IAND ( X, '00000080'X) !8º bit mais significativo com é um and filtra só este bit (16+8=24º bit original)
+	HINT = IOR  ( HINT, X) !mete este 24º bit no resultado
 C
-	XEXTSER = ISHFT(HINT,16) + LINT
+	XEXTSER = ISHFT(HINT,16) + LINT !faz um left shift de 2 bytes passando o LINT a ser esses 2 bytes menos significativos
 C
 C Set check digits
 C
