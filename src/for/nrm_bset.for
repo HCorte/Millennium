@@ -31,8 +31,8 @@ C
 	INTEGER*4   NDX
 C
 C
-	WRD = ISHFT(BITNUM, -4)
-	NDX = IAND (BITNUM, '0000000F'X)
-	I2ARY(WRD) = IBSET(I2ARY(WRD), NDX)
+	WRD = ISHFT(BITNUM, -4) !(AGTMXT=9)=9-> 0000 1001 -> WRD=0
+	NDX = IAND (BITNUM, '0000000F'X)!NDX = 1001 (filtra todos os bytes excepto o menos significativo)
+	I2ARY(WRD) = IBSET(I2ARY(WRD), NDX) !I2ARY(0) = 1001 , 9
 	RETURN
 	END
