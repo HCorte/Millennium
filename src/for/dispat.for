@@ -109,7 +109,7 @@ C  WAIT FOR SOMETHING TO DO
 C
 	FLUSH=.FALSE.
 	COMMAND_BUFFER=0         !COMMAND BUFFER
-	COMMAND_SIZE = 0	 !Command size
+	COMMAND_SIZE = 0	 	 !Command size
 	BUF=0                    !GAME BUFFER NUMBER
 	BUFNET=0                 !NETWORK BUFFER NUMBER NOT INIT
 	TOSEND=.TRUE.            !NETLOG NEEDS SOME AEROBIC EXERCISE
@@ -401,7 +401,7 @@ C
 	   IF(DMPDBG) CALL PRTOUT(BUF)
 	ENDIF
 	CALL TRNTRACE(BUF,0)       !TRY TO TRACE INPUT BUF
-	CALL QUETRA(QUE,BUF) !envia o buffer/probuf para a aplicação/processo???
+	CALL QUETRA(QUE,BUF) !envia o buffer/probuf para a aplicação/processo obtido na subroutina do GETQUE a variavel de saida QUE podendo ser WAG, etc...
 100	CONTINUE
 C
 C END OF TRANSACTION INPUT

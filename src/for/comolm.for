@@ -524,9 +524,16 @@ C----+------------------------------------------------------------------
 C get information for the buffer header   
 
 80                CONTINUE
-C aqui ir buscar um buffer da lista de buffer livres pelo getbuf ou é suposto usar o FASTSET???? 
+C aqui ir buscar um buffer da lista de buffer livres pelo getbuf 
                   CALL GETBUF(PROBUF)
-
+                  CALL FASTSET(0,PROBUF,PROLEN)!192*4=768 bytes
+C confirmar que o buffer esta zerado ou seja limpo/reset confirmar como já está implementado  
+C                  CALL LIB$MOVC5(1,0,0,64000,OUARY(K))   
+C                  CALL LIB$MOVC3(BLEN,B_CHKTAB,BPRO(BINSTAB+1,BUF))   
+C MOVE INPUT MSG TO PROCOM BUFFER
+C
+C                  CALL LIB$MOVC3(BLEN, INTAB(1), BPRO(BINSTAB+1,BUF))                            
+C                  PROBUF=0   !RESET BUF NR
                   IF (PROBUF.LE.0) THEN
 C                        CALL XWAIT(50,1,ST) !x2rcvbuf.for
 C                        X2X_LOOP_TIME=X2X_LOOP_TIME+50 !x2rcvbuf.for                        
@@ -535,19 +542,24 @@ C                        X2X_LOOP_TIME=X2X_LOOP_TIME+50 !x2rcvbuf.for
 	                  GOTO 80
                   ENDIF
 
-                  !HPRO(PRCSRC,PROBUF)=X2X_COM
+
+CCCCCCCCCC                  HPRO(OLM_COM,PROBUF)=1                  
+C                 !COMMUNICATIONS PROCESSOR ID                  
+                  HPRO(PRCSRC,PROBUF)=OLM_COM !X2X_COM or MXS_COM or 0 ou um novo chamado de OLM_COM
 C                 Applications processor id  (Na pesquisa é sempre 0 por isso manter 0...)                
                   HPRO(PRCDST,PROBUF)=0 
 C                 Communications queue number --- (SUBROUTINE TCPQUEUE(QUENUM,ST)) --- used only in tcp communications protocal mostlikely not gona needed in the new terminal (messageq)                
-                  HPRO(QUENUM,PROBUF)=QIN
-C                 Transaction code  (defenido em comigs,commgr e comolm)            
+C                 PARAMETER (QIN=-2)     !IN INPUT QUEUE
+                  HPRO(QUENUM,PROBUF)=QIN !?? confirmar se este campo está a ser usado
+C                 Transaction code  (defenido em comigs,commgr e comolm) por default comesa como REGULAR TRANSACTION (queue_to_game.for and x2rcvbuf.for)           
                   HPRO(TRCODE,PROBUF)=TYPREG
 C                 Terminal number --- (usado no in dos com que são: inigs, inmgr, etc) neste caso deve vir ou pode vir do Olimpo em vez do x2rcvbuf.for -- PRO(TERNUM,PROBUF) = TERMINAL_NO                
-                  PRO(TERNUM,PROBUF)=TERMINAL_NO
-C                 Line number or sap number --- PRO(LINENO,PROBUF)=STATION_NO in x2rcvbuf.for                
-                  PRO(LINENO,PROBUF)=0 !STATION_NO
+C                 Vêm do Olimpo que sabe qual é o numero do terminal externo AGTNUM
+                  PRO(TERNUM,PROBUF)=TERMINAL_NO 
+C                 Line number or sap number --- PRO(LINENO,PROBUF)=STATION_NO in x2rcvbuf.for and in queue_to_game PRO(LINENO,PROBUF)=0               
+                  PRO(LINENO,PROBUF)=0 !its 0 as in queue_to_game this header seems related to X2X communications routines only
 C                 Simulation mode (-999 for SIM)                  
-                  !PRO(SIMMOD,PROBUF)=SIMMOD !not used/defined in x2rcvbuf.for não vai ser usado pois não se quer estas simulações
+C                 PRO(SIMMOD,PROBUF)=0 !not used/defined in x2rcvbuf.for não vai ser usado pois não se quer estas simulações
 C                 X2X communication subsystem (Não se ve onde se está a ser usado este campo talvez na comunicação de volta se for o caso deixa de ser necessario)
 C                 HPRO(PRCSRC,PROBUF)=X2X_COM
 C                 Message number --- HPRO(MSGNUM,PROBUF)=0 in x2rcvbuf.for                
@@ -577,6 +589,7 @@ C                 Number of log records skipped in TMF -> NUMLSK=43
 
 C                 Time at which transaction has entered the system -> TIMOFF=29 -- x2rcvbuf.for
                   !date_and_time(date,time)!X2X_LOOP_TIME 
+                  CALL GETTIM(P(ACTTIM))
                   PRO(TIMOFF,PROBUF)=P(ACTTIM)
 
 C                 Transaction serial number  -> SERIAL=30   
@@ -589,8 +602,6 @@ C                 PRO(TSTAMP,COMMAND_BUFFER)=P(ACTTIM) -- dispat.for
 
 C                 Remote system serial number --> REMSER=32
 
-                  BPRO(NEWTER,PROBUF)=1 !flag for New terminal so that in dispatch knows that the message comes from Olimpo to reponde to this process 'comolm'
-
                   !BPRO((WRKTAB*4-3+15)+ I,BUF)
 C                 INPTAB=33-> 129 && WRKTAB=81 -> 321                 
 C                 max length -> 321-129=192bytes 
@@ -598,13 +609,70 @@ C                 Mess_From_len returned from messageq_olm.c -> MESSQ_GET functi
 C                 (validate max BINPTAB length if MESS_FROM_LEN excedess that value will cut until max allowed maybe?)              
 C                  
 C                 LIB$MOVC3 use this function instead of loop if needed and makes sense for large data trasnferes
+                  LIB$MOVC3(MESS_FROM_OLM,BPRO(BINPTAB,RBUF),MESS_FROM_LEN)
                   DO I=1, MESS_FROM_LEN    
                         BPRO(BINPTAB+I,RBUF) = MESS_FROM_OLM(I) !BPRO(WRKTAB*4-3+I,RBUF)
                   ENDDO
 
-C Send to DIS                
-                   CALL QUETRA(DIS,PROBUF) 
+C---------------------------------------------------------------------------------------
+C            CALL OPS('188:DISPAT:GETQUE BUF', BUF,BUF)
+C            CALL OPS('188:DISPAT:GETQUE QUE', QUE,QUE)
+C            CALL OPS('188:DISPAT:GETQUE SIZ', SIZE,SIZE)
+C            CALL OPS('188:DISPAT:GETQUE BYP', BYPASS,BYPASS)
+C            CALL OPS('188:DISPAT:HPRO(TRCODE,BUF)', ZEXT(HPRO(TRCODE,BUF)),ZEXT(HPRO(TRCODE,BUF)))
+C
+C            CALL DUMP_MESSAGE(0,0,BPRO(BINPTAB,BUF),HPRO(INPLEN,BUF))  
+C 
+C           MESS(1)=LOG
+C 	      MESS(2)=TEGEN
+C            MESS(3)=5
+C            CALL FASTMOV(SFNAMES(1,BTMF),MESS(4),5)
+C            MESS(9)=BSTAT
+C            CALL QUEMES(MESS)
+C
+C
+C	 IF(P(XXDEBUG).EQ.0) THEN
+C           DMPDBG=.FALSE.
+C           IF(P(XXDTRLN).EQ.0) DMPDBG=.TRUE.
+C           IF(P(XXDTRLN).LT.0) THEN
+C                 IF(ABS(P(XXDTRLN)).EQ.HPRO(LINENO,BUF)) DMPDBG=.TRUE.
+C           ENDIF
+C           IF(P(XXDTRLN).GT.0) THEN
+C                 IF(P(XXDTRLN).EQ.HPRO(TERNUM,BUF)) DMPDBG=.TRUE.
+C           ENDIF
+C           IF(DMPDBG) CALL PRTOUT(BUF) !ver função mas basicamente escreve para o ficheiro GTECH$DEBUG.DAT esta escrita só acontece quando o programa gxutl:setdebug estiver activado o modo debug aqui vê se as mensagens na entrada Dispacther e na saida que é Logger
+C      ENDIF
+C
+C
+C  
+C---------------------------------------------------------------------------------------  
+
+	IF(P(XXDEBUG).EQ.0) THEN
+           DMPDBG=.FALSE.
+           IF(P(XXDTRLN).EQ.0) DMPDBG=.TRUE.
+           IF(P(XXDTRLN).LT.0) THEN
+                 IF(ABS(P(XXDTRLN)).EQ.HPRO(LINENO,BUF)) DMPDBG=.TRUE.
+           ENDIF
+           IF(P(XXDTRLN).GT.0) THEN
+                 IF(P(XXDTRLN).EQ.HPRO(TERNUM,BUF)) DMPDBG=.TRUE.
+           ENDIF
+C           ver função mas basicamente escreve para o ficheiro GTECH$DEBUG.DAT esta escrita só acontece quando o programa 
+C           gxutl:setdebug estiver activado o modo debug aqui vê se as mensagens na entrada Dispacther e na saida            
+C           que é Logger (Passando agora nem que seja só em testes a mensagem enviada para o Dispacther)
+           IF(DMPDBG) CALL PRTOUT(BUF) 
+      ENDIF
+
+C Send to DIS  (for now commented to just write to GTECH$DEBUG.DAT)              
+                   !CALL QUETRA(DIS,PROBUF) 
 C                  CALL ABL(PROBUF,QUETAB(1,ENC),STATUS)                  
+
+
+
+
+
+
+
+
 
 C----+------------------------------------------------------------------
 C    | Get AGENTNR from message (bytes 1-4)
@@ -665,27 +733,6 @@ C     CALL NMOV4TOI4(HEADER,BUFFER,X2TDBH_BLKCHK-1) !'TDBH'
 C     CALL MOV2TOI4(RECV_SEQ,BUFFER,X2TDBH_BLKSEQ-1) !RCV SEQ
 
 C     MESTYP = ZEXT (BUFFER(X2FEMES_MESTYP-1))
-
-C Generic Header Info
-
-C TOTOLOTO
-                  !PROBUF(1) = 
-
-CALL GETQUE(PROBUF,APPQUE,SIZE,BYPASS) !obtêm QUE que é a queue aplicational (application task queue number) do PROCOM/PROBUF
-
-C                  IF(MTYPE .EQ. 1) THEN!TLTO needs confirmation if its totoloto then send to INMNG application queue
-C                        APPQUE = WAG
-C                  ELSE IF (MTYPE .EQ. 2) THEN!TSPT needs confirmation if its totobola then send to INMNG application queue
-C                        APPQUE = WAG    
-C                  ELSE IF (MTYPE .EQ. 14) THEN!TSSC <-> needs confirmation if its Lotaria Instantânea then send to IPS application queue
-C                        APPQUE = INI !CRS
-C                  ELSE      
-                        !received a message with a invalid type send to error queue process...
-C                        APPQUE = ERR 
-C                  END IF
-
-
-C                  CALL QUETRA(APPQUE,PROBUF) !envia o buffer/probuf para a aplicação/processo???
 
 C ON PRIMARY SEND TO NETWORK IF QUEUE EMPTIES OR BATCH DONE
 C
