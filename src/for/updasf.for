@@ -92,7 +92,7 @@ C-----V10-----------------------------------------------------------------------
   	                                                                        
       TYPE *                                                                    
       TYPE *,'----------------------------------------------------------------------------'
-      TYPE *,'<<<<< Atualização de dados de Agente a partir da Base de Dados da SCML >>>>>'                  
+      TYPE *,'<<<<< Atualizaï¿½ï¿½o de dados de Agente a partir da Base de Dados da SCML >>>>>'                  
       TYPE *,'----------------------------------------------------------------------------'
       TYPE *                                                                    
 C
@@ -324,16 +324,16 @@ C-----------V11-----------------------------------------------------------------
             ENDIF
 C-----------V11-----------------------------------------------------------------
     
-            CASFBYT(SNAME:ENAME) = AGTMIL_REC.AGENT_NAME
+            CASFBYT(SNAME:ENAME) = AGTMIL_REC.AGENT_NAME !(8:62) !CONTACT PERSON
             CALL BINASC(ASFINF, SBUSC, LBUSC, AGTMIL_REC.BUSINESS_TYPE)   
-            CASFBYT(SSTRT:ESTRT) = AGTMIL_REC.ADDRESS
+            CASFBYT(SSTRT:ESTRT) = AGTMIL_REC.ADDRESS !(110:154) !CITY
 
             CALL BINASC(ASFINF, SZIPC, LZIPC, CTOI(AGTMIL_REC.ZIP_CODE,SZ))
-            CASFBYT(SZIPA:EZIPA) = AGTMIL_REC.ZIP_CODE_NAME
-            CASFBYT(STELE+3:ETELE) = AGTMIL_REC.AGENT_PHONE
-            CASFBYT(SCONT:ECONT) = AGTMIL_REC.MANAGER_NAME(1:27)
+            CASFBYT(SZIPA:EZIPA) = AGTMIL_REC.ZIP_CODE_NAME !(296:325)
+            CASFBYT(STELE+3:ETELE) = AGTMIL_REC.AGENT_PHONE !(193+3:204)
+            CASFBYT(SCONT:ECONT) = AGTMIL_REC.MANAGER_NAME(1:27) !(63:89) ->27
 
-            CASFBYT(SBKOP:EBKOP) = AGTMIL_REC.BANK_OP
+            CASFBYT(SBKOP:EBKOP) = AGTMIL_REC.BANK_OP !
             CASFBYT(SBROP:EBROP) = AGTMIL_REC.BRANCH_OP
 
             CASFBYT(SWANB:EWANB) = AGTMIL_REC.WAGER_ACCOUNT
@@ -383,8 +383,8 @@ C           CALL BINASC(ASFINF, SPAS8, LPAS8, AGTMIL_REC.AGENT_PASSWORD)
 C
 C	    UPDATE TERMINAL FLAGS
 C           *********************
-C
-            CALL ASCBIN (ASFINF, STTYP, LTTYP, TERMTYP, ST)
+C      PARAMETER(LTTYP = 10)                  !TERMINAL TYPE
+            CALL ASCBIN (ASFINF, STTYP, LTTYP, TERMTYP, ST) !converts the ASCII caracthers into decimal values (binary)
 
             IF (AGTMIL_REC.BANK.EQ.'Y') THEN
                CALL BSET(TERMTYP,AGTBNK)
@@ -405,7 +405,7 @@ C
             ENDIF
             
 C--------------V10--------------------------------------------------------------               
-            IF (AGTMIL_REC.OPER_TYPE.EQ.'1') CALL BSET(TERMTYP,AGTMXT)
+            IF (AGTMIL_REC.OPER_TYPE.EQ.'1') CALL BSET(TERMTYP,AGTMXT) !meter a 1 (set) o 9Âº bit
 C--------------V10--------------------------------------------------------------                           
 
             CALL BINASC (ASFINF, STTYP, LTTYP, TERMTYP)
