@@ -156,8 +156,10 @@ C	  PARAMETER (AGTSPC=15)     !SPECIAL TERMINAL              !v21
 	  PARAMETER (AGTPST=17)     !POST TERMINAL
 	  PARAMETER (AGTTKM=18)     !TICKET MESSAGE FLAG
 	  PARAMETER (AGTXFR=19)     !INSTANT PACK TRANSFER ENABLE FLAG
+C possivel flag a usar SCML nunca usour SMART CARD para fazer signon mas esta flag está a ser usada em son.for (mais critico) e em vis_typsnp.for do vision (impacto baixo)
 	  PARAMETER (AGTSON=20)     !SIGNE ON WITHOUT SMART CARD PRESENT FLAG
 	  PARAMETER (AGTRAM=21)	    !RESET RAM FOR TEXT REQUESTS.
+C acho que não mas só está a ser usado em fracone.for	  
 	  PARAMETER (AGTFRC=22)	    !WAGER FRACTIONING FUNCTION.
 	  PARAMETER (AGTTOI=23)     !ON-LINE TERMINAL FLAG
 	  PARAMETER (AGTTRN=24)     !TRAINING MODE FLAG

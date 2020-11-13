@@ -309,13 +309,13 @@ C
                  ST = -42
  	         AGTMIL_REC.ERRSTR = 'SAP number is equal to zero - Agent' // AGTSTR
               ENDIF 
-	      AGTMIL_REC.BANK_OP        = ASCREC(433:436) 
+	      AGTMIL_REC.BANK_OP        = ASCREC(433:436) !G .34 ---> 433-440 Bank/Branch 
 	      AGTMIL_REC.BRANCH_OP      = ASCREC(437:440)  
 	      
 	      AGTMIL_REC.AGENT_PASSWORD = CTOI(ASCREC(441:444),SZ)
 
-	      AGTMIL_REC.X2XADDRESS     = ASCREC(445:453)
-
+	      AGTMIL_REC.X2XADDRESS     = ASCREC(445:453) !Endereço X.25 do Agente  Agent X.25 Adress
+C G .37 ->                                         	454	 455
 	      AGTMIL_REC.LINHA_DISTRIBUICAO = CTOI(ASCREC(456:457),SZ)
 
 	      AGTMIL_REC.CENTRAL_RECEPCAO   = CTOI(ASCREC(458:464),SZ)
