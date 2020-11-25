@@ -1,6 +1,5 @@
 C TASKID.DEF
 C
-C v13 18-NOV-2020 SCML Added support for OLM
 C V12 13-FEB-2014 SCML Added support for IGS
 C V11 06-JAN-2011 FJG MILLENNIUM MXSRV
 C V10 12-MAR-2003 GPW DESENCR ENCPRO -> ENCPROI
@@ -65,7 +64,7 @@ C
 C       INTEGER*4  PPP            !MXSRV	
 	PARAMETER (RPC=13)        !REPROCESS CANCEL TASK #
 	PARAMETER (NTM=14)        !NETWORK MANAGER TASK #
-	PARAMETER (X2P=15)        !X2X LOGGER 
+	PARAMETER (X2P=15)        !X2X LOGGER
 	PARAMETER (X2R=16)        !X2X RELAY
 	PARAMETER (APU=17)        !APULOG TASK #
 	PARAMETER (NTL=18)        !NETWORK LOGGER TASK #
@@ -81,7 +80,7 @@ C V12| Adding support for IGS
 C----+------------------------------------------------------------------
 	PARAMETER (UNS=22)	  !UNSOLICITED MESSAGE BROADCAST TASK
 C
-        INTEGER*4  INI, INO, CRS, GUI, PSV, PST, OLM
+        INTEGER*4  INI, INO, CRS, GUI, PSV, PST
 C EURO MIL PROJECT
         INTEGER*4 EUI, EUO, EUC
         INTEGER*4 MXS
@@ -92,14 +91,7 @@ C       PARAMETER (PPP=23)	  !BINGO PROCESSING TASK MXSRV
         PARAMETER (CRS=26)        !CROSS SYSTEM PROCESSING TASK #
 	PARAMETER (GUI=27)	  !GUIMGR
 	PARAMETER (PSV=28)        !PASSIVE VALIDATION TASK # (PASVAL)
-		PARAMETER (PST=29)        !PASSIVE PROCESSING TASK # (PASPRO)
-C----+-----------------------------------------------------------------
-C V13| Adding support for OLM
-C----+------------------------------------------------------------------		
-        PARAMETER (OLM=29)    !THE NEW TERMINALS (OLIMPO)
-C----+-----------------------------------------------------------------
-C V13| Adding support for OLM
-C----+------------------------------------------------------------------	
+        PARAMETER (PST=29)        !PASSIVE PROCESSING TASK # (PASPRO)
         PARAMETER (EUI=30)	  !EURO MIL INPUT 
         PARAMETER (EUO=31)        !EURO MIL OUTPUT
         PARAMETER (EUC=32)        !EURO MIL CONNECT
@@ -124,9 +116,9 @@ C
 C FOLLOWING TASKS DO REQUIRE AN APPLICATION QUEUE.
 C
         INTEGER*4  IGI, IGO, IGC
-        PARAMETER (IGI=2)         !IGS Input    -- reusing NBR -> inigs
-        PARAMETER (IGO=21)        !IGS Output   -- reusing ODS -> outigs
-        PARAMETER (IGC=42)        !IGS Connect  -- new -> comigs
+        PARAMETER (IGI=2)         !IGS Input    -- reusing NBR
+        PARAMETER (IGO=21)        !IGS Output   -- reusing ODS
+        PARAMETER (IGC=42)        !IGS Connect  -- new
 C----+------------------------------------------------------------------
 C V12| Adding support for IGS
 C----+------------------------------------------------------------------

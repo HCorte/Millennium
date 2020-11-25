@@ -148,7 +148,7 @@ C 7 =		Liability Limit Exceeded
 C 8 =		Non-drawing Day
 C 9 =		DES Encryption Error
 C 10 =		Results Not In
-C 11 =		Invalid Terminal Number
+C 11 =		Invalid Terminal Number  -> TBAD=11
 C 12 =		Security Violation (>10 sign-on)
 C 13 =		Bad Checksum
 C 14 =		Bad Game Status

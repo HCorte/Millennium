@@ -1,5 +1,6 @@
 C PROGRAM RESET
 C
+C V53 24-NOV-2020 SCML Added support for OLM
 C V52 14-MAR-2016 SCML M16 PROJECT
 C V51 13-FEB-2014 SCML Added support for IGS
 C V50 11-MAY-2011 FJG EVO REPROX as independent reprocessing program
@@ -283,6 +284,13 @@ C        P(ODFRTOUT) = 20
         P(IGSDEBUGF) = 0 
 C----+-----------------------------------------------------------------
 C V51| Adding support for IGS
+C----+------------------------------------------------------------------
+C----+-----------------------------------------------------------------
+C V53| Adding support for OLM
+C----+------------------------------------------------------------------
+        P(OLMCONF) = PAR.OLMCON
+C----+-----------------------------------------------------------------
+C V53| Adding support for OLM
 C----+------------------------------------------------------------------
 
 	CDC = PAR.DAYCDC

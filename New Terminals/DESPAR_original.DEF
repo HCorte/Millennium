@@ -1,6 +1,5 @@
 C DESPAR.DEF
 C
-C V57 18-NOV-2020 SCML NEW TERMINALS PROJECT - OLIMPO
 C V56 31-MAR-2016 SCML M16 PROJECT: added EUSPICA, EUSPFIR, EUSPGWAG, EUSPGGRR 
 C                      and EUSPGICA
 C                      SPBLRP renamed to EUSPBIR
@@ -611,15 +610,6 @@ C========Values related=========================================================
          parameter(ISRTSK = '00000001'X) ! Is RTASK
          parameter(ISWORK = '00000010'X) ! Is Reprocessing
 C===============================================================================
-C
-C----+---+-------------+------------------------------------------------
-C V57|BEG| OLM PROJECT | NEW OLM PARAMETERS
-C----+---+-------------+------------------------------------------------
-        INTEGER*4 OLMCONF
-        PARAMETER (OLMCONF  = 355)                                              
-C----+---+-------------+------------------------------------------------
-C V57|END| OLM PROJECT | NEW OLM PARAMETERS
-C----+---+-------------+------------------------------------------------
 C
 C END DESPAR
 C
