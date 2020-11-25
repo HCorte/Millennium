@@ -1,0 +1,14 @@
+Byte position | Hexdecimal |     Binary          |
+	1		  |		29     |     0010 1001       |  Control=10=Application Message & Sequence=1001=9 
+	2		  | 	00	   |     0000 0000       |  Type=0   Subtype=0
+   3 & 4	  |   90 4B    | 1001 0000 0100 1011 |  checksum=
+    5         |     04     |     0000 0100		 |  statistics=x04 (x04 	Total key indicator)
+	6		  |		01     |     0000 0001		 |  Game Type = 1 (Totoloto)
+	7		  |     40     |     0100 0000       |  Game Index = 4 (Totoloto-quarta) & System type/Passive Bet Type=0
+	8		  |     11     |	 0001 0001		 |  Duration = 1 & No of Boards = 1
+   9 & 10	  |   82 00    |	 .... ....       | x8000	Game Control Revision present. + x0002	Joker number present
+   11 & 12    |   01 F1	   |       497d	         |	Game Control Revision present = 497 		
+80 00 00 0C 21 41 00 30
+
+
+   

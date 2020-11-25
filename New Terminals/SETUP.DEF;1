@@ -1,5 +1,4 @@
 C
-C V03 24-NOV-2020 SCML Added support for OLM 
 C V02 24-FEB-2014 SCML Added support for IGS
 C V01 02-SEP-2000 UXN Initial release.
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -25,19 +24,12 @@ C
 	    INTEGER*4 BAKLOG                   ! BACKUP DISK LOGGING
 	    INTEGER*4 IPSCON                   ! CONNECT TO IPS
 	    INTEGER*4 GVTTIM                   ! GVT END TIME
-		INTEGER*4 EURCON		       ! EURO MIL CONNECT
+	    INTEGER*4 EURCON		       ! EURO MIL CONNECT
 C----+------------------------------------------------------------------
 C V02| Adding support for IGS
 C----+------------------------------------------------------------------
             INTEGER*4 IGSCON                   ! IGS CONNECT
 C----+------------------------------------------------------------------
 C V02| Adding support for IGS
-C----+------------------------------------------------------------------
-C----+------------------------------------------------------------------
-C V03| Adding support for OLM
-C----+------------------------------------------------------------------
-            INTEGER*4 OLMCON		       ! NEW TERMINALS CONNECT
-C----+------------------------------------------------------------------
-C V03| Adding support for OLM
 C----+------------------------------------------------------------------
 	END STRUCTURE

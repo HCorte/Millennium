@@ -1,0 +1,1793 @@
+C GLOBAL.DEF
+C
+C V73 04-MAR-2016 SCML  M16 PROJECT
+C                       MAXTYP changed from 18 to 21
+C                       New game type added for Raffle
+C V72 24-FEB-2014 SCML  PLACARD PROJECT - Added support for IGS
+C V71 17-OCT-2013 SCML  Added instant new instant bank validation modes definitions:
+C                       IVBM_REG,IVBM_INQ,IVBM_CSH,IVBM_BNK,IVBM_INQB and IVBM_NOPRZ
+C                       Added instant validation mode types: IRVMT and IBVMT
+C V70 24-SEP-2013 SCML  ADDING NEW CODE FOR NEW ACCOUNTING PLATFORM
+C                       New validation types added for Passive and Online Games
+C                       Added new ticket status NPAYBAT ("Can't pay in batch")
+C                       Added player id type definitions
+C V69 15-FEB-2011 FRP   MAXGAM from 10 to 50
+C V68 06-JAN-2011 FJG   MILLENNIUM MXSRV
+C V67 02-SEP-2010 MAC   RFSS0145 - ASFIV FILE ADDED
+C V66 13-MAY-2010 RXK   NO_BALSUMS changed from 8 to 2*NUMFIN=12.
+C V65 01-APR-2010 RXK   New types added for Passive.
+C V64 01-JAN-2010 FJG   ePASSIVE
+C V63 17-MAR-2009 TRG   SET ISET TO 0 TO AVOID WARNINGS COMPILATION
+C V62 06-JUN-2005 FRP   Modify for IPS Distribution.
+C V61 28-MAR-2001 EPH   MAXBANKS added.
+C V60 21-MAR-2001 UXN   DSKILL added.
+c V59 28-FEB-2001 EPH   INCLUDED TAGTNAM
+c V58 31-JAN-2001 EPH   INCLUDED LOGICAL UNITS FOR 2 TEMPORARY FILES
+c V57 30-JAN-2001 EPH   INCLUDED OPS FILES
+c V56 12-DEC-2000 CS    INCLUDED PASSIVE GAME TYPE
+c V55 11-DEC-2000 EPH   DOLL_BASE set to 100, CENT_LEN set to 2 (for Euro)
+C V54 28-NOV-2000 JHR   ADDED RESULTS GAME TYPE AND PRMTGL.DEF DEFINITIONS
+C V53 23-NOV-2000 UXN   DOLL_BASE set to 1, CENT_LEN set to 0
+C V52 31-OCT-2000 UXN   TGUI added.
+C V51 05-OCT-2000 UXN   AlphaIPS changes. IVTP_NRM, IVTP_NCP, IFSESON added.
+C V50 29-SEP-2000 UXN   TAGTINF added.
+C V49 30-JUN-2000 UXN   NUMLAT and its related parameters added.
+C V48 28-FEB-2000 RXK   Promotion definition ("add 1 free week") added.
+C V47 25-NOV-1999 OXK   WAP added to TEBE.
+C V46 13-OCT-1999 RXK   World Tour game added.
+C V45 10-MAY-1999 UXN   TRIPLE CHANGED TO TRIO. MAXGAM changed from 45 to 60.
+C                       SUPER TRIPLE GAME ADDED. MAXPER changed from 60 
+C                       to MAXGAM+6
+C V44 11-FEB-1997 RXK   IMNU=instant supply message, IORD=instant games names 
+C                       request message
+C V43 13-JAN-1997 HXK   Rita's changes for CDU phase 2
+C V42 11-DEC-1996 HXK   Added INQRY
+C V41 05-DEC-1996 HXK   Updated for Finland IPS
+C V40 21-MAY-1996 HXK   Modifications for Pass Thru, Sign On game block txn
+C V39 17-APR-1996 HXK   Release of Finland for X.25, Telephone Betting, 
+C                       Instant Pass Thru Phase 1
+C V38 06-NOV-1995 PXB   added super double and todays couple games and changed 
+C                       maxgam and maxtyp
+C V37 24-APR-1995 HXK   Merge of V5 development with 10th March 1995 bible
+C V36 05-MAY-1995 HXK   Further minor changes for V5
+C V35 11-DEC-1994 HXK   Added Toatl Key
+C V34 02-OCT-1994 HXK   Added Bingo
+C V33 02-SEP-1994 HXK   Merge of May,June RFSS batch 
+C V32 22-APR-1994 JXP   Updated values of the three new parameters
+C V31 07-APR-1994 JXP   Added WINHOLD CMBCLOS and ODDSEX
+C V30 19-DEC-1993 HXK   ADDED VALUES FOR COUNTS AND AMOUNTS FOR PRIZES/REFUNDS 
+C                       WON AND PAID. (PRWON -> PRIZES/REFUNDS WON; PRPAD -> 
+C                       PRIZES/REFUNDS PAID)
+C V29 06-SEP-1993 GXA   Changed Max Line # of reports to 45.
+C V28 01-SEP-1993 SXH   Forgot to declare TSINV
+C V27 01-SEP-1993 SXH   Added TSINV=37 - TERMINAL INVOICE REPORT
+C V26 10-AUG-1993 HXK   PUT IN TVLST FOR TERMINAL PEOPLE
+C V25 06-AUG-1993 HXK   CHANGED TVLST TO TGLST (GENERALISED FROM VAKIO TO GAMES)
+C V24 23-JUL-1993 GXA   Added Fractioning Transaction error codes and subcodes.
+C V23 16-JUL-1993 HXK   ADDED VAKIO STATS MATCH LIST
+C V22 07-JUL-1993 HXK   RENUMBERED LAST FIVE FILES CONTIGUOUSLY
+C V21 23-JUN-1993 HXK   CHANGED TCSPD TO TCPPP FOR SPEDE GAME
+C V20 02-JUN-1993 SXH   Added BALANS parameters NO_BALREPS, NO_BALSUMS
+C V19 02-JUN-1993 HXK   Added Multi draw bet parameters (MAXMLTD_AVL, 
+C                       MAXMLTD_SEL).
+C V18 13-MAY-1993 GXA   Include PRMMIS.DEF.
+C V17 10-MAY-1993 HXK   Changed TSPD to TPPP in declarations.
+C V16 07-MAY-1993 HXK   included PRMPPP.DEF file for Speden game.
+C V15 07-MAY-1993 HXK   Changed Speden game type parameter name from TSPD to TPPP,
+C                       to avoid confusion with sports game type, TSPT.
+C V14 07-MAY-1993 HXK   No change.
+C V13 29-APR-1993 GABOR Released for Finland Dec Conversion / Oddset
+C                       Increased MAXGAM and MAXTYP. Added new Game Types 
+C                       Speeden and Oddset games. Defined Game Revision Error 
+C                       Codes and Bitmaps.
+C V12 27-APR-1993 HUY   INCLUDING PRMKNO.DEF & PRMV65.DEF
+C V11 21-JAN-1993 DAB   Initial Release
+C                       Based on Netherlands Bible, 12/92, and Comm 1/93 update
+C                       DEC Baseline
+C V10 26-FEB-1996 wsm   Renamed LBACK TLBACK, added backgr d/load params
+C V09 06-AUG-1992 WLM   MOVED MONEY DESCRIPTION PARAMETERS FROM SEVERAL PROGRAMS
+C V08 18-MAY-1992 GCAN  ADDED SPESCIAL FUNCTION ODDS REQUEST (UNSPRO)
+C V07 11-MAY-1992 HDB   ADDED STF PARAMETER FOR STATISTICS FILE
+C V06 29-APR-1992 GCAN  ADDED ODDS PARAMETER FOR SENDING ALL ODDS OR ONLY 
+C                       CHANGED. (CAN BE REMOVED WHEN THIS FEATURE WORKS 
+C                       PROPERLY). REMOVED TV-NEWS SUPRESSION.
+C V05 27-JAN-1992 GCAN  ADDED TV-NEWS SUPPRESSION PARAMETER (REPORT SUPRESSION)
+C V04 09-JAN-1992 GCAN  ADDED TWO ERROR CODES (22 = NOCRD , 21 = INCRD) 
+C V03 01-NOV-1991 GCAN  NEW PARAMS. TCTRL, TTEXT, TORDR TSERV, OLDT, OLDC, OLDCT.
+C V02 07-OCT-1991 MTK   INITAL RELEASE FOR NETHERLANDS
+C V01 01-AUG-1990 XXX   RELEASED FOR VAX
+C
+C
+C GLOBAL SYSTEM PARAMETERS
+C
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C This item is the property of GTECH Corporation, Providence, Rhode
+C Island, and contains confidential and trade secret information. It
+C may not be transferred from the custody or control of GTECH except
+C as authorized in writing by an officer of GTECH. Neither this item
+C nor the information it contains may be used, transferred,
+C reproduced, published, or disclosed, in whole or in part, and
+C directly or indirectly, except as expressly authorized by an
+C officer of GTECH, pursuant to written agreement.
+C
+C Copyright 2010 GTECH Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+        INCLUDE 'INCLIB:PRMLTO.DEF'
+        INCLUDE 'INCLIB:PRMSPT.DEF'
+        INCLUDE 'INCLIB:PRMKIK.DEF'
+        INCLUDE 'INCLIB:PRMNBR.DEF'
+        INCLUDE 'INCLIB:PRMSCR.DEF'
+        INCLUDE 'INCLIB:PRMWIT.DEF'
+        INCLUDE 'INCLIB:PRMTSL.DEF'
+        INCLUDE 'INCLIB:PRMINS.DEF'
+        INCLUDE 'INCLIB:PRMMIS.DEF'
+        INCLUDE 'INCLIB:PRMBNG.DEF'
+        INCLUDE 'INCLIB:PRMDBL.DEF'
+        INCLUDE 'INCLIB:PRMCPL.DEF'
+        INCLUDE 'INCLIB:PRMSSC.DEF'
+        INCLUDE 'INCLIB:PRMTRP.DEF'
+        INCLUDE 'INCLIB:PRMSTR.DEF'
+        INCLUDE 'INCLIB:PRMTGL.DEF'
+        INCLUDE 'INCLIB:PRMPAS.DEF'
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+        INCLUDE 'INCLIB:PRMIGS.DEF'
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C  !V73
+        INCLUDE 'INCLIB:PRMEUR.DEF'                                            
+C
+        INTEGER*4  NUMPAR, MAXTSK, MAXFIL, SYSOFF
+C !NUMBER OF SYSTEM PARAMETERS
+        PARAMETER (NUMPAR=500)       
+C !MAXIMUM NUMBER OF SYSTEM TASKS
+        PARAMETER (MAXTSK=32)        
+C !MAXIMUM NUMBER OF FILES
+        PARAMETER (MAXFIL=75)        
+C !SERIAL NUMBER OFFSET
+        PARAMETER (SYSOFF=32000000)  
+C
+        INTEGER*4  NUMAPPQUE
+C !MAXIMUM NUMBER OF APPLICATION QUEUES        
+        PARAMETER (NUMAPPQUE=32)     
+C
+C GAME PARAMETERS
+C
+        INTEGER*4  MAXGAM, MAXTYP, MAXIND, GAMTYP, GAMIDX
+        INTEGER*4  MAXDRW, MAXBRD
+!MAXIMUM ADVANCE DRAWS
+        PARAMETER (MAXDRW=20)        
+C
+!MAXIMUM NUMBER OF GAMES
+        PARAMETER (MAXGAM=50)        
+C        PARAMETER (MAXTYP=18)        !MAXIMUM NUMBER OF GAME TYPES
+!MAXIMUM NUMBER OF GAME TYPES              !M16 PROJECT (V73)
+        PARAMETER (MAXTYP=21)        
+!MAXIMUM NUMBER OF GAMES/TYPE
+        PARAMETER (MAXIND=6)         
+!MAXIMUM # OF BOARDS/TICKET
+        PARAMETER (MAXBRD=12)        
+!GAME TYPE
+        PARAMETER(GAMTYP=1)        
+!GAME INDEX
+          PARAMETER(GAMIDX=2)        
+C
+        INTEGER*4  MAXPHN
+C !Max. number of GVT phone numbers.
+        PARAMETER (MAXPHN=10)        
+C
+        INTEGER*4 NUMCRS
+C !MAXIMUM NO OF CROSS SYSTEM VALIDATIONS
+        PARAMETER (NUMCRS=16)        
+C
+C MONEY PARAMETERS
+C
+C THESE PARAMETERS ARE PASSED INTO THE CMONY & CSMONY ROUTINES TO
+C TELL THE ROUTINE THAT THE AMOUNT BEING PASSED IS IN WAGER UNITS OR
+C VALIDATION UNITS 
+C WARNING!! IF DYN_VALUNIT AND DYN_BETUNIT ARE NOT THE SAME THEN
+C           CLAIM PROCESSING WILL HAVE TO BE CHANGED TO SUPPORT
+C           DIFFERENT VALUES.
+C
+        INTEGER*4  VALUNIT, BETUNIT, CRSVALUNIT
+C !CONVERT AMOUNTS USING DYN_VALUNIT
+        PARAMETER (VALUNIT=-1)       
+C !CONVERT AMOUNTS USING DYN_BETUNIT
+        PARAMETER (BETUNIT=-2)       
+        PARAMETER (CRSVALUNIT=1)
+C
+        INTEGER*4       DYN_BETUNIT, DYN_VALUNIT
+        PARAMETER       (DYN_BETUNIT=1)        
+        PARAMETER       (DYN_VALUNIT=1)        
+C
+C SITE SPECIFIC MONEY RELATED PARAMETERS
+C
+        INTEGER*4 CENT_LEN, DOLL_BASE
+C !LENGTH OF CENTS
+        PARAMETER (CENT_LEN=2)          
+C !# OF CENTS IN DOLLAR
+        PARAMETER (DOLL_BASE=100)         
+C
+C SYSTEM BET PARAMETERS
+C
+        INTEGER*4  MAXSYS, MAXFUL, MAXRED, MAXUSY
+C !MAXIMUM NUMBER OF SYSTEM TYPES
+        PARAMETER (MAXSYS=3)         
+C !MAXIMUM NUMBER OF FULL SYSTEMS
+        PARAMETER (MAXFUL=100)   
+C !MAXIMUM NUMBER OF REDUCED SYSTEMS
+            PARAMETER (MAXRED=20)    
+C !MAXIMUM NUMBER OF U SYSTEMS
+            PARAMETER (MAXUSY=20)    
+C
+C MULTI DRAW BET PARAMETERS
+C
+        INTEGER*4 MAXMLTD_AVL, MAXMLTD_SEL
+C !MAXIMUM NUMBER OF MULTI DRAWS AVAILABLE
+        PARAMETER (MAXMLTD_AVL=52)   
+C !MAXIMUM NUMBER OF MULTI DRAWS SELECTABLE
+        PARAMETER (MAXMLTD_SEL=6)    
+C                                    ! (Multi draw is possible up to 52 draws,
+C                                    !  and up to 6 possible multi draw bets
+C                                    !  can be selected per game. e.g 1 week,
+C                                    !  2 wks, 3 wks, 5 wks, 10 wks and 52 wks
+C                                    !  would mean 6 multi draw possibilities.)
+C
+C DAYSTS VALUES
+C
+        INTEGER*4  DUNUSD, DNOSAL, DSOPEN, DSSUSP, DSCLOS, DSKILL
+!NOT INITIALIZED
+        PARAMETER (DUNUSD=0)         
+!NON SALES DAY
+        PARAMETER (DNOSAL=1)         
+!DAY OPEN FOR SALES
+        PARAMETER (DSOPEN=2)         
+!DAY SUSPENDED
+        PARAMETER (DSSUSP=3)         
+!DAY CLOSED
+        PARAMETER (DSCLOS=4)         
+!KILSYS PERFORMED
+        PARAMETER (DSKILL=5)         
+C
+C FINANCIAL TOTAL OFFSETS
+C
+        INTEGER*4  NUMFIN, NUMTOT, TRACNT, DOLAMT
+C !FINANCIAL TRANSACTIONS (MAXIMUM)
+        PARAMETER (NUMFIN=6)         
+C !NUMBER OF TOTALS
+        PARAMETER (NUMTOT=2)         
+C !TRANSACTTION COUNT
+        PARAMETER (TRACNT=1)       
+C !TRANSACTION AMOUNT
+          PARAMETER (DOLAMT=2)       
+C
+        INTEGER*4  MAXPER
+C !MAXIMUM PERFORMANCE COUNTERS        
+        PARAMETER (MAXPER=MAXGAM+10) 
+C
+C
+C PERFORMANCE TABLE OFFSETS
+C
+
+        INTEGER*4  PERTRA, PERCAN, PERVAL, PERINS, PERDIS, PERLBK
+C !TOTAL TRANSACTION COUNT
+        PARAMETER (PERTRA=MAXGAM+1)  
+C !TOTAL CANCELLATION COUNT
+        PARAMETER (PERCAN=MAXGAM+2)  
+C !TOTAL VALIDATION COUNT
+        PARAMETER (PERVAL=MAXGAM+3)  
+C !TOTAL INSTANT CASH COUNT   ** V21 **
+        PARAMETER (PERINS=MAXGAM+4)  
+C !TOTAL DISCOUNT COUNT       ** V26 **
+        PARAMETER (PERDIS=MAXGAM+5)  
+C !NO OF LOOPBACK TRANSACTIONS
+        PARAMETER (PERLBK=MAXGAM+6)  
+C
+C VALUES FOR GAME STATUS
+C
+        INTEGER*4  GAMERR,GAMNUL, GAMCLD, GAMINF, GAMOPN
+C !ERROR IN GAME
+        PARAMETER (GAMERR=-1)        
+C !NOT INITIALIZED
+        PARAMETER (GAMNUL=0)         
+C !NOT A DRAWING DAY
+        PARAMETER (GAMCLD=1)         
+C !GAME INFO ENTERED
+        PARAMETER (GAMINF=2)         
+C !GAME OPEN
+        PARAMETER (GAMOPN=3)         
+C
+        INTEGER*4  GAMBFD, GAMEN1, GAMENV, GAMDON, GFINAL
+C !END OF GAME/BEFORE DRAWING
+        PARAMETER (GAMBFD=4)         
+C !WINNING NUMBERS ENTERED
+        PARAMETER (GAMEN1=5)         
+C !WINNING NUMBERS VERIFIED
+        PARAMETER (GAMENV=6)         
+C !PRIZE VALUES SET
+        PARAMETER (GAMDON=7)         
+C !RESULTS ARE FINAL
+        PARAMETER (GFINAL=8)         
+C
+        INTEGER*4  GAMCAN, GAMREF
+C !GAME CANCELLED
+        PARAMETER (GAMCAN=9)         
+C !GAME IS ENABLED FOR REFUNDS
+        PARAMETER (GAMREF=10)        
+C
+C GAME DATE TABLE PARAMETERS
+C
+        INTEGER*4  DATLEN
+C !DATE TABLE LENGTH
+        PARAMETER (DATLEN=20)        
+          INTEGER*4  CURDRW, NDRAW1, NDRAW2, NDRAW3, NDRAW4, NDRAW5
+C !DRAWING DATE
+          PARAMETER (CURDRW=1)       
+C !NEXT DRAW 1
+          PARAMETER (NDRAW1=2)       
+C !NEXT DRAW 2
+          PARAMETER (NDRAW2=3)       
+C !NEXT DRAW 3
+          PARAMETER (NDRAW3=4)       
+C !NEXT DRAW 4
+          PARAMETER (NDRAW4=5)       
+C !NEXT DRAW 5
+          PARAMETER (NDRAW5=6)       
+C
+          INTEGER*4  NDRAW6, NDRAW7, NDRAW8, NDRAW9, NDRW10, NDRW11
+C !NEXT DRAW 6
+          PARAMETER (NDRAW6=7)       
+C !NEXT DRAW 7
+          PARAMETER (NDRAW7=8)       
+C !NEXT DRAW 8
+          PARAMETER (NDRAW8=9)       
+C !NEXT DRAW 9
+          PARAMETER (NDRAW9=10)      
+C !NEXT DRAW 10
+          PARAMETER (NDRW10=11)      
+C !NEXT DRAW 11
+          PARAMETER (NDRW11=12)      
+C
+          INTEGER*4  NDRW12, NDRW13, NDRW14, NDRW15, NDRW16, NDRW17
+C !NEXT DRAW 12
+          PARAMETER (NDRW12=13)      
+C !NEXT DRAW 13
+          PARAMETER (NDRW13=14)      
+C !NEXT DRAW 14
+          PARAMETER (NDRW14=15)      
+C !NEXT DRAW 16
+          PARAMETER (NDRW15=16)      
+C !NEXT DRAW 17
+          PARAMETER (NDRW16=17)      
+C !NEXT DRAW 17
+          PARAMETER (NDRW17=18)      
+C
+          INTEGER*4  NDRW18, NDRW19
+C !NEXT DRAW 18
+          PARAMETER (NDRW18=19)      
+C !DRAW 19
+          PARAMETER (NDRW19=20)      
+C
+C GAME ADVANCE DATE TABLE OFFSETS
+C
+        INTEGER*4  NUMADV
+C !NUMBER OF ADVANCE DATES
+        PARAMETER (NUMADV=7)         
+          INTEGER*4  ADVMON, ADVTUE, ADVWED, ADVTHU
+C !ADVANCE MONDAY
+          PARAMETER (ADVMON=1)       
+C !ADVANCE TUESDAY
+          PARAMETER (ADVTUE=2)       
+C !ADVANCE WEDNESDAY
+          PARAMETER (ADVWED=3)       
+C !ADVANCE THURSDAY
+          PARAMETER (ADVTHU=4)       
+C
+          INTEGER*4  ADVFRI, ADVSAT, ADVSUN
+C !ADVANCE FRIDAY
+          PARAMETER (ADVFRI=5)       
+C !ADVANCE SATURDAY
+          PARAMETER (ADVSAT=6)       
+C !ADVANCE SUNDAY
+          PARAMETER (ADVSUN=7)       
+C
+C SYSTEM FILE TABLE PARAMETERS
+C
+        INTEGER*4  DAF, ASF, SMF, PTMF
+C !DAILY ACTIVITY FILE
+        PARAMETER (DAF=1)            
+C !AGENT SALES FILE
+        PARAMETER (ASF=2)            
+C !TERMINAL MESSAGE FILE
+        PARAMETER (SMF=3)            
+C !PRIMARY TRANSACTION FILE
+        PARAMETER (PTMF=4)           
+C
+C FILE NUMBERS 5 AND 6 ARE RESERVED
+C
+        INTEGER*4  BTMF, DCF, DCC, DCW, VLF, VLC, VLW, TCF
+C !BACKUP TRANSACTION FILE
+        PARAMETER (BTMF=7)           
+C !DAILY CARRYOVER FILE
+        PARAMETER (DCF=8)            
+C !DAILY CARRYOVER COPY FILE
+        PARAMETER (DCC=9)            
+C !DAILY CARRYOVER WORK FILE
+        PARAMETER (DCW=10)           
+C !VALIDATION FILE
+        PARAMETER (VLF=11)
+C !VALIDATION COPY FILE
+        PARAMETER (VLC=12)           
+C !VALIDATION WORK FILE
+        PARAMETER (VLW=13)           
+C !CARRYOVER FILE
+        PARAMETER (TCF=14)           
+C
+        INTEGER*4  TCC, TCW, CP0, CP1, CP2, CP3, CP4, LPR
+C !CARRYOVER COPY FILE
+        PARAMETER (TCC=15)           
+C !CARRYOVER WORK FILE
+        PARAMETER (TCW=16)           
+C !CHECKPOINT FILE 0
+        PARAMETER (CP0=17)           
+C !CHECKPOINT FILE 1
+        PARAMETER (CP1=18)           
+C !CHECKPOINT FILE 2
+        PARAMETER (CP2=19)           
+C !CHECKPOINT FILE 3
+        PARAMETER (CP3=20)           
+C !CHECKPOINT FILE 4
+        PARAMETER (CP4=21)           
+C !LOTTO POOL FILE (RAM DISK)
+        PARAMETER (LPR=22)           
+C
+        INTEGER*4  SSF, LSF, LP1, LP2, LO1, LO2, CTP, UTP, CLK
+C !SPORTS SYSTEM FILE
+        PARAMETER (SSF=23)           
+C !LOTTO SYSTEM FILE
+        PARAMETER (LSF=24)           
+C !LOTTO POOL FILE 1
+        PARAMETER (LP1=25)           
+C !LOTTO POOL FILE 2
+        PARAMETER (LP2=26)           
+C !LOTTO POOL OVERFLOW FILE 1
+        PARAMETER (LO1=27)           
+C !LOTTO POOL OVERFLOW FILE 2
+        PARAMETER (LO2=28)           
+C !CASHED TICKET PURGE FILE
+        PARAMETER (CTP=29)           
+C !UNCASHED TICKET PURGE FILE
+        PARAMETER (UTP=30)           
+C !CLERK ACCOUNTING FILE
+        PARAMETER (CLK=31)           
+C
+        INTEGER*4  REP, IVF, X2F, XGBL, XNPC, XLPC
+C !REPORT STATISTICS FILE
+        PARAMETER (REP=32)           
+C !INSTANT TICKET VALIDATION FILE
+        PARAMETER (IVF=33)           
+C !X2X LOG FILE
+        PARAMETER (X2F=34)           
+C !X2X GLOBAL PARAMETERS
+        PARAMETER (XGBL=35)          
+C !X2X NETWORK PORT CONFIGURATION
+        PARAMETER (XNPC=36)          
+C !X2X LOCAL PORT CONFIGURATION
+        PARAMETER (XLPC=37)          
+C
+        INTEGER*4  XSPC, XRCD, XRCL, XSCL, XSTN, XTER, XBLD
+C !X2X STATION PORT CONFIGURATION
+        PARAMETER (XSPC=38)          
+C !X2X REPORT CODE DEFINITION
+        PARAMETER (XRCD=39)          
+C !X2X REPORT CLASS DEFINITION
+        PARAMETER (XRCL=40)          
+C !X2X SALES CLASS DEFINITION
+        PARAMETER (XSCL=41)          
+C !X2X STATION CONFIGURATION
+        PARAMETER (XSTN=42)          
+C !X2X TERMINAL CONFIGURATION
+        PARAMETER (XTER=43)          
+C !X2X AUTO BUILD FILE
+        PARAMETER (XBLD=44)          
+C
+        INTEGER*4  XBRO, XGRP, XTTN, GTS, GTST, GTFL, GTSW
+        INTEGER*4  TKTM, ERLG, PRMO, DAG, RDF, DBRF, STF
+C !X2X BROADCAST RELAY CONFIGURATION
+        PARAMETER (XBRO=45)          
+C !X2X RELAY GROUP CONFIGURATION
+        PARAMETER (XGRP=46)          
+C !X2X TITAN CONFIGURATION
+        PARAMETER (XTTN=47)          
+C !GUTS HARDWARE REV FILE
+        PARAMETER (GTS=48)           
+C !GUTS STATISTICS FILE
+        PARAMETER (GTST=49)          
+C !GUTS FAULTS FILE
+        PARAMETER (GTFL=50)          
+C !GUTS SWAP FILE
+        PARAMETER (GTSW=51)          
+C !TICKET MESSAGE FILE
+        PARAMETER (TKTM=52)          
+C !ELOG FILE
+        PARAMETER (ERLG=53)          
+C !PROMO / DISCOUNT FILE
+        PARAMETER (PRMO=54)          
+C !DELETED AGENT FILE
+        PARAMETER (DAG=55)           
+C !ROLL POOL FILE
+        PARAMETER (RDF=56)           
+C !DISTRIBUTION REPORT FILE
+        PARAMETER (DBRF=57)          
+C !STATISTICS FILE
+        PARAMETER (STF=58)           
+C
+        INTEGER*4  WRF,BAL,CASHFIL,TGSF
+C !TOTOGOLA SYSTEM FILE
+        PARAMETER (TGSF=59)          
+C !WIN RESERVE FUND FILE
+        PARAMETER (WRF=60)           
+C !BALANCE REPORT FILE
+        PARAMETER (BAL=61)           
+C !CASHED TICKETS FILE....
+        PARAMETER (CASHFIL=62)       
+C
+C PASSIVE GAME FILES
+C !V67
+        INTEGER*4 VPF,VPW,PPF,TPF,ASFIV                                     
+C !VALIDATION PASSIVE FILE
+        PARAMETER (VPF=63)           
+C !VALIDATION PASSIVE WORK FILE
+        PARAMETER (VPW=64)           
+C !PASSIVE PLAN FILE
+        PARAMETER (PPF=65)           
+C !PASSIVE TICKETS INDEXED FILE
+        PARAMETER (TPF=66)           
+C !PASSIVE TICKETS ASF ACCOUNTING FILE   !V67
+        PARAMETER (ASFIV=67)         
+C
+C FILES USED BY PAYMENT ORDERS       !V57
+C
+        INTEGER*4 OPS_LUN, UNOPS_LUN, BRH_LUN, BNK_LUN
+C !OPS FILE (INDEXED)
+        PARAMETER (OPS_LUN  =71)       
+C !UNCASHED OPS FILE (INDEXED)
+        PARAMETER (UNOPS_LUN=72)       
+C !BRANCH FILE OR PRIZE ACCOUNT FILE (INDE
+        PARAMETER (BRH_LUN  =73)       
+C !BANK FILE (INDEXED)
+        PARAMETER (BNK_LUN  =74)       
+C
+C TEMPORARY FILES LOGICAL UNITS (MAY BE USED FOR TEMPORARY OR REPORT FILES) !V58
+C
+        INTEGER*4 TMP1_LUN, TMP2_LUN
+        PARAMETER (TMP1_LUN=75)
+        PARAMETER (TMP2_LUN=76) 
+C
+C PLAYER ID TYPE DEFINITIONS  !V70
+C
+        INTEGER*4 PHONNBR, PLAYCRD
+C !PLAYER TELEPHONE NUMBER
+        PARAMETER (PHONNBR=0) 
+C !PLAYER CARD NUMBER
+        PARAMETER (PLAYCRD=1) 
+C
+C TRANSACTION TYPE DEFINITIONS
+C
+        INTEGER*4  TWAG, TCAN, TINC, TVAL, TRET, TREF, TSPE, TCMD
+        INTEGER*4  TCRS, TGUI
+C EURO MIL PROJECT
+        INTEGER*4  TEUR 
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+        INTEGER*4  TIGS
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C !WAGER
+        PARAMETER (TWAG=1)           
+C !CANCELLATION
+        PARAMETER (TCAN=2)           
+C !INTERNAL CANCELLATION
+        PARAMETER (TINC=3)           
+C !VALIDATION
+        PARAMETER (TVAL=4)           
+C !RETURN (PPASSIVE)     
+        PARAMETER (TRET=5)           
+C !REFUND
+        PARAMETER (TREF=6)           
+C !SPECIAL FUNCTION
+        PARAMETER (TSPE=7)           
+C !COMMAND
+        PARAMETER (TCMD=8)           
+C !CROSS SYSTEM
+        PARAMETER (TCRS=9)           
+C !GUI
+        PARAMETER (TGUI=10)          
+C !EURO MIL
+        PARAMETER (TEUR=11)          
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C !IGS
+        PARAMETER (TIGS=12)          
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C
+C GAME TYPE DEFINITIONS
+C
+        INTEGER*4  TIN, TLTO, TSPT, TKIK, TNBR, TINS
+        INTEGER*4  TSCR, TWIT, TTSL, TBNG
+        INTEGER*4  TDBL, TCPL, TSSC, TTRP, TSTR, TTGL, TPAS
+C ! EURO MIL PROJECT
+        INTEGER*4  TEUM              
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C ! IGS - Odds Set 
+        INTEGER*4  TODS              
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C ! M16 PROJECT (V73)
+        INTEGER*4  TRAF              
+C
+C !GAME INDEPENDENT
+        PARAMETER (TIN=0)            
+C !LOTTO GAME TYPE
+        PARAMETER (TLTO=1)           
+C !SPORTS (1X2) GAME TYPE
+        PARAMETER (TSPT=2)           
+C !NUMBERS GAME TYPE / OPINION POLL
+        PARAMETER (TNBR=3)           
+C !KICKER GAME TYPE
+        PARAMETER (TKIK=4)           
+C !BINGO GAME TYPE
+        PARAMETER (TBNG=5)           
+C !WINNERS TIP GAME TYPE
+        PARAMETER (TWIT=6)           
+C !TODAYS COUPLE GAME TYPE 
+        PARAMETER (TCPL=7)           
+C !TODAYS TRIO GAME TYPE 
+        PARAMETER (TTRP=8)           
+C !SUPER DOUBLE GAME TYPE 
+        PARAMETER (TDBL=9)           
+C !SUPER TRIPLE GAME TYPE 
+        PARAMETER (TSTR=10)          
+C !TOTO SELECT GAME TYPE
+        PARAMETER (TTSL=11)          
+C !SCORE GAME TYPE
+        PARAMETER (TSCR=12)          
+C !SUPERSCORE GAME TYPE
+        PARAMETER (TSSC=13)          
+C !INSTANT TICKETS
+        PARAMETER (TINS=14)          
+C !RESULTS GAME ( TOTOGOLO )
+        PARAMETER (TTGL=15)          
+C !PASSIVE GAME
+        PARAMETER (TPAS=16)          
+C !EURO MIL TRANSACTION TYPE
+        PARAMETER (TEUM=17)          
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C !IGS - Odds Set game type
+        PARAMETER (TODS=18)          
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C !RAFFLE GAME TYPE
+        PARAMETER (TRAF=19)          
+
+C
+C COMMAND TYPE DEFINITIONS
+C
+        INTEGER*4  TCPAR, TCGEN, TCSPE, TCNET, TCCOM, TCMSC
+C !SYSTEM PARAMETERS
+        PARAMETER (TCPAR=1)          
+C !GENERAL SYSTEM COMMANDS
+        PARAMETER (TCGEN=2)          
+C !SPECIAL COMMANDS (NO FREEZE)
+        PARAMETER (TCSPE=3)          
+C !SYSTEM NETWORK COMMANDS
+        PARAMETER (TCNET=4)          
+C !COMMUNICATIONS COMMANDS
+        PARAMETER (TCCOM=5)          
+C
+        INTEGER*4  TCAGT, TCLTO, TCSPT, TCKIK, TCX2X, TCNBR    
+        INTEGER*4  TCSCR, TCWIT, TCTSL, TCBNG
+        INTEGER*4  TCDBL, TCCPL, TCSSC, TCTRP, TCSTR, TCTGL, TCPAS
+C !AGENT COMMANDS
+        PARAMETER (TCAGT=6)          
+C !LOTTO GAME COMMANDS
+        PARAMETER (TCLTO=7)          
+C !SPORT GAME COMMANDS
+        PARAMETER (TCSPT=8)          
+C !KICKER GAME COMMANDS
+        PARAMETER (TCKIK=9)          
+C !X2X ONLINE CONFIGURATION COMMANDS
+        PARAMETER (TCX2X=10)         
+C !NUMBERS GAME COMMANDS
+        PARAMETER (TCNBR=11)         
+C !MATRIX SWITCH CONFIGURATION COMMANDS
+        PARAMETER (TCMSC=12)         
+C !SCORE GAME COMMANDS
+        PARAMETER (TCSCR=13)         
+C !WINNERS TIP GAME COMMANDS
+        PARAMETER (TCWIT=14)         
+C !TOTO SELECT GAME COMMANDS
+        PARAMETER (TCTSL=15)         
+C !BINGO GAME COMMANDS
+        PARAMETER (TCBNG=16)         
+C !SUPER DOUBLE COMMANDS
+        PARAMETER (TCDBL=17)         
+C !TODAY'S COUPLE COMMANDS
+        PARAMETER (TCCPL=18)         
+C !SUPERSCORE GAME COMMANDS
+        PARAMETER (TCSSC=19)         
+C !TODAY'S TRIO GAME COMMANDS
+        PARAMETER (TCTRP=20)         
+C !SUPER TRIPLE GAME COMMANDS
+        PARAMETER (TCSTR=21)         
+C !TotoGola GAME COMMANDS
+        PARAMETER (TCTGL=22)         
+C !PASSIVE GAME COMMANDS
+        PARAMETER (TCPAS=23)         
+!                     
+C !MXSRV
+        INTEGER*4  TCMXV             
+C !MXSRV
+        PARAMETER (TCMXV=24)         
+C
+C ERRLOG MESAGE TYPE DEFINITIONS
+C
+        INTEGER*4  TESYS, TELOG, TECMD, TEGEN, TECOM, TENET
+C
+C EURO MIL PROJECT - TEEUM 
+C
+        INTEGER*4 TEEUM
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+        INTEGER*4 TEIGS
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C !SYSTEM MESSAGES
+        PARAMETER (TESYS=1)          
+C !LOGGER MESSAGES
+        PARAMETER (TELOG=2)          
+C !COMMAND MESSAGES
+        PARAMETER (TECMD=3)          
+C !GENERAL MESSAGES
+        PARAMETER (TEGEN=4)          
+C !COMMUNICATIONS MESSAGES
+        PARAMETER (TECOM=5)          
+C !SYSTEM NETWORK MESSAGES
+        PARAMETER (TENET=6)          
+C !EURO MILHOES MESSAGES
+        PARAMETER (TEEUM=7)          
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C !IGS - Odds Set Messages
+        PARAMETER (TEIGS=8)          
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C
+C TRANSACTION STATUS DEFINITIONS
+C
+        INTEGER*4  NUSD, GOOD, VOID, INCA, EXCH, CASH, REJT
+C !UNUSED
+        PARAMETER (NUSD=0)           
+C !GOOD
+        PARAMETER (GOOD=1)           
+C !VOID
+        PARAMETER (VOID=2)           
+C !INTERNAL
+        PARAMETER (INCA=3)           
+C !EXCHANGE TICKET
+        PARAMETER (EXCH=4)           
+C !CASHED
+        PARAMETER (CASH=5)           
+C !REJECTED
+        PARAMETER (REJT=6)           
+C
+        INTEGER*4  XCHD, XCSH, CLAM, XCLM,FRAC
+C !TICKET WAS EXCHANGED
+        PARAMETER (XCHD=7)           
+C !CASHED EXCHANGED TICKET
+        PARAMETER (XCSH=8)           
+C !TICKET WAS CLAIMED
+        PARAMETER (CLAM=9)           
+C !CLAIMED EXCHANGE TICKET
+        PARAMETER (XCLM=10)          
+C !FRACTIONED TICKET
+        PARAMETER (FRAC=11)          
+C
+C TRANSACTION ERROR CODE DEFINITIONS
+C
+        INTEGER*4  NOER, INVL, SYNT, SUPR, NOTON, SDOR, SDRW
+C !NO ERROR
+        PARAMETER (NOER=0)           
+C !INVALID
+        PARAMETER (INVL=1)           
+C !SYNTAX ERROR
+        PARAMETER (SYNT=2)           
+C !FUNCTION SUPRESSED
+        PARAMETER (SUPR=3)           
+C !NOT SIGNED ON
+        PARAMETER (NOTON=4)          
+C !SYSTEM DORMANT
+        PARAMETER (SDOR=5)           
+C !DRAWING BREAK
+        PARAMETER (SDRW=6)           
+C
+        INTEGER*4  LIAB,NDRW,DESMOD,RNIN,TBAD,TSEC,CBAD
+C !LIABILITY LIMIT EXCEEDED
+        PARAMETER (LIAB=7)           
+C !NON-DRAWING DAY
+        PARAMETER (NDRW=8)           
+C !DES ENCRIPTION ERROR
+        PARAMETER (DESMOD=9)         
+C !RESULTS NOT IN
+        PARAMETER (RNIN=10)          
+C !BAD TERMINAL NUMBER
+        PARAMETER (TBAD=11)          
+C !SECURITY VIOLATION
+        PARAMETER (TSEC=12)          
+C !BAD CHECKSUM
+        PARAMETER (CBAD=13)          
+C
+        INTEGER*4  BSTS, RETY, VINQ, XERR, GREV
+        INTEGER*4  GREV_KIKCTL, GREV_KIKTXT, GREV_KIKTKT
+        INTEGER*4  GREV_GAMCLT, GREV_GAMTXT, GREV_GAMTKT, GREV_GAMWQP
+C !BAD GAME STATUS
+        PARAMETER (BSTS=14)          
+C !RETRY TRANSACTION
+        PARAMETER (RETY=15)          
+C !VALIDATION INQUIRY
+        PARAMETER (VINQ=16)          
+C !X2X SYSTEM ERROR
+        PARAMETER (XERR=17)          
+C !GAME REVISION ERROR (BITMAP TO FOLLOW)
+        PARAMETER (GREV=18)          
+C !  BAD KICKER CONTROL REVISION
+        PARAMETER (GREV_KIKCTL=128)
+C !  BAD KICKER TEXT REVISION
+          PARAMETER (GREV_KIKTXT= 64)
+C !  BAD KICKER TICKET TEXT REVISION
+          PARAMETER (GREV_KIKTKT= 32)
+C !  BAD GAME TABLE REVISION (WEIGHTED QP)
+          PARAMETER (GREV_GAMWQP= 16)
+C !  BAD GAME CONTROL REVISION
+          PARAMETER (GREV_GAMCLT=  8)
+C !  BAD GAME TEXT REVISION
+          PARAMETER (GREV_GAMTXT=  4)
+C !  BAD GAME TICKET TEXT REVISION
+          PARAMETER (GREV_GAMTKT=  2)
+C
+        INTEGER*4 NFRA, NOCRD, INCRD, BDAY, WMEC, SFDC, WINHOLD, CMBCLOS, ODDSEX
+        INTEGER*4 NFRA_NFRA, NFRA_ADRW, NFRA_AFRA, NFRA_BNKO, NFRA_CAND
+        INTEGER*4 UFRA_NFRA, UFRA_ADRW 
+C !CANNOT FRACTION / UNFRACTION TICKET
+        PARAMETER (NFRA=19)          
+C !  CANNOT FRACTION TICKET
+        PARAMETER (NFRA_NFRA=1)    
+C !  FRACTION ATTEMPT AFTER DRAW
+          PARAMETER (NFRA_ADRW=2)    
+C !  ALLREADY FRACTIONED
+          PARAMETER (NFRA_AFRA=3)    
+C !  TICKET HAS BANK CARD OPTION
+          PARAMETER (NFRA_BNKO=4)    
+C !  TICKET ALLREADY CANCELLED
+          PARAMETER (NFRA_CAND=5)    
+C !  TICKET IS NOT FRACTIONED
+          PARAMETER (UFRA_NFRA=6)    
+C !  CANNOT UNFRACTION AFTER DRAW
+          PARAMETER (UFRA_ADRW=7)    
+C !CARD PRESENT (PASS#'S DO NOT MATCH).
+          PARAMETER (INCRD=22)         
+C !NO CARD PRESENT AT SIGN-ON (DO NOT SON)!
+        PARAMETER (NOCRD=23)         
+C !BAD DRAW DAY
+        PARAMETER (BDAY=24)          
+C !SPORTS, WRONG NUMBER OF MARKS WITH THE EVENT CANCELLED
+        PARAMETER (WMEC=25)
+C !SPORTS, THE FULL DRAW HAS CANCELLED
+        PARAMETER (SFDC=26)
+C !WIN ON HOLD
+        PARAMETER (WINHOLD=30)
+C !COMBINATION CLOSED
+        PARAMETER (CMBCLOS=31)
+C !ODDS EXCEEDED
+        PARAMETER (ODDSEX=32)
+C
+        INTEGER*4 BCRS, TRIN, BTRN, BTOPSN
+C BAD CROSS SYSTEM        
+        PARAMETER (BCRS=33)          
+C TRAINING MODE        
+        PARAMETER (TRIN=34)          
+C BAD TRAINING MODE        
+        PARAMETER (BTRN=35)          
+C INVALID AGENT NUMBER / PASSWORD IN SIGNON        
+        PARAMETER (BTOPSN = 36)      
+C
+        INTEGER*4 EPNR, EPIO,BNIF
+C NUMBER IS NOT RESERVED (ePassive)        
+        PARAMETER (EPNR=37)          
+C IO ERROR (ePassive)        
+        PARAMETER (EPIO=38)          
+C BLOCKED "NIF" -- SCML INTERNAL USE, DON'T DELETE        
+        PARAMETER (BNIF=39)          
+C
+C TRANSACTION FILE STATUS
+C
+        INTEGER*4  EARLY, LATE, CARRY, CPOST,CDEAD
+C !SOLD BEFORE THE DRAW
+        PARAMETER (EARLY=1)          
+C !SOLD AFTER THE DRAW
+        PARAMETER (LATE=2)           
+C !CARRYOVER TRANSACTION
+        PARAMETER (CARRY=3)          
+C !POSTPONED DRAW
+        PARAMETER (CPOST=4)          
+C !VIK+JOK, 1 OF WHICH EXPIRED.
+        PARAMETER (CDEAD=5)          
+C
+C VALIDATION STATUS DEFINITIONS
+C
+        INTEGER*4  VNOWIN, VUNCSH, VCASH, VCASHX, VDEL, VCXL
+C !NOT A WINNER
+        PARAMETER (VNOWIN=0)         
+C !NOT CASHED
+        PARAMETER (VUNCSH=1)         
+C !CASHED
+        PARAMETER (VCASH =2)         
+C !CASHED WITH EXCHANGE
+        PARAMETER (VCASHX=3)         
+C !DELETED WINNER
+        PARAMETER (VDEL  =4)         
+C !CANCELLED WINNER
+        PARAMETER (VCXL  =5)         
+C
+        INTEGER*4  VHOLD, VNOPAY, VNOPRZ, VPOST, VCLAM, VCLAMX
+        INTEGER*4  VPRPAY, VPPNPZ, VPRPOST
+C !VALIDATION ON HOLD
+        PARAMETER (VHOLD =6)         
+C !CAN'T PAY YET
+        PARAMETER (VNOPAY=7)         
+C !PRIZE VALUES NOT SET
+        PARAMETER (VNOPRZ=8)         
+C !HOST GAME POSTPONED
+        PARAMETER (VPOST =9)         
+C !CLAIMED
+        PARAMETER (VCLAM =10)        
+C !CLAIMED WITH EXCHANGE
+        PARAMETER (VCLAMX=11)        
+C !PRIV PAY
+        PARAMETER (VPRPAY=12)        
+C !NO PRIZE PRIV PAY
+        PARAMETER (VPPNPZ=13)        
+C !PRIV PAY POSTPONED
+        PARAMETER (VPRPOST=14)       
+
+        INTEGER*4  VBANK,VSBNK,VSBNKM
+C !PAYMENT ISSUED TO BANK
+        PARAMETER (VBANK =15)        
+C !SET BANKING INFO
+        PARAMETER (VSBNK =16)        
+C !SET BANKING INFO/MULTI-DRAW
+        PARAMETER (VSBNKM=17)        
+C
+C VALIDATION CODE DEFINITIONS
+C
+        INTEGER*4  NOWIN, NOTIN, BSER, NPRZ, APAID
+C !NOT A WINNER
+        PARAMETER (NOWIN=0)          
+C !RESULTS NOT IN
+        PARAMETER (NOTIN=1)          
+C !BAD SERIAL NUMBER
+        PARAMETER (BSER =2)          
+C !PRIZE NOT SET FOR ALL GAMES
+        PARAMETER (NPRZ =3)          
+C !ALREADY PAID
+        PARAMETER (APAID=4)          
+C
+        INTEGER*4  RCASH, ECASH, ACLAM, INQURY, RCLAM
+C !REGULAR CASH
+        PARAMETER (RCASH=5)          
+C !CASH/EXCHANGE
+        PARAMETER (ECASH=6)          
+C !ALREADY CLAIMED
+        PARAMETER (ACLAM=7)          
+C !VALIDATION INQUIRY
+        PARAMETER (INQURY=8)         
+C !REGULAR CLAIM
+        PARAMETER (RCLAM=9)          
+C
+        INTEGER*4  ECLAM, TOAGNT, LOTIER, VMINQ
+C !CLAIM/EXCHANGE
+        PARAMETER (ECLAM=10)         
+C !CLAIM AT AGENT
+        PARAMETER (TOAGNT=11)        
+C !LOW TIER PAY (GOTO AGENT)
+        PARAMETER (LOTIER=12)        
+C !MID-TIER INQUIRY
+        PARAMETER (VMINQ=13)         
+
+        INTEGER*4  VTOBNK, SETBNK, BASET, VDETREP, VNODET
+C !WINS CREDITED TO BANK ACCOUNT
+        PARAMETER (VTOBNK=14)        
+C !SET BANK ACOUNT INFO
+        PARAMETER (SETBNK=15)        
+C !BANK INFO ALREADY SET
+        PARAMETER (BASET=16)         
+C !DETAILS REPORT
+        PARAMETER (VDETREP=17)       
+C !NO DETAILS AVAILABLE
+        PARAMETER (VNODET=18)        
+C
+C PASSIVE VALIDATION CODE DEFINITIONS
+C
+        INTEGER*4  NWIN, VWINNER, APAD, BSERL, OVRRED, NWSEL, NPAYBAT
+        INTEGER*4  UTKT, RTKT, WEMIS, BTKT, BDSER, BTEN, PURGED
+C !NOT A WINNER
+        PARAMETER (NWIN   = 0)          
+C !BAD VALIDATION NUMBER
+        PARAMETER (BSERL  = 1)          
+C !PRIZE OVER REDEMPTION LIMIT
+        PARAMETER (OVRRED = 2)          
+C !NO WINNER SELECTION YET
+        PARAMETER (NWSEL  = 3)          
+C !CANNOT PAY IN BATCH !V70
+        PARAMETER (NPAYBAT= 4)          
+C
+C       PARAMETER (FREE   = 5)
+C       PARAMETER (FREE   = 6)
+C        
+C !PASSIVE WINNER FRACTION
+        PARAMETER (VWINNER= 7)          
+C !PRIZE ALREADY PAID
+        PARAMETER (APAD   = 8)          
+C !UNSOLD TICKET FRACTION
+        PARAMETER (UTKT   = 9)          
+C !TICKET FRACTION HAS BEEN RETURNED
+        PARAMETER (RTKT   =10)          
+C !WRONG EMISSION NUMBER - BAD WEEK/YEAR
+        PARAMETER (WEMIS  =11)          
+C !BAD TICKET NUMBER
+        PARAMETER (BTKT   =12)          
+C !BAD SERIES
+        PARAMETER (BDSER  =13)          
+C !BAD TICKET FRACTION
+        PARAMETER (BTEN   =14)          
+C !PURGED EMISSION
+        PARAMETER (PURGED =15)          
+C
+C PASSIVE RETURN TICKETS CODE DEFINITIONS
+C FROM 7 TO 15 WE HAVE THE SAME CODE FOR VALIDATIONS AND RETURN TICKETS
+C
+        INTEGER*4  RETURND, HLDRTCK, ENDEMIS, EMINOPN, SOLDTCK, RETAFDR
+C !RETURNED TICKET ACCEPTED
+        PARAMETER (RETURND= 0)          
+C !RETURN TICKET NOT ALLOWED
+        PARAMETER (HLDRTCK= 1)          
+C !EMISSION ALREADY CLOSED
+        PARAMETER (ENDEMIS= 2)          
+C !EMISSION NOT OPENED
+        PARAMETER (EMINOPN= 3)          
+C !SOLD TICKET
+        PARAMETER (SOLDTCK= 4)          
+C !RETURNED TICKETS AFTER DRAW
+        PARAMETER (RETAFDR= 5)		
+C
+C       PARAMETER (FREE   = 6)
+C
+C
+C VALIDATION TYPE DEFINITIONS
+C
+        INTEGER*4  VREG, VMID, VCLM, VDET, VINS, VPTB, VNREG, VNINQ, VNDON, VNBNK, VNIBO
+C !REGULAR CASH
+        PARAMETER (VREG=0)           
+C !MID TIER CASH
+        PARAMETER (VMID=1)           
+C !CLAIM
+        PARAMETER (VCLM=2)           
+C !DETAIL REPORT
+        PARAMETER (VDET=3)           
+C !INSTANT
+        PARAMETER (VINS=4)           
+C !PAY TO BANK
+        PARAMETER (VPTB=5)           
+C !NEW VALIDATION INQUIRY REGULAR !V70
+        PARAMETER (VNREG=6)          
+C !NEW VALIDATION INQUIRY MID-TIER !V70
+        PARAMETER (VNINQ=7)          
+C !NEW VALIDATION INQUIRY CASH ACCEPTED !V70
+        PARAMETER (VNDON=8)          
+C !NEW VALIDATION TO BANK !V70
+        PARAMETER (VNBNK=9)          
+C !NEW VALIDATION INQUIRY MID-TIER BANK ONLY !V70
+        PARAMETER (VNIBO=10)         
+C
+C VALIDATION TYPE DEFINITIONS FOR PASSIVE
+C
+        INTEGER*4  VPPINQ, VPPREG, VPNREG, VPNINQ, VPNDON, VPNBNK, VPNIBO
+C !PPASSIVE BATCH VALIDATION INQUIRY
+        PARAMETER (VPPINQ=8)         
+C !PPASSIVE BATCH VALIDATION
+        PARAMETER (VPPREG=9)         
+C !PASSIVE NEW VALIDATION
+        PARAMETER (VPNREG=10)        
+C !PASSIVE NEW VALIDATION INQUIRY
+        PARAMETER (VPNINQ=11)        
+C !PASSIVE NEW VALIDATION CASH
+        PARAMETER (VPNDON=12)        
+C !PASSIVE NEW VALIDATION TO BANK
+        PARAMETER (VPNBNK=13)        
+C !PASSIVE NEW VALIDATION INQUIRY MID-TIER BANK ONLY !V70
+        PARAMETER (VPNIBO=14)        
+C
+C WAGER SYSTEM TYPE DEFINITIONS
+C
+        INTEGER*4  NOSYS, FULSYS, REDSYS, USYS, CHCSYS
+C !NO SYSTEM
+        PARAMETER (NOSYS=0)          
+C !FULL SYSTEM
+        PARAMETER (FULSYS=1)         
+C !REDUCED SYSTEM
+        PARAMETER (REDSYS=2)         
+C !U-SYSTEM
+        PARAMETER (USYS=3)           
+C !C-SYSTEM
+        PARAMETER (CHCSYS=4)         
+C
+C SPECIAL FUNCTION DEFINITIONS
+C
+        INTEGER*4  TSON, TSOFF, TLOAD, TEKEY, TSREP, TGREP, TREPR
+C !SIGNON
+        PARAMETER (TSON=1)           
+C !SIGNOFF
+        PARAMETER (TSOFF=2)          
+C !DOWNLOAD
+        PARAMETER (TLOAD=3)          
+C !GETKEY
+        PARAMETER (TEKEY=4)          
+C !SALES REPORT
+        PARAMETER (TSREP=5)          
+C !GAME REPORT
+        PARAMETER (TGREP=6)          
+C !REPRINT
+        PARAMETER (TREPR=7)          
+C
+        INTEGER*4  THASF, TSLOW, TINFO, TJACK, TSX2X
+C !AGENT ADJUSTMENT
+        PARAMETER (THASF=8)          
+C !SLOCHK TRANSACTION
+        PARAMETER (TSLOW=9)          
+C !MESSAGE REQUEST
+        PARAMETER (TINFO=10)         
+C !JACKPOT REPORT TRANSACTION
+        PARAMETER (TJACK=11)         
+C !X2X SPECIAL TRANSACTION
+        PARAMETER (TSX2X=12)         
+C
+        INTEGER*4  TLBACK, TTERSTS, TFAULT, TWIN4, TBNSREP, TTKTRQ
+C !LOOPBACK TRANSACTION
+        PARAMETER (TLBACK=13)         
+C !TERMINAL STATISTICS
+        PARAMETER (TTERSTS=14)       
+C !FAULT
+        PARAMETER (TFAULT=15)        
+C !LAST 4 WINNING #S REPORT
+        PARAMETER (TWIN4=16)         
+C !BONUS DRAW WINNING #S REPORT
+        PARAMETER (TBNSREP=17)       
+C !TICKET MESSAGE REQUEST
+        PARAMETER (TTKTRQ=18)        
+C
+        INTEGER*4  TCTRL, TTEXT, TORDR, TSERV, TODSR
+C !GAME CONTROL MESSAGES
+        PARAMETER (TCTRL=19)         
+C !GAME TEXT MESSAGES
+        PARAMETER (TTEXT=20)         
+C !SUPPLY ORDER TRANSACTION
+        PARAMETER (TORDR=21)         
+C !SERVICE TERMINAL TRANSACTION
+        PARAMETER (TSERV=22)         
+C !ODDS REQUEST MESSGAE
+        PARAMETER (TODSR=23)         
+C !V67
+        INTEGER*4  TPOLL, TITEMS, TINSS, TPCSH, TFRIN, TFRC, TINSV
+        INTEGER*4  TUNFRC, TMMES, TVLST, TSINV, TOLST, TPASAC, TPASAD 
+C !OPINION POLLING TRANSACTION
+        PARAMETER (TPOLL=24)         
+C !SALE ITEM TRANSACTION
+        PARAMETER (TITEMS=25)        
+C !INSTANT TICKET SALE
+        PARAMETER (TINSS=26)         
+C !PETTY CASH TRASACTION
+        PARAMETER (TPCSH=27)         
+C !FRACTION INQUIRY
+        PARAMETER (TFRIN=28)         
+C !FRACTION WAGER
+        PARAMETER (TFRC=29)          
+C !INSTANT TICKET VALIDATION
+        PARAMETER (TINSV=30)         
+C !UNFRACTION TRANSACTION
+        PARAMETER (TUNFRC=31)        
+C !ODDS report
+        PARAMETER (TOLST=32)         
+C !PASSIVE ACCOUNTING
+        PARAMETER (TPASAC=33)        
+C !PASSIVE ACCOUNTING NEW
+        PARAMETER (TPASAD=34)        
+C
+C !MARKETING MESSAGE
+        PARAMETER (TMMES=35)         
+C !VAKIO MATCH LIST
+        PARAMETER (TVLST=36)         
+C !INVOICE REPORT
+        PARAMETER (TSINV=37)         
+C
+        INTEGER*4  TTKEY, TGAMBL
+C !TOTAL KEY TRANSACTION        
+        PARAMETER (TTKEY=38)         
+C !GAME BLOCK TRANSACTION        
+        PARAMETER (TGAMBL=39)        
+C
+        INTEGER*4 TCHKWRT, TISSACK, TISUBAD
+        INTEGER*4 TFPT, TSFUN_PATH
+C !INTRASYSTEM STRATUS ACK           CDH0001
+        PARAMETER (TISSACK=40)       
+C !INTRASYS BAD UNSLCTD MSG          CDH0001
+        PARAMETER (TISUBAD=41)       
+C !FINANCIAL PASS-THROUGH            FPT0001
+        PARAMETER (TFPT=42)          
+C !PATH THRU
+        PARAMETER (TSFUN_PATH = 43)  
+C !CHECKWRITER
+        PARAMETER (TCHKWRT=44)       
+C
+        INTEGER*4 TDLV, TPASS
+C !INSTANT/SUPPL.ORDER&DELIV.,REPRES.SIGNON
+        PARAMETER (TDLV=45)          
+C !INSTANT/GVT PASS NUMBER MANAGEMENT
+        PARAMETER (TPASS=46)         
+C
+        INTEGER*4 TCDURQ
+C !CDU TEXT REQUEST
+        PARAMETER (TCDURQ=47)        
+C
+        INTEGER*4 TAGTINF, TAGTNAM
+C !ONLINE AGENT UPDATE
+        PARAMETER (TAGTINF=48)       
+C !TO GET AGENT NAME           
+        PARAMETER (TAGTNAM=49)       
+!        
+C !MXSRV        
+        INTEGER*4 TMXL               
+C !MXSRV
+        PARAMETER (TMXL=50)          
+C-----------------------------------------------------------------------
+C V70| Adding new code for new accounting platform
+C-----------------------------------------------------------------------
+C !N(ew) A(ccounting) P(latform)
+        INTEGER*4 TNAP               
+C !N(ew) A(ccounting) P(latform)
+        PARAMETER (TNAP=51)          
+C-----------------------------------------------------------------------
+C V70| Adding new code for new accounting platform
+C-----------------------------------------------------------------------
+
+C TERMINAL REPORT SUPRESSION VALUES (BIT POSITIONS)
+C
+C NOTE: SETTING THE CORESPONDING BIT NUMBER OF A GIVEN GAME NUMBER
+C       IN P(SUPRPT) WILL SUPRESS ALL TERMINAL REPORTS THAT
+C       INVOLVE THAT PARTICULAR GAME NUMBER
+C
+        INTEGER*4  GAMREP
+C !SUPRESS ALL GAME RESULTS REPORTS
+        PARAMETER (GAMREP=MAXGAM+1)  
+C
+        INTEGER*4  SALREP, INVREP, DSLREP
+C !SUPRESS ALL SALES REPORTS
+        PARAMETER (SALREP=MAXGAM+2)  
+C !SUPRESS INVOICE REPORT
+        PARAMETER (INVREP=MAXGAM+3)  
+C !SUPRESS DAILY SALES REPORTS
+        PARAMETER (DSLREP=MAXGAM+4)  
+C
+        INTEGER*4  INFREP, NEWREP, ODSNEW
+C !SUPRESS ALL INFORMATION REPORTS
+        PARAMETER (INFREP=MAXGAM+5)  
+C !SUPRESS NEWS MESSAGE REPORTS
+        PARAMETER (NEWREP=MAXGAM+6)  
+C !SEND ALL ODDS OR ONLY CHANGED ONES.
+        PARAMETER (ODSNEW=MAXGAM+7)  
+C
+C INSTANT TYPES - TRABUF(TITYP)
+C
+        INTEGER*4 IVAL, IISS, ILOT, IQTA, IINV, IFIN
+        INTEGER*4 IMNU, IORD, ISET, ISON, ISOF, ICNF, IOACT, IEST, IIMSG
+        INTEGER*4 IGTB, IFSESON, ICAR
+C !INSTANT ESTABLISHMENT
+        PARAMETER (IEST=0 )             
+C !INSTANT ISSUE
+        PARAMETER (IISS=1 )             
+C !INSTANT LOT
+        PARAMETER (ILOT=2 )             
+C !INSTANT QUOTA REPORT
+        PARAMETER (IQTA=3 )             
+C !INSTANT INVENTORY REPORT
+        PARAMETER (IINV=4 )             
+C !INSTANT FINACIAL REPORT
+        PARAMETER (IFIN=5 )             
+C !INSTANT SUPPLY ORDER
+        PARAMETER (IMNU=6 )             
+C !INSTANT GAMES NAMES REQUEST
+        PARAMETER (IORD=7 )             
+C       PARAMETER (ISET=8 )             !INSTANT SETTLED BOOKS REPORT
+C !TO AVOID COMPILE WARNINGS
+        PARAMETER (ISET=0 )             
+C !INSTANT CARTON STATUS CHANGE
+        PARAMETER (ICAR=8 )             
+C !INSTANT SIGN ON
+        PARAMETER (ISON=9 )             
+C !INSTANT SIGN OFF
+        PARAMETER (ISOF=10)             
+C !FSE SIGN-ON
+        PARAMETER (IFSESON=11)          
+C !INSTANT ORDER CONFIRMATION
+        PARAMETER (ICNF=12)             
+C !INSTANT VALIDATION
+        PARAMETER (IVAL=13)             
+C !INSTANT ORDER-PACK ACTIVATION
+        PARAMETER (IOACT=14)            
+C !GAME TABLE REQUEST
+        PARAMETER (IGTB=15)             
+C !!unused !INSTALL REQUEST/CONFIRM MESSAGES
+        PARAMETER (IIMSG=9909) 
+C
+C INSTANT LOT FUNCTIONS CLASS CODES
+C
+        INTEGER*4 IACT, IDCT, ISLD, IFLL, IPRT
+C !INSTANT ACTIVATION
+        PARAMETER (IACT=1 )             
+C !INSTANT DEACTIVATION
+        PARAMETER (IDCT=2 )             
+C !INSTANT SOLD
+        PARAMETER (ISLD=3 )             
+C !INSTANT FULL RETURN
+        PARAMETER (IFLL=4 )             
+C !INSTANT PARTIAL RETURN
+        PARAMETER (IPRT=5 )             
+C
+C INSTANT VALIDATION MESSAGE TYPE DEFINITIONS
+C
+        INTEGER*4  IVTP_NRM, IVTP_NCP
+C !"NORMAL" MESSAGE TYPE
+        PARAMETER (IVTP_NRM=0)       
+C !LOW-TIER NON-CASH PRIZE MESSAGE TYPE
+        PARAMETER (IVTP_NCP=1)       
+C
+C INSTANT VALIDATION MODE TYPES !V71
+        INTEGER*4 IRVMT, IBVMT
+C !INSTANT VALIDATION MODE (OLD)
+        PARAMETER (IRVMT = 0)   
+C !INSTANT BANK VALIDATION MODE (NEW)
+        PARAMETER (IBVMT = 1)   
+C
+C INSTANT NEW BANK VALIDATION MODE DEFINITIONS !V71
+C
+        INTEGER*4 IVBM_REG, IVBM_INQ, IVBM_CSH, IVBM_BNK, IVBM_INQB, IVBM_NOPRZ
+C !NEW BANK VALIDATION REQUEST/NEW BANK VALIDATION LOW TIER INQUIRY RESPONSE (CASH PAYMENT ONLY)
+        PARAMETER (IVBM_REG  = 0)    
+C !NEW BANK VALIDATION LOW/MID TIER INQUIRY (CASH PAYMENT OR BANK TRANSFER)
+        PARAMETER (IVBM_INQ  = 1)    
+C !NEW BANK VALIDATION LOW/MID TIER CASH PAYMENT REQUEST / CASH PAYMENT ACCEPTED
+        PARAMETER (IVBM_CSH  = 2)    
+C !NEW BANK VALIDATION HIGH TIER BANK TRANSFER REQUEST / BANK TRANSFER ACCEPTED
+        PARAMETER (IVBM_BNK  = 3)    
+C !NEW BANK VALIDATION MID TIER INQUIRY RESPONSE (BANK TRANSFER ONLY)
+        PARAMETER (IVBM_INQB = 4)    
+C !NEW BANK VALIDATION NON-CASH PRIZE
+        PARAMETER (IVBM_NOPRZ= 9)    
+C
+C INSTANT REPORT TYPES
+C
+        INTEGER*4  IINVR, IPSET, IADJR, IINVF, IINVH, IADJT, IVCLRK
+C !INSTANT INVOICE REPORT
+        PARAMETER (IINVR=9)             
+C !INSTANT PACK SETTLED REPORT
+        PARAMETER (IPSET=10)            
+C !INSTANT ADJUSTMENT REPORT
+        PARAMETER (IADJR=11)            
+C !INSTANT INVOICE REPORT FOOTER
+        PARAMETER (IINVF=12)            
+C !INSTANT INVOICE REPORT HEADER
+        PARAMETER (IINVH=13)            
+C !INSTANT ADJUSTMENT REPORT TEXT
+        PARAMETER (IADJT=14)            
+C !INSTANT VALIDATIONS REPORT PER CLERK
+        PARAMETER (IVCLRK=15)           
+C
+C INSTANT ERROR CODES - TRABUF(TIERR)
+C
+        INTEGER*4 ININT, INNFD, INQRY, INOER, INCNS, INTIM, INLTH
+C !INVALID TICKET #            ! ** V22
+        PARAMETER (ININT=04)            
+C !GAME PACK TICKET NOT FOUND  ! ** V22
+        PARAMETER (INNFD=06)            
+C !QUERY AGENT IF HE WANTS TO CASH/BANK
+        PARAMETER (INQRY=72)            
+C !NO ERROR
+        PARAMETER (INOER=99)            
+C !COULD NOT SEND
+        PARAMETER (INCNS=100)           
+C !TIMED OUT
+        PARAMETER (INTIM=101)           
+C !BAD LENGTH
+        PARAMETER (INLTH=102)           
+C
+C CHECKWRITER OFFSET
+C
+        INTEGER*4 CHKWRTOFF
+        PARAMETER(CHKWRTOFF=5000000)
+C
+C FPTOFF OFFSET
+C
+        INTEGER*4 FPTOFF
+        PARAMETER(FPTOFF=60000000)
+C
+C PASSIVE DRAW OFFSET (TO BE USED FOR EVERY READ OR WRITE TO THE P*F FILES)
+C                     (RE: WHEN PASSIVE IS ACTIVATED AFTER DRAW 1 OFFSETS
+C                      FROM THE P*F.FIL)
+C
+        INTEGER*4  PAS_DRW_OFFSET
+        PARAMETER (PAS_DRW_OFFSET=0)
+C
+C INTRASYSTEM OFFSET FOR CRSPRO XREF NUMBERS
+C
+        INTEGER*4 ISSOFF
+        PARAMETER(ISSOFF=70000000)
+C
+C
+C ERRLOG MESSAGE OFFSETS FOR PROCOM BUFFER
+C
+        INTEGER*4  EDLEN, ETASK, ETYPE, EMESS, EDATA
+C !MESSAGE DATA LENGTH
+        PARAMETER (EDLEN=20)        
+C !TASK ID NUMBER
+        PARAMETER (ETASK=49)        
+C !MESSAGE TYPE
+        PARAMETER (ETYPE=50)        
+C !MESSAGE NUMBER
+        PARAMETER (EMESS=51)        
+C !START MESSAGE DATA
+        PARAMETER (EDATA=52)        
+C
+C COMMAND OFFSETS FOR PROCOM BUFFER
+C
+        INTEGER*4  CDLEN, CNUM, CVAL, CTYP, CLIN, CTER, CSRC, CAGT
+C !COMMAND BUFFER LENGTH
+        PARAMETER (CDLEN=12)     
+C !COMMAND NUMBER   (QUECMD OFFSET 1)
+        PARAMETER (CNUM=49)      
+C !COMMAND VALUE    (QUECMD OFFSET 2)
+        PARAMETER (CVAL=50)      
+C !COMMAND TYPE     (QUECMD OFFSET 3)
+        PARAMETER (CTYP=51)      
+C !LINE NUMBER      (QUECMD OFFSET 4)
+        PARAMETER (CLIN=52)      
+C !TERMINAL NUMBER  (QUECMD OFFSET 5)
+        PARAMETER (CTER=53)      
+C !COMMAND SOURCE   (QUECMD OFFSET 6)
+        PARAMETER (CSRC=54)      
+C !AGENT NUMBER     (QUECMD OFFSET 7)
+        PARAMETER (CAGT=55)      
+C
+        INTEGER*4  CDT1, CDT2, CDT3, CDT4, CDT5, CBAL
+C !COMMAND DATA 1   (QUECMD OFFSET 8)
+        PARAMETER (CDT1=56)      
+C !COMMAND DATA 2   (QUECMD OFFSET 9)
+        PARAMETER (CDT2=57)      
+C !COMMAND DATA 3   (QUECMD OFFSET 10)
+        PARAMETER (CDT3=58)      
+C !COMMAND DATA 4   (QUECMD OFFSET 11)
+        PARAMETER (CDT4=59)      
+C !COMMAND DATA 5   (QUECMD OFFSET 12)
+        PARAMETER (CDT5=60)      
+C !START OF NETWORK BALANCING TABLE
+        PARAMETER (CBAL=61)      
+C
+C LOAD DEFINITIONS
+C
+        INTEGER*4  MAXMCP, MAXFCL, MAXSFT, MAXGVT
+        INTEGER*4  ACTMCP, ACTFCL, ACTSFT, ACTGVT
+C
+C !MAXIMUM ALLOWABLE MCPS
+        PARAMETER (MAXMCP=10)   
+C !MAXIMUM ALLOWABLE FCLS
+        PARAMETER (MAXFCL=10)   
+C !MAXIMUM ALLOWABLE GVT SOFTLOADERS
+        PARAMETER (MAXSFT=10)   
+C !MAXIMUM ALLOWABLE GVT APPLICATIONS
+        PARAMETER (MAXGVT=10)   
+C
+C !ACTUAL MCPS DEFINED
+        PARAMETER (ACTMCP=2)    
+C !ACTUAL FCLS DEFINED
+        PARAMETER (ACTFCL=3)    
+C !ACTUAL GVT SOFTLOADERS DEFINED
+        PARAMETER (ACTSFT=2)    
+C !ACTUAL GVT APPLICATIONS DEFINED
+        PARAMETER (ACTGVT=2)    
+C
+C       MAXAPP SHOULD ACTUALLY BE THE SUM OF MAXMCP+MAXFCL+MAXSFT+
+C                                            MAXGVT
+C       ALL LOOPS SHOULD UST ACTMCP,ACTFCL,ACTSFT,ACTGVT
+C
+C
+C  TERMINAL DLL TABLE DEFINITIONS
+C
+C !Maximum loads
+        INTEGER*4  MAXLOADS         
+          PARAMETER (MAXLOADS=64)   
+C !Maximum entries
+          INTEGER*4 MAXDLLTAB         
+          PARAMETER(MAXDLLTAB=12)
+C !Number of different terminals(applications)
+          INTEGER*4 MAXAPP            
+C !that are supported in this system
+        PARAMETER(MAXAPP=8)       
+C
+        INTEGER*4 NBRSEG, SNDFLG, LODADR, LODREV, CRC16
+        INTEGER*4 C_NBRSEG, C_CRC16
+        INTEGER*4 APPTYPE, DLL_ROMREV, DLL_ROMREV1
+        INTEGER*4 TERMINAL_ID_NO, FOREGROUND_FLAG
+C !FOREGROUND
+        INTEGER*4 FOREGROUND_LOAD          
+C !BACKGROUND
+        INTEGER*4 BACKGROUND_LOAD          
+C !TOTAL SEGMENTS THIS LOAD
+        PARAMETER (NBRSEG=1)   
+C !SEND THIS LOAD FLAG  (1=SEND)
+          PARAMETER (SNDFLG=2)   
+C !MESSAGE COMMON START ADDRESS
+          PARAMETER (LODADR=3)   
+C !FILE REVISION NUMBER
+          PARAMETER (LODREV=4)   
+C !PROGRAM CHECKSUM
+          PARAMETER (CRC16=5)    
+C !TOTAL SEGMENTS THIS LOAD (COMPRESSED)
+          PARAMETER (C_NBRSEG=6) 
+C !PROGRAM CHECKSUM (COMPRESSED PART)
+          PARAMETER (C_CRC16=7)  
+          PARAMETER (TERMINAL_ID_NO=8)
+          PARAMETER (APPTYPE=9)
+          PARAMETER (DLL_ROMREV=10)
+          PARAMETER (DLL_ROMREV1=11)
+          PARAMETER (FOREGROUND_FLAG=12)
+            PARAMETER (FOREGROUND_LOAD=1)
+            PARAMETER (BACKGROUND_LOAD=2)
+C
+C LOAD TYPE DEFINITION
+C
+        INTEGER*4       MCP_TYPE, ACL_TYPE, FCL_TYPE
+        INTEGER*4       APP_TYPE, SFT_TYPE, GVT_TYPE
+C !MCP LOAD
+        PARAMETER       (MCP_TYPE=1)            
+C !ACL LOAD
+          PARAMETER       (ACL_TYPE=2)            
+C !FCL LOAD
+          PARAMETER       (FCL_TYPE=3)            
+C !APPLICATION LOAD
+          PARAMETER       (APP_TYPE=4)            
+C !GVT SOFT LOADER
+          PARAMETER       (SFT_TYPE=5)            
+C !GVT APPLICATION
+          PARAMETER       (GVT_TYPE=6)            
+C
+C LOAD NO USED BY FCL, APL, MCP
+C
+        INTEGER*4 MCP_LOAD_NO, ACL_LOAD_NO, FCL_LOAD_NO
+C !LOAD NO USED BY MCP
+        PARAMETER (MCP_LOAD_NO=1)       
+C !LOAD NO USED BY ACL
+          PARAMETER (ACL_LOAD_NO=2)       
+C !LOAD NO USED BY FCL
+          PARAMETER (FCL_LOAD_NO=3)       
+C
+C APPLICATION NO USED BY GVT
+C
+        INTEGER*4 GVT_APP_NO, SFT_APP_NO
+C !LOAD NO FOR GVT APPLICTION
+        PARAMETER (GVT_APP_NO=MAXAPP-ACTGVT+1)  
+C !LOAD NO FOR GVT SOFT LOADER
+          PARAMETER (SFT_APP_NO=GVT_APP_NO-ACTSFT)
+C
+C
+        INTEGER*4 NOTKC, MAXBDR, LINSPP
+C !TICKET CHARGES ENABLED 
+        PARAMETER (NOTKC=0)            
+C !MAXIMUM BONUS DRAWS
+        PARAMETER (MAXBDR=5)           
+C !45 LINES PER PAGE FOR REPORTS
+        PARAMETER (LINSPP=45)          
+
+
+C
+C KENO QUICK-PICK TYPES
+C
+        INTEGER*4  KNREG,KNSOK,KNSUP
+C !REGULAR QUICK PICK
+        PARAMETER (KNREG=1)     
+C !SOKO QUICK PICK
+        PARAMETER (KNSOK=2)     
+C !SUPER QUICK PICK
+        PARAMETER (KNSUP=3)     
+C
+C RESERVE FUND TABLE OFFSETS
+C
+        INTEGER*4  RESAMT,ONPAMT,OFPAMT,PENAMT,USEAMT,POSTED
+C !PREVIOUS RESERVE AMOUNT
+        PARAMETER (RESAMT=1)    
+C !ONLINE PURGE AMOUNT
+        PARAMETER (ONPAMT=2)    
+C !OFFLINE PURGE AMOUNT
+        PARAMETER (OFPAMT=3)    
+C !PENNY AMOUNT
+        PARAMETER (PENAMT=4)    
+C !AMOUNT USED
+        PARAMETER (USEAMT=5)    
+C !AMOUNTS POSTED TO WRF
+        PARAMETER (POSTED=10)   
+
+C
+C CONCURENT VS DEC TAPE STATUSES
+C
+        INTEGER*4 CC_ENDOFFILE, CC_ENDOFTAPE, CC_ENDOFVOLUME
+C !END OF FILE ON TAPE
+        PARAMETER (CC_ENDOFFILE=136)    
+C !END OF TAPE (EOT)
+        PARAMETER (CC_ENDOFTAPE=144)    
+C !END OF VOLUME ON TAPE
+        PARAMETER (CC_ENDOFVOLUME=144)  
+C
+C       BALANS PARAMETERS
+C
+        INTEGER*4  NO_BALREPS
+        PARAMETER (NO_BALREPS = 7)
+        INTEGER*4  NO_BALSUMS
+        PARAMETER (NO_BALSUMS = 2*NUMFIN)  
+C
+C PRIZE / REFUND OFFSETS
+C
+        INTEGER*4  PRWON, PRPAD
+        PARAMETER (PRWON = 1)
+        PARAMETER (PRPAD = 2)
+C
+C PROMOTION OFFSETS AND DEFINITIONS
+C
+        INTEGER*4 PRMTYP
+C !PROMOTION TYPE, EACH TYPE HAS MAX 2 PARAMETERS
+        PARAMETER (PRMTYP=1)    
+C
+        INTEGER*4 PRMFRW, PRMIFX
+C !PROMO TYPE         - ADD 1 FREE WEEK PROMOTION
+        PARAMETER (PRMFRW=1)    
+C !1ST PARAMETER      - IF X WEEKS PAID
+        PARAMETER (PRMIFX=2)    
+C
+C TICKETS PLAYED AFTER EVENT HAS STARTED BEFORE CLOSING DATE&TIME
+C
+	INTEGER*4 NUMLAT
+	INTEGER*4 LATCDC, LATTIM, LATCNT, LATAMT
+	PARAMETER(NUMLAT=4)
+C ! CDC 
+        PARAMETER(LATCDC=1) 
+C ! TIME
+            PARAMETER(LATTIM=2) 
+C ! HOW MANY COMBINATIONS REFUNDED
+            PARAMETER(LATCNT=3) 
+C ! TOTAL AMOUNT OF TICKETS REFUNED 
+            PARAMETER(LATAMT=4) 
+C
+C MAXIMUM BANKS USED BY SCML
+C
+	INTEGER*4 MAXBANKS
+	PARAMETER (MAXBANKS = 15)
+
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C
+C IGS TYPES - TRABUF(TIGS_TTYP)
+C
+        INTEGER*4 IGSWAG, IGSVAL, IGSCAN, IGSPAY, IGSREP
+
+C ! IGS WAGER
+        PARAMETER(IGSWAG=0)     
+C ! IGS CANCELLATION
+        PARAMETER(IGSCAN=1)     
+C ! IGS VALIDATION
+        PARAMETER(IGSVAL=2)     
+C ! IGS PAYMENT
+        PARAMETER(IGSPAY=3)     
+C ! IGS REPORT
+        PARAMETER(IGSREP=4)     
+        
+        INTEGER*4 NUMIGSTTYP
+        PARAMETER(NUMIGSTTYP=5)
+
+C
+C IGS VALIDATION/PAYMENT - PAYMENT MODE DEFINITIONS
+C
+        INTEGER*4 IGS_PMUND, IGS_PMCSH, IGS_PMBNK, IGS_PMCOB
+C ! UNDEFINED/NOT SET
+        PARAMETER(IGS_PMUND=-1) 
+C ! CASH PAYMENT ONLY INQUIRY - CASH PAYMENT
+        PARAMETER(IGS_PMCSH=0)  
+C ! BANK TRANSFER ONLY INQUIRY - BANK TRANSFER
+        PARAMETER(IGS_PMBNK=1)  
+C ! CASH PAYMENT OR BANK TRANSFER INQUIRY
+        PARAMETER(IGS_PMCOB=2)  
+        
+C
+C IGS VALIDATION - PLAYER NIF CONFIRMATION NEEDED FLAG
+C
+        INTEGER*4 IGS_VFNUND, IGS_VFNNO, IGS_VFNYES
+C ! FLAG NOT DEFINED/NOT SET
+        PARAMETER(IGS_VFNUND=-1)
+C ! PLAYER NIF CONFIRMATION NOT NEEDED
+        PARAMETER(IGS_VFNNO =0) 
+C ! PLAYER NIF CONFIRMATION NEEDED
+        PARAMETER(IGS_VFNYES=1) 
+        
+C
+C IGS PAYMENT - PLAYER ID TYPE DEFINITION
+C
+        INTEGER*4 IGS_PTYPUND, IGS_PTYPPHN, IGS_PTYPCRD
+C ! PLAYER ID NOT DEFINED/NOT SET
+        PARAMETER(IGS_PTYPUND=-1)
+C ! PLAYER PHONE NUMBER
+        PARAMETER(IGS_PTYPPHN=0) 
+C ! PLAYER CARD NUMBER
+        PARAMETER(IGS_PTYPCRD=1) 
+        
+C
+C IGS SYSTEM CODES
+C
+        INTEGER*4 IGS_UNDSYS, IGS_MILSYS, IGS_IGSSYS, IGS_ABPSYS
+C ! UNDEFINED/NOT SET
+        PARAMETER(IGS_UNDSYS=0) 
+C ! Millennium System Code
+        PARAMETER(IGS_MILSYS=1) 
+C ! IGS System Code
+        PARAMETER(IGS_IGSSYS=2) 
+C ! ABP System Code
+        PARAMETER(IGS_ABPSYS=3) 
+
+C
+C IGS STATUS DEFINITIONS
+C
+        INTEGER*4 IGS_UNDSTS
+C ! UNDEFINED STATUS/NOT SET - *
+        PARAMETER(IGS_UNDSTS=-1) 
+C ! * Used in Cancellation Status, 
+C ! Validation Status and Payment Status
+C----+------------------------------------------------------------------
+C V72| Adding support for IGS
+C----+------------------------------------------------------------------
+C
+C END GLOBAL.DEF
+C
