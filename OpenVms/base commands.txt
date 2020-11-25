@@ -57,7 +57,7 @@ Compilar no ambiente da SantaCasa Podev1 com o alias (dfor)
 	$dfor nomedoficheiro.f
 	
 Linkar no ambiente da SantaCasa Podev1 com o alias (dlnk) 
-	$dfor nomedoficheiro.obj
+	$dlnk nomedoficheiro.obj
 	
 Ver o codigo/ficheiro de um alias
 	$sh log "aliasname"
@@ -221,6 +221,10 @@ Editar um ficheiro e salvar a alteração
 	$EDIT/EDT filename.extension
 	carregar ctrl+Z 
 	modo de comando: *exit
+	$LSE filename.extension
+        -> ctrl+z
+            -> quit (save)
+			-> exit (not save)
 	
 Copiar um ficheiro numa pasta para outra pasta (neste caso na subpasta fortran77 para a subpasta com da corrente directoria)
 	$ copy/log [.fortran77]helloworld.f [.com]
