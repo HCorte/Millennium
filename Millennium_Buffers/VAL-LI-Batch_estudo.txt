@@ -1,0 +1,22 @@
+TIPCK1 --> Pack Number (0000001-9999999) -> 3 bytes -> 16777215 (minimo necessario já em uso)
+TISTS1 --> 
+TIVRN1 --> VIRN Number (9 digits) -> 0011 1111 1111 1111 1111 1111 1111 1111 -> 1.073.741.823 (possivel ir buscar 1 bits (1 reservado para o sinal)) por cada validação em 7 daria (1*7=7 bits)
+TILTX1 --> LATEX NUMBER
+
+log(999 999 999)/log(2)=29,89...bits=30bits/8=3,75bytes (=4bytes)
+2^29=536 870 912 
+2^30=1 073 741 824 (999 999 999) lembrar que ter um bit reservado para signed ou unsigned (Range Integer [-65 536 +65 536])
+2^32=4 294 967 296
+unsigned(sem sinal) [0 ; 4.294.967.296]-> 4.294.967.296-1=4.294.967.295
+signed(com sinal) [-2.147.483.648 ; +2.147.483.647]-> 4.294.967.296-1=4.294.967.295
+[4 ; 5])=(5-4)+1=2
+-2, -1, 0, 1, 2
+
+
+
+
+
+
+
+
+
