@@ -409,6 +409,7 @@ C                       ver mais tarde se trata-se se a mensagem de erro foi env
                   HPRO(MSGNUM,PROBUF)=0
                   HPRO(INPLEN,PROBUF)=MESS_FROM_LEN
                   HPRO(MESSID,PROBUF)=MESSERIAL
+                  HPRO(SEROLM,PROBUF)=SERIAL_OLM
 
 
                   CALL GETTIM(P(ACTTIM))
