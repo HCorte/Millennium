@@ -82,14 +82,14 @@
             P(OLMCONF) = 0 
             CALL OPSTXT('ERROR!!!! CAN NOT ATTACH TO MESSAGEQ!!!!')
 
-            CALL date_and_time(DATEI,TIMEI) 
+C            CALL date_and_time(DATEI,TIMEI) 
 
-            LOGDATEI = DATEI(7:8)//'/'//DATEI(5:6)//'/'//DATEI(1:4)
-     &            //'  '//TIMEI(1:2)//':'//TIMEI(3:4)//':'//TIMEI(5:6)
+C            LOGDATEI = DATEI(7:8)//'/'//DATEI(5:6)//'/'//DATEI(1:4)
+C     &            //'  '//TIMEI(1:2)//':'//TIMEI(3:4)//':'//TIMEI(5:6)
 
-            open(UNIT=1234, FILE=PATHI, ACCESS='append', STATUS='old')
-            write(1234,*) LOGDATEI//' - ERROR!!!! CAN NOT ATTACH TO MESSAGEQ!!!!'
-            close(1234)   
+C            open(UNIT=1234, FILE=PATHI, ACCESS='append', STATUS='old')
+C            write(1234,*) LOGDATEI//' - ERROR!!!! CAN NOT ATTACH TO MESSAGEQ!!!!'
+C            close(1234)   
             GOTO 10           
       ENDIF
 
@@ -124,6 +124,7 @@ C     send in the HEADER Julia Date from Millennium value
 C     DAYJUL   ->    CURRENT JULIAN DATE
 C     BUFNUM() = DAYJUL     
 
+C     MESSERIAL = MESS_FROM_OLM(MESSAGEID_POS) !MESSAGEID -> MESSERIAL
 
       CALL SENDTOOLM(BUFNUM,MESSERIAL,ST) 
       IF ((ST .NE. PAMS__SUCCESS ) .AND. (ST .NE. PAMS__TIMEOUT)) THEN
@@ -134,8 +135,23 @@ C           before removing from the application queue send the queue as error t
             HPRO(TRCODE,BUFNUM)=TYPERR    
             CALL QUETRA(ERR,BUFNUM)         
 
-            TRABUF(TERR) = SYNT
-            TRABUF(TSTAT) = REJT
+C 4.1	Cancellation Terminal -> Central (so its registered but not possible to send response to Olimpo then cancel to normalize the information)
+C     Bytes
+C     Start	End	Size	Field Contents
+C     1	1	1	Control	Sequence
+C     2	2	1	Type = 2	Subtype = n
+C     3	4	2	Checksum
+C     5	5	1	Statistics (see below)
+C     6	7	2	Wager Julian Date
+C     8	10	3	Wager Serial Number
+C     11	11	1	Wager Check Digits
+
+C     CODE = HPRO(TRCODE,BUF)
+C     CODE.EQ.TYPDEL -> INTERNAL CANCELLATION
+
+C     construct a new buffer(message)
+C     HPRO(TRCODE,BUFNUM) = TYPDEL
+C     CALL ABL(BUFNUM,QUETAB(1,DIS),ST)
 
 C TERR -> NOER (No Error) - SYNT (Synthesis Error) - RETY (Retry Error) - DESMOD (???) - SUPR (Supression Error) - BSTS - NOTON - SDRW - SDOR
 C Values:		Description
@@ -181,7 +197,7 @@ C                  GOTO 1000
 C              ENDIF
 
 C           move to try a second time only after fails a second time will remove permentaly (see if that makes more sense)
-            CALL RTL (BUFNUM, QUETAB(1, OLM), STAT)
+C            CALL RTL (BUFNUM, QUETAB(1, OLM), STAT)
        
             GOTO 543
          ENDIF
@@ -200,7 +216,7 @@ C           move to try a second time only after fails a second time will remove
 
       ST = PAMS__NOMOREMSG 
       IF (P(OLMCONF) .NE. 0 ) THEN 
-            CALL GETFROMOLM(ST,MESSERIAL,) 
+            CALL GETFROMOLM(ST,MESSERIAL) 
       ENDIF
 
 
@@ -208,39 +224,9 @@ C meter dentro do getfromolm e obter os valores dos campos control e sequence da
 C adicionar header para enviar messageid (8bytes), agent number (4bytes) = TERMINAL_NO, serial (Olimpo), current Julian date 
 C     DAYJUL   ->    CURRENT JULIAN DATE ;;;;; BUFNUM() = DAYJUL 
 C        
-      IF(ST .LT. 0) THEN
-C 1 =		Invalid
-C TRABUF(TTRN) !TTRN=TRANSACTION SEQUENCE NUMBER
-            ERRMSG(1)= '20'X + '00'X !Control + Sequence
-C           Type = 9	Subtype = 0 ->  1001 0000 -> 90 (hexadecimal)         
-            ERRMSG(2)= '90'X !10010000
-            CALL GETCCITT(ERRMSG,1,5,MYCHKSUM)
-            I4CCITT = MYCHKSUM
-            ERRMSG(3) = I1CCITT(2)
-            ERRMSG(4) = I1CCITT(1)
-            IF(ST .EQ. -10) THEN
-                  ERRMSG(5) = INVL !TRABUF(TERR)     
-            ENDIF
-            IF(ST .EQ. -9) THEN
-                  ERRMSG(5) = TBAD
-            ELSE !received un unespectade error status
-                  ERRMSG(5) = INVL
-            ENDIF
-            CALL SENDTOOLM(ERRMSG,MESSERIAL,ST)
-      ENDIF
-
-C      IF(ST .EQ. -9) THEN
-C            TRABUF(TERR) = TBAD
-C TRABUF(TTRN) !TTRN=TRANSACTION SEQUENCE NUMBER
-C            ERRMSG(1)= '20'X + '00'X !Control + Sequence            
-C            ERRMSG(2)= '90'X !10010000            
-C            CALL GETCCITT(ERRMSG,1,5,MYCHKSUM)
-C            I4CCITT = MYCHKSUM
-C            ERRMSG(3) = I1CCITT(2)
-C            ERRMSG(4) = I1CCITT(1)
-C            ERRMSG(5) = TBAD !TRABUF(TERR)                        
-C            CALL SENDTOOLM(ERRMSG,MESSERIAL,ST)
-C      ENDIF      
+      IF(ST .EQ. -1) THEN
+            GOTO 570  
+      ENDIF  
         
       IF ((ST .NE. PAMS__SUCCESS) .AND. (ST .NE. PAMS__NOMOREMSG)) THEN
             CALL MESSQ_EXIT(%REF(ST)) 
@@ -261,6 +247,9 @@ C      ENDIF
 
       END      
 
+C   TERMINAL_NO -> Agent Number (External)
+C   TERMINALNUM -> Terminal Number (Internal)    
+C   MESSERIAL -> MESSAGEID generated and sent by Olimpo   
       SUBROUTINE GETFROMOLM(ST,MESSERIAL)
       IMPLICIT NONE
             INCLUDE 'INCLIB:SYSPARAM.DEF'
@@ -292,7 +281,8 @@ C      ENDIF
             COMMON /FROM_OLM/ MESS_FROM_OLM, MESS_FROM_LEN
             BYTE MESS_FROM_OLM(1024) 
             INTEGER*4 MESS_FROM_LEN
-            INTEGER*4 MESSERIAL, TERMINAL_NO, TYPE, SUBTYPE, MESSAGEID, TEMP1, TEMP2
+            INTEGER*4 MESSERIAL, TERMINAL_NO, TYPE, SUBTYPE, MESSAGEID, TERMINALNUM
+C            , TEMP1, TEMP2
             INTEGER*4 TERMINAL_NO_POS /1/, MESSAGEID_POS /2/
             LOGICAL  DMPDBG
             DATA    ERRTYP /Z90/            
@@ -350,7 +340,7 @@ C                 VALIDATE THAT TERMINAL_NO IS A VALIDE NUMER (2 bytes max <-> 7
 C                 11 =		Invalid Terminal Number -> TBAD=11 
 
                   TERMINAL_NO = MESS_FROM_OLM(TERMINAL_NO_POS)
-                  MESSAGEID = MESS_FROM_OLM(MESSAGEID_POS)
+                  MESSERIAL = MESS_FROM_OLM(MESSAGEID_POS) !MESSAGEID -> MESSERIAL
 
                   IF(TERMINAL_NO .LT.1 .OR. TERMINAL_NO .GT. NUMAGT) THEN 
 C                       TRABUF(TERR) = TBAD
@@ -365,27 +355,40 @@ C                       Control + Sequence (request) send the same as response i
                         ERRMSG(1) = MESS_FROM_OLM(1) 
 C Type = 9	Subtype = 0 ->  1001 0000 -> 90 (hexadecimal)         
                         ERRMSG(2) = ERRTYP !'90'X <-> !10010000
-C                       Message checksum seed    (TERMINALNUM is the internal of Millennium not the external that is Agent Number)                     
-C                        I4CCITT =  DAYCDC + TERMINALNUM 
                         IF(ST .EQ. -10) THEN
                               ERRMSG(5) = INVL !TRABUF(TERR)     
                         ENDIF
                         IF(ST .EQ. -9) THEN
                               ERRMSG(5) = TBAD
-                        ELSE !received un unespectade error status
+C !received un unespectade error status                              
+                        ELSE 
                               ERRMSG(5) = INVL
                         ENDIF
-                        TEMP1 = ZEXT(MESS_FROM_OLM(3))
-                        TEMP2 = ZEXT(MESS_FROM_OLM(4))                        
-                        I4CCITT =   ISHFT(TEMP1,8) + TEMP2 !TRABUF(TCHK)                       
-                        ERRMSG(3) = I1CCITT(2)
-                        ERRMSG(4) = I1CCITT(1)
+C                        TEMP1 = ZEXT(MESS_FROM_OLM(3))
+C                        TEMP2 = ZEXT(MESS_FROM_OLM(4))    
+C !TRABUF(TCHK)                                            
+C                        I4CCITT =   ISHFT(TEMP1,8) + TEMP2                        
+C                        ERRMSG(3) = I1CCITT(2)
+C                        ERRMSG(4) = I1CCITT(1)
+C                       Message checksum seed    (TERMINALNUM is the internal of Millennium not the external that is Agent Number)  
+                        
+C                        TERMINALNUM -> TERMINAL_NO
+C                        CALL AGT_TO_TERM(INIT_FLAG, TERMINAL_NO, TERMINALNUM)
+C                        AGTN = AGTTAB(AGTNUM,AGT)
+
+                        CALL FIND_AGENT(TERMINAL_NO,TERMINALNUM,ST)
+C                        IF (ST.NE.0) THEN
+C                              CALL GSTOP (GEXIT_FATAL)
+C                        ENDIF 
+                        BASECHKSUM = IAND(DAYCDC,'FFFF'X)
+                        I4CCITT = IAND(BASECHKSUM+TERMINALNUM,'FFFF'X)  
+C                        I4CCITT =  DAYCDC + TERMINALNUM !Olimpo têm que guardar no lado deles o TERMINALNUM ao fazer o sign-on (ver melhor onde está a ser chamado a validação do checksum no fluxo do registo de uma aposta)
                         CALL GETCCITT(ERRMSG,1,5,MYCHKSUM)
                         I4CCITT = MYCHKSUM
                         ERRMSG(3) = I1CCITT(2)
                         ERRMSG(4) = I1CCITT(1)
                         CALL SENDTOOLM(ERRMSG,MESSERIAL,ST)
-C                       ver mais tarde se trata-se se a mensagem de erro foi enviado com sucesso ou falhou no envio
+C                       ver mais tarde se trata-se se a mensagem de erro foi enviado com sucesso ou falhou no envio (meter a logica de não ter dado sucesso nem timeout na lógica principal numa subroutina e chamar aqui)
                         ST = - 1
                         RETURN 
                   ENDIF                  
@@ -398,6 +401,7 @@ C                       ver mais tarde se trata-se se a mensagem de erro foi env
                   PRO(LINENO,PROBUF)=0              
                   HPRO(MSGNUM,PROBUF)=0
                   HPRO(INPLEN,PROBUF)=MESS_FROM_LEN
+C                 Ficar o MessageID no header do Buffer???                  
 
                   CALL GETTIM(P(ACTTIM))
                   PRO(TIMOFF,PROBUF)=P(ACTTIM) 
@@ -419,7 +423,7 @@ C                       ver mais tarde se trata-se se a mensagem de erro foi env
 C Send to DIS  (for now commented to just write to GTECH$DEBUG.DAT)              
 C                 CALL QUETRA(DIS,PROBUF) 
 C use ABL subroutine instead of QUETRA since QUETRA haves extra validation to see how many tasks are active at one moment of time (most likely to prevent to many running at the same time)
-C                 CALL ABL(PROBUF,QUETAB(1,DIS),ST)
+                  CALL ABL(PROBUF,QUETAB(1,DIS),ST)
 C 	  STATUS = GLIST_STAT_FULL or STATUS = GLIST_STAT_GOOD (retornar erro caso a queue aplicacional do Disptacher estiver cheio algo a considerar)
     
 C                 faz sentido fazer aqui return...
@@ -516,9 +520,9 @@ C      RETURN
                         BPRO(WRKTAB*4-3+I,SBUF) = MESS_TO_OLM(I)
                   ENDDO  
                   
-          TYPE *,'ERROR: WHILE TRY TO PUT INTO MESSAGEQ, STATUS: ',
-     *    STATUS 
-          TYPE *,' '
+                  TYPE *,'ERROR: WHILE TRY TO PUT INTO MESSAGEQ, STATUS: ',
+     *            STATUS 
+                  TYPE *,' '
  
                   DO I=1,MESS_TO_LEN
                         TYPE 9998,I,BPRO(WRKTAB*4-3+I,SBUF) 

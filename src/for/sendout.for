@@ -1,6 +1,7 @@
 C SUBROUTINE SENDOUT
 C
-C V03 06-JAN-2011 FJG MILLENNIUM MXSRV
+C V04 26-NOV-2020 SCML NEW TERMINAL PROJECT - Added support for OLM
+C V03 06-JAN-2011 FJG  MILLENNIUM MXSRV
 C
 C $Log:   GXAFXT:[GOLS]SENDOUT.FOV  $
 C  
@@ -38,7 +39,10 @@ C
  
         IF (X2X_GAME_STATE.EQ.X2X_GAMES_UP) THEN
 C         CALL X2ADDPRO(BUF)                        ! MXSRV
-          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV
+          IF (HPRO(PRCSRC,BUF).EQ.OLM_COM) THEN ! V05 - OLM
+            CALL QUETRA(OLM,BUF)                    ! V05 - OLM (rever se deve usar o ABL ou é QUETRA)
+C V05          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV            
+          ELSEIF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV
             CALL QUETRA(MXS,BUF)                    ! MXSRV
           ELSE                                      ! MXSRV
             CALL X2ADDPRO(BUF)                      ! MXSRV
