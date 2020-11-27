@@ -39,7 +39,7 @@
       TASK    = OLM
       CALL BUILD_MSG(MESS,1, TASK) 
 
-      MESSERIAL = 0
+C      MESSERIAL = 0
       CONOLM = .FALSE.
       FIRSTRUN = .FALSE.
 
@@ -126,7 +126,7 @@ C     BUFNUM() = DAYJUL
 
 C     MESSERIAL = MESS_FROM_OLM(MESSAGEID_POS) !MESSAGEID -> MESSERIAL
 
-      CALL SENDTOOLM(BUFNUM,MESSERIAL,ST) 
+      CALL SENDTOOLM(BUFNUM,ST) 
       IF ((ST .NE. PAMS__SUCCESS ) .AND. (ST .NE. PAMS__TIMEOUT)) THEN
          CALL MESSQ_EXIT(%REF(ST))
          IF (ST .EQ. PAMS__SUCCESS) THEN 
@@ -216,7 +216,7 @@ C            CALL RTL (BUFNUM, QUETAB(1, OLM), STAT)
 
       ST = PAMS__NOMOREMSG 
       IF (P(OLMCONF) .NE. 0 ) THEN 
-            CALL GETFROMOLM(ST,MESSERIAL) 
+            CALL GETFROMOLM(ST) 
       ENDIF
 
 
@@ -250,7 +250,7 @@ C
 C   TERMINAL_NO -> Agent Number (External)
 C   TERMINALNUM -> Terminal Number (Internal)    
 C   MESSERIAL -> MESSAGEID generated and sent by Olimpo   
-      SUBROUTINE GETFROMOLM(ST,MESSERIAL)
+      SUBROUTINE GETFROMOLM(ST)
       IMPLICIT NONE
             INCLUDE 'INCLIB:SYSPARAM.DEF'
             INCLUDE 'INCLIB:SYSEXTRN.DEF'
@@ -281,9 +281,10 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             COMMON /FROM_OLM/ MESS_FROM_OLM, MESS_FROM_LEN
             BYTE MESS_FROM_OLM(1024) 
             INTEGER*4 MESS_FROM_LEN
+C           MESSERIAL is MessageID used as identification of the Message           
             INTEGER*4 MESSERIAL, TERMINAL_NO, TYPE, SUBTYPE, MESSAGEID, TERMINALNUM
 C            , TEMP1, TEMP2
-            INTEGER*4 TERMINAL_NO_POS /1/, MESSAGEID_POS /2/
+            INTEGER*4 TERMINAL_NO_POS /1/, MESSAGEID_POS /2/, SERIAL_OLM_POS /3/
             LOGICAL  DMPDBG
             DATA    ERRTYP /Z90/            
 
@@ -299,7 +300,7 @@ C            , TEMP1, TEMP2
             PATH = 'DKD10:[DMIL.WRK.HMC.EXAMPLES.LOGFILES]logs.dat'            
 
             ST = 0
-
+            TERMINALNUM = 0
 20          CONTINUE
 
 
@@ -312,6 +313,9 @@ C            , TEMP1, TEMP2
 
                   CALL GETBUF(PROBUF)
                   CALL FASTSET(0, PRO(1,PROBUF), PROLEN)
+
+
+                  CALL FIND_AGENT(TERMINAL_NO,TERMINALNUM,ST)
 
 C apos x tentativas secanhar ver se caio alguma mensagem de resposta na queue aplicacional para ser enviado para o MessageQ (ou pouco provavel pois nesse caso também não tinha buffers livres...)                  
 C adicionar uma variabel do vision que indique logo que aconteceu no dia xx as hh horas e mm de minutes uma falta de procom buffers
@@ -341,6 +345,7 @@ C                 11 =		Invalid Terminal Number -> TBAD=11
 
                   TERMINAL_NO = MESS_FROM_OLM(TERMINAL_NO_POS)
                   MESSERIAL = MESS_FROM_OLM(MESSAGEID_POS) !MESSAGEID -> MESSERIAL
+                  SERIAL_OLM = MESS_FROM_OLM(SERIAL_OLM_POS)
 
                   IF(TERMINAL_NO .LT.1 .OR. TERMINAL_NO .GT. NUMAGT) THEN 
 C                       TRABUF(TERR) = TBAD
@@ -377,9 +382,11 @@ C                        CALL AGT_TO_TERM(INIT_FLAG, TERMINAL_NO, TERMINALNUM)
 C                        AGTN = AGTTAB(AGTNUM,AGT)
 
                         CALL FIND_AGENT(TERMINAL_NO,TERMINALNUM,ST)
-C                        IF (ST.NE.0) THEN
+                        IF (ST.NE.0) THEN
+c                               CALL OPSTXT('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:')
+                               CALL OPS('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:',TERMINAL_NO,TERMINAL_NO)
 C                              CALL GSTOP (GEXIT_FATAL)
-C                        ENDIF 
+                        ENDIF 
                         BASECHKSUM = IAND(DAYCDC,'FFFF'X)
                         I4CCITT = IAND(BASECHKSUM+TERMINALNUM,'FFFF'X)  
 C                        I4CCITT =  DAYCDC + TERMINALNUM !Olimpo têm que guardar no lado deles o TERMINALNUM ao fazer o sign-on (ver melhor onde está a ser chamado a validação do checksum no fluxo do registo de uma aposta)
@@ -401,7 +408,8 @@ C                       ver mais tarde se trata-se se a mensagem de erro foi env
                   PRO(LINENO,PROBUF)=0              
                   HPRO(MSGNUM,PROBUF)=0
                   HPRO(INPLEN,PROBUF)=MESS_FROM_LEN
-C                 Ficar o MessageID no header do Buffer???                  
+                  HPRO(MESSID,PROBUF)=MESSERIAL
+
 
                   CALL GETTIM(P(ACTTIM))
                   PRO(TIMOFF,PROBUF)=P(ACTTIM) 
