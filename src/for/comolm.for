@@ -509,11 +509,27 @@ C      RETURN
             INTEGER*4 MESS_TO_LEN
             INTEGER*4 MESSAGE_TYPE, LIST_INDEX  
             INTEGER*4 SBUF, I, ST, STATUS
-            INTEGER*4 MESSERIAL
+C            INTEGER*4 MESSERIAL, SERIAL_OLM, TERMINAL_NO, CDC_DATE, JULIAN_DATE
+            INTEGER*4 MSG_OFFSET /6/, MESSAGEID_POS /1/, TERMINAL_NO_POS /2/, AGENT_NUM_POS /3/, SERIAL_NUM_POS /4/, DAYCDC_POS /5/, DAYJUL_POS /6/
+ 
+C           MESSAGEID <-> MESSERIAL             
+
+C            TERMINAL_NO = PRO(TERNUM,SBUF)
+C            MESSERIAL = HPRO(MESSID,SBUF) 
+C            SERIAL_OLM = HPRO(SEROLM,SBUF)    
+C            CDC_DATE = DAYCDC 
+C            JULIAN_DATE = DAYJUL
+            
+            MESS_TO_OLM(MESSAGEID_POS) = HPRO(MESSID,SBUF)
+            MESS_TO_OLM(TERMINAL_NO_POS) = PRO(TERNUM,SBUF)
+            MESS_TO_OLM(AGENT_NUM_POS) = '' !ver primeiro a duvida se no receber é o agent number ou terminal number....
+            MESS_TO_OLM(SERIAL_NUM_POS) = HPRO(SEROLM,SBUF)
+            MESS_TO_OLM(DAYCDC_POS) = DAYCDC
+            MESS_TO_OLM(DAYJUL_POS) = DAYJUL
       
             MESS_TO_LEN  = HPRO(INPLEN,SBUF) 
             DO I=1, MESS_TO_LEN
-                  MESS_TO_OLM(I) = BPRO(I,SBUF)
+                  MESS_TO_OLM(I+MSG_OFFSET) = BPRO(I,SBUF)
             ENDDO
 
             CALL MESSQ_PUT(%REF(STATUS)) 
