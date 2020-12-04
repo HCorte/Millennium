@@ -293,7 +293,8 @@ C           MESSERIAL is MessageID used as identification of the Message
 C            , TEMP1, TEMP2
             INTEGER*8 MESSAGEID
 
-            INTEGER*4 MESSAGEID_POS /1/,TERMINAL_NUM_POS /9/, AGENT_NUM_POS /11/, SERIAL_OLM_POS /15/
+C for messageid 8 bytes            INTEGER*4 MESSAGEID_POS /1/,TERMINAL_NUM_POS /9/, AGENT_NUM_POS /11/, SERIAL_OLM_POS /15/
+            INTEGER*4 MESSAGEID_POS /1/,TERMINAL_NUM_POS /6/, AGENT_NUM_POS /8/, SERIAL_OLM_POS /12/            
             LOGICAL  DMPDBG
             DATA    ERRTYP /Z90/            
             BYTE       ERRMSG(5)                       
@@ -399,9 +400,9 @@ C                       MESSAGEID
                         I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
                         I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
                         I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
-                        I1AUX(6) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  5))
-                        I1AUX(7) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  6))
-                        I1AUX(8) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  7))
+C                        I1AUX(6) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  5))
+C                        I1AUX(7) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  6))
+C                        I1AUX(8) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  7))
                         MESSAGEID = I8AUX                        
 C saves to program log itself the message
 C TERMINALNUM - type - subtype - message id                          
@@ -609,8 +610,10 @@ C      RETURN
             INTEGER*4 MESSAGE_TYPE, LIST_INDEX  
             INTEGER*4 SBUF, I, ST, STATUS
 C            INTEGER*4 MESSERIAL, SERIAL_OLM, TERMINALNUM, CDC_DATE, JULIAN_DATE - 8 + 2 + 4 + 9 + 4 + 4 = 31
-            INTEGER*4 MSG_OFFSET /33/, MESSAGEID_POS /1/, TERMINAL_NUM_POS /9/, AGENT_NUM_POS /11/, SERIAL_NUM_POS /15/
-            INTEGER*4 DAYCDC_POS /25/, DAYJUL_POS /29/
+C for Messageid 8 bytes    INTEGER*4 MSG_OFFSET /33/, MESSAGEID_POS /1/, TERMINAL_NUM_POS /9/, AGENT_NUM_POS /11/, SERIAL_NUM_POS /15/
+C for Messageid 8 bytes    INTEGER*4 DAYCDC_POS /24/, DAYJUL_POS /28/
+            INTEGER*4 MSG_OFFSET /30/, MESSAGEID_POS /1/, TERMINAL_NUM_POS /6/, AGENT_NUM_POS /8/, SERIAL_NUM_POS /12/       
+            INTEGER*4 DAYCDC_POS /21/, DAYJUL_POS /25/            
 C            BYTE SERIAL_OLM(0:8)
 C           MESSAGEID <-> MESSERIAL             
 
@@ -636,9 +639,9 @@ C            MESS_TO_OLM(MESSAGEID_POS + 7) = I1AUX(8)
             MESS_TO_OLM(MESSAGEID_POS + 2) = BPRO(MESSID_OLM+2, SBUF)
             MESS_TO_OLM(MESSAGEID_POS + 3) = BPRO(MESSID_OLM+3, SBUF)
             MESS_TO_OLM(MESSAGEID_POS + 4) = BPRO(MESSID_OLM+4, SBUF)
-            MESS_TO_OLM(MESSAGEID_POS + 5) = BPRO(MESSID_OLM+5, SBUF)
-            MESS_TO_OLM(MESSAGEID_POS + 6) = BPRO(MESSID_OLM+6, SBUF)
-            MESS_TO_OLM(MESSAGEID_POS + 7) = BPRO(MESSID_OLM+7, SBUF)
+C            MESS_TO_OLM(MESSAGEID_POS + 5) = BPRO(MESSID_OLM+5, SBUF)
+C            MESS_TO_OLM(MESSAGEID_POS + 6) = BPRO(MESSID_OLM+6, SBUF)
+C            MESS_TO_OLM(MESSAGEID_POS + 7) = BPRO(MESSID_OLM+7, SBUF)
 
             I4TEMP = HPRO(TERNUM,SBUF) 
             MESS_TO_OLM(TERMINAL_NUM_POS + 0) = I1TEMP(1)
@@ -650,16 +653,15 @@ C            MESS_TO_OLM(MESSAGEID_POS + 7) = I1AUX(8)
             MESS_TO_OLM(AGENT_NUM_POS+2) = I1TEMP(3)
             MESS_TO_OLM(AGENT_NUM_POS+3) = I1TEMP(4)
 
-
-            MESS_TO_OLM(SERIAL_NUM_POS+0) = BPRO(MESSID_OLM+0, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+1) = BPRO(MESSID_OLM+1, SBUF)            
-            MESS_TO_OLM(SERIAL_NUM_POS+2) = BPRO(MESSID_OLM+2, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+3) = BPRO(MESSID_OLM+3, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+4) = BPRO(MESSID_OLM+4, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+5) = BPRO(MESSID_OLM+5, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+6) = BPRO(MESSID_OLM+6, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+7) = BPRO(MESSID_OLM+7, SBUF)            
-            MESS_TO_OLM(SERIAL_NUM_POS+8) = BPRO(MESSID_OLM+8, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+0) = BPRO(SEROLM_OLM+0, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+1) = BPRO(SEROLM_OLM+1, SBUF)            
+            MESS_TO_OLM(SERIAL_NUM_POS+2) = BPRO(SEROLM_OLM+2, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+3) = BPRO(SEROLM_OLM+3, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+4) = BPRO(SEROLM_OLM+4, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+5) = BPRO(SEROLM_OLM+5, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+6) = BPRO(SEROLM_OLM+6, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+7) = BPRO(SEROLM_OLM+7, SBUF)            
+            MESS_TO_OLM(SERIAL_NUM_POS+8) = BPRO(SEROLM_OLM+8, SBUF)
 
 C            DO I=0, 8
 C                  SERIAL_OLM(I) = BPRO(SEROLM+I,SBUF) !SEROLM=49
