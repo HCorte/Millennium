@@ -246,12 +246,22 @@ C
 C
 C     OFFSETS 46-48 ARE AVAILABLE FOR USE
 C
-		INTEGER*4 MESSID          ! V17 - Message ID from OLM 
-		PARAMETER (MESSID=46)     ! V17 - Message ID from OLM
+
         INTEGER*4 TIMINOFF
 		PARAMETER (TIMINOFF = 24) !USING FREE HALFWORD OFFSETS 47-48
-		INTEGER*4 SEROLM
-		PARAMETER (SEROLM=50)
+
+
+C----+------------------------------------------------------------------
+C V17| Adding support for OLM
+C----+------------------------------------------------------------------
+		INTEGER*4 MESSID_OLM         
+		PARAMETER (MESSID_OLM=105) !105 byte position Or 53 in halfword  
+		INTEGER*4 SEROLM_OLM
+		PARAMETER (SEROLM_OLM=49) !49 byte position Or 25 in halfword
+C----+------------------------------------------------------------------
+C V17| Adding support for OLM
+C----+------------------------------------------------------------------
+
 C
 C
 C PROCOM BUFFER FULLWORD OFFSETS

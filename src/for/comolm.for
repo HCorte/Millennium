@@ -23,15 +23,14 @@
       INTEGER*4  MESSERIAL
       INTEGER*4  BUFNUM
       LOGICAL    CONOLM, FIRSTRUN, WTFORMESS
-      BYTE       ERRMSG(5) 
       INTEGER*4   MYCHKSUM            
  
-      character*8 DATEI
-      character*10 TIMEI
-      character*20 LOGDATEI
-      character*80 PATHI 
+C      character*8 DATEI
+C      character*10 TIMEI
+C      character*20 LOGDATEI
+C      character*80 PATHI 
             
-      PATHI = 'DKD10:[DMIL.WRK.HMC.EXAMPLES.LOGFILES]logs.dat' 
+C      PATHI = 'DKD10:[DMIL.WRK.HMC.EXAMPLES.LOGFILES]logs.dat' 
 
       CALL OPSTXT(' Copyright 2014 SCML. All rights reserved. ') 
       CALL SNIF_AND_WRKSET 
@@ -153,6 +152,8 @@ C     construct a new buffer(message)
 C     HPRO(TRCODE,BUFNUM) = TYPDEL
 C     CALL ABL(BUFNUM,QUETAB(1,DIS),ST)
 
+C GLOBAL.DEF
+
 C TERR -> NOER (No Error) - SYNT (Synthesis Error) - RETY (Retry Error) - DESMOD (???) - SUPR (Supression Error) - BSTS - NOTON - SDRW - SDOR
 C Values:		Description
 C 1 =		Invalid
@@ -180,7 +181,7 @@ C 25 =		Sports, Wrong number of marks with an event cancelled
 C 26 =		Sports, The full draw has been cancelled.
 C 31 =		Combination Closed
 C 32 =		Odds exceeded
-C 36 =         	Invalid Agent Or Password In Sign On
+C 36 =         	Invalid Agent Or Password In Sign On -> (BTOPSN = 36)
 C 37 =		Not available passive number found
 C 38 =		Passive IO error
 C 39 =		Blocked NIF  
@@ -221,7 +222,7 @@ C            CALL RTL (BUFNUM, QUETAB(1, OLM), STAT)
 
 
 C meter dentro do getfromolm e obter os valores dos campos control e sequence da própria mensagem recebida      
-C adicionar header para enviar messageid (8bytes), agent number (4bytes) = TERMINAL_NO, serial (Olimpo), current Julian date 
+C adicionar header para enviar messageid (8bytes), agent number (4bytes) = TERMINALNUM, serial (Olimpo), current Julian date 
 C     DAYJUL   ->    CURRENT JULIAN DATE ;;;;; BUFNUM() = DAYJUL 
 C        
       IF(ST .EQ. -1) THEN
@@ -247,7 +248,7 @@ C
 
       END      
 
-C   TERMINAL_NO -> Agent Number (External)
+C   TERMINALNUM -> Agent Number (External)
 C   TERMINALNUM -> Terminal Number (Internal)    
 C   MESSERIAL -> MESSAGEID generated and sent by Olimpo   
       SUBROUTINE GETFROMOLM(ST)
@@ -268,10 +269,16 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             INCLUDE 'INCLIB:DATBUF.DEF'
 
             INTEGER*4  MESS(EDLEN)
+
             INTEGER*4 I4TEMP
             INTEGER*2 I2TEMP(2)
             BYTE      I1TEMP(4)
             EQUIVALENCE (I4TEMP,I2TEMP,I1TEMP)
+
+            INTEGER*8 I8AUX
+            INTEGER*4 I4AUX(2)
+            INTEGER*1 I1AUX(8)
+            EQUIVALENCE(I8AUX,I4AUX,I1AUX)       
 
             INTEGER*4 ST,STATUS,MTYPE,MSUBTYPE
             INTEGER*4 XRFNUM,AGENTNR   
@@ -282,24 +289,29 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             BYTE MESS_FROM_OLM(1024) 
             INTEGER*4 MESS_FROM_LEN
 C           MESSERIAL is MessageID used as identification of the Message           
-            INTEGER*4 MESSERIAL, TERMINAL_NO, TYPE, SUBTYPE, MESSAGEID, TERMINALNUM
+            INTEGER*4 MESSERIAL, TYPE, SUBTYPE, TERMINALNUM, AGENT_NUM, I, MYCHKSUM, ERRTYP
 C            , TEMP1, TEMP2
-            INTEGER*4 TERMINAL_NO_POS /1/, MESSAGEID_POS /2/, SERIAL_OLM_POS /3/
+            INTEGER*8 MESSAGEID
+
+            INTEGER*4 MESSAGEID_POS /1/,TERMINAL_NUM_POS /9/, AGENT_NUM_POS /11/, SERIAL_OLM_POS /15/
             LOGICAL  DMPDBG
             DATA    ERRTYP /Z90/            
+            BYTE       ERRMSG(5)                       
 
-            character*8 DATE
-            character*10 TIME
-            character*20 LOGDATE
-            character*80 PATH  
+C            character*8 DATE
+C            character*10 TIME
+C            character*20 LOGDATE
+C            character*80 PATH  
                
             
-            INTEGER*4 APPQUE, TERMINAL_NO /0300006/ 
+            INTEGER*4 APPQUE 
             INTEGER*4 PROBUF /0/
             
-            PATH = 'DKD10:[DMIL.WRK.HMC.EXAMPLES.LOGFILES]logs.dat'            
+C            PATH = 'DKD10:[DMIL.WRK.HMC.EXAMPLES.LOGFILES]logs.dat'            
 
             ST = 0
+            TYPE = 0 
+            SUBTYPE = 0
             TERMINALNUM = 0
 20          CONTINUE
 
@@ -314,18 +326,88 @@ C            , TEMP1, TEMP2
                   CALL GETBUF(PROBUF)
                   CALL FASTSET(0, PRO(1,PROBUF), PROLEN)
 
+C                 MESSAGEID
+C                  I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
+C                  I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+C                  I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
+C                  I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
+C                  I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+C                  I1AUX(6) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  5))
+C                  I1AUX(7) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  6))
+C                  I1AUX(8) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  7))
+C                 MESSAGEID = I8AUX
 
-                  CALL FIND_AGENT(TERMINAL_NO,TERMINALNUM,ST)
+                  I1TEMP(1) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0))
+                  I1TEMP(2) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1))
+                  I1TEMP(3) = 0
+                  I1TEMP(4) = 0
+                  TERMINALNUM = I4TEMP
+
+                  I1TEMP(1) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  0))
+                  I1TEMP(2) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  1))
+                  I1TEMP(3) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  2))
+                  I1TEMP(4) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  3))
+                  AGENT_NUM = I4TEMP
+
+C                  I1AUX(1) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0))
+C                  I1AUX(2) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1))
+C                  I1AUX(3) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  2))
+C                  I1AUX(4) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  3))
+C                  I1AUX(5) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  4))
+C                  I1AUX(6) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  5))
+C                  I1AUX(7) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  6))
+C                  I1AUX(8) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7))
+C                  MESSERIAL = I8AUX                  
+
+C                  AGENT_NUM = MESS_FROM_OLM(AGENT_NUM_POS)
+C                 !AGENT NUMBER
+C                  AGENT_NUM = MESS_FROM_OLM(AGENT_NUM_POS) 
+C                  TERMINALNUM = MESS_FROM_OLM(TERMINAL_NUM_POS) 
+C                 !MESSAGEID -> MESSERIAL                  
+C                  MESSERIAL = MESS_FROM_OLM(MESSAGEID_POS) 
+                  
+C                  SERIAL_OLM = MESS_FROM_OLM(SERIAL_OLM_POS)                  
+
+C                 se for diferente de 0000 então está defenido o terminal number no header
+                  IF(TERMINALNUM .EQ. 0) THEN
+                        CALL FIND_AGENT(AGENT_NUM,TERMINALNUM,ST)
+                  ENDIF
+
+C                 AGTN = AGTTAB(AGTNUM,AGT)  obter o agente number no AGTTAB apartir do terminal number e comparar que esse agent number é igual ao recebido no header caso contrario há uma falha nos dados enviados e é retornado uma mensagem de erro                
+                  IF(AGENT_NUM .NE. AGTTAB(AGTNUM,TERMINALNUM) ) THEN
+                        TYPE*, ' '                                            
+                        TYPE*, 'Received in the header umatched Terminal Number:',TERMINALNUM, 'and Agent Number', AGENT_NUM
+                        ST = -8
+                  ENDIF
+                        
+
+                  IF (ST.NE.0) THEN
+c                               CALL OPSTXT('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:')
+                                    CALL OPS('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:',TERMINALNUM,TERMINALNUM)
+C                              CALL GSTOP (GEXIT_FATAL)
+                        ENDIF                   
 
 C apos x tentativas secanhar ver se caio alguma mensagem de resposta na queue aplicacional para ser enviado para o MessageQ (ou pouco provavel pois nesse caso também não tinha buffers livres...)                  
 C adicionar uma variabel do vision que indique logo que aconteceu no dia xx as hh horas e mm de minutes uma falta de procom buffers
                   IF (PROBUF.LE.0) THEN
 C                       remember that while QUEMES subroutine uses GETBUF thats not true for OPS that uses caixa de email                        
-                        CALL OPSTXT('COMOLM - THERE IS NO BUFFER(PROCOM) AVAILABLE IN THE FREE QUEUE')     
+                        CALL OPSTXT('COMOLM - THERE IS NO BUFFER(PROCOM) AVAILABLE IN THE FREE QUEUE')  
+                        
+C                       MESSAGEID
+                        I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
+                        I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+                        I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
+                        I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
+                        I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+                        I1AUX(6) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  5))
+                        I1AUX(7) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  6))
+                        I1AUX(8) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  7))
+                        MESSAGEID = I8AUX                        
 C saves to program log itself the message
-C TERMINAL_NO - type - subtype - message id                          
+C TERMINALNUM - type - subtype - message id                          
                         TYPE*, ' '                                            
-                        TYPE*, 'Unable to allocate PROCOM buffer for Agent Number ', TERMINAL_NO, ' TYPE:' ,TYPE , ' SUBTYPE:' , SUBTYPE, ' MESSAGEID:', MESSAGEID
+                        TYPE*, 'Unable to allocate PROCOM buffer for Agent Number ', TERMINALNUM, 
+     *                   ' TYPE:' ,TYPE , ' SUBTYPE:' , SUBTYPE, ' MESSAGEID:', MESSAGEID
 C        (importante)               SEE BETHER METHOD OF WRITING IN ONE LINE INSTEAD OF WRITING IN FOR CYCLE                        
                         DO I=1, MESS_FROM_LEN  
                               TYPE*, MESS_FROM_OLM(I)                               
@@ -340,14 +422,10 @@ C	                  GOTO 80
 
                   ENDIF
 
-C                 VALIDATE THAT TERMINAL_NO IS A VALIDE NUMER (2 bytes max <-> 7 digitos) AND ALSO THAT MESSAGEID IS ALSO VALIDE     
+C                 VALIDATE THAT TERMINALNUM IS A VALIDE NUMER (2 bytes max <-> 7 digitos) AND ALSO THAT MESSAGEID IS ALSO VALIDE     
 C                 11 =		Invalid Terminal Number -> TBAD=11 
 
-                  TERMINAL_NO = MESS_FROM_OLM(TERMINAL_NO_POS)
-                  MESSERIAL = MESS_FROM_OLM(MESSAGEID_POS) !MESSAGEID -> MESSERIAL
-                  SERIAL_OLM = MESS_FROM_OLM(SERIAL_OLM_POS)
-
-                  IF(TERMINAL_NO .LT.1 .OR. TERMINAL_NO .GT. NUMAGT) THEN 
+                  IF(TERMINALNUM .LT.1 .OR. TERMINALNUM .GT. NUMAGT) THEN 
 C                       TRABUF(TERR) = TBAD
                         ST = -9
 C                        RETURN 
@@ -363,7 +441,7 @@ C Type = 9	Subtype = 0 ->  1001 0000 -> 90 (hexadecimal)
                         IF(ST .EQ. -10) THEN
                               ERRMSG(5) = INVL !TRABUF(TERR)     
                         ENDIF
-                        IF(ST .EQ. -9) THEN
+                        IF(ST .EQ. -9 .OR. ST .EQ. -8) THEN
                               ERRMSG(5) = TBAD
 C !received un unespectade error status                              
                         ELSE 
@@ -377,16 +455,12 @@ C                        ERRMSG(3) = I1CCITT(2)
 C                        ERRMSG(4) = I1CCITT(1)
 C                       Message checksum seed    (TERMINALNUM is the internal of Millennium not the external that is Agent Number)  
                         
-C                        TERMINALNUM -> TERMINAL_NO
-C                        CALL AGT_TO_TERM(INIT_FLAG, TERMINAL_NO, TERMINALNUM)
+C                        TERMINALNUM -> TERMINALNUM
+C                        CALL AGT_TO_TERM(INIT_FLAG, TERMINALNUM, TERMINALNUM)
 C                        AGTN = AGTTAB(AGTNUM,AGT)
 
-                        CALL FIND_AGENT(TERMINAL_NO,TERMINALNUM,ST)
-                        IF (ST.NE.0) THEN
-c                               CALL OPSTXT('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:')
-                               CALL OPS('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:',TERMINAL_NO,TERMINAL_NO)
-C                              CALL GSTOP (GEXIT_FATAL)
-                        ENDIF 
+C                        CALL FIND_AGENT(TERMINALNUM,TERMINALNUM,ST)
+
                         BASECHKSUM = IAND(DAYCDC,'FFFF'X)
                         I4CCITT = IAND(BASECHKSUM+TERMINALNUM,'FFFF'X)  
 C                        I4CCITT =  DAYCDC + TERMINALNUM !Olimpo têm que guardar no lado deles o TERMINALNUM ao fazer o sign-on (ver melhor onde está a ser chamado a validação do checksum no fluxo do registo de uma aposta)
@@ -394,7 +468,7 @@ C                        I4CCITT =  DAYCDC + TERMINALNUM !Olimpo têm que guarda
                         I4CCITT = MYCHKSUM
                         ERRMSG(3) = I1CCITT(2)
                         ERRMSG(4) = I1CCITT(1)
-                        CALL SENDTOOLM(ERRMSG,MESSERIAL,ST)
+                        CALL SENDTOOLM(ERRMSG,ST)
 C                       ver mais tarde se trata-se se a mensagem de erro foi enviado com sucesso ou falhou no envio (meter a logica de não ter dado sucesso nem timeout na lógica principal numa subroutina e chamar aqui)
                         ST = - 1
                         RETURN 
@@ -403,13 +477,33 @@ C                       ver mais tarde se trata-se se a mensagem de erro foi env
                   HPRO(PRCSRC,PROBUF)=OLM_COM                
                   HPRO(PRCDST,PROBUF)=0 
                   HPRO(QUENUM,PROBUF)=QIN           
-                  HPRO(TRCODE,PROBUF)=TYPREG                              
-                  PRO(TERNUM,PROBUF)=TERMINAL_NO 
+                  HPRO(TRCODE,PROBUF)=TYPREG    
+C                 Internimal terminal number of Millennium limited to the (X2X_TERMS=12288) or the same (NUMAGT=12288)                                            
+                  HPRO(TERNUM,PROBUF)=TERMINALNUM !TERMINALNUM 
                   PRO(LINENO,PROBUF)=0              
                   HPRO(MSGNUM,PROBUF)=0
                   HPRO(INPLEN,PROBUF)=MESS_FROM_LEN
-                  HPRO(MESSID,PROBUF)=MESSERIAL
-                  HPRO(SEROLM,PROBUF)=SERIAL_OLM
+C new buffer header fields  
+C                  PRO(MESSID,PROBUF)=MESSERIAL     
+                  BPRO(MESSID_OLM + 0,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
+                  BPRO(MESSID_OLM + 1,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+                  BPRO(MESSID_OLM + 2,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
+                  BPRO(MESSID_OLM + 3,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
+                  BPRO(MESSID_OLM + 4,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+                  BPRO(MESSID_OLM + 5,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  5))
+                  BPRO(MESSID_OLM + 6,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  6))
+                  BPRO(MESSID_OLM + 7,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  7))           
+
+C                  PRO(SEROLM,PROBUF)=SERIAL_OLM
+                  BPRO(SEROLM_OLM + 0,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0))
+                  BPRO(SEROLM_OLM + 1,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1))
+                  BPRO(SEROLM_OLM + 2,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  2))
+                  BPRO(SEROLM_OLM + 3,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  3))
+                  BPRO(SEROLM_OLM + 4,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  4))
+                  BPRO(SEROLM_OLM + 5,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  5))
+                  BPRO(SEROLM_OLM + 6,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  6))
+                  BPRO(SEROLM_OLM + 7,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7))
+                  BPRO(SEROLM_OLM + 8,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8))
 
 
                   CALL GETTIM(P(ACTTIM))
@@ -481,7 +575,7 @@ C      RETURN
         END
 
 
-      SUBROUTINE SENDTOOLM(SBUF,MESSERIAL,ST)
+      SUBROUTINE SENDTOOLM(SBUF,ST)
       IMPLICIT NONE
             INCLUDE 'INCLIB:SYSPARAM.DEF'
             INCLUDE 'INCLIB:SYSEXTRN.DEF'
@@ -503,29 +597,87 @@ C      RETURN
             INTEGER*2 I2TEMP(2) 
             BYTE      I1TEMP(4)
             EQUIVALENCE (I4TEMP,I2TEMP,I1TEMP)     
+
+            INTEGER*8 I8AUX
+            INTEGER*4 I4AUX(2)
+            INTEGER*1 I1AUX(8)
+            EQUIVALENCE(I8AUX,I4AUX,I1AUX)                 
             
             COMMON /TO_OLM/ MESS_TO_OLM, MESS_TO_LEN 
             BYTE MESS_TO_OLM(1024)
             INTEGER*4 MESS_TO_LEN
             INTEGER*4 MESSAGE_TYPE, LIST_INDEX  
             INTEGER*4 SBUF, I, ST, STATUS
-C            INTEGER*4 MESSERIAL, SERIAL_OLM, TERMINAL_NO, CDC_DATE, JULIAN_DATE
-            INTEGER*4 MSG_OFFSET /6/, MESSAGEID_POS /1/, TERMINAL_NO_POS /2/, AGENT_NUM_POS /3/, SERIAL_NUM_POS /4/, DAYCDC_POS /5/, DAYJUL_POS /6/
- 
+C            INTEGER*4 MESSERIAL, SERIAL_OLM, TERMINALNUM, CDC_DATE, JULIAN_DATE - 8 + 2 + 4 + 9 + 4 + 4 = 31
+            INTEGER*4 MSG_OFFSET /33/, MESSAGEID_POS /1/, TERMINAL_NUM_POS /9/, AGENT_NUM_POS /11/, SERIAL_NUM_POS /15/
+            INTEGER*4 DAYCDC_POS /25/, DAYJUL_POS /29/
+C            BYTE SERIAL_OLM(0:8)
 C           MESSAGEID <-> MESSERIAL             
 
-C            TERMINAL_NO = PRO(TERNUM,SBUF)
+C            TERMINALNUM = PRO(TERNUM,SBUF)
 C            MESSERIAL = HPRO(MESSID,SBUF) 
 C            SERIAL_OLM = HPRO(SEROLM,SBUF)    
 C            CDC_DATE = DAYCDC 
 C            JULIAN_DATE = DAYJUL
+
+C            AGTN = AGTTAB(AGTNUM,AGT)
             
-            MESS_TO_OLM(MESSAGEID_POS) = HPRO(MESSID,SBUF)
-            MESS_TO_OLM(TERMINAL_NO_POS) = PRO(TERNUM,SBUF)
-            MESS_TO_OLM(AGENT_NUM_POS) = '' !ver primeiro a duvida se no receber é o agent number ou terminal number....
-            MESS_TO_OLM(SERIAL_NUM_POS) = HPRO(SEROLM,SBUF)
-            MESS_TO_OLM(DAYCDC_POS) = DAYCDC
-            MESS_TO_OLM(DAYJUL_POS) = DAYJUL
+C            I8AUX = PRO(MESSID,SBUF)
+C            MESS_TO_OLM(MESSAGEID_POS + 0) = I1AUX(1)
+C            MESS_TO_OLM(MESSAGEID_POS + 1) = I1AUX(2)
+C            MESS_TO_OLM(MESSAGEID_POS + 2) = I1AUX(3)
+C            MESS_TO_OLM(MESSAGEID_POS + 3) = I1AUX(4)
+C            MESS_TO_OLM(MESSAGEID_POS + 4) = I1AUX(5)
+C            MESS_TO_OLM(MESSAGEID_POS + 5) = I1AUX(6)
+C            MESS_TO_OLM(MESSAGEID_POS + 6) = I1AUX(7)
+C            MESS_TO_OLM(MESSAGEID_POS + 7) = I1AUX(8)
+            MESS_TO_OLM(MESSAGEID_POS + 0) = BPRO(MESSID_OLM+0, SBUF)
+            MESS_TO_OLM(MESSAGEID_POS + 1) = BPRO(MESSID_OLM+1, SBUF)
+            MESS_TO_OLM(MESSAGEID_POS + 2) = BPRO(MESSID_OLM+2, SBUF)
+            MESS_TO_OLM(MESSAGEID_POS + 3) = BPRO(MESSID_OLM+3, SBUF)
+            MESS_TO_OLM(MESSAGEID_POS + 4) = BPRO(MESSID_OLM+4, SBUF)
+            MESS_TO_OLM(MESSAGEID_POS + 5) = BPRO(MESSID_OLM+5, SBUF)
+            MESS_TO_OLM(MESSAGEID_POS + 6) = BPRO(MESSID_OLM+6, SBUF)
+            MESS_TO_OLM(MESSAGEID_POS + 7) = BPRO(MESSID_OLM+7, SBUF)
+
+            I4TEMP = HPRO(TERNUM,SBUF) 
+            MESS_TO_OLM(TERMINAL_NUM_POS + 0) = I1TEMP(1)
+            MESS_TO_OLM(TERMINAL_NUM_POS + 1) = I1TEMP(2) 
+
+            I4TEMP = AGTTAB(AGTNUM,TERNUM) !PRO(AGTNUM,SBUF) 
+            MESS_TO_OLM(AGENT_NUM_POS+0) = I1TEMP(1)
+            MESS_TO_OLM(AGENT_NUM_POS+1) = I1TEMP(2)
+            MESS_TO_OLM(AGENT_NUM_POS+2) = I1TEMP(3)
+            MESS_TO_OLM(AGENT_NUM_POS+3) = I1TEMP(4)
+
+
+            MESS_TO_OLM(SERIAL_NUM_POS+0) = BPRO(MESSID_OLM+0, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+1) = BPRO(MESSID_OLM+1, SBUF)            
+            MESS_TO_OLM(SERIAL_NUM_POS+2) = BPRO(MESSID_OLM+2, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+3) = BPRO(MESSID_OLM+3, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+4) = BPRO(MESSID_OLM+4, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+5) = BPRO(MESSID_OLM+5, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+6) = BPRO(MESSID_OLM+6, SBUF)
+            MESS_TO_OLM(SERIAL_NUM_POS+7) = BPRO(MESSID_OLM+7, SBUF)            
+            MESS_TO_OLM(SERIAL_NUM_POS+8) = BPRO(MESSID_OLM+8, SBUF)
+
+C            DO I=0, 8
+C                  SERIAL_OLM(I) = BPRO(SEROLM+I,SBUF) !SEROLM=49
+C            ENDDO           
+            
+C            MESS_TO_OLM(SERIAL_NUM_POS) = SERIAL_OLM !PRO(SEROLM,SBUF)
+            I4TEMP = DAYCDC
+            MESS_TO_OLM(DAYCDC_POS+0) = I1TEMP(1)
+            MESS_TO_OLM(DAYCDC_POS+1) = I1TEMP(2)
+            MESS_TO_OLM(DAYCDC_POS+2) = I1TEMP(3)
+            MESS_TO_OLM(DAYCDC_POS+3) = I1TEMP(4)            
+C            MESS_TO_OLM(DAYCDC_POS) = DAYCDC
+            I4TEMP = DAYJUL
+            MESS_TO_OLM(DAYJUL_POS+0) = I1TEMP(1)
+            MESS_TO_OLM(DAYJUL_POS+1) = I1TEMP(2)
+            MESS_TO_OLM(DAYJUL_POS+2) = I1TEMP(3)
+            MESS_TO_OLM(DAYJUL_POS+3) = I1TEMP(4)               
+C            MESS_TO_OLM(DAYJUL_POS) = DAYJUL
       
             MESS_TO_LEN  = HPRO(INPLEN,SBUF) 
             DO I=1, MESS_TO_LEN
