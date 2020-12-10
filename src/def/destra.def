@@ -1,5 +1,6 @@
 C DESTRA.DEF
 C
+C V50 05-DEZ-2020 SCML New Terminals Project - Olimpo
 C V49 03-MAR-2016 SCML M16 PROJECT: added new trabuf fields for EM transactions.
 C V48 25-FEB-2014 SCML PLACARD PROJECT - Added new Oddset game messages
 C V47 08-OCT-2013 SCML New Validation Messages
@@ -1464,6 +1465,47 @@ C
 
 C----+------------------------------------------------------------------
 C V48| Added new Oddset game messages (PLACARD)
+C----+------------------------------------------------------------------
+
+C----+------------------------------------------------------------------
+C V50| New Terminals Project - Olimpo 
+C----+------------------------------------------------------------------
+C       BEGIN (TOTOLOTO & TOTOBOLA)
+        INTEGER*4 TWCOLMSERL, TWCOLMSERM, TWCOLMSERH
+        PARAMETER (TWCOLMSERL_TLTO = 90)
+        PARAMETER (TWCOLMSERM_TLTO = 91)
+        PARAMETER (TWCOLMSERH_TLTO = 92)
+        PARAMETER (TVOLMSERL_TLTO = 93)
+        PARAMETER (TVOLMSERM_TLTO = 94)
+        PARAMETER (TVOLMSERH_TLTO = 95)        
+
+        INTEGER*4 TWOLMMIDL, TWOLMMIDH
+        PARAMETER (TWCOLMMIDL_TLTO = 96)
+        PARAMETER (TWCOLMMIDH_TLTO = 97)
+        PARAMETER (TVOLMMIDL_TLTO = 98)
+        PARAMETER (TVOLMMIDH_TLTO = 99)        
+
+        INTEGER*4 TWOLMCOMF
+        PARAMETER (TWCOLMCOMF_TLTO = 100)
+        PARAMETER (TVOLMCOMF_TLTO = 101)
+C       END (TOTOLOTO & TOTOBOLA)
+C       BEGIN (INSTANT LOTTERY)
+        PARAMETER (TGOLMSERL_IL = 127)
+        PARAMETER (TGOLMSERM_IL = 128)
+        PARAMETER (TGOLMSERH_IL = 129)
+        PARAMETER (TGOLMMIDL_IL = 134)
+        PARAMETER (TGOLMMIDH_IL = 135)
+        PARAMETER (TGOLMCOMF_IL = 136)
+
+        PARAMETER (TVOLMSERL_IL = 130)
+        PARAMETER (TVOLMSERM_IL = 131)
+        PARAMETER (TVOLMSERH_IL = 132)
+        PARAMETER (TVOLMCOMF_IL = 133)
+
+
+C       END (INSTANT LOTTERY)
+C----+------------------------------------------------------------------
+C V50| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------
 
 C

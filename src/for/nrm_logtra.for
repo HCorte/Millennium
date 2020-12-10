@@ -3,6 +3,7 @@ C SUBROUTINE LOGTRA
 C
 C LOGTRA.FOR
 C
+C V59 10-DEZ-2020 SCML New Terminals Project - Olimpo
 C V58 04-MAR-2916 SCML M16 PROJECT:
 C                      Added new fields to Euromillions transactions.
 C V57 05-MAR-2014 SCML Added support to PLACARD Project - IGS
@@ -3156,6 +3157,19 @@ C
               TRABUF(TSSGN) = ZEXT( I1TEMP(3) )
               IF(TRABUF(TSIZE).GT.1) 
      *           CALL FASTMOV(LOGBUF(17),TRABUF(TSDT7),15)
+
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
+C              TRABUF(TSDT8)  = LOGBUF(18)
+C              TRABUF(TSDT9)  = LOGBUF(19)
+C              TRABUF(TSDT10) = LOGBUF(20)
+C              TRABUF(TSDT11) = LOGBUF(21)
+C              TRABUF(TSDT12) = LOGBUF(22)
+C              TRABUF(TSDT13) = LOGBUF(23)
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------      
 C
            ENDIF
            GOTO 9000

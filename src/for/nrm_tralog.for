@@ -1,6 +1,7 @@
 C
 C SUBROUTINE TRALOG
 C
+C V60 08-DEZ-2020 SCML New Terminals Project - Olimpo
 C V59 04-MAR-2016 SCML M16 PROJECT: added new fields to EM transactions.
 C V58 05-MAR-2014 SCML Added support to PLACARD Project - IGS
 C V57 24-OCT-2013 SCML Added TIVMT,TIPLIDTYP,TINIBBA2,TINIBCD,TIPLCARD,TINIBBB
@@ -134,6 +135,11 @@ C
         EQUIVALENCE (I4TEMP,I2TEMP,I1TEMP)
 C
         INTEGER*4   I,J,X
+        INTEGER*4 I4TEMP_AUX
+        INTEGER*2 I2TEMP_AUX(2)
+        BYTE      I1TEMP_AUX(4)
+        EQUIVALENCE (I4TEMP_AUX,I2TEMP_AUX,I1TEMP_AUX)
+C        INTEGER*4   AUXTWCOLMSERL
 C
 C
 C
@@ -1337,7 +1343,24 @@ C
                 BRDOFF = 11                 !WE LOSE SPACE FOR BOARD DATA
 C                                           !TO KICKER STORAGE.
              ENDIF
-C              
+C         
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------        
+C            Olimpo Serial Number 9 bytes
+C             I4TEMP = TRABUF(TWCOLMSERL)
+             LOGBUF(22) = TRABUF(TWCOLMSERL_TLTO)
+             LOGBUF(23) = TRABUF(TWCOLMSERM_TLTO)
+             LOGBUF(25) = TRABUF(TWCOLMMIDL_TLTO)
+             I1TEMP(1) = TRABUF(TWCOLMSERH_TLTO)
+             I1TEMP(2) = TRABUF(TWCOLMMIDH_TLTO)
+             I1TEMP(3) = TRABUF(TWCOLMCOMF_TLTO)
+             I1TEMP(4) = 0
+             LOGBUF(24) = I4TEMP
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                
+
              CALL FASTMOV(TRABUF(TWBORD), LOGBUF(LOGOFF), BRDOFF)
 C
              IF(TRABUF(TSIZE).EQ.2) GOTO 9000
@@ -2311,7 +2334,23 @@ C----+------------------------------------------------------------------
                 I1TEMP(2)   =  TRABUF(TVNIBCD) !CHECK DIGITS
                 I1TEMP(3)   =  TRABUF(TVPLIDTYP) !PLAYER ID TYPE: 0 - TELEPHONE NUMBER /  1 - PLAYER CARD !V45
                 I1TEMP(4)   =  0                 !V56
-                LOGBUF(24)  =  I4TEMP  
+                LOGBUF(24)  =  I4TEMP 
+                
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                   
+                LOGBUF(25) = TRABUF(TVOLMSERL_TLTO)
+                LOGBUF(26) = TRABUF(TVOLMSERM_TLTO)
+                LOGBUF(28) = TRABUF(TVOLMMIDL_TLTO)
+                I1TEMP(1)  = TRABUF(TVOLMSERH_TLTO)
+                I1TEMP(2)  = TRABUF(TVOLMMIDH_TLTO)
+                I1TEMP(3)  = TRABUF(TVOLMCOMF_TLTO)
+                I1TEMP(4)  = 0
+                LOGBUF(27) = I4TEMP
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                   
+
                 GOTO 9000
            ENDIF  
 C----+------------------------------------------------------------------
@@ -2502,7 +2541,7 @@ C
           I1TEMP(2)  = TRABUF(TIERR)
           LOGBUF(16) = I4TEMP
 C
-          IF(TRABUF(TITYP).EQ.IVAL) THEN !INSTANT VALIDATION
+          IF(TRABUF(TITYP).EQ.IVAL) THEN !INSTANT VALIDATION  -- Validação/Pagamento Prémio LI
 C
             I4TEMP     = LOGBUF(16)
             I1TEMP(3)  = ISHFT(TRABUF(TIIND),4)+ !1111 0000
@@ -2516,22 +2555,117 @@ C
 !-------- V57<<-------------------------------------------------------------------
             I2TEMP(2) = TRABUF(TIVALT)
             LOGBUF(8) = I4TEMP
-C
-            LOGBUF(9) = TRABUF(TIVENV)
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------            
+C New Terminal Project TIVENV only uses 2 digits = 1 byte (99<256)
+C            LOGBUF(9) = TRABUF(TIVENV)
+            I4TEMP = TRABUF(TVOLMSERL_IL)
+            I1TEMP(4) = I1TEMP(3) !3 byte do serial do Olimpo
+            I1TEMP(3) = I1TEMP(2) !2 byte do serial do Olimpo            
+            I1TEMP(2) = I1TEMP(1) !1 byte do serial do Olimpo
+            I1TEMP(1) = TRABUF(TIVENV)
+            LOGBUF(9) = I4TEMP
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------              
 C
             I4TEMP = TRABUF(TIVAGT)
             I1TEMP(4) = TRABUF(TIVTYP)
             LOGBUF(10) = I4TEMP
 C
             IF(TRABUF(TIVMT) .EQ. IRVMT) THEN !OLD LAYOUT
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                  
+C beginof - the remaining 6 bytes of Olimpo serial (giving the total of the 9 bytes)
+C HAVES MORE THAN 4 TICKETS TO VALIDATE THEN 3 SEGMENTS IN USE
+                IF(TRABUF(TIBCH) .GE. 4) THEN
+                        I4TEMP = TRABUF(TVOLMSERL_IL)    
+                        I1TEMP_AUX(1) = I1TEMP(4)
+                        I4TEMP = TRABUF(TVOLMSERM_IL)
+                        I1TEMP(4) = 0
+                        I1TEMP(3) = I1TEMP(2)
+                        I1TEMP(2) = I1TEMP(1)
+                        I1TEMP(1) = I1TEMP_AUX(1)
+                        LOGBUF(32) = I4TEMP 
+
+                        I4TEMP = TRABUF(TVOLMSERM_IL)       
+                        I1TEMP_AUX(1) = I1TEMP(3)
+                        I1TEMP_AUX(2) = I1TEMP(4)
+                        I1TEMP_AUX(3) = TRABUF(TVOLMSERH_IL)
+                        I1TEMP(1) = I1TEMP_AUX(1)
+                        I1TEMP(2) = I1TEMP_AUX(2)
+                        I1TEMP(3) = I1TEMP_AUX(3)
+                        I1TEMP(4) = 0
+                        LOGBUF(48) = I4TEMP  
+C HAVES MORE THAN 1 TICKETS TO VALIDATE THEN 2 SEGMENTS IN USE              
+                ELSEIF(TRABUF(TIBCH) .GT. 1) THEN
+                        I4TEMP = TRABUF(TVOLMSERL_IL)    
+                        I1TEMP_AUX(1) = I1TEMP(4)
+                        I4TEMP = TRABUF(TVOLMSERM_IL)
+                        I1TEMP(4) = 0
+                        I1TEMP(3) = I1TEMP(2)
+                        I1TEMP(2) = I1TEMP(1)
+                        I1TEMP(1) = I1TEMP_AUX(1)
+                        LOGBUF(32) = I4TEMP 
+
+                        I4TEMP = TRABUF(TVOLMSERM_IL)       
+                        I1TEMP_AUX(1) = I1TEMP(3)
+                        I1TEMP_AUX(2) = I1TEMP(4)
+                        I1TEMP_AUX(3) = TRABUF(TVOLMSERH_IL)
+                        I1TEMP(1) = I1TEMP_AUX(1)
+                        I1TEMP(2) = I1TEMP_AUX(2)
+                        I1TEMP(3) = I1TEMP_AUX(3)
+                        I1TEMP(4) = 0
+                        LOGBUF(31) = I4TEMP   
+C HAVES 1 TICKETS TO VALIDATE THEN 1 SEGMENT IN USE BUT NO SPACE FREE (LOGBUF)... USES TWO SEGMENTS TO HAVE SPACE                               
+                ELSE
+                        I4TEMP = TRABUF(TVOLMSERL_IL)    
+                        I1TEMP_AUX(1) = I1TEMP(4)
+                        I4TEMP = TRABUF(TVOLMSERM_IL)
+                        I1TEMP(4) = I1TEMP(3)
+                        I1TEMP(3) = I1TEMP(2)
+                        I1TEMP(2) = I1TEMP(1)
+                        I1TEMP(1) = I1TEMP_AUX(1)
+                        LOGBUF(17) = I4TEMP 
+
+                        I4TEMP = TRABUF(TVOLMSERM_IL)       
+                        I1TEMP_AUX(1) = I1TEMP(4)
+                        I1TEMP_AUX(2) = TRABUF(TVOLMSERH_IL)
+                        I1TEMP(1) = I1TEMP_AUX(1)
+                        I1TEMP(2) = I1TEMP_AUX(2)
+                        I1TEMP(3) = 0
+                        I1TEMP(4) = 0
+                        LOGBUF(18) = I4TEMP
+                ENDIF
+C endof - the remaining 6 bytes of Olimpo serial (giving the total of the 9 bytes)  
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                     
+C                
               BUFIDX = 11
               DO 2000 X = 0, TRABUF(TIBCH)-1 !NUMBER IN BATCH (TIBCH max is 7) 5*7=35
                 I4TEMP     = IAND(TRABUF(TIPCK1+X),'00FFFFFF'X) !11 17 22
                 I1TEMP(4)  = TRABUF(TISTS1+X)
                 LOGBUF(BUFIDX)  = I4TEMP
                 BUFIDX = BUFIDX + 1 !12 18 23
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------  
+                IF(X .EQ. 0) THEN
+C                 COMMUNICATIONS CHANNEL FLAG (OLM or not from OLM)                
+                  I4TEMP  = IOR( ISHFT( TRABUF(TVOLMCOMF_IL+X), 30),
+     *                         IAND(  TRABUF(TIVRN1+X),'03FFFFFFF'X) ) 
+                  LOGBUF(BUFIDX) = I4TEMP
+                ELSE
 C
-                LOGBUF(BUFIDX) = TRABUF(TIVRN1+X)
+                  LOGBUF(BUFIDX) = TRABUF(TIVRN1+X)
+                ENDIF
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------   
+C V60                LOGBUF(BUFIDX) = TRABUF(TIVRN1+X)               
                 BUFIDX         = BUFIDX + 1 !13 19 24
 C
                 I2TEMP(1)  = TRABUF(TILTX1+X)
@@ -2594,6 +2728,41 @@ C
               LOGBUF(20) =  TRABUF(TINIBBA1) !NIB ACCOUNT NUMBER (PART 1)
 C
               LOGBUF(21) = TRABUF(TINETPRZ)  !NET PRIZE AMOUNT
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                  
+C beginof - the remaining 6 bytes of Olimpo serial (giving the total of the 9 bytes)
+              I4TEMP = TRABUF(TVOLMSERL_IL)    
+              I1TEMP_AUX(1) = I1TEMP(4)
+              I4TEMP = TRABUF(TVOLMSERM_IL)
+              I1TEMP(4) = I1TEMP(3)
+              I1TEMP(3) = I1TEMP(2)
+              I1TEMP(2) = I1TEMP(1)
+              I1TEMP(1) = I1TEMP_AUX(1)
+              LOGBUF(22) = I4TEMP 
+      
+              I4TEMP = TRABUF(TVOLMSERM_IL)       
+              I1TEMP_AUX(1) = I1TEMP(4)
+              I1TEMP_AUX(2) = TRABUF(TVOLMSERH_IL)
+              I1TEMP(1) = I1TEMP_AUX(1)
+              I1TEMP(2) = I1TEMP_AUX(2)
+              I1TEMP(3) = 0
+              I1TEMP(4) = 0
+              LOGBUF(23) = I4TEMP 
+              
+              I4TEMP = TRABUF(TVOLMMIDL_TLTO)
+              LOGBUF(24) = I4TEMP
+              I1TEMP(1) = TRABUF(TVOLMMIDH_TLTO)
+              I1TEMP(2) = 0
+              I1TEMP(3) = 0
+              I1TEMP(4) = 0
+              LOGBUF(25) = I4TEMP              
+                
+C endof - the remaining 6 bytes of Olimpo serial (giving the total of the 9 bytes)  
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------    
+
 C
               IF(TRABUF(TIVTYP) .EQ. IVBM_NOPRZ) THEN
                 CALL FASTMOV(TRABUF(TIVDESCR), LOGBUF(22), 5)
@@ -2606,10 +2775,44 @@ C
             LOGBUF(8)  = TRABUF(TIREP)
 C
             I1TEMP(1)  = TRABUF(TINUM)
+C           Olimpo Serial number first 3 bytes            
+            I4TEMP_AUX = TRABUF(TGOLMSERL_IL)
+            I1TEMP(2)  = I1TEMP_AUX(1)
+            I1TEMP(3)  = I1TEMP_AUX(2)
+            I1TEMP(4)  = I1TEMP_AUX(3)
+C           before new terminal project 
+C            I1TEMP(2)  = 0
+C            I1TEMP(3)  = 0
+C            I1TEMP(4)  = 0
+            LOGBUF(10) = I4TEMP
+
+C beginof - the remaining 6 bytes of Olimpo serial (giving the total of the 9 bytes)
+            I4TEMP = TRABUF(TGOLMSERL_IL)    
+            I1TEMP_AUX(1) = I1TEMP(4)
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            I1TEMP(4) = 0
+            I1TEMP(3) = I1TEMP(2)
+            I1TEMP(2) = I1TEMP(1)
+            I1TEMP(1) = I1TEMP_AUX(1)
+            LOGBUF(32) = I4TEMP 
+                
+            I4TEMP = TRABUF(TGOLMSERM_IL)       
+            I1TEMP_AUX(1) = I1TEMP(3)
+            I1TEMP_AUX(2) = I1TEMP(4)
+            I1TEMP_AUX(3) = TRABUF(TGOLMSERH_IL)
+            I1TEMP(1) = I1TEMP_AUX(1)
+            I1TEMP(2) = I1TEMP_AUX(2)
+            I1TEMP(3) = I1TEMP_AUX(3)
+            I1TEMP(4) = 0
+            LOGBUF(48) = I4TEMP    
+C endof - the remaining 6 bytes of Olimpo serial (giving the total of the 9 bytes)
+C           Communication Flag 1 byte
+            I1TEMP(1) = TRABUF(TGOLMCOMF_IL)
             I1TEMP(2)  = 0
             I1TEMP(3)  = 0
-            I1TEMP(4)  = 0
-            LOGBUF(10) = I4TEMP
+            I1TEMP(4)  = 0            
+            LOGBUF(9) = I4TEMP    
+
 C
             BUFIDX=11
             DO X = 0, TRABUF(TINUM)- 1
@@ -2630,6 +2833,36 @@ C
                 BUFIDX=BUFIDX+1
 C
             END DO
+
+
+C            I4TEMP = TRABUF(TVOLMSERL_IL)
+C            I1TEMP(4) = I1TEMP(3) !3 byte do serial do Olimpo
+C            I1TEMP(3) = I1TEMP(2) !2 byte do serial do Olimpo            
+C            I1TEMP(2) = I1TEMP(1) !1 byte do serial do Olimpo
+C            I1TEMP(1) = TRABUF(TIVENV)
+C            LOGBUF(9) = I4TEMP
+C beginof - the remaining 6 bytes of Olimpo serial (giving the total of the 9 bytes)
+C            I4TEMP = TRABUF(TVOLMSERL_IL)    
+C            I1TEMP_AUX(1) = I1TEMP(4)
+C            I4TEMP = TRABUF(TVOLMSERM_IL)
+C            I1TEMP(4) = 0
+C            I1TEMP(3) = I1TEMP(2)
+C            I1TEMP(2) = I1TEMP(1)
+C            I1TEMP(1) = I1TEMP_AUX(1)
+C            LOGBUF(32) = I4TEMP 
+C                
+C            I4TEMP = TRABUF(TVOLMSERM_IL)       
+C            I1TEMP_AUX(1) = I1TEMP(3)
+C            I1TEMP_AUX(2) = I1TEMP(4)
+C            I1TEMP_AUX(3) = TRABUF(TVOLMSERH_IL)
+C            I1TEMP(1) = I1TEMP_AUX(1)
+C            I1TEMP(2) = I1TEMP_AUX(2)
+C            I1TEMP(3) = I1TEMP_AUX(3)
+C            I1TEMP(4) = 0
+C            LOGBUF(48) = I4TEMP    
+C endof - the remaining 6 bytes of Olimpo serial (giving the total of the 9 bytes)
+
+
 C
           ELSE IF(TRABUF(TITYP).EQ.ILOT) THEN
 C
@@ -2651,7 +2884,22 @@ C
             LOGBUF(12)  = TRABUF(TLAMT)
 C
             LOGBUF(13)  = TRABUF(TLCOM)
+            
 C
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(14) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(15) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(17) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(18) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(19) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(20) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag
           ELSE IF(TRABUF(TITYP).EQ.ICAR) THEN
 C
             LOGBUF(8)  = TRABUF(TCREP)
@@ -2668,16 +2916,52 @@ C
             LOGBUF(12) = TRABUF(TCEND)
 C
             LOGBUF(13) = TRABUF(TCCNT)
+
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(14) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(15) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(17) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(18) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(19) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(20) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag            
 C
           ELSE IF(TRABUF(TITYP).EQ.IQTA.OR.
      *            TRABUF(TITYP).EQ.IINV.OR.
      *            TRABUF(TITYP).EQ.ISET) THEN
 C
-	    I2TEMP(1)  = IOR( ISHFT(TRABUF(TRGAM),4), TRABUF(TRCLS) ) 1111 1111 1111 0000 + 1111
+	    I2TEMP(1)  = IOR( ISHFT(TRABUF(TRGAM),4), TRABUF(TRCLS) ) !1111 1111 1111 0000 + 1111
             I2TEMP(2)  = TRABUF(TRNXT1)
             LOGBUF(8)  = I4TEMP
 C
             LOGBUF(9)  = TRABUF(TRNXT2)
+
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------               
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(10) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(11) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(12) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(13) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(14) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(15) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag   
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                
 C
           ELSE IF(TRABUF(TITYP).EQ.IFIN) THEN
 C
@@ -2696,6 +2980,20 @@ C
             LOGBUF(12) = TRABUF(TRCON2)
 C
             LOGBUF(13) = TRABUF(TRCON3)
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(14) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(15) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(17) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(18) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(19) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(20) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag            
 C
           ELSE IF(TRABUF(TITYP).EQ.IORD) THEN
 C
@@ -2707,6 +3005,20 @@ C
             LOGBUF(9)  = TRABUF(TGPAGT)
 C
             LOGBUF(10) = TRABUF(TGPRCL)
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(11) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(12) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(13) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(14) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(15) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(17) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag            
 C
           ELSE IF(TRABUF(TITYP).EQ.IMNU) THEN
 C
@@ -2750,6 +3062,20 @@ C
             LOGBUF(8)  = I4TEMP
 C
             LOGBUF(9)  = TRABUF(TIINV3)
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(10) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(11) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(12) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(13) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(14) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(15) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag             
 C
           ELSE IF(TRABUF(TITYP).EQ.IOACT) THEN
 C
@@ -2758,6 +3084,20 @@ C
             LOGBUF(8)  = I4TEMP
 C
             LOGBUF(9)  = TRABUF(TOINV3)
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(10) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(11) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(12) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(13) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(14) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(15) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag             
 C
           ELSE IF(TRABUF(TITYP).EQ.ISON.OR.
      *            TRABUF(TITYP).EQ.ISOF) THEN
@@ -2776,6 +3116,20 @@ C
             LOGBUF(14) = I4TEMP
 
             LOGBUF(15) = TRABUF(TISTN)
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(17) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(18) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(19) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(20) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(21) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(22) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag             
 
 C
           ELSE IF(TRABUF(TITYP).EQ.IEST) THEN
@@ -2800,6 +3154,20 @@ C begin continuation record 1
 C
             I2TEMP(1) = TRABUF(TIMINCB)
             LOGBUF(17)= I4TEMP
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(18) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(19) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(20) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(21) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(22) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(23) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag            
 C
           ELSE IF(TRABUF(TITYP).EQ.IGTB) THEN
 C
@@ -2809,6 +3177,20 @@ C
             LOGBUF(11) = TRABUF(TIGMN+2)
             LOGBUF(12) = TRABUF(TIGMN+3)
             LOGBUF(13) = TRABUF(TIGMN+4)
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(14) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(15) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(17) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(18) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(19) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(20) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag            
 C
           ELSE IF(TRABUF(TITYP).EQ.IFSESON) THEN !V09
 C
@@ -2820,7 +3202,21 @@ C
             LOGBUF(9)  = TRABUF(TIFSEREP)
 	    I4TEMP     = 0
 	    I2TEMP(1)  = TRABUF(TIFSECLS)
-	    LOGBUF(10) = I4TEMP
+            LOGBUF(10) = I4TEMP
+C           Begin - Olimpo Serial Number & MessageID & Communication Flag
+            I4TEMP = TRABUF(TGOLMSERL_IL)
+            LOGBUF(11) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERM_IL)
+            LOGBUF(12) = I4TEMP
+            I4TEMP = TRABUF(TGOLMSERH_IL)
+            LOGBUF(13) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMMIDL_IL)
+            LOGBUF(14) = I4TEMP 
+            I4TEMP = TRABUF(TGOLMMIDH_IL)
+            LOGBUF(15) = I4TEMP  
+            I4TEMP = TRABUF(TGOLMCOMF_IL)
+            LOGBUF(17) = I4TEMP                                                           
+C           End - Olimpo Serial Number & MessageID & Communication Flag            
 C
           ENDIF
           GOTO 9000
@@ -2954,7 +3350,19 @@ C
               I1TEMP(3)  = TRABUF(TSSGN)
               LOGBUF(16) = I4TEMP
               IF(TRABUF(TSIZE).GT.1)
-     *          CALL FASTMOV(TRABUF(TSDT7),LOGBUF(17),15)
+     *          CALL FASTMOV(TRABUF(TSDT7),LOGBUF(17),15) !17+15=32 <-> LOGBUF(32)
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+C              LOGBUF(18) = TRABUF(TSDT8)
+C              LOGBUF(19) = TRABUF(TSDT9)
+C              LOGBUF(20) = TRABUF(TSDT10)
+C              LOGBUF(21) = TRABUF(TSDT11)
+C              LOGBUF(22) = TRABUF(TSDT12)
+C              LOGBUF(23) = TRABUF(TSDT13)                                         
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
            ENDIF
            I4TEMP     = LOGBUF(16)
            I2TEMP(1)  = TRABUF(TSFUN)
