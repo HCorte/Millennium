@@ -2,6 +2,7 @@ C SUBROUTINE SON
 C SON.FOR
 C
 C
+C V34 10-DEZ-2020 SCML New Terminals Project - Olimpo
 C V33 10-MAR-2016 SCML M16 PROJECT: added new SM game and updated EM game
 C V32 18-DEC-2015 FRP CR31 PIN for Owner and Clerk
 C V31 14-DEC-2010 HXK LOTTO 2 (remove Lotto1 and Lotto2 from game blocks)
@@ -259,6 +260,23 @@ C SET / CLEAR VARIABLES
 C
 	PASMATCH = .FALSE.
 	IND = 5
+
+
+C----+------------------------------------------------------------------
+C V34| New Terminals Project - Olimpo
+C         1 means that comes from channel Olimpo other wise comes from x2x or mxs  
+C----+------------------------------------------------------------------
+	IF(BPRO(CHOLM_OLM) .EQ. 1) THEN
+		TRABUF(TSDT1)=PRO(SEROLM_OLM,BUF)
+		TRABUF(TSDT2)=PRO(SEROLM_OLM+1,BUF)
+		TRABUF(TSDT3)=BPRO(SEROLM_OLM+8,BUF)
+		TRABUF(TSDT4)=PRO(MESSID_OLM)
+		TRABUF(TSDT5)=PRO(MESSID_OLM+1)
+		TRABUF(TSDT6)=BPRO(CHOLM_OLM)
+	ENDIF        
+C----+------------------------------------------------------------------
+C V34| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------	
 C
 C GET STATISTICS BYTE
 C
@@ -273,7 +291,7 @@ C
 	I1TEMP(2) = MESTAB(IND+2) !IND=8
 	I1TEMP(1) = MESTAB(IND+3) !IND=9
 	ANUM = I4TEMP
-	IND=IND+4
+	IND=IND+4 !IND=10
 C
 C GET PASS NUMBER
 C
@@ -284,13 +302,13 @@ C
 C
 C CHANGED TO LOOK AT TERMINAL PASS#
 C
-	IND = IND + 2
+	IND = IND + 2 !IND=12
 C
 	I4TEMP=0
-	I1TEMP(2) = MESTAB(IND+0) !IND=15
-	I1TEMP(1) = MESTAB(IND+1) !IND=16
+	I1TEMP(2) = MESTAB(IND+0) !IND=12
+	I1TEMP(1) = MESTAB(IND+1) !IND=13
 	PNUM      = I4TEMP
-	IND=IND+2
+	IND=IND+2 !IND=14
 C
 C CHECK PASS NUMBER FROM AGENT
 C
@@ -429,22 +447,22 @@ C
 	MESTAB(IND+0) = I1TEMP(3)
 	MESTAB(IND+1) = I1TEMP(2)
 	MESTAB(IND+2) = I1TEMP(1)
-	IND=IND+3
+	IND=IND+3 !IND=8
 C
 C GET TERMINAL NUMBER
 C
 	I4TEMP = TRABUF(TTER)
-	MESTAB(IND+0) = I1TEMP(2)
-	MESTAB(IND+1) = I1TEMP(1)
-	IND=IND+2
+	MESTAB(IND+0) = I1TEMP(2) !IND=8
+	MESTAB(IND+1) = I1TEMP(1) !IND=9
+	IND=IND+2 !IND=10
 C
 C GET REVISION NUMBER
 C
         TEMP = P(ROMREV)
 	IF(CTEMP(2).EQ.'0'.OR.CTEMP(2).EQ.' '.OR.TEMP.EQ.0) THEN
-	   MESTAB(IND+0) = 0
-	   MESTAB(IND+1) = 0
-	   IND=IND+2
+	   MESTAB(IND+0) = 0 !IND=10
+	   MESTAB(IND+1) = 0 !IND=11
+	   IND=IND+2 !IND=12
 	ELSE
 	   READ  (CTEMP(1),900) BYT1
 	   READ  (CTEMP(2),900) BYT2
@@ -462,23 +480,23 @@ C
 C GET SIGNON COUNT FOR G-GUARD NUMBER ALGORITHM
 C
 	I4TEMP = AGTHTB(ASONCT,TER)
-	MESTAB(IND) = I1TEMP(1)
-	IND=IND+1
+	MESTAB(IND) = I1TEMP(1) !IND=12
+	IND=IND+1 !IND=13
 C
 C GET CDC NUMBER
 C
 	I4TEMP = DAYCDC
-	MESTAB(IND+0) = I1TEMP(2)
-	MESTAB(IND+1) = I1TEMP(1)
-	IND=IND+2
+	MESTAB(IND+0) = I1TEMP(2) !IND=13
+	MESTAB(IND+1) = I1TEMP(1) !IND=14
+	IND=IND+2 !IND=15
 C
 C GET DAY OF WEEK
 C
 	DATE(VCDC)=DAYCDC
 	CALL CDATE(DATE)
 	I4TEMP=DATE(VDOW)
-	MESTAB(IND)=I1TEMP(1)
-	IND=IND+1
+	MESTAB(IND)=I1TEMP(1) !IND=15
+	IND=IND+1 !IND=16
 C
 C GET AGENT NUMBER
 C

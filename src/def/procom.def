@@ -258,6 +258,8 @@ C----+------------------------------------------------------------------
 		PARAMETER (MESSID_OLM=105) !105 byte position Or 53 in halfword  
 		INTEGER*4 SEROLM_OLM
 		PARAMETER (SEROLM_OLM=49) !49 byte position Or 25 in halfword
+		INTEGER*4 CHOLM_OLM
+		PARAMETER (CHOLM_OLM=58) !58 byte position
 C----+------------------------------------------------------------------
 C V17| Adding support for OLM
 C----+------------------------------------------------------------------

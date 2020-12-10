@@ -1,5 +1,6 @@
 C PROGRAM WAGPRO
 C
+C V28 09-DEZ-2020 SCML New Terminals Project - Olimpo
 C V27 17-FEB-2010 FJG Fix error in TKIK retries
 C V26 21-JUN-2002 JHR Checksum & sequence # update for cancellations moved here.
 C V25 26-MAR-2001 JHR SUPPRESSION OF PRIVILEGE TERMINAL WAGERING
@@ -160,6 +161,27 @@ C
         TRABUF(TSIZE) = HPRO(NUMLRC,BUF)
         TRABUF(TAGT)  = AGTTAB(AGTNUM,TER)
 C
+C----+------------------------------------------------------------------
+C V28| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
+C       begin - Olimpo Serial Number & Message Id & Communication Flag
+        TRABUF(TWCOLMSERL_TLTO)=PRO(SEROLM_OLM,BUF)
+        TRABUF(TWCOLMSERM_TLTO)=PRO(SEROLM_OLM+1,BUF)
+        TRABUF(TWCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
+        TRABUF(TWCOLMMIDL_TLTO)=PRO(MESSID_OLM)
+        TRABUF(TWCOLMMIDH_TLTO)=PRO(MESSID_OLM+1)
+        TRABUF(TWCOLMCOMF_TLTO)=BPRO(CHOLM_OLM)
+
+        TRABUF(TVOLMSERL_TLTO)=PRO(SEROLM_OLM,BUF)
+        TRABUF(TVOLMSERM_TLTO)=PRO(SEROLM_OLM+1,BUF)
+        TRABUF(TVOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
+        TRABUF(TVOLMMIDL_TLTO)=PRO(MESSID_OLM)
+        TRABUF(TVOLMMIDH_TLTO)=PRO(MESSID_OLM+1)
+        TRABUF(TVOLMCOMF_TLTO)=BPRO(CHOLM_OLM)
+C       end - Olimpo Serial Number & Message Id & Communication Flag
+C----+------------------------------------------------------------------
+C V28| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
         GTYP = BPRO(BINPTAB+5,BUF)
         IF(GTYP.EQ.TLTO) THEN
             CALL DLOTTO(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))

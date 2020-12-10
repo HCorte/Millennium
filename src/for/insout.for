@@ -1,5 +1,6 @@
 C INSOUT.FOR
 C
+C V28 09-DEZ-2020 SCML New Terminals Project - Olimpo
 C V27 07-JUN-2005 FRP Modify for IPS Distribution.
 C V26 06-OCT-2000 UXN AlphaIPS release. FSE sign-on added.
 C V25 20-JUN-2000 OXK GETIGNAM as a separate module, Cleanup w/ WARNINGS=ALL
@@ -143,6 +144,23 @@ C
         TRABUF(TSER)=PRO(SERIAL,BUF)
         TRABUF(TTIM)=PRO(TSTAMP,BUF)
         TRABUF(TSIZE)=HPRO(NUMLRC,BUF)
+C SET UP TRABUF Olimpo serial Number  
+C----+------------------------------------------------------------------
+C V28| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
+C        TRABUF(TVOLMSERL_IL)=PRO(SEROLM_OLM,BUF) !SEROLM=49
+C        TRABUF(TVOLMSERM_IL)=PRO(SEROLM_OLM+1,BUF)
+C        TRABUF(TVOLMSERH_IL)=BPRO(SEROLM_OLM+8,BUF)
+C        TRABUF(TVOLMCOMF_IL)=BPRO(CHOLM_OLM)
+C        TRABUF(TGOLMSERL_IL)=PRO(SEROLM_OLM,BUF)
+C        TRABUF(TGOLMSERM_IL)=PRO(SEROLM_OLM+1,BUF)
+C        TRABUF(TGOLMSERH_IL)=BPRO(SEROLM_OLM+8,BUF)
+C        TRABUF(TGOLMMIDL_IL)=PRO(MESSID_OLM)
+C        TRABUF(TGOLMMIDH_IL)=PRO(MESSID_OLM+1)
+C        TRABUF(TGOLMCOMF_IL)=BPRO(CHOLM_OLM)
+C----+------------------------------------------------------------------
+C V28| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------        
 C
 C UPDATE NXTIXRF NUMBER ON BACKUP SYSTEMS
 C
