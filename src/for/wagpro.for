@@ -163,21 +163,25 @@ C
 C
 C----+------------------------------------------------------------------
 C V28| New Terminals Project - Olimpo
+C BPRO(CHOLM_OLM) equal to 1 means that comes from the communication channel Olimpo
+C other wise comes from X2X or MXS
 C----+------------------------------------------------------------------
 C       begin - Olimpo Serial Number & Message Id & Communication Flag
-        TRABUF(TWCOLMSERL_TLTO)=PRO(SEROLM_OLM,BUF)
-        TRABUF(TWCOLMSERM_TLTO)=PRO(SEROLM_OLM+1,BUF)
-        TRABUF(TWCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
-        TRABUF(TWCOLMMIDL_TLTO)=PRO(MESSID_OLM)
-        TRABUF(TWCOLMMIDH_TLTO)=PRO(MESSID_OLM+1)
-        TRABUF(TWCOLMCOMF_TLTO)=BPRO(CHOLM_OLM)
-
-        TRABUF(TVOLMSERL_TLTO)=PRO(SEROLM_OLM,BUF)
-        TRABUF(TVOLMSERM_TLTO)=PRO(SEROLM_OLM+1,BUF)
-        TRABUF(TVOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
-        TRABUF(TVOLMMIDL_TLTO)=PRO(MESSID_OLM)
-        TRABUF(TVOLMMIDH_TLTO)=PRO(MESSID_OLM+1)
-        TRABUF(TVOLMCOMF_TLTO)=BPRO(CHOLM_OLM)
+        IF(BPRO(CHOLM_OLM) .EQ. 1) THEN
+            TRABUF(TWCOLMSERL_TLTO)=PRO(SEROLM_OLM,BUF)
+            TRABUF(TWCOLMSERM_TLTO)=PRO(SEROLM_OLM+1,BUF)
+            TRABUF(TWCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
+            TRABUF(TWCOLMMIDL_TLTO)=PRO(MESSID_OLM,BUF)
+            TRABUF(TWCOLMMIDH_TLTO)=PRO(MESSID_OLM+1,BUF)
+            TRABUF(TWCOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
+    
+            TRABUF(TVOLMSERL_TLTO)=PRO(SEROLM_OLM,BUF)
+            TRABUF(TVOLMSERM_TLTO)=PRO(SEROLM_OLM+1,BUF)
+            TRABUF(TVOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
+            TRABUF(TVOLMMIDL_TLTO)=PRO(MESSID_OLM,BUF)
+            TRABUF(TVOLMMIDH_TLTO)=PRO(MESSID_OLM+1,BUF)
+            TRABUF(TVOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
+        ENDIF
 C       end - Olimpo Serial Number & Message Id & Communication Flag
 C----+------------------------------------------------------------------
 C V28| New Terminals Project - Olimpo

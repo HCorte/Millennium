@@ -1,5 +1,6 @@
 C  GXSRC:DIMNU.FOR
 C
+C V10 11-DEZ-2020 SCML New Terminals Project - Olimpo
 C V09 14-JUN-2005 FRP Modify for IPS Distribution.
 C V08 10-OCT-2000 UXN AlphaIPS release.
 C V07 14-FEB-1997 RXK Things revbyted (to get correct value for trabuf) 
@@ -187,11 +188,30 @@ C
 C
 C
 8000	CONTINUE
-        IF(TRABUF(TIBCH).GE.9.AND.TRABUF(TIBCH).LE.28) THEN
-          TRABUF(TSIZE) = 2
+C----+------------------------------------------------------------------
+C V10| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+     IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+        IF(TRABUF(TIBCH).LE.21) THEN
+           TRABUF(TSIZE) = 2
         ELSE IF (TRABUF(TIBCH).GE.29) THEN
-          TRABUF(TSIZE) = 3
+           TRABUF(TSIZE) = 3
         ENDIF
+     ELSE
+        IF(TRABUF(TIBCH).GE.9.AND.TRABUF(TIBCH).LE.28) THEN
+           TRABUF(TSIZE) = 2
+        ELSE IF (TRABUF(TIBCH).GE.29) THEN
+           TRABUF(TSIZE) = 3
+        ENDIF
+     ENDIF
+C        IF(TRABUF(TIBCH).GE.9.AND.TRABUF(TIBCH).LE.28) THEN
+C           TRABUF(TSIZE) = 2
+C        ELSE IF (TRABUF(TIBCH).GE.29) THEN
+C           TRABUF(TSIZE) = 3
+C        ENDIF
+C----+------------------------------------------------------------------
+C V10| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
 	IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
 	RETURN
 	END

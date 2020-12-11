@@ -1,5 +1,6 @@
 C  GXSRC:DIRPT.FOR
 C
+C V08 11-DEZ-2020 SCML New Terminals Project - Olimpo
 C V07 09-OCT-2000 UXN AlphaIPS release.
 C V06 02-FEB-1997 WPW Continuation pack, game/product numbers changed.
 C V05 28-JAN-1997 HXK IPS LOTGEN release
@@ -192,6 +193,15 @@ C
 C
 C
 8000	CONTINUE
+C----+------------------------------------------------------------------
+C V08| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+	IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+		TRABUF(TSIZE) = 2
+	ENDIF	
+C----+------------------------------------------------------------------
+C V08| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
 	IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
 	RETURN
 	END

@@ -1,5 +1,6 @@
 C  GXSRC:DIVAL.FOR
 C
+C V13 11-DEZ-2020 SCML New Terminals Project - Olimpo
 C V12 29-JAN-2013 SCML Syntax Error Codes differentiation.
 C V11 30-DEC-2013 SCML Init BNKVALM variable to FALSE.
 C V10 08-NOV-2013 SCML Changed Amount in cents from 2 to 4 bytes long.
@@ -331,11 +332,32 @@ C
 	ENDIF
 C
 8000	CONTINUE
-	IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LE.4) THEN
-	  TRABUF(TSIZE) = 2
-	ELSE IF (TRABUF(TIBCH).GE.5) THEN
-	  TRABUF(TSIZE) = 3
-	ENDIF
-	IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
+C----+------------------------------------------------------------------
+C V13| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+  IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+    IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LT.4) THEN
+      TRABUF(TSIZE) = 2
+    ELSE IF (TRABUF(TIBCH).GE.4) THEN
+      TRABUF(TSIZE) = 3
+    ELSE
+      TRABUF(TSIZE) = 2
+    ENDIF
+  ELSE
+	  IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LE.4) THEN
+	    TRABUF(TSIZE) = 2
+	  ELSE IF (TRABUF(TIBCH).GE.5) THEN
+	    TRABUF(TSIZE) = 3
+	  ENDIF
+  ENDIF  
+C	IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LE.4) THEN
+C	  TRABUF(TSIZE) = 2
+C	ELSE IF (TRABUF(TIBCH).GE.5) THEN
+C	  TRABUF(TSIZE) = 3
+C	ENDIF
+C----+------------------------------------------------------------------
+C V13| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+  IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
 	RETURN
 	END
