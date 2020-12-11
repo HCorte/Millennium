@@ -1,5 +1,6 @@
 C  GXSRC:DILOT.FOR
 C
+C V13 11-DEZ-2020 SCML New Terminals Project - Olimpo
 C V12 13-JUN-2005 FRP Modify for IPS Distribution.
 C V11 09-OCT-2000 UXN AlphaIPS release.
 C V10 26-FEB-1997 RXK Starting and ending sequence numbers revbyted
@@ -210,6 +211,15 @@ C
 	ENDIF
 C
 8000	CONTINUE
+C----+------------------------------------------------------------------
+C V13| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+	IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+		TRABUF(TSIZE) = 2
+	ENDIF	
+C----+------------------------------------------------------------------
+C V13| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 	
 	IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
 	RETURN
 	END

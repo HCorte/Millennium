@@ -506,7 +506,7 @@ C                  PRO(SEROLM,PROBUF)=SERIAL_OLM
                   BPRO(SEROLM_OLM + 7,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7))
                   BPRO(SEROLM_OLM + 8,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8))
 
-                  BPRO(CHOLM_OLM) = 1
+                  BPRO(CHOLM_OLM,PROBUF) = ZEXT (1)
 
                   CALL GETTIM(P(ACTTIM))
                   PRO(TIMOFF,PROBUF)=P(ACTTIM) 

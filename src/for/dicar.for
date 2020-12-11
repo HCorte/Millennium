@@ -1,5 +1,6 @@
 C  GXSRC:DICAR.FOR
 C
+C V02 11-DEZ-2020 SCML New Terminals Project - Olimpo
 C V01 29-MAR-2006 FRP IPS Distribution release.
 C
 C SUBROUTINE TO DECODE INSTANT CAR MESSAGE FROM TERMINAL
@@ -194,6 +195,15 @@ C
 	ENDIF
 C
 8000	CONTINUE
+C----+------------------------------------------------------------------
+C V02| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+	IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+		TRABUF(TSIZE) = 2
+	ENDIF	
+C----+------------------------------------------------------------------
+C V02| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
 	IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
 	RETURN
 	END
