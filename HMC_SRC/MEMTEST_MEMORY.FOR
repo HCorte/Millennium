@@ -1,0 +1,8 @@
+      PROGRAM MEMTESTM
+      IMPLICIT NONE
+      
+      INTEGER*4 P(10), OLMCONF
+      PARAMETER (OLMCONF=1)
+      DATA P(10) /0/
+
+      END
