@@ -3,6 +3,7 @@ C PROGRAM SPESRV
 C  
 C SPESRV.FOR
 C
+C V35 12-DEZ-2020 New Terminals Project - Olimpo
 C V34 09-MAR-2016 SCML M16 PROJECT:
 C                       Added new game report for SM and SoM games
 C                       Loading of Euromillions configuration commented out (the
@@ -285,6 +286,21 @@ C
 C PROCESS SIGN-ON
 C
         IF(TRABUF(TSFUN).EQ.TSON) THEN
+C----+------------------------------------------------------------------
+C V35| New Terminals Project - Olimpo
+C         1 means that comes from channel Olimpo other wise comes from x2x or mxs  
+C----+------------------------------------------------------------------                
+          IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN
+            TRABUF(TSDT1)=PRO(SEROLM_OLM,BUF)
+            TRABUF(TSDT2)=PRO(SEROLM_OLM+1,BUF)
+            TRABUF(TSDT3)=BPRO(SEROLM_OLM+8,BUF)
+            TRABUF(TSDT4)=PRO(MESSID_OLM,BUF)
+            TRABUF(TSDT5)=PRO(MESSID_OLM+1,BUF)
+            TRABUF(TSDT6)=BPRO(CHOLM_OLM,BUF)
+          ENDIF 
+C----+------------------------------------------------------------------
+C V35| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                           
           CALL SON(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
           GOTO 100
         ENDIF
@@ -314,7 +330,21 @@ C  IF GAME TYPE = 17  THEN SEND TO EUROMILHOES
 C     ELSE IF SALES REPORTS AND NOT LIVE SYSTEM THEN FREE BUFFER AND GO TO NEXT BUFFER
 C
 C          CALL OPSTXT('SAL REP')
-
+C----+------------------------------------------------------------------
+C V35| New Terminals Project - Olimpo
+C         1 means that comes from channel Olimpo other wise comes from x2x or mxs  
+C----+------------------------------------------------------------------
+          IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN
+            TRABUF(TSDT7)=PRO(SEROLM_OLM,BUF)
+            TRABUF(TSDT8)=PRO(SEROLM_OLM+1,BUF)
+            TRABUF(TSDT9)=BPRO(SEROLM_OLM+8,BUF)
+            TRABUF(TSDT10)=PRO(MESSID_OLM,BUF)
+            TRABUF(TSDT11)=PRO(MESSID_OLM+1,BUF)
+            TRABUF(TSDT12)=BPRO(CHOLM_OLM,BUF)
+          ENDIF        
+C----+------------------------------------------------------------------
+C V35| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
           CALL SALEREP(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF))
           IF(TRABUF(TERR).EQ. NOER) THEN
 C----+------------------------------------------------------------------

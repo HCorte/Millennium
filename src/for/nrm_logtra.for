@@ -135,6 +135,12 @@ C
         BYTE      I1TEMP(4)
         EQUIVALENCE(I4TEMP,I2TEMP,I1TEMP)
 C
+C        INTEGER*4 I4TEMP_AUX
+C        INTEGER*2 I2TEMP_AUX(2)
+C        BYTE      I1TEMP_AUX(4)
+C        EQUIVALENCE (I4TEMP_AUX,I2TEMP_AUX,I1TEMP_AUX)
+C        BYTE      CHCOM_FLAG
+
         INTEGER*4 I,J,X,KIND, BDATA_VER
         INTEGER*4 OPREQ   
 C
@@ -1400,6 +1406,13 @@ C
 C           *** CONTINUATION RECORD 2 ***
 C
               CALL FASTMOV(LOGBUF(33), TRABUF(TWBORD+BRDOFF), 15)
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------               
               GOTO 9000
            ENDIF
 C
@@ -2499,6 +2512,19 @@ C----+------------------------------------------------------------------
                 TRABUF(TVNIBBA2) = ZEXT( I1TEMP(1) )  
                 TRABUF(TVNIBCD)  = ZEXT( I1TEMP(2) )
                 TRABUF(TVPLIDTYP) = ZEXT( I1TEMP(3) ) !V55
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                   
+                TRABUF(TVOLMSERL_TLTO) = LOGBUF(25)
+                TRABUF(TVOLMSERM_TLTO) = LOGBUF(26)
+                TRABUF(TVOLMMIDL_TLTO) = LOGBUF(28)
+                I4TEMP = LOGBUF(27)
+                TRABUF(TVOLMSERH_TLTO) = I1TEMP(1)
+                TRABUF(TVOLMMIDH_TLTO) = I1TEMP(2)
+                TRABUF(TVOLMCOMF_TLTO) = I1TEMP(3)                
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                 
                 GOTO 9000
            ENDIF  
 C----+------------------------------------------------------------------
@@ -2713,7 +2739,27 @@ C
 !-------- V56<<-------------------------------------------------------------------
             TRABUF(TIVALT)    = ZEXT( I2TEMP(2) )
 C
-            TRABUF(TIVENV)    = LOGBUF(9)
+
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------            
+C New Terminal Project TIVENV only uses 2 digits = 1 byte (99<256)
+C           TRABUF(TIVENV)    = LOGBUF(9)
+            I4TEMP =  LOGBUF(9)
+            IF(ISHFT(I1TEMP(1), 7) .EQ. 1) THEN
+C                I4TEMP =  LOGBUF(9)
+C                I1TEMP_AUX(3) = I1TEMP(4) 
+C                I1TEMP_AUX(2) = I1TEMP(3)            
+C                I1TEMP_AUX(1) = I1TEMP(2) 
+                TRABUF(TVOLMSERL_IL) =  ISHFT(I4TEMP, -8)
+                TRABUF(TVOLMCOMF_IL) =  ISHFT(ZEXT(I1TEMP(1)), 7) 
+                TRABUF(TIVENV) = IAND(I1TEMP(1),'7F'X)
+            ELSE
+                TRABUF(TIVENV) = IAND(I1TEMP(1),'7F'X) 
+            ENDIF
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------    
 C
             I4TEMP = LOGBUF(10)
             TRABUF(TIVTYP) = ZEXT(I1TEMP(4))
@@ -2721,6 +2767,35 @@ C
             TRABUF(TIVAGT)    = I4TEMP
 
             IF(TRABUF(TIVMT) .EQ. IRVMT) THEN !OLD LAYOUT
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                   
+              IF(ISHFT(I1TEMP(1), 7) .EQ. 1) THEN      
+                IF(TRABUF(TIBCH) .GE. 4) THEN   
+                   I4TEMP = LOGBUF(32)
+                   TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
+                   TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
+                   I4TEMP = LOGBUF(48)
+                   TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FFFF'X), 16), TRABUF(TVOLMSERM_IL) )
+                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(3) )
+                ELSEIF(TRABUF(TIBCH) .GT. 1) THEN
+                   I4TEMP = LOGBUF(32)
+                   TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
+                   TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
+                   I4TEMP = LOGBUF(31)
+                   TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FFFF'X), 16), TRABUF(TVOLMSERM_IL) )
+                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(3) )               
+                ELSE
+                   I4TEMP = LOGBUF(17)  
+                   TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
+                   TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
+                   I4TEMP = LOGBUF(18)
+                   TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FF'X), 24), TRABUF(TVOLMSERM_IL) )
+                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(2) )        
+              ENDIF
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                   
 C
               BUFIDX = 11
 C
@@ -2796,6 +2871,25 @@ C
 C
                 TRABUF(TINETPRZ) = LOGBUF(21)         !NET PRIZE AMOUNT
 C
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
+                IF(ISHFT(I1TEMP(1), 7) .EQ. 1) THEN
+                  I4TEMP = LOGBUF(27)
+                  TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
+                  TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
+                  I4TEMP = LOGBUF(28)
+                  TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FF'X), 24), TRABUF(TVOLMSERM_IL) )
+                  TRABUF(TVOLMSERH_IL) = ZEXT(I1TEMP(2))
+                  I4TEMP = LOGBUF(29)
+                  TRABUF(TVOLMMIDL_TLTO) = I4TEMP
+                  I4TEMP = LOGBUF(30)
+                  TRABUF(TVOLMMIDH_TLTO) = ZEXT(I1TEMP(1))
+                ENDIF
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
+
                 IF(TRABUF(TIVTYP) .EQ. IVBM_NOPRZ) THEN
                   CALL FASTMOV(LOGBUF(22), TRABUF(TIVDESCR), 5)
                 ENDIF
@@ -2848,6 +2942,26 @@ C
             TRABUF(TLAMT)   = LOGBUF(12)
 C
             TRABUF(TLCOM)   = LOGBUF(13)
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
+            I4TEMP  = LOGBUF(20)  
+            TRABUF(TGOLMCOMF_IL) = I4TEMP
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+              I4TEMP = LOGBUF(14)
+              TRABUF(TGOLMSERL_IL) = I4TEMP
+              I4TEMP = LOGBUF(15)
+              TRABUF(TGOLMSERM_IL) = I4TEMP 
+              I4TEMP = LOGBUF(17) 
+              TRABUF(TGOLMSERH_IL) = I4TEMP
+              I4TEMP  = LOGBUF(18)
+              TRABUF(TGOLMMIDL_IL) = I4TEMP
+              I4TEMP = LOGBUF(19)
+              TRABUF(TGOLMMIDH_IL) = I4TEMP
+            ENDIF 
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------            
 C
           ELSE IF(TRABUF(TITYP).EQ.ICAR) THEN
 C
@@ -2864,6 +2978,26 @@ C
             TRABUF(TCEND)   = LOGBUF(12)
 C
             TRABUF(TCCNT)   = LOGBUF(13)
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
+            I4TEMP  = LOGBUF(20)  
+            TRABUF(TGOLMCOMF_IL) = I4TEMP
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+              I4TEMP = LOGBUF(14)
+              TRABUF(TGOLMSERL_IL) = I4TEMP
+              I4TEMP = LOGBUF(15)
+              TRABUF(TGOLMSERM_IL) = I4TEMP 
+              I4TEMP = LOGBUF(17) 
+              TRABUF(TGOLMSERH_IL) = I4TEMP
+              I4TEMP  = LOGBUF(18)
+              TRABUF(TGOLMMIDL_IL) = I4TEMP
+              I4TEMP = LOGBUF(19)
+              TRABUF(TGOLMMIDH_IL) = I4TEMP 
+            ENDIF
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------            
 C
           ELSE IF(TRABUF(TITYP).EQ.IQTA.OR.
      *            TRABUF(TITYP).EQ.IINV.OR.
@@ -2876,6 +3010,26 @@ C
             TRABUF(TRNXT1)  = ZEXT( I2TEMP(2) )
 C
             TRABUF(TRNXT2)  = LOGBUF(9)
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
+            I4TEMP = LOGBUF(15)
+            TRABUF(TGOLMCOMF_IL) = I4TEMP
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1 .AND. TRABUF(TITYP).EQ.IQTA) THEN
+                I4TEMP = LOGBUF(10)
+                TRABUF(TGOLMSERL_IL) = I4TEMP
+                I4TEMP = LOGBUF(11)
+                TRABUF(TGOLMSERM_IL) = I4TEMP
+                I4TEMP = LOGBUF(12)  
+                TRABUF(TGOLMSERH_IL) = I4TEMP
+                I4TEMP = LOGBUF(13) 
+                TRABUF(TGOLMMIDL_IL) = I4TEMP
+                I4TEMP = LOGBUF(14)  
+                TRABUF(TGOLMMIDH_IL) = I4TEMP
+            ENDIF
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------            
 C
           ELSE IF(TRABUF(TITYP).EQ.IFIN) THEN
 C
@@ -2902,6 +3056,26 @@ C
             TRABUF(TGPAGT)  = LOGBUF(9)
 C
             TRABUF(TGPRCL)  = LOGBUF(10)
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+            I4TEMP = LOGBUF(17)
+            TRABUF(TGOLMCOMF_IL) = I4TEMP
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+              I4TEMP = LOGBUF(11)
+              TRABUF(TGOLMSERL_IL) = I4TEMP
+              I4TEMP = LOGBUF(12)
+              TRABUF(TGOLMSERM_IL) = I4TEMP
+              I4TEMP = LOGBUF(13)  
+              TRABUF(TGOLMSERH_IL) = I4TEMP
+              I4TEMP = LOGBUF(14) 
+              TRABUF(TGOLMMIDL_IL) = I4TEMP
+              I4TEMP = LOGBUF(15)  
+              TRABUF(TGOLMMIDH_IL) = I4TEMP
+            ENDIF
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------             
 C
           ELSE IF(TRABUF(TITYP).EQ.IMNU) THEN
 C
@@ -2939,6 +3113,44 @@ C
                 TRABUF(TSGAM+X) = ISHFT(GTYP,12) + IAND(GNUM,'0FFF'X)
 C
             END DO
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------            
+            IF(TRABUF(TIBCH).GE.29) THEN
+              I4TEMP = LOGBUF(48)
+              TRABUF(TGOLMCOMF_IL) = I4TEMP
+              IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+                I4TEMP = LOGBUF(43)
+                TRABUF(TGOLMSERL_IL) = I4TEMP
+                I4TEMP = LOGBUF(44)
+                TRABUF(TGOLMSERM_IL) = I4TEMP
+                I4TEMP = LOGBUF(45)  
+                TRABUF(TGOLMSERH_IL) = I4TEMP
+                I4TEMP = LOGBUF(46) 
+                TRABUF(TGOLMMIDL_IL) = I4TEMP
+                I4TEMP = LOGBUF(47)  
+                TRABUF(TGOLMMIDH_IL) = I4TEMP
+              ENDIF
+            ELSE IF(TRABUF(TIBCH).LE.21) THEN   
+              I4TEMP = LOGBUF(32)
+              TRABUF(TGOLMCOMF_IL) = I4TEMP
+              IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+                I4TEMP = LOGBUF(27)
+                TRABUF(TGOLMSERL_IL) = I4TEMP
+                I4TEMP = LOGBUF(28)
+                TRABUF(TGOLMSERM_IL) = I4TEMP
+                I4TEMP = LOGBUF(29)  
+                TRABUF(TGOLMSERH_IL) = I4TEMP
+                I4TEMP = LOGBUF(30) 
+                TRABUF(TGOLMMIDL_IL) = I4TEMP
+                I4TEMP = LOGBUF(31)  
+                TRABUF(TGOLMMIDH_IL) = I4TEMP
+              ENDIF
+            ENDIF
+            
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------              
 C
           ELSE IF(TRABUF(TITYP).EQ.ICNF) THEN
 C
@@ -2947,6 +3159,26 @@ C
             TRABUF(TIINV2) = I2TEMP(2)
 C
             TRABUF(TIINV3) = LOGBUF(9)
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+            I4TEMP = LOGBUF(15)
+            TRABUF(TGOLMCOMF_IL) = I4TEMP
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+              I4TEMP = LOGBUF(10)
+              TRABUF(TGOLMSERL_IL) = I4TEMP
+              I4TEMP = LOGBUF(11)
+              TRABUF(TGOLMSERM_IL) = I4TEMP
+              I4TEMP = LOGBUF(12)  
+              TRABUF(TGOLMSERH_IL) = I4TEMP
+              I4TEMP = LOGBUF(13) 
+              TRABUF(TGOLMMIDL_IL) = I4TEMP
+              I4TEMP = LOGBUF(14)  
+              TRABUF(TGOLMMIDH_IL) = I4TEMP
+            ENDIF
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------              
 C
           ELSE IF(TRABUF(TITYP).EQ.IOACT) THEN
 C
@@ -2955,6 +3187,26 @@ C
             TRABUF(TOINV2) = I2TEMP(2)
 C
             TRABUF(TOINV3) = LOGBUF(9)
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+            I4TEMP = LOGBUF(15)
+            TRABUF(TGOLMCOMF_IL) = I4TEMP
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+              I4TEMP = LOGBUF(10)
+              TRABUF(TGOLMSERL_IL) = I4TEMP
+              I4TEMP = LOGBUF(11)
+              TRABUF(TGOLMSERM_IL) = I4TEMP
+              I4TEMP = LOGBUF(12)  
+              TRABUF(TGOLMSERH_IL) = I4TEMP
+              I4TEMP = LOGBUF(13) 
+              TRABUF(TGOLMMIDL_IL) = I4TEMP
+              I4TEMP = LOGBUF(14)  
+              TRABUF(TGOLMMIDH_IL) = I4TEMP
+            ENDIF
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------            
 C
           ELSE IF(TRABUF(TITYP).EQ.ISON.OR.
      *            TRABUF(TITYP).EQ.ISOF) THEN

@@ -2,7 +2,6 @@ C SUBROUTINE SALEREP
 C
 C SALEREP.FOR
 C
-C V35 12-DEZ-2020 SCML New Terminals Project - Olimpo
 C V34 28-MAR-2017 HXK  Omit Joker details if Joker deactivated > 90 days
 C V33 09-MAR-2016 SCML M16 PROJECT: added new game SM into financial reports
 C V32 17-AUG-2015 SCML Correcting financial report message initialization error
@@ -166,23 +165,7 @@ C----+------------------------------------------------------------------
         I8TSTAMP = UX_TS
         
         TRABUF(TSDT6) = I4TSTAMP(2) ! HIGH
-        TRABUF(TSDT5) = I4TSTAMP(1) ! LOW
-
-C----+------------------------------------------------------------------
-C V35| New Terminals Project - Olimpo
-C         1 means that comes from channel Olimpo other wise comes from x2x or mxs  
-C----+------------------------------------------------------------------
-        IF(BPRO(CHOLM_OLM) .EQ. 1) THEN
-             TRABUF(TSDT7)=PRO(SEROLM_OLM,BUF)
-             TRABUF(TSDT8)=PRO(SEROLM_OLM+1,BUF)
-             TRABUF(TSDT9)=BPRO(SEROLM_OLM+8,BUF)
-             TRABUF(TSDT10)=PRO(MESSID_OLM)
-             TRABUF(TSDT11)=PRO(MESSID_OLM+1)
-             TRABUF(TSDT12)=BPRO(CHOLM_OLM)
-        ENDIF        
-C----+------------------------------------------------------------------
-C V35| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------        
+        TRABUF(TSDT5) = I4TSTAMP(1) ! LOW       
 
         IF(IGSDEBUG(IA_SPESRV)) THEN
             CALL OPS('SALEREP: TRABUF(TSDT1)(C)',TRABUF(TSDT1),TRABUF(TSDT1))
