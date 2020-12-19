@@ -231,7 +231,7 @@ Copiar um ficheiro numa pasta para outra pasta (neste caso na subpasta fortran77
 	$ COPY swap.for,iswap.for,logger.for [-] ###copy files to upper/parent folder
 	
 Aumentar o tamanho default do ecra da linha de comandos/terminal
-	$ SET TERMINAL/PAGE:35/WIDTH:110
+	$ SET TERMINAL/PAGE:35/WIDTH:110 -> w132
 	
 f$locate(",DEBUG,",",''P1'") 
 
