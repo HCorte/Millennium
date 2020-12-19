@@ -1,6 +1,7 @@
 C
 C SUBROUTINE XRUNTSK_DET
 C
+C V03 16-DEZ-2020 SCML Allow for the location OLMLIB
 C V02 12-FEB-2014 SCML Allowing task run from another location
 C V01 24-JUL-2000 UXN Initial release (produced from NRM_XRUNTSK.FOR) 
 C
@@ -66,7 +67,7 @@ C----+------------------------------------------------------------------
         CHARACTER*255 DVOL
         INTEGER*4     DVOL_LEN
         DATA (ALTLOC(IXI),IXI=1,MAX_ALT_LOC)/
-     *          'TSKLIB:', 'IGSLIB:', 'UD1LIB:', 'UD2LIB:'
+     *          'TSKLIB:', 'IGSLIB:', 'OLMLIB:', 'UD1LIB:'
      *  / 
 C----+------------------------------------------------------------------
 C V02| Allowing task run from another location
