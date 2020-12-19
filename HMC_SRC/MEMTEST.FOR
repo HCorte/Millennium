@@ -1,0 +1,14 @@
+      PROGRAM MEMTESTM
+      IMPLICIT NONE
+      INCLUDE 'MEMTEST.DEF'
+
+      INTEGER*4 OPTION
+      PRINT *,'P(OLMCONF)=',P(OLMCONF)
+      
+      PRINT *, 'INSERT INTEGER VALUE:'
+      READ *, OPTION
+      
+      P(OLMCONF) = OPTION  
+      PRINT *,'P(OLMCONF)=',P(OLMCONF)
+
+      END
