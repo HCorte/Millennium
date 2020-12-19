@@ -42,7 +42,7 @@ C      MESSERIAL = 0
       CONOLM = .FALSE.
       FIRSTRUN = .FALSE.
 
-      CALL OPSTXT(' ******************* COMOLM ******************* ')
+      CALL OPSTXT(' ******************* COMOLM 11 ******************* ')
 
 10      CONTINUE
         WTFORMESS = .FALSE.            
@@ -56,31 +56,39 @@ C      MESSERIAL = 0
             P(OLMCONF) = 0 
             CALL GSTOP(GEXIT_SUCCESS) 
       ENDIF
-
-      IF (P(SYSTYP) .NE. LIVSYS) THEN
-            CALL XWAIT(5, 2, ST)   
-            FIRSTRUN = .TRUE.
-            GOTO 10
-      ENDIF
-
-      IF(DAYSTS .EQ. DSSUSP) THEN 
-            CALL HOLD(0,STATUS)
-            IF(DAYSTS .EQ. DSOPEN) GOTO 10 
-            GOTO 10
-      ENDIF
+C      CALL OPSTXT(' not DSCLOS')
+C      IF (P(SYSTYP) .NE. LIVSYS) THEN
+C            CALL XWAIT(5, 2, ST)   
+C            FIRSTRUN = .TRUE.
+C            GOTO 10
+C      ENDIF
+C      CALL OPSTXT(' equal to LIVSYS')
+C      IF(DAYSTS .EQ. DSSUSP) THEN 
+C            CALL HOLD(0,STATUS)
+C            IF(DAYSTS .EQ. DSOPEN) GOTO 10 
+C            GOTO 10
+C      ENDIF
+C      CALL OPSTXT(' not DSSUSP')
 
 543     CONTINUE
+        CALL OPSTXT(' Vai validar que P(OLMCONF) deve ser != 0')
+        CALL OPS('P(OLMCONF):',P(OLMCONF),P(OLMCONF))
         IF (P(OLMCONF) .EQ. 0) THEN 
             GOTO 333
         ENDIF
      
+      CALL OPSTXT(' WILL attach to messageQ ')  
+      CALL OPS('CONOLM:',CONOLM,CONOLM)
+
       IF (CONOLM .EQ. .FALSE.) THEN 
       CALL MESSQ_ATTACH(%REF(ST))
+  
       IF (ST .NE. PAMS__SUCCESS) THEN 
+            CALL OPS('MESSQ_ATTCH Status:',ST,ST)
             CALL MESSQ_EXIT(%REF(ST))
             P(OLMCONF) = 0 
             CALL OPSTXT('ERROR!!!! CAN NOT ATTACH TO MESSAGEQ!!!!')
-
+            CALL OPS('MESSQ_EXIT Status:',ST,ST)
 C            CALL date_and_time(DATEI,TIMEI) 
 
 C            LOGDATEI = DATEI(7:8)//'/'//DATEI(5:6)//'/'//DATEI(1:4)
@@ -92,7 +100,8 @@ C            close(1234)
             GOTO 10           
       ENDIF
 
-   
+      CALL OPSTXT(' attach success to messageQ ')
+
       CALL BUILD_MSG(MESS,2, TEOLM) 
       CALL BUILD_MSG(MESS,3, 1)
       CALL QUEMES(MESS) 
@@ -109,10 +118,11 @@ C            close(1234)
 570   CONTINUE        
 
       CALL LISTTOP(BUFNUM, QUETAB(1, OLM), STAT) 
-
       
       IF(STAT .EQ. GLIST_STAT_EMPTY) THEN 
+            CALL OPSTXT(' queue OLM vazia ')            
             IF(WTFORMESS .EQ. .TRUE.) GOTO 10
+            CALL OPSTXT(' vai tentar ler outra vez da queue OLM ')
             BUFNUM = 0
             GOTO 600
       ENDIF
@@ -124,9 +134,11 @@ C     DAYJUL   ->    CURRENT JULIAN DATE
 C     BUFNUM() = DAYJUL     
 
 C     MESSERIAL = MESS_FROM_OLM(MESSAGEID_POS) !MESSAGEID -> MESSERIAL
-
+      CALL OPSTXT(' vai tentar enviar mensagem para olimpo ')
       CALL SENDTOOLM(BUFNUM,ST) 
+      CALL OPSTXT(' estado de envio ')
       IF ((ST .NE. PAMS__SUCCESS ) .AND. (ST .NE. PAMS__TIMEOUT)) THEN
+         CALL OPSTXT(' estado de envio falhou')
          CALL MESSQ_EXIT(%REF(ST))
          IF (ST .EQ. PAMS__SUCCESS) THEN 
             CONOLM = .FALSE.  
@@ -211,12 +223,15 @@ C            CALL RTL (BUFNUM, QUETAB(1, OLM), STAT)
 
 600   CONTINUE            
 
+      CALL OPSTXT('2-> Vai validar que P(OLMCONF) deve ser != 0')
+      CALL OPS('2-> P(OLMCONF):',P(OLMCONF),P(OLMCONF))
       IF (P(OLMCONF) .EQ. 0) THEN 
             GOTO 333
       ENDIF
 
       ST = PAMS__NOMOREMSG 
       IF (P(OLMCONF) .NE. 0 ) THEN 
+            CALL OPSTXT('Get Message From MessageQ from Olimpo')
             CALL GETFROMOLM(ST) 
       ENDIF
 
@@ -240,9 +255,11 @@ C
       ENDIF
     
       IF(ST .EQ. PAMS__NOMOREMSG) THEN
+            CALL OPSTXT('MESSAGEQ EMPTY')
             WTFORMESS = .TRUE.
             GOTO 570 
-      ELSE IF(ST .EQ. PAMS__SUCCESS) THEN    
+      ELSE IF(ST .EQ. PAMS__SUCCESS) THEN  
+            CALL OPSTXT('READED A MESSAGE FROM MESSAGEQ')  
             GOTO 570 
       ENDIF
 
@@ -278,7 +295,8 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             INTEGER*8 I8AUX
             INTEGER*4 I4AUX(2)
             INTEGER*1 I1AUX(8)
-            EQUIVALENCE(I8AUX,I4AUX,I1AUX)       
+            EQUIVALENCE(I8AUX,I4AUX,I1AUX) 
+            INTEGER*8 AUX_ID      
 
             INTEGER*4 ST,STATUS,MTYPE,MSUBTYPE
             INTEGER*4 XRFNUM,AGENTNR   
@@ -294,7 +312,7 @@ C            , TEMP1, TEMP2
             INTEGER*8 MESSAGEID
 
 C for messageid 8 bytes            INTEGER*4 MESSAGEID_POS /1/,TERMINAL_NUM_POS /9/, AGENT_NUM_POS /11/, SERIAL_OLM_POS /15/
-            INTEGER*4 MESSAGEID_POS /1/,TERMINAL_NUM_POS /6/, AGENT_NUM_POS /8/, SERIAL_OLM_POS /12/            
+            INTEGER*4 MESSAGEID_POS /1/,TERMINAL_NUM_POS /6/, AGENT_NUM_POS /10/, SERIAL_OLM_POS /12/            
             LOGICAL  DMPDBG
             DATA    ERRTYP /Z90/            
             BYTE       ERRMSG(5)                       
@@ -321,11 +339,29 @@ C            PATH = 'DKD10:[DMIL.WRK.HMC.EXAMPLES.LOGFILES]logs.dat'
 
             IF (STATUS .EQ. PAMS__SUCCESS) THEN   
   
-
+                  CALL OPSTXT('GET MESSAGE SUCCESS')
 80                CONTINUE
 
                   CALL GETBUF(PROBUF)
+                  CALL OPSTXT('GET MESSAGE SUCCESS111')
                   CALL FASTSET(0, PRO(1,PROBUF), PROLEN)
+
+                  CALL OPSTXT('GET MESSAGE SUCCESS222')
+
+
+C                 CALL LIB$MOVC3(MESS_FROM_LEN, MESS_FROM_OLM, BPRO(BINPTAB,PROBUF))
+C
+C                 IF(P(XXDEBUG).EQ.0) THEN
+C                       DMPDBG=.FALSE.
+C                       IF(P(XXDTRLN).EQ.0) DMPDBG=.TRUE.
+C                       IF(P(XXDTRLN).LT.0) THEN
+C                             IF(ABS(P(XXDTRLN)).EQ.HPRO(LINENO,PROBUF)) DMPDBG=.TRUE.
+C                       ENDIF
+C                       IF(P(XXDTRLN).GT.0) THEN
+C                             IF(P(XXDTRLN).EQ.HPRO(TERNUM,PROBUF)) DMPDBG=.TRUE.
+C                       ENDIF
+C                       IF(DMPDBG) CALL PRTOUT(PROBUF) 
+C                  ENDIF
 
 C                 MESSAGEID
 C                  I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
@@ -338,17 +374,42 @@ C                  I1AUX(7) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  6))
 C                  I1AUX(8) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  7))
 C                 MESSAGEID = I8AUX
 
+C                  I1TEMP(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
+C                  I1TEMP(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+C                  I1TEMP(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
+C                  I1TEMP(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
+C                 129                  
+C                  AUX_ID = I4TEMP
+C                  CALL OPS('MESSAGE ID:',AUX_ID,AUX_ID)                  
+
+                  I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
+                  I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+                  I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
+                  I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
+                  I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+                  I1AUX(6) = 0
+                  I1AUX(7) = 0
+                  I1AUX(8) = 0
+
+                  AUX_ID = I8AUX
+                  CALL OPS('MESSAGE ID:',AUX_ID,AUX_ID)
+
+C ----------------------------------------------------------------------
                   I1TEMP(1) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0))
                   I1TEMP(2) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1))
-                  I1TEMP(3) = 0
-                  I1TEMP(4) = 0
-                  TERMINALNUM = I4TEMP
+                  I1TEMP(3) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  2))
+                  I1TEMP(4) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  3))
+                  AGENT_NUM = I4TEMP
+
+                  CALL OPS('AGENT_NUM:',TERMINALNUM,TERMINALNUM)
+                  CALL OPSTXT('GET MESSAGE SUCCESS333')
 
                   I1TEMP(1) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  0))
                   I1TEMP(2) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  1))
-                  I1TEMP(3) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  2))
-                  I1TEMP(4) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  3))
-                  AGENT_NUM = I4TEMP
+                  I1TEMP(3) = 0
+                  I1TEMP(4) = 0
+                  TERMINALNUM = I4TEMP
+                  CALL OPS('TERMINALNUM:',AGENT_NUM,AGENT_NUM)
 
 C                  I1AUX(1) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0))
 C                  I1AUX(2) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1))
@@ -367,7 +428,8 @@ C                  TERMINALNUM = MESS_FROM_OLM(TERMINAL_NUM_POS)
 C                 !MESSAGEID -> MESSERIAL                  
 C                  MESSERIAL = MESS_FROM_OLM(MESSAGEID_POS) 
                   
-C                  SERIAL_OLM = MESS_FROM_OLM(SERIAL_OLM_POS)                  
+C                  SERIAL_OLM = MESS_FROM_OLM(SERIAL_OLM_POS)  
+                  CALL OPSTXT('GET MESSAGE SUCCESS ->2')
 
 C                 se for diferente de 0000 então está defenido o terminal number no header
                   IF(TERMINALNUM .EQ. 0) THEN
@@ -381,7 +443,7 @@ C                 AGTN = AGTTAB(AGTNUM,AGT)  obter o agente number no AGTTAB apa
                         ST = -8
                   ENDIF
                         
-
+                  CALL OPSTXT('GET MESSAGE SUCCESS ->3')
                   IF (ST.NE.0) THEN
 c                               CALL OPSTXT('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:')
                                     CALL OPS('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:',TERMINALNUM,TERMINALNUM)
@@ -403,7 +465,7 @@ C                       MESSAGEID
 C                        I1AUX(6) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  5))
 C                        I1AUX(7) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  6))
 C                        I1AUX(8) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  7))
-                        MESSAGEID = I8AUX                        
+                        MESSAGEID = I8AUX                      
 C saves to program log itself the message
 C TERMINALNUM - type - subtype - message id                          
                         TYPE*, ' '                                            
@@ -425,14 +487,16 @@ C	                  GOTO 80
 
 C                 VALIDATE THAT TERMINALNUM IS A VALIDE NUMER (2 bytes max <-> 7 digitos) AND ALSO THAT MESSAGEID IS ALSO VALIDE     
 C                 11 =		Invalid Terminal Number -> TBAD=11 
-
+                  CALL OPSTXT('GET MESSAGE SUCCESS ->4')
                   IF(TERMINALNUM .LT.1 .OR. TERMINALNUM .GT. NUMAGT) THEN 
 C                       TRABUF(TERR) = TBAD
                         ST = -9
 C                        RETURN 
                   ENDIF 
 
+                  CALL OPSTXT('GET MESSAGE SUCCESS ->5')
                   IF (ST .LT. 0) THEN
+                        CALL OPS('ERROR-> STATUS:',ST,ST)
 C TRABUF(TTRN) !TTRN=TRANSACTION SEQUENCE NUMBER
 C                       ERRMSG(1)= '20'X + '00'X !Control + Sequence
 C                       Control + Sequence (request) send the same as response in error
@@ -475,6 +539,7 @@ C                       ver mais tarde se trata-se se a mensagem de erro foi env
                         RETURN 
                   ENDIF                  
  
+                  CALL OPSTXT('GET MESSAGE SUCCESS ->6')
                   HPRO(PRCSRC,PROBUF)=OLM_COM                
                   HPRO(PRCDST,PROBUF)=0 
                   HPRO(QUENUM,PROBUF)=QIN           
@@ -491,9 +556,9 @@ C                  PRO(MESSID,PROBUF)=MESSERIAL
                   BPRO(MESSID_OLM + 2,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
                   BPRO(MESSID_OLM + 3,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
                   BPRO(MESSID_OLM + 4,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
-                  BPRO(MESSID_OLM + 5,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  5))
-                  BPRO(MESSID_OLM + 6,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  6))
-                  BPRO(MESSID_OLM + 7,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  7))           
+C                  BPRO(MESSID_OLM + 5,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  5))
+C                  BPRO(MESSID_OLM + 6,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  6))
+C                  BPRO(MESSID_OLM + 7,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  7))           
 
 C                  PRO(SEROLM,PROBUF)=SERIAL_OLM
                   BPRO(SEROLM_OLM + 0,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0))
@@ -505,15 +570,21 @@ C                  PRO(SEROLM,PROBUF)=SERIAL_OLM
                   BPRO(SEROLM_OLM + 6,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  6))
                   BPRO(SEROLM_OLM + 7,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7))
                   BPRO(SEROLM_OLM + 8,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8))
+                  CALL OPSTXT('GET MESSAGE SUCCESS ->7')
 
                   BPRO(CHOLM_OLM,PROBUF) = ZEXT (1)
 
                   CALL GETTIM(P(ACTTIM))
                   PRO(TIMOFF,PROBUF)=P(ACTTIM) 
+                  CALL OPS('TIMOFF:',P(ACTTIM),P(ACTTIM))
 
+                  CALL OPSTXT('GET MESSAGE SUCCESS ->8')
                   CALL LIB$MOVC3(MESS_FROM_LEN, MESS_FROM_OLM, BPRO(BINPTAB,PROBUF))
 
+                  CALL OPSTXT('GET MESSAGE SUCCESS ->9')
+                  CALL OPS('XXDEBUG should be 0: ',P(XXDEBUG),P(XXDEBUG))
                   IF(P(XXDEBUG).EQ.0) THEN
+                        CALL OPSTXT('DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!')
                         DMPDBG=.FALSE.
                         IF(P(XXDTRLN).EQ.0) DMPDBG=.TRUE.
                         IF(P(XXDTRLN).LT.0) THEN
@@ -524,11 +595,12 @@ C                  PRO(SEROLM,PROBUF)=SERIAL_OLM
                         ENDIF
                         IF(DMPDBG) CALL PRTOUT(PROBUF) 
                   ENDIF
+                  CALL OPSTXT('GET MESSAGE SUCCESS ->10')
 
 C Send to DIS  (for now commented to just write to GTECH$DEBUG.DAT)              
 C                 CALL QUETRA(DIS,PROBUF) 
 C use ABL subroutine instead of QUETRA since QUETRA haves extra validation to see how many tasks are active at one moment of time (most likely to prevent to many running at the same time)
-                  CALL ABL(PROBUF,QUETAB(1,DIS),ST)
+C                  CALL ABL(PROBUF,QUETAB(1,DIS),ST)
 C 	  STATUS = GLIST_STAT_FULL or STATUS = GLIST_STAT_GOOD (retornar erro caso a queue aplicacional do Disptacher estiver cheio algo a considerar)
     
 C                 faz sentido fazer aqui return...

@@ -2,7 +2,6 @@ C SUBROUTINE SON
 C SON.FOR
 C
 C
-C V34 10-DEZ-2020 SCML New Terminals Project - Olimpo
 C V33 10-MAR-2016 SCML M16 PROJECT: added new SM game and updated EM game
 C V32 18-DEC-2015 FRP CR31 PIN for Owner and Clerk
 C V31 14-DEC-2010 HXK LOTTO 2 (remove Lotto1 and Lotto2 from game blocks)
@@ -259,24 +258,7 @@ C
 C SET / CLEAR VARIABLES
 C
 	PASMATCH = .FALSE.
-	IND = 5
-
-
-C----+------------------------------------------------------------------
-C V34| New Terminals Project - Olimpo
-C         1 means that comes from channel Olimpo other wise comes from x2x or mxs  
-C----+------------------------------------------------------------------
-	IF(BPRO(CHOLM_OLM) .EQ. 1) THEN
-		TRABUF(TSDT1)=PRO(SEROLM_OLM,BUF)
-		TRABUF(TSDT2)=PRO(SEROLM_OLM+1,BUF)
-		TRABUF(TSDT3)=BPRO(SEROLM_OLM+8,BUF)
-		TRABUF(TSDT4)=PRO(MESSID_OLM)
-		TRABUF(TSDT5)=PRO(MESSID_OLM+1)
-		TRABUF(TSDT6)=BPRO(CHOLM_OLM)
-	ENDIF        
-C----+------------------------------------------------------------------
-C V34| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------	
+	IND = 5	
 C
 C GET STATISTICS BYTE
 C

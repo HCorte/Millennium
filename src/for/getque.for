@@ -803,7 +803,7 @@ C
            IF(KGNUM.GT.0.AND.KGNUM.LE.MAXGAM) KGIND = GNTTAB(GAMIDX,KGNUM)
            OPTIONS = ZEXT(BPRO(BINPTAB+8,BUF))
            OPTIONS = ISHFT(OPTIONS,8) + ZEXT(BPRO(BINPTAB+9,BUF))
-           INTLEN = HPRO(INPLEN,BUF)-9
+           INTLEN = HPRO(INPLEN,BUF)-9 !HPRO(INPLEN,PROBUF)=MESS_FROM_LEN (size of the message received)
            KICKER=.FALSE.
            MULTS=.FALSE.
            IF(IAND(OPTIONS,GCTR_OPT).NE.0) INTLEN=INTLEN-2  !Game Control Rev
@@ -851,9 +851,9 @@ C
               ENDIF
            ENDIF
 C
-           IF(KICKER.AND.INTLEN.GT.44) SIZE = 3
-           IF(SUBTYP.EQ.TSPT.AND.INTLEN.GT.50) SIZE = 3
-           IF(INTLEN.GT.60) SIZE = 3    
+           IF(KICKER.AND.INTLEN.GT.44) SIZE = 3 !ignore kicker no longer in use by SCML
+           IF(SUBTYP.EQ.TSPT.AND.INTLEN.GT.50) SIZE = 3 !in whant cases reaches 3 segments???
+           IF(INTLEN.GT.60) SIZE = 3 !in whant cases reaches 3 segments???    
 C
            GOTO 9000
         ENDIF
