@@ -5,10 +5,15 @@
         INCLUDE 'INCLIB:CONCOM.DEF'
 C        INCLUDE 'OLMCON.DEF'
 
+
+C       show the status of P(SUPSYN)
+
+
         RECORD/SETUP/ PAR
         PRINT *,'P(OLMCONF)=',P(OLMCONF)
         PAR.OLMCON = P(OLMCONF)    
-      
+
+        PRINT *,'P(SUPSYN)=',P(OLMCONF)        
         CALL DISP_CONFIG(PAR)
         PRINT *,'GOOD .....EXITED SUBROUTINE'
 
