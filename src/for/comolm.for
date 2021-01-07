@@ -105,6 +105,8 @@ C            close(1234)
       CALL BUILD_MSG(MESS,2, TEOLM) 
       CALL BUILD_MSG(MESS,3, 1)
       CALL QUEMES(MESS) 
+
+      CALL OPSTXT(' build_msg and quemes... ')
       
       CONOLM = .TRUE. 
       P(OLMCONF) = 1 
@@ -141,10 +143,13 @@ C     MESSERIAL = MESS_FROM_OLM(MESSAGEID_POS) !MESSAGEID -> MESSERIAL
          CALL OPSTXT(' estado de envio falhou')
          CALL MESSQ_EXIT(%REF(ST))
          IF (ST .EQ. PAMS__SUCCESS) THEN 
-            CONOLM = .FALSE.  
+            CONOLM = .FALSE. 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC             
 C           before removing from the application queue send the queue as error to dispat to save as error in the tmf as error transaction
-            HPRO(TRCODE,BUFNUM)=TYPERR    
-            CALL QUETRA(ERR,BUFNUM)         
+C            HPRO(TRCODE,BUFNUM)=TYPERR    
+C            CALL QUETRA(ERR,BUFNUM)          
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
 
 C 4.1	Cancellation Terminal -> Central (so its registered but not possible to send response to Olimpo then cancel to normalize the information)
 C     Bytes
@@ -214,10 +219,25 @@ C            CALL RTL (BUFNUM, QUETAB(1, OLM), STAT)
        
             GOTO 543
          ENDIF
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC       
+         CALL RTL (BUFNUM, QUETAB(1, OLM), STAT)
+         IF (STAT .EQ. GLIST_STAT_EMPTY) THEN
+               BUFNUM = 0
+         ENDIF
+CCCCCCCCCCCC No longer need the buffer CCCCCCCCCCCCCCCCCCCCCCCC
+         CALL RELBUF(BUFNUM)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC             
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC         
          CALL OPS('ERROR: MESSAGEQ CAN NOT BE DETACHED!!!',ST,0)
          GOTO 10
       ENDIF
       CALL RTL (BUFNUM, QUETAB(1, OLM), STAT)
+      IF (STAT .EQ. GLIST_STAT_EMPTY) THEN
+            BUFNUM = 0
+      ENDIF
+CCCCCCCCCCCC No longer need the buffer CCCCCCCCCCCCCCCCCCCCCCCC
+      CALL RELBUF(BUFNUM)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC      
 
       GOTO 570
 
@@ -307,12 +327,14 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             BYTE MESS_FROM_OLM(1024) 
             INTEGER*4 MESS_FROM_LEN
 C           MESSERIAL is MessageID used as identification of the Message           
-            INTEGER*4 MESSERIAL, TYPE, SUBTYPE, TERMINALNUM, AGENT_NUM, I, MYCHKSUM, ERRTYP
+            INTEGER*4 MESSERIAL, TYPE, SUBTYPE, TERMINALNUM, AGENT_NUM, I, MYCHKSUM, ERRTYP, I_MESS, AGENT_NUM2
 C            , TEMP1, TEMP2
             INTEGER*8 MESSAGEID
 
 C for messageid 8 bytes            INTEGER*4 MESSAGEID_POS /1/,TERMINAL_NUM_POS /9/, AGENT_NUM_POS /11/, SERIAL_OLM_POS /15/
-            INTEGER*4 MESSAGEID_POS /1/,TERMINAL_NUM_POS /6/, AGENT_NUM_POS /10/, SERIAL_OLM_POS /12/            
+            INTEGER*4 MESSAGEID_POS /1/, AGENT_NUM_POS /6/, TERMINAL_NUM_POS /10/, SERIAL_OLM_POS /12/   
+            INTEGER*4 DAYCDC_POS /21/, DAYJUL_POS /23/, BUFFER_HEADER_LENTH /25/     
+
             LOGICAL  DMPDBG
             DATA    ERRTYP /Z90/            
             BYTE       ERRMSG(5)                       
@@ -380,13 +402,109 @@ C                  I1TEMP(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
 C                  I1TEMP(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
 C                 129                  
 C                  AUX_ID = I4TEMP
-C                  CALL OPS('MESSAGE ID:',AUX_ID,AUX_ID)                  
+C                  CALL OPS('MESSAGE ID:',AUX_ID,AUX_ID)   
 
-                  I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
-                  I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
-                  I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
-                  I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
-                  I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+                  CALL OPSTXT('Mensagem Do MessageQ')
+                  CALL OPS('Mensagem Do MessageQ Size:',MESS_FROM_LEN,MESS_FROM_LEN)
+C                  DO I_MESS = 1, MESS_FROM_LEN
+C                        CALL OPS('Position:',I_MESS,I_MESS)
+C                        CALL OPS('MESSAGE Byte:',MESS_FROM_OLM(I_MESS),MESS_FROM_OLM(I_MESS))
+C                  ENDDO
+
+                  CALL OPS('Position:',12,12)
+                  I1AUX(1) = MESS_FROM_OLM(12)
+C                  CALL OPS('MESSAGE Byte:',I1AUX(1),I1AUX(1))
+C                  CALL OPS('MESSAGE Byte:',0,0)      
+                  I1AUX(1) = MESS_FROM_OLM(13)           
+C                  CALL OPS('MESSAGE Byte:',I1AUX(1),I1AUX(1)) 
+C                  CALL OPS('MESSAGE Byte:',0,0)     
+                  I1AUX(1) = MESS_FROM_OLM(14)                                         
+C                  CALL OPS('MESSAGE Byte:',I1AUX(1),I1AUX(1)) 
+C                  CALL OPS('MESSAGE Byte:',0,0)
+                  I1AUX(1) = MESS_FROM_OLM(15)
+C                  CALL OPS('MESSAGE Byte:',I1AUX(1),I1AUX(1))
+C                  CALL OPS('MESSAGE Byte:',0,0)                                               
+                  I1AUX(1) = MESS_FROM_OLM(16)
+C                  CALL OPS('MESSAGE Byte:',I1AUX(1),I1AUX(1))
+C                  CALL OPS('MESSAGE Byte:',0,0)                                              
+                  I1AUX(1) = MESS_FROM_OLM(17)
+C                  CALL OPS('MESSAGE Byte:',I1AUX(1),I1AUX(1))
+C                  CALL OPS('MESSAGE Byte:',0,0)                                                
+                  I1AUX(1) = MESS_FROM_OLM(18)
+C                  CALL OPS('MESSAGE Byte:',I1AUX(1),I1AUX(1))
+C                  CALL OPS('MESSAGE Byte:',0,0)                                              
+                  I1AUX(1) = MESS_FROM_OLM(19)
+C                  CALL OPS('MESSAGE Byte:',I1AUX(1),I1AUX(1))
+C                  CALL OPS('MESSAGE Byte:',0,0)                                              
+                  I1AUX(1) = MESS_FROM_OLM(20)
+C                  CALL OPS('MESSAGE Byte:',I1AUX(1),I1AUX(1))
+                  
+
+
+C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(12)),ZEXT (MESS_FROM_OLM(12)))
+C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(13)),ZEXT (MESS_FROM_OLM(13)))
+C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(14)),ZEXT (MESS_FROM_OLM(14)))
+C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(15)),ZEXT (MESS_FROM_OLM(15)))
+C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(16)),ZEXT (MESS_FROM_OLM(16)))
+C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(17)),ZEXT (MESS_FROM_OLM(17)))
+C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(18)),ZEXT (MESS_FROM_OLM(18)))
+C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(19)),ZEXT (MESS_FROM_OLM(19)))
+C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(20)),ZEXT (MESS_FROM_OLM(20)))
+
+C                 INTEGER*4 MESSAGEID_POS /1/,TERMINAL_NUM_POS /6/, AGENT_NUM_POS /10/, SERIAL_OLM_POS /12/  
+
+                  CALL OPS('MESSAGEID::',ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)),ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)))
+                  CALL OPS('MESSAGEID::',ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1)),ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1)))
+                  CALL OPS('MESSAGEID::',ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2)),ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2)))
+                  CALL OPS('MESSAGEID::',ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3)),ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3)))
+                  CALL OPS('MESSAGEID::',ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4)),ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4)))
+
+                  CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  0)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0)))
+                  CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  1)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1)))
+                  CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  2)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  2)))
+                  CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  3)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  3)))                  
+
+                  CALL OPS('TERMINAL NUMBER::',ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0)),ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  0)))
+                  CALL OPS('TERMINAL NUMBER::',ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1)),ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  1)))
+
+
+                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0)))
+                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1)))
+                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  2)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  2)))
+                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  3)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  3)))
+                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  4)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  4)))
+                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  5)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  5)))
+                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  6)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  6)))
+                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7)))
+                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8)))                  
+
+
+C                 BUFFER_HEADER_LENTH /25/
+C                  CALL OPS('CONTROL e SEQ::',ZEXT (MESS_FROM_OLM(25)),ZEXT (MESS_FROM_OLM(25)))
+C                  CALL OPS('Type e SubType::',ZEXT (MESS_FROM_OLM(26)),ZEXT (MESS_FROM_OLM(26)))
+C 
+C                  CALL OPS('CheckSum::',ZEXT (MESS_FROM_OLM(27)),ZEXT (MESS_FROM_OLM(27)))
+C                  CALL OPS('CheckSum::',ZEXT (MESS_FROM_OLM(28)),ZEXT (MESS_FROM_OLM(28)))
+C
+C                  CALL OPS('Statistics::',ZEXT (MESS_FROM_OLM(29)),ZEXT (MESS_FROM_OLM(29)))                                    
+C
+                  CALL OPS('Agent NUmber::',ZEXT (MESS_FROM_OLM(30)),ZEXT (MESS_FROM_OLM(30)))
+                  CALL OPS('Agent NUmber::',ZEXT (MESS_FROM_OLM(31)),ZEXT (MESS_FROM_OLM(31)))
+                  CALL OPS('Agent NUmber::',ZEXT (MESS_FROM_OLM(32)),ZEXT (MESS_FROM_OLM(32)))
+                  CALL OPS('Agent NUmber::',ZEXT (MESS_FROM_OLM(33)),ZEXT (MESS_FROM_OLM(33)))                  
+C
+C                  CALL OPS('Agent Pass Number::',ZEXT (MESS_FROM_OLM(34)),ZEXT (MESS_FROM_OLM(34)))                  
+C                  CALL OPS('Agent Pass Number::',ZEXT (MESS_FROM_OLM(35)),ZEXT (MESS_FROM_OLM(35)))
+C
+                  CALL OPS('Terminal Pass Number::',ZEXT (MESS_FROM_OLM(36)),ZEXT (MESS_FROM_OLM(36)))
+                  CALL OPS('Terminal Pass Number::',ZEXT (MESS_FROM_OLM(37)),ZEXT (MESS_FROM_OLM(37))) 
+
+
+                  I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)) !95-> 149 (149)
+                  I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1)) !0
+                  I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2)) !E6000000
+                  I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3)) !93E60000
+                  I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4)) !493E600
                   I1AUX(6) = 0
                   I1AUX(7) = 0
                   I1AUX(8) = 0
@@ -395,21 +513,38 @@ C                  CALL OPS('MESSAGE ID:',AUX_ID,AUX_ID)
                   CALL OPS('MESSAGE ID:',AUX_ID,AUX_ID)
 
 C ----------------------------------------------------------------------
-                  I1TEMP(1) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0))
-                  I1TEMP(2) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1))
-                  I1TEMP(3) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  2))
-                  I1TEMP(4) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  3))
+C                 TERMINAL_NUM_POS-> TERMINAL_NUM_POS /6/
+
+C                 CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0)))
+C                 CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1)))
+C                 CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  2)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  2)))
+C                 CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  3)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  3)))                  
+
+
+                  I1TEMP(1) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  0))!0
+                  I1TEMP(2) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  1))!1
+                  I1TEMP(3) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  2))!2
+                  I1TEMP(4) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  3))!3
+                  AGENT_NUM2 = I4TEMP
+
+                  CALL OPS('AGENT_NUM2:',AGENT_NUM2,AGENT_NUM2)
+                  CALL OPSTXT('---------------------------------------')                  
+
+                  I1TEMP(1) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  3))!0
+                  I1TEMP(2) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  2))!1
+                  I1TEMP(3) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  1))!2
+                  I1TEMP(4) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  0))!3
                   AGENT_NUM = I4TEMP
 
-                  CALL OPS('AGENT_NUM:',TERMINALNUM,TERMINALNUM)
+                  CALL OPS('AGENT_NUM:',AGENT_NUM,AGENT_NUM)
                   CALL OPSTXT('GET MESSAGE SUCCESS333')
 
-                  I1TEMP(1) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  0))
-                  I1TEMP(2) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  1))
+                  I1TEMP(1) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0))!0
+                  I1TEMP(2) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1))!1
                   I1TEMP(3) = 0
                   I1TEMP(4) = 0
                   TERMINALNUM = I4TEMP
-                  CALL OPS('TERMINALNUM:',AGENT_NUM,AGENT_NUM)
+                  CALL OPS('TERMINALNUM:',TERMINALNUM,TERMINALNUM)
 
 C                  I1AUX(1) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0))
 C                  I1AUX(2) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1))
@@ -434,6 +569,15 @@ C                  SERIAL_OLM = MESS_FROM_OLM(SERIAL_OLM_POS)
 C                 se for diferente de 0000 então está defenido o terminal number no header
                   IF(TERMINALNUM .EQ. 0) THEN
                         CALL FIND_AGENT(AGENT_NUM,TERMINALNUM,ST)
+                        CALL OPS('AGENT_NUM:',AGENT_NUM,AGENT_NUM)
+                        CALL OPS('TERMINALNUM:',TERMINALNUM,TERMINALNUM)
+                        CALL OPS('ST:',ST,ST)
+
+                        IF(ST .EQ. -1)THEN
+                              CALL OPS('FIND_AGENT FAILED -- ST:',ST,ST)
+C                             return a error message to MessageQ do not allow to process anymore                              
+                        ENDIF
+
                   ENDIF
 
 C                 AGTN = AGTTAB(AGTNUM,AGT)  obter o agente number no AGTTAB apartir do terminal number e comparar que esse agent number é igual ao recebido no header caso contrario há uma falha nos dados enviados e é retornado uma mensagem de erro                
@@ -579,28 +723,47 @@ C                  PRO(SEROLM,PROBUF)=SERIAL_OLM
                   CALL OPS('TIMOFF:',P(ACTTIM),P(ACTTIM))
 
                   CALL OPSTXT('GET MESSAGE SUCCESS ->8')
-                  CALL LIB$MOVC3(MESS_FROM_LEN, MESS_FROM_OLM, BPRO(BINPTAB,PROBUF))
+C                 DAYJUL_POS                  
+                  CALL LIB$MOVC3(MESS_FROM_LEN-(BUFFER_HEADER_LENTH), MESS_FROM_OLM(BUFFER_HEADER_LENTH), BPRO(BINPTAB,PROBUF))
+C                 CALL LIB$MOVC3(MESS_FROM_LEN, MESS_FROM_OLM, BPRO(BINPTAB,PROBUF))
 
                   CALL OPSTXT('GET MESSAGE SUCCESS ->9')
                   CALL OPS('XXDEBUG should be 0: ',P(XXDEBUG),P(XXDEBUG))
                   IF(P(XXDEBUG).EQ.0) THEN
                         CALL OPSTXT('DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!')
-                        DMPDBG=.FALSE.
+                        DMPDBG=.FALSE.                        
+                        CALL OPS('P(XXDTRLN): ',P(XXDTRLN),P(XXDTRLN))
                         IF(P(XXDTRLN).EQ.0) DMPDBG=.TRUE.
+                        CALL OPSTXT('DEBUG2222!!!!!!!!!!!!!!!!!!!!!!!!!!')
                         IF(P(XXDTRLN).LT.0) THEN
                               IF(ABS(P(XXDTRLN)).EQ.HPRO(LINENO,PROBUF)) DMPDBG=.TRUE.
                         ENDIF
+                        CALL OPSTXT('DEBUG3333!!!!!!!!!!!!!!!!!!!!!!!!!!')
                         IF(P(XXDTRLN).GT.0) THEN
-                              IF(P(XXDTRLN).EQ.HPRO(TERNUM,PROBUF)) DMPDBG=.TRUE.
+                              CALL OPS('P(XXDTRLN) GT 0: ',P(XXDTRLN),P(XXDTRLN))
+                              CALL OPS('HPRO(TERNUM,PROBUF): ',HPRO(TERNUM,PROBUF),HPRO(TERNUM,PROBUF))
+                              IF(P(XXDTRLN).EQ.HPRO(TERNUM,PROBUF)) THEN
+                                    CALL OPS('gooooooooooooooood',P(XXDTRLN),P(XXDTRLN))
+                                    DMPDBG=.TRUE.
+                              ENDIF
                         ENDIF
-                        IF(DMPDBG) CALL PRTOUT(PROBUF) 
+                        CALL OPSTXT('DEBUG44444!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                        CALL OPS('DMPDBG: ',DMPDBG,DMPDBG)
+C                        CALL PRTOUT(PROBUF)
+                        IF(DMPDBG) THEN
+                              CALL OPS('DMPDBG TRUE....: ',DMPDBG,DMPDBG)
+                              CALL PRTOUT(PROBUF) 
+                        ENDIF
                   ENDIF
                   CALL OPSTXT('GET MESSAGE SUCCESS ->10')
 
 C Send to DIS  (for now commented to just write to GTECH$DEBUG.DAT)              
 C                 CALL QUETRA(DIS,PROBUF) 
 C use ABL subroutine instead of QUETRA since QUETRA haves extra validation to see how many tasks are active at one moment of time (most likely to prevent to many running at the same time)
-C                  CALL ABL(PROBUF,QUETAB(1,DIS),ST)
+                  CALL ABL(PROBUF,QUETAB(1,DIS),ST)
+
+                  CALL OPSTXT('Result Of Send Message to Queue')
+                  CALL OPS('ST: ',ST,ST)
 C 	  STATUS = GLIST_STAT_FULL or STATUS = GLIST_STAT_GOOD (retornar erro caso a queue aplicacional do Disptacher estiver cheio algo a considerar)
     
 C                 faz sentido fazer aqui return...
@@ -682,11 +845,13 @@ C      RETURN
             INTEGER*4 MESS_TO_LEN
             INTEGER*4 MESSAGE_TYPE, LIST_INDEX  
             INTEGER*4 SBUF, I, ST, STATUS
+            INTEGER*4 TERMINALNUM
 C            INTEGER*4 MESSERIAL, SERIAL_OLM, TERMINALNUM, CDC_DATE, JULIAN_DATE - 8 + 2 + 4 + 9 + 4 + 4 = 31
 C for Messageid 8 bytes    INTEGER*4 MSG_OFFSET /33/, MESSAGEID_POS /1/, TERMINAL_NUM_POS /9/, AGENT_NUM_POS /11/, SERIAL_NUM_POS /15/
 C for Messageid 8 bytes    INTEGER*4 DAYCDC_POS /24/, DAYJUL_POS /28/
-            INTEGER*4 MSG_OFFSET /30/, MESSAGEID_POS /1/, TERMINAL_NUM_POS /6/, AGENT_NUM_POS /8/, SERIAL_NUM_POS /12/       
-            INTEGER*4 DAYCDC_POS /21/, DAYJUL_POS /25/            
+            INTEGER*4 MSG_OFFSET /30/, MESSAGEID_POS /1/, AGENT_NUM_POS /6/, TERMINAL_NUM_POS /10/, SERIAL_NUM_POS /12/       
+            INTEGER*4 DAYCDC_POS /21/, DAYJUL_POS /23/     
+            
 C            BYTE SERIAL_OLM(0:8)
 C           MESSAGEID <-> MESSERIAL             
 
@@ -707,34 +872,89 @@ C            MESS_TO_OLM(MESSAGEID_POS + 4) = I1AUX(5)
 C            MESS_TO_OLM(MESSAGEID_POS + 5) = I1AUX(6)
 C            MESS_TO_OLM(MESSAGEID_POS + 6) = I1AUX(7)
 C            MESS_TO_OLM(MESSAGEID_POS + 7) = I1AUX(8)
-            MESS_TO_OLM(MESSAGEID_POS + 0) = BPRO(MESSID_OLM+0, SBUF)
-            MESS_TO_OLM(MESSAGEID_POS + 1) = BPRO(MESSID_OLM+1, SBUF)
-            MESS_TO_OLM(MESSAGEID_POS + 2) = BPRO(MESSID_OLM+2, SBUF)
-            MESS_TO_OLM(MESSAGEID_POS + 3) = BPRO(MESSID_OLM+3, SBUF)
-            MESS_TO_OLM(MESSAGEID_POS + 4) = BPRO(MESSID_OLM+4, SBUF)
+
+C            CALL OPS('TERMINALNUM:',AGENT_NUM,AGENT_NUM)
+            CALL OPSTXT('!!!!!!!!!!!!!!!!!!!!Processou a mensagem!!!!!!!!!!!!!!!!!!!!!')
+
+C            MESS_TO_OLM(MESSAGEID_POS + 0) = ZEXT(BPRO(MESSID_OLM+0, SBUF))
+C            MESS_TO_OLM(MESSAGEID_POS + 1) = ZEXT(BPRO(MESSID_OLM+1, SBUF))
+C            MESS_TO_OLM(MESSAGEID_POS + 2) = ZEXT(BPRO(MESSID_OLM+2, SBUF))
+C            MESS_TO_OLM(MESSAGEID_POS + 3) = ZEXT(BPRO(MESSID_OLM+3, SBUF))
+C            MESS_TO_OLM(MESSAGEID_POS + 4) = ZEXT(BPRO(MESSID_OLM+4, SBUF))
+
+C            CALL OPS('MESSAGEID::',ZEXT (MESS_TO_OLM(MESSAGEID_POS +  0)),ZEXT (MESS_TO_OLM(MESSAGEID_POS +  0)))
+C            CALL OPS('MESSAGEID::',ZEXT (MESS_TO_OLM(MESSAGEID_POS +  1)),ZEXT (MESS_TO_OLM(MESSAGEID_POS +  1)))
+C            CALL OPS('MESSAGEID::',ZEXT (MESS_TO_OLM(MESSAGEID_POS +  2)),ZEXT (MESS_TO_OLM(MESSAGEID_POS +  2)))
+C            CALL OPS('MESSAGEID::',ZEXT (MESS_TO_OLM(MESSAGEID_POS +  3)),ZEXT (MESS_TO_OLM(MESSAGEID_POS +  3)))
+C            CALL OPS('MESSAGEID::',ZEXT (MESS_TO_OLM(MESSAGEID_POS +  4)),ZEXT (MESS_TO_OLM(MESSAGEID_POS +  4)))            
+            
+            MESS_TO_OLM(MESSAGEID_POS + 4) = ZEXT(BPRO(MESSID_OLM+0, SBUF))
+            MESS_TO_OLM(MESSAGEID_POS + 3) = ZEXT(BPRO(MESSID_OLM+1, SBUF))
+            MESS_TO_OLM(MESSAGEID_POS + 2) = ZEXT(BPRO(MESSID_OLM+2, SBUF))
+            MESS_TO_OLM(MESSAGEID_POS + 1) = ZEXT(BPRO(MESSID_OLM+3, SBUF))
+            MESS_TO_OLM(MESSAGEID_POS + 0) = ZEXT(BPRO(MESSID_OLM+4, SBUF))
+
+            CALL OPS('MESSAGEID::',ZEXT (MESS_TO_OLM(MESSAGEID_POS +  4)),ZEXT (MESS_TO_OLM(MESSAGEID_POS +  4)))
+            CALL OPS('MESSAGEID::',ZEXT (MESS_TO_OLM(MESSAGEID_POS +  3)),ZEXT (MESS_TO_OLM(MESSAGEID_POS +  3)))
+            CALL OPS('MESSAGEID::',ZEXT (MESS_TO_OLM(MESSAGEID_POS +  2)),ZEXT (MESS_TO_OLM(MESSAGEID_POS +  2)))
+            CALL OPS('MESSAGEID::',ZEXT (MESS_TO_OLM(MESSAGEID_POS +  1)),ZEXT (MESS_TO_OLM(MESSAGEID_POS +  1)))
+            CALL OPS('MESSAGEID::',ZEXT (MESS_TO_OLM(MESSAGEID_POS +  0)),ZEXT (MESS_TO_OLM(MESSAGEID_POS +  0)))
+
 C            MESS_TO_OLM(MESSAGEID_POS + 5) = BPRO(MESSID_OLM+5, SBUF)
 C            MESS_TO_OLM(MESSAGEID_POS + 6) = BPRO(MESSID_OLM+6, SBUF)
 C            MESS_TO_OLM(MESSAGEID_POS + 7) = BPRO(MESSID_OLM+7, SBUF)
 
-            I4TEMP = HPRO(TERNUM,SBUF) 
-            MESS_TO_OLM(TERMINAL_NUM_POS + 0) = I1TEMP(1)
-            MESS_TO_OLM(TERMINAL_NUM_POS + 1) = I1TEMP(2) 
+            TERMINALNUM = HPRO(TERNUM,SBUF) 
+            I4TEMP = TERMINALNUM
+            CALL OPS('HPRO(TERNUM,SBUF):',ZEXT (HPRO(TERNUM,SBUF)),ZEXT (HPRO(TERNUM,SBUF)))
+            MESS_TO_OLM(TERMINAL_NUM_POS + 0) = ZEXT(I1TEMP(1))
+            MESS_TO_OLM(TERMINAL_NUM_POS + 1) = ZEXT(I1TEMP(2)) 
+            CALL OPS('TERMINAL_NUM::',ZEXT (MESS_TO_OLM(TERMINAL_NUM_POS + 0)),ZEXT (MESS_TO_OLM(TERMINAL_NUM_POS + 0)))
+            CALL OPS('TERMINAL_NUM::',ZEXT (MESS_TO_OLM(TERMINAL_NUM_POS + 1)),ZEXT (MESS_TO_OLM(TERMINAL_NUM_POS + 1)))                        
 
-            I4TEMP = AGTTAB(AGTNUM,TERNUM) !PRO(AGTNUM,SBUF) 
-            MESS_TO_OLM(AGENT_NUM_POS+0) = I1TEMP(1)
-            MESS_TO_OLM(AGENT_NUM_POS+1) = I1TEMP(2)
-            MESS_TO_OLM(AGENT_NUM_POS+2) = I1TEMP(3)
-            MESS_TO_OLM(AGENT_NUM_POS+3) = I1TEMP(4)
+C            TERMINALNUM=HPRO(TERNUM,SBUF)
 
-            MESS_TO_OLM(SERIAL_NUM_POS+0) = BPRO(SEROLM_OLM+0, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+1) = BPRO(SEROLM_OLM+1, SBUF)            
-            MESS_TO_OLM(SERIAL_NUM_POS+2) = BPRO(SEROLM_OLM+2, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+3) = BPRO(SEROLM_OLM+3, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+4) = BPRO(SEROLM_OLM+4, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+5) = BPRO(SEROLM_OLM+5, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+6) = BPRO(SEROLM_OLM+6, SBUF)
-            MESS_TO_OLM(SERIAL_NUM_POS+7) = BPRO(SEROLM_OLM+7, SBUF)            
-            MESS_TO_OLM(SERIAL_NUM_POS+8) = BPRO(SEROLM_OLM+8, SBUF)
+            I4TEMP = AGTTAB(AGTNUM,TERMINALNUM) !PRO(AGTNUM,SBUF) 
+            MESS_TO_OLM(AGENT_NUM_POS+0) = ZEXT(I1TEMP(1))
+            MESS_TO_OLM(AGENT_NUM_POS+1) = ZEXT(I1TEMP(2))
+            MESS_TO_OLM(AGENT_NUM_POS+2) = ZEXT(I1TEMP(3))
+            MESS_TO_OLM(AGENT_NUM_POS+3) = ZEXT(I1TEMP(4))
+
+            CALL OPS('AGENT_NUM::',ZEXT (MESS_TO_OLM(AGENT_NUM_POS+0)),ZEXT (MESS_TO_OLM(AGENT_NUM_POS+0)))
+            CALL OPS('AGENT_NUM::',ZEXT (MESS_TO_OLM(AGENT_NUM_POS+1)),ZEXT (MESS_TO_OLM(AGENT_NUM_POS+1)))
+            CALL OPS('AGENT_NUM::',ZEXT (MESS_TO_OLM(AGENT_NUM_POS+2)),ZEXT (MESS_TO_OLM(AGENT_NUM_POS+2)))
+            CALL OPS('AGENT_NUM::',ZEXT (MESS_TO_OLM(AGENT_NUM_POS+3)),ZEXT (MESS_TO_OLM(AGENT_NUM_POS+3)))            
+
+C            MESS_TO_OLM(SERIAL_NUM_POS+0) = ZEXT(BPRO(SEROLM_OLM+0, SBUF))
+C            MESS_TO_OLM(SERIAL_NUM_POS+1) = ZEXT(BPRO(SEROLM_OLM+1, SBUF))            
+C            MESS_TO_OLM(SERIAL_NUM_POS+2) = ZEXT(BPRO(SEROLM_OLM+2, SBUF))
+C            MESS_TO_OLM(SERIAL_NUM_POS+3) = ZEXT(BPRO(SEROLM_OLM+3, SBUF))
+C            MESS_TO_OLM(SERIAL_NUM_POS+4) = ZEXT(BPRO(SEROLM_OLM+4, SBUF))
+C            MESS_TO_OLM(SERIAL_NUM_POS+5) = ZEXT(BPRO(SEROLM_OLM+5, SBUF))
+C            MESS_TO_OLM(SERIAL_NUM_POS+6) = ZEXT(BPRO(SEROLM_OLM+6, SBUF))
+C            MESS_TO_OLM(SERIAL_NUM_POS+7) = ZEXT(BPRO(SEROLM_OLM+7, SBUF))            
+C            MESS_TO_OLM(SERIAL_NUM_POS+8) = ZEXT(BPRO(SEROLM_OLM+8, SBUF))
+
+            MESS_TO_OLM(SERIAL_NUM_POS+8) = ZEXT(BPRO(SEROLM_OLM+0, SBUF))
+            MESS_TO_OLM(SERIAL_NUM_POS+7) = ZEXT(BPRO(SEROLM_OLM+1, SBUF))            
+            MESS_TO_OLM(SERIAL_NUM_POS+6) = ZEXT(BPRO(SEROLM_OLM+2, SBUF))
+            MESS_TO_OLM(SERIAL_NUM_POS+5) = ZEXT(BPRO(SEROLM_OLM+3, SBUF))
+            MESS_TO_OLM(SERIAL_NUM_POS+4) = ZEXT(BPRO(SEROLM_OLM+4, SBUF))
+            MESS_TO_OLM(SERIAL_NUM_POS+3) = ZEXT(BPRO(SEROLM_OLM+5, SBUF))
+            MESS_TO_OLM(SERIAL_NUM_POS+2) = ZEXT(BPRO(SEROLM_OLM+6, SBUF))
+            MESS_TO_OLM(SERIAL_NUM_POS+1) = ZEXT(BPRO(SEROLM_OLM+7, SBUF))            
+            MESS_TO_OLM(SERIAL_NUM_POS+0) = ZEXT(BPRO(SEROLM_OLM+8, SBUF))            
+
+
+            CALL OPS('SERIAL_NUM::',ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+0)),ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+0)))
+            CALL OPS('SERIAL_NUM::',ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+1)),ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+1)))
+            CALL OPS('SERIAL_NUM::',ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+2)),ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+2)))
+            CALL OPS('SERIAL_NUM::',ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+3)),ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+3)))
+            CALL OPS('SERIAL_NUM::',ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+4)),ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+4)))
+            CALL OPS('SERIAL_NUM::',ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+5)),ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+5)))
+            CALL OPS('SERIAL_NUM::',ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+6)),ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+6)))
+            CALL OPS('SERIAL_NUM::',ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+7)),ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+7)))
+            CALL OPS('SERIAL_NUM::',ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+8)),ZEXT (MESS_TO_OLM(SERIAL_NUM_POS+8)))
 
 C            DO I=0, 8
 C                  SERIAL_OLM(I) = BPRO(SEROLM+I,SBUF) !SEROLM=49
@@ -742,26 +962,42 @@ C            ENDDO
             
 C            MESS_TO_OLM(SERIAL_NUM_POS) = SERIAL_OLM !PRO(SEROLM,SBUF)
             I4TEMP = DAYCDC
-            MESS_TO_OLM(DAYCDC_POS+0) = I1TEMP(1)
-            MESS_TO_OLM(DAYCDC_POS+1) = I1TEMP(2)
-            MESS_TO_OLM(DAYCDC_POS+2) = I1TEMP(3)
-            MESS_TO_OLM(DAYCDC_POS+3) = I1TEMP(4)            
+            MESS_TO_OLM(DAYCDC_POS+0) = ZEXT(I1TEMP(1))
+            MESS_TO_OLM(DAYCDC_POS+1) = ZEXT(I1TEMP(2))
+            MESS_TO_OLM(DAYCDC_POS+2) = ZEXT(I1TEMP(3))
+            MESS_TO_OLM(DAYCDC_POS+3) = ZEXT(I1TEMP(4))  
+            
+            CALL OPS('DAYCDC::',ZEXT (MESS_TO_OLM(DAYCDC_POS+0)),ZEXT (MESS_TO_OLM(DAYCDC_POS+0)))
+            CALL OPS('DAYCDC::',ZEXT (MESS_TO_OLM(DAYCDC_POS+1)),ZEXT (MESS_TO_OLM(DAYCDC_POS+1)))
+            CALL OPS('DAYCDC::',ZEXT (MESS_TO_OLM(DAYCDC_POS+2)),ZEXT (MESS_TO_OLM(DAYCDC_POS+2)))
+            CALL OPS('DAYCDC::',ZEXT (MESS_TO_OLM(DAYCDC_POS+3)),ZEXT (MESS_TO_OLM(DAYCDC_POS+3)))
+            
+
 C            MESS_TO_OLM(DAYCDC_POS) = DAYCDC
             I4TEMP = DAYJUL
-            MESS_TO_OLM(DAYJUL_POS+0) = I1TEMP(1)
-            MESS_TO_OLM(DAYJUL_POS+1) = I1TEMP(2)
-            MESS_TO_OLM(DAYJUL_POS+2) = I1TEMP(3)
-            MESS_TO_OLM(DAYJUL_POS+3) = I1TEMP(4)               
+            MESS_TO_OLM(DAYJUL_POS+0) = ZEXT(I1TEMP(1))
+            MESS_TO_OLM(DAYJUL_POS+1) = ZEXT(I1TEMP(2))
+            MESS_TO_OLM(DAYJUL_POS+2) = ZEXT(I1TEMP(3))
+            MESS_TO_OLM(DAYJUL_POS+3) = ZEXT(I1TEMP(4))               
 C            MESS_TO_OLM(DAYJUL_POS) = DAYJUL
-      
-            MESS_TO_LEN  = HPRO(INPLEN,SBUF) 
-            DO I=1, MESS_TO_LEN
-                  MESS_TO_OLM(I+MSG_OFFSET) = BPRO(I,SBUF)
-            ENDDO
 
+            CALL OPS('DAYJUL_POS::',ZEXT (MESS_TO_OLM(DAYJUL_POS+0)),ZEXT (MESS_TO_OLM(DAYJUL_POS+0)))
+            CALL OPS('DAYJUL_POS::',ZEXT (MESS_TO_OLM(DAYJUL_POS+1)),ZEXT (MESS_TO_OLM(DAYJUL_POS+1)))
+            CALL OPS('DAYJUL_POS::',ZEXT (MESS_TO_OLM(DAYJUL_POS+2)),ZEXT (MESS_TO_OLM(DAYJUL_POS+2)))
+            CALL OPS('DAYJUL_POS::',ZEXT (MESS_TO_OLM(DAYJUL_POS+3)),ZEXT (MESS_TO_OLM(DAYJUL_POS+3)))
+      
+            MESS_TO_LEN  = HPRO(INPLEN,SBUF)
+            CALL OPS('Message Full Size send',MESS_TO_LEN,MESS_TO_LEN)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC             
+C            DO I=1, MESS_TO_LEN
+C                  MESS_TO_OLM(I+MSG_OFFSET) = BPRO(I,SBUF)
+C            ENDDO
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+            CALL OPSTXT('!!!!!!!!!!!!!!!!!!!!Vai tentar enviar mensagem para MessageQ!!!!!!!!!!!!!!!!!!!!!')            
             CALL MESSQ_PUT(%REF(STATUS)) 
 
             IF (STATUS .NE. PAMS__SUCCESS) THEN
+                  CALL OPSTXT('??????????????  ERROR in sending to MessageQ   ????????????????????????')
                   CALL BUILD_MSG(MESS,1, OLM) 
                   CALL BUILD_MSG(MESS,2, TEOLM)
                   CALL BUILD_MSG(MESS,3, 4) 
