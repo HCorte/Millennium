@@ -229,8 +229,11 @@ C
 C
 200	CONTINUE
 C
-	CALL DQUINP(BUF_NO)
+	CALL DQUINP(BUF_NO)	
 	IF (BUF_NO.GT.0) THEN
+D       TYPE *,IAM(),'CALLING DQUINP'
+D       CALL PRTOUT(BUF_NO)        
+D		CALL OPSTXT('**********************ENCPRO -> CALLING DQUINP***************************')		
 D	  TYPE *,'Transaction dequeued form input ',BUF_NO
 	  AGAIN=-1
 	  IF (BUF_NO.GT.NUMPRO) THEN
