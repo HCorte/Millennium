@@ -244,13 +244,13 @@ C
 C
 C
         CALL RTL(OUTPUT_BUF,GAME_OUTQUE,ST)
-        IF (ST.NE.GLIST_STAT_EMPTY) THEN
+        IF (ST.NE.GLIST_STAT_EMPTY) THEN                
 C
 C       if this is simulated transaction queue it to simulation
 C       
            XREF_BUF=SIM_XREF(OUTPUT_BUF)   !BUFFER SIMULATED IF .NON. 0
            SIM_XREF(OUTPUT_BUF)=0
-           IF (XREF_BUF.NE.0) THEN
+           IF (XREF_BUF.NE.0) THEN                         
              CALL SIMCHKOUT(OUTPUT_BUF,XREF_BUF)
              IF (XREF_BUF.LT.0) GOTO 100        !IF INTERNALLY SIMULATED
            ENDIF
@@ -259,7 +259,7 @@ C       check if should encrypt
 C       queue to encryption if should be encrypted, otherwise
 C       queue to x2x. DES HARD IS ONLY DONE TO ON-LINE TERMINALS
 C
-          IF (IAND(PRO(OUTTAB,OUTPUT_BUF),ENCRYPTION_ON).NE.0) THEN
+          IF (IAND(PRO(OUTTAB,OUTPUT_BUF),ENCRYPTION_ON).NE.0) THEN 
             IF (P(DESFLG_TYPE).EQ.DESFLG_HARD.AND.
      *         TSBIT(AGTTAB(AGTTYP,HPRO(TERNUM,OUTPUT_BUF)),AGTTOI)) THEN
 D              TYPE *,IAM(),'CALLING DESENCBF'
@@ -270,8 +270,12 @@ D              TYPE *,IAM(),'CALLING SFTENCBF'
 D              CALL PRTOUT(OUTPUT_BUF)
                CALL SFTENCBF(OUTPUT_BUF,ST)             !DO ENCRYPTION
             ENDIF
+            CALL OPS('ST.NE.0 :',ST,ST)
             IF (ST.NE.0) CALL SENDOUT(OUTPUT_BUF)       !IF ERROR
-          ELSE
+          ELSE  
+CCCCCCCCCCCCCCCCCCCCCC TEST OLM QUEUE PROBLEAM CONFIRMED (DIS BUG) CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC            
+C            CALL X2RELBUF(OUTPUT_BUF)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC               
             CALL SENDOUT(OUTPUT_BUF) !GAME OUTPUT
           ENDIF
 C
@@ -296,6 +300,15 @@ C
 C
         CALL DQUINP(BUF_NO)
         IF (BUF_NO.GT.0) THEN
+          TYPE *,IAM(),'CALLING DQUINP'
+          CALL PRTOUT(BUF_NO)   
+          CALL OPS('TRCODE',ZEXT(HPRO(TRCODE,BUF_NO)),ZEXT(HPRO(TRCODE,BUF_NO)))   
+          CALL OPS('CNUM',ZEXT(PRO(CNUM,BUF_NO)),ZEXT(PRO(CNUM,BUF_NO)))   
+          CALL OPS('CVAL',ZEXT(PRO(CVAL,BUF_NO)),ZEXT(PRO(CVAL,BUF_NO)))    
+          CALL OPS('CTYP',ZEXT(PRO(CTYP,BUF_NO)),ZEXT(PRO(CTYP,BUF_NO)))   
+          CALL OPS('CLIN',ZEXT(PRO(CLIN,BUF_NO)),ZEXT(PRO(CLIN,BUF_NO))) 
+          CALL OPS('CTER',ZEXT(PRO(CTER,BUF_NO)),ZEXT(PRO(CTER,BUF_NO)))    
+          CALL OPSTXT('**********************ENCPROI -> CALLING DQUINP***************************')                
           AGAIN=-1
           IF (BUF_NO.GT.NUMPRO) THEN
             TYPE 900,IAM(),BUF_NO
@@ -303,6 +316,7 @@ C
             GOTO 200
           ENDIF
           SIM_XREF(BUF_NO)=0
+          CALL OPSTXT('**********************1***************************')
           IF (IAND(PRO(INPTAB,BUF_NO),ENCRYPTION_ON).EQ.0.OR.
      *        P(SYSTYP).NE.LIVSYS.OR.
      *        HPRO(TRCODE,BUF_NO).NE.TYPREG) THEN
@@ -319,6 +333,7 @@ C
 C
 C            add buffer to dispatcher queue
 C
+             CALL OPSTXT('**********************2***************************')
              CALL ABL(BUF_NO,QUETAB(1,DIS),STATUS)
              GOTO 200
           ELSE
@@ -437,7 +452,7 @@ C       encrypt message (not second phase of multipassword signon)
 C
             AGAIN=-1
 D           TYPE *,IAM(),'AFTER ENCRYPTION'
-D           CALL PRTOUT(BUF_NO)
+D           CALL PRTOUT(BUF_NO)          
             CALL SENDOUT(BUF_NO)
             GOTO 2210
           ELSE          !STATUS.EQ.0, DECRYPT OR TYPPAS
@@ -899,14 +914,35 @@ C
                 
         INTEGER*4 BUF
  
+C        IF (X2X_GAME_STATE.EQ.X2X_GAMES_UP) THEN
+CC         CALL X2ADDPRO(BUF)                        ! MXSRV
+C          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV
+C            CALL QUETRA(MXS,BUF)                    ! MXSRV
+C          ELSE                                      ! MXSRV
+C            CALL X2ADDPRO(BUF)                      ! MXSRV
+C          ENDIF                    
+C        ELSE
+C            CALL X2RELBUF(BUF)
+C        ENDIF
+
+        CALL OPSTXT(' ENCPROI.FOR ')
         IF (X2X_GAME_STATE.EQ.X2X_GAMES_UP) THEN
 C         CALL X2ADDPRO(BUF)                        ! MXSRV
-          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV
+          CALL OPSTXT(' THE GAME IS UP ')
+          IF (HPRO(PRCSRC,BUF).EQ.OLM_COM) THEN ! V05 - OLM
+            CALL OPSTXT(' GOOD SEND to OLM_COM: OLM queue ')
+C            CALL QUETRA(28,BUF)                    ! V05 - OLM (rever se deve usar o ABL ou é QUETRA)            
+            CALL QUETRA(OLM,BUF)                    ! V05 - OLM (rever se deve usar o ABL ou é QUETRA)
+C V05          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV            
+          ELSEIF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV
+            CALL OPSTXT(' wrong its not MXS Channel ')
             CALL QUETRA(MXS,BUF)                    ! MXSRV
           ELSE                                      ! MXSRV
+            CALL OPSTXT(' wrong its not X2X Channel ')
             CALL X2ADDPRO(BUF)                      ! MXSRV
-          ENDIF                    
+          ENDIF                                     ! MXSRV
         ELSE
+            CALL OPSTXT(' THE GAME IS NOT UP!!!!!!!! ')
             CALL X2RELBUF(BUF)
         ENDIF
  
