@@ -300,15 +300,9 @@ C
 C
         CALL DQUINP(BUF_NO)
         IF (BUF_NO.GT.0) THEN
-          TYPE *,IAM(),'CALLING DQUINP'
-          CALL PRTOUT(BUF_NO)   
-          CALL OPS('TRCODE',ZEXT(HPRO(TRCODE,BUF_NO)),ZEXT(HPRO(TRCODE,BUF_NO)))   
-          CALL OPS('CNUM',ZEXT(PRO(CNUM,BUF_NO)),ZEXT(PRO(CNUM,BUF_NO)))   
-          CALL OPS('CVAL',ZEXT(PRO(CVAL,BUF_NO)),ZEXT(PRO(CVAL,BUF_NO)))    
-          CALL OPS('CTYP',ZEXT(PRO(CTYP,BUF_NO)),ZEXT(PRO(CTYP,BUF_NO)))   
-          CALL OPS('CLIN',ZEXT(PRO(CLIN,BUF_NO)),ZEXT(PRO(CLIN,BUF_NO))) 
-          CALL OPS('CTER',ZEXT(PRO(CTER,BUF_NO)),ZEXT(PRO(CTER,BUF_NO)))    
-          CALL OPSTXT('**********************ENCPROI -> CALLING DQUINP***************************')                
+D          TYPE *,IAM(),'CALLING DQUINP'
+D          CALL PRTOUT(BUF_NO)   
+D          CALL OPS('TRCODE',ZEXT(HPRO(TRCODE,BUF_NO)),ZEXT(HPRO(TRCODE,BUF_NO)))                  
           AGAIN=-1
           IF (BUF_NO.GT.NUMPRO) THEN
             TYPE 900,IAM(),BUF_NO
@@ -316,7 +310,6 @@ C
             GOTO 200
           ENDIF
           SIM_XREF(BUF_NO)=0
-          CALL OPSTXT('**********************1***************************')
           IF (IAND(PRO(INPTAB,BUF_NO),ENCRYPTION_ON).EQ.0.OR.
      *        P(SYSTYP).NE.LIVSYS.OR.
      *        HPRO(TRCODE,BUF_NO).NE.TYPREG) THEN
@@ -333,7 +326,6 @@ C
 C
 C            add buffer to dispatcher queue
 C
-             CALL OPSTXT('**********************2***************************')
              CALL ABL(BUF_NO,QUETAB(1,DIS),STATUS)
              GOTO 200
           ELSE
@@ -928,21 +920,16 @@ C        ENDIF
         CALL OPSTXT(' ENCPROI.FOR ')
         IF (X2X_GAME_STATE.EQ.X2X_GAMES_UP) THEN
 C         CALL X2ADDPRO(BUF)                        ! MXSRV
-          CALL OPSTXT(' THE GAME IS UP ')
           IF (HPRO(PRCSRC,BUF).EQ.OLM_COM) THEN ! V05 - OLM
-            CALL OPSTXT(' GOOD SEND to OLM_COM: OLM queue ')
 C            CALL QUETRA(28,BUF)                    ! V05 - OLM (rever se deve usar o ABL ou é QUETRA)            
             CALL QUETRA(OLM,BUF)                    ! V05 - OLM (rever se deve usar o ABL ou é QUETRA)
 C V05          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV            
           ELSEIF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV
-            CALL OPSTXT(' wrong its not MXS Channel ')
             CALL QUETRA(MXS,BUF)                    ! MXSRV
           ELSE                                      ! MXSRV
-            CALL OPSTXT(' wrong its not X2X Channel ')
             CALL X2ADDPRO(BUF)                      ! MXSRV
           ENDIF                                     ! MXSRV
         ELSE
-            CALL OPSTXT(' THE GAME IS NOT UP!!!!!!!! ')
             CALL X2RELBUF(BUF)
         ENDIF
  
