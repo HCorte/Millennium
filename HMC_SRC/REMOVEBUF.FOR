@@ -4,12 +4,15 @@
         INCLUDE 'INCLIB:GLOBAL.DEF'
         INCLUDE 'INCLIB:PROCOM.DEF'
         INCLUDE 'INCLIB:TASKID.DEF'  
-        INCLUDE 'INCLIB:QUECOM.DEF'      
+        INCLUDE 'INCLIB:QUECOM.DEF'  
+        INCLUDE 'INCLIB:CONCOM.DEF'    
 C        INCLUDE 'OLMCON.DEF'
 
         CHARACTER YN, ALLONE, BLOCKBUF
         LOGICAL RUNPROG /.TRUE./ 
-        INTEGER*4 APULST(3),LOGLST(3),PSTLST(3)
+        INTEGER*4 DISLST(1024)
+        INTEGER*4 I, LIMIT, USED
+        INTEGER*4	RESULT
       
 11      CONTINUE
         IF(RUNPROG) THEN
@@ -35,16 +38,37 @@ C        INCLUDE 'OLMCON.DEF'
             ENDIF
           
             GOTO 11
+          ELSEIF(YN .EQ. 'W' .OR. YN .EQ. 'w') THEN     
+            CALL LISTSIZE(QUETAB(1,DIS),USED)       
+            CALL QIMAGE(QUETAB(1,DIS),DISLST,USED)
+            PRINT *, 'DISPATCHER'
+            PRINT 100,DISLST(1)
+            DO I=2, USED+1
+              PRINT 101,DISLST(I) 
+            ENDDO   
+            GOTO 11   
+          ELSEIF(YN .EQ. 'T' .OR. YN .EQ. 't') THEN
+            DO I=1, NUMAPPQUE
+              PRINT *,'I:',I
+              PRINT *,'ACTTSK(I):',ACTTSK(I)
+            ENDDO
+            GOTO 11
+          ELSEIF(YN .EQ. 'R' .OR. YN .EQ. 'r') THEN
+            DO I=1, NUMAPPQUE
+              ACTTSK(I)=0
+            ENDDO
+            GOTO 11   
+          ELSEIF(YN .EQ. 'A' .OR. YN .EQ. 'a') THEN
+            CALL LIB$ADAWI(1, ACTTSK(29), RESULT)
+            PRINT *,'RESULT:',RESULT
+            GOTO 11  
+          ELSEIF(YN .EQ. 'D' .OR. YN .EQ. 'd') THEN
+            CALL LIB$ADAWI(-1, ACTTSK(29), RESULT)
+            PRINT *,'RESULT:',RESULT
+            GOTO 11                        
           ENDIF
-C          IF(YN .EQ. 'W' .OR. YN .EQ. 'w') THEN
-C            CALL QIMAGE(QUETAB(1,APU),APULST,3)
-C            CALL QIMAGE(QUETAB(1,LOG),LOGLST,3)
-C            CALL QIMAGE(QUETAB(1,PST),PSTLST,3)
-C            PRINT *, 'LIST OF BUFFERS APU -- LOG -- PST'
-C            PRINT 100,APULST(1),LOGLST(1),PSTLST(1)
-C            PRINT 101,APULST(2),LOGLST(2),PSTLST(2)
-C            PRINT 101,APULST(3),LOGLST(3),PSTLST(3)           
-C            GOTO 11
+          
+
 C          ENDIF
           IF(YN .EQ. 'N' .OR. YN .EQ. 'n') THEN
             RUNPROG = .FALSE.
@@ -52,8 +76,8 @@ C          ENDIF
         ENDIF
         PRINT *,'PROGRAM AS ENDED...'
 
-C100	FORMAT(1X,'<',I4.0,'>',3X,'<',I4.0,'>',3X,'<',I4.0,'>')
-C101	FORMAT(2X,I4.0,5X,I4.0,5X,I4.0)        
+100	FORMAT(1X,'<',I4.0,'>')
+101	FORMAT(2X,I4.0)        
 
       END
 
@@ -68,7 +92,7 @@ C101	FORMAT(2X,I4.0,5X,I4.0,5X,I4.0)
 C        INCLUDE 'OLMCON.DEF'
 
         INTEGER*4 OPT,ST, BUFNUM, STAT
-	INTEGER*4 LIST(*)        
+	      INTEGER*4 LIST(*)        
 C        CHARACTER QUEUE
         INTEGER*4 QUEUE, APPQUEUESIZE
 
@@ -112,15 +136,15 @@ C        CALL LIST_SIZE(QUETAB(1,DIS))
         INCLUDE 'INCLIB:PROCOM.DEF'   
         INCLUDE 'INCLIB:TASKID.DEF'  
         INCLUDE 'INCLIB:QUECOM.DEF'
-	INCLUDE 'INCLIB:GLIST.DEF'                     
+	      INCLUDE 'INCLIB:GLIST.DEF'                     
 C        INCLUDE 'OLMCON.DEF'
 
         INTEGER*4 OPT,ST, BUFNUM, STAT
-	INTEGER*4 LIST(*)        
+	      INTEGER*4 LIST(*)        
 C        CHARACTER QUEUE
         INTEGER*4 QUEUE, APPQUEUESIZE /0/
         INTEGER*4 MAX_LENGTH /20/
-	INTEGER*4 I, LIMIT, TOP, USED
+	      INTEGER*4 I, LIMIT, TOP, USED
         INTEGER*4 IND
         LOGICAL ALLBLOCK
 
