@@ -278,7 +278,6 @@ C
 	  SER = MOD(VALUE, SYSOFF)
 	  IF (CWAY .EQ. WAYINP) THEN
 		NETMODE(NODEID, CWAY) = FILMD		! SET RECOV MODE NOW
-		CALL OPSTXT('!!!????!!!???Restore Being Called!!!????!!!???')
 	    CALL RESTORE(SER, ST)			! LAST VALID CHECKPOINT
 	    IF (ST .NE. 0) THEN
 	      TYPE *, IAM(), BELL,
