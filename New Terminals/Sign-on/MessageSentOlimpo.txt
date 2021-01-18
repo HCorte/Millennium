@@ -1,0 +1,229 @@
+17:06:45 COMOLM   !!!!!!!!!!!!!!!!!!!!Processou a mensagem!!!!!!!!!!!!!!!!!!!!!
+
+17:06:45 COMOLM   MESSAGEID::                                       :I[         10]H[       A]
+
+17:06:45 COMOLM   MESSAGEID::                                       :I[          1]H[       1]
+
+17:06:45 COMOLM   MESSAGEID::                                       :I[          0]H[       0]
+
+17:06:45 COMOLM   MESSAGEID::                                       :I[          0]H[       0]
+
+17:06:45 COMOLM   MESSAGEID::                                       :I[          0]H[       0]
+
+17:06:45 COMOLM   HPRO(TERNUM,SBUF):                                :I[       3512]H[     DB8]
+
+17:06:45 COMOLM   TERMINAL_NUM::                                    :I[        184]H[      B8]
+
+17:06:45 COMOLM   TERMINAL_NUM::                                    :I[         13]H[       D]
+
+17:06:45 COMOLM   AGENT_NUM::                                       :I[        230]H[      E6]
+
+17:06:45 COMOLM   AGENT_NUM::                                       :I[        147]H[      93]
+
+17:06:45 COMOLM   AGENT_NUM::                                       :I[          4]H[       4]
+
+17:06:45 COMOLM   AGENT_NUM::                                       :I[          0]H[       0]
+
+17:06:45 COMOLM   SERIAL_NUM::                                      :I[        235]H[      EB]
+
+17:06:45 COMOLM   SERIAL_NUM::                                      :I[         14]H[       E]
+
+17:06:45 COMOLM   SERIAL_NUM::                                      :I[        145]H[      91]
+
+17:06:45 COMOLM   SERIAL_NUM::                                      :I[        147]H[      93]
+
+17:06:45 COMOLM   SERIAL_NUM::                                      :I[        100]H[      64]
+
+17:06:45 COMOLM   SERIAL_NUM::                                      :I[         23]H[      17]
+
+17:06:45 COMOLM   SERIAL_NUM::                                      :I[        217]H[      D9]
+
+17:06:45 COMOLM   SERIAL_NUM::                                      :I[         99]H[      63]
+
+17:06:45 COMOLM   SERIAL_NUM::                                      :I[         11]H[       B]
+
+17:06:45 COMOLM   DAYCDC::                                          :I[         25]H[      19]
+
+17:06:45 COMOLM   DAYCDC::                                          :I[         28]H[      1C]
+
+17:06:45 COMOLM   DAYJUL_POS::                                      :I[          8]H[       8]
+
+17:06:45 COMOLM   DAYJUL_POS::                                      :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Full Size send                            :I[         85]H[      55]
+
+17:06:45 COMOLM   starting position (129)?->                        :I[        129]H[      81]
+
+17:06:45 COMOLM   Message Body send                                 :I[         32]H[      20]
+
+17:06:45 COMOLM   Message Body send                                 :I[         48]H[      30]
+
+17:06:45 COMOLM   Message Body send                                 :I[        107]H[      6B]
+
+17:06:45 COMOLM   Message Body send                                 :I[        249]H[      F9]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[        240]H[      F0]
+
+17:06:45 COMOLM   Message Body send                                 :I[        165]H[      A5]
+
+17:06:45 COMOLM   Message Body send                                 :I[         13]H[       D]
+
+17:06:45 COMOLM   Message Body send                                 :I[        184]H[      B8]
+
+17:06:45 COMOLM   Message Body send                                 :I[        241]H[      F1]
+
+17:06:45 COMOLM   Message Body send                                 :I[        243]H[      F3]
+
+17:06:45 COMOLM   Message Body send                                 :I[          1]H[       1]
+
+17:06:45 COMOLM   Message Body send                                 :I[         28]H[      1C]
+
+17:06:45 COMOLM   Message Body send                                 :I[         25]H[      19]
+
+17:06:45 COMOLM   Message Body send                                 :I[          5]H[       5]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          4]H[       4]
+
+17:06:45 COMOLM   Message Body send                                 :I[        147]H[      93]
+
+17:06:45 COMOLM   Message Body send                                 :I[        230]H[      E6]
+
+17:06:45 COMOLM   Message Body send                                 :I[         16]H[      10]
+
+17:06:45 COMOLM   Message Body send                                 :I[         36]H[      24]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          1]H[       1]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          1]H[       1]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          7]H[       7]
+
+17:06:45 COMOLM   Message Body send                                 :I[        161]H[      A1]
+
+17:06:45 COMOLM   Message Body send                                 :I[         31]H[      1F]
+
+17:06:45 COMOLM   Message Body send                                 :I[          4]H[       4]
+
+17:06:45 COMOLM   Message Body send                                 :I[         87]H[      57]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          3]H[       3]
+
+17:06:45 COMOLM   Message Body send                                 :I[         15]H[       F]
+
+17:06:45 COMOLM   Message Body send                                 :I[         34]H[      22]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[         58]H[      3A]
+
+17:06:45 COMOLM   Message Body send                                 :I[        152]H[      98]
+
+17:06:45 COMOLM   Message Body send                                 :I[          5]H[       5]
+
+17:06:45 COMOLM   Message Body send                                 :I[          5]H[       5]
+
+17:06:45 COMOLM   Message Body send                                 :I[        137]H[      89]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          4]H[       4]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          1]H[       1]
+
+17:06:45 COMOLM   Message Body send                                 :I[        154]H[      9A]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          4]H[       4]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          1]H[       1]
+
+17:06:45 COMOLM   Message Body send                                 :I[         17]H[      11]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          6]H[       6]
+
+17:06:45 COMOLM   Message Body send                                 :I[          5]H[       5]
+
+17:06:45 COMOLM   Message Body send                                 :I[          2]H[       2]
+
+17:06:45 COMOLM   Message Body send                                 :I[          1]H[       1]
+
+17:06:45 COMOLM   Message Body send                                 :I[        150]H[      96]
+
+17:06:45 COMOLM   Message Body send                                 :I[         11]H[       B]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          4]H[       4]
+
+17:06:45 COMOLM   Message Body send                                 :I[          1]H[       1]
+
+17:06:45 COMOLM   Message Body send                                 :I[          3]H[       3]
+
+17:06:45 COMOLM   Message Body send                                 :I[         12]H[       C]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   Message Body send                                 :I[          4]H[       4]
+
+17:06:45 COMOLM   Message Body send                                 :I[          1]H[       1]
+
+17:06:45 COMOLM   Message Body send                                 :I[          4]H[       4]
+
+17:06:45 COMOLM   Message Body send                                 :I[          0]H[       0]
+
+17:06:45 COMOLM   !!!!!!!!!!!!!!!!!!!!Vai tentar enviar mensagem para MessageQ!!!!!!!!!!!!!!!!!!!!!

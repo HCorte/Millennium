@@ -1,0 +1,2672 @@
+Using username "console".
+Pre-authentication banner message from server:
+|
+| @SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+End of banner message from server
+console@10.100.82.101's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Monday, 4-JAN-2021 16:08:03.38
+    Last non-interactive login on Monday, 4-JAN-2021 16:05:34.92
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM
+;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been super
+seded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+
+    GOPROD  DKD11:      AGOLS     DESV Production
+
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+
+    GOPORT  DKD0:       AGOLS     TEST Production
+
+    GOSCML  DKD5:       AGOLS     TEST SCML
+
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+PODEV1::PORT> goscml
+%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
+%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
+%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superse
+ded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been supersede
+d
+PODEV1::SCML> set def [.igs]
+PODEV1::SCML> dir
+
+Directory GXPROJ:[TSK.IGS]
+
+BACKUP_20201216_IGS_EXE.ZIP;1
+                                  784  16-DEC-2020 09:24:16.18
+BIN_20140723.DIR;1                  1  23-JUL-2014 19:28:41.65
+COMIGS.EXE;2                     1208  16-DEC-2020 09:30:32.50
+COMIGS.EXE;1                     1208  27-JUN-2017 18:34:39.36
+COMOLM.EXE;10                     319   4-JAN-2021 15:03:43.63
+COMOLM.EXE;9                      319  23-DEC-2020 15:22:31.15
+COMOLM.EXE;8                      319  23-DEC-2020 12:17:18.35
+COMOLM.EXE;6                      319  23-DEC-2020 12:08:00.81
+COMOLM.EXE;5                      319  23-DEC-2020 11:59:51.90
+COMOLM.EXE;3                      317  23-DEC-2020 11:47:27.99
+COMOLM.EXE;2                      317  23-DEC-2020 11:39:02.95
+COMOLM.EXE;1                      317  23-DEC-2020 11:20:06.57
+DMQ.INI;22                          1  23-DEC-2020 16:32:21.33
+DMQ.INI;21                          1  16-DEC-2020 18:21:59.70
+DMQ.INI;20                          1  16-DEC-2020 09:37:38.41
+DMQ.INI;19                          1  20-SEP-2018 16:00:29.38
+DMQ.INI;18                          1  20-SEP-2018 16:00:29.38
+DMQ.INI;17                          1  12-JAN-2017 17:55:01.63
+DMQ.INI;16                          1   2-AUG-2016 14:49:48.44
+DMQ.INI;15                          1  14-MAR-2016 15:35:13.55
+DMQ.INI;14                          1  22-MAY-2015 15:39:33.07
+DMQ.INI;13                          1   8-MAY-2015 10:15:19.57
+DMQ.INI;12                          1   5-MAY-2015 11:35:03.92
+DMQ.INI;11                          1   4-MAY-2015 11:28:23.02
+DMQ.INI;10                          1  21-APR-2015 16:57:42.19
+DMQ.INI;9                           1  24-MAR-2015 18:54:41.52
+DMQ.INI;8                           1  24-MAR-2015 18:46:16.60
+DMQ.INI;7                           1  24-MAR-2015 18:11:17.42
+DMQ.INI;6                           1  24-MAR-2015 17:58:24.58
+DMQ.INI;5                           1  24-MAR-2015 17:58:07.29
+DMQ.INI;4                           1  24-MAR-2015 17:55:11.50
+DMQ.INI;3                           1  24-MAR-2015 17:48:33.39
+DMQ.INI;2                           1  24-MAR-2015 15:14:25.14
+DMQ.INI;1                           2  14-NOV-2014 17:57:04.77
+DMQ.JOU;1                           1   6-JUL-2020 10:50:36.56
+DMQCLDLL.LOG;1                   2452  23-DEC-2020 16:32:58.86
+DMQERROR.LOG;1                      3  17-DEC-2020 02:06:24.18
+DMQERROR_20201217.LOG;1
+                                   42  20-SEP-2018 16:17:59.50
+GTECH$DEBUG.DAT;1                  91  18-DEC-2020 18:19:45.28
+INIGS.EXE;2                       703  16-DEC-2020 09:30:32.51
+INIGS.EXE;1                       703  27-JUN-2017 18:34:43.87
+OLDEXE.DIR;1                        1  23-AUG-2016 15:09:24.12
+OUTIGS.EXE;2                      941  16-DEC-2020 09:30:32.53
+OUTIGS.EXE;1                      941  27-JUN-2017 18:34:47.24
+REMOVEBUF.EXE;2                   167   4-JAN-2021 15:09:40.12
+REMOVEBUF.EXE;1                   167   4-JAN-2021 15:06:30.38
+
+Total of 46 files, 11982 blocks.
+PODEV1::SCML> lse DMQ.INI;0
+[Default Server]
+TransportType=TCP/IP
+Hostname=SLOLIMAPPD09-FE.SCML.LOCAL
+Endpoint=5000
+ReconnectMsgInterval=0
+ReconnectTimerInterval=0
+
+[Failover]
+EnableAutomaticFailover=0
+TransportType=TCP/IP
+Hostname=SLOLIMAPPD09-FE.SCML.LOCAL
+Endpoint=5000
+
+[Logging]
+ErrorEvents=1
+SentMessages=1
+ReceivedMessages=1
+
+[MRS]
+Enabled=0
+
+JournalPath=[]
+JournalFileSize=49150
+JournalCycle=0
+JournalSizeFixed=0
+PreAllocate=1
+JournalBlockSize=0
+
+[Trace]
+PamsTrace=0
+DmqclTrace=0
+[End of file]
+ Buffer: DMQ.INI                             | Write | Insert | Forward
+Buffer modifications will not be saved, continue quitting [Yes]: y
+
+
+
+PODEV1::SCML> lse DMQ.INI;0
+[Default Server]
+TransportType=TCP/IP
+Hostname=SLOLIMAPPD09-FE.SCML.LOCAL
+Endpoint=5000
+ReconnectMsgInterval=0
+ReconnectTimerInterval=0
+
+[Failover]
+EnableAutomaticFailover=0
+TransportType=TCP/IP
+Hostname=SLOLIMAPPD09-FE.SCML.LOCAL
+Endpoint=5000
+
+[Logging]
+ErrorEvents=1
+SentMessages=1
+ReceivedMessages=1
+
+[MRS]
+Enabled=0
+
+JournalPath=[]
+JournalFileSize=49150
+JournalCycle=0
+JournalSizeFixed=0
+PreAllocate=1
+JournalBlockSize=0
+
+[Trace]
+PamsTrace=0
+DmqclTrace=0
+[End of file]
+ Buffer: DMQ.INI                             | Write | Insert | Forward
+LSE> exit
+Attempt to move past the end of buffer DMQ.INI
+31 lines written to file GXPROJ:[TSK.IGS]DMQ.INI;23
+
+PODEV1::SCML> type DMQ.INI;0
+[Default Server]
+TransportType=TCP/IP
+Hostname=SLOLIMAPPD09-FE.SCML.LOCAL
+Endpoint=5000
+ReconnectMsgInterval=0
+ReconnectTimerInterval=0
+
+[Failover]
+EnableAutomaticFailover=0
+TransportType=TCP/IP
+Hostname=SLOLIMAPPD09-FE.SCML.LOCAL
+Endpoint=5000
+
+[Logging]
+ErrorEvents=1
+SentMessages=1
+ReceivedMessages=1
+
+[MRS]
+Enabled=0
+
+JournalPath=[]
+JournalFileSize=49150
+JournalCycle=0
+JournalSizeFixed=0
+PreAllocate=1
+JournalBlockSize=0
+
+[Trace]
+PamsTrace=0
+DmqclTrace=0
+PODEV1::SCML> dir
+
+Directory GXPROJ:[TSK.IGS]
+
+BACKUP_20201216_IGS_EXE.ZIP;1
+                                  784  16-DEC-2020 09:24:16.18
+BIN_20140723.DIR;1                  1  23-JUL-2014 19:28:41.65
+COMIGS.EXE;2                     1208  16-DEC-2020 09:30:32.50
+COMIGS.EXE;1                     1208  27-JUN-2017 18:34:39.36
+COMOLM.EXE;10                     319   4-JAN-2021 15:03:43.63
+COMOLM.EXE;9                      319  23-DEC-2020 15:22:31.15
+COMOLM.EXE;8                      319  23-DEC-2020 12:17:18.35
+COMOLM.EXE;6                      319  23-DEC-2020 12:08:00.81
+COMOLM.EXE;5                      319  23-DEC-2020 11:59:51.90
+COMOLM.EXE;3                      317  23-DEC-2020 11:47:27.99
+COMOLM.EXE;2                      317  23-DEC-2020 11:39:02.95
+COMOLM.EXE;1                      317  23-DEC-2020 11:20:06.57
+DMQ.INI;23                          1   4-JAN-2021 16:10:41.54
+DMQ.INI;22                          1  23-DEC-2020 16:32:21.33
+DMQ.INI;21                          1  16-DEC-2020 18:21:59.70
+DMQ.INI;20                          1  16-DEC-2020 09:37:38.41
+DMQ.INI;19                          1  20-SEP-2018 16:00:29.38
+DMQ.INI;18                          1  20-SEP-2018 16:00:29.38
+DMQ.INI;17                          1  12-JAN-2017 17:55:01.63
+DMQ.INI;16                          1   2-AUG-2016 14:49:48.44
+DMQ.INI;15                          1  14-MAR-2016 15:35:13.55
+DMQ.INI;14                          1  22-MAY-2015 15:39:33.07
+DMQ.INI;13                          1   8-MAY-2015 10:15:19.57
+DMQ.INI;12                          1   5-MAY-2015 11:35:03.92
+DMQ.INI;11                          1   4-MAY-2015 11:28:23.02
+DMQ.INI;10                          1  21-APR-2015 16:57:42.19
+DMQ.INI;9                           1  24-MAR-2015 18:54:41.52
+DMQ.INI;8                           1  24-MAR-2015 18:46:16.60
+DMQ.INI;7                           1  24-MAR-2015 18:11:17.42
+DMQ.INI;6                           1  24-MAR-2015 17:58:24.58
+DMQ.INI;5                           1  24-MAR-2015 17:58:07.29
+DMQ.INI;4                           1  24-MAR-2015 17:55:11.50
+DMQ.INI;3                           1  24-MAR-2015 17:48:33.39
+DMQ.INI;2                           1  24-MAR-2015 15:14:25.14
+DMQ.INI;1                           2  14-NOV-2014 17:57:04.77
+DMQ.JOU;1                           1   6-JUL-2020 10:50:36.56
+DMQCLDLL.LOG;1                   2452  23-DEC-2020 16:32:58.86
+DMQERROR.LOG;1                      3  17-DEC-2020 02:06:24.18
+DMQERROR_20201217.LOG;1
+                                   42  20-SEP-2018 16:17:59.50
+GTECH$DEBUG.DAT;1                  91  18-DEC-2020 18:19:45.28
+INIGS.EXE;2                       703  16-DEC-2020 09:30:32.51
+INIGS.EXE;1                       703  27-JUN-2017 18:34:43.87
+OLDEXE.DIR;1                        1  23-AUG-2016 15:09:24.12
+OUTIGS.EXE;2                      941  16-DEC-2020 09:30:32.53
+OUTIGS.EXE;1                      941  27-JUN-2017 18:34:47.24
+REMOVEBUF.EXE;2                   167   4-JAN-2021 15:09:40.12
+REMOVEBUF.EXE;1                   167   4-JAN-2021 15:06:30.38
+
+Total of 47 files, 11983 blocks.
+PODEV1::SCML> ewatch
+Starting EWATCH process ewatch_FTA575:
+PODEV1::SCML> detrun comolm
+PODEV1::SCML>
+              16:12:57 COMOLM    Copyright 2014 SCML. All rights reserve
+d.
+
+16:12:58 COMOLM    ******************* COMOLM 11 *******************
+
+16:12:58 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:12:58 COMOLM   P(OLMCONF):                                       :I[
+         0]H[       0]
+16:12:58 COMOLM    queue OLM vazia
+
+16:12:58 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:12:58 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:12:58 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:12:58 COMOLM    queue OLM vazia
+
+16:12:58 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:12:58 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:12:58 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:12:59 COMOLM    queue OLM vazia
+
+16:12:59 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:12:59 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:12:59 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:12:59 COMOLM    queue OLM vazia
+
+16:12:59 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:12:59 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:12:59 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:12:59 COMOLM    queue OLM vazia
+
+16:12:59 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:12:59 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:12:59 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:12:59 COMOLM    queue OLM vazia
+
+16:12:59 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:12:59 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:12:59 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:00 COMOLM    queue OLM vazia
+
+16:13:00 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:00 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:00 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:00 COMOLM    queue OLM vazia
+
+16:13:00 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:00 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:00 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:00 COMOLM    queue OLM vazia
+
+16:13:00 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:00 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:00 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:00 COMOLM    queue OLM vazia
+
+16:13:00 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:00 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:00 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:01 COMOLM    queue OLM vazia
+
+16:13:01 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:01 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:01 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:01 COMOLM    queue OLM vazia
+
+16:13:01 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:01 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:01 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+ Interrupt
+
+PODEV1::SCML>
+              16:13:01 COMOLM    queue OLM vazia
+
+
+16:13:01 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:01 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:01 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:01 COMOLM    queue OLM vazia
+
+16:13:01 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:01 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:01 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:02 COMOLM    queue OLM vazia
+
+16:13:02 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:02 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:02 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:02 COMOLM    queue OLM vazia
+
+16:13:02 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:02 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:02 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:02 COMOLM    queue OLM vazia
+
+16:13:02 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:02 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:02 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:02 COMOLM    queue OLM vazia
+
+16:13:02 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:02 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:02 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:03 COMOLM    queue OLM vazia
+
+16:13:03 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:03 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:03 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:03 COMOLM    queue OLM vazia
+
+16:13:03 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:03 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:03 COMOLM   2-> P(OLMCONF):                                   :I[
+ewatch stopH[       0]
+16:13:03 COMOLM    queue OLM vazia
+
+16:13:03 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:13:03 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:13:03 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:13:03 COMOLM    queue OLM vazia
+
+16:13:03 COMOLM    vai tentar ler outra vez da queue OLM
+
+Stopping EWATCH process ewatch_FTA575:
+PODEV1::SCML> sh sys/proc=*comolm*
+OpenVMS V8.4  on node PODEV1    4-JAN-2021 16:35:48.55   Uptime  326 00:
+23:29
+  Pid    Process Name    State  Pri      I/O       CPU       Page flts
+Pages
+0011F624 SCMLCOMOLM      HIB      8    21942   0 00:00:00.54     16043
+16206
+PODEV1::SCML> stop SCMLCOMOLM
+PODEV1::SCML> sh sys/proc=*comolm*
+PODEV1::SCML> detrun comolm
+PODEV1::SCML> ewatch
+Starting EWATCH process ewatch_FTA575:
+PODEV1::SCML>
+              16:37:02 COMOLM    queue OLM vazia
+
+
+16:37:02 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:02 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:02 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:03 COMOLM    queue OLM vazia
+
+16:37:03 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:03 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:03 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:03 COMOLM    queue OLM vazia
+
+16:37:03 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:03 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:03 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:03 COMOLM    queue OLM vazia
+
+16:37:03 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:03 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:03 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:03 COMOLM    queue OLM vazia
+
+16:37:03 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:03 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:03 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:04 COMOLM    queue OLM vazia
+
+16:37:04 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:04 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:04 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:04 COMOLM    queue OLM vazia
+
+16:37:04 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:04 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:04 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:04 COMOLM    queue OLM vazia
+
+16:37:04 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:04 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:04 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:04 COMOLM    queue OLM vazia
+
+16:37:04 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:04 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:04 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:05 COMOLM    queue OLM vazia
+
+16:37:05 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:05 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:05 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:05 COMOLM    queue OLM vazia
+
+16:37:05 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:05 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:05 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:05 COMOLM    queue OLM vazia
+
+16:37:05 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:05 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:05 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:05 COMOLM    queue OLM vazia
+
+16:37:05 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:05 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:05 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:06 COMOLM    queue OLM vazia
+
+16:37:06 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:06 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:06 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:06 COMOLM    queue OLM vazia
+
+16:37:06 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:06 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:06 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:06 COMOLM    queue OLM vazia
+
+16:37:06 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:06 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:06 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:06 COMOLM    queue OLM vazia
+
+16:37:06 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:06 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:06 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:07 COMOLM    queue OLM vazia
+
+16:37:07 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:07 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:07 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:07 COMOLM    queue OLM vazia
+
+16:37:07 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:07 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:07 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:07 COMOLM    queue OLM vazia
+
+16:37:07 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:07 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:07 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:07 COMOLM    queue OLM vazia
+
+16:37:07 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:07 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:07 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:08 COMOLM    queue OLM vazia
+
+16:37:08 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:08 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:08 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:08 COMOLM    queue OLM vazia
+
+16:37:08 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:08 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:08 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:08 COMOLM    queue OLM vazia
+
+16:37:08 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:08 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:08 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:08 COMOLM    queue OLM vazia
+
+16:37:08 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:08 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:08 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:09 COMOLM    queue OLM vazia
+
+16:37:09 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:09 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:09 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:09 COMOLM    queue OLM vazia
+
+16:37:09 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:09 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:09 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:09 COMOLM    queue OLM vazia
+
+16:37:09 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:09 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:09 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:09 COMOLM    queue OLM vazia
+
+16:37:09 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:09 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:09 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:10 COMOLM    queue OLM vazia
+
+16:37:10 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:10 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:10 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:10 COMOLM    queue OLM vazia
+
+16:37:10 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:10 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:10 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:10 COMOLM    queue OLM vazia
+
+16:37:10 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:10 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:10 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:10 COMOLM    queue OLM vazia
+
+16:37:10 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:10 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:10 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:11 COMOLM    queue OLM vazia
+
+16:37:11 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:11 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:11 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:11 COMOLM    queue OLM vazia
+
+16:37:11 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:11 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:11 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:11 COMOLM    queue OLM vazia
+
+16:37:11 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:11 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:11 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:11 COMOLM    queue OLM vazia
+
+16:37:11 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:11 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:11 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:12 COMOLM    queue OLM vazia
+
+16:37:12 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:12 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:12 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:12 COMOLM    queue OLM vazia
+
+16:37:12 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:12 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:12 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:12 COMOLM    queue OLM vazia
+
+16:37:12 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:12 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:12 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:12 COMOLM    queue OLM vazia
+
+16:37:12 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:12 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:12 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:13 COMOLM    queue OLM vazia
+
+16:37:13 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:13 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:13 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:13 COMOLM    queue OLM vazia
+
+16:37:13 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:13 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:13 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:13 COMOLM    queue OLM vazia
+
+16:37:13 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:13 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:13 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:13 COMOLM    queue OLM vazia
+
+16:37:13 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:13 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:13 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:14 COMOLM    queue OLM vazia
+
+16:37:14 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:14 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:14 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:14 COMOLM    queue OLM vazia
+
+16:37:14 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:14 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:14 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:14 COMOLM    queue OLM vazia
+
+16:37:14 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:14 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:14 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:14 COMOLM    queue OLM vazia
+
+16:37:14 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:14 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:14 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:15 COMOLM    queue OLM vazia
+
+16:37:15 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:15 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:15 COMOLM   2-> P(OLMCONF):                                   :I[
+ewatch stopH[       0]
+16:37:15 COMOLM    queue OLM vazia
+
+16:37:15 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:37:15 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:37:15 COMOLM   2-> P(OLMCONF):                                   :I[
+         0]H[       0]
+16:37:15 COMOLM    queue OLM vazia
+
+Stopping EWATCH process ewatch_FTA575:
+16:37:15 COMOLM    vai tentar ler outra vez da queue OLM
+
+PODEV1::SCML> sh sys/proc=*comolm*
+OpenVMS V8.4  on node PODEV1    4-JAN-2021 16:40:00.32   Uptime  326 00:
+27:41
+  Pid    Process Name    State  Pri      I/O       CPU       Page flts
+Pages
+0011C225 SCMLCOMOLM      HIB      8     2929   0 00:00:00.52     16043
+16206
+PODEV1::SCML> stop SCMLCOMOLM
+PODEV1::SCML> dir *.dir
+
+Directory GXPROJ:[TSK.IGS]
+
+BIN_20140723.DIR;1                  1  23-JUL-2014 19:28:41.65
+OLDEXE.DIR;1                        1  23-AUG-2016 15:09:24.12
+
+Total of 2 files, 2 blocks.
+PODEV1::SCML> set def [-]
+PODEV1::SCML> dir *.dir
+
+Directory GXPROJ:[TSK]
+
+ABPAUDIT.DIR;1                      1  16-SEP-2015 16:34:59.26
+AGENTS_DSAP20.DIR;1
+                                    2   3-DEC-2014 13:08:54.20
+ASF_20190520.DIR;1                  3  20-MAY-2019 14:30:06.53
+BACK.DIR;1                          1  19-AUG-2011 10:59:53.05
+BACKUP_SCML_TESTES.DIR;1
+                                  192  22-AUG-2012 13:25:05.61
+BACKUP_X2X_20200408.DIR;1
+                                    3   8-APR-2020 13:17:29.01
+BACKUP_X2X_20200703.DIR;1
+                                    3   3-JUL-2020 17:38:33.64
+BIN_20140326.DIR;1                 27  26-MAR-2014 20:26:31.43
+BIN_20140723.DIR;1                 30  23-JUL-2014 19:05:36.82
+CONFIG_FILES_X2X_DSAP12.DIR;1
+                                    3  16-FEB-2016 14:14:12.09
+DRAW.DIR;1                          7  19-AUG-2011 10:59:34.95
+FICHEIROSX2_DSAP18.DIR;1
+                                    3  22-AUG-2012 13:23:21.44
+FICHEIROS_DSAP_14.DIR;1
+                                    1   3-OCT-2013 11:12:21.77
+IGS.DIR;1                           3  26-MAR-2014 16:17:05.09
+OLM.DIR;1                           1  16-DEC-2020 09:31:58.48
+PRIM.DIR;1                          1  19-AUG-2011 10:59:45.38
+ROG.DIR;1                           3  16-MAY-2012 11:27:18.81
+VALX.DIR;1                          7  19-AUG-2011 10:59:07.93
+WORK.DIR;1                          1  19-AUG-2011 10:59:16.90
+
+Total of 19 files, 292 blocks.
+PODEV1::SCML> set def [.olm]
+PODEV1::SCML> dir
+
+Directory GXPROJ:[TSK.OLM]
+
+COMOLM.EXE;1                      274  16-DEC-2020 09:30:42.79
+DMQ.INI;3                           1  16-DEC-2020 09:37:38.41
+DMQ.INI;2                           1  16-DEC-2020 09:34:23.74
+DMQ.INI;1                           1  24-MAR-2020 01:15:22.40
+OLMCON.EXE;17                     172  18-DEC-2020 11:41:21.43
+OLMCON.EXE;16                     176  18-DEC-2020 11:38:30.84
+OLMCON.EXE;15                     172  18-DEC-2020 11:36:52.62
+OLMCON.EXE;14                     172  18-DEC-2020 11:04:42.14
+
+Total of 8 files, 969 blocks.
+PODEV1::SCML> r olmcon
+              9. Connect to Olimpo           No
+ENTER OPTION 9 AND ACTIVATE OMLCON
+9
+GO TO OPT....
+              9. Connect to Olimpo          Yes
+ENTER OPTION 9 AND ACTIVATE OMLCON
+e
+pressed e...
+GOOD .....EXITED SUBROUTINE
+P(OLMCONF)=           1
+PODEV1::SCML> r olmcon
+              9. Connect to Olimpo          Yes
+ENTER OPTION 9 AND ACTIVATE OMLCON
+e
+pressed e...
+GOOD .....EXITED SUBROUTINE
+P(OLMCONF)=           1
+PODEV1::SCML> set def [-]
+PODEV1::SCML> dir *.dir
+
+Directory GXPROJ:[TSK]
+
+ABPAUDIT.DIR;1                      1  16-SEP-2015 16:34:59.26
+AGENTS_DSAP20.DIR;1
+                                    2   3-DEC-2014 13:08:54.20
+ASF_20190520.DIR;1                  3  20-MAY-2019 14:30:06.53
+BACK.DIR;1                          1  19-AUG-2011 10:59:53.05
+BACKUP_SCML_TESTES.DIR;1
+                                  192  22-AUG-2012 13:25:05.61
+BACKUP_X2X_20200408.DIR;1
+                                    3   8-APR-2020 13:17:29.01
+BACKUP_X2X_20200703.DIR;1
+                                    3   3-JUL-2020 17:38:33.64
+BIN_20140326.DIR;1                 27  26-MAR-2014 20:26:31.43
+BIN_20140723.DIR;1                 30  23-JUL-2014 19:05:36.82
+CONFIG_FILES_X2X_DSAP12.DIR;1
+                                    3  16-FEB-2016 14:14:12.09
+DRAW.DIR;1                          7  19-AUG-2011 10:59:34.95
+FICHEIROSX2_DSAP18.DIR;1
+                                    3  22-AUG-2012 13:23:21.44
+FICHEIROS_DSAP_14.DIR;1
+                                    1   3-OCT-2013 11:12:21.77
+IGS.DIR;1                           3  26-MAR-2014 16:17:05.09
+OLM.DIR;1                           1  16-DEC-2020 09:31:58.48
+PRIM.DIR;1                          1  19-AUG-2011 10:59:45.38
+ROG.DIR;1                           3  16-MAY-2012 11:27:18.81
+VALX.DIR;1                          7  19-AUG-2011 10:59:07.93
+WORK.DIR;1                          1  19-AUG-2011 10:59:16.90
+
+Total of 19 files, 292 blocks.
+PODEV1::SCML> set def [.igs]
+PODEV1::SCML> dir
+
+Directory GXPROJ:[TSK.IGS]
+
+BACKUP_20201216_IGS_EXE.ZIP;1
+                                  784  16-DEC-2020 09:24:16.18
+BIN_20140723.DIR;1                  1  23-JUL-2014 19:28:41.65
+COMIGS.EXE;2                     1208  16-DEC-2020 09:30:32.50
+COMIGS.EXE;1                     1208  27-JUN-2017 18:34:39.36
+COMOLM.EXE;10                     319   4-JAN-2021 15:03:43.63
+COMOLM.EXE;9                      319  23-DEC-2020 15:22:31.15
+COMOLM.EXE;8                      319  23-DEC-2020 12:17:18.35
+COMOLM.EXE;6                      319  23-DEC-2020 12:08:00.81
+COMOLM.EXE;5                      319  23-DEC-2020 11:59:51.90
+COMOLM.EXE;3                      317  23-DEC-2020 11:47:27.99
+COMOLM.EXE;2                      317  23-DEC-2020 11:39:02.95
+COMOLM.EXE;1                      317  23-DEC-2020 11:20:06.57
+DMQ.INI;23                          1   4-JAN-2021 16:10:41.54
+DMQ.INI;22                          1  23-DEC-2020 16:32:21.33
+DMQ.INI;21                          1  16-DEC-2020 18:21:59.70
+DMQ.INI;20                          1  16-DEC-2020 09:37:38.41
+DMQ.INI;19                          1  20-SEP-2018 16:00:29.38
+DMQ.INI;18                          1  20-SEP-2018 16:00:29.38
+DMQ.INI;17                          1  12-JAN-2017 17:55:01.63
+DMQ.INI;16                          1   2-AUG-2016 14:49:48.44
+DMQ.INI;15                          1  14-MAR-2016 15:35:13.55
+DMQ.INI;14                          1  22-MAY-2015 15:39:33.07
+DMQ.INI;13                          1   8-MAY-2015 10:15:19.57
+DMQ.INI;12                          1   5-MAY-2015 11:35:03.92
+DMQ.INI;11                          1   4-MAY-2015 11:28:23.02
+DMQ.INI;10                          1  21-APR-2015 16:57:42.19
+DMQ.INI;9                           1  24-MAR-2015 18:54:41.52
+DMQ.INI;8                           1  24-MAR-2015 18:46:16.60
+DMQ.INI;7                           1  24-MAR-2015 18:11:17.42
+DMQ.INI;6                           1  24-MAR-2015 17:58:24.58
+DMQ.INI;5                           1  24-MAR-2015 17:58:07.29
+DMQ.INI;4                           1  24-MAR-2015 17:55:11.50
+DMQ.INI;3                           1  24-MAR-2015 17:48:33.39
+DMQ.INI;2                           1  24-MAR-2015 15:14:25.14
+DMQ.INI;1                           2  14-NOV-2014 17:57:04.77
+DMQ.JOU;1                           1   6-JUL-2020 10:50:36.56
+DMQCLDLL.LOG;1                   2452  23-DEC-2020 16:32:58.86
+DMQERROR.LOG;1                      3  17-DEC-2020 02:06:24.18
+DMQERROR_20201217.LOG;1
+                                   42  20-SEP-2018 16:17:59.50
+GTECH$DEBUG.DAT;1                  91  18-DEC-2020 18:19:45.28
+INIGS.EXE;2                       703  16-DEC-2020 09:30:32.51
+INIGS.EXE;1                       703  27-JUN-2017 18:34:43.87
+OLDEXE.DIR;1                        1  23-AUG-2016 15:09:24.12
+OUTIGS.EXE;2                      941  16-DEC-2020 09:30:32.53
+OUTIGS.EXE;1                      941  27-JUN-2017 18:34:47.24
+REMOVEBUF.EXE;2                   167   4-JAN-2021 15:09:40.12
+REMOVEBUF.EXE;1                   167   4-JAN-2021 15:06:30.38
+
+Total of 47 files, 11983 blocks.
+PODEV1::SCML> ewatch
+Starting EWATCH process ewatch_FTA575:
+PODEV1::SCML> detrun comolm
+PODEV1::SCML>
+              16:43:34 COMOLM    Copyright 2014 SCML. All rights reserve
+d.
+
+16:43:35 COMOLM    ******************* COMOLM 11 *******************
+
+16:43:35 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:35 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:35 COMOLM    WILL attach to messageQ
+
+16:43:35 COMOLM   CONOLM:                                           :I[
+         0]H[       0]
+16:43:35 COMOLM    attach success to messageQ
+
+16:43:35 ERRLOG   01/04/2021   ERRLOG  INVALID MESSAGE TYPE>  9 NUMBER>
+  1
+16:43:35 COMOLM    queue OLM vazia
+
+16:43:35 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:35 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:35 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:35 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS111
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS222
+
+16:43:35 COMOLM   Mensagem Do MessageQ
+
+16:43:35 COMOLM   Mensagem Do MessageQ Size:                        :I[
+       134]H[      86]
+16:43:35 COMOLM   Position:                                         :I[
+        12]H[       C]
+16:43:35 COMOLM   MESSAGEID::                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   MESSAGEID::                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   MESSAGEID::                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   MESSAGEID::                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   MESSAGEID::                                       :I[
+       221]H[      DD]
+16:43:35 COMOLM   AGENT_NUM::                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   AGENT_NUM::                                       :I[
+         4]H[       4]
+16:43:35 COMOLM   AGENT_NUM::                                       :I[
+       147]H[      93]
+16:43:35 COMOLM   AGENT_NUM::                                       :I[
+       230]H[      E6]
+16:43:35 COMOLM   TERMINAL NUMBER::                                 :I[
+         0]H[       0]
+16:43:35 COMOLM   TERMINAL NUMBER::                                 :I[
+         0]H[       0]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+        11]H[       B]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+        99]H[      63]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+       202]H[      CA]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+       226]H[      E2]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+        42]H[      2A]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+       212]H[      D4]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+       174]H[      AE]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+       199]H[      C7]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+        67]H[      43]
+16:43:35 COMOLM   Agent NUmber::                                    :I[
+         0]H[       0]
+16:43:35 COMOLM   Agent NUmber::                                    :I[
+         0]H[       0]
+16:43:35 COMOLM   Agent NUmber::                                    :I[
+         0]H[       0]
+16:43:35 COMOLM   Agent NUmber::                                    :I[
+         0]H[       0]
+16:43:35 COMOLM   Terminal Pass Number::                            :I[
+         0]H[       0]
+16:43:35 COMOLM   Terminal Pass Number::                            :I[
+         0]H[       0]
+16:43:35 COMOLM   MESSAGE ID:                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   AGENT_NUM2:                                       :I[
+-426572800]H[E6930400]
+16:43:35 COMOLM   ---------------------------------------
+
+16:43:35 COMOLM   AGENT_NUM:                                        :I[
+    300006]H[   493E6]
+16:43:35 COMOLM   GET MESSAGE SUCCESS333
+
+16:43:35 COMOLM   TERMINALNUM:                                      :I[
+         0]H[       0]
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->2
+
+16:43:35 COMOLM   AGENT_NUM:                                        :I[
+    300006]H[   493E6]
+16:43:35 COMOLM   TERMINALNUM:                                      :I[
+      3512]H[     DB8]
+16:43:35 COMOLM   ST:                                               :I[
+         0]H[       0]
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->3
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->4
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->5
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->6
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->7
+
+16:43:35 COMOLM   TIMOFF:                                           :I[
+     60215]H[    EB37]
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->8
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->9
+
+16:43:35 COMOLM   XXDEBUG should be 0:                              :I[
+         0]H[       0]
+16:43:35 COMOLM   DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+16:43:35 COMOLM   P(XXDTRLN):                                       :I[
+      3512]H[     DB8]
+16:43:35 COMOLM   DEBUG2222!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+16:43:35 COMOLM   DEBUG3333!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+16:43:35 COMOLM   P(XXDTRLN) GT 0:                                  :I[
+      3512]H[     DB8]
+16:43:35 COMOLM   HPRO(TERNUM,PROBUF):                              :I[
+      3512]H[     DB8]
+16:43:35 COMOLM   gooooooooooooooood                                :I[
+      3512]H[     DB8]
+16:43:35 COMOLM   DEBUG44444!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+16:43:35 COMOLM   DMPDBG:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:35 COMOLM   DMPDBG TRUE....:                                  :I[
+        -1]H[FFFFFFFF]
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->10
+
+16:43:35 COMOLM   Result Of Send Message to Queue
+
+16:43:35 COMOLM   ST:                                               :I[
+         0]H[       0]
+16:43:35 COMOLM   READED A MESSAGE FROM MESSAGEQ
+
+16:43:35 COMOLM    queue OLM vazia
+
+16:43:35 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:35 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:35 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:35 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS111
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS222
+
+16:43:35 COMOLM   Mensagem Do MessageQ
+
+16:43:35 COMOLM   Mensagem Do MessageQ Size:                        :I[
+       134]H[      86]
+16:43:35 COMOLM   Position:                                         :I[
+        12]H[       C]
+16:43:35 COMOLM   MESSAGEID::                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   MESSAGEID::                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   MESSAGEID::                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   MESSAGEID::                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   MESSAGEID::                                       :I[
+       222]H[      DE]
+16:43:35 COMOLM   AGENT_NUM::                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   AGENT_NUM::                                       :I[
+         4]H[       4]
+16:43:35 COMOLM   AGENT_NUM::                                       :I[
+       147]H[      93]
+16:43:35 COMOLM   AGENT_NUM::                                       :I[
+       230]H[      E6]
+16:43:35 COMOLM   TERMINAL NUMBER::                                 :I[
+         0]H[       0]
+16:43:35 COMOLM   TERMINAL NUMBER::                                 :I[
+         0]H[       0]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+        11]H[       B]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+        99]H[      63]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+       202]H[      CA]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+       224]H[      E0]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+         4]H[       4]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+        83]H[      53]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+        94]H[      5E]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+        68]H[      44]
+16:43:35 COMOLM   SERIAL NUMBER::                                   :I[
+       245]H[      F5]
+16:43:35 COMOLM   Agent NUmber::                                    :I[
+         0]H[       0]
+16:43:35 COMOLM   Agent NUmber::                                    :I[
+         0]H[       0]
+16:43:35 COMOLM   Agent NUmber::                                    :I[
+         0]H[       0]
+16:43:35 COMOLM   Agent NUmber::                                    :I[
+         0]H[       0]
+16:43:35 COMOLM   Terminal Pass Number::                            :I[
+         0]H[       0]
+16:43:35 COMOLM   Terminal Pass Number::                            :I[
+         0]H[       0]
+16:43:35 COMOLM   MESSAGE ID:                                       :I[
+         0]H[       0]
+16:43:35 COMOLM   AGENT_NUM2:                                       :I[
+-426572800]H[E6930400]
+16:43:35 COMOLM   ---------------------------------------
+
+16:43:35 COMOLM   AGENT_NUM:                                        :I[
+    300006]H[   493E6]
+16:43:35 COMOLM   GET MESSAGE SUCCESS333
+
+16:43:35 COMOLM   TERMINALNUM:                                      :I[
+         0]H[       0]
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->2
+
+16:43:35 COMOLM   AGENT_NUM:                                        :I[
+    300006]H[   493E6]
+16:43:35 COMOLM   TERMINALNUM:                                      :I[
+      3512]H[     DB8]
+16:43:35 COMOLM   ST:                                               :I[
+         0]H[       0]
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->3
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->4
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->5
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->6
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->7
+
+16:43:35 COMOLM   TIMOFF:                                           :I[
+     60215]H[    EB37]
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->8
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->9
+
+16:43:35 COMOLM   XXDEBUG should be 0:                              :I[
+         0]H[       0]
+16:43:35 COMOLM   DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+16:43:35 COMOLM   P(XXDTRLN):                                       :I[
+      3512]H[     DB8]
+16:43:35 COMOLM   DEBUG2222!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+16:43:35 COMOLM   DEBUG3333!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+16:43:35 COMOLM   P(XXDTRLN) GT 0:                                  :I[
+      3512]H[     DB8]
+16:43:35 COMOLM   HPRO(TERNUM,PROBUF):                              :I[
+      3512]H[     DB8]
+16:43:35 COMOLM   gooooooooooooooood                                :I[
+      3512]H[     DB8]
+16:43:35 COMOLM   DEBUG44444!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+16:43:35 COMOLM   DMPDBG:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:35 COMOLM   DMPDBG TRUE....:                                  :I[
+        -1]H[FFFFFFFF]
+16:43:35 ENCPROI   SENDOUT.FOR
+
+16:43:35 ENCPROI   THE GAME IS UP
+
+16:43:35 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:35 COMOLM   GET MESSAGE SUCCESS ->10
+
+16:43:35 COMOLM   Result Of Send Message to Queue
+
+16:43:35 COMOLM   ST:                                               :I[
+         0]H[       0]
+16:43:35 COMOLM   READED A MESSAGE FROM MESSAGEQ
+
+16:43:35 COMOLM    queue OLM vazia
+
+16:43:35 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:35 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:35 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:35 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:35 COMOLM   MESSAGEQ EMPTY
+
+16:43:35 COMOLM    queue OLM vazia
+
+16:43:35 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:35 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:35 COMOLM    WILL attach to messageQ
+
+16:43:35 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 COMOLM    queue OLM vazia
+
+16:43:36 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:36 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:36 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:36 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:36 COMOLM   MESSAGEQ EMPTY
+
+16:43:36 COMOLM    queue OLM vazia
+
+16:43:36 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:36 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:36 COMOLM    WILL attach to messageQ
+
+16:43:36 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 COMOLM    queue OLM vazia
+
+16:43:36 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:36 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:36 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:36 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:36 COMOLM   MESSAGEQ EMPTY
+
+16:43:36 COMOLM    queue OLM vazia
+
+16:43:36 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:36 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:36 COMOLM    WILL attach to messageQ
+
+16:43:36 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 COMOLM    queue OLM vazia
+
+16:43:36 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:36 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:36 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:36 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:36 COMOLM   MESSAGEQ EMPTY
+
+16:43:36 COMOLM    queue OLM vazia
+
+16:43:36 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:36 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:36 COMOLM    WILL attach to messageQ
+
+16:43:36 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:36 COMOLM    queue OLM vazia
+
+16:43:36 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:36 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:36 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:36 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:36 COMOLM   MESSAGEQ EMPTY
+
+16:43:36 COMOLM    queue OLM vazia
+
+16:43:36 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:36 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:36 COMOLM    WILL attach to messageQ
+
+16:43:36 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ENCPROI   SENDOUT.FOR
+
+16:43:36 ENCPROI   THE GAME IS UP
+
+16:43:36 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:36 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 COMOLM    queue OLM vazia
+
+16:43:37 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:37 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:37 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:37 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:37 COMOLM   MESSAGEQ EMPTY
+
+16:43:37 COMOLM    queue OLM vazia
+
+16:43:37 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:37 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:37 COMOLM    WILL attach to messageQ
+
+16:43:37 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 COMOLM    queue OLM vazia
+
+16:43:37 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:37 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:37 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:37 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:37 COMOLM   MESSAGEQ EMPTY
+
+16:43:37 COMOLM    queue OLM vazia
+
+16:43:37 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:37 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:37 COMOLM    WILL attach to messageQ
+
+16:43:37 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 COMOLM    queue OLM vazia
+
+16:43:37 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:37 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:37 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:37 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:37 COMOLM   MESSAGEQ EMPTY
+
+16:43:37 COMOLM    queue OLM vazia
+
+16:43:37 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:37 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:37 COMOLM    WILL attach to messageQ
+
+16:43:37 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:37 COMOLM    queue OLM vazia
+
+16:43:37 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:37 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:37 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:37 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:37 COMOLM   MESSAGEQ EMPTY
+
+16:43:37 COMOLM    queue OLM vazia
+
+16:43:37 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:37 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:37 COMOLM    WILL attach to messageQ
+
+16:43:37 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:37 ENCPROI   SENDOUT.FOR
+
+16:43:37 ENCPROI   THE GAME IS UP
+
+16:43:37 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:37 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 COMOLM    queue OLM vazia
+
+16:43:38 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:38 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:38 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:38 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:38 COMOLM   MESSAGEQ EMPTY
+
+16:43:38 COMOLM    queue OLM vazia
+
+16:43:38 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:38 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:38 COMOLM    WILL attach to messageQ
+
+16:43:38 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 COMOLM    queue OLM vazia
+
+16:43:38 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:38 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:38 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:38 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:38 COMOLM   MESSAGEQ EMPTY
+
+16:43:38 COMOLM    queue OLM vazia
+
+16:43:38 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:38 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:38 COMOLM    WILL attach to messageQ
+
+16:43:38 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 COMOLM    queue OLM vazia
+
+16:43:38 COMOLM    vai tentar ler outra vez da queue OLM
+
+16:43:38 COMOLM   2-> Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:38 COMOLM   2-> P(OLMCONF):                                   :I[
+         1]H[       1]
+16:43:38 COMOLM   Get Message From MessageQ from Olimpo
+
+16:43:38 COMOLM   MESSAGEQ EMPTY
+
+16:43:38 COMOLM    queue OLM vazia
+
+16:43:38 COMOLM    Vai validar que P(OLMCONF) deve ser != 0
+
+16:43:38 COMOLM   P(OLMCONF):                                       :I[
+         1]H[       1]
+16:43:38 COMOLM    WILL attach to messageQ
+
+16:43:38 COMOLM   CONOLM:                                           :I[
+        -1]H[FFFFFFFF]
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+ewatch stop0 SER> 32005027
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+16:43:38 ENCPROI   GOOD SEND to OLM_COM: OLM queue
+
+16:43:38 ERRLOG   01/04/2021  PASPRO  SYNTAX ERR>  10 TER>  3512 GTYP>
+16 GIND>   0 SER> 32005029
+16:43:38 ENCPROI   SENDOUT.FOR
+
+16:43:38 ENCPROI   THE GAME IS UP
+
+Stopping EWATCH process ewatch_FTA575:
+PODEV1::SCML> stop scmlcomolm
+PODEV1::SCML> sh sys/proc=*comolm*
+PODEV1::SCML> set def [-]
+PODEV1::SCML> dir *.dir
+
+Directory GXPROJ:[TSK]
+
+ABPAUDIT.DIR;1                      1  16-SEP-2015 16:34:59.26
+AGENTS_DSAP20.DIR;1
+                                    2   3-DEC-2014 13:08:54.20
+ASF_20190520.DIR;1                  3  20-MAY-2019 14:30:06.53
+BACK.DIR;1                          1  19-AUG-2011 10:59:53.05
+BACKUP_SCML_TESTES.DIR;1
+                                  192  22-AUG-2012 13:25:05.61
+BACKUP_X2X_20200408.DIR;1
+                                    3   8-APR-2020 13:17:29.01
+BACKUP_X2X_20200703.DIR;1
+                                    3   3-JUL-2020 17:38:33.64
+BIN_20140326.DIR;1                 27  26-MAR-2014 20:26:31.43
+BIN_20140723.DIR;1                 30  23-JUL-2014 19:05:36.82
+CONFIG_FILES_X2X_DSAP12.DIR;1
+                                    3  16-FEB-2016 14:14:12.09
+DRAW.DIR;1                          7  19-AUG-2011 10:59:34.95
+FICHEIROSX2_DSAP18.DIR;1
+                                    3  22-AUG-2012 13:23:21.44
+FICHEIROS_DSAP_14.DIR;1
+                                    1   3-OCT-2013 11:12:21.77
+IGS.DIR;1                           3  26-MAR-2014 16:17:05.09
+OLM.DIR;1                           1  16-DEC-2020 09:31:58.48
+PRIM.DIR;1                          1  19-AUG-2011 10:59:45.38
+ROG.DIR;1                           3  16-MAY-2012 11:27:18.81
+VALX.DIR;1                          7  19-AUG-2011 10:59:07.93
+WORK.DIR;1                          1  19-AUG-2011 10:59:16.90
+
+Total of 19 files, 292 blocks.
+PODEV1::SCML> set def [.olm]
+PODEV1::SCML> dir con*
+%DIRECT-W-NOFILES, no files found
+PODEV1::SCML> dir olm*
+
+Directory GXPROJ:[TSK.OLM]
+
+OLMCON.EXE;17                     172  18-DEC-2020 11:41:21.43
+OLMCON.EXE;16                     176  18-DEC-2020 11:38:30.84
+OLMCON.EXE;15                     172  18-DEC-2020 11:36:52.62
+OLMCON.EXE;14                     172  18-DEC-2020 11:04:42.14
+
+Total of 4 files, 692 blocks.
+PODEV1::SCML> dir DKD10:[DMIL.][WRK.HMC]olmcon*
+
+Directory DKD10:[DMIL.][WRK.HMC]
+
+OLMCON.DEF;2                        1  18-DEC-2020 10:28:01.82
+OLMCON.DEF;1                        1  18-DEC-2020 09:09:46.51
+OLMCON.EXE;19                     173   4-JAN-2021 17:47:22.41
+OLMCON.EXE;18                     167   4-JAN-2021 15:01:06.47
+OLMCON.EXE;17                     172  18-DEC-2020 11:41:16.94
+OLMCON.EXE;16                     176  18-DEC-2020 11:38:24.46
+OLMCON.EXE;15                     172  18-DEC-2020 11:36:07.74
+OLMCON.EXE;14                     172  18-DEC-2020 10:56:04.90
+OLMCON.EXE;13                      26  18-DEC-2020 10:29:49.91
+OLMCON.EXE;12                      26  18-DEC-2020 10:22:09.40
+OLMCON.EXE;11                      25  18-DEC-2020 09:42:44.60
+OLMCON.EXE;10                      24  18-DEC-2020 09:41:28.34
+OLMCON.EXE;9                       24  18-DEC-2020 09:39:16.10
+OLMCON.EXE;8                       23  18-DEC-2020 09:36:27.04
+OLMCON.EXE;7                       22  18-DEC-2020 09:12:47.28
+OLMCON.EXE;6                       22  17-DEC-2020 18:47:46.45
+OLMCON.EXE;5                       22  17-DEC-2020 18:46:42.42
+OLMCON.EXE;4                       22  17-DEC-2020 18:45:16.72
+OLMCON.EXE;3                       22  17-DEC-2020 18:42:58.17
+OLMCON.EXE;2                       22  17-DEC-2020 18:11:16.43
+OLMCON.EXE;1                       18  17-DEC-2020 13:50:40.97
+OLMCON.FOR;21                       5   4-JAN-2021 17:46:53.10
+OLMCON.FOR;20                       5   4-JAN-2021 17:43:51.62
+OLMCON.FOR;19                       5  18-DEC-2020 10:50:04.38
+OLMCON.FOR;18                       5  18-DEC-2020 10:37:48.95
+OLMCON.FOR;17                       5  18-DEC-2020 10:27:52.64
+OLMCON.FOR;16                       4  18-DEC-2020 10:21:56.48
+OLMCON.FOR;15                       4  18-DEC-2020 09:42:34.26
+OLMCON.FOR;14                       4  18-DEC-2020 09:41:11.71
+OLMCON.FOR;13                       4  18-DEC-2020 09:38:52.18
+OLMCON.FOR;12                       4  18-DEC-2020 09:35:35.10
+OLMCON.FOR;11                       4  18-DEC-2020 09:31:29.66
+OLMCON.FOR;10                       4  18-DEC-2020 09:09:38.63
+OLMCON.FOR;9                        4  17-DEC-2020 18:47:29.77
+OLMCON.FOR;8                        4  17-DEC-2020 18:46:32.96
+OLMCON.FOR;7                        4  17-DEC-2020 18:45:04.27
+OLMCON.FOR;6                        4  17-DEC-2020 18:42:49.89
+OLMCON.FOR;5                        4  17-DEC-2020 18:41:57.15
+OLMCON.FOR;4                        3  17-DEC-2020 18:40:34.62
+OLMCON.FOR;3                        3  17-DEC-2020 18:39:50.53
+OLMCON.FOR;2                        3  17-DEC-2020 18:10:35.77
+OLMCON.FOR;1                        1  17-DEC-2020 11:27:53.16
+OLMCON.LIS;4                       32   4-JAN-2021 17:47:11.71
+OLMCON.LIS;3                       14   4-JAN-2021 17:45:52.94
+OLMCON.LIS;2                       32  18-DEC-2020 10:50:12.99
+OLMCON.LIS;1                       34  18-DEC-2020 10:38:36.34
+OLMCON.LNK;5                        1  18-DEC-2020 11:41:07.17
+OLMCON.LNK;4                        1  18-DEC-2020 11:38:12.55
+OLMCON.LNK;3                        1  18-DEC-2020 11:35:57.85
+OLMCON.LNK;2                        1  18-DEC-2020 11:33:54.53
+OLMCON.LNK;1                        1  18-DEC-2020 10:55:25.78
+OLMCON.OBJ;18                      24   4-JAN-2021 17:47:11.71
+OLMCON.OBJ;17                      22  18-DEC-2020 10:50:12.99
+OLMCON.OBJ;16                      17  18-DEC-2020 10:29:46.18
+OLMCON.OBJ;15                      17  18-DEC-2020 10:22:03.30
+OLMCON.OBJ;14                      17  18-DEC-2020 09:42:41.86
+OLMCON.OBJ;13                      17  18-DEC-2020 09:41:24.86
+OLMCON.OBJ;12                      17  18-DEC-2020 09:39:12.43
+OLMCON.OBJ;11                      16  18-DEC-2020 09:36:29.67
+OLMCON.OBJ;10                      16  18-DEC-2020 09:36:24.73
+OLMCON.OBJ;9                       16  18-DEC-2020 09:11:26.00
+OLMCON.OBJ;8                       14  17-DEC-2020 18:47:44.21
+OLMCON.OBJ;7                       14  17-DEC-2020 18:46:39.45
+OLMCON.OBJ;6                       14  17-DEC-2020 18:45:13.89
+OLMCON.OBJ;5                       14  17-DEC-2020 18:42:53.64
+OLMCON.OBJ;4                       14  17-DEC-2020 18:42:04.53
+OLMCON.OBJ;3                       13  17-DEC-2020 18:41:12.09
+OLMCON.OBJ;2                       13  17-DEC-2020 18:11:07.95
+OLMCON.OBJ;1                        8  17-DEC-2020 13:49:42.61
+
+Total of 69 files, 1815 blocks.
+PODEV1::SCML> dir DKD10:[DMIL.][WRK.HMC]olmcon.exe
+
+Directory DKD10:[DMIL.][WRK.HMC]
+
+OLMCON.EXE;19                     173   4-JAN-2021 17:47:22.41
+OLMCON.EXE;18                     167   4-JAN-2021 15:01:06.47
+OLMCON.EXE;17                     172  18-DEC-2020 11:41:16.94
+OLMCON.EXE;16                     176  18-DEC-2020 11:38:24.46
+OLMCON.EXE;15                     172  18-DEC-2020 11:36:07.74
+OLMCON.EXE;14                     172  18-DEC-2020 10:56:04.90
+OLMCON.EXE;13                      26  18-DEC-2020 10:29:49.91
+OLMCON.EXE;12                      26  18-DEC-2020 10:22:09.40
+OLMCON.EXE;11                      25  18-DEC-2020 09:42:44.60
+OLMCON.EXE;10                      24  18-DEC-2020 09:41:28.34
+OLMCON.EXE;9                       24  18-DEC-2020 09:39:16.10
+OLMCON.EXE;8                       23  18-DEC-2020 09:36:27.04
+OLMCON.EXE;7                       22  18-DEC-2020 09:12:47.28
+OLMCON.EXE;6                       22  17-DEC-2020 18:47:46.45
+OLMCON.EXE;5                       22  17-DEC-2020 18:46:42.42
+OLMCON.EXE;4                       22  17-DEC-2020 18:45:16.72
+OLMCON.EXE;3                       22  17-DEC-2020 18:42:58.17
+OLMCON.EXE;2                       22  17-DEC-2020 18:11:16.43
+OLMCON.EXE;1                       18  17-DEC-2020 13:50:40.97
+
+Total of 19 files, 1330 blocks.
+PODEV1::SCML> dir DKD10:[DMIL.][WRK.HMC]olmcon.exe /since
+
+Directory DKD10:[DMIL.][WRK.HMC]
+
+OLMCON.EXE;19                     173   4-JAN-2021 17:47:22.41
+OLMCON.EXE;18                     167   4-JAN-2021 15:01:06.47
+
+Total of 2 files, 340 blocks.
+PODEV1::SCML> dir DKD10:[DMIL.][WRK.HMC]olmcon.exe;0
+
+Directory DKD10:[DMIL.][WRK.HMC]
+
+OLMCON.EXE;19                     173   4-JAN-2021 17:47:22.41
+
+Total of 1 file, 173 blocks.
+PODEV1::SCML> copy DKD10:[DMIL.][WRK.HMC]olmcon.exe;0 olmcon.exe
+%COPY-S-COPIED, DKD10:[DMIL.][WRK.HMC]OLMCON.EXE;19 copied to GXPROJ:[TS
+K.OLM]OLMCON.EXE;19 (173 blocks)
+PODEV1::SCML> dir olmcon.exe /since
+
+Directory GXPROJ:[TSK.OLM]
+
+OLMCON.EXE;19                     173   4-JAN-2021 17:50:28.67
+
+Total of 1 file, 173 blocks.
+PODEV1::SCML> dir olmcon.exe*
+
+Directory GXPROJ:[TSK.OLM]
+
+OLMCON.EXE;19                     173   4-JAN-2021 17:50:28.67
+OLMCON.EXE;17                     172  18-DEC-2020 11:41:21.43
+OLMCON.EXE;16                     176  18-DEC-2020 11:38:30.84
+OLMCON.EXE;15                     172  18-DEC-2020 11:36:52.62
+OLMCON.EXE;14                     172  18-DEC-2020 11:04:42.14
+
+Total of 5 files, 865 blocks.
+PODEV1::SCML> r OLMCON
+P(OLMCONF)=           1
+P(SUPSYN)=           1
+              9. Connect to Olimpo          Yes
+ENTER OPTION 9 AND ACTIVATE OMLCON
+e
+pressed e...
+GOOD .....EXITED SUBROUTINE
+P(OLMCONF)=           1
+PODEV1::SCML> r OLMCON
+P(OLMCONF)=           1
+P(SUPSYN)=           1
+              9. Connect to Olimpo          Yes
+ENTER OPTION 9 AND ACTIVATE OMLCON
+e
+pressed e...
+GOOD .....EXITED SUBROUTINE
+P(OLMCONF)=           1
+PODEV1::SCML> r OLMCON
+P(OLMCONF)=           1
+P(SUPSYN)=           1
+              9. Connect to Olimpo          Yes
+ENTER OPTION 9 AND ACTIVATE OMLCON
+r OLMCON
+GO TO OPT....
+WRONG OPTION .... ITS NOT 1 BUT 9
+              9. Connect to Olimpo          Yes
+ENTER OPTION 9 AND ACTIVATE OMLCON
+r OLMCON
+GO TO OPT....
+WRONG OPTION .... ITS NOT 1 BUT 9
+              9. Connect to Olimpo          Yes
+ENTER OPTION 9 AND ACTIVATE OMLCON
+r OLMCON
+ Interrupt
+
+PODEV1::SCML> r OLMCON
