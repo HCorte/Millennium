@@ -1,0 +1,190 @@
+
+<!-- saved from url=(0066)https://www3.physnet.uni-hamburg.de/physnet/vms-unix-commands.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>VMS -&gt; UNIX Commands</title>
+</head><body>
+<pre>OpenVMS Commands with unix equivalents
+
+OpenVMS				unix		Explanation/examples
+=========================================================================
+APPEND				cat		Concatenates files.  If contencs of file1 need to be placed at the end of file2 issue the following unix command.cat file1 &gt;&gt; file2
+ASSIGN or DEFINE		= 		(Bourne &amp; Korn)set (C shell)	in Bourne or Korn shell DIR = lsin C shell set DIR ls
+ATTACH				fg	
+BACKUP				tar or pax	back up files into a tar file.
+  /INIT				tar -c or pax	Restore files.
+  /LIST				tar -t		List contents.
+  /LOG				tar -v		Report progress.
+  /NOREWIND			tar -r		Write at end of existing backup (tar) files.
+  /RECORD			tar -m		Update file^Òs modification date upon restore.
+COPY				cp		Copy a file 
+COPY				ftp		Copy to/from a nontrusted remote host.
+COPY				rcp		Copy to/from a remote host.
+COPY /CONFIRM			cp -i		Confirm before copying.
+CREATE				touch		Create or update a file.
+  /DIRECTORY			mkdir		Create a subdirectory.
+CREATE filename			cat &lt;&lt; filename	Create a file from the keyboard.
+CREATE filename			cat	
+DEBUG				dbx		Debug a program.
+DELETE				rm		Delete a file.
+DELETE				rmdir		Delete an empty subdirectory.
+  /CONFIRM			rm -i		Confirm deletion.
+  /ENTRY			lprm		Remove queued line printer job.
+  /QUEUE			lprm -P		Remove all jobs from the queue.
+  /LOG				rm -e		Delete files and list them as they are deleted.
+  /SYMBOL			unset		Get rid of an environment variable.
+DIFFERENCES			diff		Display all differences in files or directories.
+  /MAXIMUM_DIFF= 1		cmp		Display first difference in two files (typically used with binary files).
+  /NUMBER NL:			cat -n	Display a file with line numbers.
+  /SLP				diff - e	Generate editing changes for the ed editor.
+DIRECTORY			ls		List files.
+DIRECTORY [...]			ls -R		Do a recursive directory/list of files.
+DIRECTORY [...]			find		Find a file
+DIRECTORY *.DIR			ls -d		List directory name(s) only ls -Rd
+  /BY_OWNER			ls -l dir | grep owner	List only those files owned by a specifed user.
+  /COLUMN			ls -1		List one file per line.
+  /DATE				ls -c		List by creation/last modification.
+  /FULL				ls -l		Long listing.
+  /FULL /TOTAL			du		Summarize disk usage.
+  /MODIFIED /SINCE [...]	find -mtime +n	Modified more than n days ago.
+  /MODIFIED /BEFORE [...]	find -mtime +n	Modified more than n days ago.
+  /OWNER			ls -g		Include group (used with |).
+  /SIZE				ls -s		Include size.
+DISMOUNT /UNLOAD		mt rewofmt offline	Rewind and unload the tape.
+DUMP				od		Dump a file in various formats.
+  /HEXADECIMAL			od -h		Hexadecimal dump.
+  /OCTAL			od -o		Octal dump.
+EDIT /EDT,EDIT /EVE, EVE	vi		Screen editor session.
+EDIT /RECOVER			vi -r		Recover a screen editing session.
+EXCHANGE			dd		Back up, restore, and convert nonstandard files.
+EXIT				exit		Terminate a script.
+HELP				man		Display online reference pages. 
+HELP HINTS			man -k topic	Display a list of commands that correspond to the specified topic.
+INQUIRE /NOPUNCTUATION		read choice? 	Prompt for a responce and put the response into an environment variable.
+INITIALIZE device:		fddisk -fmt device	Format a diskette.
+LIBRARY				ar		Library maintainer.
+  /CREATE			ar -cr		Create library.
+  /EXTRACT			ar -x		Extract modules.
+  /INSERT			ar -q		Insert modules.
+  /LIST				ar -t		List modules.
+  /REPLACE			ar -r		Replace modules.
+LINK				ld		Link compiled source code into an executable image.
+login procedureLOGIN /CLI	.login.cshrc.profile.kshrc	Set of commands automatically executed at login time.  On OpenVMS, LOGIN/CLI specifies an alternate command language interpreter.
+LOGOUT				logout C shellexit Bourne &amp; Korn shell	Terminate a terminal session.
+MAIL				mail		Invoke the mail utility.
+MERGE				sort -m		Merge sorted files.
+MOUNT				mount		Mount a tape.
+ON COUNTROL_C THEN		trap 2		Enable handler for Stop signal.
+ON CONTROL_Y			onintr		On interrupt.
+PHONE				talk tty	name	Communicate interactively with another user.
+PRINT				lpr		Print a file on the default line printer.
+  /COPIES=N			lpr -#n		Print n copies.
+  /DELETE			lpr -r		Remove file after printing
+PRINT commands cont.		
+  /FORM				lpr -ln		Make page n lines (default = 66)
+  /FORM				lpr -n		Print n column output.
+  /FORM				lpr -wn		Set line width to n
+  /HEADER			pr -h string | lpr	Print a header on each page.
+  /NAME=jobname			lpr -Jjobname	Include job name on the first page of the job.
+  /NOFLAG			lpr -h		Print with no header page.
+  /NOTIFY			lpr -m		Send mail upon completion.
+  /PAGES=(n,^Ô^Ô)			lpr +n		Begin printing on page n.
+  /QUEUE			lpr -Pqueue	Print a file on the specified queue.
+READ				read		Read input (korn shell)
+RECALL /ALL			history		Recall command lines
+REPLY /USER			write		Send a brief message to a logged-in user
+RENAME	mv			move/rename a file(s)
+   /CONFIRM			mv -i		confirm the move/rename of a file(s)
+SEARCH				grep		Search files for strings.
+   /MATCH=NOR			grep -v		List only lines that do not match
+   /NOEXACT			grep -i		Ignore case distinctions.
+   /NUMBERS			grep -n		Precede each match with line number.
+   /STATISTICS			grep -c		List only a file name that contains match
+  /WINDOW = 0			grep -l		Return only file name(s) that contains match
+  file pat^Òrn /WINDOW=5		more -5 	+/pat^Òrn file	Display search line plus two lines before and after. (Terminate with q).
+  file pat^Òrn /WIND=(5,0)	cat file | more -5+pat^Òrn	Display search line plus next five lines.
+SET DEFAULT			cd		Change directory.
+SET FILE/OWNER			chgrp		Change group ownership of a file.
+SET HOST			rlogin		Network login to trusted host.
+SET HOST /DTE			tip		Dial remote host.
+SET HOST 0 /LOG			script		Record a transcript of a terminal session.
+SET PASSWORD			passwd		Change you local password.
+SET PROCESS /PRIORITY		nice or renice	Change the priority of a process.
+SET PROTECTION			chmod		Change file protection.
+   /DEFAULT			umask		Change default protection for files not yet created.
+SET TERMINAL			tset or stty	Set terminal characteristics.
+SET VERIFY			ksh -x orcsh -x	Verify command or script execution.  Echo after variable substitution.
+SHOW DEFAULT			pwd		Display current directory.
+SHOW DEVICE /FULL		df filesystem	Display information on a file system
+SHOW LOGICAL			printenv	Display environment characteristics.
+SHOW PROCESS /ALL		ps -l		Dislay all processes on system.
+SHOW /QUEUE			lpq		Display default print queue status.
+SHOW STATUS			time		Display resources used by a process.
+SHOw TIME			date		Display date and time
+SHOW USERS			who		Display the list of current system users.
+SORT				sort		Sort and merge.
+   /KEY	sort 			   +fskip.cskip /-fskip.cskip	Starting/ending porint of sort key.
+   /OUTPUT			sort -o file	Direct output to file.
+SPAWN /NOWAIT			bg		Move a process to the background.
+STOP /ID			kill -9		Remove a process.
+SUBMIT				at		Start a process at a latter time.
+TYPE				cat		Display a file
+   /PAGE			more		Display a file, pausing after each page.
+   /PAGE NL:			clear		Clear the terminal screen.
+WRITE				/bin/echovar &gt; file	Create a file and write a string or the contents of a variable to it.
+WRITE				/bin/echovar &gt;&gt; file	Append a string or the contents of a variable to an existing file.
+WRITE SYS$OUTPUT		echo (c Shell)print (Korn)	Write to standard output.
+
+OpenVMS Mathematical Operators Function Equivalents
+====================================================
+OpenVMS		unix	Explanation
+.EQ., .EQS.	==	Equal to
+.NE., .NES.	!	Not equal to
+.AND.		&amp;&amp;	Boolean and
+.OR.		||	Boolean or
+.GT., .GTS.	&gt;	Greater than
+.GE., .GES.	&gt;=	Greater than or equal to
+.LT., .LTS.	&lt;	Less than
+.LE., .LES.	&lt;=	Less than or euqal to
++		+	add
+-		-	Subtract
+*		*	Multiply
+/		/	Divide
+var + 1		var++	Increment by 1
+var - 1		var--	Decrement by 1
+		%	Modulo
+		&gt;&gt;	Right bit shift
+		&lt;&lt;	Left bit shift
+.NOT.		~	1^Òs complement
+.NOT.		!	Logical negation
+.OR.		|	Inclusive OR
+		^	Exclusive OR
+.AND.		&amp;	And
+
+OpenVMS Lexical Function and unix Equivalents
+=============================================
+OpenVMS					unix		Explanation
+F$ENVIRONMENT(^ÓINTERACTIVE^Ô)		tty -s		Determine if you are an interactive user.
+F$EXTRACT(start, length, string)	cut -c		Locate fields in a test string and write them out.
+F$ELEMENT(element#, delimiter, string)	cut -f -d awk	Locate delimited fields in a test string.
+F$ENVIRONMENT(^ÓPROCEDURE^Ô)		$0 (Korn)$arg [0] (C)	Get name of currently executing script.
+F$TRANSLATE(^ÓSYS$SYSDEVICE^Ô)		sizer -r	Get name of the device from which the operating system bootstrapped.
+F$GETDVI(^ÓTT:^Ô, ^ÓDEVNAM^Ô)		tty -s		Determine the name of the terminal you are using.
+F$GETSYI(^ÓHW_NAME^Ô)			sizer -c	Get model name of the CPU
+F$GETSYI(^ÓHW_MODEL^Ô)F$GETSYI(^ÓCPU^Ô)	sizer -wt	Return workstation device type
+F$GETSYI(^ÓVERSION^Ô)			sizer -bstrings /vmunix | grep ^Ñ(Rev^Òuname -a	Determine booted kernel^Òs file name and system version.
+F$GETSYI(^ÓPHYSICALPAGES^Ô)		uerf -r 300 -R | grep physical (+2)wc -c/dev/mem	Get the physical memory on a system.
+F$GETSYI(^ÓBOOTTIME^Ô)			who -b	Get system boot time.
+
+ unix Branching statements
+DCL command procedures rely on the statements if, gosub, call, and goto for program branching.  The shells under unix offer several branching statements.
+
+Shell	Branching Statements Offered
+====================================
+csh	if, goto, while, foreach, switch, shift
+ksh	do, case, elif, for, function, if, select, time, until, while
+sh	if, for, while, until, case
+
+Debugging Shell Scripts
+Debugging of shell scripts is done by invoking ksh or sh scripts with the -x and -v flags.  Debuging of C shell scripts by invoking them with the -v, -V, -x or -X flags.  The result is like using the OpenVMS command set verify.
+</pre>
+
+</body></html>
