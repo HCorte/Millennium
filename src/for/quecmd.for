@@ -102,6 +102,9 @@ C
 C
 C QUEUE COMMAND BUFFER TO DISPATCHER INPUT QUEUE
 C
+	  CALL OPSTXT('**********************CALL quecmd***************************')
+C      TYPE *,IAM(),'CALLING quecmd'
+C      CALL PRTOUT(BUF)
 	CALL QUEINP(BUF,STATUS)
 	RETURN
 	END

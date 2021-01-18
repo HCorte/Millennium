@@ -286,6 +286,7 @@ C
 C CHECK FOR COMMAND
 C
         IF(CODE.EQ.TYPCMD) THEN
+          CALL OPS('getque -> TRCODE',ZEXT(HPRO(TRCODE,BUF)),ZEXT(HPRO(TRCODE,BUF)))      
           QUE  = CMD
           SIZE = 2
           GOTO 9000

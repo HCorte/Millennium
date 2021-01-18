@@ -169,6 +169,7 @@ C
 C CHANGE OPSTAT
 C
 30	CONTINUE
+	CALL OPSTXT('CHANGE OPSTAT')
 	IF(VALUE.LT.SIGNOF.OR.VALUE.GT.SERVFD) GOTO 20
 	BUF(1)=1
 	BUF(2)=VALUE
@@ -259,8 +260,11 @@ C
 C QUEUE COMMAND BUFFER TO SYSTEM INPUT QUEUE
 C
 90	CONTINUE
+	CALL OPSTXT('**********************CALL VISCMD***************************')
 	CALL VISCMD(BUF,ST)
+	CALL OPSTXT('**********************CALL XWAIT***************************')
 	CALL XWAIT(2,1,ST)
+	CALL OPSTXT('**********************ENDED XWAIT***************************')
 C
 C
 100	CONTINUE
