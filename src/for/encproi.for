@@ -920,8 +920,7 @@ C        ENDIF
         CALL OPSTXT(' ENCPROI.FOR ')
         IF (X2X_GAME_STATE.EQ.X2X_GAMES_UP) THEN
 C         CALL X2ADDPRO(BUF)                        ! MXSRV
-          IF (HPRO(PRCSRC,BUF).EQ.OLM_COM) THEN ! V05 - OLM
-C            CALL QUETRA(28,BUF)                    ! V05 - OLM (rever se deve usar o ABL ou é QUETRA)            
+          IF (HPRO(PRCSRC,BUF).EQ.OLM_COM) THEN ! V05 - OLM            
             CALL QUETRA(OLM,BUF)                    ! V05 - OLM (rever se deve usar o ABL ou é QUETRA)
 C V05          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV            
           ELSEIF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV

@@ -68,7 +68,9 @@ C Call QUECMD to process buffer
 C error, then set status tO -1 and return.
 C
 20	CONTINUE
+	CALL OPSTXT('**********************CALL QUECMD***************************')
 	CALL QUECMD(CBUF,STATUS)
+	CALL OPS('So command status is:',STATUS,STATUS)
 C
 C IF AGENT PASSNUMBERS OR  AGENT TYPE ARE CHANGED ON THE PRIMARY,        
 C SEND AN INTRASYSTEM COMMAND MSG TO LMS                                 
