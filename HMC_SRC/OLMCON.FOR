@@ -13,7 +13,16 @@ C       show the status of P(SUPSYN)
         PRINT *,'P(OLMCONF)=',P(OLMCONF)
         PAR.OLMCON = P(OLMCONF)    
 
-        PRINT *,'P(SUPSYN)=',P(OLMCONF)        
+        PRINT *,'P(SUPSYN)=',P(SUPSYN) 
+        PRINT *,'P(SUPWEL)=',P(SUPWEL) 
+        PRINT *,'P(NUMENC)=',P(NUMENC) 
+        PRINT *,'P(DESFLG_TYPE)=',P(DESFLG_TYPE) 
+C       (DESFLG_HARD=1)    !HARD DES ENCRYPTIO        
+        PRINT *,'DESFLG_HARD=',1 
+        PRINT *,'P(ENCPRO_WAIT)=',P(ENCPRO_WAIT) 
+        PRINT *,'P(LOGTIM)=',P(LOGTIM) 
+        
+
         CALL DISP_CONFIG(PAR)
         PRINT *,'GOOD .....EXITED SUBROUTINE'
 
