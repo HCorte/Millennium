@@ -37,17 +37,23 @@ C
 C   
 	INTEGER*4 BUF
  
+        CALL OPSTXT(' SENDOUT.FOR ')
         IF (X2X_GAME_STATE.EQ.X2X_GAMES_UP) THEN
 C         CALL X2ADDPRO(BUF)                        ! MXSRV
+          CALL OPSTXT(' THE GAME IS UP ')
           IF (HPRO(PRCSRC,BUF).EQ.OLM_COM) THEN ! V05 - OLM
+            CALL OPSTXT(' GOOD SEND to OLM_COM: OLM queue ')
             CALL QUETRA(OLM,BUF)                    ! V05 - OLM (rever se deve usar o ABL ou é QUETRA)
 C V05          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV            
           ELSEIF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV
+            CALL OPSTXT(' wrong its not MXS Channel ')
             CALL QUETRA(MXS,BUF)                    ! MXSRV
           ELSE                                      ! MXSRV
+            CALL OPSTXT(' wrong its not X2X Channel ')
             CALL X2ADDPRO(BUF)                      ! MXSRV
           ENDIF                                     ! MXSRV
         ELSE
+            CALL OPSTXT(' THE GAME IS NOT UP!!!!!!!! ')
             CALL RELBUF(BUF)
         ENDIF
  
