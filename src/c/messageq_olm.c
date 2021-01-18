@@ -45,7 +45,7 @@ void MessQ_attach(int *status)
                      (char *) 0,    /*  Reserved               */
                      (char *) 0);   /*  Reserved               */
 
-/*   printf("\n Status: %d",dmq_status);*/
+/*   printf("\nC Status: %d",dmq_status);*/
    if ( dmq_status == PAMS__SUCCESS )
          *status = PAMS__SUCCESS;
    else
@@ -135,7 +135,9 @@ void MessQ_put(int *status)
                      &large_msg_size,
                      (char *) 0,
                      (char *) 0 );
-                     
+
+/*   printf("\n---pams_put_msg Status---");  */                
+/*   printf("\nC pams_put_msg Status : %d",dmq_status);  */
    if ( dmq_status == PAMS__SUCCESS )
       *status = PAMS__SUCCESS;
    else
