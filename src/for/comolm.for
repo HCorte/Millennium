@@ -68,7 +68,6 @@ C      CALL OPSTXT(' not DSSUSP')
 543     CONTINUE
 C        CALL OPSTXT(' Vai validar que P(OLMCONF) deve ser != 0')
 C        CALL OPS('P(OLMCONF):',P(OLMCONF),P(OLMCONF))
-        CALL OPS('0000-ACTTSK(29):',ACTTSK(29),0)
         IF (P(OLMCONF) .EQ. 0) THEN 
             GOTO 333
         ENDIF
@@ -76,7 +75,6 @@ C        CALL OPS('P(OLMCONF):',P(OLMCONF),P(OLMCONF))
 C      CALL OPSTXT(' WILL attach to messageQ ')  
 C      CALL OPS('CONOLM:',CONOLM,CONOLM)
 
-      CALL OPS('1-ACTTSK(29):',ACTTSK(29),0)
       IF (CONOLM .EQ. .FALSE.) THEN 
             CALL MESSQ_ATTACH(%REF(ST))
       
@@ -98,16 +96,20 @@ C      CALL OPS('CONOLM:',CONOLM,CONOLM)
       
       ENDIF
 
-333   CONTINUE          
-      CALL OPS('2 WAIT... -ACTTSK(29):',ACTTSK(29),0)
+333   CONTINUE   
+      CALL OPSTXT('wait 250 milseconds')       
       CALL XWAIT(250,1,ST)      
 
 570   CONTINUE        
 
-      CALL OPS('2-ACTTSK(29):',ACTTSK(29),0) 
+      CALL OPSTXT('wait 20 milisseconds')       
+      CALL XWAIT(20,1,ST)
       CALL LISTTOP(BUFNUM, QUETAB(1, OLM), STAT)
-      CALL OPS('3-ACTTSK(29):',ACTTSK(29),0)
 
+      CALL OPSTXT('STAT GLIST_STAT_GOOD:0')
+      CALL OPSTXT('STAT GLIST_STAT_LASTONE:1')
+      CALL OPSTXT('STAT GLIST_STAT_EMPTY:2')
+      CALL OPS('STAT LISTTOP:',STAT,STAT)
       IF(STAT .EQ. GLIST_STAT_EMPTY) THEN 
 C            CALL OPSTXT(' queue OLM vazia ')            
             IF(WTFORMESS .EQ. .TRUE.) GOTO 10
@@ -115,13 +117,12 @@ C            CALL OPSTXT(' vai tentar ler outra vez da queue OLM ')
             BUFNUM = 0
             GOTO 600
       ENDIF
-      CALL OPS('4-ACTTSK(29):',ACTTSK(29),0)
       ST = PAMS__SUCCESS
 
 15    CONTINUE      
       CALL OPSTXT(' vai tentar enviar mensagem para olimpo ')
       CALL SENDTOOLM(BUFNUM,ST,.FALSE.) 
-      CALL OPS('estado de envio para Olimpo:',ST,0)
+C      CALL OPS('estado de envio para Olimpo:',ST,0)
 C      CALL OPS('PAMS__TIMEOUT value:',ST,0)
       IF ((ST .NE. PAMS__SUCCESS ) .AND. (ST .NE. PAMS__TIMEOUT)) THEN
          CALL OPSTXT(' estado de envio falhou')
@@ -130,10 +131,8 @@ C      CALL OPS('PAMS__TIMEOUT value:',ST,0)
             CONOLM = .FALSE.           
 C           before removing from the application queue send the queue as error to dispat to save as error in the tmf as error transaction
             HPRO(TRCODE,BUFNUM)=TYPERR  
-            CALL OPS('6666-ACTTSK(29):',ACTTSK(29),0)
-            CALL ABL (BUFNUM, QUETAB(1, ERR), STAT)    
-            CALL OPS('77777-ACTTSK(29):',ACTTSK(29),0)          
-C            CALL QUETRA(ERR,BUFNUM)          
+C            CALL ABL (BUFNUM, QUETAB(1, ERR), STAT)              
+            CALL QUETRA(ERR,BUFNUM)          
 
 C 4.1	Cancellation Terminal -> Central (so its registered but not possible to send response to Olimpo then cancel to normalize the information)
 C     Bytes
@@ -218,14 +217,12 @@ C               CALL OPSTXT('MAX RETRIES EXCEDED REMOVED FROM OLM QUEUE....')
 C         ENDIF         
 C         GOTO 10
       ENDIF
-C     EITHER IS SUCCESS OF TIMEOUT THE MESSAGE IS REMOVED FROM APP QUEUE OLM
-C     IN CASE OF TIMEOUT THERE IS NEED TO BE NORMALIZED LATER ON BY A THIRD PROGRAM
-C     TO AVOID DESCRIPANCIES BETWEEN MILL AND OLIMPO 
 
+C     EITHER IS SUCCESS OR TIMEOUT THE MESSAGE IS REMOVED FROM APP QUEUE OLM
+C     IN CASE OF TIMEOUT THERE IS NEED TO BE NORMALIZED LATER ON BY A THIRD PROGRAM
+C     TO AVOID DESCRIPANCIES BETWEEN MILL AND OLIMPO
       CALL DQUTRA(OLM, BUFNUM)
       CALL RELBUF(BUFNUM)
-
-      CALL OPS('5-ACTTSK(29):',ACTTSK(29),0)
 C      CALL RTL (BUFNUM, QUETAB(1, OLM), STAT)
 C      IF (STAT .EQ. GLIST_STAT_EMPTY) THEN
 C            BUFNUM = 0
@@ -244,10 +241,8 @@ C      CALL OPS('2-> P(OLMCONF):',P(OLMCONF),P(OLMCONF))
             GOTO 333
       ENDIF
 
-      CALL OPS('7-ACTTSK(29):',ACTTSK(29),0)
       ST = PAMS__NOMOREMSG 
       IF (P(OLMCONF) .NE. 0 ) THEN 
-C            CALL OPSTXT('Get Message From MessageQ from Olimpo')
             CALL GETFROMOLM(ST) 
       ENDIF
 
@@ -258,8 +253,7 @@ C     DAYJUL   ->    CURRENT JULIAN DATE ;;;;; BUFNUM() = DAYJUL
 C        
       IF(ST .EQ. -1) THEN
             GOTO 570  
-      ENDIF  
-      CALL OPS('8-ACTTSK(29):',ACTTSK(29),0)  
+      ENDIF   
       IF ((ST .NE. PAMS__SUCCESS) .AND. (ST .NE. PAMS__NOMOREMSG)) THEN
             CALL MESSQ_EXIT(%REF(ST)) 
             IF (ST .EQ. PAMS__SUCCESS) THEN
@@ -272,13 +266,11 @@ C
       ENDIF
     
       IF(ST .EQ. PAMS__NOMOREMSG) THEN
-C            CALL OPSTXT('MESSAGEQ EMPTY')
+            CALL OPSTXT('MESSAGEQ EMPTY')
             WTFORMESS = .TRUE.
-            CALL OPS('9-ACTTSK(29):',ACTTSK(29),0)
             GOTO 570 
       ELSE IF(ST .EQ. PAMS__SUCCESS) THEN  
-C            CALL OPSTXT('READED A MESSAGE FROM MESSAGEQ')  
-            CALL OPS('10-ACTTSK(29):',ACTTSK(29),0)
+            CALL OPSTXT('READED A MESSAGE FROM MESSAGEQ')  
             GOTO 570 
       ENDIF
 
@@ -304,6 +296,7 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             INCLUDE 'INCLIB:EURCON.DEF'
             INCLUDE 'INCLIB:DATBUF.DEF'
 
+            INTEGER*4  values(8)
             INTEGER*4  MESS(EDLEN)
 
             INTEGER*4 I4TEMP
@@ -352,16 +345,17 @@ C            character*80 PATH
             TERMINALNUM = 0
 20          CONTINUE
 
-
-            CALL MESSQ_GET(%REF(STATUS))   
+            CALL MESSQ_GET(%REF(STATUS))  
 
             IF (STATUS .EQ. PAMS__SUCCESS) THEN   
-  
+                  CALL OPSTXT('Get Message From MessageQ from Olimpo')
 C                  CALL OPSTXT('GET9 MESSAGE SUCCESS')
 80                CONTINUE
 
                   CALL GETBUF(PROBUF)
+                  CALL PRINTDATE()
                   CALL FASTSET(0, PRO(1,PROBUF), PROLEN)
+                  CALL PRINTDATE()
 
 C                  CALL OPSTXT('Mensagem Do MessageQ')
 C                  CALL OPS('Mensagem Do MessageQ Size:',MESS_FROM_LEN,MESS_FROM_LEN)
@@ -464,7 +458,9 @@ C                  CALL OPS('TERMINALNUM:',TERMINALNUM,TERMINALNUM)
 
 C                 se for diferente de 0000 então está defenido o terminal number no header
                   IF(TERMINALNUM .EQ. 0) THEN
+                        CALL PRINTDATE()                       
                         CALL FIND_AGENT(AGENT_NUM,TERMINALNUM,ST)
+                        CALL PRINTDATE()                        
 C                        CALL OPS('AGENT_NUM:',AGENT_NUM,AGENT_NUM)
 C                        CALL OPS('TERMINALNUM:',TERMINALNUM,TERMINALNUM)
 C                        CALL OPS('ST:',ST,ST)
@@ -537,6 +533,7 @@ C                 11 =		Invalid Terminal Number -> TBAD=11
                   BPRO(SEROLM_OLM + 0,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8))                   
 
 C                  CALL OPSTXT('GET MESSAGE SUCCESS ->5')
+                  CALL PRINTDATE() 
                   IF (ST .LT. 0) THEN
                         CALL OPS('ERROR-> STATUS:',ST,ST)
 C TRABUF(TTRN) !TTRN=TRANSACTION SEQUENCE NUMBER
@@ -581,7 +578,7 @@ C                       ver mais tarde se trata-se se a mensagem de erro foi env
                         ST = - 1
                         RETURN 
                   ENDIF                  
- 
+                  CALL PRINTDATE() 
                   HPRO(PRCSRC,PROBUF)=OLM_COM                
                   HPRO(PRCDST,PROBUF)=0 
                   HPRO(QUENUM,PROBUF)=QIN           
@@ -627,7 +624,7 @@ C                        CALL PRTOUT(PROBUF)
                               CALL PRTOUT(PROBUF) 
                         ENDIF
                   ENDIF
-
+                  CALL PRINTDATE() 
 C Send to DIS  (for now commented to just write to GTECH$DEBUG.DAT)              
 C                 CALL QUETRA(DIS,PROBUF) 
 C use ABL subroutine instead of QUETRA since QUETRA haves extra validation to see how many tasks are active at one moment of time (most likely to prevent to many running at the same time)
@@ -641,7 +638,7 @@ C 	  STATUS = GLIST_STAT_FULL or STATUS = GLIST_STAT_GOOD (retornar erro caso a 
                   RETURN
             ENDIF 
             
-
+        CALL PRINTDATE()     
         IF (STATUS .EQ. PAMS__NOMOREMSG) THEN
           ST = STATUS
           RETURN
@@ -855,4 +852,18 @@ C                  ENDDO
 
             ST = STATUS
             RETURN
+      END
+
+      SUBROUTINE PRINTDATE()
+      IMPLICIT NONE
+            character*8 DATEI
+            character*10 TIMEI
+            character*28 LOGDATEI
+
+            CALL date_and_time(DATEI,TIMEI) 
+
+            LOGDATEI = DATEI(7:8)//'/'//DATEI(5:6)//'/'//DATEI(1:4)
+     &      //'  '//TIMEI(1:2)//':'//TIMEI(3:4)//':'//TIMEI(5:6)//':'//TIMEI(7:10)   
+     
+            CALL OPSTXT(LOGDATEI)
       END
