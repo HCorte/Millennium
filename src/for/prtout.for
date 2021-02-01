@@ -49,6 +49,8 @@ C=======OPTIONS /CHECK=NOOVERFLOW
 
 
 *     Implementation: 
+C        CALL OPSTXT('begin prtout')
+        print *,'begin prtout'
 
         ST = LIB$GET_LUN(LU)
 
@@ -62,6 +64,8 @@ C=======OPTIONS /CHECK=NOOVERFLOW
      .        IOSTAT      = ST)    
 	   CALL XWAIT(50,1,WST)
         ENDDO
+C      CALL OPSTXT('append to file in prtout')
+      print *,'append to file in prtout'
 	Write (LU, *) IAM()
 
         Write (LU, '(''   Buffer     = '', I5   )') BUF
@@ -82,8 +86,11 @@ C=======OPTIONS /CHECK=NOOVERFLOW
         ENDDO 
 
         Write (LU, *)
+C        CALL OPSTXT('write to buffer into GTECH$DEBUG')
+        print *,'write to buffer into GTECH$DEBUG'
 
         CLOSE (LU)
+C        CALL OPSTXT('Closed....')
 
 	ST = LIB$FREE_LUN(LU)
 

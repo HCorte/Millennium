@@ -262,10 +262,12 @@ C
           IF (IAND(PRO(OUTTAB,OUTPUT_BUF),ENCRYPTION_ON).NE.0) THEN 
             IF (P(DESFLG_TYPE).EQ.DESFLG_HARD.AND.
      *         TSBIT(AGTTAB(AGTTYP,HPRO(TERNUM,OUTPUT_BUF)),AGTTOI)) THEN
+D               CALL OPSTXT('ENCPROI ->1')
 D              TYPE *,IAM(),'CALLING DESENCBF'
 D              CALL PRTOUT(OUTPUT_BUF)
                CALL DESENCBF(OUTPUT_BUF,ST)
             ELSE
+D               CALL OPSTXT('ENCPROI ->2')
 D              TYPE *,IAM(),'CALLING SFTENCBF'
 D              CALL PRTOUT(OUTPUT_BUF)
                CALL SFTENCBF(OUTPUT_BUF,ST)             !DO ENCRYPTION
@@ -300,9 +302,12 @@ C
 C
         CALL DQUINP(BUF_NO)
         IF (BUF_NO.GT.0) THEN
-D          TYPE *,IAM(),'CALLING DQUINP'
-D          CALL PRTOUT(BUF_NO)   
-D          CALL OPS('TRCODE',ZEXT(HPRO(TRCODE,BUF_NO)),ZEXT(HPRO(TRCODE,BUF_NO)))                  
+          CALL OPSTXT('ENCPROI ->3')
+          TYPE *,IAM(),'CALLING DQUINP'
+          CALL PRTOUT(BUF_NO)   
+          CALL OPS('ENCRYPTION_ON 0:',ENCRYPTION_ON,ENCRYPTION_ON)                  
+          CALL OPS('PRO(INPTAB,BUF_NO):',PRO(INPTAB,BUF_NO),PRO(INPTAB,BUF_NO))
+C          CALL OPS('IAND(PRO(INPTAB,BUF_NO),ENCRYPTION_ON):',IAND(PRO(INPTAB,BUF_NO),ENCRYPTION_ON),IAND(PRO(INPTAB,BUF_NO),ENCRYPTION_ON))
           AGAIN=-1
           IF (BUF_NO.GT.NUMPRO) THEN
             TYPE 900,IAM(),BUF_NO
@@ -332,14 +337,21 @@ C
 C
 C       try to decrypt DES HARD IS ONLY DONE TO ON-LINE TERMINALS
 C
+             CALL OPS('P(DESFLG_TYPE)->0:',P(DESFLG_TYPE),P(DESFLG_TYPE))
+             CALL OPS('DESFLG_HARD->1:',DESFLG_HARD,DESFLG_HARD)
+             CALL OPS('AGTTAB(AGTTYP,HPRO(TERNUM,BUF_NO):',AGTTAB(AGTTYP,HPRO(TERNUM,BUF_NO)),AGTTAB(AGTTYP,HPRO(TERNUM,BUF_NO)))
+             CALL OPS('AGTTOI:',AGTTOI,AGTTOI)
              IF (P(DESFLG_TYPE).EQ.DESFLG_HARD.AND.
      *          TSBIT(AGTTAB(AGTTYP,HPRO(TERNUM,BUF_NO)),AGTTOI)) THEN
-D               TYPE *,IAM(),'CALLING DESDECBF'
-D               CALL PRTOUT(BUF_NO)
+                CALL OPSTXT('ENCPROI ->4')
+               TYPE *,IAM(),'CALLING DESDECBF'
+               CALL PRTOUT(BUF_NO)
                 CALL DESDECBF(BUF_NO,STATUS)
              ELSE
-D              TYPE *,IAM(),'CALLING SFTDECBF'     
-D               CALL PRTOUT(BUF_NO)
+                CALL OPSTXT('ENCPROI ->5')
+                
+              TYPE *,IAM(),'CALLING SFTDECBF'     
+               CALL PRTOUT(BUF_NO)
                 CALL SFTDECBF(BUF_NO,STATUS)
 
 CCCCCC                 TYPE*,'CALLING SFTDECBF' ,STATUS
@@ -380,6 +392,7 @@ C
 C       encrypt message (not second phase of multipassword signon)
 C
             AGAIN=-1
+D            CALL OPSTXT('ENCPROI ->6')
 D           TYPE *,IAM(),'AFTER ENCRYPTION'
 D           CALL PRTOUT(BUF_NO)
             CALL SENDOUT(BUF_NO)
@@ -409,6 +422,7 @@ C
             ENDIF
 C
 C
+D            CALL OPSTXT('ENCPROI ->7')
 D           TYPE *,IAM(),'AFTER DECRYPTION'
 D           CALL PRTOUT(BUF_NO)
             CALL ABL(BUF_NO,QUETAB(1,DIS),STATUS)
@@ -443,8 +457,9 @@ C
 C       encrypt message (not second phase of multipassword signon)
 C
             AGAIN=-1
-D           TYPE *,IAM(),'AFTER ENCRYPTION'
-D           CALL PRTOUT(BUF_NO)          
+            CALL OPSTXT('ENCPROI ->8')
+           TYPE *,IAM(),'AFTER ENCRYPTION'
+           CALL PRTOUT(BUF_NO)          
             CALL SENDOUT(BUF_NO)
             GOTO 2210
           ELSE          !STATUS.EQ.0, DECRYPT OR TYPPAS
@@ -472,6 +487,7 @@ C
             ENDIF
 C
 C
+D           CALL OPSTXT('ENCPROI ->9')
 D           TYPE *,IAM(),'AFTER DECRYPTION'
 D           CALL PRTOUT(BUF_NO)
             CALL ABL(BUF_NO,QUETAB(1,DIS),STATUS)
