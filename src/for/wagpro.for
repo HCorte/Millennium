@@ -107,7 +107,9 @@ C
         TASK    = WAG
         MESS(1) = TASK
 5       CONTINUE
+        CALL OPS('WAGPRO DAYCDC',DAYCDC,DAYCDC)
         BASECHKSUM=IAND(DAYCDC,'FFFF'X)
+        CALL OPS('WAGPRO BASECHKSUM',BASECHKSUM,BASECHKSUM)
 C
 C WAIT FOR SOMETHING TO DO
 C IF END OF DAY THEN CALL GSTOP(GEXIT_SUCCESS)
@@ -167,7 +169,9 @@ C BPRO(CHOLM_OLM) equal to 1 means that comes from the communication channel Oli
 C other wise comes from X2X or MXS
 C----+------------------------------------------------------------------
 C       begin - Olimpo Serial Number & Message Id & Communication Flag
-        IF(BPRO(CHOLM_OLM) .EQ. 1) THEN
+        CALL OPS('WAGPRO BPRO(CHOLM_OLM,BUF)',BPRO(CHOLM_OLM,BUF),BPRO(CHOLM_OLM,BUF))
+        IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN
+            CALL OPSTXT('BPRO(CHOLM_OLM,BUF) .EQ. 1')    
             TRABUF(TWCOLMSERL_TLTO)=PRO(SEROLM_OLM,BUF)
             TRABUF(TWCOLMSERM_TLTO)=PRO(SEROLM_OLM+1,BUF)
             TRABUF(TWCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
@@ -188,6 +192,7 @@ C V28| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------
         GTYP = BPRO(BINPTAB+5,BUF)
         IF(GTYP.EQ.TLTO) THEN
+            CALL OPSTXT('WAGPRO DLOTTO:')
             CALL DLOTTO(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
         ELSE IF(GTYP.EQ.TSPT) THEN
             CALL DSPORT(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
