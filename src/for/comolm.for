@@ -66,14 +66,9 @@ C      ENDIF
 C      CALL OPSTXT(' not DSSUSP')
 
 543     CONTINUE
-C        CALL OPSTXT(' Vai validar que P(OLMCONF) deve ser != 0')
-C        CALL OPS('P(OLMCONF):',P(OLMCONF),P(OLMCONF))
         IF (P(OLMCONF) .EQ. 0) THEN 
             GOTO 333
         ENDIF
-     
-C      CALL OPSTXT(' WILL attach to messageQ ')  
-C      CALL OPS('CONOLM:',CONOLM,CONOLM)
 
       IF (CONOLM .EQ. .FALSE.) THEN 
             CALL MESSQ_ATTACH(%REF(ST))
@@ -96,24 +91,14 @@ C      CALL OPS('CONOLM:',CONOLM,CONOLM)
       
       ENDIF
 
-333   CONTINUE   
-      CALL OPSTXT('wait 250 milseconds')       
+333   CONTINUE          
       CALL XWAIT(250,1,ST)      
 
 570   CONTINUE        
-
-      CALL OPSTXT('wait 20 milisseconds')       
-      CALL XWAIT(20,1,ST)
       CALL LISTTOP(BUFNUM, QUETAB(1, OLM), STAT)
 
-      CALL OPSTXT('STAT GLIST_STAT_GOOD:0')
-      CALL OPSTXT('STAT GLIST_STAT_LASTONE:1')
-      CALL OPSTXT('STAT GLIST_STAT_EMPTY:2')
-      CALL OPS('STAT LISTTOP:',STAT,STAT)
-      IF(STAT .EQ. GLIST_STAT_EMPTY) THEN 
-C            CALL OPSTXT(' queue OLM vazia ')            
+      IF(STAT .EQ. GLIST_STAT_EMPTY) THEN             
             IF(WTFORMESS .EQ. .TRUE.) GOTO 10
-C            CALL OPSTXT(' vai tentar ler outra vez da queue OLM ')
             BUFNUM = 0
             GOTO 600
       ENDIF
@@ -122,70 +107,14 @@ C            CALL OPSTXT(' vai tentar ler outra vez da queue OLM ')
 15    CONTINUE      
       CALL OPSTXT(' vai tentar enviar mensagem para olimpo ')
       CALL SENDTOOLM(BUFNUM,ST,.FALSE.) 
-C      CALL OPS('estado de envio para Olimpo:',ST,0)
-C      CALL OPS('PAMS__TIMEOUT value:',ST,0)
       IF ((ST .NE. PAMS__SUCCESS ) .AND. (ST .NE. PAMS__TIMEOUT)) THEN
          CALL OPSTXT(' estado de envio falhou')
          CALL MESSQ_EXIT(%REF(ST))
          IF (ST .EQ. PAMS__SUCCESS) THEN 
             CONOLM = .FALSE.           
-C           before removing from the application queue send the queue as error to dispat to save as error in the tmf as error transaction
             HPRO(TRCODE,BUFNUM)=TYPERR  
 C            CALL ABL (BUFNUM, QUETAB(1, ERR), STAT)              
-            CALL QUETRA(ERR,BUFNUM)          
-
-C 4.1	Cancellation Terminal -> Central (so its registered but not possible to send response to Olimpo then cancel to normalize the information)
-C     Bytes
-C     Start	End	Size	Field Contents
-C     1	1	1	Control	Sequence
-C     2	2	1	Type = 2	Subtype = n
-C     3	4	2	Checksum
-C     5	5	1	Statistics (see below)
-C     6	7	2	Wager Julian Date
-C     8	10	3	Wager Serial Number
-C     11	11	1	Wager Check Digits
-
-C     CODE = HPRO(TRCODE,BUF)
-C     CODE.EQ.TYPDEL -> INTERNAL CANCELLATION
-
-C     construct a new buffer(message)
-C     HPRO(TRCODE,BUFNUM) = TYPDEL
-C     CALL ABL(BUFNUM,QUETAB(1,DIS),ST)
-
-C GLOBAL.DEF
-
-C TERR -> NOER (No Error) - SYNT (Synthesis Error) - RETY (Retry Error) - DESMOD (???) - SUPR (Supression Error) - BSTS - NOTON - SDRW - SDOR
-C Values:		Description
-C 1 =		Invalid
-C 2 =		Syntax Error
-C 3 =		Function Suppressed
-C 4 =		Not Signed On
-C 5 =		System Dormant
-C 6 =		Drawing Break
-C 7 =		Liability Limit Exceeded
-C 8 =		Non-drawing Day
-C 9 =		DES Encryption Error
-C 10 =		Results Not In
-C 11 =		Invalid Terminal Number -> TBAD=11
-C 12 =		Security Violation (>10 sign-on)
-C 13 =		Bad Checksum
-C 14 =		Bad Game Status
-C 15 =		Retry Transaction
-C 18 =		Game Revision Error
-C 19 =		Can Not Fraction Ticket
-C 20 =		Already Fractioned
-C 21 =		Unfractioned
-C 22 =		Card Present (Pass # mismatch)
-C 23 =		No Card Present at SON (Do not SON)
-C 25 =		Sports, Wrong number of marks with an event cancelled
-C 26 =		Sports, The full draw has been cancelled.
-C 31 =		Combination Closed
-C 32 =		Odds exceeded
-C 36 =         	Invalid Agent Or Password In Sign On -> (BTOPSN = 36)
-C 37 =		Not available passive number found
-C 38 =		Passive IO error
-C 39 =		Blocked NIF  
-C 40 =            PROCOM Buffer Unavailable         
+            CALL QUETRA(ERR,BUFNUM)                  
             CALL OPS('ERROR: MESSAGEQ CAN NOT BE DETACHED!!!',ST,0)
             GOTO 543
          ENDIF
@@ -202,20 +131,6 @@ C         ENDIF
         
          CALL OPS('ERROR: MESSAGEQ CAN NOT BE DETACHED!!!',ST,0)
          GOTO 10
-C      ELSEIF (ST .EQ. PAMS__TIMEOUT .AND. TIMEOUT_RETRY .LT. TIMEOUT_RETRY_MAX) THEN 
-C         TIMEOUT_RETRY = TIMEOUT_RETRY + 1
-C         GOTO 15
-C      ELSEIF (ST .EQ. PAMS__TIMEOUT .AND. TIMEOUT_RETRY .EQ. TIMEOUT_RETRY_MAX) THEN
-C         TIMEOUT_RETRY = 0
-C         CALL RTL (BUFNUM, QUETAB(1, OLM), STAT)
-C         CALL OPS('MAX RETRIES EXCEDED',STAT,0)
-C         IF (STAT .EQ. GLIST_STAT_EMPTY) THEN
-C               BUFNUM = 0
-C         ELSE 
-C               CALL RELBUF(BUFNUM)  
-C               CALL OPSTXT('MAX RETRIES EXCEDED REMOVED FROM OLM QUEUE....')  
-C         ENDIF         
-C         GOTO 10
       ENDIF
 
 C     EITHER IS SUCCESS OR TIMEOUT THE MESSAGE IS REMOVED FROM APP QUEUE OLM
@@ -235,8 +150,6 @@ C      ENDIF
 
 600   CONTINUE            
 
-C      CALL OPSTXT('2-> Vai validar que P(OLMCONF) deve ser != 0')
-C      CALL OPS('2-> P(OLMCONF):',P(OLMCONF),P(OLMCONF))
       IF (P(OLMCONF) .EQ. 0) THEN 
             GOTO 333
       ENDIF
@@ -245,12 +158,7 @@ C      CALL OPS('2-> P(OLMCONF):',P(OLMCONF),P(OLMCONF))
       IF (P(OLMCONF) .NE. 0 ) THEN 
             CALL GETFROMOLM(ST) 
       ENDIF
-
-
-C meter dentro do getfromolm e obter os valores dos campos control e sequence da própria mensagem recebida      
-C adicionar header para enviar messageid (8bytes), agent number (4bytes) = TERMINALNUM, serial (Olimpo), current Julian date 
-C     DAYJUL   ->    CURRENT JULIAN DATE ;;;;; BUFNUM() = DAYJUL 
-C        
+       
       IF(ST .EQ. -1) THEN
             GOTO 570  
       ENDIF   
@@ -276,7 +184,7 @@ C
 
       END      
 
-C   TERMINALNUM -> Agent Number (External)
+C   AGENT_NUM -> Agent Number (External)
 C   TERMINALNUM -> Terminal Number (Internal)    
 C   MESSERIAL -> MESSAGEID generated and sent by Olimpo   
       SUBROUTINE GETFROMOLM(ST)
@@ -317,8 +225,7 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
 
             COMMON /FROM_OLM/ MESS_FROM_OLM, MESS_FROM_LEN
             BYTE MESS_FROM_OLM(1024) 
-            INTEGER*4 MESS_FROM_LEN
-C           MESSERIAL is MessageID used as identification of the Message           
+            INTEGER*4 MESS_FROM_LEN           
             INTEGER*4 MESSERIAL, TYPE, SUBTYPE, TERMINALNUM, AGENT_NUM, I, MYCHKSUM, ERRTYP
             INTEGER*8 MESSAGEID
             INTEGER*4 MESSAGEID_POS /1/, AGENT_NUM_POS /6/, TERMINAL_NUM_POS /10/, SERIAL_OLM_POS /12/   
@@ -328,11 +235,6 @@ C           MESSERIAL is MessageID used as identification of the Message
             DATA    ERRTYP /Z90/            
             BYTE    ERRMSG(5)
             INTEGER MESS_BODY                        
-
-C            character*8 DATE
-C            character*10 TIME
-C            character*20 LOGDATE
-C            character*80 PATH  
                
             
             INTEGER*4 APPQUE 
@@ -349,14 +251,14 @@ C            character*80 PATH
 
             IF (STATUS .EQ. PAMS__SUCCESS) THEN   
                   CALL OPSTXT('Get Message From MessageQ from Olimpo')
-C                  CALL OPSTXT('GET9 MESSAGE SUCCESS')
 80                CONTINUE
 
                   CALL GETBUF(PROBUF)
-                  CALL PRINTDATE()
+C                  CALL PRINTDATE()
                   CALL FASTSET(0, PRO(1,PROBUF), PROLEN)
-                  CALL PRINTDATE()
+C                  CALL PRINTDATE()
 
+                  CALL OPS('MESS_FROM_LEN:',MESS_FROM_LEN,MESS_FROM_LEN)
 C                  CALL OPSTXT('Mensagem Do MessageQ')
 C                  CALL OPS('Mensagem Do MessageQ Size:',MESS_FROM_LEN,MESS_FROM_LEN)
 
@@ -457,19 +359,13 @@ C                  CALL OPS('AGENT_NUM:',AGENT_NUM,AGENT_NUM)
 C                  CALL OPS('TERMINALNUM:',TERMINALNUM,TERMINALNUM)
 
 C                 se for diferente de 0000 então está defenido o terminal number no header
-                  IF(TERMINALNUM .EQ. 0) THEN
-                        CALL PRINTDATE()                       
+                  IF(TERMINALNUM .EQ. 0) THEN                       
                         CALL FIND_AGENT(AGENT_NUM,TERMINALNUM,ST)
-                        CALL PRINTDATE()                        
-C                        CALL OPS('AGENT_NUM:',AGENT_NUM,AGENT_NUM)
-C                        CALL OPS('TERMINALNUM:',TERMINALNUM,TERMINALNUM)
-C                        CALL OPS('ST:',ST,ST)
 
                         IF(ST .EQ. -1)THEN
                               CALL OPS('FIND_AGENT FAILED -- ST:',ST,ST)
 C                             return a error message to MessageQ do not allow to process anymore                              
                         ENDIF
-
                   ENDIF
 
 C                 AGTN = AGTTAB(AGTNUM,AGT)  obter o agente number no AGTTAB apartir do terminal number e comparar que esse agent number é igual ao recebido no header caso contrario há uma falha nos dados enviados e é retornado uma mensagem de erro                
@@ -496,8 +392,7 @@ C                       MESSAGEID
                         I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
                         I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
                         MESSAGEID = I8AUX                      
-C saves to program log itself the message
-C TERMINALNUM - type - subtype - message id                          
+                         
                         TYPE*, ' '                                            
                         TYPE*, 'Unable to allocate PROCOM buffer for Agent Number ', TERMINALNUM, 
      *                   ' TYPE:' ,TYPE , ' SUBTYPE:' , SUBTYPE, ' MESSAGEID:', MESSAGEID
@@ -505,13 +400,10 @@ C        (importante)               SEE BETHER METHOD OF WRITING IN ONE LINE INS
                         DO I=1, MESS_FROM_LEN  
                               TYPE*, MESS_FROM_OLM(I)                               
                         ENDDO   
-
-C                       return error message (case there is no avaible buffer at the moment)                       
+                      
                         ST = -10 
                   ENDIF
 
-C                 VALIDATE THAT TERMINALNUM IS A VALIDE NUMER (2 bytes max <-> 7 digitos) AND ALSO THAT MESSAGEID IS ALSO VALIDE     
-C                 11 =		Invalid Terminal Number -> TBAD=11 
                   IF(TERMINALNUM .LT.1 .OR. TERMINALNUM .GT. NUMAGT) THEN 
                         ST = -9
                   ENDIF 
@@ -532,23 +424,16 @@ C                 11 =		Invalid Terminal Number -> TBAD=11
                   BPRO(SEROLM_OLM + 1,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7))
                   BPRO(SEROLM_OLM + 0,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8))                   
 
-C                  CALL OPSTXT('GET MESSAGE SUCCESS ->5')
-                  CALL PRINTDATE() 
+
                   IF (ST .LT. 0) THEN
                         CALL OPS('ERROR-> STATUS:',ST,ST)
-C TRABUF(TTRN) !TTRN=TRANSACTION SEQUENCE NUMBER
-C                       ERRMSG(1)= '20'X + '00'X !Control + Sequence
-C                       Control + Sequence (request) send the same as response in error
-                        ERRMSG(1) = ZEXT(MESS_FROM_OLM(BUFFER_HEADER_LENTH))
-C Type = 9	Subtype = 0 ->  1001 0000 -> 90 (hexadecimal)         
-                        ERRMSG(2) = ZEXT(ERRTYP) !'90'X <-> !10010000
+                        ERRMSG(1) = ZEXT(MESS_FROM_OLM(BUFFER_HEADER_LENTH))        
+                        ERRMSG(2) = ZEXT(ERRTYP) 
                         IF(ST .EQ. -10) THEN
-                              ERRMSG(5) = ZEXT(INVL) !TRABUF(TERR)     
+                              ERRMSG(5) = ZEXT(INVL)    
                         ENDIF
                         IF(ST .EQ. -9 .OR. ST .EQ. -8) THEN
-C                              CALL OPSTXT('ERROR -9 (TERMINAL_NUM INVALID) OR -8 -> ')                              
-                              ERRMSG(5) = ZEXT(TBAD)
-C !received un unespectade error status                              
+                              ERRMSG(5) = ZEXT(TBAD)                              
                         ELSE 
                               ERRMSG(5) = ZEXT(INVL)
                         ENDIF
@@ -578,67 +463,62 @@ C                       ver mais tarde se trata-se se a mensagem de erro foi env
                         ST = - 1
                         RETURN 
                   ENDIF                  
-                  CALL PRINTDATE() 
+C                  CALL PRINTDATE() 
                   HPRO(PRCSRC,PROBUF)=OLM_COM                
                   HPRO(PRCDST,PROBUF)=0 
                   HPRO(QUENUM,PROBUF)=QIN           
-                  HPRO(TRCODE,PROBUF)=TYPREG    
-C                 Internimal terminal number of Millennium limited to the (X2X_TERMS=12288) or the same (NUMAGT=12288)                                            
-                  HPRO(TERNUM,PROBUF)=TERMINALNUM !TERMINALNUM 
+                  HPRO(TRCODE,PROBUF)=TYPREG                                              
+                  HPRO(TERNUM,PROBUF)=TERMINALNUM 
                   PRO(LINENO,PROBUF)=0              
                   HPRO(MSGNUM,PROBUF)=0
-                  HPRO(INPLEN,PROBUF)=MESS_FROM_LEN                 
-
+                  HPRO(INPLEN,PROBUF)=MESS_FROM_LEN-(BUFFER_HEADER_LENTH)+1  
                   BPRO(CHOLM_OLM,PROBUF) = ZEXT (1)
 
                   CALL GETTIM(P(ACTTIM))
                   PRO(TIMOFF,PROBUF)=P(ACTTIM) 
-C                  CALL OPS('TIMOFF:',P(ACTTIM),P(ACTTIM))
-                
-                  CALL LIB$MOVC3(MESS_FROM_LEN-(BUFFER_HEADER_LENTH), MESS_FROM_OLM(BUFFER_HEADER_LENTH), BPRO(BINPTAB,PROBUF))
 
-C                  CALL OPS('XXDEBUG should be 0: ',P(XXDEBUG),P(XXDEBUG))
-                  IF(P(XXDEBUG).EQ.0) THEN
-C                        CALL OPSTXT('DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!')
-                        DMPDBG=.FALSE.                        
-C                        CALL OPS('P(XXDTRLN): ',P(XXDTRLN),P(XXDTRLN))
-                        IF(P(XXDTRLN).EQ.0) DMPDBG=.TRUE.
-C                        CALL OPSTXT('DEBUG2222!!!!!!!!!!!!!!!!!!!!!!!!!!')
-                        IF(P(XXDTRLN).LT.0) THEN
-                              IF(ABS(P(XXDTRLN)).EQ.HPRO(LINENO,PROBUF)) DMPDBG=.TRUE.
-                        ENDIF
-C                        CALL OPSTXT('DEBUG3333!!!!!!!!!!!!!!!!!!!!!!!!!!')
-                        IF(P(XXDTRLN).GT.0) THEN
-C                              CALL OPS('P(XXDTRLN) GT 0: ',P(XXDTRLN),P(XXDTRLN))
-C                              CALL OPS('HPRO(TERNUM,PROBUF): ',HPRO(TERNUM,PROBUF),HPRO(TERNUM,PROBUF))
-                              IF(P(XXDTRLN).EQ.HPRO(TERNUM,PROBUF)) THEN
-C                                    CALL OPS('gooooooooooooooood',P(XXDTRLN),P(XXDTRLN))
-                                    DMPDBG=.TRUE.
-                              ENDIF
-                        ENDIF
-C                        CALL OPSTXT('DEBUG44444!!!!!!!!!!!!!!!!!!!!!!!!!!')
-C                        CALL OPS('DMPDBG: ',DMPDBG,DMPDBG)
-C                        CALL PRTOUT(PROBUF)
-                        IF(DMPDBG) THEN
-                              CALL OPS('DMPDBG TRUE....: ',DMPDBG,DMPDBG)
-                              CALL PRTOUT(PROBUF) 
-                        ENDIF
-                  ENDIF
-                  CALL PRINTDATE() 
+                  CALL LIB$MOVC3(MESS_FROM_LEN-(BUFFER_HEADER_LENTH)+1, MESS_FROM_OLM(BUFFER_HEADER_LENTH), BPRO(BINPTAB,PROBUF))
+
+C                  CALL LOGBUF(PROBUF,'COMOLM GET:')                  
+D                 TYPE *,IAM(),'COMOLM GET'
+D                 CALL PRTOUT(PROBUF)
+
+
+C                  IF(P(XXDEBUG).EQ.0) THEN
+C                        DMPDBG=.FALSE.                        
+C                        IF(P(XXDTRLN).EQ.0) DMPDBG=.TRUE.
+C                        IF(P(XXDTRLN).LT.0) THEN
+C                              IF(ABS(P(XXDTRLN)).EQ.HPRO(LINENO,PROBUF)) DMPDBG=.TRUE.
+C                        ENDIF
+C                        IF(P(XXDTRLN).GT.0) THEN
+C                              IF(P(XXDTRLN).EQ.HPRO(TERNUM,PROBUF)) THEN
+C                                    DMPDBG=.TRUE.
+C                              ENDIF
+C                        ENDIF
+C                        IF(DMPDBG) THEN
+C                              CALL PRTOUT(PROBUF) 
+C                        ENDIF
+C                  ENDIF
+
+C                  CALL PRINTDATE() 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                  
 C Send to DIS  (for now commented to just write to GTECH$DEBUG.DAT)              
 C                 CALL QUETRA(DIS,PROBUF) 
 C use ABL subroutine instead of QUETRA since QUETRA haves extra validation to see how many tasks are active at one moment of time (most likely to prevent to many running at the same time)
-                  CALL ABL(PROBUF,QUETAB(1,DIS),ST)
-
+C                  CALL ABL(PROBUF,QUETAB(1,DIS),ST)
+CCCCCCCCCCCCCCCCCCCCCCCSend to Encproi instead of DispatcherCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                  
+C                  PARAMETER (ENCRYPTION_ON='00000008'X) --> ENCRYPTION ON IN PROCOM BUF
+C                  P(DESFLG_TYPE) = 0 <---> Encrypted Mode |||| P(DESFLG_TYPE) = 1 <---> Decrypted Mode
+C                  IAND(PRO(INPTAB,BUF_NO),ENCRYPTION_ON) --> 8x and value lower then 8x (decrypted) will alls return 0
+                  CALL QUEINP (PROBUF,ST)
 C                  CALL OPSTXT('Result Of Send Message to Queue')
 C                  CALL OPS('ST: ',ST,ST)
 C 	  STATUS = GLIST_STAT_FULL or STATUS = GLIST_STAT_GOOD (retornar erro caso a queue aplicacional do Disptacher estiver cheio algo a considerar)
-    
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC    
                   ST = STATUS
                   RETURN
             ENDIF 
-            
-        CALL PRINTDATE()     
+               
         IF (STATUS .EQ. PAMS__NOMOREMSG) THEN
           ST = STATUS
           RETURN
@@ -653,7 +533,6 @@ C 	  STATUS = GLIST_STAT_FULL or STATUS = GLIST_STAT_GOOD (retornar erro caso a 
             RETURN
         ENDIF        
 
-C      RETURN
       END
 
         SUBROUTINE BUILD_MSG(MSG, INDEX, INT_VALUE) 
@@ -809,6 +688,8 @@ C            CALL OPS('starting position (129)?->',BUFFER_OUTPUT,BUFFER_OUTPUT)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC BUFFER_OUTPUT=(OUTAB*4)-4=129          
 C            CALL LIB$MOVC3(MESS_FROM_LEN-(BUFFER_HEADER_LENTH), MESS_FROM_OLM(BUFFER_HEADER_LENTH), BPRO(BINPTAB,PROBUF))
             CALL LIB$MOVC3(MESS_TO_LEN_BODY, BPRO(BUFFER_OUTPUT,SBUF), MESS_TO_OLM(BUFFER_HEADER_LENTH))
+
+C            CALL LOGBUF(SBUF,'COMOLM SEND:')            
 C            DO I=0, MESS_TO_LEN_BODY
 C                  MESS_TO_OLM(BUFFER_HEADER_LENTH+I) = BPRO(BUFFER_OUTPUT+I,SBUF)
 C                  CALL OPS('Message Body send',MESS_TO_OLM(BUFFER_HEADER_LENTH+I),MESS_TO_OLM(BUFFER_HEADER_LENTH+I))
@@ -867,3 +748,47 @@ C                  ENDDO
      
             CALL OPSTXT(LOGDATEI)
       END
+
+C      SUBROUTINE LOGBUF(BUF,MESS)
+C      IMPLICIT NONE
+C
+C            INCLUDE '(LIB$ROUTINES)'
+C            INCLUDE '($FORIOSDEF)'
+C            INCLUDE 'INCLIB:SYSDEFINE.DEF'
+C            INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C            INCLUDE 'INCLIB:GLOBAL.DEF'
+C            INCLUDE 'INCLIB:PROCOM.DEF'
+C
+C            INTEGER * 4  BUF       ! INPUT: Buffer number
+C
+C            INTEGER * 4  J, K      ! Loop counters
+C            INTEGER * 4  ST        ! I/O status
+C            INTEGER * 4  WST
+C            INTEGER * 4  LU        ! Logical unit
+C            CHARACTER*10 MESS            
+C            
+C            open(UNIT=1236, FILE='BUFLOG.DAT', ACCESS='append', STATUS='UNKNOWN', IOSTAT=ST)
+C            CALL OPS('STATUS OPEN FILE',ST,ST)
+C            Write (1236, MESS)
+C            Write (1236, *) IAM()
+C            Write (1236, '(''   Buffer     = '', I5   )') BUF
+C            Write (1236, '(''   Comm       = '', X, I4)') HPRO(PRCSRC, BUF)
+C            Write (1236, '(''   TrCode     = '', I5   )') HPRO(TRCODE  , BUF)
+C            Write (1236, '(''   Term Nr    = '', I5   )') HPRO(TERNUM  , BUF)
+C    
+C            Write (1236, '(''   Line Nr    = '', I5)') HPRO(LINENO  , BUF)
+C    
+C            Write (1236, '(''   Dest.      = '', I5)') HPRO(X2X_DEST, BUF)
+C            Write (1236, '(''   Message    = '', I5)') HPRO(MSGNUM  , BUF)
+C            Write (1236, '(''   Length     = '', I5)') HPRO(INPLEN  , BUF)
+C            Write (1236, *)            
+C
+C            DO K=0, HPRO(INPLEN,BUF)-1, 20
+C                  Write (1236, '(3X, I3, '':'', 20(X, Z2.2))') 
+C     *            K+1, (BPRO(BINPTAB+J, BUF), J=K, 
+C     *                MIN(K+19, HPRO(INPLEN, BUF)-1))
+C                ENDDO            
+C
+C            close(1236)
+C
+C      END
