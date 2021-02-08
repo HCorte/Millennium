@@ -22,7 +22,7 @@ C Copyright 2016 SCML Corporation. All rights reserved.
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C=======OPTIONS /CHECK=NOOVERFLOW/EXT
-        SUBROUTINE OLMSNP(CLINE, EGAM)
+        SUBROUTINE OLMSNP(CLINE)
         IMPLICIT NONE
 C
         INCLUDE 'INCLIB:SYSPARAM.DEF'
@@ -40,13 +40,13 @@ C
         INCLUDE 'INCLIB:QUECOM.DEF'
         INCLUDE 'INCLIB:X2XQUE.DEF'
         INCLUDE 'INCLIB:GTNAMES.DEF'
-        INCLUDE 'INCLIB:OLMCOM.DEF' !New Memory for Olimpo Communication channel          
+C        INCLUDE 'INCLIB:OLMCOM.DEF' !New Memory for Olimpo Communication channel          
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       INPUT ARGUMENTS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
         INTEGER*4  CLINE(20)
-        INTEGER*4  EGAM    !EXTERNAL GAME NUMBER (IN EUROMILLIONS SYSTEM)
+C        INTEGER*4  EGAM    !EXTERNAL GAME NUMBER (IN EUROMILLIONS SYSTEM)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       LOCAL VARIABLES
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -55,23 +55,27 @@ C
         INTEGER*4  GSGRR    !GAME SUPRESS GAME RESULTS REPORT
         INTEGER*4  GSICA    !GAME SUPRESS INTERNAL CANCELLATION
 
-        
+        INTEGER*4  ST
+        INTEGER*4  KEYNUM        
+
+        INTEGER*4 OLMLST(3),OLMTTL        
         INTEGER*4  BUF(CDLEN)     
-        INTEGER*4  MESS(EDLEN)          
+        INTEGER*4  MESS(EDLEN)  
+        CHARACTER*20  PASPAS        
         CHARACTER*7  DEFTPASS                                                   !DEFAULT PASSWORD
         CHARACTER*7  PASSENT                                                    !ENTERED PASSWORD
         INTEGER*4  VALUE
         INTEGER*4  POS
 C
         INTEGER*4  MAXPRM
-        PARAMETER (MAXPRM=22)
+        PARAMETER (MAXPRM=2)
 C
         REAL*8       K(MAXPRM)                                                  !SNAPSHOT PARAMETER DESCRIPTION
 C
-
+        EQUIVALENCE(PASPAS,PASSENT)
 C
-        DATA   K/'COMOLM  ','OLMCOn  ','OLMTMo  ','FINTMo  ',
-     *           'SUPOLm  '/
+        DATA   K/'COMOLm  ','OLMCOn  '/!,'OLMTMo  ','FINTMo  ',
+C     *           'SUPOLm  '/
         DATA DEFTPASS/'SUPORTE'/
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -91,117 +95,103 @@ C
         IF(KEYNUM.EQ.0)GOTO 200                                                 !INPUT ERROR        
 C
         CALL NUMB(CLINE,POS,VALUE)                                              !GET VALUE
-        IF(VALUE.LT.0)  GOTO 205        
+        IF(VALUE.LT.0)  GOTO 205    
+        
+C
+C CLEAR COMMAND MESSAGE BUFFER
+C
+2       CONTINUE
+        CALL FASTSET(0,BUF,CDLEN)
+        GOTO(200,506) KEYNUM   
+        
+        GOTO 200          
+C
+C force some changes to enter pass first the allow those changes
+C
+506     CONTINUE
+        CALL PASSWORD(5,PASPAS)
+        IF (PASSENT .NE. DEFTPASS) THEN
+          MESS(3) = 5
+          CALL QUEMES(MESS)
+          GOTO 206
+        ENDIF
+        IF(VALUE.LT.0.OR.VALUE.GT.1) GOTO 210
+C       will change the value of the connection to Olimpo        
+        GOTO 300
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
+C
+C INPUT ERROR
+C
+200     CONTINUE
+        WRITE(CLIN23,800)
+800     FORMAT('Input error')
+
+        RETURN   
+C
+C VALUE ERROR
+C
+205     CONTINUE
+        WRITE(CLIN23,801)
+801     FORMAT('Value error')          
+
+        RETURN
+C
+C INVALID PASSWORD
+C
+206     CONTINUE
+        WRITE(CLIN23,802)
+802     FORMAT('Invalid Password')
+
+        RETURN
+
+210     CONTINUE
+        WRITE(CLIN23,805)
+805     FORMAT('Invalid value (0-Disconnect 1-Connect /to Olimpo)')
+C
+C QUEUE COMMAND BUFFER TO SYSTEM INPUT INPUT QUEUE
+C     
+250     CONTINUE
+        BUF(6)=IDNUM
+        CALL VISCMD(BUF,ST)
+        CALL XWAIT(2,1,ST)   
+        
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C       BUILD EURSNP SCREEN IMAGE
+C       BUILD OLMSNP SCREEN IMAGE
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 300     CONTINUE
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C       GET BUFFER UTILIZATION INFORMATION
+C       GET BUFFER UTILIZATION INFORMATION 
+C       To do Later(press BUF followed by the number of buffs used to show)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-        !CALL LISTSIZE(QUETAB(1,EUI), EURQUE_LIST(1))                            !INMGR
-        CALL LISTSIZE(QUETAB(1,EUC), EURQUE_LIST(2))                            !COMOLM
-        !CALL LISTSIZE(QUETAB(1,EUO), EURQUE_LIST(3))                            !OUTMGR
+        CALL QIMAGE(QUETAB(1,OLM),OLMLST,3)
+C        CALL LISTSIZE(QUETAB(1,OLM),OLMTTL)                            !COMOLM
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C      GET GAME FLAGS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-        IF(EGAM.NE.0) THEN
-          GSWAG = 0
-          GSGRR = 0
-          GSICA = 0
-          IF(TSBIT(P(EUSPGWAG),EGAM-1)) GSWAG = 1
-          IF(TSBIT(P(EUSPGGRR),EGAM-1)) GSGRR = 1
-          IF(TSBIT(P(EUSPGICA),EGAM-1)) GSICA = 1
-        ENDIF
-        WRITE(CLIN1,901)
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C       DISPLAY EUR SYSTEM APP QUEUES
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-        WRITE(CLIN3,903) K(1), EURQUE_LIST(1),
-     *                   K(2), EURQUE_LIST(2),
-     *                   K(3), EURQUE_LIST(3)
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C       DISPLAY EUR SYSTEM PARAMETERS
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-        ST = 0
-        CALL STTSK(8HCOMMGR  ,TSKST,ST)                                         !VERIFY IF COMMGR IS OK
-        IF(ST.NE.4) THEN                                                        !IF COMMGR OK
-          IF(EURS_ATTACHSTS.NE.0) THEN                                          !ATTACH HAS BEEN DONE
-            WRITE(CLIN6,910)  K(4), P(EUMILF)                                   !EURCOn PARAMETER
-            WRITE(CLIN7,9101) K(5), P(EUTIMOUT),                                !EUR TIMEOUT (SEC)
-     *                        EURS_ATTACHDAT(3),                                !DAY ATTACHED (DD)
-     *                        EURS_ATTACHDAT(2),                                !MONTH ATTACHED (MM)
-     *                        EURS_ATTACHDAT(1),                                !YEAR ATTACHED (YYYY)
-     *                        EURS_ATTACHTIM                                    !TIME ATTACHED (H24:MI:SS)
-          ELSE                                                                  !ATTACH HAS NOT BEEN DONE
-            WRITE(CLIN6,9102) K(4), P(EUMILF)                                   !EURCOn PARAMETER
-            WRITE(CLIN7,9103) K(5), P(EUTIMOUT)                                 !EUR TIMEOUT (SEC)
-          ENDIF
-C
-          IF(EURS_DETACHFLG.NE.0) THEN                                          !A DETACH HAS OCCURRED
-            WRITE(CLIN8,9104) K(6), P(EUFINTO),                                 !FIN TIMEOUT (SEC)
-     *                        EURS_DETACHDAT(3),                                !LAST DAY DETACHED (DD)
-     *                        EURS_DETACHDAT(2),                                !LAST MONTH DETACHED (MM)
-     *                        EURS_DETACHDAT(1),                                !LAST YEAR DETACHED (YYYY)
-     *                        EURS_DETACHTIM                                    !LAST TIME DETACHED (H24:MI:SS)
-          ELSE                                                                  !DETACH HAS NOT BEEN DONE
-            WRITE(CLIN8,9105) K(6), P(EUFINTO)                                  !FIN TIMEOUT (SEC)
-          ENDIF
-        ELSE                                                                    !IF COMMGR NOT RUNNING DO NOT DISPLAY ATTACH AND DETACH TIME STAMP
-          WRITE(CLIN6,9102) K(4), P(EUMILF)                                     !EURCOn PARAMETER
-          WRITE(CLIN7,9103) K(5), P(EUTIMOUT)                                   !EUR TIMEOUT (SEC)
-          WRITE(CLIN8,9105) K(6), P(EUFINTO)                                    !FIN TIMEOUT (SEC)
-        ENDIF
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C-      DISPLAY EUR SYSTEM GAMES GLOBAL PARAMETERS
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-        IF(EGAM.EQ.0) THEN
-          WRITE(CLIN12,911) K(7), P(EUSPWAG),K(8) , P(EUSPCAN),
-     *                      K(9), P(EUSPVAL),K(10), P(EUSPGRR)
-          WRITE(CLIN13,9111) K(11), P(EUSPFIR), 
-     *                       K(12), P(EUSPBIR),
-     *                       K(13), P(EUSPICA)
-        ELSE
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C       DISPLAY EUR SYSTEM GAMES SPECIFIC PARAMETERS
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-          IF(GTYP.EQ.TEUM) THEN
-            WRITE(CLIN12,912) EGAMNAM,
-     *                        K(7) , GSWAG,
-     *                        K(10), GSGRR,
-     *                        K(13), GSICA
-            WRITE(CLIN13,900)
-          ELSEIF(GTYP.EQ.TRAF) THEN
-            WRITE(CLIN12,913) EGAMNAM,
-     *                        K(10), GSGRR
-            WRITE(CLIN13,900)
-          ENDIF
-        ENDIF
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C       DISPLAY SYSTEM STATS
+       WRITE(CLIN1,901)
+C---- System 
+       WRITE(CLIN4,903)K(1),OLMLST(1)
+       WRITE(CLIN5,910),OLMLST(2)
+       WRITE(CLIN6,913),OLMLST(3)
+C---- Supress
+       WRITE(CLIN6,912) K(2),P(OLMCONF)
+
+       WRITE(CLIN15,900)
+       WRITE(CLIN16,900)       
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C        WRITE(CLIN16,950)
-C        WRITE(CLIN17,9501) EURS_NXTXRF,                                         !NEXT CROSS REFERENCE NUMBER
-C     *                     EURS_TOTEURTMO,                                      !TOTAL # OF MESSAGES TIMED OUT
-C     *                     EURS_TOTEURATO                                       !TOTAL # OF MESSAGES ALREADY TIMED OUT
-C        WRITE(CLIN18,9502) EURS_TOTOKYPUT,                                      !TOTAL # OF MESSAGES SENT TO EUROMILLIONS SYSTEM
-C     *                     EURS_TOTOKYGET,                                      !TOTAL # OF MESSAGES RECEIVED FROM EUROMILLIONS SYSTEM
-C     *                     EURS_TOTWAGTMO,                                      !TOTAL # OF WAGERS TIMED OUT
-C     *                     EURS_TOTWAGATO                                       !TOTAL # OF WAGERS ALREADY TIMED OUD
-C        WRITE(CLIN19,9503) EURS_TOTERRPUT,                                      !TOTAL # OF ERRORS WHILE SENDING MESSAGES TO EUROMILLIONS SYSTEM
-C     *                     EURS_TOTERRGET,                                      !TOTAL # OF ERRORS WHILE GETTING MESSAGES FROM EUROMILLIONS SYSTEM
-C     *                     EURS_TOTCANTMO,                                      !TOTAL # OF CANCELS TIMED OUT
-C     *                     EURS_TOTCANATO                                       !TOTAL # OF CANCELS ALREADY TIMED OUT
-C        WRITE(CLIN20,9504) EURS_TOTICANOK,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES SENT
-C     *                     EURS_TOTICANER,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES FAILED TO SEND
-C     *                     EURS_TOTVALTMO,                                      !TOTAL # OF VALIDATIONS TIMED OUT
-C     *                     EURS_TOTVALATO                                       !TOTAL # OF VALIDATIONS ALREADY TIMED OUT
-C        WRITE(CLIN21,9505) EURS_TOTICANNS,                                      !TOTAL # OF INTERNAL CANCELS MESSAGES NOT SENT
-C     *                     EURS_TOTPAYTMO,                                      !TOTAL # OF PAYMENTS TIMED OUT
-C     *                     EURS_TOTPAYATO                                       !TOTAL # OF PAYMENTS ALREADY TIMED OUT
-C        WRITE(CLIN22,9506) EURS_TOTFINTMO,                                      !TOTAL # OF FINANCIAL REPORTS TIMED OUT (OTHER THAN THE BILLING REPORT)
-C     *                     EURS_TOTFINATO                                       !TOTAL # OF FINANCIAL REPORTS ALREAYD TIMED OUT (OTHER THAN THE BILLING REPORT)
+C----- FORMAT STATEMENTS
 C
-        RETURN        
+900     FORMAT(80(' '))
+901     FORMAT('**** OLM control snapshot ****')
+903     FORMAT('QUEUES   >  <',I4.0,'>',3X)
+910     FORMAT('BUFF 1   >  ',I4.0,3X)
+913     FORMAT('BUFF 2   >  ',I4.0,3X)
+C911     FORMAT('            ',1('*',A7,I6,3X))
+912     FORMAT('OLM      >   ',1('',A7,I6,3X))        
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C904     FORMAT(1X,'<',I4.0,'>')
+905     FORMAT(2X,I4.0)        
+        END        

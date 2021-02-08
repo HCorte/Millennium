@@ -1,5 +1,6 @@
 C SUBROUTINE PAGE
 C
+C V72 04-FEB-2021 SCML NEW TERMINAL PROJECT - Added support for OLM
 C V71 31-MAR-2016 SCML M16 PROJECT: changed EUROMIL snapshot command prompt
 C                      usage
 C V70 25-FEB-2014 SCML Placard Project
@@ -166,8 +167,10 @@ C        CHARACTER*2 YCOPY       !
         DOUBLE PRECISION KEYLST1(42)
         DOUBLE PRECISION KEYLST2(42)
         DOUBLE PRECISION KEYLST3(42)   
-        DOUBLE PRECISION KEYLST4(42)   
-        DOUBLE PRECISION ALLKEY(168)                                      
+        DOUBLE PRECISION KEYLST4(42)  ! V72
+        DOUBLE PRECISION ALLKEY(168)  ! V72
+C        DOUBLE PRECISION KEYLST4(50)   ! V72
+C        DOUBLE PRECISION ALLKEY(176)   ! V72                                   
 C
         EQUIVALENCE(SLINE,CLINE)                                          
         EQUIVALENCE(KEYLST1(1),ALLKEY(1))                                 
@@ -236,7 +239,10 @@ c     *               'GTXSNP  ','UNUSED  ','MVEsnp  ','PTRsnp  ',
      *               'TMVSNP  ','TPTSNP  ','MVOsnp  ','PTOsnp  ',
      *               'IVPsnp  ','TTRsnp  ','TROsnp  ','TRPsnp  ',    !V68
 !    *               'UNUSED  ','Unused  ','GTCsnp  ','WINsnp  ',    !V70
-     *               'UNUSED  ','IGSsnp  ','GTCsnp  ','WINsnp  ',    !V70
+C     *               'UNUSED  ','IGSsnp  ','GTCsnp  ','WINsnp  ',    !V70
+     *               'OLMsnp  ','IGSsnp  ','GTCsnp  ','WINsnp  ',    !V72     
+C     *               'OLMsnp  ','UNUSED  ','UNUSED  ','UNUSED  ',    !V72
+C     *               'UNUSED  ','UNUSED  ','UNUSED  ','UNUSED  ',    !V72
      *               '<index> ','<event#>','<draw #>','        ',
      *               '<number>','< date >'/         
 C                                                                               
@@ -489,7 +495,8 @@ C
      *        8011,8012,8013,8014,
      *        8015,8016,8017,8018,
      *        8019,8020,8021,8022,
-     *        8023,8024,8025,8026 ) KEY-9                          
+     *        8023,8024,8025,8026,
+     *        8027 ) KEY-9                          
 C                                                                               
 22      CONTINUE
         XNUM=-1000                                                
@@ -1330,17 +1337,18 @@ C
 C
 C Available to use             
 C
-8023    CONTINUE
-        IF(LIN23(1).EQ.BLANK) WRITE (CLIN23,9070)           
-        GOTO 60    
+C8023    CONTINUE
+C        IF(LIN23(1).EQ.BLANK) WRITE (CLIN23,9070)           
+C        GOTO 60    
 C
 C V70 - START - PLACARD PROJECT - SNAP IGS
 C
 C Available to use             
 C
-C8023    CONTINUE
-C        IF(LIN23(1).EQ.BLANK) WRITE (CLIN23,9070)           
-C        GOTO 60    
+8023    CONTINUE
+        IF(LIN23(1).EQ.BLANK) WRITE (CLIN23,9260) 
+        CALL OLMSNP(SLINE)          
+        GOTO 60          
 C
 8024    CONTINUE
         CALL IGSSNP(SLINE,XIND)
@@ -1452,6 +1460,7 @@ C
 C V70 - Start
 9255    FORMAT('Enter change, !igs game number, or vision command')
 C V70 - End
+9260    FORMAT('Enter change, !OLM, or vision command')             !V72     
 C
 C EURO MIL PROJECT - SEND MESSAGE
 C
