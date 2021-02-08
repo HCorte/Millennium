@@ -13,68 +13,131 @@ C        INCLUDE 'OLMCON.DEF'
         INTEGER*4 DISLST(1024)
         INTEGER*4 I, LIMIT, USED
         INTEGER*4	RESULT
+        INTEGER*4 OPT,ST
       
 11      CONTINUE
         IF(RUNPROG) THEN
-          PRINT *, 'THIS PROGRAM IS TO REMOVE A BUFFER FROM APPLICATION QUEUE, CONTINUE THE PROGRAMA (Y/N) or W for watch?'
-          READ *, YN
-          
-          IF(YN .EQ. 'Y' .OR. YN .EQ. 'y') THEN
+          PRINT *, 'To Exit GMGN press e'
+          PRINT *, 'To remove/free all buffers in use in MILL press (1) A'
+          PRINT *, 'To remove/free a block of buffer in use in MILL press (2) O'
+          PRINT *, 'See All the Buffers in the App Queue press (3) W'
+          PRINT *, 'See the List of Active Tasks press (4) T'
+          PRINT *, 'Reset the Active Task List for all Tasks press (5) R'
+          PRINT *, '(TEST) Incremente Active Task for COMOLM (6) I'
+          PRINT *, '(TEST) Decrement Active Task for COMOLM (7) D'
+C          PRINT *, 'THIS PROGRAM IS TO REMOVE A BUFFER FROM APPLICATION QUEUE, CONTINUE THE PROGRAMA (Y/N) or W for watch?'
+          READ *, OPTION
 
-            PRINT *, 'REMOVE ALL BUFFER (A or a) OR ONE BUFFER (O or o)'
-            READ *, ALLONE
-            IF(ALLONE .EQ. 'A' .OR. ALLONE .EQ. 'a') THEN   
-                PRINT *, 'REMOVE ALL (A) or BLOCK OF BUFFS (B)'  
-                READ *, BLOCKBUF
-                IF(BLOCKBUF .EQ. 'A' .OR. BLOCKBUF .EQ. 'a') THEN           
-                  CALL RALLBUFFS_FROMAPPQUEUE(QUETAB(1,DIS),.FALSE.)
-                ELSE 
-                  CALL RALLBUFFS_FROMAPPQUEUE(QUETAB(1,DIS),.TRUE.)       
-                ENDIF
-            ELSEIF (ALLONE .EQ. 'O' .OR. ALLONE .EQ. 'o') THEN
-                CALL RBUFF_FROMAPPQUEUE(QUETAB(1,DIS))
-            ELSE 
-                CALL RBUFF_FROMAPPQUEUE(QUETAB(1,DIS))
-            ENDIF
+          IF(OPTION .EQ. 'E' .OR. OPTION .EQ. 'e') THEN
+            RETURN
+          ENDIF          
+
+          OPT = ICHAR(OPTION) - ICHAR('0')
+C          CALL INPNUM('Enter option [C - bring up the system]',OPT
+C          *              , 1
+C          *              , 9
+C          *              , ST)          
+
+          GOTO(100,200,300,400,500,600,700,800,900) OPT
+
+100       CONTINUE
+            CALL RALLBUFFS_FROMAPPQUEUE(QUETAB(1,DIS),.FALSE.)
+          GOTO 11  
           
-            GOTO 11
-          ELSEIF(YN .EQ. 'W' .OR. YN .EQ. 'w') THEN     
+200       CONTINUE
+            CALL RALLBUFFS_FROMAPPQUEUE(QUETAB(1,DIS),.TRUE.)
+          GOTO 11  
+
+300       CONTINUE
             CALL LISTSIZE(QUETAB(1,DIS),USED)       
             CALL QIMAGE(QUETAB(1,DIS),DISLST,USED)
             PRINT *, 'DISPATCHER'
             PRINT 100,DISLST(1)
             DO I=2, USED+1
               PRINT 101,DISLST(I) 
-            ENDDO   
-            GOTO 11   
-          ELSEIF(YN .EQ. 'T' .OR. YN .EQ. 't') THEN
+            ENDDO
+          GOTO 11  
+
+400       CONTINUE
             DO I=1, NUMAPPQUE
               PRINT *,'I:',I
               PRINT *,'ACTTSK(I):',ACTTSK(I)
             ENDDO
-            GOTO 11
-          ELSEIF(YN .EQ. 'R' .OR. YN .EQ. 'r') THEN
+          GOTO 11  
+
+500       CONTINUE
             DO I=1, NUMAPPQUE
               ACTTSK(I)=0
             ENDDO
-            GOTO 11   
-          ELSEIF(YN .EQ. 'A' .OR. YN .EQ. 'a') THEN
+          GOTO 11  
+
+600       CONTINUE
             CALL LIB$ADAWI(1, ACTTSK(29), RESULT)
             PRINT *,'RESULT:',RESULT
-            GOTO 11  
-          ELSEIF(YN .EQ. 'D' .OR. YN .EQ. 'd') THEN
+          GOTO 11  
+
+700       CONTINUE
             CALL LIB$ADAWI(-1, ACTTSK(29), RESULT)
             PRINT *,'RESULT:',RESULT
-            GOTO 11                        
-          ENDIF
+          GOTO 11 
           
-
+800       CONTINUE
+          GOTO 11 
+          
+900       CONTINUE
+          GOTO 11 
+          
+C          IF(YN .EQ. 'Y' .OR. YN .EQ. 'y') THEN
+C            PRINT *, 'REMOVE ALL BUFFER (A or a) OR ONE BUFFER (O or o)'
+C            READ *, ALLONE
+C            IF(ALLONE .EQ. 'A' .OR. ALLONE .EQ. 'a') THEN   
+C                PRINT *, 'REMOVE ALL (A) or BLOCK OF BUFFS (B)'  
+C                READ *, BLOCKBUF
+C                IF(BLOCKBUF .EQ. 'A' .OR. BLOCKBUF .EQ. 'a') THEN           
+C                  CALL RALLBUFFS_FROMAPPQUEUE(QUETAB(1,DIS),.FALSE.)
+C                ELSE 
+C                  CALL RALLBUFFS_FROMAPPQUEUE(QUETAB(1,DIS),.TRUE.)       
+C                ENDIF
+C            ELSEIF (ALLONE .EQ. 'O' .OR. ALLONE .EQ. 'o') THEN
+C                CALL RBUFF_FROMAPPQUEUE(QUETAB(1,DIS))
+C            ELSE 
+C                CALL RBUFF_FROMAPPQUEUE(QUETAB(1,DIS))
+C            ENDIF
+C            GOTO 11
+C          ELSEIF(YN .EQ. 'W' .OR. YN .EQ. 'w') THEN     
+C            CALL LISTSIZE(QUETAB(1,DIS),USED)       
+C            CALL QIMAGE(QUETAB(1,DIS),DISLST,USED)
+C            PRINT *, 'DISPATCHER'
+C            PRINT 100,DISLST(1)
+C            DO I=2, USED+1
+C              PRINT 101,DISLST(I) 
+C            ENDDO   
+C            GOTO 11   
+C          ELSEIF(YN .EQ. 'T' .OR. YN .EQ. 't') THEN
+C            DO I=1, NUMAPPQUE
+C              PRINT *,'I:',I
+C              PRINT *,'ACTTSK(I):',ACTTSK(I)
+C            ENDDO
+C            GOTO 11
+C          ELSEIF(YN .EQ. 'R' .OR. YN .EQ. 'r') THEN
+C            DO I=1, NUMAPPQUE
+C              ACTTSK(I)=0
+C            ENDDO
+C            GOTO 11   
+C          ELSEIF(YN .EQ. 'A' .OR. YN .EQ. 'a') THEN
+C            CALL LIB$ADAWI(1, ACTTSK(29), RESULT)
+C            PRINT *,'RESULT:',RESULT
+C            GOTO 11  
+C          ELSEIF(YN .EQ. 'D' .OR. YN .EQ. 'd') THEN
+C            CALL LIB$ADAWI(-1, ACTTSK(29), RESULT)
+C            PRINT *,'RESULT:',RESULT
+C            GOTO 11                        
 C          ENDIF
-          IF(YN .EQ. 'N' .OR. YN .EQ. 'n') THEN
-            RUNPROG = .FALSE.
-          ENDIF
+C          IF(YN .EQ. 'N' .OR. YN .EQ. 'n') THEN
+C            RUNPROG = .FALSE.
+C          ENDIF
         ENDIF
-        PRINT *,'PROGRAM AS ENDED...'
+C        PRINT *,'PROGRAM AS ENDED...'
 
 100	FORMAT(1X,'<',I4.0,'>')
 101	FORMAT(2X,I4.0)        
@@ -88,7 +151,7 @@ C          ENDIF
         INCLUDE 'INCLIB:PROCOM.DEF'   
         INCLUDE 'INCLIB:TASKID.DEF'  
         INCLUDE 'INCLIB:QUECOM.DEF'
-	INCLUDE 'INCLIB:GLIST.DEF'                     
+	      INCLUDE 'INCLIB:GLIST.DEF'                     
 C        INCLUDE 'OLMCON.DEF'
 
         INTEGER*4 OPT,ST, BUFNUM, STAT
