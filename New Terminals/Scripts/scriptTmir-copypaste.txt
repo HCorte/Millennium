@@ -1,0 +1,13 @@
+run tmir
+d
+t
+prim:mtmf01.fil
+henrique
+a
+n
+n
+a
+a
+d
+n
+a

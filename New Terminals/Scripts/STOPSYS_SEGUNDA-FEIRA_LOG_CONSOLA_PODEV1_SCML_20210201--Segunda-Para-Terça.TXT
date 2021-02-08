@@ -1,0 +1,978 @@
+login as: console
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+console@podev1's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Tuesday, 2-FEB-2021 10:48:35.52
+    Last non-interactive login on Monday, 1-FEB-2021 09:49:18.11
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+PODEV1::PORT> goscml
+%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
+%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
+%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
+PODEV1::SCML>
+PODEV1::SCML> sh scmlcomolm
+%DCL-W-IVKEYW, unrecognized keyword - check validity and spelling
+ \SCMLCOMOLM\
+PODEV1::SCML> sh process scmlcomolm
+
+ 2-FEB-2021 11:55:12.39   User: CONSOLE          Process ID:   00124249
+                          Node: PODEV1           Process name: "SCMLCOMOLM"
+
+Terminal:
+User Identifier:    [GOSCML]
+Base priority:      6
+Default file spec:  Not available
+Number of Kthreads: 1 (System-wide limit: 2)
+
+Devices allocated:  BG63414:
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> shscml
+OpenVMS V8.4  on node PODEV1    2-FEB-2021 12:00:26.63   Uptime  354 19:48:07
+  Pid    Process Name    State  Pri      I/O       CPU       Page flts  Pages
+0011E121 SCMLELOG        LEF      7  4606033   0 00:01:56.34       307    344
+00118D2E SCMLLODIMG      HIB      8        7   0 00:00:01.08     22846  22872
+0011AD2F SCMLLODIMG2     HIB      8        6   0 00:00:01.84     22529  22555
+00117530 SCMLLODIMG3     HIB      8        6   0 00:00:00.55     17095  17124
+00118D31 SCMLLODIMG4     HIB      8        6   0 00:00:00.69     12295  12327
+00117532 SCMLLODIMG5     HIB      8        6   0 00:00:02.17     20564  20597
+00117939 SCMLPOOLPRO     HIB      8      445   0 00:00:01.64     26345  26395
+0011853A SCMLLOGGER      HIB      8      939   0 00:00:00.62     17091  17136
+0011893B SCMLTIMER       HIB      6        6   0 00:00:00.65      8231   8265
+0011913D SCMLREPCAN      HIB      6       13   0 00:00:00.47     15044  15113
+0012353E SCMLVALPRO      HIB      8       30   0 00:00:00.49     15099  15233
+0011913F SCMLERRLOG      HIB      7      206   0 00:00:00.42      8320   8365
+00119140 SCMLPASVAL      HIB      8        6   0 00:00:00.48     15050  15179
+00119D42 SCMLOVERPRO     HIB      8        6   0 00:00:00.44      8654   8690
+00118943 SCMLTMFMON      HIB      8       13   0 00:00:00.50      8056   8092
+00110153 SCMLCHKPNT      HIB      6    13553   0 00:00:01.05     21403  21437
+0010F954 SCMLWAGPRO      HIB      6       92   0 00:00:00.48     15768  15907
+00125955 SCMLINIGS       HIB      6        8   0 00:00:00.46     15055  15141
+00121D56 SCMLODDPRO      HIB      6        6   0 00:00:00.42     17230  17397
+00111D57 SCMLCANPRO      HIB      6        6   0 00:00:00.43     15014  15065
+00119958 SCMLSPESRV      HIB      6      172   0 00:00:00.50     18424  18652
+00114559 SCMLSPESRVF     HIB      6        6   0 00:00:00.60     18182  18297
+0011015A SCMLINCPRO      HIB      6        6   0 00:00:00.42     17350  17505
+0011555B SCMLCMDPRO      HIB      6     1167   0 00:00:22.08     33795  33949
+0011755C SCMLDISPAT      HIB      8      654   0 00:00:00.91     10346  10385
+0011815D SCMLNETMGR      HIB      8        6   0 00:00:00.46     39068  39292
+0011815E SCMLX2XPRO      HIB      8       35   0 00:00:00.42     10566  10634
+00119D5F SCMLX2XREL      HIB      8       47   0 00:00:00.50     11271  11317
+00120D60 SCMLAPULOG      HIB      8        7   0 00:00:00.81      8231   8265
+00116D61 SCMLNETLOG      CEF      7        6   0 00:00:00.44      8294   8333
+0011D563 SCMLX2XMGR      HIB      8        7   0 00:00:00.60     18876  18937
+00118564 SCMLOUTIGS      HIB      6        8   0 00:00:00.43     15094  15154
+00118565 SCMLMXSRV       HIB      7  8905064   0 00:00:01.30      2998   3077
+00119D66 SCMLINSPRO      HIB      6        6   0 00:00:00.44     15074  15131
+00118567 SCMLINSOUT      HIB      6        8   0 00:00:00.47     18068  18223
+00118568 SCMLCRSPRO      HIB      8       11   0 00:00:00.51     17038  17077
+00119D69 SCMLGUIMGR      HIB      8       32   0 00:00:00.55     16392  16677
+0011856A SCMLINMGR       HIB      6        7   0 00:00:00.42     15094  15140
+0011856B SCMLOUTMGR      HIB      6        7   0 00:00:00.42     16353  16405
+0011716C SCMLCOMMGR      HIB      8       24   0 00:00:00.75     16048  16229
+0011856D SCMLTAPLOG      HIB      6        6   0 00:00:00.43      8232   8269
+00117D6E SCMLSLOCHK      HIB      7        6   0 00:00:08.14     17064  17095
+0011796F SCMLLANPRO      CEF      8       41   0 00:00:00.42      8499   8564
+00116170 SCMLGCLOSE      HIB      8        6   0 00:00:00.50      8440   8485
+00117171 SCMLFPTPRO      HIB      8        6   0 00:00:00.51     15008  15041
+00115D72 SCMLCOMIGS      HIB      8       19   0 00:00:00.78     16061  16260
+00116173 SCMLDCNPRO      CEF      7       15   0 00:00:00.38       320    360
+00117D74 SCMLCTLPRO      CEF      8        8   0 00:00:00.66     10249  10287
+00117D75 SCMLX2XRAPP     HIB      8        6   0 00:00:00.59     11240  11275
+00116176 SCMLNETMON      HIB      8        6   0 00:00:00.39      8292   8326
+00117977 SCMLTCPASST     CEF      7        6   0 00:00:00.66      8061   8100
+0011757A SCMLGUILINK     CEF      8       29   0 00:00:00.37       595    636
+0011717B SCMLGUIWORK1    HIB      8      107   0 00:00:00.64     19604  19890
+0011917C SCMLGUIWORK2    HIB      8      105   0 00:00:00.56     19604  19890
+0011C17D SCMLGUIWORK3    HIB      8      104   0 00:00:00.63     19604  19890
+00120A47 SCMLENCPROI     HIB      8     5636   0 00:00:00.78     17052  17100
+00124249 SCMLCOMOLM      HIB      6  1827587   0 00:00:16.45     16114  16269
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> stopsys
+
+
+Portugal ES Evolution System Shutdown
+
+
+12:00:30 STSYSTEM Copyright 2011 GTECH Corp. All rights reserved.
+PODEV1::SCML>
+              12:00:31 STSYSTEM You have attempted to run STOPSYS.
+12:00:31 STSYSTEM This program will perform end-of-day shutdown
+12:00:31 STSYSTEM of the game.  If you do not intend for this to
+12:00:31 STSYSTEM happen, you may abort now without any damage.
+12:00:31 **TELL** STSYSTEM Are you sure you want STOPSYS [Y/N]?
+
+PODEV1::SCML> tell STSYSTEM y
+PODEV1::SCML>
+              12:01:50 STSYSTEM  Verifying Game Closing
+12:01:50 LODIMGSS Copyright 2011 GTECH Corp. All rights reserved.
+12:01:50 LODIMGS2 Copyright 2011 GTECH Corp. All rights reserved.
+12:01:50 LODIMGS3 Copyright 2011 GTECH Corp. All rights reserved.
+12:01:50 STSYSTEM  Begining execution of GETOFSAL
+12:01:50 GETOFSAL Copyright 2011 GTECH Corp. All rights reserved.
+12:01:50 STSYSTEM  Begining execution of DAYEND
+12:01:50 GETOFSAL STOP0001  ****  SUCCESS
+12:01:50 DAYEND   Copyright 2011 GTECH Corp. All rights reserved.
+12:01:51 DAYEND   Wait 15 sec to send night game command...
+12:02:36 DAYEND    WAITING FOR CHECKPOINTS TO COMPLETE
+12:02:36 DAYEND    WILL WAIT           10  TIMES,           15
+ SECONDS EACH TIME
+12:03:23 DAYEND   All tasks are stopped
+12:03:23 **TELL** DAYEND   Are you ready to update files?
+
+PODEV1::SCML>
+              12:03:36 STSYSTEM  Begining execution of SAVDRW
+12:03:36 SAVDRW   Copyright 2011 GTECH Corp. All rights reserved.
+12:03:36 SAVDRW   Allocating & clearing DRAW:TOTO7217.FIL         200 sectors
+12:03:36 SAVDRW   Clearing          215  VAX sectors in DRAW:TOTO7217.FIL
+12:03:36 SAVDRW   INITIALIZATION COMPLETE FOR DRAW:TOTO7217.FIL
+12:03:36 SAVDRW   Allocating & clearing DRAW:LOTS7217.FIL         200 sectors
+12:03:36 SAVDRW   Clearing          215  VAX sectors in DRAW:LOTS7217.FIL
+12:03:36 SAVDRW   INITIALIZATION COMPLETE FOR DRAW:LOTS7217.FIL
+12:03:36 SAVDRW   Allocating & clearing DRAW:LOTQ7217.FIL         200 sectors
+12:03:36 SAVDRW   Clearing          215  VAX sectors in DRAW:LOTQ7217.FIL
+12:03:36 SAVDRW   INITIALIZATION COMPLETE FOR DRAW:LOTQ7217.FIL
+12:03:37 SAVDRW   Allocating & clearing DRAW:TOT17217.FIL         200 sectors
+12:03:37 SAVDRW   Clearing          215  VAX sectors in DRAW:TOT17217.FIL
+12:03:37 SAVDRW   INITIALIZATION COMPLETE FOR DRAW:TOT17217.FIL
+12:03:37 SAVDRW          3 TOTOLOTO QUARTA  wagers transfered to DRAW:LOTQ7217.F
+IL
+12:03:37 SAVDRW   STOP0001  ****  SUCCESS
+12:03:38 SCANRETR Copyright 2011 GTECH Corp. All rights reserved.
+12:03:38 SCANRETR Scanning primary TMF : PRIM:MTMF01.FIL
+12:03:38 SCANRETR Loading the terminal retry file...
+12:03:39 SCANRETR
+12:03:39 SCANRETR         0 possibly unprinted tickets found.
+12:03:39 SCANRETR
+12:03:39 SCANRETR Updating the terminal retry file...
+12:03:39 SCANRETR STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> tell DAYEND y
+PODEV1::SCML>
+              12:06:08 DAYEND    Posting sales data to FILE:DAF.FIL
+12:06:08 DAYEND    Posting game  data to FILE:L3F.FIL
+12:06:08 DAYEND    Posting game  data to FILE:L4F.FIL
+12:06:08 DAYEND    Posting game  data to FILE:S1F.FIL
+12:06:08 DAYEND    Posting game  data to FILE:S2F.FIL
+12:06:08 DAYEND    Posting game  data to FILE:S3F.FIL
+12:06:08 DAYEND   Saving ticket messages
+12:06:08 DAYEND    Game file update complete
+12:06:08 DAYEND    Posting clerk accounts to WORK:CLERK.FIL
+12:06:08 DAYEND    Posting sales data to FILE:ASF.FIL
+12:06:08 **TELL** DAYEND      Last update for terminal >     1 on 7059 Today > 7217 Continue update [Y/N]:
+
+PODEV1::SCML>
+PODEV1::SCML> tell dayend y
+PODEV1::SCML>
+12:07:28 **TELL** DAYEND   Continue reporting CDC discrepencies [Y/N]
+
+PODEV1::SCML> tell dayend y
+PODEV1::SCML>
+12:07:45 **TELL** DAYEND      Last update for terminal >     2 on 7059 Today > 7217 Continue update [Y/N]:
+
+PODEV1::SCML> tell dayend y
+PODEV1::SCML>
+12:07:51 **TELL** DAYEND   Continue reporting CDC discrepencies [Y/N]
+
+PODEV1::SCML> tell dayend n
+PODEV1::SCML>
+              12:07:57 DAYEND            500  agents processed
+12:07:58 DAYEND           1000  agents processed
+12:07:59 DAYEND           1500  agents processed
+12:08:00 DAYEND           2000  agents processed
+12:08:01 DAYEND           2500  agents processed
+12:08:02 DAYEND           3000  agents processed
+12:08:03 DAYEND           3500  agents processed
+12:08:04 DAYEND           4000  agents processed
+12:08:05 DAYEND           4500  agents processed
+12:08:05 DAYEND           5000  agents processed
+12:08:06 DAYEND           5500  agents processed
+12:08:07 DAYEND           6000  agents processed
+12:08:08 DAYEND           6500  agents processed
+12:08:08 DAYEND           7000  agents processed
+12:08:09 DAYEND           7500  agents processed
+12:08:10 DAYEND           8000  agents processed
+12:08:10 DAYEND           8500  agents processed
+12:08:11 DAYEND           9000  agents processed
+12:08:12 DAYEND           9500  agents processed
+12:08:13 DAYEND          10000  agents processed
+12:08:13 DAYEND          10500  agents processed
+12:08:14 DAYEND          11000  agents processed
+12:08:15 DAYEND          11500  agents processed
+12:08:15 DAYEND          12000  agents processed
+12:08:16 DAYEND    Posting System Statistics File
+12:08:16 DAYEND    Posting Complete
+12:08:16 DAYEND   Updating pool files
+12:08:17 DAYEND   Testing pools  for consistency
+12:08:17 DAYEND   Pool file update complete
+12:08:17 DAYEND    DAYEND processing complete
+12:08:17 DAYEND   STOP0001  ****  SUCCESS
+12:08:18 STSYSTEM  Begining execution of TMFREPS
+12:08:18 TMFREP   Copyright 2011 GTECH Corp. All rights reserved.
+12:08:18 STSYSTEM  Checking for Winner Selections to be run
+12:08:18 STSYSTEM  Clearing Postponed Draw Section In WINCOM
+
+12:08:18 STSYSTEM  Starting VlfTsk Procedures, Please Enter
+12:08:18 STSYSTEM  StSystem CONT, When An Appropriate Message
+12:08:18 STSYSTEM  Apeears In Console ....
+12:08:18 VLFTSK   Copyright 2011 GTECH Corp. All rights reserved.
+12:08:19 **TELL** STSYSTEM Enter CONT or STOP
+
+PODEV1::SCML>
+              12:08:19 TMFREP    <<<<< TMREPORTS Transaction Master File Scannin
+g >>>>>
+12:08:19 TMFREP   Opening & Reading Distribution file...FILE:REP.FIL        ...
+12:08:19 VLFTSK   Checking WINSEL statuses
+12:08:19 VLFTSK   WINSEL statuses OK
+12:08:19 **TELL** VLFTSK   Do You Want To Run Winner Selection Today [Y/N]
+
+PODEV1::SCML>
+              12:08:19 TMFREP    Now Scanning the TM for all transactions
+12:08:19 TMFREP   <<< TMREPS (ONLGAMS) V01 (ONLGAMS.REP)         >>>
+12:08:19 TMFREP   <<< Online sales by game - Totals Report      >>>
+
+
+12:08:19 TMFREP   <<< TMREPS (SYSTRPT) V01 (SYSSUM.REP)         >>>
+12:08:19 TMFREP   <<< System Transaction Report                 >>>
+
+12:08:19 TMFREP   Using default cartel number - 7
+
+12:08:19 TMFREP   <<<<< WHALE Transaction Distribution Analysis V01>>>>>
+
+12:08:19 TMFREP   CANREP - Generating report sorted by Agent and Game number
+12:08:19 TMFREP   CANREP - Sort completed
+12:08:19 TMFREP   Producing System Sales Report
+12:08:19 TMFREP   Updating Report Statistics file
+12:08:19 TMFREP    Writing to Distribution file
+12:08:19 TMFREP   STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> tell vlftsk n
+
+
+12:13:19 **TELL** STSYSTEM Enter CONT or STOP
+
+12:13:19 **TELL** VLFTSK   Do You Want To Run Winner Selection Today [Y/N]
+
+PODEV1::SCML>
+12:13:35 **TELL** VLFTSK   Do you want to run ShareClc Task [Y/N]?
+
+PODEV1::SCML> tell vlftsk n
+PODEV1::SCML>
+12:13:45 **TELL** VLFTSK   Do You Want To Run UpdTsk [Y/N]
+
+PODEV1::SCML> tell VLFTSK n
+PODEV1::SCML>
+12:14:21 **TELL** VLFTSK   Do you want to run PRGTSK today [Y/N]?
+
+PODEV1::SCML> tell vlftsk y
+PODEV1::SCML>
+              12:15:00 VLFTSK    Begining execution of PRGTSK
+12:15:00 PRGTSK   Copyright 2011 GTECH Corp. All rights reserved.
+12:15:00 **TELL** PRGTSK   Are you sure you want validation purge [Y/N]?
+
+PODEV1::SCML> tell prgtsk y
+PODEV1::SCML>
+              12:15:10 PRGTSK   Allocating & clearing VALX:VLC.FIL           900
+000 sectors
+12:15:10 PRGTSK   Clearing       900017  VAX sectors in VALX:VLC.FIL
+12:15:12 PRGTSK   INITIALIZATION COMPLETE FOR VALX:VLC.FIL
+12:15:12 PRGTSK   Allocating & clearing WORK:CPURGE.FIL         80000 sectors
+12:15:12 PRGTSK   Clearing        80009  VAX sectors in WORK:CPURGE.FIL
+12:15:12 PRGTSK   INITIALIZATION COMPLETE FOR WORK:CPURGE.FIL
+12:15:13 PRGTSK   Allocating & clearing WORK:UPURGE.FIL         30000 sectors
+12:15:13 PRGTSK   Clearing        30005  VAX sectors in WORK:UPURGE.FIL
+12:15:13 PRGTSK   INITIALIZATION COMPLETE FOR WORK:UPURGE.FIL
+12:15:13 PRGTSK    Begining execution of VPURGE
+12:15:13 VPURGE   Purge draw 1013 for TOTOBOLA NORMAL
+12:15:13 VPURGE   Purge draw  510 for TOTOLOTO
+12:15:13 VPURGE   Purge draw    5 for TOTOBOLA EXTRA 2
+12:15:13 VPURGE   Purge draw  509 for LOT2
+12:15:13 VPURGE   Purge draw  844 for JOKER
+12:15:13 VPURGE   Purge draw  504 for TOTOLOTO SABADO
+12:15:13 VPURGE   Purge draw  504 for TOTOLOTO QUARTA
+12:15:13 VPURGE   Purge draw  294 for TOTOBOLA EXTRA 1
+12:15:13 VPURGE    Loading detail prize data for Sports  1 game
+12:15:14 VPURGE    Loading detail prize data for Lotto   1 game
+12:15:14 VPURGE    Loading detail prize data for Sports  2 game
+12:15:14 VPURGE    Loading detail prize data for Lotto   2 game
+12:15:14 VPURGE    Loading detail prize data for Joker   1 game
+12:15:14 VPURGE    Loading detail prize data for Lotto   3 game
+12:15:15 VPURGE    Loading detail prize data for Lotto   4 game
+12:15:15 VPURGE    Loading detail prize data for Sports  3 game
+12:15:19 VPURGE    Posting purge data to FILE:L1F.FIL
+12:15:19 VPURGE    Posting purge data to FILE:L2F.FIL
+12:15:19 VPURGE    Posting purge data to FILE:L3F.FIL
+12:15:19 VPURGE    Posting purge data to FILE:L4F.FIL
+12:15:19 VPURGE    Posting purge data to FILE:S1F.FIL
+12:15:19 VPURGE    Posting purge data to FILE:S2F.FIL
+12:15:19 VPURGE    Posting purge data to FILE:S3F.FIL
+12:15:19 VPURGE    Posting purge data to FILE:J1F.FIL
+
+
+12:15:19 VPURGE        613 records read from VALX:VLF.FIL
+12:15:19 VPURGE        613 records written to VALX:VLC.FIL
+12:15:19 VPURGE          0 records written to WORK:CPURGE.FIL
+12:15:19 VPURGE          0 records written to WORK:UPURGE.FIL
+
+
+12:15:19 VPURGE   STOP0001  ****  SUCCESS
+12:15:19 **TELL** PRGTSK   Did validation purge run ok [Y/N]?
+
+PODEV1::SCML> tell prgtsk y
+PODEV1::SCML>
+              12:15:53 PRGTSK    Renaming VALX:VLF.OLD         to VALX:VLF.TMP
+
+12:15:53 PRGTSK    Renaming VALX:VLF.FIL         to VALX:VLF.OLD
+12:15:53 PRGTSK    Renaming VALX:VLC.FIL         to VALX:VLF.FIL
+12:15:53 PRGTSK    Renaming VALX:VLF.TMP         to VALX:VLC.FIL
+12:15:53 PRGTSK    Begining execution of PURWIN
+12:15:53 PURWIN   Copyright 2011 GTECH Corp. All rights reserved.
+12:15:53 PURWIN    Generating purged ticket report
+12:15:53 **TELL** PURWIN   Enter minimum cash amount for report
+
+PODEV1::SCML> tell purgin 0.00
+12:16:22 CONSOLE  TELL - NO SUCH MAILBOX PURGIN
+PODEV1::SCML> tell purwin 0.00
+PODEV1::SCML>
+12:16:28 **TELL** PURWIN   Enter minimum refund amount for report
+
+PODEV1::SCML> tell purwin 0.00
+PODEV1::SCML>
+              12:16:36 PURWIN    Generating report sorted by game and ticket num
+ber
+12:16:37 PRGTSK    Validation purge complete
+12:16:37 PRGTSK   STOP0001  ****  SUCCESS
+12:16:38 VLFTSK    VLFTSK complete - Continue With Stopsys
+12:16:38 VLFTSK
+
+    Please Enter StSystem Cont
+
+12:16:38 VLFTSK
+12:16:38 VLFTSK   STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> tell stsystem cont
+PODEV1::SCML>
+              12:17:22 STSYSTEM CONTINUING
+12:17:22 STSYSTEM  Begining execution of TCFSUM
+12:17:22 TCFSUM   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:22 STSYSTEM  Carryover file merge complete
+12:17:22 TCFSUM    Generating carryover summary report
+12:17:24 TCFSUM   STOP0001  ****  SUCCESS
+12:17:24 STSYSTEM  Begining execution of ANLTPF
+12:17:24 ANLTPF   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:24 ANLTPF
+12:17:24 ANLTPF   <<<<<<<<<<<< ANLTPF - Passive Tickets Analysis >>>>>>>>>>>>
+12:17:24 ANLTPF
+12:17:24 ANLTPF   STOP0001  ****  SUCCESS
+12:17:26 STSYSTEM  Begining execution of ANLVPF
+12:17:26 ANLVPF   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:26 ANLVPF
+12:17:26 ANLVPF   <<<<< ANLVPF Validation Passive File Analysis   >>>>>
+12:17:26 ANLVPF
+12:17:26 ANLVPF   STOP0001  ****  SUCCESS
+12:17:28 STSYSTEM  Begining execution of UPDVPF
+12:17:28 UPDVPF   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:29 UPDVPF
+12:17:29 UPDVPF   <<<<<<<<<<< UPDVPF - Returned After Draw Update >>>>>>>>>>>
+12:17:29 UPDVPF
+12:17:29 UPDVPF   STOP0001  ****  SUCCESS
+12:17:31 STSYSTEM Today is  Mo 01.02.2021, invoices do not need to be run
+12:17:31 STSYSTEM  Verifying that Winner Selections have been run
+12:17:33 STSYSTEM  Begining execution of WDRSAP
+12:17:33 WDRSAP   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:33 STSYSTEM  Begining execution of WPASAP
+12:17:33 WDRSAP   STOP0001  ****  SUCCESS
+12:17:33 WPASAP   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:33 STSYSTEM  Begining execution of ASFREP
+12:17:33 WPASAP   STOP0001  ****  SUCCESS
+12:17:33 ASFREP   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:33 STSYSTEM  Begining execution of PAYUPD
+12:17:33 PAYUPD   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:33 ASFREP
+12:17:33 ASFREP   Sorting Agent Sales File Reports ...
+12:17:33 ASFREP
+12:17:33 PAYUPD    Updating payoff data for  Mo 01.02.2021
+12:17:33 PAYUPD    Extracting payoff data from the VLF.FIL
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:            9
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:            9
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           16
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           16
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           17
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           17
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           18
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           18
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           19
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           19
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           20
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           20
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           21
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           21
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           22
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           22
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           23
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           23
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           24
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           24
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           25
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           25
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           26
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           26
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           27
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           27
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           28
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           28
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           29
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           29
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           30
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           30
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           31
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           31
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Distribution Line For Terminal:           32
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Error Getting Reception Center For Terminal:           32
+12:17:34 ASFREP
+12:17:34 ASFREP
+12:17:34 ASFREP   Agent Sales File Reports Has Been Sorted ...
+12:17:34 ASFREP
+12:17:34 ASFREP   **** AGTACT Agent Daily Summary Report ****
+12:17:34 ASFREP   **** CARACT Cartel Daily Summary Report ****
+12:17:34 ASFREP           1000  active agents processed...
+12:17:35 ASFREP           2000  active agents processed...
+12:17:35 PAYUPD    Posting payoff data to FILE:L1F.FIL
+12:17:35 PAYUPD    Posting payoff data to FILE:L2F.FIL
+12:17:35 PAYUPD    Posting payoff data to FILE:L3F.FIL
+12:17:35 PAYUPD    Posting payoff data to FILE:L4F.FIL
+12:17:35 PAYUPD    Posting payoff data to FILE:S1F.FIL
+12:17:35 PAYUPD    Posting payoff data to FILE:S2F.FIL
+12:17:35 PAYUPD    Posting payoff data to FILE:S3F.FIL
+12:17:35 PAYUPD    Posting payoff data to FILE:J1F.FIL
+12:17:35 PAYUPD    Payoff update complete
+12:17:35 PAYUPD   STOP0001  ****  SUCCESS
+12:17:35 ASFREP           3000  active agents processed...
+12:17:36 ASFREP           4000  active agents processed...
+12:17:36 ASFREP           4563  active agents processed in total...
+12:17:36 ASFREP   STOP0001  ****  SUCCESS
+12:17:39 STSYSTEM  Begining execution of CSHREP
+12:17:39 CSHREP   Copyright 2011 GTECH Corp. All rights reserved.
+
+12:17:39 CSHREP   <<<<< CSHREP Tickets Cashed Report           V03 >>>>>
+
+12:17:39 CSHREP   Extracting cashed tickets from the VLF.FIL
+12:17:40 CSHREP              0  cash records listed in CSHD7217_PC.REP file
+12:17:40 CSHREP              0  cash records listed in CSHREP1_PC.REP file
+12:17:40 CSHREP   Sorting file CSHD7217.REP
+$SORT/KEY=(POS:55,SIZ:15)     CSHD7217.REP        CSHD7217_PC.REP
+12:17:43 CSHREP   Sorting file CSHREP1.REP
+$SORT/KEY=(POS:55,SIZ:15)     CSHREP1.REP         CSHREP1_PC.REP
+12:17:46 CSHREP   Re-writing report files
+12:17:46 CSHREP   STOP0001  ****  SUCCESS
+12:17:47 STSYSTEM  Begining execution of LIABLE
+12:17:47 LIABLE   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:47 STSYSTEM  Begining execution of PASPURGE
+12:17:47 PASPURGE
+12:17:47 PASPURGE Copyright 2011 GTECH Corp. All rights reserved.
+12:17:47 LIABLE    Processing liability data for  Mo 01.02.2021
+12:17:47 PASPURGE
+12:17:47 PASPURGE <<< PASPURGE - Purge VPF files for Passive draws >>>
+12:17:47 PASPURGE
+12:17:47 PASPURGE
+12:17:47 PASPURGE STOP0001  ****  SUCCESS
+12:17:48 LIABLE    Generating TOTOLOTO         liability report
+12:17:48 LIABLE    Generating LOT2             liability report
+12:17:48 LIABLE    Generating TOTOLOTO SABADO  liability report
+12:17:48 LIABLE    Generating TOTOLOTO QUARTA  liability report
+12:17:48 LIABLE    Generating TOTOBOLA NORMAL  liability report
+12:17:48 LIABLE    Generating TOTOBOLA EXTRA 2 liability report
+12:17:48 LIABLE    Generating TOTOBOLA EXTRA 1 liability report
+12:17:48 LIABLE    Generating JOKER            liability report
+12:17:48 LIABLE    Generating                  liability report
+12:17:48 LIABLE    Generating                  liability report
+12:17:48 LIABLE   STOP0001  ****  SUCCESS
+12:17:51 STSYSTEM  Begining execution of CSHPAS
+12:17:51 STSYSTEM  Begining execution of GENPSORC
+12:17:51 GENPSORC
+12:17:51 GENPSORC **************************************************
+12:17:51 GENPSORC GENERATE PASSIVE INTERFACES PASORC_RET, _VEN, _PRM
+12:17:51 GENPSORC **************************************************
+12:17:51 GENPSORC
+12:17:52 GENPSORC
+WARNING: THERE ARE NO PAID EXTRACTIONS TODAY FOR PASSIVE GAMES
+12:17:52 GENPSORC Reading MTM records from            0  to      1000000
+12:17:52 GENPSORC SYSX:PASORC_RET.ASC:            2  records written
+12:17:52 GENPSORC SYSX:PASORC_VEN.ASC:            2  records written
+12:17:52 GENPSORC SYSX:PASORC_PRM.ASC:            2  records written
+12:17:52 GENPSORC STOP0001  ****  SUCCESS
+12:17:52 CSHPAS   STOP0001  ****  SUCCESS
+12:17:54 STSYSTEM  Begining execution of GAMTOT
+12:17:54 GAMTOT   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:56 STSYSTEM  Begining execution of SYSTOT
+12:17:56 SYSTOT   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:56 STSYSTEM  Begining execution of LTODIS
+12:17:56 LTODIS   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:56 STSYSTEM  Begining execution of SPTDIS
+12:17:56 SPTDIS   Copyright 2011 GTECH Corp. All rights reserved.
+
+<<<<< LTODIS Lotto Coupon Distribution       V01 >>>>>
+
+12:17:56 LTODIS     Opening & Reading Distribution file...FILE:REP.FIL        ..
+.
+
+<<<<< SPTDIS Sports Coupon Distribution >>>>>
+
+12:17:56 SPTDIS     Opening & Reading Distribution file...FILE:REP.FIL        ..
+.
+12:17:56 SYSTOT   STOP0001  ****  SUCCESS
+12:17:58 STSYSTEM  Begining execution of BALANS
+12:17:58 BALANS   Copyright 2011 GTECH Corp. All rights reserved.
+12:17:58 BALANS
+12:17:58 BALANS   <<<<< BALANS  REPORT >>>>>
+12:17:58 BALANS
+12:17:58 BALANS   STOP0001  ****  SUCCESS
+12:18:02 STSYSTEM  Begining execution of GSALTSK
+12:18:02 GSALTSK  Copyright 2011 GTECH Corp. All rights reserved.
+12:18:02 GSALTSK
+12:18:02 GSALTSK  Gsales Manager Task Is Starting All Loaders
+12:18:02 GSALTSK
+12:18:02 GSONLTRN Copyright 2011 GTECH Corp. All rights reserved.
+12:18:02 GSONLTRN
+12:18:02 GSONLTRN Running Gsales On Line Transactions Loader
+12:18:02 GSONLTRN
+
+GAME        WAGERS             CANCELS             RETURNS              VALIDS
+NAME     CNT      AMOUNT     CNT      AMOUNT     CNT      AMOUNT     CNT      AM
+OUNT
+================================================================================
+====
+TOTO       0        0.00       0        0.00       0        0.00       0
+0.00
+LOTO       0        0.00       0        0.00       0        0.00       0
+0.00
+TOT2       0        0.00       0        0.00       0        0.00       0
+0.00
+LOT2       0        0.00       0        0.00       0        0.00       0
+0.00
+JKER       0        0.00       0        0.00       0        0.00       0
+0.00
+LOTS       0        0.00       0        0.00       0        0.00       0
+0.00
+LOTQ       2        1.80       1        0.90       0        0.00       0
+0.00
+CLAS       0        0.00       0        0.00       0        0.00       0
+0.00
+POPL       0        0.00       0        0.00       0        0.00       0
+0.00
+TOT1       0        0.00       0        0.00       0        0.00       0
+0.00
+================================================================================
+====
+TOTL       2        1.80       1        0.90       0        0.00       0
+0.00
+
+12:18:02 GSONLTRN
+12:18:02 GSONLTRN Generated Transaction GSales File: valx:20210201_otran.fil
+12:18:02 GSONLTRN
+12:18:02 GSONLGAM Copyright 2011 GTECH Corp. All rights reserved.
+12:18:02 GSONLTRN STOP0001  ****  SUCCESS
+12:18:02 GSDRWRES Copyright 2011 GTECH Corp. All rights reserved.
+12:18:02 GSONLGAM
+12:18:02 GSONLGAM Running Gsales On Line Games Loader
+12:18:02 GSONLGAM
+12:18:02 GSONLGAM
+12:18:02 GSONLGAM Generated On Line GSales File: valx:20210201_ogame.fil
+12:18:02 GSONLGAM
+12:18:02 GSONLGAM STOP0001  ****  SUCCESS
+12:18:03 GSDRWRES
+12:18:03 GSDRWRES Running Gsales Draws Results Loader
+12:18:03 GSDRWRES
+12:18:03 GSDRWDRW Copyright 2011 GTECH Corp. All rights reserved.
+12:18:03 GSDRWRES
+12:18:03 GSDRWRES Generated Draws Results GSales File:
+valx:20210201_drawres.fil
+12:18:03 GSDRWRES
+12:18:03 GSDRWRES STOP0001  ****  SUCCESS
+12:18:03 GSDRWDIV Copyright 2011 GTECH Corp. All rights reserved.
+12:18:03 GSDRWDRW
+12:18:03 GSDRWDRW Running Gsales Draws Draw Loader
+12:18:03 GSDRWDRW
+12:18:03 GSDRWDRW
+12:18:03 GSDRWDRW Generated Draws Draw GSales File: valx:20210201_draw.fil
+12:18:03 GSDRWDRW
+12:18:03 GSDRWDRW STOP0001  ****  SUCCESS
+12:18:03 GSDRWMAP Copyright 2011 GTECH Corp. All rights reserved.
+12:18:03 GSDRWDIV
+12:18:03 GSDRWDIV Running Gsales Draw Division Loader
+12:18:03 GSDRWDIV
+12:18:03 GSDRWMAP
+12:18:03 GSDRWMAP Running Gsales Draw Map Loader
+12:18:03 GSDRWMAP
+12:18:03 GSDRWDIV
+12:18:03 GSDRWDIV Generated Draw Division GSales File:
+valx:20210201_drawdiv.fil
+12:18:03 GSDRWDIV
+12:18:03 GSDRWMAP
+12:18:03 GSDRWMAP Generated Draw Map GSales File: valx:20210201_drawmap.fil
+12:18:03 GSDRWMAP
+12:18:03 GSDRWDIV STOP0001  ****  SUCCESS
+12:18:03 GSDRWMAP STOP0001  ****  SUCCESS
+12:18:03 GSPAYORD Copyright 2011 GTECH Corp. All rights reserved.
+12:18:03 GSPOPAID Copyright 2011 GTECH Corp. All rights reserved.
+12:18:03 GSPAYORD
+12:18:03 GSPAYORD Running Gsales Payment Order Loader
+12:18:03 GSPAYORD
+12:18:03 GSPOPAID
+12:18:03 GSPOPAID Running Gsales P. Order Paid By The Banks Loader
+12:18:03 GSPOPAID
+12:18:03 GSPAYORD
+12:18:03 GSPAYORD Generated Payment Orders File: valx:20210201_p_order.fil
+12:18:03 GSPAYORD
+12:18:03 GSPAYORD STOP0001  ****  SUCCESS
+12:18:04 GSPOPAID
+12:18:04 GSPOPAID Generated P. Order Paid File: valx:20210201_paidpord.fil
+12:18:04 GSPOPAID
+12:18:04 GSPOPAID STOP0001  ****  SUCCESS
+12:18:05 GSALTSK
+12:18:05 GSALTSK  Gsales Has Generated All Files Loaders For Today
+12:18:05 GSALTSK
+12:18:05 GSALTSK  STOP0001  ****  SUCCESS
+12:18:06 STSYSTEM  Begining execution of GNINVALL
+12:18:06 GNINVALL
+12:18:06 GNINVALL Copyright 2011 GTECH Corp. All rights reserved.
+12:18:06 GNINVALL
+12:18:06 GNINVALL <<<<<< GNINVALL - Generate INVOICE information >>>>>>
+12:18:06 GNINVALL
+12:18:06 GNINVALL Loading draw dates...
+12:18:07 GNINVALL Loading game files...
+12:18:07 GNINVALL
+12:18:07 GNINVALL Invoice of Mo 01.02.2021 (7217)
+12:18:07 GNINVALL
+12:18:07 GNINVALL >>> WARNING: TOTOBOLA NORMAL      ACTIVE            1
+ days <<<
+12:18:07 GNINVALL TOTOLOTO             NOT ACTIVE
+12:18:07 GNINVALL TOTOBOLA EXTRA 2     NOT ACTIVE
+12:18:07 GNINVALL LOT2                 NOT ACTIVE
+12:18:07 GNINVALL JOKER                NOT ACTIVE
+12:18:07 GNINVALL >>> WARNING: TOTOLOTO SABADO      ACTIVE            1
+ days <<<
+12:18:07 GNINVALL >>> WARNING: TOTOLOTO QUARTA      ACTIVE            1
+ days <<<
+12:18:07 GNINVALL >>> WARNING: TOTOBOLA EXTRA 1     ACTIVE            1
+ days <<<
+12:18:07 GNINVALL
+12:18:07 GNINVALL Processing game files for sales and cancellations...
+12:18:07 GNINVALL
+12:18:07 GNINVALL Processed file DRAW:TOTO7217.FIL              0  records
+12:18:07 GNINVALL Processed file DRAW:LOTS7217.FIL              0  records
+12:18:07 GNINVALL Processed file DRAW:LOTQ7217.FIL              3  records
+12:18:07 GNINVALL Processed file DRAW:TOT17217.FIL              0  records
+12:18:07 GNINVALL
+12:18:07 GNINVALL Processing Validation files for payments...
+12:18:07 GNINVALL
+12:18:08 GNINVALL
+12:18:08 GNINVALL Creating interface file AM_WAG20210201.ASC
+12:18:08 GNINVALL
+12:18:10 GNINVALL            3  Records written
+12:18:10 GNINVALL
+12:18:10 GNINVALL ------------- TOTOLOTO QUARTA  ------------
+12:18:10 GNINVALL TOTAL SALES ......          2          1.80
+12:18:10 GNINVALL TOTAL CANCELS ....          1          0.90
+12:18:10 GNINVALL TOTAL PAYMENTS ...          0          0.00
+12:18:10 GNINVALL -------------------------------------------
+12:18:10 GNINVALL
+12:18:10 GNINVALL ------------- ALL GAMES        ------------
+12:18:10 GNINVALL TOTAL SALES ......          2          1.80
+12:18:10 GNINVALL TOTAL CANCELS ....          1          0.90
+12:18:10 GNINVALL TOTAL PAYMENTS ...          0          0.00
+12:18:10 GNINVALL -------------------------------------------
+12:18:10 GNINVALL
+12:18:10 GNINVALL STOP0001  ****  SUCCESS
+12:18:12 STSYSTEM  Stopsys complete - Perform file backups
+12:18:12 STSYSTEM STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> shscml
+OpenVMS V8.4  on node PODEV1    2-FEB-2021 12:18:59.96   Uptime  354 20:06:40
+  Pid    Process Name    State  Pri      I/O       CPU       Page flts  Pages
+0011E121 SCMLELOG        LEF      8  4616150   0 00:01:56.61       314    351
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> r soupfm
+ Interrupt
+
+PODEV1::SCML> dir soupfm
+
+Directory GXPROJ:[TSK]
+
+SOUPFM.EXE;2                     2863  16-DEC-2020 09:30:43.47
+SOUPFM.EXE;1                     2863  27-JUN-2017 18:34:50.90
+
+Total of 2 files, 5726 blocks.
+PODEV1::SCML> R SOUPFM
+12:19:52 CONSOLE  Copyright 2013 SCML. All rights reserved.
+
+<<<<< SOUP File Management   V02 >>>>>
+
+12:19:52 CONSOLE  Data CDC presente      :         7217  (2021-02-01)
+12:19:52 CONSOLE  -Insira a data CDC para geracao dos ficheiros   >
+12:20:10 CONSOLE   The number should fall within interval         1 to       721
+7
+12:20:10 CONSOLE  -Insira a data CDC para geracao dos ficheiros   >7217
+12:20:19 CONSOLE   Nova data CDC escolhida:         7217  (2021-02-01)
+12:20:19 CONSOLE  Ficheiro TMF por omissao : PRIM:MTMF01.FIL
+12:20:19 CONSOLE  -Insira o nome do ficheiro TMF (VOLN:FILNAME)   >
+12:20:46 CONSOLE  Ficheiro PRG por omissao : WORK:UPURGE.FIL
+12:20:46 CONSOLE  -Insira o nome do ficheiro PRG (VOLN:FILNAME)   >
+
+           Soup FM - Menu de opcoes de geracao de ficheiros
+
+                11 - SoupFM LN Premios Pagos
+                12 - SoupFM LN Premios Caducados
+                13 - SoupFM LN Premios Devolvidos
+                14 - SoupFM AM Premios Pagos
+                15 - SoupFM AM Premios Caducados
+                 A - Todos os ficheiros para AM
+                 L - Todos os ficheiros para LN
+                 T - Todos os ficheiros
+                 E - Sair
+
+12:20:51 CONSOLE  Indique qual a opcao escolhida                 >T
+
+12:21:01 CONSOLE  Ira ser gerado o ficheiro SoupFM LN Premios Pagos
+12:21:01 CONSOLE  Ira ser gerado o ficheiro SoupFM LN Premios Caducados
+12:21:01 CONSOLE  Ira ser gerado o ficheiro SoupFM LN Rel Premios Caduc.
+12:21:01 CONSOLE  Ira ser gerado o ficheiro SoupFM LN Premios Devolvidos
+12:21:01 CONSOLE  Ira ser gerado o ficheiro SoupFM AM Premios Pagos
+12:21:01 CONSOLE  Ira ser gerado o ficheiro SoupFM AM Premios Caducados
+12:21:01 CONSOLE  Ira ser gerado o ficheiro SoupFM AM Rel Premios Caduc.
+12:21:01 CONSOLE  Aberto ficheiro SOUP_LN_PP_20210201.ASC
+12:21:01 CONSOLE  Aberto ficheiro SOUP_LN_PC_20210201.ASC
+12:21:01 CONSOLE  Aberto ficheiro SOUP_LN_PD_20210201.ASC
+12:21:01 CONSOLE  Aberto ficheiro SOUP_AM_PP_20210201.ASC
+12:21:01 CONSOLE  Aberto o ficheiro VALX:VLF.FIL
+12:21:01 CONSOLE  Aberto ficheiro SOUP_AM_PC_20210201.ASC
+12:21:01 CONSOLE  Aberto ficheiro REL_AM_PC_20210201.REP
+12:21:01 CONSOLE  Aberto ficheiro REL_LN_PC_20210201.REP
+12:21:01 CONSOLE
+-----------------------------------------------------------------------
+ Relatorio de geracao de ficheiros
+-----------------------------------------------------------------------
+ Ficheiro de transaccoes lido          : PRIM:MTMF01.FIL
+ Nr. transaccoes lidas                 :          460
+ Ficheiro de validacoes lido           : WORK:UPURGE.FIL
+ Nr. validacoes lidas                  :            0
+ Nr. ficheiros validacao passiva lidos :            0
+ Nr. validacoes passiva lidas          :            0
+-----------------------------------------------------------------------
+ Nome Ficheiro                    Nr. Linhas     Nr. Trans. Proc.
+-----------------------------------------------------------------------
+ SoupFM LN Premios Pagos                   2                 0
+     SOUP_LN_PP_20210201.ASC
+
+ SoupFM LN Premios Caducados               2                 0
+     SOUP_LN_PC_20210201.ASC
+
+ SoupFM LN Premios Devolvidos              2                 0
+     SOUP_LN_PD_20210201.ASC
+
+ SoupFM AM Premios Pagos                   2                 0
+     SOUP_AM_PP_20210201.ASC
+
+ SoupFM AM Premios Caducados               2                 0
+     SOUP_AM_PC_20210201.ASC
+
+ SoupFM AM Rel Premios Caduc.              2                 0
+     REL_AM_PC_20210201.REP
+
+ SoupFM LN Rel Premios Caduc.              2                 0
+     REL_LN_PC_20210201.REP
+
+
+           Soup FM - Menu de opcoes de geracao de ficheiros
+
+                11 - SoupFM LN Premios Pagos
+                12 - SoupFM LN Premios Caducados
+                13 - SoupFM LN Premios Devolvidos
+                14 - SoupFM AM Premios Pagos
+                15 - SoupFM AM Premios Caducados
+                 A - Todos os ficheiros para AM
+                 L - Todos os ficheiros para LN
+                 T - Todos os ficheiros
+                 E - Sair
+
+12:21:01 CONSOLE  Indique qual a opcao escolhida                 >E
+
+12:21:18 CONSOLE  STOP0003  ****  OPERATOR ABORT
+PODEV1::SCML> R PMXTRACT
+12:21:38 CONSOLE
+12:21:38 CONSOLE  Copyright 2011 SCML/Accenture. All rights reserved.
+12:21:38 CONSOLE
+12:21:38 CONSOLE  -----------------------------------------------------------
+12:21:38 CONSOLE  <<<<<     FICHEIRO DE AUDITORIA PORTAL-MILLENNIUM     >>>>>
+12:21:38 CONSOLE  <<<<<              GERA PMAUDIT_<CDC>.ASC             >>>>>
+12:21:38 CONSOLE  <<<<<                                                 >>>>>
+12:21:38 CONSOLE  <<<<<                 <CDC> = data CDC                >>>>>
+12:21:38 CONSOLE  -----------------------------------------------------------
+12:21:38 CONSOLE
+12:21:38 CONSOLE  Insira a data CDC >7217
+12:21:54 CONSOLE   Ficheiro nao encontrado: BCKS:MT7217.FIL
+12:21:54 CONSOLE
+12:21:54 CONSOLE  Insira a data CDC >E
+12:23:15 CONSOLE  STOP0003  ****  OPERATOR ABORT
+PODEV1::SCML> R QLIK
+%DCL-W-ACTIMAGE, error activating image QLIK
+-CLI-E-IMAGEFNF, image file not found DKD5:[SCML.][TSK]QLIK.EXE;
+PODEV1::SCML> R QLIKTRAN
+12:23:21 CONSOLE
+12:23:21 CONSOLE  Copyright 2016 SCML. All rights reserved.
+12:23:21 CONSOLE
+12:23:21 CONSOLE  Running QLIKTRAN On Line Transactions Loader
+12:23:21 CONSOLE
+12:23:21 CONSOLE
+12:23:21 CONSOLE  Generated Transaction QLIK File: GXTSK:QLIK_20210201.CSV
+12:23:21 CONSOLE
+12:23:21 CONSOLE  STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML> R MILLRECON
+Opening transaction file with name MILLENNIUM_7217.ASC
+File opened, writing HEADER
+Opening transaction master file with name PRIM:MTMF01.FIL
+Processing Transactions from TMF...
+End of File
+Processing finished, writing TAIL
+Closing transaction file
+Program Ended
+PODEV1::SCML> SHSCML
+OpenVMS V8.4  on node PODEV1    2-FEB-2021 12:25:34.85   Uptime  354 20:13:15
+  Pid    Process Name    State  Pri      I/O       CPU       Page flts  Pages
+0011E121 SCMLELOG        LEF      8  4616150   0 00:01:56.61       314    351
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>

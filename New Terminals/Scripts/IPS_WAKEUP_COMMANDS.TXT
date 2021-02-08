@@ -1,0 +1,359 @@
+login as: PORT_SQA
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+PORT_SQA@PODEV1's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Thursday, 4-FEB-2021 20:55:33.08
+    Last non-interactive login on Thursday, 4-FEB-2021 20:58:04.57
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.PORT_SQA]login.com;4
+>>> MODE IS: INTERACTIVE
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_0001_00640
+PODEV1::PORT_SQA$ LUI
+        ID      User            Process         Image
+        123C19  PORT_SQA        _FTA850:        IPS_GETJPI.EXE
+        117D6F  PORT_SQA        npx$pfm         NPX$PFM.EXE
+        2 Processes In 640 group
+PODEV1::PORT_SQA$ DMQ
+%DCL-W-UNDSYM, undefined symbol - check validity and spelling
+ \ALPHA\
+%DCL-W-UNDSYM, undefined symbol - check validity and spelling
+ \VAX\
+
+
+     MessageQ for OpenVMS I64 V5.01-06(00)  PODEV1::  Bus:0001  Group:00640
+
+                          1    Run IVP
+                          2    Restart / Shutdown DMQ$COM_SERVER
+                          3    Run LLS_VERIFY
+                          4    Run LOOP
+                          5    Run MONITOR
+                          6    Run TEST
+                          7    Run MGR_UTILITY
+                          8    Run PSSVFY
+                          9    @CUSTOMIZE procedure
+                         10    Run LOADER
+                         11    Change Bus and Group numbers
+                        <CR>   Exit
+
+        Enter Option Number: 2
+
+ Startup  DMQ_C_000100640 [Y/N] (N): y
+
+
+                Startup DMQ_C_000100640
+
+
+
+%DMQ-W-NOGMTLNM, DMQ$GMT_OFFSET not set
+
+Copyright ▒ BEA Systems, Inc. 2005. All rights reserved.
+%DMQ-I-FORCEX, Forcing image termination on process "DMQ_C_000100640"
+%DMQ-S-IMGTERM, Process "DMQ_C_000100640" image terminated
+   ...Getting list of installed images
+   ...Verifying DMQ$MSGSHR
+   ...Verifying DMQ$EXECRTL
+   ...Verifying DMQ$ENTRYRTL
+   ...Verifying DMQ$VPS_EXEC
+   ...Verifying DMQ$SET_LNM
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_0001_00640
+   ...Starting DMQ_C_000100640 (COM Server)
+%RUN-S-PROC_ID, identification of created process is 00125C1A
+<CR> to continue:
+
+
+     MessageQ for OpenVMS I64 V5.01-06(00)  PODEV1::  Bus:0001  Group:00640
+
+                          1    Run IVP
+                          2    Restart / Shutdown DMQ$COM_SERVER
+                          3    Run LLS_VERIFY
+                          4    Run LOOP
+                          5    Run MONITOR
+                          6    Run TEST
+                          7    Run MGR_UTILITY
+                          8    Run PSSVFY
+                          9    @CUSTOMIZE procedure
+                         10    Run LOADER
+                         11    Change Bus and Group numbers
+                        <CR>   Exit
+
+        Enter Option Number:
+PODEV1::PORT_SQA$ LUI
+        ID      User            Process         Image
+        123C19  PORT_SQA        _FTA850:        IPS_GETJPI.EXE
+        1 Processes In 640 group
+PODEV1::PORT_SQA$ @IPS$COM
+ Interrupt
+
+PODEV1::PORT_SQA$ DIR IPS$COM
+
+Directory IPS:[COM]
+
+AGTMIL_TRANS.COM;1  BACKUP_ALL_CDDS.COM;1                   BUILD.LIS;2
+BUILD_LMS$RTL.COM;1 BUILD_VERIFY_BACKUP.COM;1               CDD_BACKUP.COM;1
+CDD_BUILD_IPS.COM;1 CDD_RESTORE.COM;1   CHECKSUMIPS.COM;1   CHKARCH.COM;1
+COM.ZIP;1           CONVERT_FILES.COM;1 COPY_AGTRET_RTMS.COM;1
+COPY_MAILSUB.COM;1  COPY_RTMSRET.COM;1  CREATE_RELEASE.COM;1
+DCPS$STARTUP.COM;1  DIFF_BALANS.COM;1   DIFF_BALANS_TESTE.COM;1
+DMQ$DETACH_PROCESS.COM;2                DMQ$SET_SERVER_QUOTAS.COM;1
+ELT.DAT;2           FILE_TRANSFER_MENU.COM;1                GAME_LOAD_MENU.COM;2
+GAME_MENU.DISP;3    GAME_PURGE_MENU.COM;2                   GAME_PURGE_MENU.COM;1
+GAME_PURGE_MENU.DISP;2                  GAME_START.COM;1    GAME_START.DISP;2
+GBRT_SCRAMBLE_UNSCRAMBLE_2.COM;1        GET_ONLINE_SALES.COM;1
+GET_WINNCHKS.COM;1  GP_PASS.NAM;1       ICS_PRINT.COM;1     INV_BUILD.COM;1
+IPS$BLDBG.COM;2     IPS$BUILD.COM;2     IPS$CONFIGURE_DMQ.COM;1
+IPS$CREATE_FILES.COM;1                  IPS$CREATE_FILES_QA.COM;1
+IPS$DATE.COM;2      IPS$DATE_TIME.COM;2 IPS$DATE_TIME_VALIDATE.COM;2
+IPS$GET_CONTROL_REC.COM;2               IPS$INSCOM.COM;2    IPS$IO_COMMANDS.CLD;2
+IPS$MONITOR_PROCESS.LIS;2               IPS$MONPROC_COMMANDS.CLD;3
+IPS$PARAMETERS.COM;2                    IPS$REMCOM.COM;2    IPS$RUN_SERVER.COM;2
+IPS$SETLOGICALS.COM;2                   IPS$SET_PRINT.COM;2 IPS$SET_SHAREABLE.COM;2
+IPS$SHRIMG.NAM;3    IPS$SUBSTITUTE.COM;2                    IPS$TIME.COM;2
+IPSGEN.COM;1        IPS_ACCESS_DEVICE.COM;1                 IPS_ARP9876.COM;2
+IPS_BACKUP.COM;2    IPS_BACKUP.COM;1    IPS_BACKUP_GBDEVB.COM;1
+IPS_BACKUP_GBDEVD.COM;1                 IPS_BACKUP_GBDEVE.COM;1
+IPS_BACKUP_GBLMSA.COM;1                 IPS_BACKUP_GBLMSB.COM;1
+IPS_BACKUP_PROCS.DISP;3                 IPS_BANK_RETURN.COM;2
+IPS_CHECKSUM.COM;3  IPS_CHECKSUM.COM;2  IPS_CHECK_USER.COM;1
+IPS_CONVERT_ORDER_FILES.COM;1           IPS_DEVICE_CHECK.COM;1
+IPS_DEV_BACKUP.COM;1                    IPS_INV8850_CONVERT.COM;1
+IPS_INV8850_MAGTAPE.COM;1               IPS_LOGIN.COM;1     IPS_MERGE_HT.COM;1
+IPS_MESSAGE.LIS;2   IPS_PAH_WINSEL.COM;1                    IPS_RESTART_SERVERS.COM;1
+IPS_RESTORE.COM;1   IPS_RESTORE_ALL.COM;1                   IPS_RUN.CLD;10
+IPS_RUN.CLD;9       IPS_RUN.CLD;8       IPS_RUN_BATCH_RPTS.COM;1
+IPS_SCAN.COM;2      IPS_SPLIT_ORDER.COM;1                   IPS_WAKEUP.COM;1
+LMS_INV_BUILD.COM;1 LMS_INV_LINK.COM;1  LMS_NIGHTLY_BUILD.COM;1
+LNS_INV_LINK.COM;1  LOAD_DEL_TAPE.COM;1 LOAD_HT_VIRNS.COM;1 LOAD_LOW_VIRNS.COM;1
+LOTTERY_TAPE_MENU.COM;2                 LOTTERY_TAPE_MENU.DISP;3
+LOWGEN.COM;1        MTGIPS.COM;1        OPER_MENU.COM;2     OPER_MENU.DISP;3
+PNP_PRINTER_CONFIG.COM;1                PNP_PRINTER_CONFIG_ALL.COM;1
+PNP_PRINTER_CONFIG_LN2.COM;1            PPSS_BACKUP.COM;1   PPSS_INSTALL.COM;1
+PRINT_CONFIG.COM;1  PRINT_MENU.COM;2    RELEASE_2_PROD.COM;1
+RELEASE_2_QA.COM;1  RELEASE_FROM_DEV.COM;1                  RELEASE_FROM_QA.COM;1
+REMOVE_LOGICALS.COM;2                   RENAME_DEL_FILE.COM;1
+RENAME_HT_VIRNS.COM;1                   RHP_SEARCH.COM;1    SALES_CONVERT.COM;1
+SALES_CONVERT_BUILD.COM;1               SALES_PACK.COM;1    SALES_PACK_BUILD.COM;1
+SALES_SEND.COM;1    SALES_SETUP_DEVD.COM;1                  SALES_SETUP_DEVE.COM;1
+SAVES_MENU.COM;1    SAVES_MENU.DISP;2   SCML_FILE_TRANSFER_MENU.COM;2
+SCML_FTP_MENU.DISP;3                    SEND_ADJ.COM;1      SEND_EFTTRAN.COM;1
+SEND_FILE.COM;1     SEND_INV.COM;1      SEND_LOGGER.COM;1   SEND_PTT_FILE.COM;1
+SEND_RTMS_XFERRET.COM;1                 SEND_STMT.COM;1     SEND_SUSPRET.COM;1
+SEND_UNCON.COM;1    SEND_XFERRET.COM;1  SEND_XFERRET_3.COM;1
+SETENV.COM;2        SETENV.DISP;2       SETENV_7620.COM;1   SETENV_GBDEVE.NAM;2
+SETLOW.COM;1        START_TCP.COM;2     STMT_MENU.DISP;2    STNV7620.COM;1
+STRIPE$SYSTARTUP.COM;1                  STRTUP.COM;1        SYSHUTDWN.COM;1
+SYSTARTUP_VMS.COM;1 TEST_1_0.COM;1      TEST_2_0.COM;1      TEST_3_0.COM;1
+TIMO_BACKUP.COM;1   UK_CREATE_IPS_STRIPE_SETS.COM;1         VIEW_FILES.COM;2
+WHO_LOCKED.COM;2    XFER_MENU.DISP;2
+
+Total of 163 files.
+PODEV1::PORT_SQA$ @IPS$COM:IPS$REMCOM
+***** REMOVING SHARED IMAGES...Please Wait.....
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$PROCESS_INFO.ESH
+***** Status - Removed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_CONTROL.ESH
+***** Status - Removed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_GAME.ESH
+***** Status - Removed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_RETAILER.ESH
+***** Status - Removed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_RETFIN.ESH
+***** Status - Removed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_SALES.ESH
+***** Status - Removed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_SYNCRO.ESH
+***** Status - Removed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_WIN_LIAB.ESH
+***** Status - Removed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_PAH_LIAB.ESH
+***** Status - Removed Successfully
+
+
+***** All Shared Images HAVE BEEN Removed Or Were NOT Installed *****
+
+***** Images Not Installed := 0
+
+***** Images Removed       := 9
+
+***** Images NOT Removed   := 0
+PODEV1::PORT_SQA$ @IPS$COM:IPS$INSCOM
+***** INSTALLING SHARED IMAGES...Please Wait.....
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$PROCESS_INFO.ESH
+***** Status - Installed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_CONTROL.ESH
+***** Status - Installed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_GAME.ESH
+***** Status - Installed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_RETAILER.ESH
+***** Status - Installed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_RETFIN.ESH
+***** Status - Installed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_SALES.ESH
+***** Status - Installed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_SYNCRO.ESH
+***** Status - Installed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_WIN_LIAB.ESH
+***** Status - Installed Successfully
+
+***** Image  - DKD6:[PORT_SQA.][shr]SQAPORTIPS$SHARED_PAH_LIAB.ESH
+***** Status - Installed Successfully
+
+
+***** All Shared Images HAVE BEEN Installed Or Are ALREADY Installed *****
+
+***** Images Already Installed := 0
+
+***** Images Installed         := 9
+
+***** Images Failed To Install := 0
+PODEV1::PORT_SQA$ @IPS$COM:IPS$RUN_SERVER NPX$PFM "I/SYS_MODE=1"
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_0001_00640
+%RUN-S-PROC_ID, identification of created process is 0012282B
+PODEV1::PORT_SQA$ LUI
+        ID      User            Process         Image
+        123C19  PORT_SQA        _FTA850:        IPS_GETJPI.EXE
+        12282B  PORT_SQA        npx$pfm         SEARCH.EXE
+        2 Processes In 640 group
+PODEV1::PORT_SQA$ LUI
+        ID      User            Process         Image
+        123C19  PORT_SQA        _FTA850:        IPS_GETJPI.EXE
+        12282B  PORT_SQA        npx$pfm         NPX$PFM.EXE
+        2 Processes In 640 group
+PODEV1::PORT_SQA$ IPS IPS_WAKEUP
+
+               ES Evolution Ver 1.8.
+               Copyright ▒ 1994 - 2016 GTECH Corporation. All rights reserved.
+
+
+Node    Grp     Mode    Sts(x)  Sts(s)  Upd(x)  Upd(s)  CP(x)   CP(s)
+----    ---     ----    ------  ------  ------  ------  -----   -----
+Group 620 not found in the PFM table
+PODEV1  640     P       1000    5       1000    5       32767   900
+Do You Want to Change the System Mode or PFM parameters (Y/N) N
+Do You Want To Restore Shared Memory From the Checkpoint (Y/N) N
+Loading shared retailer memory and shared retfin memory.
+Number of Retailers Read          :  11599
+Number of Retailers Loaded to SVM :  11599
+Maximum Number of Retailers       :  11600
+Retailers Memory Usage            :     99%
+Loading shared game memory and shared winner liability memory.
+Starting.... ips_adm0000    (ADMIN SERVER        ) ... as ips_adm0000
+Starting.... ips_adm1000    (GAME SERVER         ) ... as ips_adm1000
+Starting.... ips_arp1000    (RETLR FIN INFO SRVR ) ... as ips_arp1000
+Starting.... ips_inv1000    (INVENTORY UPD SERVER) ... as ips_inv1000
+Starting.... ips_inv2000    (INVENTORY INQ SERVER) ... as ips_inv2000
+Starting.... ips_inv3000    (TRANSFER INV SERVER ) ... as ips_inv3000
+Starting.... npx$ckp        (CHECKPOINT SERVER   ) ... as npx$ckp
+Starting.... npx$log        (N-PLEX LOGGER       ) ... as npx$log
+Starting.... npx$svm        (SHARED MEMORY SRVR  ) ... as npx$svm
+Starting.... npx$tfc        (TRANS. FLOW CONTROL ) ... as npx$tfc
+Starting.... ips_ret0000    (RETAILER UPDATE SRVR) ... as ips_ret0000
+Starting.... ips_ret0151    (RETAILER REPORT SRVR) ... as ips_ret0151
+Starting.... ips_sec1000    (SECURITY LOG SRVR   ) ... as ips_sec1000
+Starting.... ips_sec2000    (SECURITY LOG PRINTER) ... as ips_sec2000
+Starting.... ips_sys0100    (IPS SERVER MONITOR  ) ... as ips_sys0100
+Starting.... ips_tel0000    (TELESALES REALLOCS  ) ... as ips_tel0000
+Starting.... ips_tel1000    (TEL-SELL SRVR       ) ... as ips_tel1000
+Starting.... ips_val0091    (CHECK REG RPT SRVR  ) ... as ips_val0091
+Starting.... ips_val1000    (CHECK PROCESS SRVR  ) ... as ips_val1000
+Starting.... ips_val2000    (VALIDATION SRVR     ) ... as ips_val2000
+Starting.... ips_val3000    (VALIDATION INQUIRY  ) ... as ips_val3000
+Reprocessing the transaction log file. Please wait...
+Waiting for NPX$TFC.ok
+
+IPS$REPROCESS:  0 Msgs Read
+
+
+
+IPS$REPROCESS:  0 Msgs Sent
+Reprocessing complete
+If IPS is coming up in simplex mode no other IPS systems should be active.
+Is this application coming up in simplex mode (Y/N) Y
+IPS_WAKEUP is complete
+PODEV1::PORT_SQA$
+PODEV1::PORT_SQA$
+PODEV1::PORT_SQA$
+PODEV1::PORT_SQA$
+PODEV1::PORT_SQA$ LUI
+        ID      User            Process         Image
+        123C19  PORT_SQA        _FTA850:        IPS_GETJPI.EXE
+        12282B  PORT_SQA        npx$pfm         NPX$PFM.EXE
+        12502C  PORT_SQA        ips_adm0000     IPS_ADM0000.EXE
+        12082F  PORT_SQA        ips_adm1000     IPS_ADM1000.EXE
+        122832  PORT_SQA        ips_arp1000     IPS_ARP1000.EXE
+        124035  PORT_SQA        ips_inv1000     IPS_INV1000.EXE
+        123838  PORT_SQA        ips_inv2000     IPS_INV2000.EXE
+        12643B  PORT_SQA        ips_inv3000     IPS_INV3000.EXE
+        123C3E  PORT_SQA        npx$ckp         NPX$CKP.EXE
+        124441  PORT_SQA        npx$log         NPX$LOG.EXE
+        124844  PORT_SQA        npx$svm         NPX$SVM.EXE
+        120047  PORT_SQA        npx$tfc         NPX$TFC.EXE
+        124C4A  PORT_SQA        ips_ret0000     IPS_RET0000.EXE
+        122C4D  PORT_SQA        ips_ret0151     IPS_RET0151.EXE
+        121050  PORT_SQA        ips_sec1000     IPS_SEC1000.EXE
+        11F854  PORT_SQA        ips_sec2000     IPS_SEC2000.EXE
+        126057  PORT_SQA        ips_sys0100     IPS_SYS0100.EXE
+        122C5D  PORT_SQA        ips_tel1000     IPS_TEL1000.EXE
+        122460  PORT_SQA        ips_val0091     IPS_VAL0091.EXE
+        122863  PORT_SQA        ips_val1000     IPS_VAL1000.EXE
+        124466  PORT_SQA        ips_val2000     IPS_VAL2000.EXE
+        124069  PORT_SQA        ips_val3000     IPS_VAL3000.EXE
+        12486D  PORT_SQA        IPS_TCPVAL_0    TCPVAL_IO.EXE
+        23 Processes In 640 group
+PODEV1::PORT_SQA$
+
+
+------------------------------------------------------------------------
+System date and IPS Control Run Date do not match!
+***
+*** SYSTEM Date is 08/02/2021
+*** GTECH  Date is 07/02/2021
+***
+Do You Want To Continue With Wakeup (Y/N) y
