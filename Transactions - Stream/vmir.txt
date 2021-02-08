@@ -1,0 +1,100 @@
+Using username "console".
+Pre-authentication banner message from server:
+|
+| @SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+End of banner message from server
+console@10.100.82.101's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Wednesday, 27-JAN-2021 09:18:31.15
+    Last non-interactive login on Friday, 22-JAN-2021 15:35:02.14
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM
+;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been super
+seded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+
+    GOPROD  DKD11:      AGOLS     DESV Production
+
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+
+    GOPORT  DKD0:       AGOLS     TEST Production
+
+    GOSCML  DKD5:       AGOLS     TEST SCML
+
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+PODEV1::PORT> goscml
+%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
+%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
+%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superse
+ded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been supersede
+d
+PODEV1::SCML> r vmir
+10:13:06 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+10:13:08 CONSOLE
+10:13:08 CONSOLE  <<<<< VMIR Validation File Inquiry V10 >>>>>
+10:13:08 CONSOLE
+10:13:08 CONSOLE  Please enter password  >
+                                          10:13:14 CONSOLE
+10:13:14 CONSOLE  Is This VMIR For A Passive Game Type [Y/N]? >N
+10:13:26 CONSOLE  Enter Validation File Name: >valx:vlf.fil
+10:14:12 CONSOLE  Enter Report File Name [Enter='Vmir.rep']: >
+10:14:27 CONSOLE  Enter Terminal Number [A=All]: >A
+10:14:43 CONSOLE
+10:14:43 CONSOLE         Status Values Are:
+10:14:43 CONSOLE
+10:14:43 CONSOLE   0 Is Not Winner
+10:14:43 CONSOLE   1 Is Uncashed
+10:14:43 CONSOLE   2 Is Cashed
+10:14:43 CONSOLE   3 Is Cashed With Exchange
+10:14:43 CONSOLE   4 Is Deleted Winner
+10:14:43 CONSOLE   5 Is Cancelled Winner
+10:14:43 CONSOLE  15 Is Paid by Bank
+10:14:43 CONSOLE   A Is All Status
+10:14:43 CONSOLE
+10:14:43 CONSOLE  Enter Status: >1
+10:14:54 CONSOLE  Do You Want All Games [1:Yes, 2:No]: >1
+10:15:05 CONSOLE  Enter Draw / Emission Number [A=All]: >A
+10:15:11 CONSOLE  Enter Selling CDC [A=All]: >A
+10:15:18 CONSOLE  Only Grand Totals [Y/N]? >N
+10:15:23 CONSOLE

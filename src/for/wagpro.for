@@ -170,8 +170,7 @@ C other wise comes from X2X or MXS
 C----+------------------------------------------------------------------
 C       begin - Olimpo Serial Number & Message Id & Communication Flag
         CALL OPS('WAGPRO BPRO(CHOLM_OLM,BUF)',BPRO(CHOLM_OLM,BUF),BPRO(CHOLM_OLM,BUF))
-        IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN
-            CALL OPSTXT('BPRO(CHOLM_OLM,BUF) .EQ. 1')    
+        IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN 
             TRABUF(TWCOLMSERL_TLTO)=PRO(SEROLM_OLM,BUF)
             TRABUF(TWCOLMSERM_TLTO)=PRO(SEROLM_OLM+1,BUF)
             TRABUF(TWCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)

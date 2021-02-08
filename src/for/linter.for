@@ -38,7 +38,7 @@ C     CALL LINTER(KEYLST,KEY,IND,NUM,DAT,BAMT,VAMT,ERR,OFF1,CMB)
 C
 C Input parameters:
 C
-C     KEYLST      Real*8(168)     List of Vision function keys
+C     KEYLST      Real*8(168)     List of Vision function keys /176
 C     KEY         Int*4           Key relative to KEYLST
 C     OFF1        Int*4           Beginning search index
 C

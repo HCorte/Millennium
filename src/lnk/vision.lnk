@@ -135,7 +135,8 @@ VIS_EURMILSNP,-
 VIS_NACSNP,-
 VIS_SNIFSNP,-
 VIS_GUISNP,-
-VIS_IGSSNP
+VIS_IGSSNP,-
+VIS_OLMSNP
 $!
 $! Now build the executable
 $!

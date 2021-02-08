@@ -254,88 +254,16 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
 80                CONTINUE
 
                   CALL GETBUF(PROBUF)
-C                  CALL PRINTDATE()
+C                 may comment this buffer body reset since with length size info all the garbage at the remaining bytes of the buffer are ignored (so no actual need to reset those bytes)                 
                   CALL FASTSET(0, PRO(1,PROBUF), PROLEN)
-C                  CALL PRINTDATE()
 
                   CALL OPS('MESS_FROM_LEN:',MESS_FROM_LEN,MESS_FROM_LEN)
-C                  CALL OPSTXT('Mensagem Do MessageQ')
-C                  CALL OPS('Mensagem Do MessageQ Size:',MESS_FROM_LEN,MESS_FROM_LEN)
 
-C                  I1AUX(1) = MESS_FROM_OLM(12)     
-C                  I1AUX(1) = MESS_FROM_OLM(13)               
-C                  I1AUX(1) = MESS_FROM_OLM(14)                                         
-C                  I1AUX(1) = MESS_FROM_OLM(15)                                              
-C                  I1AUX(1) = MESS_FROM_OLM(16)                                              
-C                  I1AUX(1) = MESS_FROM_OLM(17)                                                
-C                  I1AUX(1) = MESS_FROM_OLM(18)                                            
-C                  I1AUX(1) = MESS_FROM_OLM(19)                                             
-C                  I1AUX(1) = MESS_FROM_OLM(20)                  
-
-
-C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(12)),ZEXT (MESS_FROM_OLM(12)))
-C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(13)),ZEXT (MESS_FROM_OLM(13)))
-C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(14)),ZEXT (MESS_FROM_OLM(14)))
-C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(15)),ZEXT (MESS_FROM_OLM(15)))
-C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(16)),ZEXT (MESS_FROM_OLM(16)))
-C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(17)),ZEXT (MESS_FROM_OLM(17)))
-C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(18)),ZEXT (MESS_FROM_OLM(18)))
-C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(19)),ZEXT (MESS_FROM_OLM(19)))
-C                  CALL OPS('MESSAGE Byte:',ZEXT (MESS_FROM_OLM(20)),ZEXT (MESS_FROM_OLM(20)))
-  
-
-C                  CALL OPS('MESSAGEID::',ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)),ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)))
-C                  CALL OPS('MESSAGEID::',ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1)),ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1)))
-C                  CALL OPS('MESSAGEID::',ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2)),ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2)))
-C                  CALL OPS('MESSAGEID::',ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3)),ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3)))
-C                  CALL OPS('MESSAGEID::',ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4)),ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4)))
-
-C                  CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  0)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0)))
-C                  CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  1)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1)))
-C                  CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  2)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  2)))
-C                  CALL OPS('AGENT_NUM::',ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  3)),ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  3)))                  
-
-C                  CALL OPS('TERMINAL NUMBER::',ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0)),ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  0)))
-C                  CALL OPS('TERMINAL NUMBER::',ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1)),ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  1)))
-
-
-C                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0)))
-C                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1)))
-C                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  2)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  2)))
-C                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  3)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  3)))
-C                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  4)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  4)))
-C                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  5)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  5)))
-C                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  6)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  6)))
-C                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7)))
-C                  CALL OPS('SERIAL NUMBER::',ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8)),ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8)))                  
-
-
-C                 BUFFER_HEADER_LENTH /25/
-C                  CALL OPS('CONTROL e SEQ::',ZEXT (MESS_FROM_OLM(25)),ZEXT (MESS_FROM_OLM(25)))
-C                  CALL OPS('Type e SubType::',ZEXT (MESS_FROM_OLM(26)),ZEXT (MESS_FROM_OLM(26)))
-C 
-C                  CALL OPS('CheckSum::',ZEXT (MESS_FROM_OLM(27)),ZEXT (MESS_FROM_OLM(27)))
-C                  CALL OPS('CheckSum::',ZEXT (MESS_FROM_OLM(28)),ZEXT (MESS_FROM_OLM(28)))
-C
-C                  CALL OPS('Statistics::',ZEXT (MESS_FROM_OLM(29)),ZEXT (MESS_FROM_OLM(29)))                                    
-C
-C                  CALL OPS('Agent NUmber::',ZEXT (MESS_FROM_OLM(30)),ZEXT (MESS_FROM_OLM(30)))
-C                  CALL OPS('Agent NUmber::',ZEXT (MESS_FROM_OLM(31)),ZEXT (MESS_FROM_OLM(31)))
-C                  CALL OPS('Agent NUmber::',ZEXT (MESS_FROM_OLM(32)),ZEXT (MESS_FROM_OLM(32)))
-C                  CALL OPS('Agent NUmber::',ZEXT (MESS_FROM_OLM(33)),ZEXT (MESS_FROM_OLM(33)))                  
-C
-C                  CALL OPS('Agent Pass Number::',ZEXT (MESS_FROM_OLM(34)),ZEXT (MESS_FROM_OLM(34)))                  
-C                  CALL OPS('Agent Pass Number::',ZEXT (MESS_FROM_OLM(35)),ZEXT (MESS_FROM_OLM(35)))
-C
-C                  CALL OPS('Terminal Pass Number::',ZEXT (MESS_FROM_OLM(36)),ZEXT (MESS_FROM_OLM(36)))
-C                  CALL OPS('Terminal Pass Number::',ZEXT (MESS_FROM_OLM(37)),ZEXT (MESS_FROM_OLM(37))) 
-
-
-                  I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)) !95-> 149 (149)
-                  I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1)) !0
-                  I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2)) !E6000000
-                  I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3)) !93E60000
-                  I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4)) !493E600
+                  I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)) 
+                  I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1)) 
+                  I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2)) 
+                  I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3)) 
+                  I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4)) 
                   I1AUX(6) = 0
                   I1AUX(7) = 0
                   I1AUX(8) = 0
@@ -364,6 +292,7 @@ C                 se for diferente de 0000 então está defenido o terminal numb
 
                         IF(ST .EQ. -1)THEN
                               CALL OPS('FIND_AGENT FAILED -- ST:',ST,ST)
+                              ST = -8
 C                             return a error message to MessageQ do not allow to process anymore                              
                         ENDIF
                   ENDIF
