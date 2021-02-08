@@ -8,8 +8,10 @@ C        INCLUDE 'OLMCON.DEF'
 
 C       show the status of P(SUPSYN)
 
-
         RECORD/SETUP/ PAR
+
+        PRINT *, 'CDC DATE:',P(NXTCDC)
+
         PRINT *,'P(OLMCONF)=',P(OLMCONF)
         PAR.OLMCON = P(OLMCONF)    
 
@@ -21,7 +23,10 @@ C       (DESFLG_HARD=1)    !HARD DES ENCRYPTIO
         PRINT *,'DESFLG_HARD=',1 
         PRINT *,'P(ENCPRO_WAIT)=',P(ENCPRO_WAIT) 
         PRINT *,'P(LOGTIM)=',P(LOGTIM) 
-        
+        PRINT *,'P(SUPSUM)=',P(SUPSUM) 
+
+C        GNUM=GTNTAB(TLTO,GIND)
+C        PRINT *,'File Name:',GFNAMES(1,GNUM)     
 
         CALL DISP_CONFIG(PAR)
         PRINT *,'GOOD .....EXITED SUBROUTINE'
