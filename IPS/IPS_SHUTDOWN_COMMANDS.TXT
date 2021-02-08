@@ -1,0 +1,157 @@
+login as: port_sqa
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+port_sqa@podev1's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Wednesday, 3-FEB-2021 04:53:52.99
+    Last non-interactive login on Wednesday, 3-FEB-2021 04:26:05.70
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.PORT_SQA]login.com;4
+>>> MODE IS: INTERACTIVE
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_0001_00640
+PODEV1::PORT_SQA$ lui
+        ID      User            Process         Image
+        11F456  PORT_SQA        IPS_TCPVAL_0    TCPVAL_IO.EXE
+        1220F0  PORT_SQA        PORT_SQA        IPS_GETJPI.EXE
+        11975D  PORT_SQA        npx$pfm         NPX$PFM.EXE
+        11635E  PORT_SQA        ips_adm0000     IPS_ADM0000.EXE
+        11EB61  PORT_SQA        ips_adm1000     IPS_ADM1000.EXE
+        112764  PORT_SQA        ips_arp1000     IPS_ARP1000.EXE
+        11C367  PORT_SQA        ips_inv1000     IPS_INV1000.EXE
+        11C76A  PORT_SQA        ips_inv2000     IPS_INV2000.EXE
+        11C36D  PORT_SQA        ips_inv3000     IPS_INV3000.EXE
+        11B370  PORT_SQA        npx$ckp         NPX$CKP.EXE
+        11DF73  PORT_SQA        npx$log         NPX$LOG.EXE
+        11EB76  PORT_SQA        npx$svm         NPX$SVM.EXE
+        11D779  PORT_SQA        npx$tfc         NPX$TFC.EXE
+        11C77C  PORT_SQA        ips_ret0000     IPS_RET0000.EXE
+        11C37F  PORT_SQA        ips_ret0151     IPS_RET0151.EXE
+        11DF82  PORT_SQA        ips_sec1000     IPS_SEC1000.EXE
+        11A785  PORT_SQA        ips_sec2000     IPS_SEC2000.EXE
+        11A788  PORT_SQA        ips_sys0100     IPS_SYS0100.EXE
+        11E38E  PORT_SQA        ips_tel1000     IPS_TEL1000.EXE
+        117B91  PORT_SQA        ips_val0091     IPS_VAL0091.EXE
+        113B94  PORT_SQA        ips_val1000     IPS_VAL1000.EXE
+        111B97  PORT_SQA        ips_val2000     IPS_VAL2000.EXE
+        116F9A  PORT_SQA        ips_val3000     IPS_VAL3000.EXE
+        23 Processes In 640 group
+PODEV1::PORT_SQA$ IPS IPS_SHUTDOWN
+
+               ES Evolution Ver 1.8.
+               Copyright ▒ 1994 - 2016 GTECH Corporation. All rights reserved.
+
+Type minutes before system shutdown...(01-99) 00
+Shut down system in 00 minutes? Y/N Y
+Do You Want To Backup The Logger File (Y/N) N
+Do You Want To Backup The Retailer File (Y/N) N
+
+Hit enter when pass-thrus from front-end have been stopped
+User CONSOLE has been notified on PODEV1 (2 terminals).
+02 02 2021 09:26:22.00 Step ... SHUTDOWN IPS MASTER_MENU USERS
+02 02 2021 09:26:22.00 Step ... SHUTTING DOWN SERVERS
+
+        SHUTDOWN: Issuing checkpoint command
+02 02 2021 09:26:32.00 ... WAITING FOR THE FOLLOWING SERVERS TO COME DOWN:
+      PORT_SQA        ips_sec2000     IPS_SEC2000.EXE;1
+----------------------------------------------------------
+02 02 2021 09:26:52.00 ... WAITING FOR THE FOLLOWING SERVERS TO COME DOWN:
+      PORT_SQA        ips_sec2000     IPS_SEC2000.EXE;1
+----------------------------------------------------------
+02 02 2021 09:27:12.00 ALL SERVERS ARE DOWN.
+
+You may now begin IPS_SHUTDOWN on Secondary machines...
+02 02 2021 09:27:12.00 Step ... STARTING ips_arp0220
+02 02 2021 09:27:14.00 Step ... STARTING ips_adm0020
+Enter tape drive unit for backups or NONE if no backup is needed NONE
+02 02 2021 09:27:52.00 Step ... CREATING DAILY REPORTS
+02 02 2021 09:27:52.00 .......... STARTING report IPS_ICS0010
+02 02 2021 09:27:54.00 .......... STARTING report IPS_ICS0020
+02 02 2021 09:27:56.00 .......... STARTING report IPS_ICS0030
+02 02 2021 09:27:58.00 .......... STARTING report IPS_ARP0060
+02 02 2021 09:28:00.00 .......... STARTING report IPS_ARP7000
+02 02 2021 09:28:02.00 .......... STARTING report IPS_ARP7100
+02 02 2021 09:28:04.00 .......... STARTING extract IPS_INV6100
+02 02 2021 09:28:06.00 .......... STARTING report IPS_INV7000
+02 02 2021 09:28:08.00 .......... STARTING report IPS_INV7600
+02 02 2021 09:28:10.00 .......... STARTING report IPS_INV7900
+02 02 2021 09:28:12.00 .......... STARTING report IPS_ICS5000
+02 02 2021 09:28:16.00 .......... STARTING report ips_analyze_log
+02 02 2021 09:28:18.00 .......... STARTING report IPS_ICS5010
+02 02 2021 09:28:20.00 .......... STARTING report IPS_ICS5020
+02 02 2021 09:28:24.00 .......... STARTING report IPS_RET8120
+02 02 2021 09:28:26.00 .......... STARTING report IPS_INV4330
+02 02 2021 09:28:28.00 .......... STARTING report IPS_ICS5040
+02 02 2021 09:28:30.00 .......... STARTING report IPS_INV7610
+02 02 2021 09:28:32.00 .......... STARTING report IPS_VAL7100
+02 02 2021 09:28:36.00 .......... STARTING report IPS_ICS6010
+02 02 2021 09:28:38.00 .......... STARTING report IPS_DIS7400
+02 02 2021 09:28:42.00 .......... STARTING report IPS_ICS6020
+02 02 2021 09:28:46.00 .......... STARTING report IPS_SEC0030
+02 02 2021 09:28:50.00 BATCH REPORTS ARE FINISHED.
+02 02 2021 09:28:50.00 Step ... RENAMING IPS_WATCHDOG FILE
+02 02 2021 09:28:50.00 Step ... ROLL TO NEXT BUSINESS DAY
+03 02 2021 09:28:50.00 .......... Next business day is 20210203
+03 02 2021 09:28:50.00 Step ... CREATING DAILY FILES
+03 02 2021 09:28:50.00 .......... ips$files:ips_security_log_20210203.fil FILE CREATED
+03 02 2021 09:28:50.00 SHUTDOWN COMPLETE.
+PODEV1::PORT_SQA$ lui
+        ID      User            Process         Image
+        1220F0  PORT_SQA        PORT_SQA        IPS_GETJPI.EXE
+        11B12F  PORT_SQA        ips_inv7610     IPS_INV7610.EXE
+        11975D  PORT_SQA        npx$pfm         NPX$PFM.EXE
+        3 Processes In 640 group
+PODEV1::PORT_SQA$ lui
+        ID      User            Process         Image
+        1220F0  PORT_SQA        PORT_SQA        IPS_GETJPI.EXE
+        11B12F  PORT_SQA        ips_inv7610     IPS_INV7610.EXE
+        11975D  PORT_SQA        npx$pfm         NPX$PFM.EXE
+        3 Processes In 640 group
+PODEV1::PORT_SQA$ lui
+        ID      User            Process         Image
+        1220F0  PORT_SQA        PORT_SQA        IPS_GETJPI.EXE
+        11B12F  PORT_SQA        ips_inv7610     IPS_INV7610.EXE
+        11975D  PORT_SQA        npx$pfm         NPX$PFM.EXE
+        3 Processes In 640 group
+PODEV1::PORT_SQA$ lui
+        ID      User            Process         Image
+        1220F0  PORT_SQA        PORT_SQA        IPS_GETJPI.EXE
+        11975D  PORT_SQA        npx$pfm         NPX$PFM.EXE
+        2 Processes In 640 group
+PODEV1::PORT_SQA$ lui
+        ID      User            Process         Image
+        1220F0  PORT_SQA        PORT_SQA        IPS_GETJPI.EXE
+        11975D  PORT_SQA        npx$pfm         NPX$PFM.EXE
+        2 Processes In 640 group
+PODEV1::PORT_SQA$
+PODEV1::PORT_SQA$
+
+
+----     FIM DO SHUTDOWN     --------
