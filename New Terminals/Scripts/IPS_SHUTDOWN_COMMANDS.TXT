@@ -164,4 +164,6 @@ dir ips$files ficheiros com datas muito antigas (falar sempre com o Mário prime
 06 02 2021 12:15:54.00 .......... Copying IPS_RETFIN.FIL
 06 02 2021 12:15:54.00 .......... Copying IPS_NMEC_INVOICE.FIL
 
-
+--------  Obter o TMF no IPS -------------------
+ips ips_aud0100 20210208 9999 0 0 0 
+mudar a data YYYYMMDD para o correcto
