@@ -105,10 +105,10 @@ C      CALL OPSTXT(' not DSSUSP')
       ST = PAMS__SUCCESS
 
 15    CONTINUE      
-      CALL OPSTXT(' vai tentar enviar mensagem para olimpo ')
+C      CALL OPSTXT(' vai tentar enviar mensagem para olimpo ')
       CALL SENDTOOLM(BUFNUM,ST,.FALSE.) 
       IF ((ST .NE. PAMS__SUCCESS ) .AND. (ST .NE. PAMS__TIMEOUT)) THEN
-         CALL OPSTXT(' estado de envio falhou')
+C         CALL OPSTXT(' estado de envio falhou')
          CALL MESSQ_EXIT(%REF(ST))
          IF (ST .EQ. PAMS__SUCCESS) THEN 
             CONOLM = .FALSE.           
@@ -174,11 +174,11 @@ C      ENDIF
       ENDIF
     
       IF(ST .EQ. PAMS__NOMOREMSG) THEN
-            CALL OPSTXT('MESSAGEQ EMPTY')
+C            CALL OPSTXT('MESSAGEQ EMPTY')
             WTFORMESS = .TRUE.
             GOTO 570 
       ELSE IF(ST .EQ. PAMS__SUCCESS) THEN  
-            CALL OPSTXT('READED A MESSAGE FROM MESSAGEQ')  
+C            CALL OPSTXT('READED A MESSAGE FROM MESSAGEQ')  
             GOTO 570 
       ENDIF
 
@@ -250,14 +250,14 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             CALL MESSQ_GET(%REF(STATUS))  
 
             IF (STATUS .EQ. PAMS__SUCCESS) THEN   
-                  CALL OPSTXT('Get Message From MessageQ from Olimpo')
+C                  CALL OPSTXT('Get Message From MessageQ from Olimpo')
 80                CONTINUE
 
                   CALL GETBUF(PROBUF)
 C                 may comment this buffer body reset since with length size info all the garbage at the remaining bytes of the buffer are ignored (so no actual need to reset those bytes)                 
                   CALL FASTSET(0, PRO(1,PROBUF), PROLEN)
 
-                  CALL OPS('MESS_FROM_LEN:',MESS_FROM_LEN,MESS_FROM_LEN)
+C                  CALL OPS('MESS_FROM_LEN:',MESS_FROM_LEN,MESS_FROM_LEN)
 
                   I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)) 
                   I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1)) 
@@ -291,7 +291,7 @@ C                 se for diferente de 0000 então está defenido o terminal numb
                         CALL FIND_AGENT(AGENT_NUM,TERMINALNUM,ST)
 
                         IF(ST .EQ. -1)THEN
-                              CALL OPS('FIND_AGENT FAILED -- ST:',ST,ST)
+C                              CALL OPS('FIND_AGENT FAILED -- ST:',ST,ST)
                               ST = -8
 C                             return a error message to MessageQ do not allow to process anymore                              
                         ENDIF
@@ -312,7 +312,7 @@ C apos x tentativas secanhar ver se caio alguma mensagem de resposta na queue ap
 C adicionar uma variabel do vision que indique logo que aconteceu no dia xx as hh horas e mm de minutes uma falta de procom buffers
                   IF (PROBUF.LE.0) THEN
 C                       remember that while QUEMES subroutine uses GETBUF thats not true for OPS that uses caixa de email                        
-                        CALL OPSTXT('COMOLM - THERE IS NO BUFFER(PROCOM) AVAILABLE IN THE FREE QUEUE')  
+C                        CALL OPSTXT('COMOLM - THERE IS NO BUFFER(PROCOM) AVAILABLE IN THE FREE QUEUE')  
                         
 C                       MESSAGEID
                         I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
@@ -355,7 +355,7 @@ C        (importante)               SEE BETHER METHOD OF WRITING IN ONE LINE INS
 
 
                   IF (ST .LT. 0) THEN
-                        CALL OPS('ERROR-> STATUS:',ST,ST)
+C                        CALL OPS('ERROR-> STATUS:',ST,ST)
                         ERRMSG(1) = ZEXT(MESS_FROM_OLM(BUFFER_HEADER_LENTH))        
                         ERRMSG(2) = ZEXT(ERRTYP) 
                         IF(ST .EQ. -10) THEN
