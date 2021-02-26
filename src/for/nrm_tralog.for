@@ -145,63 +145,59 @@ C
 C
 C ENCODE TRANSACTION HEADER INFORMATION
 C
-!(TSER=4) - SERIAL NUMBER (AGENT NUMBER | CROSS REFERENCE NUMBER)
         LOGBUF(1) = TRABUF(TSER)
 C
 C REMEMBER BYTES ARE NUMBERED AS 3,2,1,0 - SO SOME THINGS LOOK BACKWARDS
 C BUT THEY REALLY ARE NOT
 C
-        I2TEMP(1) = TRABUF(TCDC)!(TCDC=3) - CDC date (2 bytes)
-        I2TEMP(2) = TRABUF(TTER)!(TTER=6) - TERMINAL Number (2 bytes) (chave primaria)
-        LOGBUF(2) = I4TEMP ! 4 bytes
-C       Mediador(agente), Estabelecimento(loja), terminal(maquina)
-!PARAMETER (NUMAGT=12288) -> numero de terminais maximo		!NOTE: ALSO CHANGE X2XPRM.DEF
-        I4TEMP    = TRABUF(TAGT)!(TAGT=7) - AGENT NUMBER 300 0000 <---> (código de terminal que é um numero inteiro) -> 3 primeiros bytes (4 mas na linha a seguir faz override do 4º)
-        I1TEMP(4) = TRABUF(TNFRAC) !(TNFRAC=23) !REAL # OF FRACTIONS -> 4º byte
+        I2TEMP(1) = TRABUF(TCDC)
+        I2TEMP(2) = TRABUF(TTER)
+        LOGBUF(2) = I4TEMP 
+
+        I4TEMP    = TRABUF(TAGT)
+        I1TEMP(4) = TRABUF(TNFRAC) 
         LOGBUF(3) = I4TEMP
 C
-        I4TEMP    = TRABUF(TTIM) !(TTIM=5) - TIME STAMP (IN SECONDS) -> 3 primeiros bytes (4 mas na linha a seguir faz override do 4º)
-        I1TEMP(4) = TRABUF(TTSTCS) !(TTSTCS=13) - TERMINAL STATISTICS -> 4º byte
+        I4TEMP    = TRABUF(TTIM) 
+        I1TEMP(4) = TRABUF(TTSTCS) 
         LOGBUF(4) = I4TEMP
 C
-        I2TEMP(1) = TRABUF(TCHK)!(TCHK=17) MESSAGE CHECKSUM -> 2 bytes
-        I1TEMP(3) = TRABUF(TERR)!(TERR=2) ERROR CODE -> 1 byte 
-        I1TEMP(4) = TRABUF(TGAM)!(TGAM=10) GAME NUMBER -> 1 byte
+        I2TEMP(1) = TRABUF(TCHK)
+        I1TEMP(3) = TRABUF(TERR) 
+        I1TEMP(4) = TRABUF(TGAM)
         LOGBUF(5) = I4TEMP
 C 
-        I1TEMP(1) = TRABUF(TSTAT)!(TSTAT=1) STATUS -> 1 byte
-        I1TEMP(2) = ISHFT(TRABUF(TTYP),4) +  !(TTYP=9) !TRANSACTION TYPE (shift 4 left) 4 bits menos significativos
-     *              IAND(TRABUF(TTRN),'0F'X)!(TTRN=8) !TRANSACTION SEQUENCE NUMBER filtra os 4 bits menos significativos
-        !(TFIL=15)             !FILE STATUS
-        X = IAND(TRABUF(TFIL),7)! 0111 os 3 bits menos significativos
-        !(TINTRA=14)           !INTERNAL TRANSACTION FLAG 1000
-        IF(TRABUF(TINTRA).NE.0) X = X + 8 !ao somar 8 fica o 4º bit a 1
-        !(TSIZE=19)            !TRANSACTION SIZE (LOG RECS)
-        I1TEMP(3) = ISHFT(TRABUF(TSIZE),4) + X !4 bits menos significativos de TSIZE ficando 
-        !(xxxx 0000) somando ao X que são 0000 YYYY (bits menos significativos) passa a ser XXXX YYYY (1 byte)
-        !(TGAMTYP=11)  !GAME TYPE
-        I1TEMP(4) = ISHFT(TRABUF(TGAMTYP),3) + !xxxx x000 filtra os 5 bits mais significativos
-     *              IAND(TRABUF(TGAMIND),'07'X) !(TGAMIND=12)  !GAME INDEX filtra os 3 bits menos significativos (0000 0YYY)
-        LOGBUF(6) = I4TEMP !1 byte
-C       !(TTKID=16)  !TICKET ID
-	X         = IAND(TRABUF(TTKID), '7F'X) ! filtra os 7 bits menos significativos
-	IF(TRABUF(TFAMTFLG).EQ.1) X = IOR(X,'80'X) !flag que é o 8ª bit (X000 0000)
-        I1TEMP(1) = X ! 1 byte composto por TTKID e a flag TFAMTFLG ->BET AMOUT FLAG (FOR FRACTIONS)
-        I1TEMP(2) = TRABUF(TFRAC)!(TFRAC=18)            !# OF FRACTIONS
-        I1TEMP(3) = TRABUF(TSUBERR)!(TSUBERR=20)          !ERROR SUB CODE
-        I1TEMP(4) = TRABUF(TCDC) - TRABUF(TCDC_SOLD) !(TCDC_SOLD=21)        !CDC TRANS. WAS SOLD (NEVER CHANGES)
-        LOGBUF(7) = I4TEMP ! 4 bytes
+        I1TEMP(1) = TRABUF(TSTAT)
+        I1TEMP(2) = ISHFT(TRABUF(TTYP),4) +  
+     *              IAND(TRABUF(TTRN),'0F'X)
+
+        X = IAND(TRABUF(TFIL),7)
+
+        IF(TRABUF(TINTRA).NE.0) X = X + 8 
+
+        I1TEMP(3) = ISHFT(TRABUF(TSIZE),4) + X 
+        I1TEMP(4) = ISHFT(TRABUF(TGAMTYP),3) + 
+     *              IAND(TRABUF(TGAMIND),'07'X) 
+        LOGBUF(6) = I4TEMP 
+
+	X         = IAND(TRABUF(TTKID), '7F'X) 
+	IF(TRABUF(TFAMTFLG).EQ.1) X = IOR(X,'80'X) 
+        I1TEMP(1) = X 
+        I1TEMP(2) = TRABUF(TFRAC)
+        I1TEMP(3) = TRABUF(TSUBERR)
+        I1TEMP(4) = TRABUF(TCDC) - TRABUF(TCDC_SOLD) 
+        LOGBUF(7) = I4TEMP 
 C
 C PROJECT EURO MIL
 C
         IF (TRABUF(TTYP) .EQ. TEUR) THEN
-           I4TEMP = 0                 ! LOGBUF(8) = XX XX 00 YY (XX XX = CHECK DIGITS AND YY = EURO MILHOES TRANSACTION TYPE)
-           I1TEMP(1) = TRABUF(TEUTYP) ! PUT INTO LOGBUF EURO MILHOES TRANSACTION TYPE (0 - WAGGER, 1 - CANCEL, 2 - VAL)
-           I2TEMP(2) = TRABUF(TEUCHK) ! CHECK DIGITS FOR THIS TRANSACTION
+           I4TEMP = 0                 
+           I1TEMP(1) = TRABUF(TEUTYP) 
+           I2TEMP(2) = TRABUF(TEUCHK) 
            LOGBUF(8) = I4TEMP
            
-           LOGBUF(9) = TRABUF(TEUSER) ! SERIAL FOR THIS TRANSACTION 
-           LOGBUF(10) = TRABUF(TEUMESSQ) ! MESSAGEQ SEQ NUMBER 
+           LOGBUF(9) = TRABUF(TEUSER)  
+           LOGBUF(10) = TRABUF(TEUMESSQ) 
            
            IF (TRABUF(TEUTYP) .EQ. TWAG) THEN 
               
@@ -457,8 +453,7 @@ C              	 LOGBUF(16) = I4TEMP
 C----+------------------------------------------------------------------
 C V58| Added support to PLACARD Project - IGS
 C----+------------------------------------------------------------------
-!              (TIGS=12)          !IGS
-        IF (TRABUF(TTYP) .EQ. TIGS) THEN !(TTYP=9)              !TRANSACTION TYPE
+        IF (TRABUF(TTYP) .EQ. TIGS) THEN 
 C----+------------------------------------------------------------------
 C    |
 C    |
@@ -1273,20 +1268,32 @@ C
 C
              I1TEMP(1)  = TRABUF(TWSYSN)
              I1TEMP(2)  = TRABUF(TWVSTS)
-             I1TEMP(3)  = TRABUF(TWDUR)
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+             IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
+C               can insert in the most higher bit since the higher nible used to save const 1 and previously max 5 that is 0101               
+               I1TEMP(3)  = TRABUF(TWDUR) + '10'X 
+             ELSE
+               I1TEMP(3)  = TRABUF(TWDUR)
+             ENDIF
+C----+------------------------------------------------------------------
+C V60| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+
              I1TEMP(4)  = TRABUF(TWSYST)
              LOGBUF(12) = I4TEMP
 C
              I4TEMP = 0
              I1TEMP(1)  = TRABUF(TWNMRK)
-             IF(TRABUF(TWMFLG)  .NE. 0)    I1TEMP(2) = I1TEMP(2) + '80'X !1000 0000 2bytes
-             IF(TRABUF(TWKGME)  .NE. 0)    I1TEMP(2) = I1TEMP(2) + '40'X !0100 0000 2bytes
-             IF(TRABUF(TWKFLG)  .NE. 0)    I1TEMP(2) = I1TEMP(2) + '20'X !0010 0000 2bytes
-             IF(TRABUF(TWKFLG2) .NE. 0)    I1TEMP(2) = I1TEMP(2) + '10'X !0001 0000 2bytes
-             IF(TRABUF(TWFFLG)  .NE. 0)    I1TEMP(2) = I1TEMP(2) + '08'X !0000 1000 2bytes
-             IF(TRABUF(TWADDFW) .NE. 0)    I1TEMP(2) = I1TEMP(2) + '04'X !0000 0100 2bytes
-             IF(TRABUF(TWLMFI)  .NE. 0)    I1TEMP(2) = I1TEMP(2) + '02'X !0000 0010 2bytes
-             IF(TRABUF(TGAMTYP) .EQ. TSPT) I1TEMP(2) = I1TEMP(2) + '01'X !0000 0001 2bytes ! Set To Offset Version for board old data
+             IF(TRABUF(TWMFLG)  .NE. 0)    I1TEMP(2) = I1TEMP(2) + '80'X 
+             IF(TRABUF(TWKGME)  .NE. 0)    I1TEMP(2) = I1TEMP(2) + '40'X 
+             IF(TRABUF(TWKFLG)  .NE. 0)    I1TEMP(2) = I1TEMP(2) + '20'X 
+             IF(TRABUF(TWKFLG2) .NE. 0)    I1TEMP(2) = I1TEMP(2) + '10'X 
+             IF(TRABUF(TWFFLG)  .NE. 0)    I1TEMP(2) = I1TEMP(2) + '08'X 
+             IF(TRABUF(TWADDFW) .NE. 0)    I1TEMP(2) = I1TEMP(2) + '04'X 
+             IF(TRABUF(TWLMFI)  .NE. 0)    I1TEMP(2) = I1TEMP(2) + '02'X 
+             IF(TRABUF(TGAMTYP) .EQ. TSPT) I1TEMP(2) = I1TEMP(2) + '01'X 
 C
              I1TEMP(3)  = TRABUF(TWCDCOFF)
              I1TEMP(4)  = TRABUF(TWMFRAC)
@@ -1347,21 +1354,25 @@ C
 C----+------------------------------------------------------------------
 C V60| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------        
-C            Olimpo Serial Number 9 bytes
-C             I4TEMP = TRABUF(TWCOLMSERL)
-             LOGBUF(22) = TRABUF(TWCOLMSERL_TLTO)
-             LOGBUF(23) = TRABUF(TWCOLMSERM_TLTO)
-             LOGBUF(25) = TRABUF(TWCOLMMIDL_TLTO)
-             I1TEMP(1) = TRABUF(TWCOLMSERH_TLTO)
-             I1TEMP(2) = TRABUF(TWCOLMMIDH_TLTO)
-             I1TEMP(3) = TRABUF(TWCOLMCOMF_TLTO)
-             I1TEMP(4) = 0
-             LOGBUF(24) = I4TEMP
+            IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
+               LOGBUF(17) = TRABUF(TWCOLMSERL_TLTO)
+               LOGBUF(18) = TRABUF(TWCOLMSERM_TLTO)
+               LOGBUF(19) = TRABUF(TWCOLMMIDL_TLTO)
+               I1TEMP(1) = TRABUF(TWCOLMSERH_TLTO)
+               I1TEMP(2) = TRABUF(TWCOLMMIDH_TLTO)
+               I1TEMP(3) = TRABUF(TWCOLMCOMF_TLTO)
+               I1TEMP(4) = 0
+               LOGBUF(20) = I4TEMP
+
+C WE LOSE SPACE FOR BOARD DATA
+C TO USE FOR NEW TERMINALS 2021 
+               LOGOFF = 21
+               BRDOFF = 11               
+            ENDIF
 C----+------------------------------------------------------------------
 C V60| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------                
-C           TSPT-> LOGOFF=19  BRDOFF=13 -> 19....32
-C           TLTO-> LOGOFF=17  BRDOFF=15 -> 17....32          
+       
              CALL FASTMOV(TRABUF(TWBORD), LOGBUF(LOGOFF), BRDOFF)
 C
              IF(TRABUF(TSIZE).EQ.2) GOTO 9000
@@ -1369,8 +1380,7 @@ C
 C BEGIN CONTINUATION RECORD 2
 C
              LOGOFF = LOGOFF + BRDOFF + 1 
-             ! TSPT-> LOGOFF=19+13+1=33 -> 33+15=48
-             ! TLTO-> LOGOFF=17+15+1=33 -> 33+15=48
+
              CALL FASTMOV(TRABUF(TWBORD+BRDOFF), LOGBUF(LOGOFF), 15)
              GOTO 9000
 C
@@ -1379,7 +1389,7 @@ C
 C
 C ENCODE KICKER (ONLY) WAGER BODY
 C
-          IF(TRABUF(TGAMTYP).EQ.TKIK) THEN ! TKIK IS NOT USED BY SCML (IGNORE)
+          IF(TRABUF(TGAMTYP).EQ.TKIK) THEN 
              LOGBUF(8) = TRABUF(TWCSER)
 C
              I2TEMP(1) = TRABUF(TWAMT)
@@ -1425,7 +1435,7 @@ C
 C
 C NUMBERS WAGER BODY
 C
-          IF(TRABUF(TGAMTYP).EQ.TNBR) THEN ! TNBR IS NOT USED BY SCML (IGNORE)
+          IF(TRABUF(TGAMTYP).EQ.TNBR) THEN 
  
             LOGBUF(8)  = TRABUF(TWCSER)
  
@@ -1512,7 +1522,7 @@ C
 C
 C SCORE WAGER BODY
 C
-          IF(TRABUF(TGAMTYP).EQ.TSCR) THEN ! TSCR - SCORE GAME TYPE IS NOT USED BY SCML (IGNORE)
+          IF(TRABUF(TGAMTYP).EQ.TSCR) THEN 
 C
              LOGBUF(8) = TRABUF(TWCSER)
 C
@@ -1599,7 +1609,7 @@ C
 C
 C WINNERS TIP WAGER BODY
 C
-          IF(TRABUF(TGAMTYP).EQ.TWIT) THEN ! TWIT - WINNERS TIP GAME TYPE IS NOT USED BY SCML (IGNORE)
+          IF(TRABUF(TGAMTYP).EQ.TWIT) THEN 
 C
              LOGBUF(8) = TRABUF(TWCSER)
 C
@@ -1616,7 +1626,7 @@ C
              I1TEMP(4) = TRABUF(TWWROW+TWWBLEN)
              LOGBUF(11)= I4TEMP
 C
-             I4TEMP = TRABUF(TWBNKID)               !3 BYTES ONLY 
+             I4TEMP = TRABUF(TWBNKID)               
              I1TEMP(4) = TRABUF(TWWROW+TWWBLEN*2)
              LOGBUF(12)= I4TEMP
 C
@@ -1676,7 +1686,7 @@ C
 C
 C SUPER DOUBLE WAGER BODY
 C
-          IF(TRABUF(TGAMTYP).EQ.TDBL) THEN ! TDBL - SUPER DOUBLE GAME TYPE  IS NOT USED BY SCML (IGNORE)
+          IF(TRABUF(TGAMTYP).EQ.TDBL) THEN 
 C
              LOGBUF(8) = TRABUF(TWCSER)
 C
@@ -1774,7 +1784,7 @@ C
 C
 C TODAYS COUPLE WAGER BODY
 C
-          IF(TRABUF(TGAMTYP).EQ.TCPL) THEN ! TCPL - TODAYS COUPLE GAME TYPE IS NOT USED BY SCML (IGNORE)
+          IF(TRABUF(TGAMTYP).EQ.TCPL) THEN 
 C
              LOGBUF(8) = TRABUF(TWCSER)
 C
@@ -1871,7 +1881,7 @@ C
 C
 C TOTO SELECT WAGER BODY
 C
-          IF(TRABUF(TGAMTYP).EQ.TTSL) THEN  ! TTSL - TOTO SELECT GAME TYPE IS NOT USED BY SCML (IGNORE)
+          IF(TRABUF(TGAMTYP).EQ.TTSL) THEN  
 C
              LOGBUF(8) = TRABUF(TWCSER)
 C
@@ -1960,7 +1970,7 @@ C
 C
 C BINGO
 C
-          IF(TRABUF(TGAMTYP).EQ.TBNG) THEN ! TBNG - BINGO GAME TYPE IS NOT USED BY SCML (IGNORE)
+          IF(TRABUF(TGAMTYP).EQ.TBNG) THEN 
 C
              LOGBUF(8)  = TRABUF(TWCSER)
 C
@@ -2026,7 +2036,7 @@ C
 C
 C TODAY'S TRIO WAGER BODY
 C
-          IF(TRABUF(TGAMTYP).EQ.TTRP) THEN ! TTRP - TODAYS TRIO GAME TYPE IS NOT USED BY SCML (IGNORE)
+          IF(TRABUF(TGAMTYP).EQ.TTRP) THEN 
 C
              LOGBUF(8) = TRABUF(TWCSER)
 C
@@ -2111,7 +2121,7 @@ C
 C
 C SUPERSCORE WAGER BODY
 C
-          IF(TRABUF(TGAMTYP).EQ.TSSC) THEN ! TSSC - TODAYS TRIO GAME TYPE IS NOT USED BY SCML (IGNORE) 
+          IF(TRABUF(TGAMTYP).EQ.TSSC) THEN 
 C
              LOGBUF(8) = TRABUF(TWCSER)
 C
@@ -2203,7 +2213,7 @@ C
 C
 C SUPER TRIPLE WAGER BODY
 C
-          IF(TRABUF(TGAMTYP).EQ.TSTR) THEN ! TSTR - SUPER TRIPLE GAME TYPE IS NOT USED BY SCML (IGNORE) 
+          IF(TRABUF(TGAMTYP).EQ.TSTR) THEN 
 C
              LOGBUF(8) = TRABUF(TWCSER)
 C
@@ -2278,7 +2288,7 @@ C
 C
 C ENCODE VALIDATION BODY
 C
-        IF( (TRABUF(TTYP).EQ.TVAL.OR.TRABUF(TTYP).EQ.TREF) .AND. !TPAS <=> PASSIVE GAME (Lotaria Classica e Popular) USED BY SCML -> está no Olimpo (já não passa no Millennium)
+        IF( (TRABUF(TTYP).EQ.TVAL.OR.TRABUF(TTYP).EQ.TREF) .AND. 
      *       TRABUF(TGAMTYP).NE.TPAS.OR.
      *       TRABUF(TTYP).EQ.TVAL.AND.
      *       TRABUF(TGAMTYP).EQ.TPAS.AND.TRABUF(TVEPVAL).NE.0 )  THEN
@@ -2403,8 +2413,8 @@ C
      *     TRABUF(TVEPVAL).EQ.0) THEN
 	  
 	  I4TEMP      =  IOR(TRABUF(TPRETYP),ISHFT(TRABUF(TPTCK),4))
-	  I4TEMP      =  ISHFT(I4TEMP,24) + !moves first byte to 4º byte position
-     *                   IAND (TRABUF(TPNUM1), '00FFFFFF'X)! filters the first 3 bytes
+	  I4TEMP      =  ISHFT(I4TEMP,24) + 
+     *                   IAND (TRABUF(TPNUM1), '00FFFFFF'X)
 	  LOGBUF(8)   =  I4TEMP
 
 	  LOGBUF(9)   =  TRABUF(TPKEY1)
@@ -2428,7 +2438,7 @@ C
 	  LOGBUF(15)  =  I4TEMP
 
 	  I4TEMP      = TRABUF(TPOFFTER)
-	  I1TEMP(3)   = IAND(TRABUF(TPSTS1),'0F'X) + ISHFT(TRABUF(TPSTS2),4) !0000 1111 + 1111 0000
+	  I1TEMP(3)   = IAND(TRABUF(TPSTS1),'0F'X) + ISHFT(TRABUF(TPSTS2),4) 
 	  LOGBUF(16)  = I4TEMP
 C
 C PASSIVE CONTINUATION RECORD 1
@@ -2534,7 +2544,7 @@ C
 C
 C ENCODE INSTANTS
 C
-        IF(TRABUF(TTYP).EQ.TCRS) THEN ! TCRS <=> CROSS SYSTEM <=> IPS (Lotaria instantania)
+        IF(TRABUF(TTYP).EQ.TCRS) THEN 
           LOGBUF(7)  = TRABUF(TIXRF)
 C
           I4TEMP     = 0
@@ -2542,11 +2552,11 @@ C
           I1TEMP(2)  = TRABUF(TIERR)
           LOGBUF(16) = I4TEMP
 C
-          IF(TRABUF(TITYP).EQ.IVAL) THEN !INSTANT VALIDATION  -- Validação/Pagamento Prémio LI
+          IF(TRABUF(TITYP).EQ.IVAL) THEN 
 C
             I4TEMP     = LOGBUF(16)
-            I1TEMP(3)  = ISHFT(TRABUF(TIIND),4)+ !1111 0000
-     *                   IAND(TRABUF(TIBCH),'0F'X)!0000 1111
+            I1TEMP(3)  = ISHFT(TRABUF(TIIND),4)+ 
+     *                   IAND(TRABUF(TIBCH),'0F'X)
             LOGBUF(16) = I4TEMP
 C
 !-------->>V57 -------------------------------------------------------------------
@@ -2563,9 +2573,9 @@ C New Terminal Project TIVENV only uses 2 digits = 1 byte (99<256)
 C            LOGBUF(9) = TRABUF(TIVENV)
             IF(TRABUF(TVOLMCOMF_IL) .EQ. 1) THEN
               I4TEMP = TRABUF(TVOLMSERL_IL)
-              I1TEMP(4) = I1TEMP(3) !3 byte do serial do Olimpo
-              I1TEMP(3) = I1TEMP(2) !2 byte do serial do Olimpo            
-              I1TEMP(2) = I1TEMP(1) !1 byte do serial do Olimpo
+              I1TEMP(4) = I1TEMP(3) 
+              I1TEMP(3) = I1TEMP(2)             
+              I1TEMP(2) = I1TEMP(1) 
               I1TEMP(1) = TRABUF(TIVENV)
 
               I1TEMP(1)  = IOR( ISHFT( TRABUF(TVOLMCOMF_IL), 7),
@@ -2656,11 +2666,11 @@ C V60| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------                     
 C                
               BUFIDX = 11
-              DO 2000 X = 0, TRABUF(TIBCH)-1 !NUMBER IN BATCH (TIBCH max is 7) 5*7=35
-                I4TEMP     = IAND(TRABUF(TIPCK1+X),'00FFFFFF'X) !11 17 22
+              DO 2000 X = 0, TRABUF(TIBCH)-1 
+                I4TEMP     = IAND(TRABUF(TIPCK1+X),'00FFFFFF'X) 
                 I1TEMP(4)  = TRABUF(TISTS1+X)
                 LOGBUF(BUFIDX)  = I4TEMP
-                BUFIDX = BUFIDX + 1 !12 18 23
+                BUFIDX = BUFIDX + 1 
 C----+------------------------------------------------------------------
 C V60| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------  
@@ -2677,23 +2687,23 @@ C----+------------------------------------------------------------------
 C V60| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------   
 C V60                LOGBUF(BUFIDX) = TRABUF(TIVRN1+X)               
-                BUFIDX         = BUFIDX + 1 !13 19 24
+                BUFIDX         = BUFIDX + 1 
 C
                 I2TEMP(1)  = TRABUF(TILTX1+X)
-                I2TEMP(2)  = IOR( ISHFT( TRABUF(TIPCKSTS1+X), 12),! 1111 0000 0000 0000 -> 8*2-12=16-12= 4 bits 
-     *                            IAND(  TRABUF(TIGAM1+X),'0FFF'X) ) !0000 1111 1111 1111 -> 12 bits
+                I2TEMP(2)  = IOR( ISHFT( TRABUF(TIPCKSTS1+X), 12), 
+     *                            IAND(  TRABUF(TIGAM1+X),'0FFF'X) ) 
                 LOGBUF(BUFIDX) = I4TEMP
-                BUFIDX = BUFIDX + 1 ! 14 20 25
+                BUFIDX = BUFIDX + 1 
 C
                 I2TEMP(1)      = TRABUF(TITIM1+X)/2
                 I2TEMP(2)      = TRABUF(TICDC1+X)
                 LOGBUF(BUFIDX) = I4TEMP
-                BUFIDX         = BUFIDX + 1 ! 15 21 26
+                BUFIDX         = BUFIDX + 1 
 C
                 LOGBUF(BUFIDX) = TRABUF(TIPRZ1+X)
-                BUFIDX = BUFIDX + 1 ! 16 22 27
+                BUFIDX = BUFIDX + 1 
 
-                IF (MOD(BUFIDX,16).EQ.0) BUFIDX = BUFIDX + 1 !sendo 16 passa logo para o 17 (16 livre)
+                IF (MOD(BUFIDX,16).EQ.0) BUFIDX = BUFIDX + 1 
 2000          CONTINUE
 C
 C IF TRABUF(TIVTYP) IT'S IVTP_NCP TRABUF(TIBCH) SHOULD BE ALWAYS ONE
@@ -2899,7 +2909,7 @@ C
      *            TRABUF(TITYP).EQ.IINV.OR.
      *            TRABUF(TITYP).EQ.ISET) THEN
 C
-	    I2TEMP(1)  = IOR( ISHFT(TRABUF(TRGAM),4), TRABUF(TRCLS) ) !1111 1111 1111 0000 + 1111
+	    I2TEMP(1)  = IOR( ISHFT(TRABUF(TRGAM),4), TRABUF(TRCLS) ) 
             I2TEMP(2)  = TRABUF(TRNXT1)
             LOGBUF(8)  = I4TEMP
 C
@@ -2989,14 +2999,14 @@ C
             LOGBUF(9)  = TRABUF(TSINF)
 C
             IND=1
-            DO X = 0, TRABUF(TIBCH)-1	  !t(TIBCH) can be up to TSMAX=40
+            DO X = 0, TRABUF(TIBCH)-1	  
 C
-                GNUM = IAND(TRABUF(TSGAM+X),'0FFF'X) !(TSGAM=31)            !GAME (REQUESTED)
-                GNUM = GNUM*1000 + TRABUF(TSQTY+X)  !join gnum and quantity
+                GNUM = IAND(TRABUF(TSGAM+X),'0FFF'X) 
+                GNUM = GNUM*1000 + TRABUF(TSQTY+X)  
                 GTYP = ISHFT(TRABUF(TSGAM+X),-12)
 C
                 I4TEMP = 0
-                I4TEMP = ISHFT(GTYP,20) + IAND(GNUM,'000FFFFF'X) !3 bytes/game
+                I4TEMP = ISHFT(GTYP,20) + IAND(GNUM,'000FFFFF'X) 
 C
                 IF(TSBIT(TRABUF(TSSTK1),X)) I4TEMP = IOR(I4TEMP,'00800000'X)
 C
@@ -3004,15 +3014,14 @@ C
                 IND=IND+3
             END DO
 C
-            CALL MOVBYT(BUFF(1),1,LOGBUF(10),1,24) !gams 1 to 8 (3 bytes each) - 24/4=6 10+6=16 positions 
+            CALL MOVBYT(BUFF(1),1,LOGBUF(10),1,24)  
 C
             IF(TRABUF(TIBCH).GE.9)
-     *        CALL MOVBYT(BUFF(25),1,LOGBUF(17),1,60) !gams 9 to 28 - 60/4=15 positions 17+15=32
+     *        CALL MOVBYT(BUFF(25),1,LOGBUF(17),1,60) 
             IF(TRABUF(TIBCH).GE.29)
-     *        CALL MOVBYT(BUFF(85),1,LOGBUF(33),1,36) !gams 29 to 40 - 36/4=9 positions 33+9=42
+     *        CALL MOVBYT(BUFF(85),1,LOGBUF(33),1,36) 
 
-     !next position available LOGBUF(43)  20 TRABUF(TIBCH) -> 15 logbuf
-C     4 - 3 
+C     
 C----+------------------------------------------------------------------
 C V60| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------              
@@ -3185,7 +3194,7 @@ C
 C
 C ENCODE SPECIAL SERVICE BODY
 C
-        IF(TRABUF(TTYP).EQ.TSPE) THEN ! TSPE <=> SPECIAL FUNCTION (reports/relatorios among others)
+        IF(TRABUF(TTYP).EQ.TSPE) THEN 
            IF(TRABUF(TSFUN).EQ.TSX2X) THEN
 C
               LOGBUF(8)=TRABUF(TXIDX)
@@ -3332,7 +3341,7 @@ C----+------------------------------------------------------------------
 C
 C ENCODE COMMAND BODY
 C
-        IF(TRABUF(TTYP).EQ.TCMD) THEN ! TCMD <=> COMMAND Not Used By SCML (IGNORE)
+        IF(TRABUF(TTYP).EQ.TCMD) THEN 
           LOGBUF( 8) = TRABUF(TCMOLD)
           LOGBUF( 9) = TRABUF(TCMNEW)
           LOGBUF(10) = TRABUF(TCMDT1)
