@@ -153,73 +153,47 @@ C
         CALL FASTSET( 0, TRABUF, TRALEN )
 C
 C DECODE TRANSACTION HEADER INFORMATION
-C       !filters the two most signification bits
-        TRABUF(TSER)     = IAND(LOGBUF(1),'3FFFFFFF'X)!(TSER=4) - SERIAL NUMBER (AGENT NUMBER | CROSS REFERENCE NUMBER)
+        TRABUF(TSER)     = IAND(LOGBUF(1),'3FFFFFFF'X)
 C
         I4TEMP           = LOGBUF(2)
-        TRABUF(TCDC)     = ZEXT( I2TEMP(1) ) !(TCDC=3) - CDC date YY MM DD
-        TRABUF(TTER)     = I2TEMP(2) !(TTER=6) - TERMINAL Number
+        TRABUF(TCDC)     = ZEXT( I2TEMP(1) ) 
+        TRABUF(TTER)     = I2TEMP(2) 
 
-C       !se é um and e sendo o segundo valor é só bits a 1 mantêm sempre o valor porque fazer o AND ou está limpar bits mais significativos???
-        !espera o LOGBUF(3) é só um byte????
-        !(TAGT=7) - AGENT NUMBER
-        TRABUF(TAGT)     = IAND(LOGBUF(3),'00FFFFFF'X) ! 00FFFFFF --> 0000 0000 1111 1111 1111 1111 1111 1111 (3bytes)
-        !so filters the one most significates byte
+        TRABUF(TAGT)     = IAND(LOGBUF(3),'00FFFFFF'X) 
+        TRABUF(TNFRAC)   = IAND(ISHFT(LOGBUF(3),-24),'000000FF'X)      
+        TRABUF(TTIM)     = IAND(LOGBUF(4),'00FFFFFF'X) 
 
-        !(TNFRAC=23) !REAL # OF FRACTIONS
-        TRABUF(TNFRAC)   = IAND(ISHFT(LOGBUF(3),-24),'000000FF'X) !right shift 24 bits <-> 3bytes
-C       filtra os 3 bytes menos signaficativos     
+        TRABUF(TTSTCS)   = IAND(ISHFT(LOGBUF(4),-24),'000000FF'X) 
 
-        !(TTIM=5) - TIME STAMP (IN SECONDS)
-        TRABUF(TTIM)     = IAND(LOGBUF(4),'00FFFFFF'X) !filtra o byte mais significativos
-
-        !(TTSTCS=13) - TERMINAL STATISTICS
-        TRABUF(TTSTCS)   = IAND(ISHFT(LOGBUF(4),-24),'000000FF'X) !right shift 24 bits
-C       filtra os 3 bytes menos signaficativos
-
-
-        I4TEMP           = LOGBUF(5)! 4 bytes -> INTEGER*4 I4TEMP
-        !(TCHK=17) MESSAGE CHECKSUM
-        TRABUF(TCHK)     = ZEXT(I2TEMP(1)) !2 bytes -> INTEGER*2 I2TEMP(2), gets 4 bytes with ZEXT??? filed with 0's
-        !(TERR=2) ERROR CODE
-        TRABUF(TERR)     = ZEXT(I1TEMP(3)) !1 byte
-        X                = ZEXT(I1TEMP(4)) !1 byte
-        !(TGAM=10) GAME NUMBER
-        TRABUF(TGAM)     = IAND (X,'7F'X ) !filtra só 7 bits menos significativo 
+        I4TEMP           = LOGBUF(5)
+        TRABUF(TCHK)     = ZEXT(I2TEMP(1)) 
+        TRABUF(TERR)     = ZEXT(I1TEMP(3)) 
+        X                = ZEXT(I1TEMP(4)) 
+        TRABUF(TGAM)     = IAND (X,'7F'X ) 
 C
         I4TEMP           = LOGBUF(6)
-        !(TSTAT=1) STATUS
-        TRABUF(TSTAT)    = ZEXT(I1TEMP(1)) !1 byte
-        X                = ZEXT(I1TEMP(2)) !1 byte
-        !(TTYP=9)              !TRANSACTION TYPE
-        TRABUF(TTYP)     = ISHFT( X, -4 ) !4 bits mais significativos
-        !(TTRN=8)              !TRANSACTION SEQUENCE NUMBER
-        TRABUF(TTRN)     = IAND (X,'0F'X ) !4 bits menos significativos
-        X                = ZEXT (I1TEMP(3)) !1 byte
-        !(TSIZE=19)            !TRANSACTION SIZE (LOG RECS)
-        TRABUF(TSIZE)    = ISHFT( X, -4 ) !4 bits mais significativos
-        !sendo um byte (8 bits) com segundo parametro 8 decimal? é 1000
-        !(TINTRA=14)           !INTERNAL TRANSACTION FLAG
-        IF( IAND( X, 8) .NE. 0 ) TRABUF(TINTRA) = 1 !4º bit (flag bit 0 or 1)
-        !(TFIL=15)             !FILE STATUS
-        TRABUF(TFIL)     = IAND ( X, '07'X )! 0111 os 3 bits menos significativos
-        X                = ZEXT(I1TEMP(4)) !1 byte
-        !(TGAMTYP=11)  !GAME TYPE
-        TRABUF(TGAMTYP)  = ISHFT( X, -3 ) !5 bits mais significativos
-        !(TGAMIND=12)  !GAME INDEX
-        TRABUF(TGAMIND)  = IAND ( X,'07'X ) ! 0111 os 3 bits menos significativos
-C
+        TRABUF(TSTAT)    = ZEXT(I1TEMP(1)) 
+        X                = ZEXT(I1TEMP(2)) 
+
+        TRABUF(TTYP)     = ISHFT( X, -4 ) 
+        TRABUF(TTRN)     = IAND (X,'0F'X ) 
+        X                = ZEXT (I1TEMP(3)) 
+
+        TRABUF(TSIZE)    = ISHFT( X, -4 ) 
+        IF( IAND( X, 8) .NE. 0 ) TRABUF(TINTRA) = 1 
+
+        TRABUF(TFIL)     = IAND ( X, '07'X )
+        X                = ZEXT(I1TEMP(4)) 
+
+        TRABUF(TGAMTYP)  = ISHFT( X, -3 ) 
+        TRABUF(TGAMIND)  = IAND ( X,'07'X ) 
+
         I4TEMP = LOGBUF(7)
         X                = ZEXT( I1TEMP(1) )
-        !(TTKID=16)  !TICKET ID
-        TRABUF(TTKID)    = IAND( X, '7F'X)! 0111 1111 os 7 bits menos significativos
-        !(TFAMTFLG=22)         !BET AMOUT FLAG (FOR FRACTIONS)
-        TRABUF(TFAMTFLG) = ISHFT(X, -7) !bit mais significativo (flag 1 or 0)
-        !(TFRAC=18)            !# OF FRACTIONS
-        TRABUF(TFRAC)    = ZEXT( I1TEMP(2) )! 1 byte
-        !(TSUBERR=20)          !ERROR SUB CODE
-        TRABUF(TSUBERR)  = ZEXT( I1TEMP(3) )! 1 byte
-        !(TCDC_SOLD=21)        !CDC TRANS. WAS SOLD (NEVER CHANGES)
+        TRABUF(TTKID)    = IAND( X, '7F'X)
+        TRABUF(TFAMTFLG) = ISHFT(X, -7) 
+        TRABUF(TFRAC)    = ZEXT( I1TEMP(2) )
+        TRABUF(TSUBERR)  = ZEXT( I1TEMP(3) )
         TRABUF(TCDC_SOLD)= TRABUF(TCDC) - ZEXT( I1TEMP(4) )
 C
 C PROJECT EURO MIL
@@ -468,8 +442,7 @@ C              	 TRABUF(TEUEVWCKD) = I1TEMP(3)
 C----+------------------------------------------------------------------
 C V57| Added support to PLACARD Project - IGS
 C----+------------------------------------------------------------------
-!              (TIGS=12)          !IGS
-        IF (TRABUF(TTYP) .EQ. TIGS) THEN !(TTYP=9)              !TRANSACTION TYPE
+        IF (TRABUF(TTYP) .EQ. TIGS) THEN 
 C----+------------------------------------------------------------------
 C    |
 C    |
@@ -480,22 +453,18 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V57| Handling IGS transaction header: IGS TRANSACTION TYPE 
 C----+------------------------------------------------------------------
-!(TIGS_TTYP=25)   !IGS Transaction Type (0 wager, 1 cancel, 2 val, 3 pay, 4 report)
             TRABUF (TIGS_TTYP) = LOGBUF(8)  ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling IGS transaction header: MESSAGE QUEUE SEQUENCE NUMBER FOR THIS TRANSACTION
 C----+------------------------------------------------------------------
-!(TIGS_XREF=26)   !MessageQ Seq Num for this transaction
             TRABUF (TIGS_XREF) = LOGBUF(9)  ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling IGS transaction header: IGS ERROR CODE DESCRIPTION, SYSTEM CODE WHERE ERROR OCCURRED
 C----+------------------------------------------------------------------
-!(TIGS_XERR=28)   !IGS Error Code Description (3 x INTEGER*4)
             TRABUF (TIGS_XERR + 0) = LOGBUF(10) ! (9 bytes) 28
             TRABUF (TIGS_XERR + 1) = LOGBUF(11) ! 29
             I4TEMP = LOGBUF(12) 
-            TRABUF (TIGS_XERR + 2) = ZEXT(I1TEMP(1)) ! (1 byte) 30
-!PARAMETER (TIGS_SERR=27)   !System code where error occurred             
+            TRABUF (TIGS_XERR + 2) = ZEXT(I1TEMP(1)) ! (1 byte) 30            
             TRABUF (TIGS_SERR)     = ZEXT(I1TEMP(2)) ! (1 byte)
 C----+------------------------------------------------------------------
 C    |
@@ -504,24 +473,18 @@ C V57| Handling wager transactions
 C    |
 C    |
 C----+------------------------------------------------------------------
-!TIGS_TTYP=25)   !IGS Transaction Type (0 wager, 1 cancel, 2 val, 3 pay, 4 report) (25)
-!(IGSWAG=0)     ! IGS WAGER
             IF (TRABUF(TIGS_TTYP) .EQ. IGSWAG) THEN
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: TERMINAL MESSAGE ID (LOW 4 BYTES)
 C----+------------------------------------------------------------------
-!(TIGSW_MIDL=TIGS_XERR+XERR_I4LEN)!TERMINAL MESSAGE ID (LOW 4 BYTES)
-!28+3=31
                 TRABUF (TIGSW_MIDL) = LOGBUF(13) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: TERMINAL MESSAGE ID (HIGH 4 BYTES)
 C----+------------------------------------------------------------------
-!(TIGSW_MIDH=TIGSW_MIDL+1)=31+1=32        !TERMINAL MESSAGE ID (HIGH 4 BYTES)
                 TRABUF (TIGSW_MIDH) = LOGBUF(14) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: ABP GAME ID
 C----+------------------------------------------------------------------
-!(TIGSW_XGID=TIGSW_MIDH+1)=32+1=33        !ABP GAME ID 
                 TRABUF (TIGSW_XGID) = LOGBUF(15) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: SUBTYPE ID
@@ -529,90 +492,70 @@ C    | - Be careful when placing information here, because bytes #4 of -
 C    | - words #16,#32,#48 are used for record extension               -
 C----+------------------------------------------------------------------
                 I4TEMP = LOGBUF(16) 
-                !(TIGSW_STID=TIGSW_XGID+1)=33+1=34        !SUBTYPE ID
                 TRABUF (TIGSW_STID) = I2TEMP(1)  ! (2 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: UNIT STAKE OF THE BET
-C----+------------------------------------------------------------------
-!(TIGSW_USTK=TIGSW_STID+1)=34+1=35         !UNIT STAKE OF THE BET   
+C----+------------------------------------------------------------------  
                 TRABUF (TIGSW_USTK) = LOGBUF(17) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: TOTAL BETS/NUMBER OF SELECTIONS (MAX = 8)
 C----+------------------------------------------------------------------
-!(TIGSW_TBET=TIGSW_USTK+1)=35+1=36        !TOTAL BETS/NUMBER OF SELECTIONS
                 TRABUF (TIGSW_TBET) = LOGBUF(18) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET REFERENCE DATE (YYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(19) 
-!(TIGSW_WRDY=TIGSW_TBET+1)(37)        !BET REFERENCE DATE YEAR(YY, LAST TWO DIGITS ONLY)                
-                TRABUF (TIGSW_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)
-!(TIGSW_WRDM=TIGSW_WRDY+1)(38)        !BET REFERENCE DATE MONTH(MM)                                     
-                TRABUF (TIGSW_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)
-!(TIGSW_WRDD=TIGSW_WRDM+1)(39)        !BET REFERENCE DATE DAY(DD)                                       
+                I4TEMP = LOGBUF(19)                
+                TRABUF (TIGSW_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)                                    
+                TRABUF (TIGSW_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)                                      
                 TRABUF (TIGSW_WRDD) = ZEXT(I1TEMP(3)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET REFERENCE GAME
-C----+------------------------------------------------------------------
-!(TIGSW_WRGM=TIGSW_WRDD+1)(40)        !BET REFERENCE GAME                               
+C----+------------------------------------------------------------------                              
                 TRABUF (TIGSW_WRGM) = LOGBUF(20) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET REFERENCE SERIAL NUMBER (LOW FOUR BYTES)
-C----+------------------------------------------------------------------
-!(TIGSW_WRSL=TIGSW_WRGM+1)(41)        !BET REFERENCE SERIAL NUMBER (LOW FOUR BYTES)     
+C----+------------------------------------------------------------------     
                 TRABUF (TIGSW_WRSL) = LOGBUF(21) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE)
-C----+------------------------------------------------------------------
-!(TIGSW_WRSH=TIGSW_WRSL+1)(42)      !BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE)      
+C----+------------------------------------------------------------------      
                 TRABUF (TIGSW_WRSH) = LOGBUF(22) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET REFERENCE CHECK DIGITS
-C----+------------------------------------------------------------------
-!(TIGSW_WRCD=TIGSW_WRSH+1)(43)      !BET REFERENCE CHECK DIGITS                       
+C----+------------------------------------------------------------------                       
                 TRABUF (TIGSW_WRCD) = LOGBUF(23) ! (2 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET CREATION DATE (YYYYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(24) 
-!(TIGSW_WCDY=TIGSW_WRCD+1)(44)        !BET CREATION DATE YEAR(YYYY)                                     
-                TRABUF (TIGSW_WCDY) = ZEXT(I2TEMP(1)) ! (2 bytes)
-!PARAMETER (TIGSW_WCDM=TIGSW_WCDY+1)(45)  !BET CREATION DATE MONTH(MM)                                      
-                TRABUF (TIGSW_WCDM) = ZEXT(I1TEMP(3)) ! (1 byte)
-!(TIGSW_WCDD=TIGSW_WCDM+1)(46)        !BET CREATION DATE DAY(DD)                
+                I4TEMP = LOGBUF(24)                                   
+                TRABUF (TIGSW_WCDY) = ZEXT(I2TEMP(1)) ! (2 bytes)                                      
+                TRABUF (TIGSW_WCDM) = ZEXT(I1TEMP(3)) ! (1 byte)               
                 TRABUF (TIGSW_WCDD) = ZEXT(I1TEMP(4)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET CREATION TIME (HHMISS)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(25) 
-!(TIGSW_WCTH=TIGSW_WCDD+1)(47)        !BET CREATION TIME HOUR(HH)                                       
-                TRABUF (TIGSW_WCTH) = ZEXT(I1TEMP(1)) ! (1 byte)
-!(TIGSW_WCTM=TIGSW_WCTH+1)(48)        !BET CREATION TIME MINUTE(MI)                     
-                TRABUF (TIGSW_WCTM) = ZEXT(I1TEMP(2)) ! (1 byte)
-!(TIGSW_WCTS=TIGSW_WCTM+1)(49)        !BET CREATION TIME SECOND(SS)                                     
+                I4TEMP = LOGBUF(25)                                       
+                TRABUF (TIGSW_WCTH) = ZEXT(I1TEMP(1)) ! (1 byte)                     
+                TRABUF (TIGSW_WCTM) = ZEXT(I1TEMP(2)) ! (1 byte)                                     
                 TRABUF (TIGSW_WCTS) = ZEXT(I1TEMP(3)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET LAST EVENT DATE (YYYYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(26) 
-!(TIGSW_LEDY=TIGSW_WCTS+1)        !BET LAST EVENT DATE YEAR(YYYY)                
+                I4TEMP = LOGBUF(26)                 
                 TRABUF (TIGSW_LEDY) = ZEXT(I2TEMP(1)) ! (2 bytes)
                 TRABUF (TIGSW_LEDM) = ZEXT(I1TEMP(3)) ! (1 byte)
                 TRABUF (TIGSW_LEDD) = ZEXT(I1TEMP(4)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET TOTAL STAKE
 C----+------------------------------------------------------------------
-!(TIGSW_TSTK=TIGSW_LEDD+1)(53)        !BET TOTAL STAKE
                 TRABUF (TIGSW_TSTK) = LOGBUF(27) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET MAXIMUM POSSIBLE RETURNS
-C----+------------------------------------------------------------------
-!(TIGSW_MAXR=TIGSW_TSTK+1)(54)        !BET MAXIMUM POSSIBLE RETURNS                     
+C----+------------------------------------------------------------------                    
                 TRABUF (TIGSW_MAXR) = LOGBUF(28) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: PLAYER NIF NUMBER
-C----+------------------------------------------------------------------
-!(TIGSW_PNIF=TIGSW_MAXR+1)(55)        !PORTUGUESE PLAYER NIF NUMBER                            
+C----+------------------------------------------------------------------                           
                 TRABUF (TIGSW_PNIF) = LOGBUF(29) ! (4 bytes)
                 GOTO 9000
             ENDIF
@@ -623,44 +566,35 @@ C V57| Handling cancellation transactions
 C    |
 C    |
 C----+------------------------------------------------------------------
-!(IGSCAN=1)     ! IGS CANCELLATION
             IF (TRABUF(TIGS_TTYP) .EQ. IGSCAN) THEN
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: TERMINAL MESSAGE ID (LOW 4 BYTES)
-C----+------------------------------------------------------------------
-!(TIGSC_MIDL=TIGS_XERR+XERR_I4LEN)(31)    !TERMINAL MESSAGE ID (LOW 4 BYTES) -> Terminal Number               
+C----+------------------------------------------------------------------               
                 TRABUF (TIGSC_MIDL) = LOGBUF(13) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: TERMINAL MESSAGE ID (HIGH 4 BYTES) -> Terminal Number               
-C----+------------------------------------------------------------------
-!(TIGSC_MIDH=TIGSC_MIDL+1)(32)      !TERMINAL MESSAGE ID (HIGH 4 BYTES)               
+C----+------------------------------------------------------------------              
                 TRABUF (TIGSC_MIDH) = LOGBUF(14) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: BET REFERENCE DATE (YYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP     = LOGBUF(15)
-!(TIGSC_WRDY=TIGSC_MIDH+1)(33)        !BET REFERENCE DATE YEAR(YY, LAST TWO DIGITS ONLY)                
-                TRABUF (TIGSC_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)
-!(TIGSC_WRDM=TIGSC_WRDY+1)(34)        !BET REFERENCE DATE MONTH(MM)                             
-                TRABUF (TIGSC_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)
-!(TIGSC_WRDD=TIGSC_WRDM+1)(35)        !BET REFERENCE DATE DAY(DD)                                       
+                I4TEMP     = LOGBUF(15)                
+                TRABUF (TIGSC_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)                             
+                TRABUF (TIGSC_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)                                      
                 TRABUF (TIGSC_WRDD) = ZEXT(I1TEMP(3)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: BET REFERENCE GAME
 C    | - Be careful when placing information here, because bytes #4 of -
 C    | - words #16,#32,#48 are used for record extension               -
 C----+------------------------------------------------------------------
-!               (TIGSC_WRGM=TIGSC_WRDD+1)(36)        !BET REFERENCE GAME
                 I4TEMP     = LOGBUF(16)
                 TRABUF (TIGSC_WRGM) = ZEXT(I1TEMP(1)) ! (1 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: BET REFERENCE SERIAL NUMBER (LOW FOUR BYTES)
-C----+------------------------------------------------------------------
-                !(TIGSC_WRSL=TIGSC_WRGM+1)(37)        !BET REFERENCE SERIAL NUMBER (LOW FOUR BYTES)     
+C----+------------------------------------------------------------------     
                 TRABUF (TIGSC_WRSL) = LOGBUF(17) ! (4 bytes)
 C----+------------------------------------------------------------------
-C V57| Handling cancellation transactions: BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE)
-!(TIGSC_WRSH=TIGSC_WRSL+1)(38)        !BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE)      
+C V57| Handling cancellation transactions: BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE)      
 C----+------------------------------------------------------------------
                 TRABUF (TIGSC_WRSH) = LOGBUF(18) ! (1 byte)
 C----+------------------------------------------------------------------
@@ -669,8 +603,7 @@ C----+------------------------------------------------------------------
                 TRABUF (TIGSC_WRCD) = LOGBUF(19) ! (2 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: CANCEL STATUS, CANCEL REFERENCE GAME
-C----+------------------------------------------------------------------
-!(TIGSC_WRCD=TIGSC_WRSH+1)(39)        !BET REFERENCE CHECK DIGITS                       
+C----+------------------------------------------------------------------                       
                 I4TEMP     = LOGBUF(20)
                 TRABUF (TIGSC_CRGM) = ZEXT(I1TEMP(2)) ! (1 byte)
 C----+------------------------------------------------------------------
@@ -1301,8 +1234,8 @@ C
 C
 C DECODE LOTTO/SPORTS/SPEDEN WAGER BODY
 C
-           IF(TRABUF(TGAMTYP).EQ.TLTO.OR.TRABUF(TGAMTYP).EQ.TSPT
-     *     .OR.TRABUF(TGAMTYP).EQ.TTGL) THEN
+           IF(TRABUF(TGAMTYP).EQ.TLTO.OR.TRABUF(TGAMTYP).EQ.TSPT 
+     *     .OR.TRABUF(TGAMTYP).EQ.TTGL) THEN 
 C
               TRABUF(TWCSER)   = LOGBUF(8)
 C 
@@ -1316,11 +1249,11 @@ C
               TRABUF(TWQPF)    = ZEXT( I2TEMP(1) )
               TRABUF(TWSIMP)   = ZEXT( I2TEMP(2) )
 C 
-              I4TEMP           = LOGBUF(12)
-              TRABUF(TWSYSN)   = ZEXT( I1TEMP(1) )
-              TRABUF(TWVSTS)   = ZEXT( I1TEMP(2) )
-              TRABUF(TWDUR)    = ZEXT( I1TEMP(3) )
-              TRABUF(TWSYST)   = ZEXT( I1TEMP(4) )
+C              I4TEMP           = LOGBUF(12)
+C              TRABUF(TWSYSN)   = ZEXT( I1TEMP(1) )
+C              TRABUF(TWVSTS)   = ZEXT( I1TEMP(2) ) 
+C              TRABUF(TWDUR)    = ZEXT( I1TEMP(3) )
+C              TRABUF(TWSYST)   = ZEXT( I1TEMP(4) )
 C 
               BDATA_VER = 0
               KIKFLG = .FALSE.
@@ -1387,6 +1320,37 @@ C
 C                                               !TO KICKER STORAGE.
               ENDIF
 C
+C   
+
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------   
+              I4TEMP           = LOGBUF(12)
+              TRABUF(TWSYSN)   = ZEXT( I1TEMP(1) )
+              TRABUF(TWVSTS)   = ZEXT( I1TEMP(2) ) 
+              IF(ISHFT(ZEXT(I1TEMP(3)),-4) .EQ. 1) THEN
+                TRABUF(TWDUR)    = ZEXT( IAND(I1TEMP(3),15) )
+
+                LOGBUF(17) = TRABUF(TWCOLMSERL_TLTO)
+                LOGBUF(18) = TRABUF(TWCOLMSERM_TLTO)
+                LOGBUF(19) = TRABUF(TWCOLMMIDL_TLTO)
+                I1TEMP(1) = TRABUF(TWCOLMSERH_TLTO)
+                I1TEMP(2) = TRABUF(TWCOLMMIDH_TLTO)
+                I1TEMP(3) = TRABUF(TWCOLMCOMF_TLTO)
+                I1TEMP(4) = 0
+                LOGBUF(20) = I4TEMP  
+
+C WE LOSE SPACE FOR BOARD DATA
+C TO USE FOR NEW TERMINALS 2021                  
+                LOGOFF = 21
+                BRDOFF = 11                 
+              ELSE
+                TRABUF(TWDUR)    = ZEXT( I1TEMP(3) )
+              ENDIF
+              TRABUF(TWSYST)   = ZEXT( I1TEMP(4) )              
+C----+------------------------------------------------------------------
+C V59| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------                   
               CALL FASTMOV(LOGBUF(LOGOFF), TRABUF(TWBORD), BRDOFF)
 C
 C           *** NOW SET CALCULATED FIELDS ***
@@ -2747,10 +2711,6 @@ C New Terminal Project TIVENV only uses 2 digits = 1 byte (99<256)
 C           TRABUF(TIVENV)    = LOGBUF(9)
             I4TEMP =  LOGBUF(9)
             IF(ISHFT(I1TEMP(1), 7) .EQ. 1) THEN
-C                I4TEMP =  LOGBUF(9)
-C                I1TEMP_AUX(3) = I1TEMP(4) 
-C                I1TEMP_AUX(2) = I1TEMP(3)            
-C                I1TEMP_AUX(1) = I1TEMP(2) 
                 TRABUF(TVOLMSERL_IL) =  ISHFT(I4TEMP, -8)
                 TRABUF(TVOLMCOMF_IL) =  ISHFT(ZEXT(I1TEMP(1)), 7) 
                 TRABUF(TIVENV) = IAND(I1TEMP(1),'7F'X)
@@ -2791,7 +2751,8 @@ C----+------------------------------------------------------------------
                    TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
                    I4TEMP = LOGBUF(18)
                    TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FF'X), 24), TRABUF(TVOLMSERM_IL) )
-                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(2) )        
+                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(2) )   
+                ENDIF     
               ENDIF
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
@@ -3086,15 +3047,15 @@ C
 C
             TRABUF(TSINF)     = LOGBUF(9)
 C
-            CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,24) !gams 1 to 8 (3 bytes each)
+            CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,24) 
 C
             IF(TRABUF(TIBCH).GE.9)
-     *        CALL MOVBYT(LOGBUF(17),1,BUFF(25),1,60) !gams 9 to 28
+     *        CALL MOVBYT(LOGBUF(17),1,BUFF(25),1,60) 
             IF(TRABUF(TIBCH).GE.29)
-     *        CALL MOVBYT(LOGBUF(33),1,BUFF(85),1,36) !gams 29 to 40
+     *        CALL MOVBYT(LOGBUF(33),1,BUFF(85),1,36) 
 C
             IND=1
-            DO X = 0, TRABUF(TIBCH)-1     !t(TIBCH) can be up to TSMAX=40
+            DO X = 0, TRABUF(TIBCH)-1     
 C
                 I4TEMP = 0
                 CALL MOVBYT(BUFF,IND,I4TEMP,1,3)

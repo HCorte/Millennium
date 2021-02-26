@@ -357,3 +357,6 @@ System date and IPS Control Run Date do not match!
 *** GTECH  Date is 07/02/2021
 ***
 Do You Want To Continue With Wakeup (Y/N) y
+
+---------------------------equivalent to kilsys--------------------------
+PODEV1::PORT_SQA$ forcex
