@@ -291,11 +291,11 @@ C V35| New Terminals Project - Olimpo
 C         1 means that comes from channel Olimpo other wise comes from x2x or mxs  
 C----+------------------------------------------------------------------                
           IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN
-            TRABUF(TSDT1)=PRO(SEROLM_OLM,BUF)
-            TRABUF(TSDT2)=PRO(SEROLM_OLM+1,BUF)
+            TRABUF(TSDT1)=PRO(SEROLM_INT_OLM,BUF)
+            TRABUF(TSDT2)=PRO(SEROLM_INT_OLM+1,BUF)
             TRABUF(TSDT3)=BPRO(SEROLM_OLM+8,BUF)
-            TRABUF(TSDT4)=PRO(MESSID_OLM,BUF)
-            TRABUF(TSDT5)=PRO(MESSID_OLM+1,BUF)
+            TRABUF(TSDT4)=PRO(MESSID_INT_OLM,BUF)
+            TRABUF(TSDT5)=BPRO(MESSID_OLM+1,BUF)
             TRABUF(TSDT6)=BPRO(CHOLM_OLM,BUF)
           ENDIF 
 C----+------------------------------------------------------------------
