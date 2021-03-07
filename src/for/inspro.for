@@ -130,16 +130,16 @@ C V30| New Terminals Project - Olimpo
 C BPRO(CHOLM_OLM) equal to 1 means that comes from the communication channel Olimpo
 C other wise comes from X2X or MXS
 C----+------------------------------------------------------------------
-        IF(BPRO(CHOLM_OLM) .EQ. 1) THEN
-            TRABUF(TVOLMSERL_IL)=PRO(SEROLM_OLM,BUF) !SEROLM=49
-            TRABUF(TVOLMSERM_IL)=PRO(SEROLM_OLM+1,BUF)
+        IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN
+            TRABUF(TVOLMSERL_IL)=PRO(SEROLM_INT_OLM,BUF) !SEROLM=49
+            TRABUF(TVOLMSERM_IL)=PRO(SEROLM_INT_OLM+1,BUF)
             TRABUF(TVOLMSERH_IL)=BPRO(SEROLM_OLM+8,BUF)
-            TRABUF(TVOLMCOMF_IL)=BPRO(CHOLM_OLM)
-            TRABUF(TGOLMSERL_IL)=PRO(SEROLM_OLM,BUF)
-            TRABUF(TGOLMSERM_IL)=PRO(SEROLM_OLM+1,BUF)
+            TRABUF(TVOLMCOMF_IL)=BPRO(CHOLM_OLM,BUF)
+            TRABUF(TGOLMSERL_IL)=PRO(SEROLM_INT_OLM,BUF)
+            TRABUF(TGOLMSERM_IL)=PRO(SEROLM_INT_OLM+1,BUF)
             TRABUF(TGOLMSERH_IL)=BPRO(SEROLM_OLM+8,BUF)
-            TRABUF(TGOLMMIDL_IL)=PRO(MESSID_OLM,BUF)
-            TRABUF(TGOLMMIDH_IL)=PRO(MESSID_OLM+1,BUF)
+            TRABUF(TGOLMMIDL_IL)=PRO(MESSID_INT_OLM,BUF)
+            TRABUF(TGOLMMIDH_IL)=BPRO(MESSID_OLM+1,BUF)
             TRABUF(TGOLMCOMF_IL)=BPRO(CHOLM_OLM,BUF)
         ENDIF
 C----+------------------------------------------------------------------
