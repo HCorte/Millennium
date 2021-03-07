@@ -62,11 +62,11 @@ C     PARAMETERS 1-6 RESERVED FOR NEW COM ????? (CONCURRENT ONLY)
 C
 	INTEGER*4  PRCSRC, X2X_COM, PRCDST, QUENUM
 	INTEGER*4  MXS_COM        !MXSRV
-    INTEGER*4  OLM_COM        !OLIMPO (tipo novo de comunicacoes "MessageQ")	
-	PARAMETER (PRCSRC=7)      !COMMUNICATIONS PROCESSOR ID
-	   PARAMETER (X2X_COM=13) ! X2X COMMUNICATION SUBSYSTEM (valores possiveis para o PRCSRC)
-	   PARAMETER (MXS_COM=14) ! MXSRV (valores possiveis para o PRCSRC)
-	   PARAMETER (OLM_COM=15) ! V17 - OLIMPO (valores possiveis para o PRCSRC)	   
+      INTEGER*4  OLM_COM        !OLIMPO (tipo novo de comunicacoes "MessageQ")	
+      PARAMETER (PRCSRC=7)      !COMMUNICATIONS PROCESSOR ID
+       PARAMETER (X2X_COM=13) ! X2X COMMUNICATION SUBSYSTEM (valores possiveis para o PRCSRC)
+       PARAMETER (MXS_COM=14) ! MXSRV (valores possiveis para o PRCSRC)
+       PARAMETER (OLM_COM=15) ! V17 - OLIMPO (valores possiveis para o PRCSRC)	   
 	PARAMETER (PRCDST=8)      !APPLICATIONS PROCESSOR ID
 	PARAMETER (QUENUM=9)      !COMMUNICATIONS QUEUE NUMBER
 C
@@ -254,12 +254,17 @@ C
 C----+------------------------------------------------------------------
 C V17| Adding support for OLM
 C----+------------------------------------------------------------------
-		INTEGER*4 MESSID_OLM         
-		PARAMETER (MESSID_OLM=105) !105 byte position Or 53 in halfword  
-		INTEGER*4 SEROLM_OLM
-		PARAMETER (SEROLM_OLM=49) !49 byte position Or 25 in halfword
+		INTEGER*4 MESSID_OLM, MESSID_INT_OLM         
+		PARAMETER (MESSID_OLM=105) !105 byte position Or 53 in halfword (5 bytes) 
+		PARAMETER (MESSID_INT_OLM=27) 
+		INTEGER*4 SEROLM_OLM, SEROLM_INT_OLM
+		PARAMETER (SEROLM_OLM=49) !49 byte position Or 25 in halfword (9 bytes)
+		PARAMETER (SEROLM_INT_OLM=13) 
 		INTEGER*4 CHOLM_OLM
-		PARAMETER (CHOLM_OLM=58) !58 byte position
+		PARAMETER (CHOLM_OLM=58) !58 byte position (1 byte)
+		INTEGER*4 TWTOT_OLM, TWTOT_HALFW_OLM
+		PARAMETER (TWTOT_OLM=59) !59 byte position Or 30 in halfword (4 bytes)
+		PARAMETER (TWTOT_HALFW_OLM=30)
 C----+------------------------------------------------------------------
 C V17| Adding support for OLM
 C----+------------------------------------------------------------------
