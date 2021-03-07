@@ -109,14 +109,17 @@ C
 C force some changes to enter pass first the allow those changes
 C
 506     CONTINUE
-        CALL PASSWORD(5,PASPAS)
-        IF (PASSENT .NE. DEFTPASS) THEN
-          MESS(3) = 5
-          CALL QUEMES(MESS)
-          GOTO 206
-        ENDIF
+C        CALL PASSWORD(5,PASPAS)
+C        IF (PASSENT .NE. DEFTPASS) THEN
+C          MESS(3) = 5
+C          CALL QUEMES(MESS)
+C          GOTO 206
+C        ENDIF
         IF(VALUE.LT.0.OR.VALUE.GT.1) GOTO 210
-C       will change the value of the connection to Olimpo        
+C       will change the value of the connection to Olimpo   
+        P(OLMCONF)=VALUE
+
+
         GOTO 300
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
@@ -175,7 +178,7 @@ C---- System
        WRITE(CLIN5,910),OLMLST(2)
        WRITE(CLIN6,913),OLMLST(3)
 C---- Supress
-       WRITE(CLIN6,912) K(2),P(OLMCONF)
+       WRITE(CLIN8,912) K(2),P(OLMCONF)
 
        WRITE(CLIN15,900)
        WRITE(CLIN16,900)       
@@ -185,11 +188,11 @@ C----- FORMAT STATEMENTS
 C
 900     FORMAT(80(' '))
 901     FORMAT('**** OLM control snapshot ****')
-903     FORMAT('QUEUES   >  <',I4.0,'>',3X)
+903     FORMAT('QUEUES   >  ',A7,'<',I4.0,'>',3X)
 910     FORMAT('BUFF 1   >  ',I4.0,3X)
 913     FORMAT('BUFF 2   >  ',I4.0,3X)
 C911     FORMAT('            ',1('*',A7,I6,3X))
-912     FORMAT('OLM      >   ',1('',A7,I6,3X))        
+912     FORMAT('OLM      >   ',1('*',A7,I6,3X))        
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C904     FORMAT(1X,'<',I4.0,'>')
