@@ -1,0 +1,2301 @@
+---
+swagger: "2.0"
+info:
+  description: "Hades Management API"
+  version: "999.9.9"
+  title: "Hades Management"
+  termsOfService: "N.A."
+  contact:
+    name: "Jogos Santa Casa"
+    url: "https://www.jogossantacasa.pt/"
+    email: "jogos@jogossantacasa.pt"
+host: "localhost:8080"
+basePath: "/hades-web"
+tags:
+- name: "Instant Management lookup Api"
+- name: "SignOn Management lookup Api"
+- name: "Wager Management lookup Api"
+- name: "{api.cache}"
+- name: "{api.management.financialReport}"
+- name: "{api.management.gameResults.report}"
+schemes:
+- "http"
+- "https"
+paths:
+  /auth/signOn:
+    post:
+      tags:
+      - "SignOn Management lookup Api"
+      summary: "SignOn"
+      description: ""
+      operationId: "signOn"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "SignOn Payload Request"
+        required: false
+        schema:
+          $ref: "#/definitions/SignOnRequestVO"
+      responses:
+        "200":
+          description: "Returns a SignOn object"
+          schema:
+            $ref: "#/definitions/SignOnResponseVO"
+  /game/results:
+    get:
+      tags:
+      - "{api.management.gameResults.report}"
+      summary: "Report Game Results"
+      description: ""
+      operationId: "reportGameResults"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "query"
+        description: "Token"
+        required: true
+        type: "string"
+      - name: "terminalCode"
+        in: "query"
+        description: "Terminal Code"
+        required: true
+        type: "string"
+      - name: "gameType"
+        in: "query"
+        description: "Game Type"
+        required: true
+        type: "integer"
+        format: "int32"
+      - name: "gameIndex"
+        in: "query"
+        description: "Game Index"
+        required: true
+        type: "integer"
+        format: "int32"
+      - name: "drawNumber"
+        in: "query"
+        description: "Draw Number"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GameResultsReportResponseVO"
+  /instant/gameParameters:
+    get:
+      tags:
+      - "Instant Management lookup Api"
+      summary: "Game Parameters"
+      description: ""
+      operationId: "gameParameters"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "query"
+        description: "Token"
+        required: true
+        type: "string"
+      - name: "terminalCode"
+        in: "query"
+        description: "Terminal Code"
+        required: true
+        type: "string"
+      - name: "keyboardEntry"
+        in: "query"
+        description: "Keyboard Entry / Wand or Slot Reader "
+        required: true
+        type: "boolean"
+      responses:
+        "200":
+          description: "Returns a Game Parameters object"
+          schema:
+            $ref: "#/definitions/InstantGameParametersResponseVO"
+  /instant/supplyOrder:
+    post:
+      tags:
+      - "Instant Management lookup Api"
+      summary: "Supply Order"
+      description: ""
+      operationId: "supplyOrder"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Instant Supply Order Payload"
+        required: false
+        schema:
+          $ref: "#/definitions/InstantSupplyOrderRequestVO"
+      responses:
+        "200":
+          description: "Returns a Supply Order object"
+          schema:
+            $ref: "#/definitions/InstantSupplyOrderResponseVO"
+  /management/cache:
+    get:
+      tags:
+      - "{api.cache}"
+      summary: "{api.cache.getAllCache}"
+      description: ""
+      operationId: "getAllCache"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "sortType"
+        in: "query"
+        description: "{api.param.sortType}"
+        required: false
+        type: "string"
+        enum:
+        - "ASC"
+        - "DESC"
+      - name: "sort"
+        in: "query"
+        description: "{api.param.sort}"
+        required: false
+        type: "string"
+        enum:
+        - "entityName"
+      - name: "entityName"
+        in: "query"
+        description: "{api.cache.getAllCache.param.entityName}"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "{api.cache.getAllCache.response.200}"
+          schema:
+            $ref: "#/definitions/CacheListResponseVO"
+  /management/cache/reload:
+    post:
+      tags:
+      - "{api.cache}"
+      summary: "{api.cache.reloadCache}"
+      description: ""
+      operationId: "reloadCache"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/CacheListResponseVO"
+  /report/financial/prizePayments:
+    get:
+      tags:
+      - "{api.management.financialReport}"
+      summary: "Report Finantial Prize Payments"
+      description: ""
+      operationId: "reportFinantialPrizePayments"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "query"
+        description: "{api.management.wager.summary.request.token}"
+        required: true
+        type: "string"
+      - name: "terminalCode"
+        in: "query"
+        description: "{api.management.wager.summary.request.terminalCode}"
+        required: true
+        type: "string"
+      - name: "terminalCodeOnBehalfOf"
+        in: "query"
+        description: "{api.management.wager.summary.request.terminalCodeOnBehalfOf}"
+        required: false
+        type: "string"
+      - name: "mondayDrawIndicator"
+        in: "query"
+        description: "{api.management.wager.summary.request.mondayDrawIndicator}"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/FinancialReportPrizePaymentsResponseVO"
+  /report/financial/renumerations:
+    get:
+      tags:
+      - "{api.management.financialReport}"
+      summary: "Report Finantial Renumerations"
+      description: ""
+      operationId: "reportFinantialRenumerations"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "query"
+        description: "{api.management.wager.summary.request.token}"
+        required: true
+        type: "string"
+      - name: "terminalCode"
+        in: "query"
+        description: "{api.management.wager.summary.request.terminalCode}"
+        required: true
+        type: "string"
+      - name: "terminalCodeOnBehalfOf"
+        in: "query"
+        description: "{api.management.wager.summary.request.terminalCodeOnBehalfOf}"
+        required: false
+        type: "string"
+      - name: "mondayDrawIndicator"
+        in: "query"
+        description: "{api.management.wager.summary.request.mondayDrawIndicator}"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/FinancialReportRenumerationsResponseVO"
+  /report/financial/sales:
+    get:
+      tags:
+      - "{api.management.financialReport}"
+      summary: "Report Finantial Sales"
+      description: ""
+      operationId: "reportFinantialSales"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "query"
+        description: "{api.management.wager.summary.request.token}"
+        required: true
+        type: "string"
+      - name: "terminalCode"
+        in: "query"
+        description: "{api.management.wager.summary.request.terminalCode}"
+        required: true
+        type: "string"
+      - name: "terminalCodeOnBehalfOf"
+        in: "query"
+        description: "{api.management.wager.summary.request.terminalCodeOnBehalfOf}"
+        required: false
+        type: "string"
+      - name: "mondayDrawIndicator"
+        in: "query"
+        description: "{api.management.wager.summary.request.mondayDrawIndicator}"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/FinancialReportOnlineSalesResponseVO"
+  /report/financial/summary:
+    get:
+      tags:
+      - "{api.management.financialReport}"
+      summary: "{api.management.wager.summary}"
+      description: ""
+      operationId: "reportFinantialSummary"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "query"
+        description: "{api.management.wager.summary.request.token}"
+        required: true
+        type: "string"
+      - name: "terminalCode"
+        in: "query"
+        description: "{api.management.wager.summary.request.terminalCode}"
+        required: true
+        type: "string"
+      - name: "terminalCodeOnBehalfOf"
+        in: "query"
+        description: "{api.management.wager.summary.request.terminalCodeOnBehalfOf}"
+        required: false
+        type: "string"
+      - name: "mondayDrawIndicator"
+        in: "query"
+        description: "{api.management.wager.summary.request.mondayDrawIndicator}"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/FinancialReportTotalSummaryResponseVO"
+  /wager/lotto:
+    post:
+      tags:
+      - "Wager Management lookup Api"
+      summary: "Create Wager"
+      description: ""
+      operationId: "createWager"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Create Wager Payload Request"
+        required: false
+        schema:
+          $ref: "#/definitions/CreateWagerRequestVO"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/CreateWagerResponseVO"
+  /wager/prize:
+    put:
+      tags:
+      - "Wager Management lookup Api"
+      summary: "Pay Prize Wager"
+      description: ""
+      operationId: "payPrizeWager"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Create PayPrizeWager Payload Request"
+        required: false
+        schema:
+          $ref: "#/definitions/PayPrizedWagerRequestVO"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/PayPrizedWagerResponseVO"
+  /wager/validate/prize:
+    post:
+      tags:
+      - "Wager Management lookup Api"
+      summary: "Validate Prize Wager"
+      description: ""
+      operationId: "payValidatePrizeWager"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Create ValidatePrizeWager Payload Request"
+        required: false
+        schema:
+          $ref: "#/definitions/ValidatePrizedWagerRequestVO"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ValidatedPrizeWagerResponseVO"
+  /wager/{serialNumber}:
+    delete:
+      tags:
+      - "Wager Management lookup Api"
+      summary: "Cancel Wager "
+      description: ""
+      operationId: "cancelWager"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Cancel Wager Payload Request"
+        required: false
+        schema:
+          $ref: "#/definitions/CancelWagerRequestVO"
+      - name: "serialNumber"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/CancelWagerResponseVO"
+definitions:
+  CacheListResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/CacheResponseDataList"
+  CacheResponseDataList:
+    type: "object"
+    properties:
+      pagination:
+        description: "{vo.data.pagination}"
+        $ref: "#/definitions/Pagination"
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      cacheList:
+        type: "array"
+        description: "cacheList"
+        items:
+          $ref: "#/definitions/CacheVO"
+  CacheVO:
+    type: "object"
+    required:
+    - "entityList"
+    - "entityName"
+    properties:
+      entityName:
+        type: "string"
+        description: "{vo.baseline.cache.entityName}"
+      entityList:
+        type: "array"
+        description: "{vo.baseline.cache.entityList}"
+        items:
+          $ref: "#/definitions/GenericVO"
+  CancelWagerInformationVO:
+    type: "object"
+    properties:
+      cancellationDate:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "{vo.baseline.wagerDetail.cancellationDate}"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      cancellationStatus:
+        type: "integer"
+        format: "int32"
+        description: "{vo.baseline.wagerDetail.cancellationStatus}"
+      cancellationCheckDigits:
+        type: "integer"
+        format: "int32"
+        description: "{vo.baseline.wagerDetail.cancellationCheckDigits}"
+      cancellationJulianDate:
+        type: "integer"
+        format: "int32"
+        description: "{vo.baseline.wagerDetail.cancellationJulianDate}"
+      cancellationExternalSerialNumber:
+        type: "integer"
+        format: "int32"
+        description: "{vo.baseline.wagerDetail.cancellationExternalSerialNumber}"
+      cancellationSerialNumber:
+        type: "string"
+        description: "{vo.baseline.wagerDetail.cancellationSerialNumber}"
+      cancelAmount:
+        description: "{vo.baseline.wagerDetail.cancelAmount}"
+        $ref: "#/definitions/Currency"
+      mondayDrawIndicator:
+        type: "integer"
+        format: "int32"
+        description: "{vo.baseline.wagerDetail.mondayDrawIndicator}"
+      betSerialNumber:
+        type: "string"
+        description: "{vo.baseline.wagerDetail.betSerialNumber}"
+  CancelWagerRequestVO:
+    type: "object"
+    required:
+    - "terminalCode"
+    - "token"
+    properties:
+      terminalCode:
+        type: "string"
+        description: "{vo.terminal.terminalCode}"
+        pattern: "^\\d{7}$"
+      token:
+        type: "string"
+        description: "{vo.token.token}"
+      statistic:
+        type: "object"
+        description: "statistic"
+        additionalProperties:
+          type: "object"
+  CancelWagerResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/CancelWagerResult"
+  CancelWagerResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      cancelWagerResult:
+        description: "cancelWagerResult"
+        $ref: "#/definitions/CancelledWagerVO"
+  CancelledWagerVO:
+    type: "object"
+    properties:
+      transactionSerial:
+        type: "string"
+        description: "{vo.baseline.wagerDetail.transactionSerial}"
+      transactionDate:
+        type: "string"
+        description: "{vo.baseline.wagerDetail.transactionDate}"
+      wager:
+        description: "{vo.baseline.wagerDetail.wager}"
+        $ref: "#/definitions/CancelWagerInformationVO"
+  CreateWagerInformationVO:
+    type: "object"
+    properties:
+      wagerJulianDate:
+        type: "integer"
+        format: "int32"
+        description: "wagerJulianDate"
+      wagerExternalSerialNumber:
+        type: "integer"
+        format: "int32"
+        description: "wagerExternalSerialNumber"
+      wagerCheckDigits:
+        type: "integer"
+        format: "int32"
+        description: "wagerCheckDigits"
+      wagerSerialNumber:
+        type: "string"
+        description: "wagerSerialNumber"
+      offSetFirstCDCDate:
+        type: "integer"
+        format: "int32"
+        description: "offSetFirstCDCDate"
+      offSetSecondCDCDate:
+        type: "integer"
+        format: "int32"
+        description: "offSetSecondCDCDate"
+      firstWeekDrawDate:
+        type: "integer"
+        format: "int32"
+        description: "firstWeekDrawDate"
+      firstYearDrawDate:
+        type: "integer"
+        format: "int32"
+        description: "firstYearDrawDate"
+      secondWeekDrawDate:
+        type: "integer"
+        format: "int32"
+        description: "secondWeekDrawDate"
+      secondYearDrawDate:
+        type: "integer"
+        format: "int32"
+        description: "secondYearDrawDate"
+      time:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "time"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      wagerDate:
+        type: "string"
+        description: "{vo.data.wager.wagerDate}"
+      amount:
+        description: "amount"
+        $ref: "#/definitions/Currency"
+      wagerRequestInformation:
+        description: "{vo.data.wager.wagerRequestInformation}"
+        $ref: "#/definitions/CreateWagerVO"
+  CreateWagerRequestVO:
+    type: "object"
+    required:
+    - "terminalCode"
+    - "token"
+    - "wager"
+    properties:
+      terminalCode:
+        type: "string"
+        description: "{vo.terminal.terminalCode}"
+        pattern: "^\\d{7}$"
+      token:
+        type: "string"
+        description: "{vo.token.token}"
+      statistic:
+        type: "object"
+        description: "{vo.data.wager.statistic}"
+        additionalProperties:
+          type: "object"
+      wager:
+        description: "{vo.data.wager.wager}"
+        $ref: "#/definitions/CreateWagerVO"
+  CreateWagerResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/CreateWagerResult"
+  CreateWagerResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      wagerResult:
+        description: "wagerResult"
+        $ref: "#/definitions/CreatedWagerVO"
+  CreateWagerVO:
+    type: "object"
+    required:
+    - "ticketList"
+    - "wagerAmount"
+    properties:
+      playerIdentification:
+        type: "string"
+        description: "{vo.data.wager.playerIdentification}"
+      playerIdentificationShdes:
+        type: "string"
+        description: "{vo.data.wager.playerIdentificationShdes}"
+      playerContact:
+        type: "string"
+        description: "{vo.data.wager.playerContact}"
+      playerCardCode:
+        type: "string"
+        description: "{vo.data.wager.playerCardCode}"
+      ticketList:
+        type: "array"
+        description: "TicketList"
+        items:
+          $ref: "#/definitions/TicketVO"
+        maxItems: 2147483647
+        minItems: 1
+      wagerAmount:
+        type: "number"
+        description: "{vo.data.wager.wagerAmount}"
+        minimum: 1
+  CreatedWagerVO:
+    type: "object"
+    properties:
+      transactionSerial:
+        type: "string"
+        description: "{vo.data.wager.transactionSerial}"
+      transactionDate:
+        type: "string"
+        description: "{vo.data.wager.transactionDate}"
+      wager:
+        description: "{vo.data.wager.wager}"
+        $ref: "#/definitions/CreateWagerInformationVO"
+  Currency:
+    type: "object"
+    properties:
+      value:
+        type: "number"
+        format: "double"
+      formattedValue:
+        type: "string"
+  ErrorResponse:
+    type: "object"
+    required:
+    - "code"
+    - "message"
+    properties:
+      code:
+        type: "string"
+        description: "{vo.header.error.code}"
+      message:
+        type: "string"
+        description: "{vo.header.error.message}"
+      description:
+        type: "string"
+        description: "{vo.header.error.description}"
+      cdu:
+        type: "string"
+        description: "{vo.header.message.cdu}"
+      printer:
+        type: "string"
+        description: "{vo.header.message.screen}"
+      screen:
+        type: "string"
+        description: "{vo.header.message.printer}"
+      updateChronology:
+        type: "boolean"
+        description: "{vo.header.message.updateChronology}"
+  FinancialReportOnlineSalesInformationVO:
+    type: "object"
+    properties:
+      gameType:
+        type: "integer"
+        format: "int32"
+        description: "Game Type"
+      gameIndex:
+        type: "integer"
+        format: "int32"
+        description: "Game Index"
+      gameNumber:
+        type: "string"
+        description: "Game Number"
+      gameDescription:
+        type: "string"
+        description: "Game Description"
+      netSalesCount:
+        description: "Net Sales Count"
+        $ref: "#/definitions/Currency"
+      netSalesAmount:
+        description: "Net Sales Amount"
+        $ref: "#/definitions/Currency"
+  FinancialReportOnlineSalesResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/ReportFinantialTotalSalesResponseResult"
+  FinancialReportOnlineSalesResultVO:
+    type: "object"
+    required:
+    - "fromDate"
+    - "terminalCode"
+    - "toDate"
+    properties:
+      time:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Time"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      numberOfGames:
+        type: "integer"
+        format: "int32"
+        description: "Number of Games"
+      totalSalesCount:
+        type: "integer"
+        format: "int32"
+        description: "Total Sales Count"
+      totalSalesAmount:
+        description: "Total Cash Amount"
+        $ref: "#/definitions/Currency"
+      reportFinantialInformation:
+        type: "array"
+        description: "Report Finantial Information"
+        items:
+          $ref: "#/definitions/FinancialReportOnlineSalesInformationVO"
+      reportDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.reportDate}"
+        pattern: "dd/MM/yyyy"
+      reportSerial:
+        type: "string"
+        description: "{vo.data.reportSerial}"
+      terminalCode:
+        type: "string"
+        description: "{vo.data.terminalCode}"
+      terminalCodeOnBehalfOf:
+        type: "string"
+        description: "{vo.data.terminalCodeOnBehalfOf}"
+      fromDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.fromDate}"
+        pattern: "dd/MM/yyyy"
+      toDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.toDate}"
+        pattern: "dd/MM/yyyy"
+  FinancialReportPrizePaymentsInformationVO:
+    type: "object"
+    properties:
+      gameType:
+        type: "integer"
+        format: "int32"
+        description: "Game Type"
+      gameIndex:
+        type: "integer"
+        format: "int32"
+        description: "Game Index"
+      gameNumber:
+        type: "string"
+        description: "Game Number"
+      gameDescription:
+        type: "string"
+        description: "Game Description"
+      cashCount:
+        description: "Cash Count"
+        $ref: "#/definitions/Currency"
+      cashAmount:
+        description: "Cash Amount"
+        $ref: "#/definitions/Currency"
+  FinancialReportPrizePaymentsResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/ReportFinantialPrizePaymentsResponseResult"
+  FinancialReportPrizePaymentsResultVO:
+    type: "object"
+    required:
+    - "fromDate"
+    - "terminalCode"
+    - "toDate"
+    properties:
+      time:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Time"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      numberOfGames:
+        type: "integer"
+        format: "int32"
+        description: "Number of Games"
+      cashCountForInstantValidations:
+        type: "integer"
+        format: "int32"
+        description: "Cash Count for Instant Validations"
+      cashAmountForInstantValidations:
+        description: "Cash Amount for Instant Validations"
+        $ref: "#/definitions/Currency"
+      totalCount:
+        type: "integer"
+        format: "int32"
+        description: "Total Count"
+      totalAmount:
+        description: "Total Amount"
+        $ref: "#/definitions/Currency"
+      reportFinantialInformationList:
+        type: "array"
+        description: "Report Finantial Information"
+        items:
+          $ref: "#/definitions/FinancialReportPrizePaymentsInformationVO"
+      reportDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.reportDate}"
+        pattern: "dd/MM/yyyy"
+      reportSerial:
+        type: "string"
+        description: "{vo.data.reportSerial}"
+      terminalCode:
+        type: "string"
+        description: "{vo.data.terminalCode}"
+      terminalCodeOnBehalfOf:
+        type: "string"
+        description: "{vo.data.terminalCodeOnBehalfOf}"
+      fromDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.fromDate}"
+        pattern: "dd/MM/yyyy"
+      toDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.toDate}"
+        pattern: "dd/MM/yyyy"
+  FinancialReportRemunerationsInformationVO:
+    type: "object"
+    properties:
+      gameType:
+        type: "integer"
+        format: "int32"
+        description: "Game Type"
+      gameIndex:
+        type: "integer"
+        format: "int32"
+        description: "Game Index"
+      gameNumber:
+        type: "string"
+        description: "Game Number"
+      gameDescription:
+        type: "string"
+        description: "Game Description"
+      remunerationAmount:
+        description: "Remuneration Amount"
+        $ref: "#/definitions/Currency"
+  FinancialReportRenumerationsResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/ReportFinantialRenumerationsResponseResult"
+  FinancialReportRenumerationsResultVO:
+    type: "object"
+    required:
+    - "fromDate"
+    - "terminalCode"
+    - "toDate"
+    properties:
+      time:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Report Finantial Time"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      numberOfGames:
+        type: "integer"
+        format: "int32"
+        description: "Number Of Games"
+      totalAmount:
+        description: "Total Amount"
+        $ref: "#/definitions/Currency"
+      financialReportRemunerationsInformationList:
+        type: "array"
+        description: "Report Finantial Remuneration Information"
+        items:
+          $ref: "#/definitions/FinancialReportRemunerationsInformationVO"
+      reportDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.reportDate}"
+        pattern: "dd/MM/yyyy"
+      reportSerial:
+        type: "string"
+        description: "{vo.data.reportSerial}"
+      terminalCode:
+        type: "string"
+        description: "{vo.data.terminalCode}"
+      terminalCodeOnBehalfOf:
+        type: "string"
+        description: "{vo.data.terminalCodeOnBehalfOf}"
+      fromDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.fromDate}"
+        pattern: "dd/MM/yyyy"
+      toDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.toDate}"
+        pattern: "dd/MM/yyyy"
+  FinancialReportTotalSummaryResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/ReportFinantialTotalSummaryResponseResult"
+  FinancialReportTotalSummaryResultVO:
+    type: "object"
+    required:
+    - "fromDate"
+    - "terminalCode"
+    - "toDate"
+    properties:
+      time:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Time"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      lgsSystemNotAvailable:
+        type: "boolean"
+        description: "LGS System not Available"
+      abpSystemNotAvailable:
+        type: "boolean"
+        description: "ABP System not Available"
+      clerkNumber:
+        type: "integer"
+        format: "int32"
+        description: "Clerk Number"
+      cancelsCount:
+        type: "integer"
+        format: "int32"
+        description: "Cancels Count"
+      cancelsAmount:
+        description: "Cancels Amount"
+        $ref: "#/definitions/Currency"
+      netSalesCount:
+        type: "integer"
+        format: "int32"
+        description: "Net Sales Count"
+      netSalesAmount:
+        description: "Net Sales Amount"
+        $ref: "#/definitions/Currency"
+      cashCount:
+        type: "integer"
+        format: "int32"
+        description: "Cash Count"
+      cashAmount:
+        description: "Cash Amount"
+        $ref: "#/definitions/Currency"
+      instantSalesCount:
+        type: "integer"
+        format: "int32"
+        description: "Instant Sales Count"
+      instantSalesAmount:
+        description: "Instant Sales Amount"
+        $ref: "#/definitions/Currency"
+      instantCashCount:
+        type: "integer"
+        format: "int32"
+        description: "Instant Cash Count"
+      instantCashAmount:
+        description: "Instant Cash Amount"
+        $ref: "#/definitions/Currency"
+      miscSalesCount:
+        type: "integer"
+        format: "int32"
+        description: "Misc Sales Count"
+      miscSalesAmount:
+        description: "Misc Sales Amount"
+        $ref: "#/definitions/Currency"
+      pettyCashCount:
+        type: "integer"
+        format: "int32"
+        description: "Petty Cash Count"
+      pettyCashAmount:
+        description: "Petty Cash Amount"
+        $ref: "#/definitions/Currency"
+      totalCashCount:
+        type: "integer"
+        format: "int32"
+        description: "Total Cash Count"
+      totalCashAmount:
+        description: "Total Cash Amount"
+        $ref: "#/definitions/Currency"
+      reportDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.reportDate}"
+        pattern: "dd/MM/yyyy"
+      reportSerial:
+        type: "string"
+        description: "{vo.data.reportSerial}"
+      terminalCode:
+        type: "string"
+        description: "{vo.data.terminalCode}"
+      terminalCodeOnBehalfOf:
+        type: "string"
+        description: "{vo.data.terminalCodeOnBehalfOf}"
+      fromDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.fromDate}"
+        pattern: "dd/MM/yyyy"
+      toDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.toDate}"
+        pattern: "dd/MM/yyyy"
+  GameResultsReportDivisionsVO:
+    type: "object"
+    properties:
+      prize:
+        description: "prize"
+        $ref: "#/definitions/Currency"
+      shareCount:
+        type: "integer"
+        format: "int32"
+        description: "shareCount"
+      divisionNumber:
+        type: "integer"
+        format: "int32"
+        description: "divisionNumber"
+  GameResultsReportOptionFlagsVO:
+    type: "object"
+    properties:
+      jokerWinningNumberPresent:
+        type: "boolean"
+      winningRowsPresent:
+        type: "boolean"
+      winningOddsPresent:
+        type: "boolean"
+      winningScorePresent:
+        type: "boolean"
+      divisionPresent:
+        type: "boolean"
+      winningTextPresent:
+        type: "boolean"
+  GameResultsReportResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/ReportGameResultsResponseResult"
+  GameResultsReportResultVO:
+    type: "object"
+    required:
+    - "fromDate"
+    - "terminalCode"
+    - "toDate"
+    properties:
+      time:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Time"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      gameType:
+        type: "integer"
+        format: "int32"
+        description: "Game Type"
+      gameIndex:
+        type: "integer"
+        format: "int32"
+        description: "Game Index"
+      setsOfWinningNumbers:
+        type: "integer"
+        format: "int32"
+        description: "setsOfWinningNumbers"
+      hasWinners:
+        type: "boolean"
+        description: "hasWinners"
+      numberOfDivisions:
+        type: "integer"
+        format: "int32"
+        description: "numberOfDivisions"
+      winningNumbers:
+        type: "array"
+        description: "winningNumbers"
+        items:
+          type: "integer"
+          format: "int32"
+      divisionsList:
+        type: "array"
+        description: "Game Results Report Divisions"
+        items:
+          $ref: "#/definitions/GameResultsReportDivisionsVO"
+      contestDrawCDCDate:
+        type: "integer"
+        format: "int32"
+        description: "contestDrawCDCDate"
+      contestDrawDate:
+        type: "string"
+        description: "contestDrawDate"
+      contestYear:
+        type: "integer"
+        format: "int32"
+        description: "contestYear"
+      contestWeek:
+        type: "integer"
+        format: "int32"
+        description: "contestWeek"
+      numberOfRegularWinningNumbers:
+        type: "integer"
+        format: "int32"
+        description: "numberOfRegularWinningNumbers"
+      numberOfBonusWinningNumbers:
+        type: "integer"
+        format: "int32"
+        description: "numberOfBonusWinningNumbers"
+      shareBitMap:
+        description: "shareBitMap"
+        $ref: "#/definitions/GameResultsReportShareBitMapVO"
+      optionFlags:
+        description: "optionFlags"
+        $ref: "#/definitions/GameResultsReportOptionFlagsVO"
+      reportDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.reportDate}"
+        pattern: "dd/MM/yyyy"
+      reportSerial:
+        type: "string"
+        description: "{vo.data.reportSerial}"
+      terminalCode:
+        type: "string"
+        description: "{vo.data.terminalCode}"
+      terminalCodeOnBehalfOf:
+        type: "string"
+        description: "{vo.data.terminalCodeOnBehalfOf}"
+      fromDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.fromDate}"
+        pattern: "dd/MM/yyyy"
+      toDate:
+        type: "string"
+        format: "dd/MM/yyyy"
+        description: "{vo.data.toDate}"
+        pattern: "dd/MM/yyyy"
+  GameResultsReportShareBitMapVO:
+    type: "object"
+    properties:
+      sharesFinal:
+        type: "boolean"
+      resultFinal:
+        type: "boolean"
+      bonusDraw:
+        type: "boolean"
+      estimatedPrizes:
+        type: "boolean"
+      resultNotIn:
+        type: "boolean"
+      gameCanceled:
+        type: "boolean"
+      notWinner:
+        type: "boolean"
+      prognosis:
+        type: "boolean"
+  GenericVO:
+    type: "object"
+  InfoResponse:
+    type: "object"
+    required:
+    - "code"
+    - "message"
+    - "messageCode"
+    properties:
+      code:
+        type: "string"
+        description: "{vo.header.error.code}"
+      message:
+        type: "string"
+        description: "{vo.header.error.message}"
+      description:
+        type: "string"
+        description: "{vo.header.error.description}"
+      cdu:
+        type: "string"
+        description: "{vo.header.message.cdu}"
+      printer:
+        type: "string"
+        description: "{vo.header.message.screen}"
+      screen:
+        type: "string"
+        description: "{vo.header.message.printer}"
+      updateChronology:
+        type: "boolean"
+        description: "{vo.header.message.updateChronology}"
+      messageCode:
+        type: "string"
+        description: "{vo.header.info.messageCode}"
+  InstantGameOrder:
+    type: "object"
+    properties:
+      version:
+        type: "integer"
+        format: "int64"
+      lastUpdateDate:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      lastUserId:
+        type: "string"
+      gameNumber:
+        type: "integer"
+        format: "int32"
+      supplyQuantity:
+        type: "integer"
+        format: "int32"
+  InstantGameParametersResponseResultVO:
+    type: "object"
+    properties:
+      transactionDate:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Transaction Date"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      transactionSerial:
+        type: "string"
+        description: "Transaction Serial"
+      instantGameParameterResult:
+        description: "Instant Game Parameters Result"
+        $ref: "#/definitions/InstantGameParametersResultVO"
+  InstantGameParametersResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/InstantGameParametersResult"
+  InstantGameParametersResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      instantGameParametersResult:
+        $ref: "#/definitions/InstantGameParametersResponseResultVO"
+  InstantGameParametersResultVO:
+    type: "object"
+    properties:
+      secondsSinceMidnight:
+        type: "integer"
+        format: "int32"
+        description: "Seconds Since Midnight "
+      date:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Time"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      julianDate:
+        type: "integer"
+        format: "int32"
+        description: "Julian Date"
+      externalSerialNumber:
+        type: "integer"
+        format: "int32"
+        description: "External Serial Number"
+      checkDigits:
+        type: "integer"
+        format: "int32"
+        description: "Check Digits"
+      serialNumber:
+        type: "string"
+        description: "Serial Number"
+      resultCode:
+        type: "integer"
+        format: "int32"
+        description: "Result Code"
+      moreFlag:
+        type: "boolean"
+        description: "More Flag"
+      checksum:
+        type: "integer"
+        format: "int32"
+        description: "Ckecksum"
+      retailerCreditLimit:
+        description: "Retailer Credit Limit"
+        $ref: "#/definitions/Currency"
+      nextGame:
+        type: "integer"
+        format: "int32"
+        description: "Next Game"
+      gameList:
+        type: "array"
+        description: "Game List"
+        items:
+          $ref: "#/definitions/InstantGameVO"
+  InstantGameVO:
+    type: "object"
+    properties:
+      gameNumber:
+        type: "integer"
+        format: "int32"
+        description: "Game Number"
+      shortGameName:
+        type: "string"
+        description: "Short Game Name"
+      longGameName:
+        type: "string"
+        description: "Long Game Name"
+      flags:
+        type: "integer"
+        format: "int32"
+        description: "Flags"
+      distributionEnabled:
+        type: "boolean"
+        description: "Distribution Enabled"
+      validationEnabled:
+        type: "boolean"
+        description: "Validation Enabled"
+      activationEnabled:
+        type: "boolean"
+        description: "Activation Enabled"
+      telesalesEnabled:
+        type: "boolean"
+        description: "Telesales Enabled"
+      ticketCost:
+        description: "Ticket Cost"
+        $ref: "#/definitions/Currency"
+      ticketsPerPack:
+        type: "integer"
+        format: "int32"
+        description: "Ticket per Pack"
+  InstantSupplyOrderGameVO:
+    type: "object"
+    properties:
+      gameNumber:
+        type: "integer"
+        format: "int32"
+        description: "Game Number"
+      outOfStockFlag:
+        type: "boolean"
+        description: "Out Of Stock Flag"
+  InstantSupplyOrderRequestVO:
+    type: "object"
+    required:
+    - "instantSupplyOrder"
+    - "terminalCode"
+    - "token"
+    properties:
+      terminalCode:
+        type: "string"
+        description: "{vo.terminal.terminalCode}"
+        pattern: "^\\d{7}$"
+      token:
+        type: "string"
+        description: "{vo.token.token}"
+      instantSupplyOrder:
+        description: "Instant Supply Order"
+        $ref: "#/definitions/InstantSupplyOrderVO"
+      statistic:
+        type: "object"
+        description: "Statistics"
+        additionalProperties:
+          type: "object"
+  InstantSupplyOrderResponseResultVO:
+    type: "object"
+    properties:
+      transactionDate:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Transaction Date"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      transactionSerial:
+        type: "string"
+        description: "Transaction Serial"
+      instantSupplyOrder:
+        description: "Instant Supply Order Result"
+        $ref: "#/definitions/InstantSupplyOrderResultVO"
+  InstantSupplyOrderResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/InstantSupplyOrderResult"
+  InstantSupplyOrderResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      instantSupplyOrderResult:
+        $ref: "#/definitions/InstantSupplyOrderResponseResultVO"
+  InstantSupplyOrderResultVO:
+    type: "object"
+    properties:
+      time:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Millennium Time"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      secondsSinceMidnight:
+        type: "integer"
+        format: "int32"
+        description: "Seconds Since Midnight"
+      julianDate:
+        type: "integer"
+        format: "int32"
+        description: "Julian Date"
+      externalSerialNumber:
+        type: "integer"
+        format: "int32"
+        description: "External Serial Number"
+      checkDigits:
+        type: "integer"
+        format: "int32"
+        description: "Check Digits"
+      serialNumber:
+        type: "string"
+        description: "Serial Number"
+      resultCode:
+        type: "integer"
+        format: "int32"
+        description: "Result Code"
+      resultCode2:
+        type: "integer"
+        format: "int32"
+        description: "Result Code 2"
+      resultInfo:
+        type: "integer"
+        format: "int32"
+        description: "Result Info"
+      orderNumber:
+        type: "integer"
+        format: "int32"
+        description: "Order Number"
+      numberOfOrdersInBatch:
+        type: "integer"
+        format: "int32"
+        description: "Number of Order in Batch"
+      instantSupplyOrderGameList:
+        type: "array"
+        description: "Game List"
+        items:
+          $ref: "#/definitions/InstantSupplyOrderGameVO"
+  InstantSupplyOrderVO:
+    type: "object"
+    required:
+    - "gameList"
+    - "numberOfOrdersInBatch"
+    properties:
+      numberOfOrdersInBatch:
+        type: "integer"
+        format: "int32"
+        description: "Number Of Orders"
+      gameList:
+        type: "array"
+        description: "Game Number and Quantity"
+        items:
+          $ref: "#/definitions/InstantGameOrder"
+  NumberListVO:
+    type: "object"
+    required:
+    - "numberList"
+    properties:
+      numberList:
+        type: "array"
+        description: "{vo.baseline.wagerDetail.numberList}"
+        items:
+          type: "integer"
+          format: "int32"
+        maxItems: 2147483647
+        minItems: 5
+  Pagination:
+    type: "object"
+    required:
+    - "page"
+    - "size"
+    - "totalPages"
+    - "totalResults"
+    properties:
+      page:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.pagination.page}"
+      size:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.pagination.size}"
+      totalResults:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.pagination.totalResults}"
+      totalPages:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.pagination.totalPages}"
+  PayPrizedWagerRequestVO:
+    type: "object"
+    required:
+    - "terminalCode"
+    - "token"
+    - "transactionId"
+    - "wager"
+    properties:
+      terminalCode:
+        type: "string"
+        description: "{vo.terminal.terminalCode}"
+        pattern: "^\\d{7}$"
+      token:
+        type: "string"
+        description: "{vo.token.token}"
+      statistic:
+        type: "object"
+        description: "{vo.data.wager.statistic}"
+        additionalProperties:
+          type: "object"
+      transactionId:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.wager}"
+      wager:
+        description: "{vo.data.wager.wager}"
+        $ref: "#/definitions/PayPrizedWagerVO"
+  PayPrizedWagerResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/PayPrizedWagerResult"
+  PayPrizedWagerResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      payedPrizedWagerResult:
+        description: "payedPrizedWagerResult"
+        $ref: "#/definitions/PayPrizedWagerResultVO"
+  PayPrizedWagerResultVO:
+    type: "object"
+    properties:
+      prizePayment:
+        description: "{vo.data.wager.prizePayment}"
+        $ref: "#/definitions/PrizePaymentVO"
+  PayPrizedWagerVO:
+    type: "object"
+    properties:
+      gameNumber:
+        type: "string"
+        description: "{vo.data.wager.gameNumber}"
+      betSerialNumber:
+        type: "string"
+        description: "{vo.data.wager.betSerialNumber}"
+      playerIdentification:
+        type: "string"
+        description: "{vo.data.wager.playerIdentification}"
+      playerIdentificationTypeShdes:
+        type: "string"
+        description: "{vo.data.wager.playerIdentificationTypeShdes}"
+      paymentInformation:
+        description: "{vo.data.wager.paymentInformation}"
+        $ref: "#/definitions/PaymentInformationRequestVO"
+  PaymentInformationRequestVO:
+    type: "object"
+    properties:
+      playerContact:
+        type: "string"
+        description: "{vo.data.wager.playerContact}"
+      playerCardCode:
+        type: "string"
+        description: "{vo.data.wager.playerCardCode}"
+      payIdentification:
+        type: "boolean"
+        example: false
+        description: "{vo.data.wager.payIdentification}"
+      playerIdentificationCode:
+        type: "string"
+        description: "{vo.data.wager.playerIdentificationCode}"
+      paymentMethodShdes:
+        type: "string"
+        description: "{vo.data.wager.paymentMethodShdes}"
+      iban:
+        type: "string"
+        description: "{vo.data.wager.iban}"
+  PaymentInformationVO:
+    type: "object"
+    properties:
+      playerIdentificationCode:
+        type: "string"
+        description: "{vo.data.wager.playerIdentificationCode}"
+      playerCardCode:
+        type: "string"
+        description: "{vo.data.wager.playerCardCode}"
+      iban:
+        type: "string"
+        description: "{vo.data.wager.iban}"
+      paymentMethodShdes:
+        type: "string"
+        description: "{vo.data.wager.paymentMethodShdes}"
+      cashAmount:
+        description: "{vo.data.wager.cashAmount}"
+        $ref: "#/definitions/Currency"
+      refundAmount:
+        description: "{vo.data.wager.refundAmount}"
+        $ref: "#/definitions/Currency"
+      prizeLevelId:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.prizeLevelId}"
+  PrizePaymentVO:
+    type: "object"
+    properties:
+      paymentDate:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "{vo.data.wager.paymentDate}"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      paymentExternalSerialNumber:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.paymentExternalSerialNumber}"
+      paymentCheckDigits:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.paymentCheckDigits}"
+      paymentJulianDate:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.julianDate}"
+      paymentSerialNumber:
+        type: "string"
+        description: "{vo.data.wager.paymentSerialNumber}"
+      gameNumber:
+        type: "string"
+        description: "{vo.data.wager.gameNumber}"
+      gameType:
+        type: "string"
+        description: "{vo.data.wager.gameType}"
+      gameIndex:
+        type: "integer"
+        format: "int32"
+        description: "Contest Number, 3 = Saturday, 4 = Wednesday"
+      paymentStatus:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.paymentStatus}"
+      paymentStatusMessage:
+        type: "string"
+        description: "{vo.data.wager.paymentStatusMessage}"
+      playerNif:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.playerNif}"
+      nifConfirmation:
+        type: "boolean"
+        description: "{vo.data.wager.nifConfirmation}"
+      hasPrizedWager:
+        type: "boolean"
+        description: "{vo.data.wager.hasPrizedWager}"
+      paymentInformation:
+        description: "{vo.data.wager.paymentInformation}"
+        $ref: "#/definitions/PaymentInformationVO"
+  PrizeValidationInformationVO:
+    type: "object"
+    properties:
+      paymentMethodList:
+        type: "array"
+        description: "{vo.data.wager.paymentMethodList}"
+        items:
+          type: "string"
+      paymentMethodId:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.paymentMethodId}"
+      prizeLevelId:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.prizeLevelId}"
+      cashAmount:
+        description: "{vo.data.wager.cashAmount}"
+        $ref: "#/definitions/Currency"
+      refundAmount:
+        description: "{vo.data.wager.refundAmount}"
+        $ref: "#/definitions/Currency"
+  PrizeValidationVO:
+    type: "object"
+    properties:
+      validationDate:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "{vo.data.wager.validationDate}"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      validationJulianDate:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.validationJulianDate}"
+      validationExternalSerialNumber:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.validationExternalSerialNumber}"
+      validationCheckDigits:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.validationCheckDigits}"
+      validationSerialNumber:
+        type: "string"
+        description: "{vo.data.wager.validationSerialNumber}"
+      validationStatus:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.validationStatus}"
+      validationStatusMessage:
+        type: "string"
+        description: "{vo.data.wager.validationStatusMessage}"
+      gameNumber:
+        type: "string"
+        description: "{vo.data.wager.gameNumber}"
+      gameType:
+        type: "string"
+        description: "{vo.data.wager.gameType}"
+      gameIndex:
+        type: "integer"
+        format: "int32"
+        description: "Contest Number, 3 = Saturday, 4 = Wednesday"
+      playerNif:
+        type: "integer"
+        format: "int32"
+        description: "{vo.data.wager.playerNif}"
+      nifConfirmation:
+        type: "boolean"
+        example: false
+        description: "{vo.data.wager.nifConfirmation}"
+      hasPrizedWager:
+        type: "boolean"
+        example: false
+        description: "{vo.data.wager.hasPrizedWager}"
+      prizeValidationInformation:
+        description: "{vo.data.wager.prizeValidationInformation}"
+        $ref: "#/definitions/PrizeValidationInformationVO"
+  ReportFinantialPrizePaymentsResponseResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      reportGameResult:
+        description: "reportGameResult"
+        $ref: "#/definitions/FinancialReportPrizePaymentsResultVO"
+  ReportFinantialRenumerationsResponseResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      financialReportRemunerationsResult:
+        description: "Financial Report Remunerations Result"
+        $ref: "#/definitions/FinancialReportRenumerationsResultVO"
+  ReportFinantialTotalSalesResponseResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      reportGameResult:
+        description: "reportGameResult"
+        $ref: "#/definitions/FinancialReportOnlineSalesResultVO"
+  ReportFinantialTotalSummaryResponseResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      reportGameResult:
+        description: "reportGameResult"
+        $ref: "#/definitions/FinancialReportTotalSummaryResultVO"
+  ReportGameResultsResponseResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      reportGameResult:
+        description: "reportGameResult"
+        $ref: "#/definitions/GameResultsReportResultVO"
+  ResponseHeader:
+    type: "object"
+    required:
+    - "status"
+    - "timestamp"
+    properties:
+      timestamp:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "{vo.header.timestamp}"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      status:
+        type: "boolean"
+        description: "{vo.header.status}"
+        enum:
+        - true
+        - false
+      error:
+        description: "{vo.header.error}"
+        $ref: "#/definitions/ErrorResponse"
+      info:
+        description: "{vo.header.info}"
+        $ref: "#/definitions/InfoResponse"
+  SignOnGameOptionFlagsVO:
+    type: "object"
+    properties:
+      maxFreeSystems:
+        type: "boolean"
+        description: "Max Free Systems"
+      maxBetLimitPresent:
+        type: "boolean"
+        description: "Max Bet Limit Present"
+      reserved:
+        type: "boolean"
+        description: "Reserved"
+      multidrawBitmapPresent:
+        type: "boolean"
+        description: "Multidraw Bitmap Present"
+      ticketChargePresent:
+        type: "boolean"
+        description: "Ticket Charge Present"
+      controlRevisionPresent:
+        type: "boolean"
+        description: "Control Revision Present"
+      textRevisionPresent:
+        type: "boolean"
+        description: "Text Revision Present"
+      ticketTextRevisionPresent:
+        type: "boolean"
+        description: "Ticket Text Revision Present"
+  SignOnRequestVO:
+    type: "object"
+    required:
+    - "signOn"
+    - "terminalCode"
+    properties:
+      terminalCode:
+        type: "string"
+        description: "{vo.terminal.terminalCode}"
+        pattern: "^\\d{7}$"
+      signOn:
+        description: "SignOn"
+        $ref: "#/definitions/SignOnVO"
+      statistic:
+        type: "object"
+        description: "Statistics"
+        additionalProperties:
+          type: "object"
+  SignOnResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/SignOnResult"
+  SignOnResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      signedOnResult:
+        $ref: "#/definitions/SignedOnResultVO"
+  SignOnTerminalOptionFlagsVO:
+    type: "object"
+    properties:
+      reqInvoiceAtSignOn:
+        type: "boolean"
+        description: "Req. Invoice at Sign-on"
+      prePrintOn:
+        type: "boolean"
+        description: "Pre-Print On"
+      testModeOn:
+        type: "boolean"
+        description: "Test Mode On"
+      privilegedTerminal:
+        type: "boolean"
+        description: "Privileged Terminal"
+      dontDoCheckSumming:
+        type: "boolean"
+        description: "Dont do Check Summing"
+      displayBetDetailOnReprint:
+        type: "boolean"
+        description: "Display Bet Detail On Reprint"
+  SignOnVO:
+    type: "object"
+    required:
+    - "terminalPasswordNumber"
+    properties:
+      agentPasswordNumber:
+        type: "integer"
+        format: "int32"
+        description: "Agent Password Number"
+      terminalPasswordNumber:
+        type: "integer"
+        format: "int32"
+        description: "Terminal Password Number"
+      terminalHardwareId:
+        type: "integer"
+        format: "int64"
+        description: "Terminal Hardware ID"
+      printerHardwareId:
+        type: "integer"
+        format: "int64"
+        description: "Printer Hardware ID"
+      readerHardwareId:
+        type: "integer"
+        format: "int64"
+        description: "Reader Hardware ID"
+      cpuRomRevision:
+        type: "integer"
+        format: "int32"
+        description: "CPU ROM Revision"
+      printerRomRevision:
+        type: "integer"
+        format: "int32"
+        description: "Printer ROM Revision"
+      readerRomRevision:
+        type: "integer"
+        format: "int32"
+        description: "Reader ROM Revision"
+      terminalWellBoardId:
+        type: "integer"
+        format: "int32"
+        description: "Terminal Well-Board ID"
+  SignedOnGameVO:
+    type: "object"
+    properties:
+      gameName:
+        type: "string"
+        description: "Game Name"
+      gameType:
+        type: "integer"
+        format: "int32"
+        description: "Game Type"
+      gameIndex:
+        type: "integer"
+        format: "int32"
+        description: "Game Index"
+      controlRevision:
+        type: "integer"
+        format: "int32"
+        description: "Control Revision"
+      gameTextRevision:
+        type: "integer"
+        format: "int32"
+        description: "Game Text Revision"
+      ticketMarketingTextRevision:
+        type: "integer"
+        format: "int32"
+        description: "Ticket Marketing Text Revision"
+      gameOptionFlags:
+        description: "Game Option Flags"
+        $ref: "#/definitions/SignOnGameOptionFlagsVO"
+  SignedOnResultVO:
+    type: "object"
+    properties:
+      transactionDate:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Transaction Date"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      transactionSerial:
+        type: "string"
+        description: "Transaction Serial"
+      signedOn:
+        description: "Sign-on data result"
+        $ref: "#/definitions/SignedOnVO"
+  SignedOnVO:
+    type: "object"
+    properties:
+      secondsSinceMidnight:
+        type: "integer"
+        format: "int32"
+        description: "Seconds since Midnight"
+      time:
+        type: "string"
+        format: "dd/MM/yyyy HH:mm:ss"
+        description: "Sign On Time"
+        pattern: "dd/MM/yyyy HH:mm:ss"
+      terminalNumber:
+        type: "integer"
+        format: "int32"
+        description: "Terminal Number"
+      applicationRevision:
+        type: "integer"
+        format: "int32"
+        description: "Application Revision"
+      signOnCount:
+        type: "integer"
+        format: "int32"
+        description: "SignOn Count"
+      cdcDate:
+        type: "integer"
+        format: "int32"
+        description: "CDC Date"
+      currentDayOfTheWeek:
+        type: "integer"
+        format: "int32"
+        description: "Current day of the week"
+      agentNumber:
+        type: "integer"
+        format: "int32"
+        description: "Agent Number"
+      clerkId:
+        type: "integer"
+        format: "int32"
+        description: "Clerk ID"
+      terminalLanguage:
+        type: "integer"
+        format: "int32"
+        description: "Terminal Language"
+      wagerUnits:
+        type: "integer"
+        format: "int32"
+        description: "Wager Units"
+      validationUnits:
+        type: "integer"
+        format: "int32"
+        description: "Validation Units"
+      cduTextRevision:
+        type: "integer"
+        format: "int32"
+        description: "CDU Text Revision"
+      redMin:
+        type: "integer"
+        format: "int32"
+        description: "Red Min"
+      redMax:
+        type: "integer"
+        format: "int32"
+        description: "Red Max"
+      secondTellerPassword:
+        type: "integer"
+        format: "int32"
+        description: "Second Teller Password "
+      euroCurrencyConversionRate:
+        type: "number"
+        format: "double"
+        description: "Euro Currency Conversion Rate"
+      amountLimitForCdu:
+        type: "integer"
+        format: "int32"
+        description: "Amount Limit for CDU"
+      totalNumberOfGames:
+        type: "integer"
+        format: "int32"
+        description: "Total number of Games"
+      numberOfGames:
+        type: "integer"
+        format: "int32"
+        description: "Number of Games"
+      terminalOptionFlags:
+        description: "Terminal Option Flags"
+        $ref: "#/definitions/SignOnTerminalOptionFlagsVO"
+      gameList:
+        type: "array"
+        description: "Games"
+        items:
+          $ref: "#/definitions/SignedOnGameVO"
+  TextMessageVO:
+    type: "object"
+    properties:
+      cdu:
+        type: "string"
+        description: "{vo.header.message.cdu}"
+      screen:
+        type: "string"
+        description: "{vo.header.message.screen}"
+      printer:
+        type: "string"
+        description: "{vo.header.message.printer}"
+  TicketVO:
+    type: "object"
+    required:
+    - "boardList"
+    - "gameIndex"
+    - "luckyNumber"
+    - "numberOfBoards"
+    - "numberOfNumbers"
+    - "quickPickIndicator"
+    properties:
+      quickPickIndicator:
+        type: "boolean"
+        example: false
+        description: "QuickPickIndicator"
+      luckyNumber:
+        type: "integer"
+        format: "int32"
+        description: "LuckyNumber"
+        minimum: 1
+      boardList:
+        type: "array"
+        description: "{vo.data.wager.boardList}"
+        items:
+          $ref: "#/definitions/NumberListVO"
+        maxItems: 2147483647
+        minItems: 1
+      gameIndex:
+        type: "integer"
+        format: "int32"
+        description: "Contest Number, 3 = Saturday, 4 = Wednesday"
+        minimum: 3
+        maximum: 4
+      numberOfBoards:
+        type: "integer"
+        format: "int32"
+        description: "NumberOfBoards"
+        minimum: 1
+      numberOfNumbers:
+        type: "integer"
+        format: "int32"
+        description: "NumberOfNumbers"
+        minimum: 1
+  ValidatePrizedWagerRequestVO:
+    type: "object"
+    required:
+    - "prizeValidation"
+    - "terminalCode"
+    - "token"
+    properties:
+      terminalCode:
+        type: "string"
+        description: "{vo.terminal.terminalCode}"
+        pattern: "^\\d{7}$"
+      token:
+        type: "string"
+        description: "{vo.token.token}"
+      prizeValidation:
+        description: "wagerRequestInformation"
+        $ref: "#/definitions/ValidateWagerVO"
+      statistic:
+        type: "object"
+        description: "statistic"
+        additionalProperties:
+          type: "object"
+  ValidateWagerVO:
+    type: "object"
+    properties:
+      gameNumber:
+        type: "string"
+        description: "{vo.data.wager.gameNumber}"
+      betSerialNumber:
+        type: "string"
+        description: "{vo.data.wager.betSerialNumber}"
+  ValidatedPrizeWagerResponseVO:
+    type: "object"
+    required:
+    - "header"
+    properties:
+      header:
+        description: "{vo.header}"
+        $ref: "#/definitions/ResponseHeader"
+      data:
+        description: "{vo.data}"
+        $ref: "#/definitions/ValidatedPrizeWagerResult"
+  ValidatedPrizeWagerResult:
+    type: "object"
+    properties:
+      textMessages:
+        description: "textMessages"
+        $ref: "#/definitions/TextMessageVO"
+      validatedPrizedWagerResult:
+        description: "validatedPrizedWagerResult"
+        $ref: "#/definitions/ValidatedPrizedWagerResultVO"
+  ValidatedPrizedWagerResultVO:
+    type: "object"
+    properties:
+      prizeValidation:
+        description: "{vo.data.wager.prizeValidation}"
+        $ref: "#/definitions/PrizeValidationVO"
