@@ -2,7 +2,7 @@ run tmir
 d
 t
 prim:mtmf01.fil
-henrique
+henrique-test
 a
 n
 n
