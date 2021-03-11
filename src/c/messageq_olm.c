@@ -33,7 +33,7 @@ void MessQ_attach(int *status)
 
    attach_mode = PSYM_ATTACH_BY_NUMBER;
    q_type      = PSYM_ATTACH_PQ;
-   q_number    = 2; /*its associated with the bus 13 and queue 2*/
+   q_number    = 1; /*its associated with the bus 13 and queue 1*/
    (void)sprintf( q_num_str, "%d", q_number ); 
    q_num_len   = (int32) strlen( q_num_str );
 
@@ -88,7 +88,7 @@ void MessQ_put(int *status)
    messagSent[To_IGS.Mess_To_Len] = '\0';*/
    
    q_addrPut.au.group= 13;
-   q_addrPut.au.queue= 1; 
+   q_addrPut.au.queue= 2; 
    
    /*from Hades Wildfly09 
    
