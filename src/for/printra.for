@@ -192,6 +192,13 @@ C V52 - Start
         INTEGER*4  I4TMP(2)
         EQUIVALENCE (I8TMP,I4TMP)
         
+        INTEGER*8  MESSID
+        REAL*16     OVER8BYTES
+        PARAMETER  (OVER8BYTES = 18446744073709551616.0)
+C        integer, parameter :: ep= selected_real_kind(21)
+C        real(ep), parameter :: OVER8BYTES = 18446744073709551616.0_ep
+        REAL*16     SERIALNUM_OLM
+        CHARACTER*24  SERIALNUM_OLMSTR,  SERIAL_AUX
         INTEGER*8  TMSGID ! TERMINAL MESSAGE ID
         INTEGER*8  HMSGID ! HOST MESSAGE ID
         INTEGER*8  TRXREF ! TRX EXTERNAL SERIAL
@@ -291,11 +298,36 @@ C
         SUBSTIT = TTYPE(TRABUF(TTYP))
         IF(TRABUF(TGAMTYP).EQ.TPAS.AND.
      *    (TRABUF(TWEPOP).EQ.EPASRES.OR.TRABUF(TWEPOP).EQ.EPASREL))
-     *     SUBSTIT = RESERV 
+     *     SUBSTIT = RESERV
+           I4TMP(1) = ZEXT(TRABUF(TWCOLMMIDL_TLTO)) 
+           I4TMP(2) = ZEXT(TRABUF(TWCOLMMIDH_TLTO)) 
+           MESSID = I8TMP  
+
+C           I8TMP = 0     
+           I4TMP(1) = ZEXT(TRABUF(TWCOLMSERL_TLTO)) 
+           I4TMP(2) = ZEXT(TRABUF(TWCOLMSERM_TLTO))
+C           SERIALNUM_OLM = 0
+
+           SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TWCOLMSERH_TLTO)))*OVER8BYTES+DFLOAT(I8TMP)
+           WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
+           SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)
+C           SERIALNUM_OLM = I8TMP           
+           
+           CALL OPS('MESSAGE ID:',MESSID,MESSID)
+           CALL OPS('MESSAGEL ID:',ZEXT(TRABUF(TWCOLMMIDL_TLTO)),ZEXT(TRABUF(TWCOLMMIDL_TLTO)))
+           CALL OPS('MESSAGEH ID:',ZEXT(TRABUF(TWCOLMMIDH_TLTO)),ZEXT(TRABUF(TWCOLMMIDH_TLTO)))
+           CALL OPS('CHANNEL OLM?',ZEXT(TRABUF(TWCOLMCOMF_TLTO)),ZEXT(TRABUF(TWCOLMCOMF_TLTO)))
+           CALL OPS('SERIALNUM_OLM:',SERIALNUM_OLM,SERIALNUM_OLM)
+           CALL OPS('SERIALNUM_OLM 4l byte:',ZEXT(TRABUF(TWCOLMSERL_TLTO)),ZEXT(TRABUF(TWCOLMSERL_TLTO)))
+           CALL OPS('SERIALNUM_OLM 4m byte:',ZEXT(TRABUF(TWCOLMSERM_TLTO)),ZEXT(TRABUF(TWCOLMSERM_TLTO)))
+           CALL OPS('SERIALNUM_OLM 9ºh byte:',ZEXT(TRABUF(TWCOLMSERH_TLTO)),ZEXT(TRABUF(TWCOLMSERH_TLTO)))
+
            WRITE(PUNIT,901)  STAT(TRABUF(TSTAT)),
      *                       ERROR(TRABUF(TERR)),
      *                       SUBSTIT,
      *                       SERIAL,
+C     *                       ZEXT(TRABUF(TWCOLMMIDL_TLTO)),
+C     *                       TRABUF(TWCOLMCOMF_TLTO),
      *                       DISTIM(TRABUF(TTIM)),
      *                       TRABUF(TTER),
      *                       TRABUF(TTRN),
@@ -310,6 +342,15 @@ C
      *                       KICKER,
      *                       CSMONY(TRABUF(TWTOT),10,BETUNIT),
      *                       TRABUF(TFRAC),QPTXT(QPVAL)
+
+           IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
+                WRITE(PUNIT,980)  MESSID,'COMOLM',SERIALNUM_OLMSTR
+C                WRITE(PUNIT,980)  MESSID,'COMOLM'
+           ELSE
+                WRITE(PUNIT,980)  MESSID,'COMX2X/COMMXS',SERIALNUM_OLMSTR
+C                WRITE(PUNIT,980)  MESSID,'COMX2X/COMMXS'
+           ENDIF
+            
 C
         IF(CANSER .GT. 0) THEN
             IF(TRABUF(TSTAT).EQ.CASH.OR.TRABUF(TSTAT).EQ.EXCH.OR.
@@ -1349,8 +1390,15 @@ CV54     *         /,1X,131('='),/)
      *         'SIZE  BEG        END     JOKER CMIL  M1LH',1X,
      *          'FRACTION','  X BET',
      *         /,1X,131('='),/)
-901     FORMAT(1X,3(2X,A4),I10,1X,A8,I6,Z4,I6,I5,1X,A8,
-     *         I5,I5,I5,1X,A4,1X,I5,A2,2X,A11,A10,1X,I4,1X,A4)
+901     FORMAT(1X,3(2X,A4),
+     *         I10,1X,
+C     *         I0,1X,
+C     *         I4,1X,
+     *         A8,I6,Z4,I6,I5,1X,A8,
+     *         I5,I5,I5,1X,A4,1X,I5,A2,2X,A11,A10,1X,I4,1X,A4)     
+980     FORMAT(10X,'Message ID>',I0,3X,'Channel>',A15,3X,'SerialNumber OLM>',A)
+990     FORMAT(F22.0)
+C980     FORMAT(10X,'Message ID>',I0,3X,'Channel>',A15)
 9018    FORMAT(3X,'BANK NUMBER ----> ',I8.8,' - ',I8.8,2X,
      *            'CASH NUM --> ',I10,2X,
      *            'TFILE:',A8,3X,A11,' Kb:',I4,' Ke:',I4,

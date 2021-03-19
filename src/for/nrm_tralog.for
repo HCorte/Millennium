@@ -1353,7 +1353,7 @@ C                                           !TO KICKER STORAGE.
 C         
 C----+------------------------------------------------------------------
 C V60| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------        
+C----+------------------------------------------------------------------       
             IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
                LOGBUF(17) = TRABUF(TWCOLMSERL_TLTO)
                LOGBUF(18) = TRABUF(TWCOLMSERM_TLTO)

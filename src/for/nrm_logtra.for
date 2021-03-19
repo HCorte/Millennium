@@ -1328,17 +1328,17 @@ C----+------------------------------------------------------------------
               I4TEMP           = LOGBUF(12)
               TRABUF(TWSYSN)   = ZEXT( I1TEMP(1) )
               TRABUF(TWVSTS)   = ZEXT( I1TEMP(2) ) 
+              
               IF(ISHFT(ZEXT(I1TEMP(3)),-4) .EQ. 1) THEN
                 TRABUF(TWDUR)    = ZEXT( IAND(I1TEMP(3),15) )
 
-                LOGBUF(17) = TRABUF(TWCOLMSERL_TLTO)
-                LOGBUF(18) = TRABUF(TWCOLMSERM_TLTO)
-                LOGBUF(19) = TRABUF(TWCOLMMIDL_TLTO)
-                I1TEMP(1) = TRABUF(TWCOLMSERH_TLTO)
-                I1TEMP(2) = TRABUF(TWCOLMMIDH_TLTO)
-                I1TEMP(3) = TRABUF(TWCOLMCOMF_TLTO)
-                I1TEMP(4) = 0
-                LOGBUF(20) = I4TEMP  
+                TRABUF(TWCOLMSERL_TLTO) = LOGBUF(17) 
+                TRABUF(TWCOLMSERM_TLTO) = LOGBUF(18)
+                TRABUF(TWCOLMMIDL_TLTO) = LOGBUF(19)
+                I4TEMP = LOGBUF(20) 
+                TRABUF(TWCOLMSERH_TLTO) = I1TEMP(1)  
+                TRABUF(TWCOLMMIDH_TLTO) = I1TEMP(2)
+                TRABUF(TWCOLMCOMF_TLTO) = I1TEMP(3)
 
 C WE LOSE SPACE FOR BOARD DATA
 C TO USE FOR NEW TERMINALS 2021                  
