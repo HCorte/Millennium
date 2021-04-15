@@ -1,6 +1,7 @@
 C
 C PROGRAM CANPRO
 C
+C V15 15-APR-2021 SCM New Termninals Project - OLM
 C V14 11-AUG-2015 SCML Correcting message lengths after changes in PLACARD
 C V13 16-MAR-2010 RXK Changes for ePassive
 C V12 21-JUN-2002 JHR Updating checksum and sequence # moved to wagpro's.
@@ -112,6 +113,7 @@ C
         TRABUF(TAGT)  =AGTTAB(AGTNUM,TER)
         TRABUF(TTYP)  =TCAN
         CALL DCAN(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
+
         IF(TRABUF(TERR).NE.NOER) THEN
           ERCODE=2
           GOTO 100
@@ -317,6 +319,20 @@ C
 	ENDIF
         IF(TRABUF(TERR).EQ.TBAD) HPRO(ENCOVR,BUF)=-1
 
+C----+------------------------------------------------------------------
+C V15| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------        
+        IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN 
+           TRABUF(TWCOLMSERL_TLTO)=PRO(SEROLM_INT_OLM,BUF)
+           TRABUF(TWCOLMSERM_TLTO)=PRO(SEROLM_INT_OLM+1,BUF)
+           TRABUF(TWCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
+           TRABUF(TWCOLMMIDL_TLTO)=PRO(MESSID_INT_OLM,BUF)
+           TRABUF(TWCOLMMIDH_TLTO)=BPRO(MESSID_OLM+4,BUF)
+           TRABUF(TWCOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
+        ENDIF
+C----+------------------------------------------------------------------
+C V15| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
         CALL TRALOG(TRABUF,PRO(WRKTAB,BUF))
 C	HPRO(INPLEN,BUF)=320   !INCREASED DO SUPPORT 3 RECORDS
 C----+------------------------------------------------------------------
