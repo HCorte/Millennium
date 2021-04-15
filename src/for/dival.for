@@ -319,37 +319,37 @@ C
 C
 C CHECK FOR DES ERROR
 C
-	IF(P(DESACT).EQ.0) THEN
-	  ENCMES = ZEXT(TERMES(1))
-	  ENCMES = IAND(ENCMES,'08'X)
-	  IF(P(DESFLG).EQ.0.AND.
-     *	     BTEST(AGTTAB(AGTTYP,TRABUF(TTER)),AGTDES)) THEN
- 	     ENCACT='08'X
-	  ELSE
-	     ENCACT=0
-	  ENDIF
-	  IF(ENCMES.NE.ENCACT) TRABUF(TERR) = DESMOD
-	ENDIF
+        IF(P(DESACT).EQ.0) THEN
+          ENCMES = ZEXT(TERMES(1))
+          ENCMES = IAND(ENCMES,'08'X)
+          IF(P(DESFLG).EQ.0.AND.
+     *       BTEST(AGTTAB(AGTTYP,TRABUF(TTER)),AGTDES)) THEN
+             ENCACT='08'X
+          ELSE
+             ENCACT=0
+          ENDIF
+          IF(ENCMES.NE.ENCACT) TRABUF(TERR) = DESMOD
+        ENDIF
 C
 8000	CONTINUE
 C----+------------------------------------------------------------------
 C V13| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------ 
-  IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
-    IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LT.4) THEN
-      TRABUF(TSIZE) = 2
-    ELSE IF (TRABUF(TIBCH).GE.4) THEN
-      TRABUF(TSIZE) = 3
-    ELSE
-      TRABUF(TSIZE) = 2
-    ENDIF
-  ELSE
-	  IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LE.4) THEN
-	    TRABUF(TSIZE) = 2
-	  ELSE IF (TRABUF(TIBCH).GE.5) THEN
-	    TRABUF(TSIZE) = 3
-	  ENDIF
-  ENDIF  
+          IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+            IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LT.4) THEN
+              TRABUF(TSIZE) = 2
+            ELSE IF (TRABUF(TIBCH).GE.4) THEN
+              TRABUF(TSIZE) = 3
+            ELSE
+              TRABUF(TSIZE) = 2
+            ENDIF
+          ELSE
+            IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LE.4) THEN
+              TRABUF(TSIZE) = 2
+            ELSE IF (TRABUF(TIBCH).GE.5) THEN
+              TRABUF(TSIZE) = 3
+            ENDIF
+          ENDIF  
 C	IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LE.4) THEN
 C	  TRABUF(TSIZE) = 2
 C	ELSE IF (TRABUF(TIBCH).GE.5) THEN
@@ -358,6 +358,6 @@ C	ENDIF
 C----+------------------------------------------------------------------
 C V13| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------ 
-  IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
-	RETURN
-	END
+        IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT
+        RETURN
+        END
