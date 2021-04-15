@@ -1352,7 +1352,9 @@ C                                           !TO KICKER STORAGE.
              ENDIF
 C         
 C----+------------------------------------------------------------------
-C V60| New Terminals Project - Olimpo
+C V60| New Terminals Project - Olimpo 
+C nota: confirmar se não comessar no LOGBUF 19 
+C pois TWCEBM no TSPT(SPORTS) está ocupar a posição 18 ....
 C----+------------------------------------------------------------------       
             IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
                LOGBUF(17) = TRABUF(TWCOLMSERL_TLTO)
