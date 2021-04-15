@@ -2,6 +2,7 @@ C  GXSRC:VIS_QUESNP.FOR
 C  
 C  $Log:   GXAFXT:[GOLS]QUESNP.FOV  $
 C  
+C V15 15-APR-2021 SCML Added support for OLM (New Terminals Proj)
 C V14 24-FEB-2014 SCML   Added support for IGS
 C V13 24-JUN-2011 FJG Reprocessing OOB QUE
 C V12 17-FEB-2001 CS  ADDED PASSIVE REPROCESSING QUEUE'S (RETURN AND VALIDATION)
@@ -71,6 +72,13 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V14| Adding support for IGS
 C----+------------------------------------------------------------------
+C----+------------------------------------------------------------------
+C V14| Adding support for IGS
+C----+------------------------------------------------------------------
+		INTEGER*4 COMOLMQ_LIST(2)
+C----+------------------------------------------------------------------
+C V14| Adding support for IGS
+C----+------------------------------------------------------------------
 C
 	INTEGER*4 LSTSTAT(9)
 	DATA      LSTSTAT/'rqin','inpr','redy','rewr','rout','oinp','free',
@@ -120,6 +128,13 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V14| Adding support for IGS
 C----+------------------------------------------------------------------
+C----+------------------------------------------------------------------
+C V15| Adding support for IGS
+C----+------------------------------------------------------------------
+		CALL LISTSIZE(COMOLMQUE(1),COMOLMQ_LIST(1))
+C----+------------------------------------------------------------------
+C V15| Adding support for IGS
+C----+------------------------------------------------------------------
 C
 C ENCODE SCREEN IMAGE
 C
@@ -155,12 +170,12 @@ C
 	ENDIF
 	WRITE(CLIN16,916)
 C----+------------------------------------------------------------------
-C V14| Adding support for IGS
+C V14| Adding support for IGS & V15 Adding support for OLM
 C----+------------------------------------------------------------------
 C        WRITE(CLIN17,917) (RPVQ_LIST(I),I=1,3)
-        WRITE(CLIN17,917) RPVQ_LIST(1),RPVQ_LIST(2),RPVQ_LIST(3),COMIGSQ_LIST(1)
+        WRITE(CLIN17,917) RPVQ_LIST(1),RPVQ_LIST(2),RPVQ_LIST(3),COMIGSQ_LIST(1),COMOLMQ_LIST(1)
 C----+------------------------------------------------------------------
-C V14| Adding support for IGS
+C V14| Adding support for IGS & V15 Adding support for OLM
 C----+------------------------------------------------------------------
 C
 	WRITE(CLIN18,918)
@@ -185,14 +200,14 @@ C QUESNP FOR PASSIVE GAMES: 33-RPVQPV 34-RPASPRO 35-RPASVAL
 C
 
 C----+------------------------------------------------------------------
-C V14| Adding support for IGS
+C V14| Adding support for IGS & V15 Adding support for OLM
 C----+------------------------------------------------------------------
 C916     FORMAT(X, '33-RPVQPV 34-RPASPR 35-RPASVA')
 C917     FORMAT(1X, I9, 1X, I9, 1X, I9)
-916     FORMAT(X, '33-RPVQPV 34-RPASPR 35-RPASVA 36-COMIGS')
-917     FORMAT(1X, I9, 1X, I9, 1X, I9, 1X, I9)
+916     FORMAT(X, '33-RPVQPV 34-RPASPR 35-RPASVA 36-COMIGS 37-COMOLM')
+917     FORMAT(1X, I9, 1X, I9, 1X, I9, 1X, I9, 1X, I9)
 C----+------------------------------------------------------------------
-C V14| Adding support for IGS
+C V14| Adding support for IGS & V15 Adding support for OLM
 C----+------------------------------------------------------------------
 C
 918	FORMAT(14('-'),' L O G G E R   B U F F E R   ',
