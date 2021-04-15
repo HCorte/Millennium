@@ -96,7 +96,7 @@ C       PARAMETER (PPP=23)	  !BINGO PROCESSING TASK MXSRV
 C----+-----------------------------------------------------------------
 C V13| Adding support for OLM
 C----+------------------------------------------------------------------		
-        PARAMETER (OLM=29)    !THE NEW TERMINALS (OLIMPO)
+        PARAMETER (OLM=43)    !THE NEW TERMINALS (OLIMPO)
 C----+-----------------------------------------------------------------
 C V13| Adding support for OLM
 C----+------------------------------------------------------------------	
@@ -168,12 +168,12 @@ C
      *                'TAPLOG  ','TIMER   ','CHKPNT  ','SLOCHK  ',
      *                'LANPRO  ','POOLPRO ','OVERPRO ','GCLOSE  ',
 C----+------------------------------------------------------------------
-C V12| Adding support for IGS
+C V12| Adding support for IGS & v13 Adding support for OLM
 C----+------------------------------------------------------------------
 C     *                'FPTPRO  ','        ','        ','        ',
-     *                'FPTPRO  ','COMIGS  ','        ','        ',
+     *                'FPTPRO  ','COMIGS  ','COMOLM   ','        ',
 C----+------------------------------------------------------------------
-C V12| Adding support for IGS
+C V12| Adding support for IGS & v13 Adding support for OLM
 C----+------------------------------------------------------------------
      *                '        ','        ','        ','        ',
      *                '        ','        ','        ','        ',
