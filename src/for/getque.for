@@ -854,7 +854,7 @@ C
 C
            IF(KICKER.AND.INTLEN.GT.44) SIZE = 3 !ignore kicker no longer in use by SCML
            IF(SUBTYP.EQ.TSPT.AND.INTLEN.GT.50) SIZE = 3 !in whant cases reaches 3 segments???
-           IF(INTLEN.GT.60) SIZE = 3 !in whant cases reaches 3 segments???    
+           IF(INTLEN.GT.60) SIZE = 3 !in whant cases reaches 3 segments???   
 C
            GOTO 9000
         ENDIF
