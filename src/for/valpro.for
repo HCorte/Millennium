@@ -1,6 +1,7 @@
 C
 C PROGRAM VALPRO
 C
+C V08 15-APR-2021 SCML New Terminals Project
 C V07 11-AUG-2015 SCML Correcting message lengths after changes in PLACARD
 C V06 09-OCT-2013 SCML New Validation Messages
 C V05 12-MAR-2010 RXK TCLM commented out
@@ -117,6 +118,20 @@ C
         TRABUF(TTIM)=PRO(TSTAMP,BUF)
         TRABUF(TSIZE)=HPRO(NUMLRC,BUF)
         TRABUF(TVCODE)=NOWIN
+C----+------------------------------------------------------------------
+C V08| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
+        IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN 
+           TRABUF(TVOLMSERL_TLTO)=PRO(SEROLM_INT_OLM,BUF)
+           TRABUF(TVOLMSERM_TLTO)=PRO(SEROLM_INT_OLM+1,BUF)
+           TRABUF(TVOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
+           TRABUF(TVOLMMIDL_TLTO)=PRO(MESSID_INT_OLM,BUF)
+           TRABUF(TVOLMMIDH_TLTO)=BPRO(MESSID_OLM+4,BUF)
+           TRABUF(TVOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
+        ENDIF        
+C----+------------------------------------------------------------------
+C V08| New Terminals Project - Olimpo
+C----+------------------------------------------------------------------
         CALL DVAL(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
 C
 C CHECK AGENT AND SYSTEM STATUS

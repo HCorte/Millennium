@@ -107,9 +107,8 @@ C
         TASK    = WAG
         MESS(1) = TASK
 5       CONTINUE
-C        CALL OPS('WAGPRO DAYCDC',DAYCDC,DAYCDC)
+
         BASECHKSUM=IAND(DAYCDC,'FFFF'X)
-C        CALL OPS('WAGPRO BASECHKSUM',BASECHKSUM,BASECHKSUM)
 C
 C WAIT FOR SOMETHING TO DO
 C IF END OF DAY THEN CALL GSTOP(GEXIT_SUCCESS)
@@ -170,33 +169,19 @@ C other wise comes from X2X or MXS
 C----+------------------------------------------------------------------
 C       begin - Olimpo Serial Number & Message Id & Communication Flag
         IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN 
-            TRABUF(TWCOLMSERL_TLTO)=PRO(SEROLM_INT_OLM,BUF)
-            CALL OPS('PRO(SEROLM_INT_OLM,BUF):',ZEXT(PRO(SEROLM_INT_OLM,BUF)),ZEXT(PRO(SEROLM_INT_OLM,BUF)))
-            TRABUF(TWCOLMSERM_TLTO)=PRO(SEROLM_INT_OLM+1,BUF)
-            CALL OPS('PRO(SEROLM_INT_OLM,BUF):',ZEXT(PRO(SEROLM_INT_OLM+1,BUF)),ZEXT(PRO(SEROLM_INT_OLM+1,BUF)))
-            TRABUF(TWCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
-            CALL OPS('PRO(SEROLM_INT_OLM,BUF):',ZEXT(BPRO(SEROLM_OLM+8,BUF)),ZEXT(BPRO(SEROLM_OLM+8,BUF)))
-            TRABUF(TWCOLMMIDL_TLTO)=PRO(MESSID_INT_OLM,BUF)
-            TRABUF(TWCOLMMIDH_TLTO)=BPRO(MESSID_OLM+4,BUF)
-            TRABUF(TWCOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
-
-            CALL OPS('SERIALNUM_OLM Wagpro 4l byte:',ZEXT(TRABUF(TWCOLMSERL_TLTO)),ZEXT(TRABUF(TWCOLMSERL_TLTO)))
-            CALL OPS('SERIALNUM_OLM Wagpro 4m byte:',ZEXT(TRABUF(TWCOLMSERM_TLTO)),ZEXT(TRABUF(TWCOLMSERM_TLTO)))
-            CALL OPS('SERIALNUM_OLM Wagpro 9ºh byte:',ZEXT(TRABUF(TWCOLMSERH_TLTO)),ZEXT(TRABUF(TWCOLMSERH_TLTO)))
-    
-            TRABUF(TVOLMSERL_TLTO)=PRO(SEROLM_INT_OLM,BUF)
-            TRABUF(TVOLMSERM_TLTO)=PRO(SEROLM_INT_OLM+1,BUF)
-            TRABUF(TVOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
-            TRABUF(TVOLMMIDL_TLTO)=PRO(MESSID_INT_OLM,BUF)
-            TRABUF(TVOLMMIDH_TLTO)=BPRO(MESSID_OLM+4,BUF)
-            TRABUF(TVOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
+                TRABUF(TWCOLMSERL_TLTO)=PRO(SEROLM_INT_OLM,BUF)                
+                TRABUF(TWCOLMSERM_TLTO)=PRO(SEROLM_INT_OLM+1,BUF)                
+                TRABUF(TWCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
+                TRABUF(TWCOLMMIDL_TLTO)=PRO(MESSID_INT_OLM,BUF)
+                TRABUF(TWCOLMMIDH_TLTO)=BPRO(MESSID_OLM+4,BUF)
+                TRABUF(TWCOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
         ENDIF
 C       end - Olimpo Serial Number & Message Id & Communication Flag
 C----+------------------------------------------------------------------
 C V28| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------
         GTYP = BPRO(BINPTAB+5,BUF)
-        IF(GTYP.EQ.TLTO) THEN
+        IF(GTYP.EQ.TLTO) THEN   
             CALL DLOTTO(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
         ELSE IF(GTYP.EQ.TSPT) THEN
             CALL DSPORT(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
@@ -293,7 +278,7 @@ CEV18
                 IF(WRKBUF(TTRN).NE.TRABUF(TTRN))     GOTO 80
                 IF(WRKBUF(TGAM).NE.TRABUF(TGAM))     GOTO 80
 C
-                IF(TRABUF(TGAMTYP).NE.TKIK) THEN
+                IF(TRABUF(TGAMTYP).NE.TKIK) THEN    
                    DO I=TWBORD,TWBEND
                       IF(WRKBUF(I).NE.TRABUF(I))       GOTO 80
                    ENDDO
@@ -332,7 +317,7 @@ C
 C=V27===========================================================================            
             TRABUF(TWKICK)  = AGTTAB(AGTLKN,TER)
             TRABUF(TWKICK2) = AGTTAB(AGTLKN2,TER)  
-C=V27===========================================================================                        
+C=V27===========================================================================                         
             CALL TRALOG(TRABUF,PRO(WRKTAB,BUF))
             TRABUF(TSER)    = AGTTAB(ALSTRA,TER)
 C=V27===========================================================================            
@@ -390,18 +375,17 @@ C----+------------------------------------------------------------------
 C V28| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------             
             I4TEMP = TRABUF(TWTOT)
-            CALL OPS('Wager Amount to Pay (wagpro):',ZEXT(I4TEMP),ZEXT(I4TEMP))
             HPRO(TWTOT_HALFW_OLM+0,BUF) = I2TEMP(1)
             HPRO(TWTOT_HALFW_OLM+1,BUF) = I2TEMP(2)
 C----+------------------------------------------------------------------
 C V28| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------                
-            CALL OUTWAG(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF)) !afther construting the output message (OUTTAB in the buffer BUF)
+C----+------------------------------------------------------------------               
+            CALL OUTWAG(TRABUF,PRO(OUTTAB,BUF),HPRO(OUTLEN,BUF)) !after constructing the output message (OUTTAB in the buffer BUF)
         ENDIF
 C
 C IF SYNTAX ERROR THEN PRINT ERROR CODE
 C ON THE CONSOLE.
-C
+C 
         IF(P(SUPSYN).EQ.0.AND.SYNTERRCOD.NE.0.AND.
      *     TRABUF(TERR).NE.NOTON) THEN
             MESS(2) = TEGEN !(TEGEN=4) !GENERAL MESSAGES
