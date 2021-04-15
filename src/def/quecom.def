@@ -12,6 +12,7 @@ C  Initial Release
 C  Based on Netherlands Bible, 12/92, and Comm 1/93 update
 C  DEC Baseline
 C
+C V03 07-APR-2021 SCML New Terminals Project - OLM
 C V02 24-FEB-2014 SCML PLACARD PROJECT - Added support for IGS
 C V01 01-AUG-1990 XXX  RELEASED FOR VAX
 C
@@ -53,6 +54,13 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V02| Adding support to IGS
 C----+------------------------------------------------------------------
+C----+------------------------------------------------------------------
+C V03| Adding support to OLM
+C----+------------------------------------------------------------------
+		INTEGER*4  COMOLMQUE
+C----+------------------------------------------------------------------
+C V03| Adding support to OLM
+C----+------------------------------------------------------------------	
 
 	COMMON/QUECOM/  QUETAB(NUMPRO +QHEDSZ,NUMAPPQUE),
      *                  REPVQUE(REPVLEN+QHEDSZ),
@@ -60,7 +68,14 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V02| Adding support to IGS
 C----+------------------------------------------------------------------
-     *                  COMIGSQUE(NUMPRO+QHEDSZ)
+     *                  COMIGSQUE(NUMPRO+QHEDSZ),
+C----+------------------------------------------------------------------
+C V02| Adding support to IGS
+C----+------------------------------------------------------------------
+C----+------------------------------------------------------------------
+C V02| Adding support to IGS
+C----+------------------------------------------------------------------
+     *                  COMOLMQUE(NUMPRO+QHEDSZ)
 C----+------------------------------------------------------------------
 C V02| Adding support to IGS
 C----+------------------------------------------------------------------
@@ -70,14 +85,17 @@ C
 	EQUIVALENCE	(FRST_QUECOM, QUETAB)
 	INTEGER*4	 LAST_QUECOM
 C----+------------------------------------------------------------------
-C V02| Adding support to IGS
+C V03| Adding support to OLM
 C----+------------------------------------------------------------------
 C       EQUIVALENCE     (LAST_QUECOM, REPQUEPAS(REPVLEN+QHEDSZ,2))
 C	EQUIVALENCE	(LAST_QUECOM, REPVQUE(REPVLEN+QHEDSZ))
-        EQUIVALENCE     (LAST_QUECOM, COMIGSQUE(NUMPRO+QHEDSZ))
+C V02	EQUIVALENCE     (LAST_QUECOM, COMIGSQUE(NUMPRO+QHEDSZ)) 
+        EQUIVALENCE     (LAST_QUECOM, COMOLMQUE(NUMPRO+QHEDSZ))
 C----+------------------------------------------------------------------
-C V02| Adding support to IGS
+C V03| Adding support to OLM
 C----+------------------------------------------------------------------
+
+
 	VOLATILE /QUECOM/
 C
 C END QUECOM.DEF

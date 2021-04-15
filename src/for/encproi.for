@@ -44,6 +44,7 @@ C  Initial revision.
 C
 C
 C 
+C V13 01-FEB-21 SCML New Terminal Project (MILL-OLM)
 C V12 16-MAR-03 GPW ENCSGNON (PASS NUM. CHANGED,MAXPAS=8)
 C V11 15-MAR-03 GPW PASS NUMBER FROM 10 BYTE
 C V10 14-MAR-03 GPW DESENCR AGTBTB->AGTHTB (PAS NUMB.),PRO(TERNUM ->HPRO(TERNUM
@@ -153,6 +154,9 @@ C
         INTEGER*4   NOFTLSIG
         EXTERNAL    NOFTLSIG
         INTEGER*4   INIT_HARDWARE /0/
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        INTEGER*4 USED, OLMLST(1024)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C
 C       (1) initialize - call encstart
@@ -933,12 +937,18 @@ C        ELSE
 C            CALL X2RELBUF(BUF)
 C        ENDIF
 
-        CALL OPSTXT(' ENCPROI.FOR ')
+        CALL OPSTXT('!!!!!X2X_GAMES_UP!!!!!!')
         IF (X2X_GAME_STATE.EQ.X2X_GAMES_UP) THEN
+          CALL OPSTXT('!!!!!X2X_GAMES_UP YES!!!!!!')      
 C         CALL X2ADDPRO(BUF)                        ! MXSRV
-          IF (HPRO(PRCSRC,BUF).EQ.OLM_COM) THEN ! V05 - OLM            
-            CALL QUETRA(OLM,BUF)                    ! V05 - OLM (rever se deve usar o ABL ou é QUETRA)
-C V05          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV            
+          IF (HPRO(PRCSRC,BUF).EQ.OLM_COM) THEN ! V13 - OLM            
+C            CALL QUETRA(OLM,BUF)                    ! V13 - OLM (rever se deve usar o ABL ou é QUETRA)
+             CALL OPSTXT('HPRO(PRCSRC,BUF).EQ.OLM_COM')   
+             CALL OLM_QUETRA(BUF) 
+C             CALL LISTSIZE(COMOLMQUE(1),USED)       
+C             CALL QIMAGE(COMOLMQUE(1),OLMLST,USED)
+C             CALL OPS('QUEUE 1 buff:',OLMLST(1),OLMLST(1))
+C V13          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV            
           ELSEIF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV
             CALL QUETRA(MXS,BUF)                    ! MXSRV
           ELSE                                      ! MXSRV

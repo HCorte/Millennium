@@ -1,6 +1,7 @@
 C
 C SUBROUTINE INTMEM
 C
+C V16 12-APR-2021 SCML New Terminals Project - OLM
 C V15 12-MAR-2014 SCML Added support to PLACARD Project - IGS
 C V14 22-JAN-2001 CS  ADDED PASSIVE GAME FOR PORTUGAL.
 C V13 22-JAN-2000 UXN POOLLTO ADDED.
@@ -99,6 +100,13 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V15| Added support to PLACARD Project - IGS
 C----+------------------------------------------------------------------
+C----+------------------------------------------------------------------
+C V16| Added support to New Terminals Project - OLM
+C----+------------------------------------------------------------------
+        CALL FASTSET(0, COMOLMQUE, (NUMPRO+QHEDSZ))
+C----+------------------------------------------------------------------
+C V16| Added support to New Terminals Project - OLM
+C----+------------------------------------------------------------------
 C
 C CLEAR GAME COMMONS
 C
@@ -166,6 +174,13 @@ C----+------------------------------------------------------------------
         CALL DEFLST(COMIGSQUE(1),NUMPRO)    !IGS
 C----+------------------------------------------------------------------
 C V15| Added support to PLACARD Project - IGS
+C----+------------------------------------------------------------------
+C----+------------------------------------------------------------------
+C V16| Added support to New Terminals Project - OLM
+C----+------------------------------------------------------------------
+        CALL DEFLST(COMOLMQUE(1),NUMPRO)    !OLM
+C----+------------------------------------------------------------------
+C V16| Added support to New Terminals Project - OLM
 C----+------------------------------------------------------------------
 C
         DO I =1, STALEN
