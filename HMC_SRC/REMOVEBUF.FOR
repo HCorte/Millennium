@@ -10,10 +10,12 @@ C        INCLUDE 'OLMCON.DEF'
 
         CHARACTER YN, ALLONE, BLOCKBUF
         LOGICAL RUNPROG /.TRUE./ 
-        INTEGER*4 DISLST(1024)
+        INTEGER*4 DISLST(1024), OLMLST(1024)
         INTEGER*4 I, LIMIT, USED
         INTEGER*4	RESULT
         INTEGER*4 OPT,ST
+        CHARACTER OPTION
+        INTEGER*4 BUFNUM, STAT        
       
 11      CONTINUE
         IF(RUNPROG) THEN
@@ -25,11 +27,13 @@ C        INCLUDE 'OLMCON.DEF'
           PRINT *, 'Reset the Active Task List for all Tasks press (5) R'
           PRINT *, '(TEST) Incremente Active Task for COMOLM (6) I'
           PRINT *, '(TEST) Decrement Active Task for COMOLM (7) D'
+          PRINT *, 'List all the buffers in the OLM queue (8) Q'
+          PRINT *, 'Remove Buff from OLM queue (9) ...'
 C          PRINT *, 'THIS PROGRAM IS TO REMOVE A BUFFER FROM APPLICATION QUEUE, CONTINUE THE PROGRAMA (Y/N) or W for watch?'
           READ *, OPTION
 
           IF(OPTION .EQ. 'E' .OR. OPTION .EQ. 'e') THEN
-            RETURN
+C            RETURN
           ENDIF          
 
           OPT = ICHAR(OPTION) - ICHAR('0')
@@ -52,9 +56,9 @@ C          *              , ST)
             CALL LISTSIZE(QUETAB(1,DIS),USED)       
             CALL QIMAGE(QUETAB(1,DIS),DISLST,USED)
             PRINT *, 'DISPATCHER'
-            PRINT 100,DISLST(1)
+            PRINT 102,DISLST(1)
             DO I=2, USED+1
-              PRINT 101,DISLST(I) 
+              PRINT 103,DISLST(I) 
             ENDDO
           GOTO 11  
 
@@ -82,9 +86,24 @@ C          *              , ST)
           GOTO 11 
           
 800       CONTINUE
+           CALL LISTSIZE(COMOLMQUE(1),USED)       
+           CALL QIMAGE(COMOLMQUE(1),OLMLST,USED)
+           PRINT *, 'OLIMPO Queue'
+           PRINT *, 'USED BUFFERS:',USED
+           PRINT 104,OLMLST(1)
+           DO I=2, 10
+C           DO I=2, USED+1
+             PRINT 105,OLMLST(I) 
+           ENDDO
           GOTO 11 
           
 900       CONTINUE
+            CALL RTL (BUFNUM, COMOLMQUE(1), STAT)
+            IF (STAT .EQ. GLIST_STAT_EMPTY) THEN
+              PRINT *, 'LIST iS EMPTY'
+              BUFNUM = 0
+            ENDIF 
+            CALL RELBUF(BUFNUM)
           GOTO 11 
           
 C          IF(YN .EQ. 'Y' .OR. YN .EQ. 'y') THEN
@@ -139,8 +158,10 @@ C          ENDIF
         ENDIF
 C        PRINT *,'PROGRAM AS ENDED...'
 
-100	FORMAT(1X,'<',I4.0,'>')
-101	FORMAT(2X,I4.0)        
+102	FORMAT(1X,'<',I4.0,'>')
+103	FORMAT(2X,I4.0) 
+104	FORMAT(1X,'<',I4.0,'>')
+105	FORMAT(2X,I4.0)        
 
       END
 
