@@ -4,7 +4,7 @@ C V50 05-DEZ-2020 SCML New Terminals Project - Olimpo
 C V49 03-MAR-2016 SCML M16 PROJECT: added new trabuf fields for EM transactions.
 C V48 25-FEB-2014 SCML PLACARD PROJECT - Added new Oddset game messages
 C V47 08-OCT-2013 SCML New Validation Messages
-C V46 08-OCT-2013 SCML Added TIVMT,TIPLIDTYP,TIPLCARD,TINIBBB,TINIBBO, 
+C V46 08-OCT-2013 SCML Added TIVMT,TIPLIDTYP,TIPLCARD,TINIBBB,TINIBBO,
 C                      TINIBBA1,TINIBBA2,TINIBCD,TINETPRZ.
 C V45 23-SEP-2013 SCML TVPLIDTYP added
 C V44 12-APR-2011 FJG ACCENTURE MERGE FOR EM2
@@ -35,12 +35,12 @@ C                     SUPER TRIPLE ADDED.
 C V26 18-MAR-1999 RXK Flag for the case gtyp+gind are in 5+3 bits.
 C V25 17-JUN-1997 RXK Bingo Fullhouse changes
 C V24 14-FEB-1997 RXK Value for ISLEN set to 5
-C V23 11-FEB-1997 RXK IMNU=instant supply message, IORD=instant games names 
+C V23 11-FEB-1997 RXK IMNU=instant supply message, IORD=instant games names
 C                     request message
 C V22 05-DEC-1996 HXK Updated for Finland IPS
-C V21 19-NOV-1996 GPK Parameter TRCON=30 changed to TRCON=31; TRCON1,TRCON2 
+C V21 19-NOV-1996 GPK Parameter TRCON=30 changed to TRCON=31; TRCON1,TRCON2
 C                     and TRCON3 changed
-C V20 17-APR-1996 HXK Release of Finland for X.25, Telephone Betting, 
+C V20 17-APR-1996 HXK Release of Finland for X.25, Telephone Betting,
 C                     Instant Pass Thru Phase 1
 C V19 04-JAN-1996 HXK Added TWWCOUPID for Voittaja coupon
 C V18 07-NOV-1995 PXB Coupon ID for dbl and cpl now is first.
@@ -51,9 +51,9 @@ C V14 18-FEB-1995 HXK Changes for V5 game
 C V13 19-OCT-1994 HXK Set Bingo record size = 2
 C V12 02-OCT-1994 HXK Added Bingo
 C V11 22-AUG-1993 GXA Added TCDC_SOLD to Transaction Header.
-C V10 16-JUL-1993 GXA Added TSUBERR as a sub error code to the transaction 
+C V10 16-JUL-1993 GXA Added TSUBERR as a sub error code to the transaction
 C                     header.
-C V09 21-MAY-1993 GXA Added Kicker Winsel CDC, Bank ID and Bank# to Validation 
+C V09 21-MAY-1993 GXA Added Kicker Winsel CDC, Bank ID and Bank# to Validation
 C                     transactions.
 C V08 11-MAY-1993 GXA Removed multiple definitions of TWKFLG.
 C V07 11-MAY-1993 GXA Removed multiply defined TAVAL6.
@@ -113,7 +113,7 @@ C
         PARAMETER (TFRAC=18)            !# OF FRACTIONS
         PARAMETER (TSIZE=19)            !TRANSACTION SIZE (LOG RECS)
         PARAMETER (TSUBERR=20)          !ERROR SUB CODE
-C 
+C
         INTEGER*4 TCDC_SOLD, TFAMTFLG, TNFRAC, TWADDFW
         PARAMETER (TCDC_SOLD=21)        !CDC TRANS. WAS SOLD (NEVER CHANGES)
         PARAMETER (TFAMTFLG=22)         !BET AMOUT FLAG (FOR FRACTIONS)
@@ -125,7 +125,7 @@ C
         INTEGER*4  TWBEG, TWEND, TWTKC, TWAMT, TWDAMT, TWTOT, TWDUR
         PARAMETER (TWBEG=25)            !STARTING DRAW #
         PARAMETER (TWEND=26)            !ENDING DRAW #
-        PARAMETER (TWTKC=27)            !TICKET CHARGE 
+        PARAMETER (TWTKC=27)            !TICKET CHARGE
         PARAMETER (TWAMT=28)            !BASE AMOUNT
         PARAMETER (TWDAMT=29)           !DISCOUNT AMOUNT
         PARAMETER (TWTOT=30)            !TOTAL AMOUNT
@@ -183,7 +183,7 @@ C
         PARAMETER (TWCDCOFF=63)         !CDC OFFSET FOR EXCH TKT. (FOR STATE)
         PARAMETER (TWNMRK=64)           !#LOTTO MARKS/BOARD
         PARAMETER (TWMULT=76)           !START OF BET MULTIPLIERS
-        PARAMETER (TWBORD=88)           !START OF BOARD DATA
+        PARAMETER (TWBORD=88)           !START OF BOARD DATA to 98 positon lotto
         PARAMETER (TWWEQP=120)          !WEIGHTED QP
         PARAMETER (TWBEND=120)          !END OF BOARD DATA
         PARAMETER (TWLUCK=121)          !LUCKY NUMBER      !V42
@@ -192,9 +192,9 @@ C
 C EPASSIVE WAGER BODY
 C
         INTEGER*4 TWEPOP, TWEPWK, TWEPYR
-        PARAMETER (TWEPOP=60)           !OPERATION REQUESTED 
+        PARAMETER (TWEPOP=60)           !OPERATION REQUESTED
         PARAMETER (TWEPWK=61)           !WEEK
-        PARAMETER (TWEPYR=62)           !YEAR 
+        PARAMETER (TWEPYR=62)           !YEAR
 C
 C EPASSIVE SALE
 C
@@ -208,25 +208,25 @@ C
         INTEGER*4  TWEPSD, TWEPRM, TWEPNE, TWEPNF
         PARAMETER (TWEPSD=66)           !SEED
         PARAMETER (TWEPRM=67)           !RESERVE MASK
-        PARAMETER (TWEPNE=68)           !NUMBER OF GIVEN ENDING NUMBERS   
+        PARAMETER (TWEPNE=68)           !NUMBER OF GIVEN ENDING NUMBERS
         PARAMETER (TWEPNF=69)           !NUMBER OF REQUESTED FRACTIONS
 
         INTEGER*4  TWEPNR
         PARAMETER (TWEPNR=70)           !NUMBER OF RESERVATIONS/RELEASES
 
         INTEGER*4 TWEPRES1, TWEPRES2, TWEPRES3
-        PARAMETER (TWEPRES1=71)         !NUMBER RESERVED 1    
-        PARAMETER (TWEPRES2=72)         !NUMBER RESERVED 2    
-        PARAMETER (TWEPRES3=73)         !NUMBER RESERVED 3    
+        PARAMETER (TWEPRES1=71)         !NUMBER RESERVED 1
+        PARAMETER (TWEPRES2=72)         !NUMBER RESERVED 2
+        PARAMETER (TWEPRES3=73)         !NUMBER RESERVED 3
 
         INTEGER*4 TWEPNFR1, TWEPNFR2, TWEPNFR3
-        PARAMETER (TWEPNFR1=74)         !NUMBER OF FRACTIONS FOR NUMBER 1   
+        PARAMETER (TWEPNFR1=74)         !NUMBER OF FRACTIONS FOR NUMBER 1
         PARAMETER (TWEPNFR2=75)         !NUMBER OF FRACTIONS FOR NUMBER 2
         PARAMETER (TWEPNFR3=76)         !NUMBER OF FRACTIONS FOR NUMBER 3
 
         INTEGER*4 TWEPSER1_1,TWEPSER1_2,TWEPSER1_3,TWEPSER1_4,TWEPSER1_5
         INTEGER*4 TWEPSER1_6,TWEPSER1_7,TWEPSER1_8,TWEPSER1_9,TWEPSER1_10
-        PARAMETER (TWEPSER1_1=77)       !SERIE 1-1 FOR NUMBER RESERVED 1 
+        PARAMETER (TWEPSER1_1=77)       !SERIE 1-1 FOR NUMBER RESERVED 1
         PARAMETER (TWEPSER1_2=78)       !SERIE 1-2    "
         PARAMETER (TWEPSER1_3=79)       !SERIE 1-3    "
         PARAMETER (TWEPSER1_4=80)       !SERIE 1-4    "
@@ -239,12 +239,12 @@ C
 
         INTEGER*4 TWEPFRC1_1,TWEPFRC1_2,TWEPFRC1_3,TWEPFRC1_4,TWEPFRC1_5
         INTEGER*4 TWEPFRC1_6,TWEPFRC1_7,TWEPFRC1_8,TWEPFRC1_9,TWEPFRC1_10
-        PARAMETER (TWEPFRC1_1=87)       !FRACTION FOR SERIE 1-1 
+        PARAMETER (TWEPFRC1_1=87)       !FRACTION FOR SERIE 1-1
         PARAMETER (TWEPFRC1_2=88)       !FRACTION FOR SERIE 1-2
         PARAMETER (TWEPFRC1_3=89)       !FRACTION FOR SERIE 1-3
         PARAMETER (TWEPFRC1_4=90)       !FRACTION FOR SERIE 1-4
         PARAMETER (TWEPFRC1_5=91)       !FRACTION FOR SERIE 1-5
-        PARAMETER (TWEPFRC1_6=92)       !FRACTION FOR SERIE 1-6 
+        PARAMETER (TWEPFRC1_6=92)       !FRACTION FOR SERIE 1-6
         PARAMETER (TWEPFRC1_7=93)       !FRACTION FOR SERIE 1-7
         PARAMETER (TWEPFRC1_8=94)       !FRACTION FOR SERIE 1-8
         PARAMETER (TWEPFRC1_9=95)       !FRACTION FOR SERIE 1-9
@@ -265,12 +265,12 @@ C
 
         INTEGER*4 TWEPFRC2_1,TWEPFRC2_2,TWEPFRC2_3,TWEPFRC2_4,TWEPFRC2_5
         INTEGER*4 TWEPFRC2_6,TWEPFRC2_7,TWEPFRC2_8,TWEPFRC2_9,TWEPFRC2_10
-        PARAMETER (TWEPFRC2_1=107)      !FRACTION FOR SERIE 2-1 
+        PARAMETER (TWEPFRC2_1=107)      !FRACTION FOR SERIE 2-1
         PARAMETER (TWEPFRC2_2=108)      !FRACTION FOR SERIE 2-2
         PARAMETER (TWEPFRC2_3=109)      !FRACTION FOR SERIE 2-3
         PARAMETER (TWEPFRC2_4=110)      !FRACTION FOR SERIE 2-4
         PARAMETER (TWEPFRC2_5=111)      !FRACTION FOR SERIE 2-5
-        PARAMETER (TWEPFRC2_6=112)      !FRACTION FOR SERIE 2-6 
+        PARAMETER (TWEPFRC2_6=112)      !FRACTION FOR SERIE 2-6
         PARAMETER (TWEPFRC2_7=113)      !FRACTION FOR SERIE 2-7
         PARAMETER (TWEPFRC2_8=114)      !FRACTION FOR SERIE 2-8
         PARAMETER (TWEPFRC2_9=115)      !FRACTION FOR SERIE 2-9
@@ -291,12 +291,12 @@ C
 
         INTEGER*4 TWEPFRC3_1,TWEPFRC3_2,TWEPFRC3_3,TWEPFRC3_4,TWEPFRC3_5
         INTEGER*4 TWEPFRC3_6,TWEPFRC3_7,TWEPFRC3_8,TWEPFRC3_9,TWEPFRC3_10
-        PARAMETER (TWEPFRC3_1=127)      !FRACTION FOR SERIE 3-1 
+        PARAMETER (TWEPFRC3_1=127)      !FRACTION FOR SERIE 3-1
         PARAMETER (TWEPFRC3_2=128)      !FRACTION FOR SERIE 3-2
         PARAMETER (TWEPFRC3_3=129)      !FRACTION FOR SERIE 3-3
         PARAMETER (TWEPFRC3_4=130)      !FRACTION FOR SERIE 3-4
         PARAMETER (TWEPFRC3_5=131)      !FRACTION FOR SERIE 3-5
-        PARAMETER (TWEPFRC3_6=132)      !FRACTION FOR SERIE 3-6 
+        PARAMETER (TWEPFRC3_6=132)      !FRACTION FOR SERIE 3-6
         PARAMETER (TWEPFRC3_7=133)      !FRACTION FOR SERIE 3-7
         PARAMETER (TWEPFRC3_8=134)      !FRACTION FOR SERIE 3-8
         PARAMETER (TWEPFRC3_9=135)      !FRACTION FOR SERIE 3-9
@@ -443,47 +443,47 @@ C
         PARAMETER (TWCPBLEN=3)          !3 WORDS/ BET
         PARAMETER (TWCPBMAX=12)         !12 BETS
 C
-C SUPERSCORE WAGER BODY 
+C SUPERSCORE WAGER BODY
 C
         INTEGER*4 TWSSCOUPID, TWSSAMT
         INTEGER*4 TWSSHM1, TWSSAW1, TWSSHM2, TWSSAW2, TWSSHM3, TWSSAW3
         INTEGER*4 TWSSBET, TWSSBMAX
-        PARAMETER (TWSSCOUPID=60)       !COUPON ID       
-        PARAMETER (TWSSAMT=61)          !AMOUNT BET       
-        PARAMETER (TWSSHM1=62)          !# OF HOME SCORES IN SET 1       
-        PARAMETER (TWSSAW1=63)          !# OF AWAY SCORES IN SET 1       
+        PARAMETER (TWSSCOUPID=60)       !COUPON ID
+        PARAMETER (TWSSAMT=61)          !AMOUNT BET
+        PARAMETER (TWSSHM1=62)          !# OF HOME SCORES IN SET 1
+        PARAMETER (TWSSAW1=63)          !# OF AWAY SCORES IN SET 1
         PARAMETER (TWSSHM2=64)          !# OF HOME SCORES IN SET 2
         PARAMETER (TWSSAW2=65)          !# OF AWAY SCORES IN SET 2
         PARAMETER (TWSSHM3=66)          !# OF HOME SCORES IN SET 3
         PARAMETER (TWSSAW3=67)          !# OF AWAY SCORES IN SET 3
         PARAMETER (TWSSBET=68)          !BET SCORES BEGIN
-        PARAMETER (TWSSBMAX=30)         !MAX # OF SCORES      
+        PARAMETER (TWSSBMAX=30)         !MAX # OF SCORES
 C
-C TODAY'S TRIO WAGER BODY 
+C TODAY'S TRIO WAGER BODY
 C
         INTEGER*4 TWTTCOUPID, TWTTAMT
-        INTEGER*4 TWTTMA, TWTTMB, TWTTMC 
+        INTEGER*4 TWTTMA, TWTTMB, TWTTMC
         INTEGER*4 TWTTBET, TWTTBMAX
-        PARAMETER (TWTTCOUPID=60)       !COUPON ID       
-        PARAMETER (TWTTAMT=61)          !AMOUNT BET       
+        PARAMETER (TWTTCOUPID=60)       !COUPON ID
+        PARAMETER (TWTTAMT=61)          !AMOUNT BET
         PARAMETER (TWTTMA=62)           !# OF MARKS FOR EVENT A
         PARAMETER (TWTTMB=63)           !# OF MARKS FOR EVENT B
         PARAMETER (TWTTMC=64)           !# OF MARKS FOR EVENT C
         PARAMETER (TWTTBET=65)          !BET BEGINS
-        PARAMETER (TWTTBMAX=27)         !MAX # OF MARKS 
+        PARAMETER (TWTTBMAX=27)         !MAX # OF MARKS
 C
-C SUPER TRIPLE WAGER BODY 
+C SUPER TRIPLE WAGER BODY
 C
         INTEGER*4 TWSTCOUPID, TWSTAMT
-        INTEGER*4 TWSTM1, TWSTM2, TWSTM3 
+        INTEGER*4 TWSTM1, TWSTM2, TWSTM3
         INTEGER*4 TWSTBET, TWSTBMAX
-        PARAMETER (TWSTCOUPID=60)       !COUPON ID       
-        PARAMETER (TWSTAMT=61)          !AMOUNT BET       
-        PARAMETER (TWSTM1=62)           !# OF MARKS FOR 1ST PLACE 
+        PARAMETER (TWSTCOUPID=60)       !COUPON ID
+        PARAMETER (TWSTAMT=61)          !AMOUNT BET
+        PARAMETER (TWSTM1=62)           !# OF MARKS FOR 1ST PLACE
         PARAMETER (TWSTM2=63)           !# OF MARKS FOR 2ND PLACE
         PARAMETER (TWSTM3=64)           !# OF MARKS FOR 3RD PLACE
         PARAMETER (TWSTBET=65)          !BET BEGINS
-        PARAMETER (TWSTBMAX=18)         !MAX # OF MARKS 
+        PARAMETER (TWSTBMAX=18)         !MAX # OF MARKS
 C
 C VALIDATION BODY
 C
@@ -519,7 +519,7 @@ C
         INTEGER*4 TVEPVAL, TVEPWK, TVEPYR
         PARAMETER (TVEPVAL=43)         !NEW PASSIVE VALIDATION LAYOUT
         PARAMETER (TVEPWK =44)         !WEEK
-        PARAMETER (TVEPYR =45)         !YEAR   
+        PARAMETER (TVEPYR =45)         !YEAR
 C
         INTEGER*4 TVPLIDTYP            !V45
         PARAMETER (TVPLIDTYP=46)       !PLAYER ID TYPE: 0 - TELEPHONE NUMBER /  1 - PLAYER CARD !V45
@@ -536,7 +536,7 @@ C
         PARAMETER (TVEPTYP=53)         !IF SET IT IS AN ETICKET FLAG
 CC
 C PPASSIVE LOTTERY BUNCH VALIDATION
-C PPASSIVE RETURN OF TICKETS 
+C PPASSIVE RETURN OF TICKETS
 C
 	INTEGER*4	TPTCK,TPFRAMT,TPFRCNT,TPOFFTER,TPRETYP
 	PARAMETER	(TPTCK  = 54)		!NUMBER OF TICKETS TO VALIDATE
@@ -546,14 +546,14 @@ C
 	PARAMETER	(TPFRCNT= 58)		!TOTAL # OF FRACTIONS (OK)
 C
 	INTEGER*4	OFFTRA
-	PARAMETER	(OFFTRA=7)  !OFFSET BETWEEN TWO TICKETS ON TRABUF 
+	PARAMETER	(OFFTRA=7)  !OFFSET BETWEEN TWO TICKETS ON TRABUF
 C				    !CHANGE IT IF YOU INCLUDE NEW FIELDS ON IT
 C
 	INTEGER*4       TPNUM1,TPKEY1,TPPAY1,TPEMIS1
 	INTEGER*4	TPSER1,TPTEN1,TPSTS1
 	PARAMETER	(TPNUM1 = 59)		!TICKET/PACK NUMBER 1
 	PARAMETER	(TPKEY1 = 60)		!TICKET KEY 1
-	PARAMETER	(TPPAY1 = 61)		!PRIZE PAID 1 
+	PARAMETER	(TPPAY1 = 61)		!PRIZE PAID 1
 	PARAMETER	(TPEMIS1= 62)		!EMISSION NUMBER 1
 	PARAMETER	(TPSER1 = 63)		!SERIE NUMBER 1
 	PARAMETER	(TPTEN1 = 64)		!TENTH NUMBER 1
@@ -1050,7 +1050,7 @@ C
          PARAMETER (TEUWENDY = 32)                                              !END YEAR DRAW                     (OUT)
          PARAMETER (TEUWDUR  = 33)                                              !DURATION OF BET (NUMBER OF DRAWS) (IN)
          PARAMETER (TEUWNBET = 34)                                              !NUMBER OF BOARDS                  (IN)
-         
+
          INTEGER*4 TEUWQP, TEUWNMK, TEUWNST, TEUWTIMEH, TEUWTIMEM, TEUWTIMES
          PARAMETER (TEUWQP    = 35)                                             !QUICK PICK FLAG       (IN)
          PARAMETER (TEUWNMK   = 36)                                             !NUMBER OF MARKS       (IN)
@@ -1058,7 +1058,7 @@ C
          PARAMETER (TEUWTIMEH = 38)                                             !TIME OF WAGGER : HOUR (OUT)
          PARAMETER (TEUWTIMEM = 39)                                             !TIME OF WAGGER : MIN  (OUT)
          PARAMETER (TEUWTIMES = 40)                                             !TIME OF WAGGER : SS   (OUT)
-         
+
 C         INTEGER*4 TEUWBOARDM, TEUWBOARD1, TEUWBOARD2, TEUWBOARD3, TEUWBOARD4, TEUWBOARD5
 C         INTEGER*4 TEUWBOARD,TEUWOFS1,TEUWOFS2,TEUWDRWIND
          INTEGER*4 TEUWOFS1,TEUWOFS2,TEUWDRWIND                                 !M16 PROJECT (V49)
@@ -1076,7 +1076,7 @@ C         PARAMETER (TEUWBOARD5 = 45) ! BOARD OF BET 5
 C
 C M16 PROJECT - WAGER TRANSACTION NEW FIELDS (V49)
 C
-         INTEGER*4 TEUW_KIWFL, TEUW_EUWCH, TEUW_PLNIF, TEUW_SMWFL, TEUW_SHWFL 
+         INTEGER*4 TEUW_KIWFL, TEUW_EUWCH, TEUW_PLNIF, TEUW_SMWFL, TEUW_SHWFL
          PARAMETER (TEUW_KIWFL = 44)                                            !EM KICKER FLAG                          (IN)
          PARAMETER (TEUW_EUWCH = 45)                                            !EM WAGER CHANNEL                        (IN)
          PARAMETER (TEUW_PLNIF = 46)                                            !PORTUGUESE PLAYER NIF                   (IN)
@@ -1112,7 +1112,7 @@ C
 C        PAY ATTENTION:
 C          1. TRABUF INDEX FOR START BOARD IS TEUWBOARD
 C          2. TRABUF INDEX FOR END BOARD IS TEUWBEND
-C          3. BOARD DATA HAVE A MAXIMUM SIZE OF ONE LOG RECORD MINUS 4 
+C          3. BOARD DATA HAVE A MAXIMUM SIZE OF ONE LOG RECORD MINUS 4
 C             BYTES, WHICH IS 60 BYTES = 15 INTEGER*4
 C          4. TEUWBEND = TEUWBOARD + 32 - 1
 C
@@ -1130,7 +1130,7 @@ C
          PARAMETER (TEUCWJUL = 29)                                              !EM WAGER JULIAN CANCEL        (IN)
          PARAMETER (TEUCWSER = 30)                                              !EM WAGER EXTERN SERIAL CANCEL (IN)
          PARAMETER (TEUCWCKD = 31)                                              !EM WAGER CHECK DIGITS CANCEL  (IN)
-         
+
          INTEGER*4 TEUCTIMEH, TEUCTIMEM, TEUCTIMES, TEUCST, TEUCAM
          PARAMETER (TEUCTIMEH  = 32)                                            !CANCEL TIME: HOUR             (OUT)
          PARAMETER (TEUCTIMEM  = 33)                                            !CANCEL TIME: MIN              (OUT)
@@ -1147,7 +1147,7 @@ C
          PARAMETER (TEUC_SMWCD = 38)                                            !SM WAGER CHECK DIGITS             (OUT)
          PARAMETER (TEUC_SMCFL = 39)                                            !SM CANCELLATION DATA PRESENT FLAG (OUT)
          PARAMETER (TEUC_SHCFL = 40)                                            !SoM CANCELLATION FLAG             (OUT)
-         
+
          INTEGER*4 TEUC_SMCSN, TEUC_SMCCD, TEUC_SMWCA
          PARAMETER (TEUC_SMCSN = 41)                                            !SM CANCELLATION EXTERNAL SERIAL NUMBER (OUT)
          PARAMETER (TEUC_SMCCD = 42)                                            !SM CANCELLATION CHECK DIGITS           (OUT)
@@ -1160,13 +1160,13 @@ C
          PARAMETER (TEUVWJUL = 30)                                              !WAGER JULIAN VALIDATION        (IN)
          PARAMETER (TEUVWSER = 31)                                              !WAGER EXTERN SERIAL VALIDATION (IN)
          PARAMETER (TEUVWCKD = 32)                                              !WAGER CHECK DIGITS VALIDATION  (IN)
-         
+
          INTEGER*4 TEUVTIMEH, TEUVTIMEM, TEUVTIMES, TEUVST
          PARAMETER (TEUVTIMEH = 33)                                             !VALIDATION TIME : HOUR   (OUT)
          PARAMETER (TEUVTIMEM = 34)                                             !VALIDATION TIME : MIN    (OUT)
          PARAMETER (TEUVTIMES = 35)                                             !VALIDATION TIME : SS     (OUT)
          PARAMETER (TEUVST    = 36)                                             !VALIDATION STATUS        (OUT)
-C         
+C
          INTEGER*4 TEUVCAM, TEUVRAM, TEUVCAMH, TEUVRAMH
          PARAMETER (TEUVCAM   = 37)                                             !VALIDATION CASH AMOUNT                  (OUT)
          PARAMETER (TEUVRAM   = 38)                                             !VALIDATION REFUND AMOUNT                (OUT)
@@ -1178,7 +1178,7 @@ C
          INTEGER*4 TEUEVWSER,TEUEVWCKD
          PARAMETER (TEUEVWSER = 39)
          PARAMETER (TEUEVWCKD = 40)
-         
+
          INTEGER*4  TEUVEBEGW, TEUVEBEGY, TEUVEENDW, TEUVEENDY, TEUVEDUR,TEUVENBET
          PARAMETER (TEUVEBEGW = 41)                                             !BEGIN WEEK DRAW                   (OUT)
          PARAMETER (TEUVEBEGY = 42)                                             !BEGIN YEAR DRAW                   (OUT)
@@ -1186,7 +1186,7 @@ C
          PARAMETER (TEUVEENDY = 44)                                             !END YEAR DRAW                     (OUT)
          PARAMETER (TEUVEDUR  = 45)                                             !DURATION OF BET (NUMBER OF DRAWS) (IN)
          PARAMETER (TEUVENBET = 46)                                             !NUMBER OF BOARDS                  (IN)
-         
+
          INTEGER*4 TEUVEQP, TEUVENMK, TEUVENST, TEUVETIMEH, TEUVETIMEM, TEUVETIMES
          PARAMETER (TEUVEQP    = 47)                                            !QUICK PICK FLAG       (IN)
          PARAMETER (TEUVENMK   = 48)                                            !NUMBER OF MARK'S      (IN)
@@ -1194,25 +1194,25 @@ C
          PARAMETER (TEUVETIMEH = 50)                                            !TIME OF WAGGER : HOUR (OUT)
          PARAMETER (TEUVETIMEM = 51)                                            !TIME OF WAGGER : MIN  (OUT)
          PARAMETER (TEUVETIMES = 52)                                            !TIME OF WAGGER : SS   (OUT)
-         
+
 C         INTEGER*4 TEUWBOARDM, TEUWBOARD1, TEUWBOARD2, TEUWBOARD3, TEUWBOARD4, TEUWBOARD5
          INTEGER*4 TEUVEBOARD,TEUVEOFS1,TEUVEOFS2
          PARAMETER (TEUVEOFS1 = 53)                                             !OFFSET TO FIRST CDC DATE  (OUT)
          PARAMETER (TEUVEOFS2 = 54)                                             !OFFSET TO SECOND CDC DATE (OUT)
          PARAMETER (TEUVEBOARD = 55)                                            !START BOARD               (IN)
 C        PAY ATTENTION
-C        VALUE 56 FREE  
+C        VALUE 56 FREE
 C        PARAMETER (TEUVCAMH  = 57) ! SEE ABOVE FOR LOGICAL ORDER
 C        PARAMETER (TEUVRAMH  = 58) ! SEE ABOVE FOR LOGICAL ORDER
 C----+------------------------------------------------------------------
 C V47| New Validation Messages
 C----+------------------------------------------------------------------
-         INTEGER*4 TEUVPLIDTYP          
+         INTEGER*4 TEUVPLIDTYP
          PARAMETER (TEUVPLIDTYP=59)                                             !PLAYER ID TYPE (IN): 0 - TELEPHONE NUMBER /  1 - PLAYER CARD !V45
- 
+
          INTEGER*4 TEUVPLCARD
          PARAMETER (TEUVPLCARD=60)                                              !PLAYER CARD/TELEPHONE CONTACT NUMBER (IN)
- 
+
          INTEGER*4 TEUVNIBBB, TEUVNIBBO, TEUVNIBBA1, TEUVNIBBA2
          INTEGER*4 TEUVNIBCD, TEUVEPTYP
          PARAMETER (TEUVNIBBB=61)                                               !BANK BRANCH  (IN)
@@ -1296,9 +1296,9 @@ C
         PARAMETER (TIGSW_LEDD=TIGSW_LEDM+1)        !BET LAST EVENT DATE DAY(DD)                      (52)
         PARAMETER (TIGSW_TSTK=TIGSW_LEDD+1)        !BET TOTAL STAKE                                  (53)
         PARAMETER (TIGSW_MAXR=TIGSW_TSTK+1)        !BET MAXIMUM POSSIBLE RETURNS                     (54)
-        
+
         INTEGER*4 TIGSW_PNIF
-        PARAMETER (TIGSW_PNIF=TIGSW_MAXR+1)        !PORTUGUESE PLAYER NIF NUMBER                     (55)       
+        PARAMETER (TIGSW_PNIF=TIGSW_MAXR+1)        !PORTUGUESE PLAYER NIF NUMBER                     (55)
 C
 C IF TRANSACTION IS CANCELLATION
 C
@@ -1371,8 +1371,8 @@ C
         PARAMETER (TIGSV_TTAX=TIGSV_TPRZ+1)        !TOTAL TAX AMOUNT (VALIDATION UNITS)              (48)
         PARAMETER (TIGSV_NPRZ=TIGSV_TTAX+1)        !NET PRIZE AMOUNT (VALIDATION UNITS)              (49)
         PARAMETER (TIGSV_PMOD=TIGSV_NPRZ+1)        !PAYMENT MODE                                     (50)
-        
-        INTEGER*4 TIGSV_FNIF, TIGSV_PNIF 
+
+        INTEGER*4 TIGSV_FNIF, TIGSV_PNIF
         PARAMETER (TIGSV_FNIF=TIGSV_PMOD+1)        !NIF CONFIRMATION NEEDED FLAG                     (51)
         PARAMETER (TIGSV_PNIF=TIGSV_FNIF+1)        !PORTUGUESE PLAYER NIF NUMBER                     (52)
 C
@@ -1468,29 +1468,29 @@ C V48| Added new Oddset game messages (PLACARD)
 C----+------------------------------------------------------------------
 
 C----+------------------------------------------------------------------
-C V50| New Terminals Project - Olimpo 
+C V50| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------
 C       BEGIN (TOTOLOTO & TOTOBOLA)
-        INTEGER*4 TWCOLMSERL_TLTO, TWCOLMSERM_TLTO, TWCOLMSERH_TLTO 
-        INTEGER*4 TVOLMSERL_TLTO, TVOLMSERM_TLTO, TVOLMSERH_TLTO 
-        PARAMETER (TWCOLMSERL_TLTO = 90)
-        PARAMETER (TWCOLMSERM_TLTO = 91)
-        PARAMETER (TWCOLMSERH_TLTO = 92)
-        PARAMETER (TVOLMSERL_TLTO = 93)
-        PARAMETER (TVOLMSERM_TLTO = 94)
-        PARAMETER (TVOLMSERH_TLTO = 95)        
+        INTEGER*4 TWCOLMSERL_TLTO, TWCOLMSERM_TLTO, TWCOLMSERH_TLTO
+        INTEGER*4 TVOLMSERL_TLTO, TVOLMSERM_TLTO, TVOLMSERH_TLTO
+        PARAMETER (TWCOLMSERL_TLTO = 110)
+        PARAMETER (TWCOLMSERM_TLTO = 111)
+        PARAMETER (TWCOLMSERH_TLTO = 112)
+        PARAMETER (TVOLMSERL_TLTO = 60)
+        PARAMETER (TVOLMSERM_TLTO = 61)
+        PARAMETER (TVOLMSERH_TLTO = 62)
 
         INTEGER*4 TWCOLMMIDL_TLTO, TWCOLMMIDH_TLTO, TVOLMMIDL_TLTO, TVOLMMIDH_TLTO
-        PARAMETER (TWCOLMMIDL_TLTO = 96)
-        PARAMETER (TWCOLMMIDH_TLTO = 97)
-        PARAMETER (TVOLMMIDL_TLTO = 98)
-        PARAMETER (TVOLMMIDH_TLTO = 99)        
+        PARAMETER (TWCOLMMIDL_TLTO = 113)
+        PARAMETER (TWCOLMMIDH_TLTO = 114)
+        PARAMETER (TVOLMMIDL_TLTO = 63)
+        PARAMETER (TVOLMMIDH_TLTO = 64)
 
-        INTEGER*4 TWCOLMCOMF_TLTO, TVOLMCOMF_TLTO, TGOLMSERL_IL, TGOLMSERM_IL, TGOLMSERH_IL 
+        INTEGER*4 TWCOLMCOMF_TLTO, TVOLMCOMF_TLTO, TGOLMSERL_IL, TGOLMSERM_IL, TGOLMSERH_IL
         INTEGER*4 TGOLMMIDL_IL, TGOLMMIDH_IL, TGOLMCOMF_IL
         INTEGER*4 TVOLMSERL_IL, TVOLMSERM_IL, TVOLMSERH_IL, TVOLMCOMF_IL
-        PARAMETER (TWCOLMCOMF_TLTO = 100)
-        PARAMETER (TVOLMCOMF_TLTO = 101)
+        PARAMETER (TWCOLMCOMF_TLTO = 115)
+        PARAMETER (TVOLMCOMF_TLTO = 65)
 C       END (TOTOLOTO & TOTOBOLA)
 C       BEGIN (INSTANT LOTTERY)
         PARAMETER (TGOLMSERL_IL = 127)
@@ -1511,4 +1511,4 @@ C----+------------------------------------------------------------------
 
 C
 C END DESTRA.DEF
-C 
+C
