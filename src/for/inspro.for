@@ -139,7 +139,7 @@ C----+------------------------------------------------------------------
             TRABUF(TGOLMSERM_IL)=PRO(SEROLM_INT_OLM+1,BUF)
             TRABUF(TGOLMSERH_IL)=BPRO(SEROLM_OLM+8,BUF)
             TRABUF(TGOLMMIDL_IL)=PRO(MESSID_INT_OLM,BUF)
-            TRABUF(TGOLMMIDH_IL)=BPRO(MESSID_OLM+1,BUF)
+            TRABUF(TGOLMMIDH_IL)=BPRO(MESSID_OLM+4,BUF)
             TRABUF(TGOLMCOMF_IL)=BPRO(CHOLM_OLM,BUF)
         ENDIF
 C----+------------------------------------------------------------------
@@ -147,12 +147,12 @@ C V30| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------ 
         ITYP = BPRO(BINPTAB+2-1,BUF)
         TRABUF(TITYP)=IAND(ITYP,'0F'X)
-        IF(TRABUF(TITYP).EQ.IVAL) THEN !PARAMETER (IVAL=13) - INSTANT VALIDATION -> 0xDD ValidaÃ§Ã£o/Pagamento PrÃ©mio LI ---> OIVAL
+        IF(TRABUF(TITYP).EQ.IVAL) THEN !PARAMETER (IVAL=13) - INSTANT VALIDATION -> 0xDD Validação/Pagamento Prémio LI ---> OIVAL
           CALL DIVAL(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
         ELSE IF (TRABUF(TITYP).EQ.ILOT) THEN !PARAMETER (ILOT=2 ) - INSTANT LOT (not used)
           CALL DILOT(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF),AGTPAS,
      *               SALPAS)
-        ELSE IF (TRABUF(TITYP).EQ.ICAR) THEN !PARAMETER (ICAR=8 ) - INSTANT CARTON STATUS CHANGE (used) -> 0xD2 AlteraÃ§Ã£o de Estado MaÃ§o ----> D8
+        ELSE IF (TRABUF(TITYP).EQ.ICAR) THEN !PARAMETER (ICAR=8 ) - INSTANT CARTON STATUS CHANGE (used) -> 0xD2 Alteração de Estado Maço ----> D8
           CALL DICAR(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF),AGTPAS,
      *               SALPAS)
         ELSE IF (TRABUF(TITYP).EQ.IQTA) THEN !(IQTA=3 ) - INSTANT QUOTA REPORT
@@ -163,7 +163,7 @@ C----+------------------------------------------------------------------
           CALL DIFIN(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF),CHNPAS)
         ELSE IF (TRABUF(TITYP).EQ.IMNU) THEN !(IMNU=6 ) - INSTANT SUPPLY ORDER (used?) 0xD6
           CALL DIMNU(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
-        ELSE IF (TRABUF(TITYP).EQ.IORD) THEN !(IORD=7 ) - INSTANT GAMES NAMES REQUEST (not used)
+        ELSE IF (TRABUF(TITYP).EQ.IORD) THEN !(IORD=7 ) - INSTANT GAMES NAMES REQUEST - gameParameters
           CALL DIORD(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
         ELSE IF (TRABUF(TITYP).EQ.ISON) THEN !(ISON=9 ) - INSTANT SIGN ON (not used)
           CALL DISON(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
