@@ -309,13 +309,15 @@ C---------------- V55 Begin -------------------------------------------
            I4TMP(1) = ZEXT(TRABUF(TWCOLMSERL_TLTO)) 
            I4TMP(2) = ZEXT(TRABUF(TWCOLMSERM_TLTO))
 
-C           CALL OPS('TWCOLMSERL_TLTO:',ZEXT(TRABUF(TWCOLMSERL_TLTO)),ZEXT(TRABUF(TWCOLMSERL_TLTO)))
-C           CALL OPS('TWCOLMSERM_TLTO:',ZEXT(TRABUF(TWCOLMSERM_TLTO)),ZEXT(TRABUF(TWCOLMSERM_TLTO)))
-C           CALL OPS('TWCOLMSERH_TLTO',ZEXT(TRABUF(TWCOLMSERH_TLTO)),ZEXT(TRABUF(TWCOLMSERH_TLTO)))
-
            SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TWCOLMSERH_TLTO)))*OVER8BYTES+DFLOAT(I8TMP)
            WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
            SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
+
+           IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
+                WRITE(PUNIT,980)  'Yes',MESSID,SERIALNUM_OLMSTR
+           ELSE
+                WRITE(PUNIT,985)  'No'
+           ENDIF           
 C---------------- V55 End -------------------------------------------           
            WRITE(PUNIT,901)  STAT(TRABUF(TSTAT)),
      *                       ERROR(TRABUF(TERR)),
@@ -334,14 +336,7 @@ C---------------- V55 End -------------------------------------------
      *                       TRABUF(TWEND),FREEWK(TRABUF(TWADDFW)),
      *                       KICKER,
      *                       CSMONY(TRABUF(TWTOT),10,BETUNIT),
-     *                       TRABUF(TFRAC),QPTXT(QPVAL)
-C---------------- V55 Begin -------------------------------------------
-           IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
-                WRITE(PUNIT,980)  MESSID,'YES',SERIALNUM_OLMSTR
-           ELSE
-                WRITE(PUNIT,980)  MESSID,'NO',SERIALNUM_OLMSTR
-           ENDIF
-C---------------- V55 End ---------------------------------------------            
+     *                       TRABUF(TFRAC),QPTXT(QPVAL)         
 C
         IF(CANSER .GT. 0) THEN
             IF(TRABUF(TSTAT).EQ.CASH.OR.TRABUF(TSTAT).EQ.EXCH.OR.
@@ -568,13 +563,16 @@ C---------------- V55 Begin -------------------------------------------
         
         I4TMP(1) = ZEXT(TRABUF(TVOLMSERL_TLTO)) 
         I4TMP(2) = ZEXT(TRABUF(TVOLMSERM_TLTO))
-C           CALL OPS('TWCOLMSERL_TLTO:',ZEXT(TRABUF(TWCOLMSERL_TLTO)),ZEXT(TRABUF(TWCOLMSERL_TLTO)))
-C           CALL OPS('TWCOLMSERM_TLTO:',ZEXT(TRABUF(TWCOLMSERM_TLTO)),ZEXT(TRABUF(TWCOLMSERM_TLTO)))
-C           CALL OPS('TWCOLMSERH_TLTO',ZEXT(TRABUF(TWCOLMSERH_TLTO)),ZEXT(TRABUF(TWCOLMSERH_TLTO)))
 
         SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TVOLMSERH_TLTO)))*OVER8BYTES+DFLOAT(I8TMP)
         WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
         SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
+
+        IF(TRABUF(TVOLMCOMF_TLTO) .EQ. 1) THEN
+           WRITE(PUNIT,980)  'Yes',MESSID,SERIALNUM_OLMSTR
+        ELSE
+           WRITE(PUNIT,985)  'No'
+        ENDIF        
 C---------------- V55 End -------------------------------------------         
 
         WRITE(PUNIT,903) STAT(TRABUF(TSTAT)),
@@ -596,14 +594,7 @@ C
             WRITE(PUNIT,9020) TRABUF(TVCDC),VALSER,
      *                        CMONY(TRABUF(TVOPPAY),11,BETUNIT)
             LINCNT=LINCNT+1
-        ENDIF
-C---------------- V55 Begin -------------------------------------------
-        IF(TRABUF(TVOLMCOMF_TLTO) .EQ. 1) THEN
-           WRITE(PUNIT,980)  MESSID,'YES',SERIALNUM_OLMSTR
-        ELSE
-           WRITE(PUNIT,980)  MESSID,'NO',SERIALNUM_OLMSTR
-        ENDIF
-C---------------- V55 End ---------------------------------------------         
+        ENDIF         
 C----+------------------------------------------------------------------
 C V50| Adding data for new validation messages
 C----+------------------------------------------------------------------
@@ -977,6 +968,24 @@ C
 C
         IF (DETAIL) THEN                      ! V13: If detailed report, then: 
           IF (TRABUF(TITYP) .EQ. IVAL) THEN
+C---------------- V55 Begin -------------------------------------------
+            I4TMP(1) = ZEXT(TRABUF(TGOLMMIDL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMMIDH_IL)) 
+            MESSID = I8TMP  
+                    
+            I4TMP(1) = ZEXT(TRABUF(TGOLMSERL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMSERM_IL))
+                    
+            SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TGOLMSERH_IL)))*OVER8BYTES+DFLOAT(I8TMP)
+            WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
+            SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
+                    
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+                WRITE(PUNIT,980)  'Yes',MESSID,SERIALNUM_OLMSTR
+            ELSE
+                WRITE(PUNIT,985)  'No'
+            ENDIF            
+C---------------- V55 End -------------------------------------------                
             LINCNT = LINCNT + 11
             IF(TRABUF(TIVAGT).GT.0) THEN
               K = TRABUF(TIVAGT)
@@ -1037,6 +1046,24 @@ CV54            LINCNT = LINCNT + 7
             WRITE(PUNIT,9438)  CSMONY(TRABUF(TLCOM),10,1)
             WRITE(PUNIT,9440)  TRABUF(TIXRF)                                    !V54
           ELSE IF (TRABUF(TITYP).EQ.ICAR) THEN
+C---------------- V55 Begin -------------------------------------------
+            I4TMP(1) = ZEXT(TRABUF(TGOLMMIDL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMMIDH_IL)) 
+            MESSID = I8TMP  
+                    
+            I4TMP(1) = ZEXT(TRABUF(TGOLMSERL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMSERM_IL))
+                    
+            SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TGOLMSERH_IL)))*OVER8BYTES+DFLOAT(I8TMP)
+            WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
+            SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
+                    
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+                WRITE(PUNIT,980)  'Yes',MESSID,SERIALNUM_OLMSTR
+            ELSE
+                WRITE(PUNIT,985)  'No'
+            ENDIF            
+C---------------- V55 End -------------------------------------------                 
 CV54            LINCNT = LINCNT + 6
             LINCNT = LINCNT + 7                                                 !V54
             WRITE(PUNIT,9435)  (TRABUF(TCREP))
@@ -1049,6 +1076,24 @@ CV54            LINCNT = LINCNT + 6
           ELSE IF (TRABUF(TITYP).EQ.IQTA.OR.
      *             TRABUF(TITYP).EQ.IINV.OR.
      *             TRABUF(TITYP).EQ.ISET) THEN
+C---------------- V55 Begin -------------------------------------------
+            I4TMP(1) = ZEXT(TRABUF(TGOLMMIDL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMMIDH_IL)) 
+            MESSID = I8TMP  
+                    
+            I4TMP(1) = ZEXT(TRABUF(TGOLMSERL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMSERM_IL))
+                    
+            SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TGOLMSERH_IL)))*OVER8BYTES+DFLOAT(I8TMP)
+            WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
+            SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
+            
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+                WRITE(PUNIT,980)  'Yes',MESSID,SERIALNUM_OLMSTR
+            ELSE
+                WRITE(PUNIT,985)  'No'
+            ENDIF            
+C---------------- V55 End -------------------------------------------         
 CV54            LINCNT = LINCNT + 4
             LINCNT = LINCNT + 5                                                 !V54
             WRITE(PUNIT,9441) TRABUF(TRGAM)
@@ -1066,13 +1111,49 @@ CV54            LINCNT = LINCNT + 5
             WRITE(PUNIT,9455) TRABUF(TRCON2)
             WRITE(PUNIT,9456) TRABUF(TIXRF)                                     !V54
           ELSE IF(TRABUF(TITYP).EQ.IORD) THEN
+C---------------- V55 Begin -------------------------------------------
+            I4TMP(1) = ZEXT(TRABUF(TGOLMMIDL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMMIDH_IL)) 
+            MESSID = I8TMP  
+                    
+            I4TMP(1) = ZEXT(TRABUF(TGOLMSERL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMSERM_IL))
+                    
+            SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TGOLMSERH_IL)))*OVER8BYTES+DFLOAT(I8TMP)
+            WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
+            SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
+
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+                WRITE(PUNIT,980)  'Yes',MESSID,SERIALNUM_OLMSTR
+            ELSE
+                WRITE(PUNIT,985)  'No'
+            ENDIF            
+C---------------- V55 End -------------------------------------------                
 CV54            LINCNT = LINCNT + 3
             LINCNT = LINCNT + 4                                                 !V54
             WRITE(PUNIT,9461) TRABUF(TGPGAM)
             WRITE(PUNIT,9462) TRABUF(TGPNXT)
             WRITE(PUNIT,9463) CSMONY(TRABUF(TGPRCL),10,1)
-            WRITE(PUNIT,9464) TRABUF(TIXRF)                                     !V54
+            WRITE(PUNIT,9464) TRABUF(TIXRF)                                     !V54             
           ELSE IF(TRABUF(TITYP).EQ.IMNU) THEN
+C---------------- V55 Begin -------------------------------------------
+            I4TMP(1) = ZEXT(TRABUF(TGOLMMIDL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMMIDH_IL)) 
+            MESSID = I8TMP  
+                    
+            I4TMP(1) = ZEXT(TRABUF(TGOLMSERL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMSERM_IL))
+                    
+            SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TGOLMSERH_IL)))*OVER8BYTES+DFLOAT(I8TMP)
+            WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
+            SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
+
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+                WRITE(PUNIT,980)  'Yes',MESSID,SERIALNUM_OLMSTR
+            ELSE
+                WRITE(PUNIT,985)  'No'
+            ENDIF            
+C---------------- V55 End -------------------------------------------                
 CV54            LINCNT = LINCNT + 11
             LINCNT = LINCNT + 12                                                !V54
             WRITE(PUNIT,9471) (IAND(TRABUF(TSGAM+K),'00000FFF'X),K=0,7)
@@ -1086,8 +1167,26 @@ CV54            LINCNT = LINCNT + 11
             WRITE(PUNIT,9472) (TRABUF(TSQTY+K),K=24,31)
             WRITE(PUNIT,9472) (TRABUF(TSQTY+K),K=32,39)
             WRITE(PUNIT,9473) TRABUF(TSORD)
-            WRITE(PUNIT,9474) TRABUF(TIXRF)                                     !V54
+            WRITE(PUNIT,9474) TRABUF(TIXRF)                                     !V54          
           ELSE IF(TRABUF(TITYP).EQ.ICNF) THEN
+C---------------- V55 Begin -------------------------------------------
+            I4TMP(1) = ZEXT(TRABUF(TGOLMMIDL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMMIDH_IL)) 
+            MESSID = I8TMP  
+                    
+            I4TMP(1) = ZEXT(TRABUF(TGOLMSERL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMSERM_IL))
+                    
+            SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TGOLMSERH_IL)))*OVER8BYTES+DFLOAT(I8TMP)
+            WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
+            SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
+                    
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+                WRITE(PUNIT,980)  'Yes',MESSID,SERIALNUM_OLMSTR
+            ELSE
+                WRITE(PUNIT,985)  'No'
+            ENDIF            
+C---------------- V55 End -------------------------------------------                 
 CV54            LINCNT = LINCNT + 3
             LINCNT = LINCNT + 4                                                 !V54
             WRITE(PUNIT,9481) TRABUF(TIINV1)
@@ -1095,6 +1194,24 @@ CV54            LINCNT = LINCNT + 3
             WRITE(PUNIT,9483) TRABUF(TIINV3)
             WRITE(PUNIT,9485) TRABUF(TIXRF)                                     !V54
           ELSE IF(TRABUF(TITYP).EQ.IOACT) THEN
+C---------------- V55 Begin -------------------------------------------
+            I4TMP(1) = ZEXT(TRABUF(TGOLMMIDL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMMIDH_IL)) 
+            MESSID = I8TMP  
+                    
+            I4TMP(1) = ZEXT(TRABUF(TGOLMSERL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TGOLMSERM_IL))
+                    
+            SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TGOLMSERH_IL)))*OVER8BYTES+DFLOAT(I8TMP)
+            WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
+            SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
+                    
+            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+                WRITE(PUNIT,980)  'Yes',MESSID,SERIALNUM_OLMSTR
+            ELSE
+                WRITE(PUNIT,985)  'No'
+            ENDIF            
+C---------------- V55 End -------------------------------------------                
 CV54            LINCNT = LINCNT + 3
             LINCNT = LINCNT + 4                                                 !V54
             WRITE(PUNIT,9484) TRABUF(TOINV1)
@@ -1145,7 +1262,7 @@ CV54            LINCNT = LINCNT + 6
           ENDIF
         ENDIF  
 C
-        IF(TRABUF(TITYP).EQ.IVAL.AND.TRABUF(TSTAT).NE.REJT) THEN
+        IF(TRABUF(TITYP).EQ.IVAL.AND.TRABUF(TSTAT).NE.REJT) THEN                
           DO 5010 I = 0,TRABUF(TIBCH)-1
             IF(TRABUF(TISTS1+I).EQ.INOER) THEN
               TOTAL(TRABUF(TTYP),1)   = TOTAL(TRABUF(TTYP),1)+1
@@ -1412,7 +1529,8 @@ C     *         I4,1X,
      *         A8,I6,Z4,I6,I5,1X,A8,
      *         I5,I5,I5,1X,A4,1X,I5,A2,2X,A11,A10,1X,I4,1X,A4)   
 C---------------- V55 Begin -------------------------------------------       
-980     FORMAT(10X,'Message ID > ',I0,3X,'OLM Channel > ',A3,3X,'Serial Number OLM > ',A)
+980     FORMAT(6X,'OLM Channel > ',A3,3X,'Message ID > ',I0,3X,'OLM Serial # > ',A)
+985     FORMAT(6X,'OLM Channel > ',A3,3X)
 990     FORMAT(F22.0)
 C---------------- V55 End ---------------------------------------------
 9018    FORMAT(3X,'BANK NUMBER ----> ',I8.8,' - ',I8.8,2X,
