@@ -2710,9 +2710,9 @@ C----+------------------------------------------------------------------
 C New Terminal Project TIVENV only uses 2 digits = 1 byte (99<256)
 C           TRABUF(TIVENV)    = LOGBUF(9)
             I4TEMP =  LOGBUF(9)
-            IF(ISHFT(I1TEMP(1), 7) .EQ. 1) THEN
+            IF(ISHFT(I1TEMP(1), -7) .EQ. 1) THEN
                 TRABUF(TVOLMSERL_IL) =  ISHFT(I4TEMP, -8)
-                TRABUF(TVOLMCOMF_IL) =  ISHFT(ZEXT(I1TEMP(1)), 7) 
+                TRABUF(TVOLMCOMF_IL) =  ISHFT(ZEXT(I1TEMP(1)), -7) 
                 TRABUF(TIVENV) = IAND(I1TEMP(1),'7F'X)
             ELSE
                 TRABUF(TIVENV) = IAND(I1TEMP(1),'7F'X) 
@@ -2729,29 +2729,29 @@ C
             IF(TRABUF(TIVMT) .EQ. IRVMT) THEN !OLD LAYOUT
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------                   
-              IF(ISHFT(I1TEMP(1), 7) .EQ. 1) THEN      
-                IF(TRABUF(TIBCH) .GE. 4) THEN   
+C----+------------------------------------------------------------------     
+              IF(TRABUF(TVOLMCOMF_IL) .EQ. 1) THEN      
+                IF(TRABUF(TIBCH) .GE. 4) THEN           
                    I4TEMP = LOGBUF(32)
                    TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
-                   TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
+                   TRABUF(TVOLMSERM_IL) = ISHFT( IAND(I4TEMP,'FFFFFF'X), -8)
                    I4TEMP = LOGBUF(48)
                    TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FFFF'X), 16), TRABUF(TVOLMSERM_IL) )
                    TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(3) )
-                ELSEIF(TRABUF(TIBCH) .GT. 1) THEN
+                ELSEIF(TRABUF(TIBCH) .GT. 1) THEN                            
                    I4TEMP = LOGBUF(32)
                    TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
-                   TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
+                   TRABUF(TVOLMSERM_IL) = ISHFT( IAND(I4TEMP,'FFFFFF'X), -8)
                    I4TEMP = LOGBUF(31)
                    TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FFFF'X), 16), TRABUF(TVOLMSERM_IL) )
-                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(3) )               
-                ELSE
+                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(3) )                                 
+                ELSE                          
                    I4TEMP = LOGBUF(17)  
                    TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
                    TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
                    I4TEMP = LOGBUF(18)
                    TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FF'X), 24), TRABUF(TVOLMSERM_IL) )
-                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(2) )   
+                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(2) )                                  
                 ENDIF     
               ENDIF
 C----+------------------------------------------------------------------
@@ -2796,7 +2796,6 @@ C
             ELSEIF(TRABUF(TIVMT) .EQ. IBVMT) THEN ! NEW BANK VALIDATION MODE LAYOUT
 !-------->>V56 -------------------------------------------------------------------
                 ! TRABUF(TIBCH) IS ALWAYS ONE
-                
                 I4TEMP = LOGBUF(11)
                 TRABUF(TIPCK1)  = IAND(I4TEMP,'00FFFFFF'X)
                 TRABUF(TISTS1)  = ZEXT(I1TEMP(4))
@@ -2835,7 +2834,7 @@ C
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------
-                IF(ISHFT(I1TEMP(1), 7) .EQ. 1) THEN
+                IF(TRABUF(TVOLMCOMF_IL) .EQ. 1) THEN
                   I4TEMP = LOGBUF(27)
                   TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
                   TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
@@ -2843,9 +2842,9 @@ C----+------------------------------------------------------------------
                   TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FF'X), 24), TRABUF(TVOLMSERM_IL) )
                   TRABUF(TVOLMSERH_IL) = ZEXT(I1TEMP(2))
                   I4TEMP = LOGBUF(29)
-                  TRABUF(TVOLMMIDL_TLTO) = I4TEMP
+                  TRABUF(TVOLMMIDL_IL) = I4TEMP
                   I4TEMP = LOGBUF(30)
-                  TRABUF(TVOLMMIDH_TLTO) = ZEXT(I1TEMP(1))
+                  TRABUF(TVOLMMIDH_IL) = ZEXT(I1TEMP(1))
                 ENDIF
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
@@ -3076,10 +3075,10 @@ C
             END DO
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------            
+C----+------------------------------------------------------------------  
             IF(TRABUF(TIBCH).GE.29) THEN
               I4TEMP = LOGBUF(48)
-              TRABUF(TGOLMCOMF_IL) = I4TEMP
+              TRABUF(TGOLMCOMF_IL) = I1TEMP(1)              
               IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
                 I4TEMP = LOGBUF(43)
                 TRABUF(TGOLMSERL_IL) = I4TEMP
@@ -3094,7 +3093,7 @@ C----+------------------------------------------------------------------
               ENDIF
             ELSE IF(TRABUF(TIBCH).LE.21) THEN   
               I4TEMP = LOGBUF(32)
-              TRABUF(TGOLMCOMF_IL) = I4TEMP
+              TRABUF(TGOLMCOMF_IL) = I1TEMP(1)
               IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
                 I4TEMP = LOGBUF(27)
                 TRABUF(TGOLMSERL_IL) = I4TEMP
