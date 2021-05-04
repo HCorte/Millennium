@@ -1,0 +1,2617 @@
+Using username "console".
+Pre-authentication banner message from server:
+|
+| @SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+End of banner message from server
+console@10.100.82.101's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Friday, 23-APR-2021 09:43:31.33
+    Last non-interactive login on Thursday, 22-APR-2021 19:52:06.54
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+PODEV1::PORT> goscml
+%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
+%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
+%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> type HenriqueLIWork.dat;0
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A
+   16:28:30 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T
+   23.04.2021 CDC 7298
+
+              SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF
+    FILE NAME -----------> prim:mtmf01.fil
+    TAPE DRIVE ---------->
+    TERMINAL NUMBER -----> 3512
+    EXCLUDE EM TRX ------> YES
+    EXCLUDE IGS TRX -----> YES
+    EUROMIL EXT SER # --->
+    PLACARD EXT SER # --->
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 :
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A
+   16:28:30 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T
+   23.04.2021 CDC 7298
+
+              SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL
+ M1LH FRACTION  X BET
+=============================================================================================================
+======================
+
+  GOOD  NOER   SPE  32000029 10:44:08  3512   5  7298    0             0    2 SON  OLD>       0 NEW>       0
+AGT> 03-00006
+  REJT  BCRS   CRS  32000031 10:44:50  3512   6  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8449864015-527
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         4
+25
+         Instant pack #           81825      390051      234028      498168      190813      378712       963
+65
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   2701761
+11
+         Instant crs ref #     32000000    32000000    32000000    32000000    32000000    32000000    320000
+00
+         Instant latex             3185        7420        8436        4390        4595        9855        56
+15
+         Instant Time             38690       38690       38690       38690       38690       38690       386
+90
+         Instant CDC               7298        7298        7298        7298        7298        7298        72
+98
+         Instant Status              34          34          38          34          34          34
+89
+         Instant Pack Sts             0           0           0           0           0           0
+ 0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.
+00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.
+00
+  GOOD  NOER   CRS  32000038 10:52:12  3512   7  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-1504103395-130
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         4
+10
+         Instant pack #           81825      390051      234028      498168      190813      378712      1220
+52
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   8728538
+70
+         Instant crs ref #     32000001    32000001    32000001    32000001    32000001    32000001    320000
+01
+         Instant latex             3185        7420        8436        4390        4595        9855        11
+66
+         Instant Time             39132       39132       39132       39132       39132       39132       391
+32
+         Instant CDC               7298        7298        7298        7298        7298        7298        72
+98
+         Instant Status              34          34          38          34          34          34
+34
+         Instant Pack Sts             0           0           0           0           0           0
+ 0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.
+00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.
+00
+  GOOD  NOER   CRS  32000053 11:10:55  3512   0  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8390886403-604
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         4
+10
+         Instant pack #           81825      390051      234028      498168      190813      378712      1220
+52
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   8728538
+70
+         Instant crs ref #     32000002    32000002    32000002    32000002    32000002    32000002    320000
+02
+         Instant latex             3185        7420        8436        4390        4595        9855        11
+66
+         Instant Time             40254       40254       40254       40254       40254       40254       402
+54
+         Instant CDC               7298        7298        7298        7298        7298        7298        72
+98
+         Instant Status              34          34          38          34          34          34
+34
+         Instant Pack Sts             0           0           0           0           0           0
+ 0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.
+00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.
+00
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A
+   16:28:30 PAGE     2
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T
+   23.04.2021 CDC 7298
+
+              SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL
+ M1LH FRACTION  X BET
+=============================================================================================================
+======================
+
+  GOOD  NOER   CRS  32000120 13:17:45  3512   1  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6565   OLM Serial # > 210423-15-5775830002-780
+         Instant game           421        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025920
+         Instant crs ref #  32000003
+  REJT  BCRS   CRS  32000130 13:30:37  3512   2  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-2692101816-987
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         4
+25
+         Instant pack #           81825      390051      234028      498168      190813      378712       963
+65
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   2701761
+11
+         Instant crs ref #     32000004    32000004    32000004    32000004    32000004    32000004    320000
+04
+         Instant latex             3185        7420        8436        4390        4595        9855        56
+15
+         Instant Time             48636       48636       48636       48636       48636       48636       486
+36
+         Instant CDC               7298        7298        7298        7298        7298        7298        72
+98
+         Instant Status              34          34          38          34          34          34
+89
+         Instant Pack Sts             0           0           0           0           0           0
+ 0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.
+00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.
+00
+  GOOD  NOER   CRS  32000215 16:11:02  3512   3  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6567   OLM Serial # > 210423-15-8505692516-038
+         Instant game           363        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity        50        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025921
+         Instant crs ref #  32000005
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A
+   16:28:30 PAGE     3
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T
+   23.04.2021 CDC 7298
+
+              SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL
+ M1LH FRACTION  X BET
+=============================================================================================================
+======================
+
+  GOOD  NOER   CRS  32000227 16:28:00  3512   5  7298 IVAL     99           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-3850611431-387
+         Retailer, who gets the credit      0300006
+         Instant game #             425
+         Instant pack #           96365
+         Instant virn #       270176111
+         Instant crs ref #     32000006
+         Instant latex             5615
+         Instant Time             59280
+         Instant CDC               7298
+         Instant Status              99
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH
+AMT
+                  -------------------------------------------------------------------------------------------
+---
+Total sales                0                0.00            0.00            0.00            0.00            0
+.00
+Total cancels              0                0.00            0.00            0.00            0.00            0
+.00
+Total deletes              0                0.00            0.00            0.00            0.00            0
+.00
+Total cashes               0                0.00            0.00            0.00            0.00            0
+.00
+Total Instant Cashes       1                2.00            0.00            2.00            0.00            0
+.00
+
+Total Instant Message Transactions
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        2
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          5
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions          7
+
+Total Passive Returns and Validations
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0
+Total IGS Transactions          0
+PODEV1::SCML>
+PODEV1::SCML> w132
+PODEV1::SCML> type HenriqueLIWork.dat;0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                                                         16:28:30 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                                                                  23.04.2021 CDC 7298
+                                                                                                                                                                    SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF
+    FILE NAME -----------> prim:mtmf01.fil
+    TAPE DRIVE ---------->
+    TERMINAL NUMBER -----> 3512
+    EXCLUDE EM TRX ------> YES
+    EXCLUDE IGS TRX -----> YES
+    EUROMIL EXT SER # --->
+    PLACARD EXT SER # --->
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 :
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 :
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                                                         16:28:30 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                                                                  23.04.2021 CDC 7298
+                                                                                                                                                                    SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL                                           M1LH FRACTION  X BET
+=============================================================================================================                                         ======================
+
+  GOOD  NOER   SPE  32000029 10:44:08  3512   5  7298    0             0    2 SON  OLD>       0 NEW>       0                                          AGT> 03-00006
+  REJT  BCRS   CRS  32000031 10:44:50  3512   6  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8449864015-527
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         4                                         25
+         Instant pack #           81825      390051      234028      498168      190813      378712       963                                         65
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   2701761                                         11
+         Instant crs ref #     32000000    32000000    32000000    32000000    32000000    32000000    320000                                         00
+         Instant latex             3185        7420        8436        4390        4595        9855        56                                         15
+         Instant Time             38690       38690       38690       38690       38690       38690       386                                         90
+         Instant CDC               7298        7298        7298        7298        7298        7298        72                                         98
+         Instant Status              34          34          38          34          34          34                                                   89
+         Instant Pack Sts             0           0           0           0           0           0                                                    0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.                                         00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.                                         00
+  GOOD  NOER   CRS  32000038 10:52:12  3512   7  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-1504103395-130
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         4                                         10
+         Instant pack #           81825      390051      234028      498168      190813      378712      1220                                         52
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   8728538                                         70
+         Instant crs ref #     32000001    32000001    32000001    32000001    32000001    32000001    320000                                         01
+         Instant latex             3185        7420        8436        4390        4595        9855        11                                         66
+         Instant Time             39132       39132       39132       39132       39132       39132       391                                         32
+         Instant CDC               7298        7298        7298        7298        7298        7298        72                                         98
+         Instant Status              34          34          38          34          34          34                                                   34
+         Instant Pack Sts             0           0           0           0           0           0                                                    0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.                                         00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.                                         00
+  GOOD  NOER   CRS  32000053 11:10:55  3512   0  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8390886403-604
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         4                                         10
+         Instant pack #           81825      390051      234028      498168      190813      378712      1220                                         52
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   8728538                                         70
+         Instant crs ref #     32000002    32000002    32000002    32000002    32000002    32000002    320000                                         02
+         Instant latex             3185        7420        8436        4390        4595        9855        11                                         66
+         Instant Time             40254       40254       40254       40254       40254       40254       402                                         54
+         Instant CDC               7298        7298        7298        7298        7298        7298        72                                         98
+         Instant Status              34          34          38          34          34          34                                                   34
+         Instant Pack Sts             0           0           0           0           0           0                                                    0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.                                         00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.                                         00
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                                                         16:28:30 PAGE     2
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                                                                  23.04.2021 CDC 7298
+                                                                                                                                                                    SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL                                           M1LH FRACTION  X BET
+=============================================================================================================                                         ======================
+
+  GOOD  NOER   CRS  32000120 13:17:45  3512   1  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6565   OLM Serial # > 210423-15-5775830002-780
+         Instant game           421        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025920
+         Instant crs ref #  32000003
+  REJT  BCRS   CRS  32000130 13:30:37  3512   2  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-2692101816-987
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         4                                         25
+         Instant pack #           81825      390051      234028      498168      190813      378712       963                                         65
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   2701761                                         11
+         Instant crs ref #     32000004    32000004    32000004    32000004    32000004    32000004    320000                                         04
+         Instant latex             3185        7420        8436        4390        4595        9855        56                                         15
+         Instant Time             48636       48636       48636       48636       48636       48636       486                                         36
+         Instant CDC               7298        7298        7298        7298        7298        7298        72                                         98
+         Instant Status              34          34          38          34          34          34                                                   89
+         Instant Pack Sts             0           0           0           0           0           0                                                    0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.                                         00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.                                         00
+  GOOD  NOER   CRS  32000215 16:11:02  3512   3  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6567   OLM Serial # > 210423-15-8505692516-038
+         Instant game           363        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity        50        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025921
+         Instant crs ref #  32000005
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                                                         16:28:30 PAGE     3
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                                                                  23.04.2021 CDC 7298
+                                                                                                                                                                    SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL                                           M1LH FRACTION  X BET
+=============================================================================================================                                         ======================
+
+  GOOD  NOER   CRS  32000227 16:28:00  3512   5  7298 IVAL     99           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-3850611431-387
+         Retailer, who gets the credit      0300006
+         Instant game #             425
+         Instant pack #           96365
+         Instant virn #       270176111
+         Instant crs ref #     32000006
+         Instant latex             5615
+         Instant Time             59280
+         Instant CDC               7298
+         Instant Status              99
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH                                          AMT
+                  -------------------------------------------------------------------------------------------                                         ---
+Total sales                0                0.00            0.00            0.00            0.00            0                                         .00
+Total cancels              0                0.00            0.00            0.00            0.00            0                                         .00
+Total deletes              0                0.00            0.00            0.00            0.00            0                                         .00
+Total cashes               0                0.00            0.00            0.00            0.00            0                                         .00
+Total Instant Cashes       1                2.00            0.00            2.00            0.00            0                                         .00
+
+Total Instant Message Transactions
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        2
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          5
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions          7
+
+Total Passive Returns and Validations
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0
+Total IGS Transactions          0
+PODEV1::SCML> w132
+PODEV1::SCML> type HenriqueLIWork.dat;0
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:28:                                30 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.                                2021 CDC 7298
+                                                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF
+    FILE NAME -----------> prim:mtmf01.fil
+    TAPE DRIVE ---------->
+    TERMINAL NUMBER -----> 3512
+    EXCLUDE EM TRX ------> YES
+    EXCLUDE IGS TRX -----> YES
+    EUROMIL EXT SER # --->
+    PLACARD EXT SER # --->
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 :
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 :
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:28:                                30 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.                                2021 CDC 7298
+                                                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRA                                CTION  X BET
+======================================================================================================================                                =============
+
+  GOOD  NOER   SPE  32000029 10:44:08  3512   5  7298    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-0                                0006
+  REJT  BCRS   CRS  32000031 10:44:50  3512   6  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8449864015-527
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         425
+         Instant pack #           81825      390051      234028      498168      190813      378712       96365
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   270176111
+         Instant crs ref #     32000000    32000000    32000000    32000000    32000000    32000000    32000000
+         Instant latex             3185        7420        8436        4390        4595        9855        5615
+         Instant Time             38690       38690       38690       38690       38690       38690       38690
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          89
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000038 10:52:12  3512   7  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-1504103395-130
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         410
+         Instant pack #           81825      390051      234028      498168      190813      378712      122052
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   872853870
+         Instant crs ref #     32000001    32000001    32000001    32000001    32000001    32000001    32000001
+         Instant latex             3185        7420        8436        4390        4595        9855        1166
+         Instant Time             39132       39132       39132       39132       39132       39132       39132
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          34
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000053 11:10:55  3512   0  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8390886403-604
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         410
+         Instant pack #           81825      390051      234028      498168      190813      378712      122052
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   872853870
+         Instant crs ref #     32000002    32000002    32000002    32000002    32000002    32000002    32000002
+         Instant latex             3185        7420        8436        4390        4595        9855        1166
+         Instant Time             40254       40254       40254       40254       40254       40254       40254
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          34
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:28:                                30 PAGE     2
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.                                2021 CDC 7298
+                                                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRA                                CTION  X BET
+======================================================================================================================                                =============
+
+  GOOD  NOER   CRS  32000120 13:17:45  3512   1  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6565   OLM Serial # > 210423-15-5775830002-780
+         Instant game           421        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025920
+         Instant crs ref #  32000003
+  REJT  BCRS   CRS  32000130 13:30:37  3512   2  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-2692101816-987
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         425
+         Instant pack #           81825      390051      234028      498168      190813      378712       96365
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   270176111
+         Instant crs ref #     32000004    32000004    32000004    32000004    32000004    32000004    32000004
+         Instant latex             3185        7420        8436        4390        4595        9855        5615
+         Instant Time             48636       48636       48636       48636       48636       48636       48636
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          89
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000215 16:11:02  3512   3  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6567   OLM Serial # > 210423-15-8505692516-038
+         Instant game           363        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity        50        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025921
+         Instant crs ref #  32000005
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:28:                                30 PAGE     3
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.                                2021 CDC 7298
+                                                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRA                                CTION  X BET
+======================================================================================================================                                =============
+
+  GOOD  NOER   CRS  32000227 16:28:00  3512   5  7298 IVAL     99           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-3850611431-387
+         Retailer, who gets the credit      0300006
+         Instant game #             425
+         Instant pack #           96365
+         Instant virn #       270176111
+         Instant crs ref #     32000006
+         Instant latex             5615
+         Instant Time             59280
+         Instant CDC               7298
+         Instant Status              99
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales                0                0.00            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       1                2.00            0.00            2.00            0.00            0.00
+
+Total Instant Message Transactions
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        2
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          5
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions          7
+
+Total Passive Returns and Validations
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0
+Total IGS Transactions          0
+PODEV1::SCML> w132
+PODEV1::SCML> type HenriqueLIWork.dat;0
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:28:30 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF
+    FILE NAME -----------> prim:mtmf01.fil
+    TAPE DRIVE ---------->
+    TERMINAL NUMBER -----> 3512
+    EXCLUDE EM TRX ------> YES
+    EXCLUDE IGS TRX -----> YES
+    EUROMIL EXT SER # --->
+    PLACARD EXT SER # --->
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 :
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 :
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:28:30 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000029 10:44:08  3512   5  7298    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  REJT  BCRS   CRS  32000031 10:44:50  3512   6  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8449864015-527
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         425
+         Instant pack #           81825      390051      234028      498168      190813      378712       96365
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   270176111
+         Instant crs ref #     32000000    32000000    32000000    32000000    32000000    32000000    32000000
+         Instant latex             3185        7420        8436        4390        4595        9855        5615
+         Instant Time             38690       38690       38690       38690       38690       38690       38690
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          89
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000038 10:52:12  3512   7  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-1504103395-130
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         410
+         Instant pack #           81825      390051      234028      498168      190813      378712      122052
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   872853870
+         Instant crs ref #     32000001    32000001    32000001    32000001    32000001    32000001    32000001
+         Instant latex             3185        7420        8436        4390        4595        9855        1166
+         Instant Time             39132       39132       39132       39132       39132       39132       39132
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          34
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000053 11:10:55  3512   0  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8390886403-604
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         410
+         Instant pack #           81825      390051      234028      498168      190813      378712      122052
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   872853870
+         Instant crs ref #     32000002    32000002    32000002    32000002    32000002    32000002    32000002
+         Instant latex             3185        7420        8436        4390        4595        9855        1166
+         Instant Time             40254       40254       40254       40254       40254       40254       40254
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          34
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:28:30 PAGE     2
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000120 13:17:45  3512   1  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6565   OLM Serial # > 210423-15-5775830002-780
+         Instant game           421        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025920
+         Instant crs ref #  32000003
+  REJT  BCRS   CRS  32000130 13:30:37  3512   2  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-2692101816-987
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         425
+         Instant pack #           81825      390051      234028      498168      190813      378712       96365
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   270176111
+         Instant crs ref #     32000004    32000004    32000004    32000004    32000004    32000004    32000004
+         Instant latex             3185        7420        8436        4390        4595        9855        5615
+         Instant Time             48636       48636       48636       48636       48636       48636       48636
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          89
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000215 16:11:02  3512   3  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6567   OLM Serial # > 210423-15-8505692516-038
+         Instant game           363        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity        50        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025921
+         Instant crs ref #  32000005
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:28:30 PAGE     3
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000227 16:28:00  3512   5  7298 IVAL     99           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-3850611431-387
+         Retailer, who gets the credit      0300006
+         Instant game #             425
+         Instant pack #           96365
+         Instant virn #       270176111
+         Instant crs ref #     32000006
+         Instant latex             5615
+         Instant Time             59280
+         Instant CDC               7298
+         Instant Status              99
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales                0                0.00            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       1                2.00            0.00            2.00            0.00            0.00
+
+Total Instant Message Transactions
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        2
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          5
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions          7
+
+Total Passive Returns and Validations
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0
+Total IGS Transactions          0
+PODEV1::SCML>
+PODEV1::SCML> run tmir
+20:09:36 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+
+<<<<< TMIR Transaction Master File Inquiry   V01 >>>>>
+
+20:09:36 CONSOLE  Enter file device (Disk, Tape)         >disk
+20:09:42 CONSOLE  Enter file type (Tmf, Carryover, Draw) >t
+20:09:49 CONSOLE  Enter file name (VOLN:FILNAME)         >prim:mtmf01.fil
+20:09:57 CONSOLE  Enter report file name:                >Henriqueaux
+20:10:05 CONSOLE  Enter terminal number (A=all)          >a
+20:10:08 CONSOLE  Exclude EM transactions (Y/N)          >y
+20:10:12 CONSOLE  Exclude IGS transactions (Y/N)         >y
+20:10:14 CONSOLE  Enter starting serial number (A=all/E=EuroMil/P=Placard)   >a
+20:10:49 CONSOLE  Enter starting time (A=all)            >
+ Interrupt
+
+PODEV1::SCML>
+ Interrupt
+
+PODEV1::SCML> run tmir
+20:10:57 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+
+<<<<< TMIR Transaction Master File Inquiry   V01 >>>>>
+
+20:10:57 CONSOLE  Enter file device (Disk, Tape)         >d
+20:10:59 CONSOLE  Enter file type (Tmf, Carryover, Draw) >t
+20:11:01 CONSOLE  Enter file name (VOLN:FILNAME)         >prim:mtmf01.fil
+20:11:07 CONSOLE  Enter report file name:                >Henriqueaux
+20:11:10 CONSOLE  Enter terminal number (A=all)          >a
+20:11:12 CONSOLE  Exclude EM transactions (Y/N)          >y
+20:11:12 CONSOLE  Exclude IGS transactions (Y/N)         >y
+20:11:13 CONSOLE  Enter starting serial number (A=all/E=EuroMil/P=Placard)   >p
+20:11:21 CONSOLE  Enter external serial number                               >
+20:11:28 CONSOLE   Ext Serial # must have the format YYMMDD-GG-SSSSSSSSSS-XXX
+20:11:28 CONSOLE  Enter external serial number                               >210423-15-8505692516-038
+20:15:12 CONSOLE  Enter starting time (A=all)            >a
+20:15:48 CONSOLE  Enter report option (Detail,Summary)   >d
+20:15:54 CONSOLE  Scramble serial numbers (Y/N)          >n
+***   OFFSETS   *****   VALUES   **************************************
+* Trx Status(1)...: Good(1)/Void(2)/CashExchg(4)/Cash(5)/Reject(6)    *
+* Trx Error(2)....: Noer(0)/Invl(1)/Synt(2)/Supr(3)/NotOn(4)/Sdor(5)  *
+*                   Sdrw(6)/Rety(15)/Vinq(16)/Grev(18)/Bcrs(33)       *
+* Trx Type(9).....: Wag(1)/Can(2)/Ican(3)/Val(4)/Ret(5)/Spe(7)/Crs(9) *
+*                   Eur(11)/Igs(12)                                   *
+* Game Num(10)....: TotobolaNormal(1)/Totoloto(2)/TotobolaExtra2(3)   *
+*                   Loto2(4)/Joker(5)/TotolotoSab(6)/TotolotoQua(7)   *
+*                   Classica(8)/Popular(9)/TotobolaExtra1(10)         *
+* Game Type(11)...: Loto(1)/Sports(2)/Joker(4)/Results(15)/Pas(16)    *
+*                   Eur(17)/Odds(18)/Raffle(19)                       *
+* Spe Func(25)....: Son(1)/Soff(2)/SalRep(5)/GamRep(6)/Reprint(7)     *
+*                   CtrlReq(19)/BilRep(51)                            *
+* Eur TrxType(25).: Wag(1)/Can(2)/Val(4)                              *
+* Eur WagChan(45).: Retlr(1)/Web(2)/SMS(3)/PortalMed(4)/Mob(5)        *
+* Igs TrxType(25).: Wag(0)/Can(1)/Val(2)/Pay(3)/Rep(4)                *
+***********************************************************************
+20:16:43 CONSOLE  Enter first  offset (A=all)            >25
+20:18:36 CONSOLE  Enter first  value  (A=all)            >1
+20:18:46 CONSOLE  Enter second offset (A=all)            >e
+20:19:21 CONSOLE  STOP0003  ****  OPERATOR ABORT
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> run tmir
+20:26:27 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+
+<<<<< TMIR Transaction Master File Inquiry   V01 >>>>>
+
+20:26:27 CONSOLE  Enter file device (Disk, Tape)         >d
+20:26:34 CONSOLE  Enter file type (Tmf, Carryover, Draw) >t
+20:26:36 CONSOLE  Enter file name (VOLN:FILNAME)         >prim:mtmf01.fil
+20:26:43 CONSOLE  Enter report file name:                >teste
+20:26:49 CONSOLE  Enter terminal number (A=all)          >a
+20:26:52 CONSOLE  Exclude EM transactions (Y/N)          >y
+20:26:54 CONSOLE  Exclude IGS transactions (Y/N)         >n
+20:27:06 CONSOLE  Enter starting serial number (A=all/E=EuroMil/P=Placard)   >a
+20:27:10 CONSOLE  Enter starting time (A=all)            >a
+20:27:12 CONSOLE  Enter report option (Detail,Summary)   >d
+20:27:15 CONSOLE  Scramble serial numbers (Y/N)          >n
+***   OFFSETS   *****   VALUES   **************************************
+* Trx Status(1)...: Good(1)/Void(2)/CashExchg(4)/Cash(5)/Reject(6)    *
+* Trx Error(2)....: Noer(0)/Invl(1)/Synt(2)/Supr(3)/NotOn(4)/Sdor(5)  *
+*                   Sdrw(6)/Rety(15)/Vinq(16)/Grev(18)/Bcrs(33)       *
+* Trx Type(9).....: Wag(1)/Can(2)/Ican(3)/Val(4)/Ret(5)/Spe(7)/Crs(9) *
+*                   Eur(11)/Igs(12)                                   *
+* Game Num(10)....: TotobolaNormal(1)/Totoloto(2)/TotobolaExtra2(3)   *
+*                   Loto2(4)/Joker(5)/TotolotoSab(6)/TotolotoQua(7)   *
+*                   Classica(8)/Popular(9)/TotobolaExtra1(10)         *
+* Game Type(11)...: Loto(1)/Sports(2)/Joker(4)/Results(15)/Pas(16)    *
+*                   Eur(17)/Odds(18)/Raffle(19)                       *
+* Spe Func(25)....: Son(1)/Soff(2)/SalRep(5)/GamRep(6)/Reprint(7)     *
+*                   CtrlReq(19)/BilRep(51)                            *
+* Eur TrxType(25).: Wag(1)/Can(2)/Val(4)                              *
+* Eur WagChan(45).: Retlr(1)/Web(2)/SMS(3)/PortalMed(4)/Mob(5)        *
+* Igs TrxType(25).: Wag(0)/Can(1)/Val(2)/Pay(3)/Rep(4)                *
+***********************************************************************
+20:27:18 CONSOLE  Enter first  offset (A=all)            >9
+20:27:42 CONSOLE  Enter first  value  (A=all)            >7
+20:27:55 CONSOLE  Enter second offset (A=all)            >25
+20:28:06 CONSOLE  Enter second value  (A=all)            >1
+20:28:10 CONSOLE  Enter third  offset (A=all)            >a
+PODEV1::SCML>
+PODEV1::SCML> type teste.dat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:28:16 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF
+    FILE NAME -----------> prim:mtmf01.fil
+    TAPE DRIVE ---------->
+    TERMINAL NUMBER -----> ALL
+    EXCLUDE EM TRX ------> YES
+    EXCLUDE IGS TRX -----> NO
+    EUROMIL EXT SER # --->
+    PLACARD EXT SER # --->
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->         9 :        25 :        -1 :        -1 :        -1 :
+    VALUES -------------->         7 :         1 :        -1 :        -1 :        -1 :
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:28:16 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000029 10:44:08  3512   5  7298    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales                0                0.00            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       0                0.00            0.00            0.00            0.00            0.00
+
+Total Instant Message Transactions
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        0
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          0
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions          0
+
+Total Passive Returns and Validations
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0
+Total IGS Transactions          0
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> run tmir
+20:29:12 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+
+<<<<< TMIR Transaction Master File Inquiry   V01 >>>>>
+
+20:29:12 CONSOLE  Enter file device (Disk, Tape)         >d
+20:29:14 CONSOLE  Enter file type (Tmf, Carryover, Draw) >t
+20:29:15 CONSOLE  Enter file name (VOLN:FILNAME)         >prim:mtmf01.fil
+20:29:20 CONSOLE  Enter report file name:                >teste
+20:29:23 CONSOLE  Enter terminal number (A=all)          >a
+20:29:26 CONSOLE  Exclude EM transactions (Y/N)          >n
+20:29:37 CONSOLE  Exclude IGS transactions (Y/N)         >n
+20:29:38 CONSOLE  Enter starting serial number (A=all/E=EuroMil/P=Placard)   >a
+20:29:40 CONSOLE  Enter starting time (A=all)            >a
+20:29:44 CONSOLE  Enter report option (Detail,Summary)   >d
+20:29:45 CONSOLE  Scramble serial numbers (Y/N)          >n
+***   OFFSETS   *****   VALUES   **************************************
+* Trx Status(1)...: Good(1)/Void(2)/CashExchg(4)/Cash(5)/Reject(6)    *
+* Trx Error(2)....: Noer(0)/Invl(1)/Synt(2)/Supr(3)/NotOn(4)/Sdor(5)  *
+*                   Sdrw(6)/Rety(15)/Vinq(16)/Grev(18)/Bcrs(33)       *
+* Trx Type(9).....: Wag(1)/Can(2)/Ican(3)/Val(4)/Ret(5)/Spe(7)/Crs(9) *
+*                   Eur(11)/Igs(12)                                   *
+* Game Num(10)....: TotobolaNormal(1)/Totoloto(2)/TotobolaExtra2(3)   *
+*                   Loto2(4)/Joker(5)/TotolotoSab(6)/TotolotoQua(7)   *
+*                   Classica(8)/Popular(9)/TotobolaExtra1(10)         *
+* Game Type(11)...: Loto(1)/Sports(2)/Joker(4)/Results(15)/Pas(16)    *
+*                   Eur(17)/Odds(18)/Raffle(19)                       *
+* Spe Func(25)....: Son(1)/Soff(2)/SalRep(5)/GamRep(6)/Reprint(7)     *
+*                   CtrlReq(19)/BilRep(51)                            *
+* Eur TrxType(25).: Wag(1)/Can(2)/Val(4)                              *
+* Eur WagChan(45).: Retlr(1)/Web(2)/SMS(3)/PortalMed(4)/Mob(5)        *
+* Igs TrxType(25).: Wag(0)/Can(1)/Val(2)/Pay(3)/Rep(4)                *
+***********************************************************************
+20:29:47 CONSOLE  Enter first  offset (A=all)            >9
+20:30:00 CONSOLE  Enter first  value  (A=all)            >9
+20:30:26 CONSOLE  Enter second offset (A=all)            >a
+PODEV1::SCML>
+PODEV1::SCML> type teste.dat
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:32:42 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF
+    FILE NAME -----------> prim:mtmf01.fil
+    TAPE DRIVE ---------->
+    TERMINAL NUMBER -----> ALL
+    EXCLUDE EM TRX ------> NO
+    EXCLUDE IGS TRX -----> NO
+    EUROMIL EXT SER # --->
+    PLACARD EXT SER # --->
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->         9 :        -1 :        -1 :        -1 :        -1 :
+    VALUES -------------->         9 :        -1 :        -1 :        -1 :        -1 :
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:32:42 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  REJT  BCRS   CRS  32000031 10:44:50  3512   6  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8449864015-527
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         425
+         Instant pack #           81825      390051      234028      498168      190813      378712       96365
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   270176111
+         Instant crs ref #     32000000    32000000    32000000    32000000    32000000    32000000    32000000
+         Instant latex             3185        7420        8436        4390        4595        9855        5615
+         Instant Time             38690       38690       38690       38690       38690       38690       38690
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          89
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000038 10:52:12  3512   7  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-1504103395-130
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         410
+         Instant pack #           81825      390051      234028      498168      190813      378712      122052
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   872853870
+         Instant crs ref #     32000001    32000001    32000001    32000001    32000001    32000001    32000001
+         Instant latex             3185        7420        8436        4390        4595        9855        1166
+         Instant Time             39132       39132       39132       39132       39132       39132       39132
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          34
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000053 11:10:55  3512   0  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8390886403-604
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         410
+         Instant pack #           81825      390051      234028      498168      190813      378712      122052
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   872853870
+         Instant crs ref #     32000002    32000002    32000002    32000002    32000002    32000002    32000002
+         Instant latex             3185        7420        8436        4390        4595        9855        1166
+         Instant Time             40254       40254       40254       40254       40254       40254       40254
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          34
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:32:42 PAGE     2
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000120 13:17:45  3512   1  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6565   OLM Serial # > 210423-15-5775830002-780
+         Instant game           421        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025920
+         Instant crs ref #  32000003
+  REJT  BCRS   CRS  32000130 13:30:37  3512   2  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-2692101816-987
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         425
+         Instant pack #           81825      390051      234028      498168      190813      378712       96365
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   270176111
+         Instant crs ref #     32000004    32000004    32000004    32000004    32000004    32000004    32000004
+         Instant latex             3185        7420        8436        4390        4595        9855        5615
+         Instant Time             48636       48636       48636       48636       48636       48636       48636
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          89
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000215 16:11:02  3512   3  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6567   OLM Serial # > 210423-15-8505692516-038
+         Instant game           363        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity        50        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025921
+         Instant crs ref #  32000005
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:32:42 PAGE     3
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000227 16:28:00  3512   5  7298 IVAL     99           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-3850611431-387
+         Retailer, who gets the credit      0300006
+         Instant game #             425
+         Instant pack #           96365
+         Instant virn #       270176111
+         Instant crs ref #     32000006
+         Instant latex             5615
+         Instant Time             59280
+         Instant CDC               7298
+         Instant Status              99
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+  GOOD  NOER   CRS  32000239 16:50:41  3512   6  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6569   OLM Serial # > 210423-15-5333497912-859
+         Instant game           444        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025922
+         Instant crs ref #  32000007
+  GOOD  NOER   CRS  32000253 17:09:00  3512   7  7298 ICNF     99           0
+     OLM Channel > Yes   Message ID > 6570   OLM Serial # > 210423-15-7609433044-378
+         Instant invoice#          0
+         Instant invoice#       5922
+         Instant invoice#        402
+         Instant crs ref #  32000008
+  GOOD  NOER   CRS  32000254 17:09:02  3512   0  7298 OACT     99           1
+     OLM Channel > Yes   Message ID > 6571   OLM Serial # > 210423-15-7609433044-378
+         Instant pack cnt          1
+         Instant invoice#       5922
+         Instant invoice#        402
+         Instant crs ref #  32000009
+  GOOD  NOER   CRS  32000255 17:11:41  3512   1  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6572   OLM Serial # > 210423-15-9914856982-357
+         Instant game           444        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025923
+         Instant crs ref #  32000010
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:32:42 PAGE     4
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000257 17:12:26  3512   2  7298 ICNF     99           0
+     OLM Channel > Yes   Message ID > 6573   OLM Serial # > 210423-15-6067568951-980
+         Instant invoice#          0
+         Instant invoice#       5923
+         Instant invoice#        402
+         Instant crs ref #  32000011
+  GOOD  NOER   CRS  32000258 17:12:29  3512   3  7298 OACT     99           1
+     OLM Channel > Yes   Message ID > 6574   OLM Serial # > 210423-15-6067568951-980
+         Instant pack cnt          1
+         Instant invoice#       5923
+         Instant invoice#        402
+         Instant crs ref #  32000012
+  REJT  BCRS   CRS  32000261 17:14:06  3512   4  7298 IVAL     89           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8372992889-959
+         Retailer, who gets the credit      0300006
+         Instant game #             444
+         Instant pack #           41402
+         Instant virn #       361747957
+         Instant crs ref #     32000013
+         Instant latex             6016
+         Instant Time             62046
+         Instant CDC               7298
+         Instant Status              89
+         Instant Pack Sts             0
+         Actual Amount             1.00
+         Net Prize Amount          1.00
+  GOOD  NOER   CRS  32000265 17:19:03  3512   5  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6576   OLM Serial # > 210423-15-1427232269-562
+         Instant game           408        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025924
+         Instant crs ref #  32000014
+  GOOD  NOER   CRS  32000269 17:20:05  3512   6  7298 IVAL     99           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-7579944238-915
+         Retailer, who gets the credit      0300006
+         Instant game #             408
+         Instant pack #           81825
+         Instant virn #       725516781
+         Instant crs ref #     32000015
+         Instant latex             3185
+         Instant Time             62404
+         Instant CDC               7298
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             1.00
+         Net Prize Amount          1.00
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:32:42 PAGE     5
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000281 17:45:10  3512   7  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6578   OLM Serial # > 210423-15-0604694812-058
+         Instant game           421        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025925
+         Instant crs ref #  32000016
+  GOOD  NOER   CRS  32000285 17:46:14  3512   0  7298 ICNF     99           0
+     OLM Channel > Yes   Message ID > 6579   OLM Serial # > 210423-15-6757406781-411
+         Instant invoice#          0
+         Instant invoice#       5925
+         Instant invoice#        402
+         Instant crs ref #  32000017
+  GOOD  NOER   CRS  32000286 17:46:16  3512   1  7298 OACT     99           1
+     OLM Channel > Yes   Message ID > 6580   OLM Serial # > 210423-15-6757406781-411
+         Instant pack cnt          1
+         Instant invoice#       5925
+         Instant invoice#        402
+         Instant crs ref #  32000018
+  REJT  BCRS   CRS  32000287 17:47:06  3512   2  7298 IVAL     89           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-2910118750-037
+         Retailer, who gets the credit      0300006
+         Instant game #             421
+         Instant pack #          390051
+         Instant virn #       184819874
+         Instant crs ref #     32000019
+         Instant latex             7420
+         Instant Time             64026
+         Instant CDC               7298
+         Instant Status              89
+         Instant Pack Sts             0
+         Actual Amount             1.00
+         Net Prize Amount          1.00
+  REJT  BCRS   CRS  32000289 17:47:49  3512   3  7298 IORD      8           1
+     OLM Channel > Yes   Message ID > 6582   OLM Serial # > 210423-15-5215542688-016
+         Instant game           430        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #           0
+         Instant crs ref #  32000020
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:32:42 PAGE     6
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  REJT  BCRS   CRS  32000291 17:49:40  3512   4  7298 IORD      8           1
+     OLM Channel > Yes   Message ID > 6583   OLM Serial # > 210423-15-1368254657-639
+         Instant game           430        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #           0
+         Instant crs ref #  32000021
+  GOOD  NOER   CRS  32000295 17:51:45  3512   5  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6584   OLM Serial # > 210423-15-9826390564-971
+         Instant game           437        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025926
+         Instant crs ref #  32000022
+  GOOD  NOER   CRS  32000297 17:52:29  3512   6  7298 ICNF     99           0
+     OLM Channel > Yes   Message ID > 6585   OLM Serial # > 210423-15-4437238440-202
+         Instant invoice#          0
+         Instant invoice#       5926
+         Instant invoice#        402
+         Instant crs ref #  32000023
+  GOOD  NOER   CRS  32000298 17:52:31  3512   7  7298 OACT     99           1
+     OLM Channel > Yes   Message ID > 6586   OLM Serial # > 210423-15-4437238440-202
+         Instant pack cnt          1
+         Instant invoice#       5926
+         Instant invoice#        402
+         Instant crs ref #  32000024
+  REJT  BCRS   CRS  32000299 17:52:54  3512   0  7298 IVAL     89           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-0589950409-825
+         Retailer, who gets the credit      0300006
+         Instant game #             437
+         Instant pack #          498168
+         Instant virn #       603783523
+         Instant crs ref #     32000025
+         Instant latex             4390
+         Instant Time             64374
+         Instant CDC               7298
+         Instant Status              89
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:32:42 PAGE     7
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000301 17:53:31  3512   1  7298 IORD     99           1
+     OLM Channel > Yes   Message ID > 6588   OLM Serial # > 210423-15-6742662378-181
+         Instant game           438        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4025927
+         Instant crs ref #  32000026
+  GOOD  NOER   CRS  32000303 17:54:27  3512   2  7298 ICNF     99           0
+     OLM Channel > Yes   Message ID > 6589   OLM Serial # > 210423-15-9048086316-160
+         Instant invoice#          0
+         Instant invoice#       5927
+         Instant invoice#        402
+         Instant crs ref #  32000027
+  GOOD  NOER   CRS  32000304 17:54:29  3512   3  7298 OACT     99           1
+     OLM Channel > Yes   Message ID > 6590   OLM Serial # > 210423-15-9048086316-160
+         Instant pack cnt          1
+         Instant invoice#       5927
+         Instant invoice#        402
+         Instant crs ref #  32000028
+  REJT  BCRS   CRS  32000305 17:54:49  3512   4  7298 IVAL     89           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-5200798285-783
+         Retailer, who gets the credit      0300006
+         Instant game #             438
+         Instant pack #          190813
+         Instant virn #       463942042
+         Instant crs ref #     32000029
+         Instant latex             4595
+         Instant Time             64488
+         Instant CDC               7298
+         Instant Status              89
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales                0                0.00            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       1                2.00            0.00            2.00            0.00            0.00
+
+Total Instant Message Transactions
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering       10
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         5
+Instant Cashes         10
+Instant Activat         5
+Instant Game Tbl        0
+Total Instant Transactions         30
+
+Total Passive Returns and Validations
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0
+Total IGS Transactions          0
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> run tmir
+20:35:15 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+
+<<<<< TMIR Transaction Master File Inquiry   V01 >>>>>
+
+20:35:15 CONSOLE  Enter file device (Disk, Tape)         >d
+20:35:17 CONSOLE  Enter file type (Tmf, Carryover, Draw) >t
+20:35:18 CONSOLE  Enter file name (VOLN:FILNAME)         >prim:mtmf01.fil
+20:35:24 CONSOLE  Enter report file name:                >teste
+20:35:26 CONSOLE  Enter terminal number (A=all)          >a
+20:35:28 CONSOLE  Exclude EM transactions (Y/N)          >n
+20:35:30 CONSOLE  Exclude IGS transactions (Y/N)         >n
+20:35:31 CONSOLE  Enter starting serial number (A=all/E=EuroMil/P=Placard)   >a
+20:35:33 CONSOLE  Enter starting time (A=all)            >a
+20:35:34 CONSOLE  Enter report option (Detail,Summary)   >d
+20:35:35 CONSOLE  Scramble serial numbers (Y/N)          >\n
+ *** Invalid input ***
+n
+***   OFFSETS   *****   VALUES   **************************************
+* Trx Status(1)...: Good(1)/Void(2)/CashExchg(4)/Cash(5)/Reject(6)    *
+* Trx Error(2)....: Noer(0)/Invl(1)/Synt(2)/Supr(3)/NotOn(4)/Sdor(5)  *
+*                   Sdrw(6)/Rety(15)/Vinq(16)/Grev(18)/Bcrs(33)       *
+* Trx Type(9).....: Wag(1)/Can(2)/Ican(3)/Val(4)/Ret(5)/Spe(7)/Crs(9) *
+*                   Eur(11)/Igs(12)                                   *
+* Game Num(10)....: TotobolaNormal(1)/Totoloto(2)/TotobolaExtra2(3)   *
+*                   Loto2(4)/Joker(5)/TotolotoSab(6)/TotolotoQua(7)   *
+*                   Classica(8)/Popular(9)/TotobolaExtra1(10)         *
+* Game Type(11)...: Loto(1)/Sports(2)/Joker(4)/Results(15)/Pas(16)    *
+*                   Eur(17)/Odds(18)/Raffle(19)                       *
+* Spe Func(25)....: Son(1)/Soff(2)/SalRep(5)/GamRep(6)/Reprint(7)     *
+*                   CtrlReq(19)/BilRep(51)                            *
+* Eur TrxType(25).: Wag(1)/Can(2)/Val(4)                              *
+* Eur WagChan(45).: Retlr(1)/Web(2)/SMS(3)/PortalMed(4)/Mob(5)        *
+* Igs TrxType(25).: Wag(0)/Can(1)/Val(2)/Pay(3)/Rep(4)                *
+***********************************************************************
+20:35:42 CONSOLE  Enter first  offset (A=all)            >9
+20:35:52 CONSOLE  Enter first  value  (A=all)            >9
+20:35:54 CONSOLE  Enter second offset (A=all)            >25
+20:35:57 CONSOLE  Enter second value  (A=all)            >13
+20:36:02 CONSOLE  Enter third  offset (A=all)            >a
+PODEV1::SCML> type teste.dat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:36:05 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF
+    FILE NAME -----------> prim:mtmf01.fil
+    TAPE DRIVE ---------->
+    TERMINAL NUMBER -----> ALL
+    EXCLUDE EM TRX ------> NO
+    EXCLUDE IGS TRX -----> NO
+    EUROMIL EXT SER # --->
+    PLACARD EXT SER # --->
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->         9 :        25 :        -1 :        -1 :        -1 :
+    VALUES -------------->         9 :        13 :        -1 :        -1 :        -1 :
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:36:05 PAGE     1
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  REJT  BCRS   CRS  32000031 10:44:50  3512   6  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8449864015-527
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         425
+         Instant pack #           81825      390051      234028      498168      190813      378712       96365
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   270176111
+         Instant crs ref #     32000000    32000000    32000000    32000000    32000000    32000000    32000000
+         Instant latex             3185        7420        8436        4390        4595        9855        5615
+         Instant Time             38690       38690       38690       38690       38690       38690       38690
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          89
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000038 10:52:12  3512   7  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-1504103395-130
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         410
+         Instant pack #           81825      390051      234028      498168      190813      378712      122052
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   872853870
+         Instant crs ref #     32000001    32000001    32000001    32000001    32000001    32000001    32000001
+         Instant latex             3185        7420        8436        4390        4595        9855        1166
+         Instant Time             39132       39132       39132       39132       39132       39132       39132
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          34
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000053 11:10:55  3512   0  7298 IVAL     99           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8390886403-604
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         410
+         Instant pack #           81825      390051      234028      498168      190813      378712      122052
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   872853870
+         Instant crs ref #     32000002    32000002    32000002    32000002    32000002    32000002    32000002
+         Instant latex             3185        7420        8436        4390        4595        9855        1166
+         Instant Time             40254       40254       40254       40254       40254       40254       40254
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          34
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:36:05 PAGE     2
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  REJT  BCRS   CRS  32000130 13:30:37  3512   2  7298 IVAL     89           7
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-2692101816-987
+         Retailer, who gets the credit      0300006
+         Instant game #             408         421         430         437         438         421         425
+         Instant pack #           81825      390051      234028      498168      190813      378712       96365
+         Instant virn #       725516781   184819874   736488305   603783523   463942042   275331210   270176111
+         Instant crs ref #     32000004    32000004    32000004    32000004    32000004    32000004    32000004
+         Instant latex             3185        7420        8436        4390        4595        9855        5615
+         Instant Time             48636       48636       48636       48636       48636       48636       48636
+         Instant CDC               7298        7298        7298        7298        7298        7298        7298
+         Instant Status              34          34          38          34          34          34          89
+         Instant Pack Sts             0           0           0           0           0           0           0
+         Actual Amount             1.00        1.00        0.00        2.00        2.00        2.00        2.00
+         Net Prize Amount          0.00        0.00        0.00        0.00        0.00        0.00        0.00
+  GOOD  NOER   CRS  32000227 16:28:00  3512   5  7298 IVAL     99           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-3850611431-387
+         Retailer, who gets the credit      0300006
+         Instant game #             425
+         Instant pack #           96365
+         Instant virn #       270176111
+         Instant crs ref #     32000006
+         Instant latex             5615
+         Instant Time             59280
+         Instant CDC               7298
+         Instant Status              99
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+  REJT  BCRS   CRS  32000261 17:14:06  3512   4  7298 IVAL     89           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-8372992889-959
+         Retailer, who gets the credit      0300006
+         Instant game #             444
+         Instant pack #           41402
+         Instant virn #       361747957
+         Instant crs ref #     32000013
+         Instant latex             6016
+         Instant Time             62046
+         Instant CDC               7298
+         Instant Status              89
+         Instant Pack Sts             0
+         Actual Amount             1.00
+         Net Prize Amount          1.00
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:36:05 PAGE     3
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000269 17:20:05  3512   6  7298 IVAL     99           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-7579944238-915
+         Retailer, who gets the credit      0300006
+         Instant game #             408
+         Instant pack #           81825
+         Instant virn #       725516781
+         Instant crs ref #     32000015
+         Instant latex             3185
+         Instant Time             62404
+         Instant CDC               7298
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             1.00
+         Net Prize Amount          1.00
+  REJT  BCRS   CRS  32000287 17:47:06  3512   2  7298 IVAL     89           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-2910118750-037
+         Retailer, who gets the credit      0300006
+         Instant game #             421
+         Instant pack #          390051
+         Instant virn #       184819874
+         Instant crs ref #     32000019
+         Instant latex             7420
+         Instant Time             64026
+         Instant CDC               7298
+         Instant Status              89
+         Instant Pack Sts             0
+         Actual Amount             1.00
+         Net Prize Amount          1.00
+  REJT  BCRS   CRS  32000299 17:52:54  3512   0  7298 IVAL     89           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-0589950409-825
+         Retailer, who gets the credit      0300006
+         Instant game #             437
+         Instant pack #          498168
+         Instant virn #       603783523
+         Instant crs ref #     32000025
+         Instant latex             4390
+         Instant Time             64374
+         Instant CDC               7298
+         Instant Status              89
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+
+
+
+
+
+
+
+
+
+
+
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                20:36:05 PAGE     4
+ 23.04.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         23.04.2021 CDC 7298
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  REJT  BCRS   CRS  32000305 17:54:49  3512   4  7298 IVAL     89           1
+     OLM Channel > Yes   Message ID > 0   OLM Serial # > 210423-15-5200798285-783
+         Retailer, who gets the credit      0300006
+         Instant game #             438
+         Instant pack #          190813
+         Instant virn #       463942042
+         Instant crs ref #     32000029
+         Instant latex             4595
+         Instant Time             64488
+         Instant CDC               7298
+         Instant Status              89
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales                0                0.00            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       1                2.00            0.00            2.00            0.00            0.00
+
+Total Instant Message Transactions
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        0
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes         10
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions         10
+
+Total Passive Returns and Validations
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0
+Total IGS Transactions          0
+PODEV1::SCML>

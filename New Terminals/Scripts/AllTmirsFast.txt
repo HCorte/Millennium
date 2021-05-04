@@ -1,0 +1,141 @@
+PODEV1::SCML> r tmir
+09:46:56 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+
+<<<<< TMIR Transaction Master File Inquiry   V01 >>>>>
+
+09:46:56 CONSOLE  Enter file device (Disk, Tape)         >d
+09:46:58 CONSOLE  Enter file type (Tmf, Carryover, Draw) >t
+09:46:59 CONSOLE  Enter file name (VOLN:FILNAME)         >prim:mtmf01.fil
+09:47:13 CONSOLE  Enter report file name:                >Henrique-09-03-2021
+09:47:41 CONSOLE  Enter terminal number (A=all)          >a
+09:47:44 CONSOLE  Exclude EM transactions (Y/N)          >y
+09:47:46 CONSOLE  Exclude IGS transactions (Y/N)         >y
+09:47:47 CONSOLE  Enter starting serial number (A=all/E=EuroMil/P=Placard)   >a
+09:47:48 CONSOLE  Enter starting time (A=all)            >a
+09:47:53 CONSOLE  Enter report option (Detail,Summary)   >d
+09:47:54 CONSOLE  Scramble serial numbers (Y/N)          >y
+***   OFFSETS   *****   VALUES   **************************************
+* Trx Status(1)...: Good(1)/Void(2)/CashExchg(4)/Cash(5)/Reject(6)    *
+* Trx Error(2)....: Noer(0)/Invl(1)/Synt(2)/Supr(3)/NotOn(4)/Sdor(5)  *
+*                   Sdrw(6)/Rety(15)/Vinq(16)/Grev(18)/Bcrs(33)       *
+* Trx Type(9).....: Wag(1)/Can(2)/Ican(3)/Val(4)/Ret(5)/Spe(7)/Crs(9) *
+*                   Eur(11)/Igs(12)                                   *
+* Game Num(10)....: TotobolaNormal(1)/Totoloto(2)/TotobolaExtra2(3)   *
+*                   Loto2(4)/Joker(5)/TotolotoSab(6)/TotolotoQua(7)   *
+*                   Classica(8)/Popular(9)/TotobolaExtra1(10)         *
+* Game Type(11)...: Loto(1)/Sports(2)/Joker(4)/Results(15)/Pas(16)    *
+*                   Eur(17)/Odds(18)/Raffle(19)                       *
+* Spe Func(25)....: Son(1)/Soff(2)/SalRep(5)/GamRep(6)/Reprint(7)     *
+*                   CtrlReq(19)/BilRep(51)                            *
+* Eur TrxType(25).: Wag(1)/Can(2)/Val(4)                              *
+* Eur WagChan(45).: Retlr(1)/Web(2)/SMS(3)/PortalMed(4)/Mob(5)        *
+* Igs TrxType(25).: Wag(0)/Can(1)/Val(2)/Pay(3)/Rep(4)                *
+***********************************************************************
+09:48:08 CONSOLE  Enter first  offset (A=all)            >a
+
+
+run tmir
+d
+t
+prim:mtmf01.fil
+HenriqueSerial
+a
+y
+y
+a
+a
+d
+n
+a
+
+---------------------For All Terminals------------------
+--------------------For My Terminal (0300006)-------------
+-------------------For Nelson Terminal----------------------
+-------------------For Andre Terminal----------------------
+-------------------For Sara Terminal----------------------
+-------------------For Joao Terminal----------------------
+run tmir
+d
+t
+prim:mtmf01.fil
+Henrique-22-04-2021
+a
+y
+y
+a
+a
+d
+n
+a
+
+
+run tmir
+d
+t
+prim:mtmf01.fil
+My-22-04-2021
+3512
+y
+y
+a
+a
+d
+n
+a
+
+run tmir
+d
+t
+prim:mtmf01.fil
+Nelson-22-04-2021
+3355
+y
+y
+a
+a
+d
+n
+a
+
+run tmir
+d
+t
+prim:mtmf01.fil
+Andre-22-04-2021
+4547
+y
+y
+a
+a
+d
+n
+a
+
+run tmir
+d
+t
+prim:mtmf01.fil
+Sara-22-04-2021
+638
+y
+y
+a
+a
+d
+n
+a
+
+run tmir
+d
+t
+prim:mtmf01.fil
+Joao-22-04-2021
+4350
+y
+y
+a
+a
+d
+n
+a
+
