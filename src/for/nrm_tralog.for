@@ -2620,7 +2620,7 @@ C HAVES MORE THAN 4 TICKETS TO VALIDATE THEN 3 SEGMENTS IN USE
                           I1TEMP(2) = I1TEMP_AUX(2)
                           I1TEMP(3) = I1TEMP_AUX(3)
                           I1TEMP(4) = 0
-                          LOGBUF(48) = I4TEMP  
+                          LOGBUF(48) = I4TEMP                          
 C HAVES MORE THA  N 1 TICKETS TO VALIDATE THEN 2 SEGMENTS IN USE              
                   ELSEIF(TRABUF(TIBCH) .GT. 1) THEN
                           I4TEMP = TRABUF(TVOLMSERL_IL)    
@@ -2640,7 +2640,7 @@ C HAVES MORE THA  N 1 TICKETS TO VALIDATE THEN 2 SEGMENTS IN USE
                           I1TEMP(2) = I1TEMP_AUX(2)
                           I1TEMP(3) = I1TEMP_AUX(3)
                           I1TEMP(4) = 0
-                          LOGBUF(31) = I4TEMP   
+                          LOGBUF(31) = I4TEMP                          
 C HAVES 1 TICKET  S TO VALIDATE THEN 1 SEGMENT IN USE BUT NO SPACE FREE (LOGBUF)... USES TWO SEGMENTS TO HAVE SPACE                               
                   ELSE
                           I4TEMP = TRABUF(TVOLMSERL_IL)    
@@ -2774,9 +2774,9 @@ C beginof - the remaining 6 bytes of Olimpo serial (giving the total of the 9 by
                 I1TEMP(4) = 0
                 LOGBUF(28) = I4TEMP 
                 
-                I4TEMP = TRABUF(TVOLMMIDL_TLTO)
+                I4TEMP = TRABUF(TVOLMMIDL_IL)
                 LOGBUF(29) = I4TEMP
-                I1TEMP(1) = TRABUF(TVOLMMIDH_TLTO)
+                I1TEMP(1) = TRABUF(TVOLMMIDH_IL)
                 I1TEMP(2) = 0
                 I1TEMP(3) = 0
                 I1TEMP(4) = 0
@@ -3041,9 +3041,6 @@ C           Begin - Olimpo Serial Number & MessageID & Communication Flag
                   I4TEMP = TRABUF(TGOLMMIDH_IL)
                   LOGBUF(47) = I4TEMP  
                   I4TEMP = TRABUF(TGOLMCOMF_IL)
-                  I1TEMP(2) = 0
-                  I1TEMP(3) = 0
-                  I1TEMP(4) = 0
                   LOGBUF(48) = I4TEMP 
                ELSE IF(TRABUF(TIBCH).LE.21) THEN
                   I4TEMP = TRABUF(TGOLMSERL_IL)
@@ -3057,9 +3054,6 @@ C           Begin - Olimpo Serial Number & MessageID & Communication Flag
                   I4TEMP = TRABUF(TGOLMMIDH_IL)
                   LOGBUF(31) = I4TEMP  
                   I4TEMP = TRABUF(TGOLMCOMF_IL)
-                  I1TEMP(2) = 0
-                  I1TEMP(3) = 0
-                  I1TEMP(4) = 0
                   LOGBUF(32) = I4TEMP               
                ENDIF
             ENDIF                                                  
