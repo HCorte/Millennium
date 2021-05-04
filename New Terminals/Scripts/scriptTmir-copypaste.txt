@@ -11,3 +11,66 @@ a
 d
 n
 a
+
+
+
+C           SERIAL_OLM(9)     
+C           MESSAGE_ID(4)
+           I4TMP(1) = TRABUF(TWCOLMMIDL_TLTO) 
+           I4TMP(2) = TRABUF(TWCOLMMIDH_TLTO)
+		   
+		   
+		   
+run tmir
+d
+t
+prim:mtmf01.fil
+SaraSerial
+638
+y
+y
+a
+a
+d
+n
+a
+
+
+run tmir
+d
+t
+prim:mtmf01.fil
+HenriqueLIWork
+3512
+y
+y
+a
+a
+d
+n
+a
+
+!!!!!!!!!!!!Não esquecer de actualizar inspro.for e insout.for e o printra no CRM com a versão mais recente!!!!!!!!!!!!!!!!!!!!!!
+
+210423-27-8683624188-533
+
+run tmir
+d
+t
+prim:mtmf01.fil
+AndreSerial
+3252
+y
+y
+a
+a
+d
+n
+a
+
+
+16:43:47 CONSOLE  SERIALNUM_OLM 4l byte:                            :I[       3629]H[     E2D]
+
+16:43:47 CONSOLE  SERIALNUM_OLM 9m byte:                            :I[ 1723617285]H[66BC5005]
+
+16:43:47 CONSOLE  SERIALNUM_OLM 9h byte:                            :I[         11]H[       B]
