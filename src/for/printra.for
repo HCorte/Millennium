@@ -557,14 +557,14 @@ C
         AMOUNT = TRABUF(TVPAY) + TRABUF(TVKPAY)
 
 C---------------- V55 Begin -------------------------------------------     
-        I4TMP(1) = ZEXT(TRABUF(TVOLMMIDL_TLTO)) 
-        I4TMP(2) = ZEXT(TRABUF(TVOLMMIDH_TLTO)) 
+        I4TMP(1) = 0
+        I4TMP(2) = 0 
         MESSID = I8TMP  
         
-        I4TMP(1) = ZEXT(TRABUF(TVOLMSERL_TLTO)) 
-        I4TMP(2) = ZEXT(TRABUF(TVOLMSERM_TLTO))
+        I4TMP(1) = ZEXT(TRABUF(TVOLMSERL_IL)) 
+        I4TMP(2) = ZEXT(TRABUF(TVOLMSERM_IL))
 
-        SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TVOLMSERH_TLTO)))*OVER8BYTES+DFLOAT(I8TMP)
+        SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TVOLMSERH_IL)))*OVER8BYTES+DFLOAT(I8TMP)
         WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
         SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
 
@@ -969,18 +969,18 @@ C
         IF (DETAIL) THEN                      ! V13: If detailed report, then: 
           IF (TRABUF(TITYP) .EQ. IVAL) THEN
 C---------------- V55 Begin -------------------------------------------
-            I4TMP(1) = ZEXT(TRABUF(TGOLMMIDL_IL)) 
-            I4TMP(2) = ZEXT(TRABUF(TGOLMMIDH_IL)) 
+            I4TMP(1) = 0
+            I4TMP(2) = 0 
             MESSID = I8TMP  
                     
-            I4TMP(1) = ZEXT(TRABUF(TGOLMSERL_IL)) 
-            I4TMP(2) = ZEXT(TRABUF(TGOLMSERM_IL))
+            I4TMP(1) = ZEXT(TRABUF(TVOLMSERL_IL)) 
+            I4TMP(2) = ZEXT(TRABUF(TVOLMSERM_IL))
                     
-            SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TGOLMSERH_IL)))*OVER8BYTES+DFLOAT(I8TMP)
+            SERIALNUM_OLM = DFLOAT(ZEXT(TRABUF(TVOLMSERH_IL)))*OVER8BYTES+DFLOAT(I8TMP)
             WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
             SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21)           
                     
-            IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+            IF(TRABUF(TVOLMCOMF_IL) .EQ. 1) THEN
                 WRITE(PUNIT,980)  'Yes',MESSID,SERIALNUM_OLMSTR
             ELSE
                 WRITE(PUNIT,985)  'No'
