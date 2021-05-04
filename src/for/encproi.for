@@ -154,9 +154,6 @@ C
         INTEGER*4   NOFTLSIG
         EXTERNAL    NOFTLSIG
         INTEGER*4   INIT_HARDWARE /0/
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-        INTEGER*4 USED, OLMLST(1024)
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C
 C       (1) initialize - call encstart
@@ -248,13 +245,13 @@ C
 C
 C
         CALL RTL(OUTPUT_BUF,GAME_OUTQUE,ST)
-        IF (ST.NE.GLIST_STAT_EMPTY) THEN                
+        IF (ST.NE.GLIST_STAT_EMPTY) THEN
 C
 C       if this is simulated transaction queue it to simulation
 C       
            XREF_BUF=SIM_XREF(OUTPUT_BUF)   !BUFFER SIMULATED IF .NON. 0
            SIM_XREF(OUTPUT_BUF)=0
-           IF (XREF_BUF.NE.0) THEN                         
+           IF (XREF_BUF.NE.0) THEN
              CALL SIMCHKOUT(OUTPUT_BUF,XREF_BUF)
              IF (XREF_BUF.LT.0) GOTO 100        !IF INTERNALLY SIMULATED
            ENDIF
@@ -263,25 +260,19 @@ C       check if should encrypt
 C       queue to encryption if should be encrypted, otherwise
 C       queue to x2x. DES HARD IS ONLY DONE TO ON-LINE TERMINALS
 C
-          IF (IAND(PRO(OUTTAB,OUTPUT_BUF),ENCRYPTION_ON).NE.0) THEN 
+          IF (IAND(PRO(OUTTAB,OUTPUT_BUF),ENCRYPTION_ON).NE.0) THEN
             IF (P(DESFLG_TYPE).EQ.DESFLG_HARD.AND.
      *         TSBIT(AGTTAB(AGTTYP,HPRO(TERNUM,OUTPUT_BUF)),AGTTOI)) THEN
-D               CALL OPSTXT('ENCPROI ->1')
 D              TYPE *,IAM(),'CALLING DESENCBF'
 D              CALL PRTOUT(OUTPUT_BUF)
                CALL DESENCBF(OUTPUT_BUF,ST)
             ELSE
-D               CALL OPSTXT('ENCPROI ->2')
 D              TYPE *,IAM(),'CALLING SFTENCBF'
 D              CALL PRTOUT(OUTPUT_BUF)
                CALL SFTENCBF(OUTPUT_BUF,ST)             !DO ENCRYPTION
             ENDIF
-            CALL OPS('ST.NE.0 :',ST,ST)
             IF (ST.NE.0) CALL SENDOUT(OUTPUT_BUF)       !IF ERROR
-          ELSE  
-CCCCCCCCCCCCCCCCCCCCCC TEST OLM QUEUE PROBLEAM CONFIRMED (DIS BUG) CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC            
-C            CALL X2RELBUF(OUTPUT_BUF)
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC               
+          ELSE
             CALL SENDOUT(OUTPUT_BUF) !GAME OUTPUT
           ENDIF
 C
@@ -306,12 +297,6 @@ C
 C
         CALL DQUINP(BUF_NO)
         IF (BUF_NO.GT.0) THEN
-          CALL OPSTXT('ENCPROI ->3')
-          TYPE *,IAM(),'CALLING DQUINP'
-          CALL PRTOUT(BUF_NO)   
-          CALL OPS('ENCRYPTION_ON 0:',ENCRYPTION_ON,ENCRYPTION_ON)                  
-          CALL OPS('PRO(INPTAB,BUF_NO):',PRO(INPTAB,BUF_NO),PRO(INPTAB,BUF_NO))
-C          CALL OPS('IAND(PRO(INPTAB,BUF_NO),ENCRYPTION_ON):',IAND(PRO(INPTAB,BUF_NO),ENCRYPTION_ON),IAND(PRO(INPTAB,BUF_NO),ENCRYPTION_ON))
           AGAIN=-1
           IF (BUF_NO.GT.NUMPRO) THEN
             TYPE 900,IAM(),BUF_NO
@@ -341,21 +326,14 @@ C
 C
 C       try to decrypt DES HARD IS ONLY DONE TO ON-LINE TERMINALS
 C
-             CALL OPS('P(DESFLG_TYPE)->0:',P(DESFLG_TYPE),P(DESFLG_TYPE))
-             CALL OPS('DESFLG_HARD->1:',DESFLG_HARD,DESFLG_HARD)
-             CALL OPS('AGTTAB(AGTTYP,HPRO(TERNUM,BUF_NO):',AGTTAB(AGTTYP,HPRO(TERNUM,BUF_NO)),AGTTAB(AGTTYP,HPRO(TERNUM,BUF_NO)))
-             CALL OPS('AGTTOI:',AGTTOI,AGTTOI)
              IF (P(DESFLG_TYPE).EQ.DESFLG_HARD.AND.
      *          TSBIT(AGTTAB(AGTTYP,HPRO(TERNUM,BUF_NO)),AGTTOI)) THEN
-                CALL OPSTXT('ENCPROI ->4')
-               TYPE *,IAM(),'CALLING DESDECBF'
-               CALL PRTOUT(BUF_NO)
+D               TYPE *,IAM(),'CALLING DESDECBF'
+D               CALL PRTOUT(BUF_NO)
                 CALL DESDECBF(BUF_NO,STATUS)
              ELSE
-                CALL OPSTXT('ENCPROI ->5')
-                
-              TYPE *,IAM(),'CALLING SFTDECBF'     
-               CALL PRTOUT(BUF_NO)
+D              TYPE *,IAM(),'CALLING SFTDECBF'     
+D               CALL PRTOUT(BUF_NO)
                 CALL SFTDECBF(BUF_NO,STATUS)
 
 CCCCCC                 TYPE*,'CALLING SFTDECBF' ,STATUS
@@ -396,7 +374,6 @@ C
 C       encrypt message (not second phase of multipassword signon)
 C
             AGAIN=-1
-D            CALL OPSTXT('ENCPROI ->6')
 D           TYPE *,IAM(),'AFTER ENCRYPTION'
 D           CALL PRTOUT(BUF_NO)
             CALL SENDOUT(BUF_NO)
@@ -426,7 +403,6 @@ C
             ENDIF
 C
 C
-D            CALL OPSTXT('ENCPROI ->7')
 D           TYPE *,IAM(),'AFTER DECRYPTION'
 D           CALL PRTOUT(BUF_NO)
             CALL ABL(BUF_NO,QUETAB(1,DIS),STATUS)
@@ -461,9 +437,8 @@ C
 C       encrypt message (not second phase of multipassword signon)
 C
             AGAIN=-1
-            CALL OPSTXT('ENCPROI ->8')
-           TYPE *,IAM(),'AFTER ENCRYPTION'
-           CALL PRTOUT(BUF_NO)          
+D           TYPE *,IAM(),'AFTER ENCRYPTION'
+D           CALL PRTOUT(BUF_NO)
             CALL SENDOUT(BUF_NO)
             GOTO 2210
           ELSE          !STATUS.EQ.0, DECRYPT OR TYPPAS
@@ -491,7 +466,6 @@ C
             ENDIF
 C
 C
-D           CALL OPSTXT('ENCPROI ->9')
 D           TYPE *,IAM(),'AFTER DECRYPTION'
 D           CALL PRTOUT(BUF_NO)
             CALL ABL(BUF_NO,QUETAB(1,DIS),STATUS)
@@ -937,17 +911,11 @@ C        ELSE
 C            CALL X2RELBUF(BUF)
 C        ENDIF
 
-        CALL OPSTXT('!!!!!X2X_GAMES_UP!!!!!!')
-        IF (X2X_GAME_STATE.EQ.X2X_GAMES_UP) THEN
-          CALL OPSTXT('!!!!!X2X_GAMES_UP YES!!!!!!')      
+        IF (X2X_GAME_STATE.EQ.X2X_GAMES_UP) THEN      
 C         CALL X2ADDPRO(BUF)                        ! MXSRV
           IF (HPRO(PRCSRC,BUF).EQ.OLM_COM) THEN ! V13 - OLM            
-C            CALL QUETRA(OLM,BUF)                    ! V13 - OLM (rever se deve usar o ABL ou é QUETRA)
-             CALL OPSTXT('HPRO(PRCSRC,BUF).EQ.OLM_COM')   
+C            CALL QUETRA(OLM,BUF)                    ! V13 - OLM (rever se deve usar o ABL ou é QUETRA)   
              CALL OLM_QUETRA(BUF) 
-C             CALL LISTSIZE(COMOLMQUE(1),USED)       
-C             CALL QIMAGE(COMOLMQUE(1),OLMLST,USED)
-C             CALL OPS('QUEUE 1 buff:',OLMLST(1),OLMLST(1))
 C V13          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV            
           ELSEIF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV
             CALL QUETRA(MXS,BUF)                    ! MXSRV
