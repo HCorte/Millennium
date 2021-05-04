@@ -79,16 +79,15 @@ C
 	GIND=TRABUF(TCMDT1)
 	TRABUF(TCMOLD)=LTOSTS(GIND)
 	LTOSTS(GIND)=TRABUF(TCMNEW)
-      CALL OPSTXT('CHANGE LOTTO GAME STATUS')
 	IF(TRABUF(TCMNEW).EQ.GAMBFD) THEN !(GAMBFD=4)  !END OF GAME/BEFORE DRAWING
 	    LTOCTM(GIND)=TRABUF(TTIM)
 		CALL BSET(LTOTIM(GIND),1)
-            CALL OPSTXT('game control revision update')
-            CALL OPS('control revision before',LTOREV(GIND),LTOREV(GIND))
+C            CALL OPSTXT('game control revision update')
+C            CALL OPS('control revision before',LTOREV(GIND),LTOREV(GIND))
             TEMP=LTOREV(GIND)
             I2TEMP(1)=I2TEMP(1)+1
 			LTOREV(GIND)=TEMP
-            CALL OPS('control revision now/updated',LTOREV(GIND),LTOREV(GIND))
+C            CALL OPS('control revision now/updated',LTOREV(GIND),LTOREV(GIND))
 	    CALL CLRSUM
 	ENDIF
 

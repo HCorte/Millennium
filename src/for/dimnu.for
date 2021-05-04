@@ -191,19 +191,19 @@ C
 C----+------------------------------------------------------------------
 C V10| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------ 
-     IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
-        IF(TRABUF(TIBCH).LE.21) THEN
-           TRABUF(TSIZE) = 2
-        ELSE IF (TRABUF(TIBCH).GE.29) THEN
-           TRABUF(TSIZE) = 3
+        IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+           IF(TRABUF(TIBCH).LE.21) THEN  
+              TRABUF(TSIZE) = 2
+           ELSE IF (TRABUF(TIBCH).GE.29) THEN 
+              TRABUF(TSIZE) = 3
+           ENDIF
+        ELSE
+           IF(TRABUF(TIBCH).GE.9.AND.TRABUF(TIBCH).LE.28) THEN
+              TRABUF(TSIZE) = 2
+           ELSE IF (TRABUF(TIBCH).GE.29) THEN
+              TRABUF(TSIZE) = 3
+           ENDIF
         ENDIF
-     ELSE
-        IF(TRABUF(TIBCH).GE.9.AND.TRABUF(TIBCH).LE.28) THEN
-           TRABUF(TSIZE) = 2
-        ELSE IF (TRABUF(TIBCH).GE.29) THEN
-           TRABUF(TSIZE) = 3
-        ENDIF
-     ENDIF
 C        IF(TRABUF(TIBCH).GE.9.AND.TRABUF(TIBCH).LE.28) THEN
 C           TRABUF(TSIZE) = 2
 C        ELSE IF (TRABUF(TIBCH).GE.29) THEN
