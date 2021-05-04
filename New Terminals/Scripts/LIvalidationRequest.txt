@@ -1,0 +1,40 @@
+endpoint----
+{{host-hades}}/instant/validation
+body------
+{
+    "terminalCode": "{{agentnum}}",
+    "token": "{{token}}",
+    "instantValidation": {
+        "retailNumber": 0,
+        "envelopeIdentificationNumber": 0,
+        "numberOfTicketsInBatch": 7,
+        "instantValidationGameInformationList": [
+            {
+                "ticketInternalSerialNumber": "408-0081825-725516781-3185"
+            },
+            {
+                "ticketInternalSerialNumber": "421-0390051-184819874-7420"
+            },
+            {
+                "ticketInternalSerialNumber": "430-0234028-736488305-8436"
+            },
+            {
+                "ticketInternalSerialNumber": "437-0498168-603783523-4390"
+            },
+            {
+                "ticketInternalSerialNumber": "438-0190813-463942042-4595"
+            },
+            {
+                "ticketInternalSerialNumber": "421-0378712-275331210-9855"
+            },
+            {
+                "ticketInternalSerialNumber": "425-0096365-270176111-5615"
+            }
+        ]
+    },
+    "statistic": {
+        "additionalProp1": {},
+        "additionalProp2": {},
+        "additionalProp3": {}
+    }
+}
