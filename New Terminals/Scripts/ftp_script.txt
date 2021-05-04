@@ -1,0 +1,135 @@
+
+abrir Janela do Power shell aqui <----- importante (ou abrir linha de comandos vai dar ao mesmo supostamente)
+
+PS C:\Users\105864\Documents\Millennium\New Terminals\bkp> ftp 10.100.82.101
+Connected to 10.100.82.101.
+220 podev1.polott.lott FTP Server (Version 5.7) Ready.
+502 OPTS is unimplemented.
+User (10.100.82.101:(none)): console
+331 Username console requires a Password
+Password:
+230 User logged in.
+ftp> pwd
+257 "SYS$SYSDEVICE:[USER.CONSOLE]" is current directory.
+ftp> sh def
+Invalid command.
+ftp> cd DKD10:[DMIL.WRK.HMC]
+250-CWD command successful.
+250 New default directory is DKD10:[DMIL.WRK.HMC]
+ftp> pwd
+257 "DKD10:[DMIL.WRK.HMC]" is current directory.
+ftp> dir
+200 PORT command successful.
+150 Opening data connection for DKD10:[DMIL.WRK.HMC]*.*; (100.64.19.96,61495)
+
+Directory DKD10:[DMIL.WRK.HMC]
+
+CMDLTO.FOR;3            14/18         29-JAN-2021 11:02:52  [GODMIL]               (RWD,RWD,R,)
+CMDLTO.LIS;2            51/54         29-JAN-2021 11:02:57  [GODMIL]               (RWED,RWED,RE,)
+CMDLTO.OBJ;1            37/54         29-JAN-2021 11:02:57  [GODMIL]               (RWED,RWED,RE,)
+CMDNET.FOR;1            30/36         11-JAN-2021 18:06:02  [GODMIL]               (RWD,RWD,R,)
+CMDPRO.FOR;5             8/18         29-JAN-2021 11:04:31  [GODMIL]               (RWD,RWD,R,)
+CMDPRO.LIS;4            50/54         29-JAN-2021 11:04:39  [GODMIL]               (RWED,RWED,RE,)
+CMDPRO.OBJ;4            30/36         29-JAN-2021 11:04:39  [GODMIL]               (RWED,RWED,RE,)
+CMDROU.FOR;2            14/18         29-JAN-2021 11:03:32  [GODMIL]               (RWD,RWD,R,)
+CMDROU.LIS;1            37/54         29-JAN-2021 11:03:42  [GODMIL]               (RWED,RWED,RE,)
+CMDROU.OBJ;1            60/72         29-JAN-2021 11:03:42  [GODMIL]               (RWED,RWED,RE,)
+COM.DIR;1                1/18         16-SEP-2020 18:17:41  [GODMIL]               (RWE,RWE,RE,RWE)
+COPYWRITE.OBJ;2          9/18         27-JUL-2020 16:26:49  [GODMIL]               (RWED,RWED,RE,)
+DESTRA.DEF;3           153/162         7-APR-2021 19:01:04  [GODMIL]               (RWD,RWD,R,)
+DISPAT.FOR;12           51/54         18-JAN-2021 10:47:45  [GODMIL]               (RWD,RWD,R,)
+DISPAT.LIS;14          117/126        19-JAN-2021 12:30:44  [GODMIL]               (RWED,RWED,RE,)
+DISPAT.OBJ;14          128/144        19-JAN-2021 12:30:44  [GODMIL]               (RWED,RWED,RE,)
+DLOTTO.FOR;14           45/54          5-APR-2021 15:05:56  [GODMIL]               (RWD,RWD,R,)
+DLOTTO.LIS;6           110/126         5-APR-2021 15:06:22  [GODMIL]               (RWED,RWED,RE,)
+DLOTTO.OBJ;5            67/72          5-APR-2021 15:06:22  [GODMIL]               (RWED,RWED,RE,)
+ENCPRO.FOR;3            24/36         14-JAN-2021 14:37:04  [GODMIL]               (RWD,RWD,R,)
+ENCPRO.LIS;3            67/72         14-JAN-2021 14:37:27  [GODMIL]               (RWED,RWED,RE,)
+ENCPRO.OBJ;3            35/36         14-JAN-2021 14:37:27  [GODMIL]               (RWED,RWED,RE,)
+EXAMP.COM;2              1/18         24-AUG-2020 12:00:57  [GODMIL]               (RWED,RWED,RE,)
+EXAMPLECOM.COM;1         1/18          7-APR-2021 17:29:30  [GODMIL]               (RWED,RWED,RE,)
+EXAMPLES.DIR;1           6/18         21-JUL-2020 16:22:10  [GODMIL]               (RWE,RWE,RE,RWE)
+FORTRAN_USER_MANUEL.DIR;1
+                         1/18         27-AUG-2020 10:55:31  [GODMIL]               (RWE,RWE,RE,RWE)
+GETQUE.FOR;2            66/72          5-APR-2021 15:28:54  [GODMIL]               (RWD,RWD,R,)
+GETQUE.LIS;2           123/126         5-APR-2021 15:29:41  [GODMIL]               (RWED,RWED,RE,)
+GETQUE.OBJ;2            87/90          5-APR-2021 15:29:41  [GODMIL]               (RWED,RWED,RE,)
+HELLO.LNK;1              1/18         21-JUL-2020 17:36:05  [GODMIL]               (RWED,RWED,RE,)
+HELLOWORLD.EXE;1        16/18         21-JUL-2020 17:31:51  [GODMIL]               (RWED,RWED,RE,)
+HELLOWORLD.LIS;4         7/18         21-JUL-2020 17:31:08  [GODMIL]               (RWED,RWED,RE,)
+INCPRO.LIS;1            56/72         27-JAN-2021 15:43:08  [GODMIL]               (RWED,RWED,RE,)
+INCPRO.OBJ;1            59/72         27-JAN-2021 15:43:08  [GODMIL]               (RWED,RWED,RE,)
+ISWAP.LIS;2              8/18         24-AUG-2020 10:25:20  [GODMIL]               (RWED,RWED,RE,)
+ISWAP.OBJ;4              6/18         24-AUG-2020 10:25:20  [GODMIL]               (RWED,RWED,RE,)
+LOGGER.LIS;1            16/18         24-AUG-2020 10:25:32  [GODMIL]               (RWED,RWED,RE,)
+LOGGER.OBJ;1            23/36         24-AUG-2020 10:25:32  [GODMIL]               (RWED,RWED,RE,)
+MEMORYT.EXE;1           17/18         18-DEC-2020 14:16:38  [GODMIL]               (RWED,RWED,RE,)
+MEMTEST.DEF;1            1/18         18-DEC-2020 14:10:55  [GODMIL]               (RWD,RWD,R,)
+MEMTEST.FOR;1            1/18         18-DEC-2020 14:19:35  [GODMIL]               (RWD,RWD,R,)
+MEMTEST.OBJ;1           10/18         18-DEC-2020 14:20:01  [GODMIL]               (RWED,RWED,RE,)
+MEMTEST_MEMORY.FOR;1
+                         1/18         18-DEC-2020 14:15:17  [GODMIL]               (RWD,RWD,R,)
+MEMTEST_MEMORY.OBJ;1
+                         7/18         18-DEC-2020 14:15:36  [GODMIL]               (RWED,RWED,RE,)
+NETMGR.LIS;1            86/90         11-JAN-2021 18:12:45  [GODMIL]               (RWED,RWED,RE,)
+NETMGR.OBJ;1            75/90         11-JAN-2021 18:12:45  [GODMIL]               (RWED,RWED,RE,)
+OLM.DIR;1                1/18          7-OCT-2020 11:30:20  [GODMIL]               (RWE,RWE,RE,RWE)
+OLMCON.DEF;2             1/18         18-DEC-2020 10:28:01  [GODMIL]               (RWD,RWD,R,)
+OLMCON.EXE;24          177/180         3-FEB-2021 11:33:38  [GODMIL]               (RWED,RWED,RE,)
+OLMCON.FOR;31            6/18          3-FEB-2021 11:33:20  [GODMIL]               (RWD,RWD,R,)
+OLMCON.LIS;13           34/36          3-FEB-2021 11:33:27  [GODMIL]               (RWED,RWED,RE,)
+OLMCON.LNK;5             1/18         18-DEC-2020 11:41:07  [GODMIL]               (RWD,RWD,R,)
+OLMCON.OBJ;23           30/36          3-FEB-2021 11:33:27  [GODMIL]               (RWED,RWED,RE,)
+PAGE.FOR;3             155/162         4-FEB-2021 16:46:11  [GODMIL]               (RWD,RWD,R,)
+PAGE.LIS;2             261/270         4-FEB-2021 16:50:31  [GODMIL]               (RWED,RWED,RE,)
+PAGE.OBJ;2             261/270         4-FEB-2021 16:50:31  [GODMIL]               (RWED,RWED,RE,)
+PRTOUT.FOR;5             7/18         19-JAN-2021 14:44:14  [GODMIL]               (RWD,RWD,R,)
+QUECMD.FOR;4             6/18         18-JAN-2021 10:57:55  [GODMIL]               (RWD,RWD,R,)
+REMOVEBUF.EXE;22       196/198        15-JAN-2021 17:54:28  [GODMIL]               (RWED,RWED,RE,)
+REMOVEBUF.FOR;39        13/18         15-JAN-2021 17:47:56  [GODMIL]               (RWD,RWD,R,)
+REMOVEBUF.LIS;37        63/72         15-JAN-2021 17:54:26  [GODMIL]               (RWED,RWED,RE,)
+REMOVEBUF.LNK;5          1/18         14-JAN-2021 10:13:17  [GODMIL]               (RWD,RWD,R,)
+REMOVEBUF.OBJ;21        47/54         15-JAN-2021 17:54:26  [GODMIL]               (RWED,RWED,RE,)
+SENDOUT.FOR;1            4/18         23-DEC-2020 13:02:17  [GODMIL]               (RWD,RWD,R,)
+SERIALNUM.DAT;1          2/18         16-MAR-2021 15:25:24  [GODMIL]               (RWED,RWED,RE,)
+SERIALNUM.FOR;31         4/18         19-MAR-2021 10:52:48  [GODMIL]               (RWD,RWD,R,)
+SERIALNUM.LNK;3          1/18         16-MAR-2021 14:34:59  [GODMIL]               (RWD,RWD,R,)
+SETUP.DEF;1              5/18         24-NOV-2020 11:39:20  [GODMIL]               (RWED,RWED,RE,)
+SETUP.FOR;1             22/36         24-NOV-2020 12:22:54  [GODMIL]               (RWED,RWED,RE,)
+SHAREABLE_IMAGES.DIR;1
+                         1/18         17-SEP-2020 10:56:19  [GODMIL]               (RWE,RWE,RE,RWE)
+SON.FOR;1               51/54         29-JAN-2021 12:37:45  [GODMIL]               (RWD,RWD,R,)
+SON.LIS;1              286/288        29-JAN-2021 12:39:09  [GODMIL]               (RWED,RWED,RE,)
+SON.OBJ;1              129/144        29-JAN-2021 12:39:09  [GODMIL]               (RWED,RWED,RE,)
+SWAP.EXE;17             34/36         24-AUG-2020 14:45:10  [GODMIL]               (RWED,RWED,RE,)
+SWAP.LIS;2              10/18         24-AUG-2020 10:24:45  [GODMIL]               (RWED,RWED,RE,)
+SWAP.LNK;23              1/18         24-AUG-2020 10:29:01  [GODMIL]               (RWD,RWD,R,)
+SWAP.OBJ;4              12/18         24-AUG-2020 10:24:45  [GODMIL]               (RWED,RWED,RE,)
+TESTE1.COM;10            1/18         24-AUG-2020 16:07:23  [GODMIL]               (RWED,RWED,RE,)
+TESTE2.COM;4             1/18         24-AUG-2020 15:29:26  [GODMIL]               (RWED,RWED,RE,)
+TMIR.DIR;1               1/18         22-JUL-2020 10:47:15  [GODMIL]               (RWE,RWE,RE,RWE)
+TMIR.FOR;1             101/108         5-MAR-2021 11:44:32  [GODMIL]               (RWD,RWD,R,)
+TMIR.OBJ;17            247/252        15-MAR-2021 12:14:44  [GODMIL]               (RWED,RWED,RE,)
+TMIREXAMPLE.EXE;4     1281/1296       28-JUL-2020 09:21:47  [GODMIL]               (RWED,RWED,RE,)
+TMIREXAMPLE.F;3         11/18         28-JUL-2020 09:44:48  [GODMIL]               (RWD,RWD,R,)
+TMIREXAMPLE.LIS;1        7/18         27-JUL-2020 16:25:21  [GODMIL]               (RWED,RWED,RE,)
+TMIREXAMPLE.LNK;6        2/18         28-JUL-2020 09:21:27  [GODMIL]               (RWD,RWD,R,)
+TMIREXAMPLE.OBJ;3        7/18         27-JUL-2020 16:25:21  [GODMIL]               (RWED,RWED,RE,)
+VISCMD.FOR;2             8/18         18-JAN-2021 10:56:27  [GODMIL]               (RWD,RWD,R,)
+VISION.OBJ;5            44/54          4-FEB-2021 09:34:17  [GODMIL]               (RWED,RWED,RE,)
+VIS_AGTSNP.FOR;3        36/36         18-JAN-2021 10:55:23  [GODMIL]               (RWD,RWD,R,)
+VIS_OLMSNP.FOR;19       14/18          5-APR-2021 16:36:04  [GODMIL]               (RWD,RWD,R,)
+VIS_OLMSNP.LIS;16       62/72          9-FEB-2021 17:14:01  [GODMIL]               (RWED,RWED,RE,)
+VIS_OLMSNP.OBJ;10       27/36          9-FEB-2021 17:14:01  [GODMIL]               (RWED,RWED,RE,)
+
+Total of 93 files, 5485/6426 blocks
+226 LIST Directory transfer complete.
+ftp: 9386 bytes received in 0.18Seconds 51.01Kbytes/sec.
+ftp> asc
+200 TYPE set to ASCII.
+ftp> put destra.def
+200 PORT command successful.
+150 Opening data connection for DKD10:[DMIL.WRK.HMC]DESTRA.DEF;4 (100.64.19.96,61524)
+226 Transfer complete.
+ftp: 79304 bytes sent in 0.11Seconds 741.16Kbytes/sec.
+ftp>
