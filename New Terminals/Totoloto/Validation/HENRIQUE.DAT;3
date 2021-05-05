@@ -1,0 +1,910 @@
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE     1
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF 
+    FILE NAME -----------> prim:mtmf01.fil     
+    TAPE DRIVE ---------->                     
+    TERMINAL NUMBER -----> ALL 
+    EXCLUDE EM TRX ------> NO 
+    EXCLUDE IGS TRX -----> NO 
+    EUROMIL EXT SER # --->             
+    PLACARD EXT SER # --->                         
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL  
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE     1
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000001 10:46:00     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9768
+  GOOD  NOER   CMD  32000003 10:51:13     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    98A1
+  GOOD  NOER   CMD  32000005 10:56:25     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    99D9
+  GOOD  NOER   CMD  32000007 11:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       A
+  GOOD  NOER   CMD  32000009 11:00:34     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       0 NEW>       1
+  GOOD  NOER   CMD  32000011 11:01:37     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9B11
+  GOOD  NOER   CMD  32000013 11:06:49     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9C49
+  GOOD  NOER   CMD  32000015 11:11:04     0   0  7221    0             0    2 PRMSTR   TER>   0 OLD>       0 NEW>       1
+  GOOD  NOER   CMD  32000017 11:12:01     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9D81
+  GOOD  NOER   CMD  32000019 11:17:13     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9EB9
+  GOOD  NOER   CMD  32000021 11:20:04     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   SPE  32000023 11:21:25  3512   8  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   SPE  32000025 11:21:30  3512   9  7221    7 Lotto       4    2 CNTL OLD>     801 NEW>       0 AGT> 03-00006
+  GOOD  NOER   CMD  32000027 11:22:26     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9FF1
+  REJT  SUPR   CRS  32000029 11:25:22  3512   A  7221 GPAR      0           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim    3000.06
+         Instant crs ref #         0
+  REJT  SUPR   CRS  32000030 11:26:16  3512   B  7221 IQTA      0           0
+         Instant game #            0
+         Instant class #           1
+         Instant nxt game          0
+         Instant nxt book          0
+         Instant crs ref #         0
+  GOOD  NOER   CMD  32000031 11:26:48     0   0  7221    0             0    2 DESFLG   TER>   0 OLD>       0 NEW>       1
+  GOOD  NOER   CMD  32000033 11:26:51     0   0  7221    0             0    2 SUPWAG   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000035 11:26:53     0   0  7221    0             0    2 SUPCAN   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000037 11:26:57     0   0  7221    0             0    2 SUPVAL   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000039 11:27:05     0   0  7221    0             0    2 SUPINS   TER>   0 OLD>       1 NEW>       0
+  REJT  DES    CRS  32000041 11:27:19  3512   C  7221 IQTA      0           0
+         Instant game #            0
+         Instant class #           1
+         Instant nxt game          0
+         Instant nxt book          0
+         Instant crs ref #         0
+  GOOD  NOER   CRS  32000042 11:27:31  3512   5  7221 IQTA     99           0
+         Instant game #            0
+         Instant class #           1
+         Instant nxt game          0
+         Instant nxt book          0
+         Instant crs ref #  32000000     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE     2
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000043 11:27:32  3512   6  7221 IQTA     99           0
+         Instant game #            0
+         Instant class #           1
+         Instant nxt game        428
+         Instant nxt book          0
+         Instant crs ref #  32000001
+  GOOD  NOER   CMD  32000044 11:27:38     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A12A
+  GOOD  NOER   CRS  32000046 11:29:34  3512   7  7221 IQTA     99           0
+         Instant game #            0
+         Instant class #           1
+         Instant nxt game          0
+         Instant nxt book          0
+         Instant crs ref #  32000002
+  GOOD  NOER   CRS  32000047 11:29:35  3512   0  7221 IQTA     99           0
+         Instant game #            0
+         Instant class #           1
+         Instant nxt game        428
+         Instant nxt book          0
+         Instant crs ref #  32000003
+  GOOD  NOER   CMD  32000048 11:32:50     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A262
+  GOOD  NOER   CMD  32000050 11:38:02     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A39A
+  GOOD  NOER   CMD  32000052 11:39:34     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CRS  32000054 11:39:54  3512   1  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000004
+  GOOD  NOER   CRS  32000055 11:39:55  3512   2  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          5
+         Instant cred lim   80775.00
+         Instant crs ref #  32000005
+  GOOD  NOER   CRS  32000056 11:39:56  3512   3  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          9
+         Instant cred lim   80775.00
+         Instant crs ref #  32000006
+  GOOD  NOER   CRS  32000057 11:39:57  3512   4  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         13
+         Instant cred lim   80775.00
+         Instant crs ref #  32000007     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE     3
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000058 11:39:58  3512   5  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         17
+         Instant cred lim   80775.00
+         Instant crs ref #  32000008
+  GOOD  NOER   CRS  32000059 11:39:59  3512   6  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         21
+         Instant cred lim   80775.00
+         Instant crs ref #  32000009
+  GOOD  NOER   CRS  32000060 11:40:00  3512   7  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         25
+         Instant cred lim   80775.00
+         Instant crs ref #  32000010
+  GOOD  NOER   CRS  32000061 11:40:01  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         29
+         Instant cred lim   80775.00
+         Instant crs ref #  32000011
+  GOOD  NOER   CRS  32000062 11:40:02  3512   1  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         33
+         Instant cred lim   80775.00
+         Instant crs ref #  32000012
+  GOOD  NOER   CRS  32000063 11:40:03  3512   2  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         37
+         Instant cred lim   80775.00
+         Instant crs ref #  32000013
+  GOOD  NOER   CRS  32000064 11:40:04  3512   3  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         41
+         Instant cred lim   80775.00
+         Instant crs ref #  32000014
+  GOOD  NOER   CRS  32000065 11:40:05  3512   4  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         45
+         Instant cred lim   80775.00
+         Instant crs ref #  32000015     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE     4
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000066 11:40:06  3512   5  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         49
+         Instant cred lim   80775.00
+         Instant crs ref #  32000016
+  GOOD  NOER   CRS  32000067 11:40:07  3512   6  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         53
+         Instant cred lim   80775.00
+         Instant crs ref #  32000017
+  GOOD  NOER   CRS  32000068 11:40:08  3512   7  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         57
+         Instant cred lim   80775.00
+         Instant crs ref #  32000018
+  GOOD  NOER   CRS  32000069 11:41:43  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000019
+  GOOD  NOER   SPE  32000070 11:42:58  3512   1  7221    0             0    1 SOFF OLD>       2 NEW>       1 AGT> 03-00006
+  GOOD  NOER   CMD  32000071 11:43:14     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A4D2
+  GOOD  NOER   SPE  32000073 11:43:18  3512   2  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   CRS  32000075 11:43:49  3512   3  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000020
+  GOOD  NOER   CRS  32000076 11:46:14  3512   4  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000021
+  GOOD  NOER   CMD  32000077 11:48:26     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A60A
+  GOOD  NOER   SPE  32000079 11:48:54  3512   5  7221    0             0    1 SOFF OLD>       2 NEW>       1 AGT> 03-00006
+  REJT  DES    SPE  32000080 11:52:28  3512   8  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  REJT  BPSW   SPE  32000082 11:52:58  3512   1  7221    0             0    2 SON  OLD>       1 NEW>       1 AGT> 03-00006
+  GOOD  NOER   SPE  32000084 11:53:17  3512   2  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   CMD  32000086 11:53:38     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A742     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE     5
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000088 11:54:20  3512   3  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000022
+  GOOD  NOER   CRS  32000089 11:54:21  3512   4  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          5
+         Instant cred lim   80775.00
+         Instant crs ref #  32000023
+  GOOD  NOER   CRS  32000090 11:54:22  3512   5  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          9
+         Instant cred lim   80775.00
+         Instant crs ref #  32000024
+  GOOD  NOER   CRS  32000091 11:54:23  3512   6  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         13
+         Instant cred lim   80775.00
+         Instant crs ref #  32000025
+  GOOD  NOER   CRS  32000092 11:54:24  3512   7  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         17
+         Instant cred lim   80775.00
+         Instant crs ref #  32000026
+  GOOD  NOER   CRS  32000093 11:54:25  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         21
+         Instant cred lim   80775.00
+         Instant crs ref #  32000027
+  GOOD  NOER   CRS  32000094 11:54:26  3512   1  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         25
+         Instant cred lim   80775.00
+         Instant crs ref #  32000028
+  GOOD  NOER   CRS  32000095 11:54:27  3512   2  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         29
+         Instant cred lim   80775.00
+         Instant crs ref #  32000029     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE     6
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000096 11:54:28  3512   3  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         33
+         Instant cred lim   80775.00
+         Instant crs ref #  32000030
+  GOOD  NOER   CRS  32000097 11:54:29  3512   4  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         37
+         Instant cred lim   80775.00
+         Instant crs ref #  32000031
+  GOOD  NOER   CRS  32000098 11:54:30  3512   5  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         41
+         Instant cred lim   80775.00
+         Instant crs ref #  32000032
+  GOOD  NOER   CRS  32000099 11:54:31  3512   6  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         45
+         Instant cred lim   80775.00
+         Instant crs ref #  32000033
+  GOOD  NOER   CRS  32000100 11:54:32  3512   7  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         49
+         Instant cred lim   80775.00
+         Instant crs ref #  32000034
+  GOOD  NOER   CRS  32000101 11:54:33  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         53
+         Instant cred lim   80775.00
+         Instant crs ref #  32000035
+  GOOD  NOER   CRS  32000102 11:54:34  3512   1  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         57
+         Instant cred lim   80775.00
+         Instant crs ref #  32000036
+  GOOD  NOER   CMD  32000103 11:58:50     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A87A
+  GOOD  NOER   CMD  32000105 11:59:04     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000107 12:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       3 NEW>       B
+  GOOD  NOER   CRS  32000109 12:03:33  3512   2  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000037     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE     7
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000110 12:04:03     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A9B3
+  GOOD  NOER   CMD  32000112 12:09:15     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AAEB
+  GOOD  NOER   CMD  32000114 12:14:27     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AC23
+  GOOD  NOER   CMD  32000116 12:18:34     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   SPE  32000118 12:19:05  3512   3  7221    0             0    1 SOFF OLD>       2 NEW>       1 AGT> 03-00006
+  GOOD  NOER   SPE  32000119 12:19:19  3512   4  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   CMD  32000121 12:19:39     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AD5B
+  GOOD  NOER   CRS  32000123 12:19:54  3512   5  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000038
+  GOOD  NOER   CMD  32000124 12:24:51     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AE93
+  GOOD  NOER   SPE  32000126 12:24:53  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   SPE  32000128 12:25:44  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   CMD  32000130 12:30:03     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AFCB
+  GOOD  NOER   CMD  32000132 12:35:16     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B103
+  GOOD  NOER   CMD  32000134 12:38:04     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000136 12:40:28     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B23C
+  GOOD  NOER   CMD  32000138 12:45:40     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B374
+  GOOD  NOER   CMD  32000140 12:50:52     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B4AC
+  GOOD  NOER   CMD  32000142 12:56:04     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B5E4
+  GOOD  NOER   CMD  32000144 12:57:34     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000146 13:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       2 NEW>       C
+  GOOD  NOER   CMD  32000148 13:01:16     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B71C
+  GOOD  NOER   CMD  32000150 13:06:28     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B854
+  GOOD  NOER   CMD  32000152 13:11:40     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B98C
+  GOOD  NOER   CMD  32000154 13:16:53     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BAC5
+  GOOD  NOER   CMD  32000156 13:17:04     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000158 13:22:05     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BBFD
+  GOOD  NOER   CMD  32000160 13:27:17     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BD35
+  GOOD  NOER   CMD  32000162 13:32:29     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BE6D
+  GOOD  NOER   CMD  32000164 13:36:34     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000166 13:37:41     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BFA5
+  GOOD  NOER   CMD  32000168 13:42:53     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C0DD
+  GOOD  NOER   CMD  32000170 13:48:05     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C215
+  GOOD  NOER   CMD  32000172 13:53:18     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C34E
+  GOOD  NOER   CMD  32000174 13:56:04     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000176 13:58:30     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C486     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE     8
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000178 14:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       D
+  GOOD  NOER   CMD  32000180 14:03:42     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C5BE
+  GOOD  NOER   CMD  32000182 14:08:54     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C6F6
+  GOOD  NOER   CMD  32000184 14:14:06     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C82E
+  GOOD  NOER   CMD  32000186 14:15:34     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000188 14:19:18     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C966
+  GOOD  NOER   CMD  32000190 14:24:30     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CA9E
+  GOOD  NOER   CMD  32000192 14:29:43     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CBD6
+  GOOD  NOER   CMD  32000194 14:34:55     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CD0F
+  GOOD  NOER   CMD  32000196 14:35:04     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000198 14:40:07     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CE47
+  GOOD  NOER   CMD  32000200 14:45:19     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CF7F
+  GOOD  NOER   SPE  32000202 14:45:20  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   SPE  32000204 14:46:02  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   SPE  32000206 14:46:48  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   SPE  32000208 14:50:05  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   CMD  32000210 14:50:31     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D0B7
+  GOOD  NOER   CMD  32000212 14:54:34     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000214 14:55:43     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D1EF
+  GOOD  NOER   CMD  32000216 15:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       E
+  GOOD  NOER   CMD  32000218 15:00:55     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D327
+  GOOD  NOER   SPE  32000220 15:04:58  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   CMD  32000222 15:06:08     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D45F
+  GOOD  NOER   SPE  32000224 15:09:12  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   CMD  32000226 15:11:20     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D598
+  GOOD  NOER   CMD  32000228 15:14:04     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000230 15:16:32     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D6D0
+  GOOD  NOER   CMD  32000232 15:21:44     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D808
+  GOOD  NOER   CMD  32000234 15:26:56     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D940
+  GOOD  NOER   CMD  32000236 15:32:08     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DA78
+  GOOD  NOER   CMD  32000238 15:33:34     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000240 15:37:20     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DBB0
+  GOOD  NOER   CMD  32000242 15:42:32     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DCE8
+  GOOD  NOER   CMD  32000244 15:47:45     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DE21
+  GOOD  NOER   CMD  32000246 15:52:57     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DF59
+  GOOD  NOER   CMD  32000248 15:53:04     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000250 15:58:09     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E091
+  GOOD  NOER   CRS  32000251 15:58:47  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000039     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE     9
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000252 16:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       F
+  GOOD  NOER   CRS  32000254 16:00:10  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000040
+  GOOD  NOER   CMD  32000255 16:03:21     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E1C9
+  GOOD  NOER   CMD  32000257 16:08:33     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E301
+  GOOD  NOER   CMD  32000259 16:12:34     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000261 16:13:45     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E439
+  GOOD  NOER   CMD  32000263 16:18:57     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E571
+  GOOD  NOER   CMD  32000265 16:24:10     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E6A9
+  GOOD  NOER   CMD  32000267 16:29:22     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E7E2
+  GOOD  NOER   CMD  32000269 16:32:04     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000271 16:34:34     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E91A
+  GOOD  NOER   CMD  32000273 16:39:46     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EA52
+  GOOD  NOER   SPE  32000275 16:44:01  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   SPE  32000277 16:44:37  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   CMD  32000279 16:44:58     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EB8A
+  GOOD  NOER   CMD  32000281 16:50:10     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    ECC2
+  GOOD  NOER   CMD  32000283 16:51:34     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  REJT  DES    SPE  32000285 16:52:32  3512   8  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   SPE  32000287 16:52:48  3512   1  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   CRS  32000289 16:53:22  3512   2  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000041
+  GOOD  NOER   CRS  32000290 16:53:23  3512   3  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          5
+         Instant cred lim   80775.00
+         Instant crs ref #  32000042
+  GOOD  NOER   CRS  32000291 16:53:24  3512   4  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          9
+         Instant cred lim   80775.00
+         Instant crs ref #  32000043
+  GOOD  NOER   CRS  32000292 16:53:25  3512   5  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         13
+         Instant cred lim   80775.00
+         Instant crs ref #  32000044     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE    10
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000293 16:53:26  3512   6  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         17
+         Instant cred lim   80775.00
+         Instant crs ref #  32000045
+  GOOD  NOER   CRS  32000294 16:53:27  3512   7  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         21
+         Instant cred lim   80775.00
+         Instant crs ref #  32000046
+  GOOD  NOER   CRS  32000295 16:53:28  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         25
+         Instant cred lim   80775.00
+         Instant crs ref #  32000047
+  GOOD  NOER   CRS  32000296 16:53:29  3512   1  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         29
+         Instant cred lim   80775.00
+         Instant crs ref #  32000048
+  GOOD  NOER   CRS  32000297 16:53:30  3512   2  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         33
+         Instant cred lim   80775.00
+         Instant crs ref #  32000049
+  GOOD  NOER   CRS  32000298 16:53:31  3512   3  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         37
+         Instant cred lim   80775.00
+         Instant crs ref #  32000050
+  GOOD  NOER   CRS  32000299 16:53:32  3512   4  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         41
+         Instant cred lim   80775.00
+         Instant crs ref #  32000051
+  GOOD  NOER   CRS  32000300 16:53:33  3512   5  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         45
+         Instant cred lim   80775.00
+         Instant crs ref #  32000052     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE    11
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000301 16:53:34  3512   6  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         49
+         Instant cred lim   80775.00
+         Instant crs ref #  32000053
+  GOOD  NOER   CRS  32000302 16:53:35  3512   7  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         53
+         Instant cred lim   80775.00
+         Instant crs ref #  32000054
+  GOOD  NOER   CRS  32000303 16:53:36  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game         57
+         Instant cred lim   80775.00
+         Instant crs ref #  32000055
+  GOOD  NOER   CMD  32000304 16:55:22     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EDFA
+  GOOD  NOER   CMD  32000306 17:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      10
+  GOOD  NOER   CMD  32000308 17:00:35     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EF33
+  GOOD  NOER   CMD  32000310 17:05:47     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F06B
+  GOOD  NOER   CMD  32000312 17:10:59     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F1A3
+  GOOD  NOER   CMD  32000314 17:11:04     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000316 17:16:11     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F2DB
+  REJT  GREV   WAG  32000318 17:21:03  3512   0  7221    7 Lotto       4    2  518 THRU   518     --NONE--        0.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                                                                                  
+  GOOD  NOER   CMD  32000320 17:21:23     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F413
+  GOOD  NOER   SPE  32000322 17:21:42  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   SPE  32000324 17:23:41  3512   0  7221    0             0    2 SON  OLD>       0 NEW>       0 AGT> 03-00006
+  GOOD  NOER   WAG  32000326 17:24:27  3512   0  7221    7 Lotto       4    2  518 THRU   518     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         04 32 34 35 37                                           
+   Lucky Number 11                                                                
+                                                                                  
+  REJT  RETY   WAG  32000328 17:25:05  3512   0  7221    7 Lotto       4    2  518 THRU   518     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         04 32 34 35 37                                           
+   Lucky Number 11                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000330 17:26:35     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F54B     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE    12
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   WAG  32000332 17:28:26  3512   1  7221    7 Lotto       4    2  518 THRU   518     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         04 32 34 35 37                                           
+   Lucky Number 11                                                                
+                                                                                  
+  GOOD  NOER   WAG  32000334 17:28:38  3512   0  7221    7 Lotto       4    2  518 THRU   518     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         04 32 34 35 37                                           
+   Lucky Number 11                                                                
+                                                                                  
+  REJT  RETY   WAG  32000336 17:28:58  3512   0  7221    7 Lotto       4    2  518 THRU   518     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         04 32 34 35 37                                           
+   Lucky Number 11                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000338 17:30:35     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  REJT  RETY   WAG  32000340 17:31:30  3512   0  7221    7 Lotto       4    2  518 THRU   518     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         04 32 34 35 37                                           
+   Lucky Number 11                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000342 17:31:47     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F683
+  GOOD  NOER   WAG  32000344 17:32:12  3512   1  7221    7 Lotto       4    2  518 THRU   518     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         04 32 34 35 37                                           
+   Lucky Number 11                                                                
+                                                                                  
+  GOOD  NOER   WAG  32000346 17:32:22  3512   0  7221    7 Lotto       4    2  518 THRU   518     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         04 32 34 35 37                                           
+   Lucky Number 11                                                                
+                                                                                  
+  REJT  RETY   WAG  32000348 17:32:42  3512   0  7221    7 Lotto       4    2  518 THRU   518     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         04 32 34 35 37                                           
+   Lucky Number 11                                                                
+                                                                                  
+  GOOD  NOER   CRS  32000350 17:35:24  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000056     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE    13
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000351 17:37:00     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F7BB
+  GOOD  NOER   CMD  32000353 17:42:12     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F8F4
+  GOOD  NOER   CMD  32000355 17:47:24     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FA2C
+  GOOD  NOER   CMD  32000357 17:50:05     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000359 17:52:36     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FB64
+  GOOD  NOER   CMD  32000361 17:57:48     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FC9C
+  GOOD  NOER   CMD  32000363 18:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      11
+  GOOD  NOER   CMD  32000365 18:03:00     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FDD4
+  GOOD  NOER   CMD  32000367 18:08:12     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FF0C
+  GOOD  NOER   CRS  32000369 18:08:43  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000057
+  GOOD  NOER   CMD  32000370 18:09:35     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CRS  32000372 18:09:52  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000058
+  GOOD  NOER   CRS  32000373 18:11:49  3512   0  7221 GPAR     99           0
+         Instant game #            0
+         Instant nxt game          0
+         Instant cred lim   80775.00
+         Instant crs ref #  32000059
+  GOOD  NOER   CMD  32000374 18:13:25     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10044
+  GOOD  NOER   CMD  32000376 18:18:37     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1017D
+  GOOD  NOER   CMD  32000378 18:23:49     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   102B5
+  GOOD  NOER   CMD  32000380 18:29:01     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   103ED
+  GOOD  NOER   CMD  32000382 18:29:05     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000384 18:34:13     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10525
+  GOOD  NOER   CMD  32000386 18:39:25     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1065D
+  GOOD  NOER   CMD  32000388 18:44:37     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10795
+  GOOD  NOER   CMD  32000390 18:48:35     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000392 18:49:50     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   108CD
+  GOOD  NOER   CMD  32000394 18:55:02     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10A06
+  GOOD  NOER   WAG  32000396 18:56:03  3512   1  7221    6 Lotto       3    2  517 THRU   517     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE    14
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   WAG  32000398 18:56:41  3512   2  7221    6 Lotto       3    2  517 THRU   517     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         01 02 03 04 11                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   WAG  32000400 18:58:02  3512   3  7221    6 Lotto       3    2  517 THRU   517     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         01 02 03 10 11                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   WAG  32000402 18:58:37  3512   4  7221    6 Lotto       3    2  517 THRU   517     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         08 09 10 11 12                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000404 19:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      12
+  GOOD  NOER   CMD  32000406 19:00:14     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10B3E
+  GOOD  NOER   CMD  32000408 19:05:26     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10C76
+  GOOD  NOER   CMD  32000410 19:08:05     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000412 19:10:38     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10DAE
+  GOOD  NOER   CMD  32000414 19:15:50     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10EE6
+  GOOD  NOER   CMD  32000416 19:21:02     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1101E
+  GOOD  NOER   CMD  32000418 19:26:14     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11156
+  GOOD  NOER   CMD  32000420 19:27:35     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000422 19:31:27     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1128F
+  GOOD  NOER   CMD  32000424 19:36:39     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   113C7
+  GOOD  NOER   CMD  32000426 19:41:51     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   114FF
+  GOOD  NOER   CMD  32000428 19:47:03     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11637
+  GOOD  NOER   CMD  32000430 19:47:05     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000432 19:52:15     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1176F
+  GOOD  NOER   CMD  32000434 19:57:27     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   118A7
+  GOOD  NOER   CMD  32000436 20:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      13
+  GOOD  NOER   CMD  32000438 20:02:39     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   119DF
+  GOOD  NOER   CMD  32000440 20:06:35     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000442 20:07:52     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11B17
+  GOOD  NOER   WAG  32000444 20:12:16  3512   5  7221    6 Lotto       3    2  517 THRU   517     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE    15
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         22 25 31 33 39                                           
+   Lucky Number  3                                                                
+                                                                                  
+  GOOD  NOER   WAG  32000446 20:12:58  3512   6  7221    6 Lotto       3    2  517 THRU   517     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         01 09 17 25 33                                           
+   Lucky Number 11                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000448 20:13:04     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11C50
+  GOOD  NOER   WAG  32000450 20:15:06  3512   7  7221    6 Lotto       3    2  517 THRU   517     --NONE--        9.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         01 02 17 18 32                                           
+                         17 24 26 30 33                                           
+                         01 24 30 38 40                                           
+                         01 02 23 25 32                                           
+                         17 23 26 40 41                                           
+                         01 02 17 24 25                                           
+                         36 37 38 39 40                                           
+                         23 26 28 31 34                                           
+                         16 17 18 19 20                                           
+                         08 15 22 29 36                                           
+   Lucky Number  3                                                                
+                                                                                  
+  GOOD  NOER   WAG  32000452 20:15:34  3512   0  7221    6 Lotto       3    2  517 THRU   517     --NONE--        9.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                     QP  05 08 15 20 43                                           
+                     QP  07 11 23 45 49                                           
+                     QP  11 16 18 24 47                                           
+                     QP  06 10 12 16 46                                           
+                     QP  02 14 27 40 41                                           
+                     QP  09 10 22 45 49                                           
+                     QP  08 10 22 26 32                                           
+                     QP  08 11 23 40 42                                           
+                     QP  02 13 15 19 23                                           
+                     QP  16 20 23 25 47                                           
+   Lucky Number  8                                                                
+                                                                                  
+  GOOD  NOER   WAG  32000454 20:16:05  3512   1  7221    6 Lotto       3    2  517 THRU   517     --NONE--        9.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE    16
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                     QP  01 13 21 28 40                                           
+                     QP  05 15 18 21 37                                           
+                     QP  06 13 25 29 43                                           
+                     QP  04 09 16 38 47                                           
+                     QP  06 29 45 46 49                                           
+                     QP  02 18 20 33 41                                           
+                     QP  07 08 09 12 47                                           
+                     QP  01 18 29 41 44                                           
+                     QP  05 21 23 28 31                                           
+                     QP  01 03 21 30 40                                           
+   Lucky Number  8                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000456 20:18:16     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11D88
+  GOOD  NOER   CMD  32000458 20:23:28     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11EC0
+  GOOD  NOER   CMD  32000460 20:26:05     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   WAG  32000462 20:26:09  3512   2  7221    1 Sports      1    3 1026 THRU  1026     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- -X- --2 -X- -X- -X- 1-- 1-- 1-- -X- 1--                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- -X- -X- -X- -X- -X- -X- -X- -X- -X- -X- -X- -X-                         
+      -X- --2 --2 --2 --2 --2 --2 --2 --2 --2 --2 --2 --2                         
+      --2 --2 --2 --2 --2 --2 --2 --2 --2 --2 --2 --2 --2                         
+      --2 --2 --2 --2 --2 --2 --2 --2 --2 --2 --2 --2 --2                         
+      --2 1-- -X- -X- 1-- 1-- 1-- 1-- 1-- 1-- -X- -X- -X-                         
+      --2 --2 --2 --2 1-- 1-- -X- -X- 1-- 1-- 1-- 1-- 1--                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- -X- -X- -X- -X- -X- -X-                         
+      -X- -X- -X- -X- -X- -X- -X- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+  GOOD  NOER   CMD  32000465 20:28:40     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11FF8
+  GOOD  NOER   CMD  32000467 20:33:52     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12130
+  GOOD  NOER   CMD  32000469 20:39:04     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12268
+  GOOD  NOER   CMD  32000471 20:44:17     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   123A0
+  GOOD  NOER   CMD  32000473 20:45:35     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000475 20:49:29     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   124D9
+  GOOD  NOER   WAG  32000477 20:50:19  3512   3  7221    1 Sports      1    2 1026 THRU  1026     --NONE--        0.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+      SUPER 14: 1--                                                                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+  GOOD  NOER   CMD  32000479 20:54:41     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12611     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                21:16:21 PAGE    17
+ 05.02.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         05.02.2021 CDC 7221
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000481 20:59:53     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12749
+  GOOD  NOER   CMD  32000483 21:00:03     0   0  7221    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      14
+  GOOD  NOER   CMD  32000485 21:05:05     0   0  7221    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000487 21:05:05     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12881
+  GOOD  NOER   WAG  32000489 21:08:39  3512   4  7221    1 Sports      1    2 1026 THRU  1026     --NONE--        1.60    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+  GOOD  NOER   CMD  32000491 21:10:17     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   129B9
+  GOOD  NOER   WAG  32000493 21:11:31  3512   0  7221    6 Lotto       3    2  517 THRU   517     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         01 17 19 20 21                                           
+   Lucky Number  1                                                                
+                                                                                  
+  REJT  RETY   WAG  32000495 21:11:58  3512   0  7221    6 Lotto       3    2  517 THRU   517     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         01 17 19 20 21                                           
+   Lucky Number  1                                                                
+                                                                                  
+  REJT  RETY   WAG  32000497 21:12:23  3512   0  7221    6 Lotto       3    2  517 THRU   517     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         01 17 19 20 21                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   WAG  32000499 21:12:44  3512   0  7221    6 Lotto       3    2  517 THRU   517     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7221
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000501 21:15:29     0   0  7221    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12AF1
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales               19               45.10            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       0                0.00            0.00            0.00            0.00            0.00
+
+Total Instant Message Transactions 
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         6
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        0
+Instant Gam Prms       57
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          0
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions         63
+
+Total Passive Returns and Validations 
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0                
+Total IGS Transactions          0
