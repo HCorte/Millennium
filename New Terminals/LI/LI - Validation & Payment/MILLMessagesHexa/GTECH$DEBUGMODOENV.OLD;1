@@ -1,0 +1,738 @@
+
+18:00:07 ENCPROI  
+  Buffer     =   308
+  Comm       =     0
+  TrCode     =     4
+  Term Nr    =     0
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    52
+    1: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00
+
+18:00:27 ENCPROI  
+  Buffer     =   310
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    14
+    1: 20 65 00 C6 01 00 01 00 00 00 04 93 E6 00
+
+18:00:28 DISPAT   
+  Buffer     =   310
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    14
+    1: 20 65 00 C6 01 00 01 00 00 00 04 93 E6 00
+
+18:00:28 LOGGER   
+  Buffer     =   310
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 20 65 E5 D1 12 00 1B 01 00 43 41 53 41 20 44 41 20 53 4F 52
+   21: 54 45 2D 4F 52 47 41 4E 49 5A 41 43 41 4F
+
+18:00:53 ENCPROI  
+  Buffer     =   311
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 21 DD 0B 8A 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 BB
+   21: 00 00 15 A4 2E D4 26 E5 17 8D 00 00 00 00
+
+18:00:53 DISPAT   
+  Buffer     =   311
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 21 DD 0B 8A 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 BB
+   21: 00 00 15 A4 2E D4 26 E5 17 8D 00 00 00 00
+
+18:00:53 CRSPRO   
+18:00:53 CRSPRO   OUTGOING PACKET:  BUFLEN -->           70
+    1: 46 00 37 01 11 48 E8 01 0D 00 00 00 02 00 01 00 E6 93 04 00
+   21: 00 00 F1 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 BB 01 55 1C A4 15 00 00 E5 26
+   61: D4 2E 8D 17 55 FD 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 70 HEX: 00000046
+    3   4     2 GTECH SLOT ID:                         311 HEX: 00000137
+    5   8     4 GTECH CROSS REF #:                32000017 HEX: 01E84811
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 TICKET INDICATION:                       2 HEX: 00000002
+   15  16     2 # OF TICKETS IN BATCH:                   1 HEX: 00000001
+   17  20     4 RETAILER #:                         300006 HEX: 000493E6
+   21  22     2 VALIDATION MODE:                         0 HEX: 00000000
+   23  26     4 VALIDATING RETAILER #:                1009 HEX: 000003F1
+   27  30     4 ENVELOPE ID:                             1 HEX: 00000001
+   31  32     2 PLAYER ID TYPE:                          0 HEX: 00000000
+   33  36     4 PLAYER ID:                               0 HEX: 00000000
+   37  38     2 BANK BRANCH:                             0 HEX: 00000000
+   39  40     2 BANK OFFICE:                             0 HEX: 00000000
+   41  44     4 BANK ACCOUNT (PART1):                    0 HEX: 00000000
+   45  48     4 BANK ACCOUNT (PART2):                    0 HEX: 00000000
+   49  50     2 BANK CHECK DIGITS:                       0 HEX: 00000000
+          1 . TICKET IN THE BATCH
+   51  52     2 GAME #:                                443 HEX: 000001BB
+   53  54     2 CDC OF TICKET SWIPED:                 7253 HEX: 00001C55
+   55  58     4 PACK #:                               5540 HEX: 000015A4
+   59  62     4 VIRN # (9 DIGITS):               785655525 HEX: 2ED426E5
+   63  64     2 VIRN CHECK DIGITS:                    6029 HEX: 0000178D
+   65  68     4 TIME OF TICKET SWIPED:            18:00:53
+
+18:00:53 CRSPRO   
+18:00:53 CRSPRO   INCOMING PACKET:  BUFLEN -->           24
+    1: 18 00 37 01 11 48 E8 01 0D 00 00 00 01 00 00 00 08 00 00 00
+   21: 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 24 HEX: 00000018
+    3   4     2 GTECH SLOT ID:                         311 HEX: 00000137
+    5   8     4 GTECH CROSS REF #:                32000017 HEX: 01E84811
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 NUMBER OF TICKETS IN BATCH:              1 HEX: 00000001
+   15  16     2 VALIDATION TYPE:                         0 HEX: 00000000
+          1 .TICKET IN THE BATCH
+   17  18     2 TICKET RESULT CODE:                      8 HEX: 00000008
+   19  22     4 PRIZE AMOUNT IN CENTS:                   0 HEX: 00000000
+   23  24     2 PACK STATUS:                             0 HEX: 00000000
+
+18:00:53 DISPAT   
+  Buffer     =   311
+  Comm       =    14
+  TrCode     =    29
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   281
+    1: 02 00 00 00 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 BB
+   21: 00 00 15 A4 2E D4 26 E5 17 8D 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  121: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  141: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  161: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  181: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  201: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  221: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  241: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 18 00 37
+  261: 01 11 48 E8 01 0D 00 00 00 01 00 00 00 08 00 00 00 00 00 00
+  281: 00
+
+18:00:53 LOGGER   
+  Buffer     =   311
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 21 DD 75 DE 00 FD 55 00 44 E5 16 85 0D 00 01 00 08 00 00 00
+   21: 00 00
+
+18:01:42 ENCPROI  
+  Buffer     =   312
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 22 DD 59 D9 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 B5
+   21: 00 06 FB 7B 39 D0 4E EA 1D 08 00 00 00 00
+
+18:01:42 DISPAT   
+  Buffer     =   312
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 22 DD 59 D9 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 B5
+   21: 00 06 FB 7B 39 D0 4E EA 1D 08 00 00 00 00
+
+18:01:42 CRSPRO   
+18:01:42 CRSPRO   OUTGOING PACKET:  BUFLEN -->           70
+    1: 46 00 38 01 12 48 E8 01 0D 00 00 00 02 00 01 00 E6 93 04 00
+   21: 00 00 F1 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 B5 01 55 1C 7B FB 06 00 EA 4E
+   61: D0 39 08 1D 86 FD 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 70 HEX: 00000046
+    3   4     2 GTECH SLOT ID:                         312 HEX: 00000138
+    5   8     4 GTECH CROSS REF #:                32000018 HEX: 01E84812
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 TICKET INDICATION:                       2 HEX: 00000002
+   15  16     2 # OF TICKETS IN BATCH:                   1 HEX: 00000001
+   17  20     4 RETAILER #:                         300006 HEX: 000493E6
+   21  22     2 VALIDATION MODE:                         0 HEX: 00000000
+   23  26     4 VALIDATING RETAILER #:                1009 HEX: 000003F1
+   27  30     4 ENVELOPE ID:                             1 HEX: 00000001
+   31  32     2 PLAYER ID TYPE:                          0 HEX: 00000000
+   33  36     4 PLAYER ID:                               0 HEX: 00000000
+   37  38     2 BANK BRANCH:                             0 HEX: 00000000
+   39  40     2 BANK OFFICE:                             0 HEX: 00000000
+   41  44     4 BANK ACCOUNT (PART1):                    0 HEX: 00000000
+   45  48     4 BANK ACCOUNT (PART2):                    0 HEX: 00000000
+   49  50     2 BANK CHECK DIGITS:                       0 HEX: 00000000
+          1 . TICKET IN THE BATCH
+   51  52     2 GAME #:                                437 HEX: 000001B5
+   53  54     2 CDC OF TICKET SWIPED:                 7253 HEX: 00001C55
+   55  58     4 PACK #:                             457595 HEX: 0006FB7B
+   59  62     4 VIRN # (9 DIGITS):               969953002 HEX: 39D04EEA
+   63  64     2 VIRN CHECK DIGITS:                    7432 HEX: 00001D08
+   65  68     4 TIME OF TICKET SWIPED:            18:01:42
+
+18:01:42 CRSPRO   
+18:01:42 CRSPRO   INCOMING PACKET:  BUFLEN -->           24
+    1: 18 00 38 01 12 48 E8 01 0D 00 00 00 01 00 00 00 22 00 C4 09
+   21: 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 24 HEX: 00000018
+    3   4     2 GTECH SLOT ID:                         312 HEX: 00000138
+    5   8     4 GTECH CROSS REF #:                32000018 HEX: 01E84812
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 NUMBER OF TICKETS IN BATCH:              1 HEX: 00000001
+   15  16     2 VALIDATION TYPE:                         0 HEX: 00000000
+          1 .TICKET IN THE BATCH
+   17  18     2 TICKET RESULT CODE:                     34 HEX: 00000022
+   19  22     4 PRIZE AMOUNT IN CENTS:                2500 HEX: 000009C4
+   23  24     2 PACK STATUS:                             0 HEX: 00000000
+
+18:01:42 DISPAT   
+  Buffer     =   312
+  Comm       =    14
+  TrCode     =    29
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   281
+    1: 02 00 00 00 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 B5
+   21: 00 06 FB 7B 39 D0 4E EA 1D 08 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  121: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  141: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  161: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  181: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  201: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  221: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  241: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 18 00 38
+  261: 01 12 48 E8 01 0D 00 00 00 01 00 00 00 22 00 C4 09 00 00 00
+  281: 00
+
+18:01:43 LOGGER   
+  Buffer     =   312
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 22 DD 44 52 00 FD 86 00 44 C3 16 83 F3 00 01 00 22 00 00 09
+   21: C4 00
+
+18:02:34 ENCPROI  
+  Buffer     =   313
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 23 DD E7 A5 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 9C
+   21: 00 06 5A 32 01 76 0E 3E 13 FA 00 00 00 00
+
+18:02:34 DISPAT   
+  Buffer     =   313
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 23 DD E7 A5 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 9C
+   21: 00 06 5A 32 01 76 0E 3E 13 FA 00 00 00 00
+
+18:02:34 CRSPRO   
+18:02:34 CRSPRO   OUTGOING PACKET:  BUFLEN -->           70
+    1: 46 00 39 01 13 48 E8 01 0D 00 00 00 02 00 01 00 E6 93 04 00
+   21: 00 00 F1 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 9C 01 55 1C 32 5A 06 00 3E 0E
+   61: 76 01 FA 13 BA FD 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 70 HEX: 00000046
+    3   4     2 GTECH SLOT ID:                         313 HEX: 00000139
+    5   8     4 GTECH CROSS REF #:                32000019 HEX: 01E84813
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 TICKET INDICATION:                       2 HEX: 00000002
+   15  16     2 # OF TICKETS IN BATCH:                   1 HEX: 00000001
+   17  20     4 RETAILER #:                         300006 HEX: 000493E6
+   21  22     2 VALIDATION MODE:                         0 HEX: 00000000
+   23  26     4 VALIDATING RETAILER #:                1009 HEX: 000003F1
+   27  30     4 ENVELOPE ID:                             1 HEX: 00000001
+   31  32     2 PLAYER ID TYPE:                          0 HEX: 00000000
+   33  36     4 PLAYER ID:                               0 HEX: 00000000
+   37  38     2 BANK BRANCH:                             0 HEX: 00000000
+   39  40     2 BANK OFFICE:                             0 HEX: 00000000
+   41  44     4 BANK ACCOUNT (PART1):                    0 HEX: 00000000
+   45  48     4 BANK ACCOUNT (PART2):                    0 HEX: 00000000
+   49  50     2 BANK CHECK DIGITS:                       0 HEX: 00000000
+          1 . TICKET IN THE BATCH
+   51  52     2 GAME #:                                412 HEX: 0000019C
+   53  54     2 CDC OF TICKET SWIPED:                 7253 HEX: 00001C55
+   55  58     4 PACK #:                             416306 HEX: 00065A32
+   59  62     4 VIRN # (9 DIGITS):                24514110 HEX: 01760E3E
+   63  64     2 VIRN CHECK DIGITS:                    5114 HEX: 000013FA
+   65  68     4 TIME OF TICKET SWIPED:            18:02:34
+
+18:02:34 CRSPRO   
+18:02:34 CRSPRO   INCOMING PACKET:  BUFLEN -->           24
+    1: 18 00 39 01 13 48 E8 01 0D 00 00 00 01 00 00 00 22 00 70 17
+   21: 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 24 HEX: 00000018
+    3   4     2 GTECH SLOT ID:                         313 HEX: 00000139
+    5   8     4 GTECH CROSS REF #:                32000019 HEX: 01E84813
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 NUMBER OF TICKETS IN BATCH:              1 HEX: 00000001
+   15  16     2 VALIDATION TYPE:                         0 HEX: 00000000
+          1 .TICKET IN THE BATCH
+   17  18     2 TICKET RESULT CODE:                     34 HEX: 00000022
+   19  22     4 PRIZE AMOUNT IN CENTS:                6000 HEX: 00001770
+   23  24     2 PACK STATUS:                             0 HEX: 00000000
+
+18:02:34 DISPAT   
+  Buffer     =   313
+  Comm       =    14
+  TrCode     =    29
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   281
+    1: 02 00 00 00 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 9C
+   21: 00 06 5A 32 01 76 0E 3E 13 FA 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  121: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  141: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  161: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  181: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  201: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  221: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  241: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 18 00 39
+  261: 01 13 48 E8 01 0D 00 00 00 01 00 00 00 22 00 70 17 00 00 00
+  281: 00
+
+18:02:34 LOGGER   
+  Buffer     =   313
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 23 DD 14 F8 00 FD BA 00 44 A1 16 81 D9 00 01 00 22 00 00 17
+   21: 70 00
+
+18:03:15 ENCPROI  
+  Buffer     =   314
+  Comm       =     0
+  TrCode     =     4
+  Term Nr    =     0
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    52
+    1: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00
+
+18:03:26 ENCPROI  
+  Buffer     =   315
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 24 DD D0 DA 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 8B
+   21: 00 09 5A AC 26 A2 7F 82 07 BB 00 00 00 00
+
+18:03:26 DISPAT   
+  Buffer     =   315
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 24 DD D0 DA 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 8B
+   21: 00 09 5A AC 26 A2 7F 82 07 BB 00 00 00 00
+
+18:03:26 CRSPRO   
+18:03:26 CRSPRO   OUTGOING PACKET:  BUFLEN -->           70
+    1: 46 00 3B 01 14 48 E8 01 0D 00 00 00 02 00 01 00 E6 93 04 00
+   21: 00 00 F1 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 8B 01 55 1C AC 5A 09 00 82 7F
+   61: A2 26 BB 07 EE FD 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 70 HEX: 00000046
+    3   4     2 GTECH SLOT ID:                         315 HEX: 0000013B
+    5   8     4 GTECH CROSS REF #:                32000020 HEX: 01E84814
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 TICKET INDICATION:                       2 HEX: 00000002
+   15  16     2 # OF TICKETS IN BATCH:                   1 HEX: 00000001
+   17  20     4 RETAILER #:                         300006 HEX: 000493E6
+   21  22     2 VALIDATION MODE:                         0 HEX: 00000000
+   23  26     4 VALIDATING RETAILER #:                1009 HEX: 000003F1
+   27  30     4 ENVELOPE ID:                             1 HEX: 00000001
+   31  32     2 PLAYER ID TYPE:                          0 HEX: 00000000
+   33  36     4 PLAYER ID:                               0 HEX: 00000000
+   37  38     2 BANK BRANCH:                             0 HEX: 00000000
+   39  40     2 BANK OFFICE:                             0 HEX: 00000000
+   41  44     4 BANK ACCOUNT (PART1):                    0 HEX: 00000000
+   45  48     4 BANK ACCOUNT (PART2):                    0 HEX: 00000000
+   49  50     2 BANK CHECK DIGITS:                       0 HEX: 00000000
+          1 . TICKET IN THE BATCH
+   51  52     2 GAME #:                                395 HEX: 0000018B
+   53  54     2 CDC OF TICKET SWIPED:                 7253 HEX: 00001C55
+   55  58     4 PACK #:                             613036 HEX: 00095AAC
+   59  62     4 VIRN # (9 DIGITS):               648183682 HEX: 26A27F82
+   63  64     2 VIRN CHECK DIGITS:                    1979 HEX: 000007BB
+   65  68     4 TIME OF TICKET SWIPED:            18:03:26
+
+18:03:26 CRSPRO   
+18:03:26 CRSPRO   INCOMING PACKET:  BUFLEN -->           24
+    1: 18 00 3B 01 14 48 E8 01 0D 00 00 00 01 00 00 00 22 00 88 13
+   21: 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 24 HEX: 00000018
+    3   4     2 GTECH SLOT ID:                         315 HEX: 0000013B
+    5   8     4 GTECH CROSS REF #:                32000020 HEX: 01E84814
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 NUMBER OF TICKETS IN BATCH:              1 HEX: 00000001
+   15  16     2 VALIDATION TYPE:                         0 HEX: 00000000
+          1 .TICKET IN THE BATCH
+   17  18     2 TICKET RESULT CODE:                     34 HEX: 00000022
+   19  22     4 PRIZE AMOUNT IN CENTS:                5000 HEX: 00001388
+   23  24     2 PACK STATUS:                             0 HEX: 00000000
+
+18:03:26 DISPAT   
+  Buffer     =   315
+  Comm       =    14
+  TrCode     =    29
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   281
+    1: 02 00 00 00 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 8B
+   21: 00 09 5A AC 26 A2 7F 82 07 BB 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  121: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  141: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  161: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  181: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  201: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  221: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  241: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 18 00 3B
+  261: 01 14 48 E8 01 0D 00 00 00 01 00 00 00 22 00 88 13 00 00 00
+  281: 00
+
+18:03:26 LOGGER   
+  Buffer     =   315
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 24 DD B0 AC 00 FD EE 00 44 ED 16 8D 25 00 01 00 22 00 00 13
+   21: 88 00
+
+18:04:18 ENCPROI  
+  Buffer     =   316
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 25 DD DC 61 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 98
+   21: 00 01 36 87 2E CB 13 DE 02 37 00 00 00 00
+
+18:04:18 DISPAT   
+  Buffer     =   316
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 25 DD DC 61 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 98
+   21: 00 01 36 87 2E CB 13 DE 02 37 00 00 00 00
+
+18:04:18 CRSPRO   
+18:04:18 CRSPRO   OUTGOING PACKET:  BUFLEN -->           70
+    1: 46 00 3C 01 15 48 E8 01 0D 00 00 00 02 00 01 00 E6 93 04 00
+   21: 00 00 F1 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 98 01 55 1C 87 36 01 00 DE 13
+   61: CB 2E 37 02 22 FE 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 70 HEX: 00000046
+    3   4     2 GTECH SLOT ID:                         316 HEX: 0000013C
+    5   8     4 GTECH CROSS REF #:                32000021 HEX: 01E84815
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 TICKET INDICATION:                       2 HEX: 00000002
+   15  16     2 # OF TICKETS IN BATCH:                   1 HEX: 00000001
+   17  20     4 RETAILER #:                         300006 HEX: 000493E6
+   21  22     2 VALIDATION MODE:                         0 HEX: 00000000
+   23  26     4 VALIDATING RETAILER #:                1009 HEX: 000003F1
+   27  30     4 ENVELOPE ID:                             1 HEX: 00000001
+   31  32     2 PLAYER ID TYPE:                          0 HEX: 00000000
+   33  36     4 PLAYER ID:                               0 HEX: 00000000
+   37  38     2 BANK BRANCH:                             0 HEX: 00000000
+   39  40     2 BANK OFFICE:                             0 HEX: 00000000
+   41  44     4 BANK ACCOUNT (PART1):                    0 HEX: 00000000
+   45  48     4 BANK ACCOUNT (PART2):                    0 HEX: 00000000
+   49  50     2 BANK CHECK DIGITS:                       0 HEX: 00000000
+          1 . TICKET IN THE BATCH
+   51  52     2 GAME #:                                408 HEX: 00000198
+   53  54     2 CDC OF TICKET SWIPED:                 7253 HEX: 00001C55
+   55  58     4 PACK #:                              79495 HEX: 00013687
+   59  62     4 VIRN # (9 DIGITS):               785060830 HEX: 2ECB13DE
+   63  64     2 VIRN CHECK DIGITS:                     567 HEX: 00000237
+   65  68     4 TIME OF TICKET SWIPED:            18:04:18
+
+18:04:18 CRSPRO   
+18:04:18 CRSPRO   INCOMING PACKET:  BUFLEN -->           24
+    1: 18 00 3C 01 15 48 E8 01 0D 00 00 00 01 00 00 00 22 00 C8 00
+   21: 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 24 HEX: 00000018
+    3   4     2 GTECH SLOT ID:                         316 HEX: 0000013C
+    5   8     4 GTECH CROSS REF #:                32000021 HEX: 01E84815
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 NUMBER OF TICKETS IN BATCH:              1 HEX: 00000001
+   15  16     2 VALIDATION TYPE:                         0 HEX: 00000000
+          1 .TICKET IN THE BATCH
+   17  18     2 TICKET RESULT CODE:                     34 HEX: 00000022
+   19  22     4 PRIZE AMOUNT IN CENTS:                 200 HEX: 000000C8
+   23  24     2 PACK STATUS:                             0 HEX: 00000000
+
+18:04:18 DISPAT   
+  Buffer     =   316
+  Comm       =    14
+  TrCode     =    29
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   281
+    1: 02 00 00 00 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 98
+   21: 00 01 36 87 2E CB 13 DE 02 37 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  121: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  141: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  161: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  181: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  201: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  221: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  241: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 18 00 3C
+  261: 01 15 48 E8 01 0D 00 00 00 01 00 00 00 22 00 C8 00 00 00 00
+  281: 00
+
+18:04:18 LOGGER   
+  Buffer     =   316
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 25 DD E3 28 00 FE 22 00 44 CB 16 8B DB 00 01 00 22 00 00 00
+   21: C8 00
+
+18:05:11 ENCPROI  
+  Buffer     =   317
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 26 DD 6C A1 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 6B
+   21: 00 06 82 B6 2C 62 4D D5 21 59 00 00 00 00
+
+18:05:11 DISPAT   
+  Buffer     =   317
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    34
+    1: 26 DD 6C A1 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 6B
+   21: 00 06 82 B6 2C 62 4D D5 21 59 00 00 00 00
+
+18:05:11 CRSPRO   
+18:05:11 CRSPRO   OUTGOING PACKET:  BUFLEN -->           70
+    1: 46 00 3D 01 16 48 E8 01 0D 00 00 00 02 00 01 00 E6 93 04 00
+   21: 00 00 F1 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 6B 01 55 1C B6 82 06 00 D5 4D
+   61: 62 2C 59 21 57 FE 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 70 HEX: 00000046
+    3   4     2 GTECH SLOT ID:                         317 HEX: 0000013D
+    5   8     4 GTECH CROSS REF #:                32000022 HEX: 01E84816
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 TICKET INDICATION:                       2 HEX: 00000002
+   15  16     2 # OF TICKETS IN BATCH:                   1 HEX: 00000001
+   17  20     4 RETAILER #:                         300006 HEX: 000493E6
+   21  22     2 VALIDATION MODE:                         0 HEX: 00000000
+   23  26     4 VALIDATING RETAILER #:                1009 HEX: 000003F1
+   27  30     4 ENVELOPE ID:                             1 HEX: 00000001
+   31  32     2 PLAYER ID TYPE:                          0 HEX: 00000000
+   33  36     4 PLAYER ID:                               0 HEX: 00000000
+   37  38     2 BANK BRANCH:                             0 HEX: 00000000
+   39  40     2 BANK OFFICE:                             0 HEX: 00000000
+   41  44     4 BANK ACCOUNT (PART1):                    0 HEX: 00000000
+   45  48     4 BANK ACCOUNT (PART2):                    0 HEX: 00000000
+   49  50     2 BANK CHECK DIGITS:                       0 HEX: 00000000
+          1 . TICKET IN THE BATCH
+   51  52     2 GAME #:                                363 HEX: 0000016B
+   53  54     2 CDC OF TICKET SWIPED:                 7253 HEX: 00001C55
+   55  58     4 PACK #:                             426678 HEX: 000682B6
+   59  62     4 VIRN # (9 DIGITS):               744639957 HEX: 2C624DD5
+   63  64     2 VIRN CHECK DIGITS:                    8537 HEX: 00002159
+   65  68     4 TIME OF TICKET SWIPED:            18:05:11
+
+18:05:11 CRSPRO   
+18:05:11 CRSPRO   INCOMING PACKET:  BUFLEN -->           24
+    1: 18 00 3D 01 16 48 E8 01 0D 00 00 00 01 00 00 00 63 00 C8 00
+   21: 00 00 00 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 24 HEX: 00000018
+    3   4     2 GTECH SLOT ID:                         317 HEX: 0000013D
+    5   8     4 GTECH CROSS REF #:                32000022 HEX: 01E84816
+    9  10     2 TRANSACTION TYPE:                       13 HEX: 0000000D
+   11  12     2 VALIDATION MODE TYPE:                    0 HEX: 00000000
+   13  14     2 NUMBER OF TICKETS IN BATCH:              1 HEX: 00000001
+   15  16     2 VALIDATION TYPE:                         0 HEX: 00000000
+          1 .TICKET IN THE BATCH
+   17  18     2 TICKET RESULT CODE:                     99 HEX: 00000063
+   19  22     4 PRIZE AMOUNT IN CENTS:                 200 HEX: 000000C8
+   23  24     2 PACK STATUS:                             0 HEX: 00000000
+
+18:05:11 DISPAT   
+  Buffer     =   317
+  Comm       =    14
+  TrCode     =    29
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   281
+    1: 02 00 00 00 02 00 00 00 00 04 93 E6 00 00 00 00 01 01 01 6B
+   21: 00 06 82 B6 2C 62 4D D5 21 59 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  121: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  141: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  161: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  181: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  201: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  221: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  241: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 18 00 3D
+  261: 01 16 48 E8 01 0D 00 00 00 01 00 00 00 63 00 C8 00 00 00 00
+  281: 00
+
+18:05:11 LOGGER   
+  Buffer     =   317
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  1676
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 26 DD 3C 88 00 FE 57 00 44 A9 16 89 F1 00 01 00 00 00 00 00
+   21: C8 00
