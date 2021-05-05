@@ -1,0 +1,929 @@
+   INVENTÁRIO View Report HCORTE / 23.04.2021  
+View Report  Logoff | Help  
+
+                  
+ 
+--------------------------------------------------------------------------------
+  
+  
+    
+     
+                File    
+    
+   
+  
+ 
+--------------------------------------------------------------------------------
+  
+  
+ Previous   
+    
+  
+   
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0000302  Available               0000401  0000338  Available               0000401  0000339  Available                  
+     0000401  0000340  Available               0000401  0000341  Available               0000401  0000342  Available                  
+     0000401  0000343  Available               0000401  0000344  Available               0000401  0000345  Available                  
+     0000401  0000346  Available               0000401  0000347  Available               0000401  0000348  Available                  
+     0000401  0000349  Available               0000401  0000350  Available               0000401  0000351  Available                  
+     0000401  0000362  Available               0000401  0000363  Available               0000401  0000364  Available                  
+     0000401  0000365  Available               0000401  0000366  Available               0000401  0000367  Available                  
+     0000401  0000368  Available               0000401  0000369  Available               0000401  0000370  Available                  
+     0000401  0000371  Available               0000401  0000372  Available               0000401  0000373  Available                  
+     0000401  0000374  Available               0000401  0000375  Available               0000401  0000376  Available                  
+     0000401  0000377  Available               0000401  0000378  Available               0000401  0000379  Available                  
+     0000401  0000380  Available               0000401  0000423  Available               0000401  0000440  Available                  
+     0000401  0000446  Available               0000401  0000455  Available               0000401  0000665  Available                  
+     0000401  0000762  Available               0000401  0000784  Available               0000401  0000851  Available                  
+     0000401  0000882  Available               0000401  0000886  Available               0000401  0000902  Available                  
+     0000401  0000930  Available               0000401  0000937  Available               0000401  0000959  Available                  
+     0000401  0000961  Available               0000401  0001020  Available               0000401  0001036  Available                  
+     0000401  0001043  Available               0000401  0001045  Available               0000401  0001241  Available                  
+     0000401  0001280  Available               0000401  0001285  Available               0000401  0019649  Missing-Full               
+     0000401  0021293  Available               0000401  0029042  Missing-Full            0000401  0042438  Available                  
+     0000401  0042439  Available               0000401  0042440  Available               0000401  0042441  Available                  
+     0000401  0042442  Available               0000401  0042443  Available               0000401  0042444  Available                  
+     0000401  0042445  Available               0000401  0042446  Available               0000401  0042447  Available                  
+     0000401  0042448  Available               0000401  0042449  Available               0000401  0042450  Available                  
+     0000401  0042451  Available               0000401  0042452  Available               0000401  0042453  Available                  
+     0000401  0042454  Available               0000401  0042455  Available               0000401  0042456  Available                  
+     0000401  0042457  Available               0000401  0042458  Available               0000401  0042459  Available                  
+     0000401  0042460  Available               0000401  0042461  Available               0000401  0042462  Available                  
+     0000401  0042463  Available               0000401  0042464  Available               0000401  0042465  Available                  
+     0000401  0042466  Available               0000401  0042467  Available               0000401  0042468  Available                  
+     0000401  0042469  Available               0000401  0042470  Available               0000401  0042471  Available                  
+     0000401  0042472  Available               0000401  0042473  Available               0000401  0042474  Available                  
+     0000401  0042475  Available               0000401  0042476  Available               0000401  0042477  Available                  
+     0000401  0042478  Available               0000401  0042479  Available               0000401  0042480  Available                  
+     0000401  0042481  Available               0000401  0042482  Available               0000401  0042483  Available                  
+     0000401  0042484  Available               0000401  0042485  Available               0000401  0042486  Available                  
+     0000401  0042487  Available               0000401  0042488  Available               0000401  0042489  Available                  
+     0000401  0042490  Available               0000401  0042491  Available               0000401  0042492  Available                  
+     0000401  0042493  Available               0000401  0042494  Available               0000401  0042495  Available                  
+     0000401  0042496  Available               0000401  0042497  Available               0000401  0042498  Available                  
+     0000401  0042499  Available               0000401  0042500  Available               0000401  0042501  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0042502  Available               0000401  0042503  Available               0000401  0042504  Available                  
+     0000401  0042505  Available               0000401  0042506  Available               0000401  0042507  Available                  
+     0000401  0042508  Available               0000401  0042509  Available               0000401  0042510  Available                  
+     0000401  0042511  Available               0000401  0042512  Available               0000401  0042513  Available                  
+     0000401  0042514  Available               0000401  0042515  Available               0000401  0042516  Available                  
+     0000401  0042517  Available               0000401  0042518  Available               0000401  0042519  Available                  
+     0000401  0042520  Available               0000401  0042521  Available               0000401  0042522  Available                  
+     0000401  0042523  Available               0000401  0042524  Available               0000401  0042525  Available                  
+     0000401  0042526  Available               0000401  0042527  Available               0000401  0042528  Available                  
+     0000401  0042529  Available               0000401  0042530  Available               0000401  0042531  Available                  
+     0000401  0042532  Available               0000401  0042533  Available               0000401  0042534  Available                  
+     0000401  0042535  Available               0000401  0042536  Available               0000401  0042537  Available                  
+     0000401  0042538  Available               0000401  0042539  Available               0000401  0042540  Available                  
+     0000401  0042541  Available               0000401  0042542  Available               0000401  0042543  Available                  
+     0000401  0042544  Available               0000401  0042545  Available               0000401  0042546  Available                  
+     0000401  0042547  Available               0000401  0042548  Available               0000401  0042549  Available                  
+     0000401  0042550  Available               0000401  0042551  Available               0000401  0042552  Available                  
+     0000401  0042553  Available               0000401  0042554  Available               0000401  0042555  Available                  
+     0000401  0042556  Available               0000401  0042557  Available               0000401  0042558  Available                  
+     0000401  0042559  Available               0000401  0042560  Available               0000401  0042561  Available                  
+     0000401  0042562  Available               0000401  0042563  Available               0000401  0042564  Available                  
+     0000401  0042565  Available               0000401  0042566  Available               0000401  0042567  Available                  
+     0000401  0042568  Available               0000401  0042569  Available               0000401  0042570  Available                  
+     0000401  0042571  Available               0000401  0042572  Available               0000401  0042573  Available                  
+     0000401  0042574  Available               0000401  0042575  Available               0000401  0042576  Available                  
+     0000401  0042577  Available               0000401  0042578  Available               0000401  0042579  Available                  
+     0000401  0042580  Available               0000401  0042581  Available               0000401  0042582  Available                  
+     0000401  0042583  Available               0000401  0042584  Available               0000401  0042585  Available                  
+     0000401  0042586  Available               0000401  0042587  Available               0000401  0042588  Available                  
+     0000401  0042589  Available               0000401  0042590  Available               0000401  0042591  Available                  
+     0000401  0042592  Available               0000401  0042593  Available               0000401  0042594  Available                  
+     0000401  0042595  Available               0000401  0042596  Available               0000401  0042597  Available                  
+     0000401  0042598  Available               0000401  0042599  Available               0000401  0042601  Available                  
+     0000401  0042602  Available               0000401  0042603  Available               0000401  0042604  Available                  
+     0000401  0042605  Available               0000401  0042606  Available               0000401  0042607  Available                  
+     0000401  0042608  Available               0000401  0042609  Available               0000401  0042610  Available                  
+     0000401  0042611  Available               0000401  0042612  Available               0000401  0042613  Available                  
+     0000401  0042614  Available               0000401  0042615  Available               0000401  0042616  Available                  
+     0000401  0042617  Available               0000401  0042618  Available               0000401  0042619  Available                  
+     0000401  0042620  Available               0000401  0042621  Available               0000401  0042622  Available                  
+     0000401  0042623  Available               0000401  0042624  Available               0000401  0042625  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0042626  Available               0000401  0042627  Available               0000401  0042628  Available                  
+     0000401  0042629  Available               0000401  0042630  Available               0000401  0042631  Available                  
+     0000401  0042632  Available               0000401  0042633  Available               0000401  0042634  Available                  
+     0000401  0042635  Available               0000401  0042636  Available               0000401  0042637  Available                  
+     0000401  0042638  Available               0000401  0042639  Available               0000401  0042640  Available                  
+     0000401  0042641  Available               0000401  0042642  Available               0000401  0042643  Available                  
+     0000401  0042644  Available               0000401  0042645  Available               0000401  0042646  Available                  
+     0000401  0042647  Available               0000401  0042648  Available               0000401  0042649  Available                  
+     0000401  0042650  Available               0000401  0042651  Available               0000401  0042652  Available                  
+     0000401  0042653  Available               0000401  0042654  Available               0000401  0042655  Available                  
+     0000401  0042656  Available               0000401  0042657  Available               0000401  0042658  Available                  
+     0000401  0042659  Available               0000401  0042660  Available               0000401  0042661  Available                  
+     0000401  0042662  Available               0000401  0042663  Available               0000401  0042664  Available                  
+     0000401  0042665  Available               0000401  0042666  Available               0000401  0042667  Available                  
+     0000401  0042668  Available               0000401  0042669  Available               0000401  0042670  Available                  
+     0000401  0042671  Available               0000401  0042672  Available               0000401  0042673  Available                  
+     0000401  0042674  Available               0000401  0042675  Available               0000401  0042676  Available                  
+     0000401  0042677  Available               0000401  0042678  Available               0000401  0042679  Available                  
+     0000401  0042680  Available               0000401  0042681  Available               0000401  0042682  Available                  
+     0000401  0042683  Available               0000401  0042684  Available               0000401  0042685  Available                  
+     0000401  0042686  Available               0000401  0042687  Available               0000401  0042688  Available                  
+     0000401  0042689  Available               0000401  0042690  Available               0000401  0042691  Available                  
+     0000401  0042692  Available               0000401  0042693  Available               0000401  0042694  Available                  
+     0000401  0042695  Available               0000401  0042696  Available               0000401  0042697  Available                  
+     0000401  0042698  Available               0000401  0042699  Available               0000401  0042700  Available                  
+     0000401  0042701  Available               0000401  0042702  Available               0000401  0042703  Available                  
+     0000401  0042704  Available               0000401  0042705  Available               0000401  0042706  Available                  
+     0000401  0042707  Available               0000401  0042708  Available               0000401  0042709  Available                  
+     0000401  0042710  Available               0000401  0042711  Available               0000401  0042712  Available                  
+     0000401  0042713  Available               0000401  0042714  Available               0000401  0042715  Available                  
+     0000401  0042716  Available               0000401  0042717  Available               0000401  0042718  Available                  
+     0000401  0042719  Available               0000401  0042720  Available               0000401  0042721  Available                  
+     0000401  0042722  Available               0000401  0042723  Available               0000401  0042724  Available                  
+     0000401  0042725  Available               0000401  0042726  Available               0000401  0042727  Available                  
+     0000401  0042728  Available               0000401  0042729  Available               0000401  0042730  Available                  
+     0000401  0042731  Available               0000401  0042732  Available               0000401  0042733  Available                  
+     0000401  0042734  Available               0000401  0042735  Available               0000401  0042736  Available                  
+     0000401  0042737  Available               0000401  0042738  Available               0000401  0042739  Available                  
+     0000401  0042740  Available               0000401  0042741  Available               0000401  0042742  Available                  
+     0000401  0042743  Available               0000401  0042744  Available               0000401  0042745  Available                  
+     0000401  0042746  Available               0000401  0042747  Available               0000401  0042748  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0042749  Available               0000401  0042750  Available               0000401  0042751  Available                  
+     0000401  0042752  Available               0000401  0042753  Available               0000401  0042754  Available                  
+     0000401  0042755  Available               0000401  0042756  Available               0000401  0042757  Available                  
+     0000401  0042758  Available               0000401  0042759  Available               0000401  0042760  Available                  
+     0000401  0042761  Available               0000401  0042762  Available               0000401  0042763  Available                  
+     0000401  0042764  Available               0000401  0042765  Available               0000401  0042766  Available                  
+     0000401  0042767  Available               0000401  0042768  Available               0000401  0042769  Available                  
+     0000401  0042770  Available               0000401  0042771  Available               0000401  0042772  Available                  
+     0000401  0042773  Available               0000401  0042774  Available               0000401  0042775  Available                  
+     0000401  0042776  Available               0000401  0042777  Available               0000401  0042778  Available                  
+     0000401  0042779  Available               0000401  0042780  Available               0000401  0042781  Available                  
+     0000401  0042782  Available               0000401  0042783  Available               0000401  0042784  Available                  
+     0000401  0042785  Available               0000401  0042786  Available               0000401  0042787  Available                  
+     0000401  0042788  Available               0000401  0042789  Available               0000401  0042790  Available                  
+     0000401  0042791  Available               0000401  0042792  Available               0000401  0042793  Available                  
+     0000401  0042794  Available               0000401  0042795  Available               0000401  0042796  Available                  
+     0000401  0042797  Available               0000401  0042798  Available               0000401  0042799  Available                  
+     0000401  0042800  Available               0000401  0042801  Available               0000401  0042802  Available                  
+     0000401  0042803  Available               0000401  0042804  Available               0000401  0042805  Available                  
+     0000401  0042806  Available               0000401  0042807  Available               0000401  0042808  Available                  
+     0000401  0042809  Available               0000401  0042810  Available               0000401  0042811  Available                  
+     0000401  0042812  Available               0000401  0042813  Available               0000401  0042814  Available                  
+     0000401  0042815  Available               0000401  0042816  Available               0000401  0042817  Available                  
+     0000401  0042818  Available               0000401  0042819  Available               0000401  0042820  Available                  
+     0000401  0042821  Available               0000401  0042822  Available               0000401  0042823  Available                  
+     0000401  0042824  Available               0000401  0042825  Available               0000401  0042826  Available                  
+     0000401  0042827  Available               0000401  0042828  Available               0000401  0042829  Available                  
+     0000401  0042830  Available               0000401  0042831  Available               0000401  0042832  Available                  
+     0000401  0042833  Available               0000401  0042834  Available               0000401  0042835  Available                  
+     0000401  0042836  Available               0000401  0042837  Available               0000401  0042838  Available                  
+     0000401  0042839  Available               0000401  0042840  Available               0000401  0042841  Available                  
+     0000401  0042842  Available               0000401  0042843  Available               0000401  0042844  Available                  
+     0000401  0042845  Available               0000401  0042846  Available               0000401  0042847  Available                  
+     0000401  0042848  Available               0000401  0042849  Available               0000401  0042850  Available                  
+     0000401  0042851  Available               0000401  0042852  Available               0000401  0042853  Available                  
+     0000401  0042854  Available               0000401  0042855  Available               0000401  0042856  Available                  
+     0000401  0042857  Available               0000401  0042858  Available               0000401  0042859  Available                  
+     0000401  0042860  Available               0000401  0042861  Available               0000401  0042862  Available                  
+     0000401  0042863  Available               0000401  0042864  Available               0000401  0042865  Available                  
+     0000401  0042866  Available               0000401  0042867  Available               0000401  0042868  Available                  
+     0000401  0042869  Available               0000401  0042870  Available               0000401  0042871  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0042872  Available               0000401  0042873  Available               0000401  0042874  Available                  
+     0000401  0042876  Available               0000401  0042877  Available               0000401  0042878  Available                  
+     0000401  0042879  Available               0000401  0042880  Available               0000401  0042881  Available                  
+     0000401  0042882  Available               0000401  0042883  Available               0000401  0042884  Available                  
+     0000401  0042885  Available               0000401  0042886  Available               0000401  0042887  Available                  
+     0000401  0042888  Available               0000401  0042889  Available               0000401  0042890  Available                  
+     0000401  0042891  Available               0000401  0042892  Available               0000401  0042893  Available                  
+     0000401  0042894  Available               0000401  0042895  Available               0000401  0042896  Available                  
+     0000401  0042897  Available               0000401  0042898  Available               0000401  0042899  Available                  
+     0000401  0042900  Available               0000401  0042901  Available               0000401  0042902  Available                  
+     0000401  0042903  Available               0000401  0042904  Available               0000401  0042905  Available                  
+     0000401  0042906  Available               0000401  0042907  Available               0000401  0042908  Available                  
+     0000401  0042909  Available               0000401  0042910  Available               0000401  0042911  Available                  
+     0000401  0042912  Available               0000401  0042913  Available               0000401  0042914  Available                  
+     0000401  0042915  Available               0000401  0042916  Available               0000401  0042917  Available                  
+     0000401  0042918  Available               0000401  0042919  Available               0000401  0042920  Available                  
+     0000401  0042921  Available               0000401  0042922  Available               0000401  0042923  Available                  
+     0000401  0042924  Available               0000401  0042925  Available               0000401  0042926  Available                  
+     0000401  0042927  Available               0000401  0042928  Available               0000401  0042929  Available                  
+     0000401  0042930  Available               0000401  0042931  Available               0000401  0042932  Available                  
+     0000401  0042933  Available               0000401  0042934  Available               0000401  0042935  Available                  
+     0000401  0042936  Available               0000401  0042937  Available               0000401  0042938  Available                  
+     0000401  0042939  Available               0000401  0042940  Available               0000401  0042941  Available                  
+     0000401  0042942  Available               0000401  0042943  Available               0000401  0042944  Available                  
+     0000401  0042945  Available               0000401  0042946  Available               0000401  0042947  Available                  
+     0000401  0042948  Available               0000401  0042949  Available               0000401  0042950  Available                  
+     0000401  0042951  Available               0000401  0042952  Available               0000401  0042953  Available                  
+     0000401  0042954  Available               0000401  0042955  Available               0000401  0042956  Available                  
+     0000401  0042957  Available               0000401  0042958  Available               0000401  0042959  Available                  
+     0000401  0042960  Available               0000401  0042961  Available               0000401  0042962  Available                  
+     0000401  0042963  Available               0000401  0042964  Available               0000401  0042965  Available                  
+     0000401  0042966  Available               0000401  0042967  Available               0000401  0042968  Available                  
+     0000401  0042969  Available               0000401  0042970  Available               0000401  0042971  Available                  
+     0000401  0042972  Available               0000401  0042973  Available               0000401  0042974  Available                  
+     0000401  0042975  Available               0000401  0042976  Available               0000401  0042977  Available                  
+     0000401  0042978  Available               0000401  0042979  Available               0000401  0042980  Available                  
+     0000401  0042981  Available               0000401  0042982  Available               0000401  0042983  Available                  
+     0000401  0042984  Available               0000401  0042985  Available               0000401  0042987  Available                  
+     0000401  0042988  Available               0000401  0042989  Available               0000401  0042990  Available                  
+     0000401  0042991  Available               0000401  0042992  Available               0000401  0042993  Available                  
+     0000401  0042994  Available               0000401  0042995  Available               0000401  0042996  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0042997  Available               0000401  0042998  Available               0000401  0042999  Available                  
+     0000401  0043000  Available               0000401  0043002  Available               0000401  0043003  Available                  
+     0000401  0043004  Available               0000401  0043005  Available               0000401  0043006  Available                  
+     0000401  0043007  Available               0000401  0043008  Available               0000401  0043009  Available                  
+     0000401  0043010  Available               0000401  0043011  Available               0000401  0043012  Available                  
+     0000401  0043013  Available               0000401  0043014  Available               0000401  0043015  Available                  
+     0000401  0043016  Available               0000401  0043017  Available               0000401  0043018  Available                  
+     0000401  0043019  Available               0000401  0043020  Available               0000401  0043021  Available                  
+     0000401  0043022  Available               0000401  0043023  Available               0000401  0043024  Available                  
+     0000401  0043025  Available               0000401  0043026  Available               0000401  0043027  Available                  
+     0000401  0043028  Available               0000401  0043029  Available               0000401  0043030  Available                  
+     0000401  0043031  Available               0000401  0043032  Available               0000401  0043033  Available                  
+     0000401  0043034  Available               0000401  0043035  Available               0000401  0043036  Available                  
+     0000401  0043037  Available               0000401  0043038  Available               0000401  0043039  Available                  
+     0000401  0043040  Available               0000401  0043041  Available               0000401  0043042  Available                  
+     0000401  0043043  Available               0000401  0043044  Available               0000401  0043045  Available                  
+     0000401  0043046  Available               0000401  0043047  Available               0000401  0043048  Available                  
+     0000401  0043049  Available               0000401  0043050  Available               0000401  0043051  Available                  
+     0000401  0043052  Available               0000401  0043053  Available               0000401  0043054  Available                  
+     0000401  0043055  Available               0000401  0043056  Available               0000401  0043057  Available                  
+     0000401  0043058  Available               0000401  0043059  Available               0000401  0043060  Available                  
+     0000401  0043061  Available               0000401  0043063  Available               0000401  0043064  Available                  
+     0000401  0043065  Available               0000401  0043066  Available               0000401  0043067  Available                  
+     0000401  0043068  Available               0000401  0043069  Available               0000401  0043071  Available                  
+     0000401  0043072  Available               0000401  0043073  Available               0000401  0043075  Available                  
+     0000401  0043076  Available               0000401  0043077  Available               0000401  0043078  Available                  
+     0000401  0043080  Available               0000401  0043081  Available               0000401  0043082  Available                  
+     0000401  0043083  Available               0000401  0043084  Available               0000401  0043085  Available                  
+     0000401  0043086  Available               0000401  0043087  Available               0000401  0043088  Available                  
+     0000401  0043089  Available               0000401  0043090  Available               0000401  0043091  Available                  
+     0000401  0043092  Available               0000401  0043093  Available               0000401  0043094  Available                  
+     0000401  0043095  Available               0000401  0043096  Available               0000401  0043098  Available                  
+     0000401  0043099  Available               0000401  0043100  Available               0000401  0043101  Available                  
+     0000401  0043102  Available               0000401  0043103  Available               0000401  0043104  Available                  
+     0000401  0043105  Available               0000401  0043106  Available               0000401  0043107  Available                  
+     0000401  0043108  Available               0000401  0043109  Available               0000401  0043110  Available                  
+     0000401  0043111  Available               0000401  0043112  Available               0000401  0043113  Available                  
+     0000401  0043115  Available               0000401  0043116  Available               0000401  0043117  Available                  
+     0000401  0043119  Available               0000401  0043120  Available               0000401  0043121  Available                  
+     0000401  0043122  Available               0000401  0043123  Available               0000401  0043124  Available                  
+     0000401  0043125  Available               0000401  0043126  Available               0000401  0043127  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0043128  Available               0000401  0043129  Available               0000401  0043130  Available                  
+     0000401  0043131  Available               0000401  0043132  Available               0000401  0043133  Available                  
+     0000401  0043134  Available               0000401  0043135  Available               0000401  0043136  Available                  
+     0000401  0043137  Available               0000401  0043138  Available               0000401  0043139  Available                  
+     0000401  0043140  Available               0000401  0043141  Available               0000401  0043142  Available                  
+     0000401  0043143  Available               0000401  0043144  Available               0000401  0043145  Available                  
+     0000401  0043146  Available               0000401  0043147  Available               0000401  0043148  Available                  
+     0000401  0043149  Available               0000401  0043150  Available               0000401  0043151  Available                  
+     0000401  0043152  Available               0000401  0043153  Available               0000401  0043154  Available                  
+     0000401  0043155  Available               0000401  0043156  Available               0000401  0043157  Available                  
+     0000401  0043158  Available               0000401  0043159  Available               0000401  0043160  Available                  
+     0000401  0043161  Available               0000401  0043162  Available               0000401  0043163  Available                  
+     0000401  0043164  Available               0000401  0043165  Available               0000401  0043166  Available                  
+     0000401  0043167  Available               0000401  0043168  Available               0000401  0043169  Available                  
+     0000401  0043170  Available               0000401  0043171  Available               0000401  0043172  Available                  
+     0000401  0043173  Available               0000401  0043174  Available               0000401  0043175  Available                  
+     0000401  0043176  Available               0000401  0043177  Available               0000401  0043178  Available                  
+     0000401  0043179  Available               0000401  0043180  Available               0000401  0043181  Available                  
+     0000401  0043182  Available               0000401  0043183  Available               0000401  0043184  Available                  
+     0000401  0043185  Available               0000401  0043186  Available               0000401  0043187  Available                  
+     0000401  0043188  Available               0000401  0043189  Available               0000401  0043190  Available                  
+     0000401  0043191  Available               0000401  0043192  Available               0000401  0043193  Available                  
+     0000401  0043194  Available               0000401  0043195  Available               0000401  0043196  Available                  
+     0000401  0043197  Available               0000401  0043198  Available               0000401  0043199  Available                  
+     0000401  0043200  Available               0000401  0043201  Available               0000401  0043202  Available                  
+     0000401  0043203  Available               0000401  0043204  Available               0000401  0043205  Available                  
+     0000401  0043206  Available               0000401  0043207  Available               0000401  0043208  Available                  
+     0000401  0043210  Available               0000401  0043211  Available               0000401  0043212  Available                  
+     0000401  0043214  Available               0000401  0043215  Available               0000401  0043216  Available                  
+     0000401  0043217  Available               0000401  0043218  Available               0000401  0043219  Available                  
+     0000401  0043220  Available               0000401  0043221  Available               0000401  0043222  Available                  
+     0000401  0043223  Available               0000401  0043224  Available               0000401  0043225  Available                  
+     0000401  0043226  Available               0000401  0043227  Available               0000401  0043228  Available                  
+     0000401  0043229  Available               0000401  0043230  Available               0000401  0043231  Available                  
+     0000401  0043232  Available               0000401  0043233  Available               0000401  0043234  Available                  
+     0000401  0043235  Available               0000401  0043236  Available               0000401  0043237  Available                  
+     0000401  0043238  Available               0000401  0043239  Available               0000401  0043240  Available                  
+     0000401  0043241  Available               0000401  0043242  Available               0000401  0043243  Available                  
+     0000401  0043244  Available               0000401  0043245  Available               0000401  0043246  Available                  
+     0000401  0043247  Available               0000401  0043248  Available               0000401  0043249  Available                  
+     0000401  0043250  Available               0000401  0043251  Available               0000401  0043252  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0043253  Available               0000401  0043254  Available               0000401  0043255  Available                  
+     0000401  0043256  Available               0000401  0043257  Available               0000401  0043258  Available                  
+     0000401  0043259  Available               0000401  0043260  Available               0000401  0043261  Available                  
+     0000401  0043262  Available               0000401  0043263  Available               0000401  0043264  Available                  
+     0000401  0043265  Available               0000401  0043266  Available               0000401  0043267  Available                  
+     0000401  0043268  Available               0000401  0043269  Available               0000401  0043270  Available                  
+     0000401  0043271  Available               0000401  0043272  Available               0000401  0043273  Available                  
+     0000401  0043274  Available               0000401  0043275  Available               0000401  0043276  Available                  
+     0000401  0043277  Available               0000401  0043278  Available               0000401  0043279  Available                  
+     0000401  0043280  Available               0000401  0043281  Available               0000401  0043282  Available                  
+     0000401  0043283  Available               0000401  0043284  Available               0000401  0043286  Available                  
+     0000401  0043287  Available               0000401  0043288  Available               0000401  0043289  Available                  
+     0000401  0043290  Available               0000401  0043291  Available               0000401  0043292  Available                  
+     0000401  0043293  Available               0000401  0043294  Available               0000401  0043295  Available                  
+     0000401  0043296  Available               0000401  0043297  Available               0000401  0043298  Available                  
+     0000401  0043299  Available               0000401  0043300  Available               0000401  0043301  Available                  
+     0000401  0043302  Available               0000401  0043303  Available               0000401  0043304  Available                  
+     0000401  0043305  Available               0000401  0043306  Available               0000401  0043307  Available                  
+     0000401  0043308  Available               0000401  0043310  Available               0000401  0043311  Available                  
+     0000401  0043312  Available               0000401  0043314  Available               0000401  0043315  Available                  
+     0000401  0043316  Available               0000401  0043317  Available               0000401  0043318  Available                  
+     0000401  0043319  Available               0000401  0043320  Available               0000401  0043321  Available                  
+     0000401  0043322  Available               0000401  0043323  Available               0000401  0043324  Available                  
+     0000401  0043325  Available               0000401  0043326  Available               0000401  0043327  Available                  
+     0000401  0043328  Available               0000401  0043329  Available               0000401  0043330  Available                  
+     0000401  0043331  Available               0000401  0043332  Available               0000401  0043333  Available                  
+     0000401  0043334  Available               0000401  0043335  Available               0000401  0043336  Available                  
+     0000401  0043337  Available               0000401  0043338  Available               0000401  0043339  Available                  
+     0000401  0043340  Available               0000401  0043341  Available               0000401  0043342  Available                  
+     0000401  0043343  Available               0000401  0043344  Available               0000401  0043345  Available                  
+     0000401  0043346  Available               0000401  0043347  Available               0000401  0043348  Available                  
+     0000401  0043349  Available               0000401  0043350  Available               0000401  0043351  Available                  
+     0000401  0043352  Available               0000401  0043353  Available               0000401  0043354  Available                  
+     0000401  0043355  Available               0000401  0043356  Available               0000401  0043357  Available                  
+     0000401  0043358  Available               0000401  0043359  Available               0000401  0043360  Available                  
+     0000401  0043361  Available               0000401  0043362  Available               0000401  0043363  Available                  
+     0000401  0043364  Available               0000401  0043365  Available               0000401  0043366  Available                  
+     0000401  0043367  Available               0000401  0043368  Available               0000401  0043369  Available                  
+     0000401  0043370  Available               0000401  0043371  Available               0000401  0043372  Available                  
+     0000401  0043373  Available               0000401  0043374  Available               0000401  0043375  Available                  
+     0000401  0043376  Available               0000401  0043377  Available               0000401  0043378  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0043379  Available               0000401  0043380  Available               0000401  0043381  Available                  
+     0000401  0043382  Available               0000401  0043383  Available               0000401  0043384  Available                  
+     0000401  0043385  Available               0000401  0043386  Available               0000401  0043387  Available                  
+     0000401  0043388  Available               0000401  0043389  Available               0000401  0043390  Available                  
+     0000401  0043391  Available               0000401  0043392  Available               0000401  0043393  Available                  
+     0000401  0043394  Available               0000401  0043395  Available               0000401  0043396  Available                  
+     0000401  0043397  Available               0000401  0043398  Available               0000401  0043399  Available                  
+     0000401  0043400  Available               0000401  0043401  Available               0000401  0043402  Available                  
+     0000401  0043403  Available               0000401  0043404  Available               0000401  0043405  Available                  
+     0000401  0043406  Available               0000401  0043407  Available               0000401  0043408  Available                  
+     0000401  0043409  Available               0000401  0043410  Available               0000401  0043411  Available                  
+     0000401  0043412  Available               0000401  0043413  Available               0000401  0043414  Available                  
+     0000401  0043415  Available               0000401  0043416  Available               0000401  0043417  Available                  
+     0000401  0043418  Available               0000401  0043419  Available               0000401  0043420  Available                  
+     0000401  0043421  Available               0000401  0043422  Available               0000401  0043423  Available                  
+     0000401  0043424  Available               0000401  0043425  Available               0000401  0043426  Available                  
+     0000401  0043427  Available               0000401  0043428  Available               0000401  0043429  Available                  
+     0000401  0043430  Available               0000401  0043431  Available               0000401  0043432  Available                  
+     0000401  0043433  Available               0000401  0043434  Available               0000401  0043435  Available                  
+     0000401  0043436  Available               0000401  0043437  Available               0000401  0043438  Available                  
+     0000401  0043439  Available               0000401  0043440  Available               0000401  0043441  Available                  
+     0000401  0043442  Available               0000401  0043443  Available               0000401  0043444  Available                  
+     0000401  0043445  Available               0000401  0043446  Available               0000401  0043447  Available                  
+     0000401  0043448  Available               0000401  0043449  Available               0000401  0043450  Available                  
+     0000401  0043451  Available               0000401  0043452  Available               0000401  0043453  Available                  
+     0000401  0043454  Available               0000401  0043455  Available               0000401  0043456  Available                  
+     0000401  0043457  Available               0000401  0043458  Available               0000401  0043459  Available                  
+     0000401  0043460  Available               0000401  0043461  Available               0000401  0043462  Available                  
+     0000401  0043463  Available               0000401  0043464  Available               0000401  0043465  Available                  
+     0000401  0043466  Available               0000401  0043467  Available               0000401  0043468  Available                  
+     0000401  0043469  Available               0000401  0043470  Available               0000401  0043471  Available                  
+     0000401  0043472  Available               0000401  0043473  Available               0000401  0043474  Available                  
+     0000401  0043475  Available               0000401  0043476  Available               0000401  0043477  Available                  
+     0000401  0043478  Available               0000401  0043479  Available               0000401  0043480  Available                  
+     0000401  0043481  Available               0000401  0043482  Available               0000401  0043484  Available                  
+     0000401  0043485  Available               0000401  0043486  Available               0000401  0043489  Available                  
+     0000401  0043490  Available               0000401  0043491  Available               0000401  0043492  Available                  
+     0000401  0043493  Available               0000401  0043494  Available               0000401  0043495  Available                  
+     0000401  0043496  Available               0000401  0043497  Available               0000401  0043498  Available                  
+     0000401  0043499  Available               0000401  0043500  Available               0000401  0043501  Available                  
+     0000401  0043502  Available               0000401  0043503  Available               0000401  0043504  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0043505  Available               0000401  0043506  Available               0000401  0043507  Available                  
+     0000401  0043508  Available               0000401  0043509  Available               0000401  0043510  Available                  
+     0000401  0043511  Available               0000401  0043512  Available               0000401  0043513  Available                  
+     0000401  0043514  Available               0000401  0043515  Available               0000401  0043516  Available                  
+     0000401  0043517  Available               0000401  0043518  Available               0000401  0043519  Available                  
+     0000401  0043520  Available               0000401  0043521  Available               0000401  0043522  Available                  
+     0000401  0043523  Available               0000401  0043524  Available               0000401  0043525  Available                  
+     0000401  0043526  Available               0000401  0043527  Available               0000401  0043528  Available                  
+     0000401  0043529  Available               0000401  0043530  Available               0000401  0043531  Available                  
+     0000401  0043532  Available               0000401  0043533  Available               0000401  0043534  Available                  
+     0000401  0043535  Available               0000401  0043536  Available               0000401  0043537  Available                  
+     0000401  0043538  Available               0000401  0043539  Available               0000401  0043540  Available                  
+     0000401  0043541  Available               0000401  0043542  Available               0000401  0043543  Available                  
+     0000401  0043544  Available               0000401  0043545  Available               0000401  0043546  Available                  
+     0000401  0043547  Available               0000401  0043548  Available               0000401  0043549  Available                  
+     0000401  0043550  Available               0000401  0043551  Available               0000401  0043552  Available                  
+     0000401  0043553  Available               0000401  0043554  Available               0000401  0043555  Available                  
+     0000401  0043556  Available               0000401  0043557  Available               0000401  0043558  Available                  
+     0000401  0043559  Available               0000401  0043560  Available               0000401  0043561  Available                  
+     0000401  0043562  Available               0000401  0043563  Available               0000401  0043564  Available                  
+     0000401  0043565  Available               0000401  0043566  Available               0000401  0043567  Available                  
+     0000401  0043568  Available               0000401  0043569  Available               0000401  0043570  Available                  
+     0000401  0043571  Available               0000401  0043572  Available               0000401  0043573  Available                  
+     0000401  0043574  Available               0000401  0043575  Available               0000401  0043576  Available                  
+     0000401  0043577  Available               0000401  0043578  Available               0000401  0043579  Available                  
+     0000401  0043580  Available               0000401  0043581  Available               0000401  0043582  Available                  
+     0000401  0043583  Available               0000401  0043584  Available               0000401  0043585  Available                  
+     0000401  0043586  Available               0000401  0043587  Available               0000401  0043588  Available                  
+     0000401  0043589  Available               0000401  0043590  Available               0000401  0043591  Available                  
+     0000401  0043592  Available               0000401  0043593  Available               0000401  0043594  Available                  
+     0000401  0043595  Available               0000401  0043596  Available               0000401  0043597  Available                  
+     0000401  0043598  Available               0000401  0043599  Available               0000401  0043600  Available                  
+     0000401  0043601  Available               0000401  0043602  Available               0000401  0043603  Available                  
+     0000401  0043604  Available               0000401  0043605  Available               0000401  0043606  Available                  
+     0000401  0043607  Available               0000401  0043608  Available               0000401  0043609  Available                  
+     0000401  0043610  Available               0000401  0043611  Available               0000401  0043612  Available                  
+     0000401  0043613  Available               0000401  0043614  Available               0000401  0043615  Available                  
+     0000401  0043616  Available               0000401  0043617  Available               0000401  0043618  Available                  
+     0000401  0043619  Available               0000401  0043620  Available               0000401  0043621  Available                  
+     0000401  0043622  Available               0000401  0043623  Available               0000401  0043624  Available                  
+     0000401  0043625  Available               0000401  0043626  Available               0000401  0043627  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0043628  Available               0000401  0043629  Available               0000401  0043630  Available                  
+     0000401  0043631  Available               0000401  0043632  Available               0000401  0043633  Available                  
+     0000401  0043634  Available               0000401  0043635  Available               0000401  0043636  Available                  
+     0000401  0043637  Available               0000401  0043638  Available               0000401  0043639  Available                  
+     0000401  0043640  Available               0000401  0043641  Available               0000401  0043642  Available                  
+     0000401  0043643  Available               0000401  0043644  Available               0000401  0043645  Available                  
+     0000401  0043646  Available               0000401  0043647  Available               0000401  0043648  Available                  
+     0000401  0043649  Available               0000401  0043650  Available               0000401  0043651  Available                  
+     0000401  0043652  Available               0000401  0043653  Available               0000401  0043654  Available                  
+     0000401  0043655  Available               0000401  0043656  Available               0000401  0043657  Available                  
+     0000401  0043658  Available               0000401  0043659  Available               0000401  0043660  Available                  
+     0000401  0043661  Available               0000401  0043662  Available               0000401  0043663  Available                  
+     0000401  0043664  Available               0000401  0043665  Available               0000401  0043666  Available                  
+     0000401  0043667  Available               0000401  0043668  Available               0000401  0043669  Available                  
+     0000401  0043670  Available               0000401  0043671  Available               0000401  0043672  Available                  
+     0000401  0043673  Available               0000401  0043674  Available               0000401  0043675  Available                  
+     0000401  0043676  Available               0000401  0043677  Available               0000401  0043678  Available                  
+     0000401  0043679  Available               0000401  0043680  Available               0000401  0043681  Available                  
+     0000401  0043682  Available               0000401  0043683  Available               0000401  0043684  Available                  
+     0000401  0043685  Available               0000401  0043686  Available               0000401  0043687  Available                  
+     0000401  0043688  Available               0000401  0043689  Available               0000401  0043690  Available                  
+     0000401  0043691  Available               0000401  0043692  Available               0000401  0043693  Available                  
+     0000401  0043694  Available               0000401  0043695  Available               0000401  0043696  Available                  
+     0000401  0043697  Available               0000401  0043698  Available               0000401  0043699  Available                  
+     0000401  0043700  Available               0000401  0043701  Available               0000401  0043702  Available                  
+     0000401  0043703  Available               0000401  0043704  Available               0000401  0043705  Available                  
+     0000401  0043706  Available               0000401  0043707  Available               0000401  0043708  Available                  
+     0000401  0043709  Available               0000401  0043710  Available               0000401  0043711  Available                  
+     0000401  0043712  Available               0000401  0043713  Available               0000401  0043714  Available                  
+     0000401  0043715  Available               0000401  0043716  Available               0000401  0043717  Available                  
+     0000401  0043718  Available               0000401  0043719  Available               0000401  0043720  Available                  
+     0000401  0043721  Available               0000401  0043722  Available               0000401  0043723  Available                  
+     0000401  0043724  Available               0000401  0043725  Available               0000401  0043726  Available                  
+     0000401  0043727  Available               0000401  0043728  Available               0000401  0043729  Available                  
+     0000401  0043730  Available               0000401  0043731  Available               0000401  0043732  Available                  
+     0000401  0043733  Available               0000401  0043734  Available               0000401  0043735  Available                  
+     0000401  0043736  Available               0000401  0043737  Available               0000401  0043738  Available                  
+     0000401  0043739  Available               0000401  0043740  Available               0000401  0043741  Available                  
+     0000401  0043742  Available               0000401  0043743  Available               0000401  0043744  Available                  
+     0000401  0043745  Available               0000401  0043746  Available               0000401  0043747  Available                  
+     0000401  0043748  Available               0000401  0043749  Available               0000401  0043750  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0043751  Available               0000401  0043752  Available               0000401  0043753  Available                  
+     0000401  0043754  Available               0000401  0043755  Available               0000401  0043756  Available                  
+     0000401  0043757  Available               0000401  0043758  Available               0000401  0043759  Available                  
+     0000401  0043760  Available               0000401  0043761  Available               0000401  0043762  Available                  
+     0000401  0043763  Available               0000401  0043764  Available               0000401  0043765  Available                  
+     0000401  0043766  Available               0000401  0043767  Available               0000401  0043768  Available                  
+     0000401  0043769  Available               0000401  0043770  Available               0000401  0043771  Available                  
+     0000401  0043772  Available               0000401  0043773  Available               0000401  0043774  Available                  
+     0000401  0043775  Available               0000401  0043776  Available               0000401  0043777  Available                  
+     0000401  0043778  Available               0000401  0043779  Available               0000401  0043780  Available                  
+     0000401  0043781  Available               0000401  0043782  Available               0000401  0043783  Available                  
+     0000401  0043784  Available               0000401  0043785  Available               0000401  0043786  Available                  
+     0000401  0043787  Available               0000401  0043788  Available               0000401  0043789  Available                  
+     0000401  0043790  Available               0000401  0043791  Available               0000401  0043792  Available                  
+     0000401  0043793  Available               0000401  0043794  Available               0000401  0043795  Available                  
+     0000401  0043796  Available               0000401  0043797  Available               0000401  0043798  Available                  
+     0000401  0043799  Available               0000401  0043800  Available               0000401  0043801  Available                  
+     0000401  0043802  Available               0000401  0043803  Available               0000401  0043804  Available                  
+     0000401  0043805  Available               0000401  0043806  Available               0000401  0043807  Available                  
+     0000401  0043808  Available               0000401  0043809  Available               0000401  0043810  Available                  
+     0000401  0043811  Available               0000401  0043812  Available               0000401  0043813  Available                  
+     0000401  0043814  Available               0000401  0043815  Available               0000401  0043816  Available                  
+     0000401  0043817  Available               0000401  0043818  Available               0000401  0043819  Available                  
+     0000401  0043820  Available               0000401  0043821  Available               0000401  0043822  Available                  
+     0000401  0043823  Available               0000401  0043824  Available               0000401  0043825  Available                  
+     0000401  0043826  Available               0000401  0043827  Available               0000401  0043828  Available                  
+     0000401  0043829  Available               0000401  0043830  Available               0000401  0043831  Available                  
+     0000401  0043862  Available               0000401  0043873  Available               0000401  0043938  Available                  
+     0000401  0043989  Available               0000401  0044131  Available               0000401  0044170  Available                  
+     0000401  0044185  Available               0000401  0044244  Available               0000401  0048272  Available                  
+     0000401  0054733  Missing-Full            0000401  0055245  Available               0000401  0055246  Available                  
+     0000401  0063227  Available               0000401  0063228  Available               0000401  0063229  Available                  
+     0000401  0063230  Available               0000401  0068081  Available               0000401  0068082  Available                  
+     0000401  0068083  Available               0000401  0068084  Available               0000401  0068085  Available                  
+     0000401  0068086  Available               0000401  0068087  Available               0000401  0068088  Available                  
+     0000401  0068089  Available               0000401  0068090  Available               0000401  0068091  Available                  
+     0000401  0068092  Available               0000401  0068093  Available               0000401  0068094  Available                  
+     0000401  0068095  Available               0000401  0068096  Available               0000401  0068097  Available                  
+     0000401  0068098  Available               0000401  0068099  Available               0000401  0068100  Available                  
+     0000401  0068101  Available               0000401  0068102  Available               0000401  0068103  Available                  
+     0000401  0068104  Available               0000401  0068105  Available               0000401  0068106  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0068107  Available               0000401  0068108  Available               0000401  0068109  Available                  
+     0000401  0068110  Available               0000401  0068111  Available               0000401  0068112  Available                  
+     0000401  0068113  Available               0000401  0068114  Available               0000401  0068115  Available                  
+     0000401  0068116  Available               0000401  0068117  Available               0000401  0068118  Available                  
+     0000401  0068119  Available               0000401  0068120  Available               0000401  0068121  Available                  
+     0000401  0068122  Available               0000401  0068123  Available               0000401  0068124  Available                  
+     0000401  0068125  Available               0000401  0068126  Available               0000401  0068127  Available                  
+     0000401  0068128  Available               0000401  0068129  Available               0000401  0068130  Available                  
+     0000401  0068131  Available               0000401  0068132  Available               0000401  0068133  Available                  
+     0000401  0068134  Available               0000401  0068135  Available               0000401  0068136  Available                  
+     0000401  0068137  Available               0000401  0068138  Available               0000401  0068139  Available                  
+     0000401  0068140  Available               0000401  0068141  Available               0000401  0068142  Available                  
+     0000401  0068143  Available               0000401  0068144  Available               0000401  0068177  Available                  
+     0000401  0068178  Available               0000401  0068179  Available               0000401  0068180  Available                  
+     0000401  0068181  Available               0000401  0068182  Available               0000401  0068183  Available                  
+     0000401  0068184  Available               0000401  0068185  Available               0000401  0068186  Available                  
+     0000401  0068187  Available               0000401  0068188  Available               0000401  0068189  Available                  
+     0000401  0068190  Available               0000401  0068191  Available               0000401  0068192  Available                  
+     0000401  0068193  Available               0000401  0068194  Available               0000401  0068195  Available                  
+     0000401  0068196  Available               0000401  0068197  Available               0000401  0068198  Available                  
+     0000401  0068199  Available               0000401  0068200  Available               0000401  0068201  Available                  
+     0000401  0068202  Available               0000401  0068203  Available               0000401  0068204  Available                  
+     0000401  0068205  Available               0000401  0068206  Available               0000401  0068207  Available                  
+     0000401  0068208  Available               0000401  0068209  Available               0000401  0068210  Available                  
+     0000401  0068211  Available               0000401  0068212  Available               0000401  0068213  Available                  
+     0000401  0068214  Available               0000401  0068215  Available               0000401  0068216  Available                  
+     0000401  0068217  Available               0000401  0068218  Available               0000401  0068219  Available                  
+     0000401  0068220  Available               0000401  0068221  Available               0000401  0068222  Available                  
+     0000401  0068223  Available               0000401  0068224  Available               0000401  0068225  Available                  
+     0000401  0068226  Available               0000401  0068227  Available               0000401  0068228  Available                  
+     0000401  0068229  Available               0000401  0068230  Available               0000401  0068231  Available                  
+     0000401  0068232  Available               0000401  0068233  Available               0000401  0068234  Available                  
+     0000401  0068235  Available               0000401  0068236  Available               0000401  0068237  Available                  
+     0000401  0068238  Available               0000401  0068239  Available               0000401  0068240  Available                  
+     0000401  0068241  Available               0000401  0068242  Available               0000401  0068243  Available                  
+     0000401  0068244  Available               0000401  0068245  Available               0000401  0068246  Available                  
+     0000401  0068247  Available               0000401  0068248  Available               0000401  0068249  Available                  
+     0000401  0068250  Available               0000401  0068251  Available               0000401  0068252  Available                  
+     0000401  0068253  Available               0000401  0068254  Available               0000401  0068255  Available                  
+     0000401  0068256  Available               0000401  0068257  Available               0000401  0068258  Available                  
+     0000401  0068259  Available               0000401  0068260  Available               0000401  0068261  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0068262  Available               0000401  0068263  Available               0000401  0068264  Available                  
+     0000401  0068265  Available               0000401  0068266  Available               0000401  0068267  Available                  
+     0000401  0068268  Available               0000401  0068269  Available               0000401  0068270  Available                  
+     0000401  0068271  Available               0000401  0068272  Available               0000401  0068273  Available                  
+     0000401  0068274  Available               0000401  0068275  Available               0000401  0068276  Available                  
+     0000401  0068277  Available               0000401  0068278  Available               0000401  0068279  Available                  
+     0000401  0068280  Available               0000401  0068281  Available               0000401  0068282  Available                  
+     0000401  0068283  Available               0000401  0068284  Available               0000401  0068285  Available                  
+     0000401  0068286  Available               0000401  0068287  Available               0000401  0068288  Available                  
+     0000401  0068289  Available               0000401  0068290  Available               0000401  0068291  Available                  
+     0000401  0068292  Available               0000401  0068293  Available               0000401  0068294  Available                  
+     0000401  0068295  Available               0000401  0068296  Available               0000401  0068297  Available                  
+     0000401  0068298  Available               0000401  0068299  Available               0000401  0068300  Available                  
+     0000401  0068301  Available               0000401  0068302  Available               0000401  0068303  Available                  
+     0000401  0068304  Available               0000401  0068305  Available               0000401  0068306  Available                  
+     0000401  0068307  Available               0000401  0068308  Available               0000401  0068309  Available                  
+     0000401  0068310  Available               0000401  0068311  Available               0000401  0068312  Available                  
+     0000401  0068313  Available               0000401  0068314  Available               0000401  0068315  Available                  
+     0000401  0068316  Available               0000401  0068317  Available               0000401  0068318  Available                  
+     0000401  0068319  Available               0000401  0068320  Available               0000401  0068321  Available                  
+     0000401  0068322  Available               0000401  0068323  Available               0000401  0068324  Available                  
+     0000401  0068325  Available               0000401  0068326  Available               0000401  0068327  Available                  
+     0000401  0068328  Available               0000401  0068329  Available               0000401  0068330  Available                  
+     0000401  0068331  Available               0000401  0068332  Available               0000401  0068333  Available                  
+     0000401  0068334  Available               0000401  0068335  Available               0000401  0068336  Available                  
+     0000401  0068337  Available               0000401  0068338  Available               0000401  0068339  Available                  
+     0000401  0068340  Available               0000401  0068341  Available               0000401  0068342  Available                  
+     0000401  0068343  Available               0000401  0068344  Available               0000401  0068345  Available                  
+     0000401  0068346  Available               0000401  0068347  Available               0000401  0068348  Available                  
+     0000401  0068349  Available               0000401  0068350  Available               0000401  0068351  Available                  
+     0000401  0068352  Available               0000401  0068353  Available               0000401  0068354  Available                  
+     0000401  0068355  Available               0000401  0068356  Available               0000401  0068357  Available                  
+     0000401  0068358  Available               0000401  0068359  Available               0000401  0068360  Available                  
+     0000401  0068361  Available               0000401  0068362  Available               0000401  0068363  Available                  
+     0000401  0068364  Available               0000401  0068365  Available               0000401  0068366  Available                  
+     0000401  0068367  Available               0000401  0068368  Available               0000401  0068369  Available                  
+     0000401  0068370  Available               0000401  0068371  Available               0000401  0068372  Available                  
+     0000401  0068373  Available               0000401  0068374  Available               0000401  0068375  Available                  
+     0000401  0068376  Available               0000401  0068377  Available               0000401  0068378  Available                  
+     0000401  0068379  Available               0000401  0068380  Available               0000401  0068381  Available                  
+     0000401  0068382  Available               0000401  0068383  Available               0000401  0068384  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0068385  Available               0000401  0068386  Available               0000401  0068387  Available                  
+     0000401  0068388  Available               0000401  0068389  Available               0000401  0068390  Available                  
+     0000401  0068391  Available               0000401  0068392  Available               0000401  0068393  Available                  
+     0000401  0068394  Available               0000401  0068395  Available               0000401  0068396  Available                  
+     0000401  0068397  Available               0000401  0068398  Available               0000401  0068399  Available                  
+     0000401  0068400  Available               0000401  0068401  Available               0000401  0068402  Available                  
+     0000401  0068403  Available               0000401  0068404  Available               0000401  0068405  Available                  
+     0000401  0068406  Available               0000401  0068407  Available               0000401  0068408  Available                  
+     0000401  0068409  Available               0000401  0068410  Available               0000401  0068411  Available                  
+     0000401  0068412  Available               0000401  0068413  Available               0000401  0068414  Available                  
+     0000401  0068415  Available               0000401  0068416  Available               0000401  0068417  Available                  
+     0000401  0068418  Available               0000401  0068419  Available               0000401  0068420  Available                  
+     0000401  0068421  Available               0000401  0068422  Available               0000401  0068423  Available                  
+     0000401  0068424  Available               0000401  0068425  Available               0000401  0068426  Available                  
+     0000401  0068427  Available               0000401  0068428  Available               0000401  0068429  Available                  
+     0000401  0068430  Available               0000401  0068431  Available               0000401  0068432  Available                  
+     0000401  0068433  Available               0000401  0068434  Available               0000401  0068435  Available                  
+     0000401  0068436  Available               0000401  0068437  Available               0000401  0068438  Available                  
+     0000401  0068439  Available               0000401  0068440  Available               0000401  0068441  Available                  
+     0000401  0068442  Available               0000401  0068443  Available               0000401  0068444  Available                  
+     0000401  0068445  Available               0000401  0068446  Available               0000401  0068447  Available                  
+     0000401  0068448  Available               0000401  0068449  Available               0000401  0068450  Available                  
+     0000401  0068451  Available               0000401  0068452  Available               0000401  0068453  Available                  
+     0000401  0068454  Available               0000401  0068455  Available               0000401  0068456  Available                  
+     0000401  0068457  Available               0000401  0068458  Available               0000401  0068459  Available                  
+     0000401  0068460  Available               0000401  0068461  Available               0000401  0068462  Available                  
+     0000401  0068463  Available               0000401  0068464  Available               0000401  0068465  Available                  
+     0000401  0068466  Available               0000401  0068467  Available               0000401  0068468  Available                  
+     0000401  0068469  Available               0000401  0068470  Available               0000401  0068471  Available                  
+     0000401  0068472  Available               0000401  0068473  Available               0000401  0068474  Available                  
+     0000401  0068475  Available               0000401  0068476  Available               0000401  0068477  Available                  
+     0000401  0068478  Available               0000401  0068479  Available               0000401  0068480  Available                  
+     0000401  0068481  Available               0000401  0068482  Available               0000401  0068483  Available                  
+     0000401  0068484  Available               0000401  0068485  Available               0000401  0068486  Available                  
+     0000401  0068487  Available               0000401  0068488  Available               0000401  0068489  Available                  
+     0000401  0068490  Available               0000401  0068491  Available               0000401  0068492  Available                  
+     0000401  0068493  Available               0000401  0068494  Available               0000401  0068495  Available                  
+     0000401  0068496  Available               0000401  0068497  Available               0000401  0068498  Available                  
+     0000401  0068499  Available               0000401  0068500  Available               0000401  0068501  Available                  
+     0000401  0068502  Available               0000401  0068504  Available               0000401  0068505  Available                  
+     0000401  0068506  Available               0000401  0068507  Available               0000401  0068508  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0068509  Available               0000401  0068510  Available               0000401  0068511  Available                  
+     0000401  0068512  Available               0000401  0068513  Available               0000401  0068514  Available                  
+     0000401  0068515  Available               0000401  0068516  Available               0000401  0068517  Available                  
+     0000401  0068518  Available               0000401  0068519  Available               0000401  0068520  Available                  
+     0000401  0068521  Available               0000401  0068522  Available               0000401  0068523  Available                  
+     0000401  0068524  Available               0000401  0068525  Available               0000401  0068526  Available                  
+     0000401  0068527  Available               0000401  0068528  Available               0000401  0068529  Available                  
+     0000401  0068530  Available               0000401  0068531  Available               0000401  0068532  Available                  
+     0000401  0068533  Available               0000401  0068534  Available               0000401  0068535  Available                  
+     0000401  0068536  Available               0000401  0068537  Available               0000401  0068538  Available                  
+     0000401  0068539  Available               0000401  0068540  Available               0000401  0068541  Available                  
+     0000401  0068542  Available               0000401  0068543  Available               0000401  0068544  Available                  
+     0000401  0068545  Available               0000401  0068546  Available               0000401  0068547  Available                  
+     0000401  0068548  Available               0000401  0068549  Available               0000401  0068550  Available                  
+     0000401  0068551  Available               0000401  0068552  Available               0000401  0068553  Available                  
+     0000401  0068554  Available               0000401  0068555  Available               0000401  0068556  Available                  
+     0000401  0068557  Available               0000401  0068558  Available               0000401  0068559  Available                  
+     0000401  0068560  Available               0000401  0068561  Available               0000401  0068562  Available                  
+     0000401  0068563  Available               0000401  0068564  Available               0000401  0068565  Available                  
+     0000401  0068566  Available               0000401  0068567  Available               0000401  0068568  Available                  
+     0000401  0068569  Available               0000401  0068570  Available               0000401  0068571  Available                  
+     0000401  0068572  Available               0000401  0068573  Available               0000401  0068574  Available                  
+     0000401  0068575  Available               0000401  0068576  Available               0000401  0068577  Available                  
+     0000401  0068578  Available               0000401  0068579  Available               0000401  0068580  Available                  
+     0000401  0068581  Available               0000401  0068582  Available               0000401  0068583  Available                  
+     0000401  0068584  Available               0000401  0068585  Available               0000401  0068586  Available                  
+     0000401  0068587  Available               0000401  0068588  Available               0000401  0068589  Available                  
+     0000401  0068590  Available               0000401  0068591  Available               0000401  0068592  Available                  
+     0000401  0068593  Available               0000401  0068594  Available               0000401  0068595  Available                  
+     0000401  0068596  Available               0000401  0068597  Available               0000401  0068598  Available                  
+     0000401  0068599  Available               0000401  0068600  Available               0000401  0068601  Available                  
+     0000401  0068602  Available               0000401  0068603  Available               0000401  0068604  Available                  
+     0000401  0068605  Available               0000401  0068606  Available               0000401  0068607  Available                  
+     0000401  0068608  Available               0000401  0068609  Available               0000401  0068610  Available                  
+     0000401  0068611  Available               0000401  0068612  Available               0000401  0068613  Available                  
+     0000401  0068614  Available               0000401  0068615  Available               0000401  0068616  Available                  
+     0000401  0068617  Available               0000401  0068618  Available               0000401  0068619  Available                  
+     0000401  0068620  Available               0000401  0068621  Available               0000401  0068622  Available                  
+     0000401  0068623  Available               0000401  0068624  Available               0000401  0068625  Available                  
+     0000401  0068626  Available               0000401  0068627  Available               0000401  0068628  Available                  
+     0000401  0068629  Available               0000401  0068630  Available               0000401  0068631  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0068632  Available               0000401  0068633  Available               0000401  0068634  Available                  
+     0000401  0068635  Available               0000401  0068636  Available               0000401  0068637  Available                  
+     0000401  0068638  Available               0000401  0068639  Available               0000401  0068640  Available                  
+     0000401  0068641  Available               0000401  0068642  Available               0000401  0068643  Available                  
+     0000401  0068644  Available               0000401  0068645  Available               0000401  0068646  Available                  
+     0000401  0068647  Available               0000401  0068648  Available               0000401  0068649  Available                  
+     0000401  0068650  Available               0000401  0068651  Available               0000401  0068652  Available                  
+     0000401  0068653  Available               0000401  0068654  Available               0000401  0068655  Available                  
+     0000401  0068656  Available               0000401  0068657  Available               0000401  0068658  Available                  
+     0000401  0068659  Available               0000401  0068660  Available               0000401  0068661  Available                  
+     0000401  0068662  Available               0000401  0068663  Available               0000401  0068664  Available                  
+     0000401  0068665  Available               0000401  0068666  Available               0000401  0068667  Available                  
+     0000401  0068668  Available               0000401  0068669  Available               0000401  0068670  Available                  
+     0000401  0068671  Available               0000401  0068672  Available               0000401  0068673  Available                  
+     0000401  0068674  Available               0000401  0068675  Available               0000401  0068676  Available                  
+     0000401  0068677  Available               0000401  0068678  Available               0000401  0068679  Available                  
+     0000401  0068680  Available               0000401  0068681  Available               0000401  0068682  Available                  
+     0000401  0068683  Available               0000401  0068685  Available               0000401  0068686  Available                  
+     0000401  0068687  Available               0000401  0068688  Available               0000401  0068689  Available                  
+     0000401  0068690  Available               0000401  0068691  Available               0000401  0068692  Available                  
+     0000401  0068693  Available               0000401  0068694  Available               0000401  0068695  Available                  
+     0000401  0068696  Available               0000401  0068697  Available               0000401  0068698  Available                  
+     0000401  0068699  Available               0000401  0068700  Available               0000401  0068701  Available                  
+     0000401  0068702  Available               0000401  0068703  Available               0000401  0068704  Available                  
+     0000401  0068705  Available               0000401  0068706  Available               0000401  0068707  Available                  
+     0000401  0068708  Available               0000401  0068709  Available               0000401  0068710  Available                  
+     0000401  0068711  Available               0000401  0068712  Available               0000401  0068713  Available                  
+     0000401  0068714  Available               0000401  0068715  Available               0000401  0068716  Available                  
+     0000401  0068717  Available               0000401  0068718  Available               0000401  0068719  Available                  
+     0000401  0068720  Available               0000401  0068721  Available               0000401  0068722  Available                  
+     0000401  0068723  Available               0000401  0068725  Available               0000401  0068726  Available                  
+     0000401  0068727  Available               0000401  0068728  Available               0000401  0068729  Available                  
+     0000401  0068730  Available               0000401  0068731  Available               0000401  0068732  Available                  
+     0000401  0068733  Available               0000401  0068734  Available               0000401  0068735  Available                  
+     0000401  0068736  Available               0000401  0068737  Available               0000401  0068738  Available                  
+     0000401  0068739  Available               0000401  0068740  Available               0000401  0068741  Available                  
+     0000401  0068742  Available               0000401  0068743  Available               0000401  0068744  Available                  
+     0000401  0068745  Available               0000401  0068746  Available               0000401  0068747  Available                  
+     0000401  0068748  Available               0000401  0068749  Available               0000401  0068750  Available                  
+     0000401  0068751  Available               0000401  0068752  Available               0000401  0068753  Available                  
+     0000401  0068754  Available               0000401  0068755  Available               0000401  0068756  Available                  
+                                                                                                                                     
+IPS_INV6010_20210423_170931.RPT                                                                                                       
+2021-04-23 Friday                                          Game408/report            PODEV1  System: 23 04 2021    17:15:08.00        
+                                                                                                                                      
+       Game: 0408                                                                                                                     
+       For Warehouses 0000401 - 0000401                                                                                               
+                                                                                                                                      
+                                                                                                                                      
+     Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
+     -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
+     0000401  0068757  Available               0000401  0068758  Available               0000401  0068759  Available                  
+     0000401  0068760  Available               0000401  0068761  Available               0000401  0068762  Available                  
+     0000401  0068763  Available               0000401  0068764  Available               0000401  0068765  Available                  
+     0000401  0068766  Available               0000401  0068767  Available               0000401  0068768  Available                  
+     0000401  0068769  Available               0000401  0068770  Available               0000401  0068771  Available                  
+     0000401  0068772  Available               0000401  0068773  Available               0000401  0068774  Available                  
+     0000401  0068775  Available               0000401  0068776  Available               0000401  0068777  Available                  
+     0000401  0068778  Available               0000401  0068779  Available               0000401  0068780  Available                  
+     0000401  0068781  Available               0000401  0068782  Available               0000401  0068783  Available                  
+     0000401  0068784  Available               0000401  0068785  Available               0000401  0068786  Available                  
+     0000401  0068787  Available               0000401  0068788  Available               0000401  0068789  Available                  
+     0000401  0068790  Available               0000401  0068791  Available               0000401  0068792  Available                  
+     0000401  0068793  Available               0000401  0068794  Available               0000401  0068795  Available                  
+     0000401  0068796  Available               0000401  0068797  Available               0000401  0068798  Available                  
+     0000401  0068799  Available               0000401  0068800  Available               0000401  0068801  Available                  
+     0000401  0068802  Available               0000401  0068803  Available               0000401  0068804  Available                  
+     0000401  0068805  Available               0000401  0068806  Available               0000401  0068807  Available                  
+ 
+  
+ Previous   
+    
+  
+ 
+--------------------------------------------------------------------------------
+  
+  
+ 
+  
+  
+ 
