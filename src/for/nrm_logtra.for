@@ -1333,12 +1333,18 @@ C----+------------------------------------------------------------------
                 TRABUF(TWDUR)    = ZEXT( IAND(I1TEMP(3),15) )
 
                 TRABUF(TWCOLMSERL_TLTO) = LOGBUF(17) 
+                TRABUF(TCOLMSERL_TLTO) = LOGBUF(17) 
                 TRABUF(TWCOLMSERM_TLTO) = LOGBUF(18)
+                TRABUF(TCOLMSERM_TLTO) = LOGBUF(18)
                 TRABUF(TWCOLMMIDL_TLTO) = LOGBUF(19)
+                TRABUF(TCOLMMIDL_TLTO) = LOGBUF(19)
                 I4TEMP = LOGBUF(20) 
-                TRABUF(TWCOLMSERH_TLTO) = I1TEMP(1)  
+                TRABUF(TWCOLMSERH_TLTO) = I1TEMP(1)
+                TRABUF(TCOLMSERH_TLTO) = I1TEMP(1)  
                 TRABUF(TWCOLMMIDH_TLTO) = I1TEMP(2)
+                TRABUF(TCOLMMIDH_TLTO) = I1TEMP(2)
                 TRABUF(TWCOLMCOMF_TLTO) = I1TEMP(3)
+                TRABUF(TCOLMCOMF_TLTO) = I1TEMP(3)
 
 C WE LOSE SPACE FOR BOARD DATA
 C TO USE FOR NEW TERMINALS 2021                  
@@ -2751,7 +2757,11 @@ C----+------------------------------------------------------------------
                    TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
                    I4TEMP = LOGBUF(18)
                    TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FF'X), 24), TRABUF(TVOLMSERM_IL) )
-                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(2) )                                  
+                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(2) )      
+                   I4TEMP = LOGBUF(19)
+                   TRABUF(TVOLMMIDL_IL) = I4TEMP
+                   I4TEMP = LOGBUF(20)
+                   TRABUF(TVOLMMIDH_IL) = I4TEMP 
                 ENDIF     
               ENDIF
 C----+------------------------------------------------------------------

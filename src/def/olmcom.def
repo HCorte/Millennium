@@ -1,0 +1,26 @@
+C OLMCOM.DEF
+C
+C V01 28-MAY-2021 SCML NEW TERMINALS PROJECT
+C
+C THIS COMMON CONTAINS ALL GLOBALS REGARDING COMOLM PROGRAM THAT 
+c COMMUNICATES WITH OLIMPO MORE SPECIFIC WITH HADES
+C
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Copyright 2016 SCML Corporation. All rights reserved.
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+        COMMON /OLMCOM/
+     *    OLMS_ATTACHSTS,
+     *    OLMS_ATTACHDAT,
+     *    OLMS_ATTACHTIM,
+     *    OLMS_DETACHFLG,
+     *    OLMS_DETACHDAT,
+     *    OLMS_DETACHTIM
+C
+        INTEGER*4 OLMS_ATTACHSTS                                               !ATTACH STATUS (COMOLM IS OR IS NOT ATTACHED TO MESSAGEQ SERVER IN OLIMPO SYSTEM)
+        INTEGER*4 OLMS_ATTACHDAT(8)                                             !LAST DATE ATTACHED TO MESSAGEQ SERVER HOSTED IN OLIMPO SYSTEM
+        INTEGER*4 OLMS_ATTACHTIM(2)                                             !LAST TIME ATTACHED TO MESSAGEQ SERVER HOSTED IN OLIMPO SYSTEM (HH24:MI:SS)
+        INTEGER*4 OLMS_DETACHFLG                                                !TIME LAST DETACH FLAG (A DETACH HAS OCCURRED)
+        INTEGER*4 OLMS_DETACHDAT(8)                                             !LAST DATE DETACHED FROM MESSAGEQ SERVER HOSTED IN OLIMPO SYSTEM
+        INTEGER*4 OLMS_DETACHTIM(2)                                             !LAST TIME DETACHED FROM MESSAGEQ SERVER HOSTED IN OLIMPO SYSTEM (HH24:MI:SS)
