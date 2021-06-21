@@ -3,6 +3,7 @@ C SUBROUTINE REPROTRA
 C
 C REPROTRA.FOR
 C
+C V27 14-MAY-2021 SCML New Terminal Proj Ignore OLM connection switches
 C V26 19-OCT-2016 SCML Fix. Replace special function reprocessing
 C V25 01-APR-2016 SCML M16 PROJECT: reprocess EUR transactions
 C                      Ignore EUR connection switches
@@ -382,6 +383,15 @@ C----+---+-------------+------------------------------------------------
 C----+---+-------------+------------------------------------------------
 C V25|END| M16 PROJECT | IGNORE EUR Connection SWITCHES
 C----+---+-------------+------------------------------------------------
+C
+C----+-----------------------------------------------------------------
+C V27| Adding support for OLM - New Termninals Proj
+C----+------------------------------------------------------------------
+		IF(TRABUF(TCMTYP).EQ.TCPAR.AND.     !IGNORE OLM Connection SWITCHES
+     *     TRABUF(TCMNUM).EQ.OLMCONF) RETURN
+C----+-----------------------------------------------------------------
+C V27| Adding support for OLM - New Termninals Proj
+C----+------------------------------------------------------------------
 C
 	CALL CMDROU(TRABUF,MESS)
 	RETURN
