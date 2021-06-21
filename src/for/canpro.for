@@ -322,14 +322,22 @@ C
 C----+------------------------------------------------------------------
 C V15| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------        
+C        IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN 
+C           TRABUF(TWCOLMSERL_TLTO)=PRO(SEROLM_INT_OLM,BUF)
+C           TRABUF(TWCOLMSERM_TLTO)=PRO(SEROLM_INT_OLM+1,BUF)
+C           TRABUF(TWCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
+C           TRABUF(TWCOLMMIDL_TLTO)=PRO(MESSID_INT_OLM,BUF)
+C           TRABUF(TWCOLMMIDH_TLTO)=BPRO(MESSID_OLM+4,BUF)
+C           TRABUF(TWCOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
+C        ENDIF
         IF(BPRO(CHOLM_OLM,BUF) .EQ. 1) THEN 
-           TRABUF(TWCOLMSERL_TLTO)=PRO(SEROLM_INT_OLM,BUF)
-           TRABUF(TWCOLMSERM_TLTO)=PRO(SEROLM_INT_OLM+1,BUF)
-           TRABUF(TWCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
-           TRABUF(TWCOLMMIDL_TLTO)=PRO(MESSID_INT_OLM,BUF)
-           TRABUF(TWCOLMMIDH_TLTO)=BPRO(MESSID_OLM+4,BUF)
-           TRABUF(TWCOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
-        ENDIF
+           TRABUF(TCOLMSERL_TLTO)=PRO(SEROLM_INT_OLM,BUF)
+           TRABUF(TCOLMSERM_TLTO)=PRO(SEROLM_INT_OLM+1,BUF)
+           TRABUF(TCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
+           TRABUF(TCOLMMIDL_TLTO)=PRO(MESSID_INT_OLM,BUF)
+           TRABUF(TCOLMMIDH_TLTO)=BPRO(MESSID_OLM+4,BUF)
+           TRABUF(TCOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
+        ENDIF        
 C----+------------------------------------------------------------------
 C V15| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------

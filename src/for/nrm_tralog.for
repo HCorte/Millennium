@@ -1371,6 +1371,22 @@ C TO USE FOR NEW TERMINALS 2021
                LOGOFF = 21
                BRDOFF = 11               
             ENDIF
+
+            IF(TRABUF(TCOLMCOMF_TLTO) .EQ. 1) THEN
+               LOGBUF(17) = TRABUF(TCOLMSERL_TLTO)
+               LOGBUF(18) = TRABUF(TCOLMSERM_TLTO)
+               LOGBUF(19) = TRABUF(TCOLMMIDL_TLTO)
+               I1TEMP(1) = TRABUF(TCOLMSERH_TLTO)
+               I1TEMP(2) = TRABUF(TCOLMMIDH_TLTO)
+               I1TEMP(3) = TRABUF(TCOLMCOMF_TLTO)
+               I1TEMP(4) = 0
+               LOGBUF(20) = I4TEMP
+
+C WE LOSE SPACE FOR BOARD DATA
+C TO USE FOR NEW TERMINALS 2021 
+               LOGOFF = 21
+               BRDOFF = 11               
+            ENDIF            
 C----+------------------------------------------------------------------
 C V60| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------                
@@ -2660,6 +2676,13 @@ C HAVES 1 TICKET  S TO VALIDATE THEN 1 SEGMENT IN USE BUT NO SPACE FREE (LOGBUF)
                           I1TEMP(3) = 0
                           I1TEMP(4) = 0
                           LOGBUF(18) = I4TEMP
+
+                          I4TEMP = TRABUF(TVOLMMIDL_IL)
+                          LOGBUF(19) = I4TEMP
+
+                          I4TEMP = TRABUF(TVOLMMIDH_IL)
+                          LOGBUF(20) = I4TEMP
+
                   ENDIF
                ENDIF
 C endof - the remaining 6 bytes of Olimpo serial (giving the total of the 9 bytes)  

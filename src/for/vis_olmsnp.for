@@ -40,13 +40,13 @@ C
         INCLUDE 'INCLIB:QUECOM.DEF'
         INCLUDE 'INCLIB:X2XQUE.DEF'
         INCLUDE 'INCLIB:GTNAMES.DEF'
-C        INCLUDE 'INCLIB:OLMCOM.DEF' !New Memory for Olimpo Communication channel          
+        INCLUDE 'INCLIB:OLMCOM.DEF'           
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       INPUT ARGUMENTS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
         INTEGER*4  CLINE(20)
-C        INTEGER*4  EGAM    !EXTERNAL GAME NUMBER (IN EUROMILLIONS SYSTEM)
+C        INTEGER*4  EGAM    !EXTERNAL GAME NUMBER (IN OLIMPO SYSTEM)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       LOCAL VARIABLES
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -58,7 +58,9 @@ C
         INTEGER*4  ST
         INTEGER*4  KEYNUM        
 
-        INTEGER*4 OLMLST(3),OLMTTL        
+        INTEGER*4 OLMLST(3),OLMTTL,INPLST(3)   
+        INTEGER*4 DECLST(3),WAGLST(3),CANLST(3),VALLST(3)  
+        INTEGER*4 INILST(3),CRSLST(3),INOLST(3)  
         INTEGER*4  BUF(CDLEN)     
         INTEGER*4  MESS(EDLEN)  
         CHARACTER*20  PASPAS        
@@ -68,26 +70,28 @@ C
         INTEGER*4  POS
 C
         INTEGER*4  MAXPRM
-        PARAMETER (MAXPRM=2)
+        PARAMETER (MAXPRM=12)
 C
         REAL*8       K(MAXPRM)                                                  !SNAPSHOT PARAMETER DESCRIPTION
 C
         EQUIVALENCE(PASPAS,PASSENT)
 C
-        DATA   K/'COMOLm  ','OLMCOn  '/!,'OLMTMo  ','FINTMo  ',
-C     *           'SUPOLm  '/
+        DATA   K/'COMOLm  ','OLMCOn  ','Input  ','Output  ',
+     *           'WAGPro  ','CANPro  ','VALPro ',
+     *           'INSPro  ','CRSPro  ','INSOut ',
+     *           'OLMTMo  ','FINTMo  '/
         DATA DEFTPASS/'SUPORTE'/
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       BEGIN PROCESS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-        MESS(1) = 63 !que é este valor do euromil???
+        MESS(1) = 63 !que ? este valor do euromil???
         MESS(2) = TEOLM
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C EURSNP INPUT
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  
         VALUE = 0
-        !TEMP  = 0 parece que esta variavel não está a ser usada no euromil
+        !TEMP  = 0 parece que esta variavel n?o est? a ser usada no euromil
         POS   = 1      
         CALL KEY(CLINE,K,MAXPRM,POS,KEYNUM)
 C
@@ -102,7 +106,7 @@ C CLEAR COMMAND MESSAGE BUFFER
 C
 2       CONTINUE
         CALL FASTSET(0,BUF,CDLEN)
-        GOTO(200,506) KEYNUM   
+        GOTO(200,506,200,200,200,200,200) KEYNUM   
         
         GOTO 200          
 C
@@ -167,32 +171,79 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       GET BUFFER UTILIZATION INFORMATION 
 C       To do Later(press BUF followed by the number of buffs used to show)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-        CALL QIMAGE(QUETAB(1,OLM),OLMLST,3)
-C        CALL LISTSIZE(QUETAB(1,OLM),OLMTTL)                            !COMOLM
+!        CALL QIMAGE(QUETAB(1,OLM),OLMLST,3) !from reuse paspro application queue
+        CALL QIMAGE(COMOLMQUE(1),OLMLST,3) !use the new queue for the app queue
+        CALL QIMAGE(INQUE,INPLST,3)
+        CALL NQIMAGE(GAME_OUTQUE,DECLST,3)
+        CALL QIMAGE(QUETAB(1,WAG),WAGLST,3)
+        CALL QIMAGE(QUETAB(1,CAN),CANLST,3)
+        CALL QIMAGE(QUETAB(1,VAL),VALLST,3)
+        CALL QIMAGE(QUETAB(1,INI),INILST,3)
+        CALL QIMAGE(QUETAB(1,CRS),CRSLST,3)
+        CALL QIMAGE(QUETAB(1,INO),INOLST,3)        
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C      GET GAME FLAGS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
        WRITE(CLIN1,901)
 C---- System 
-       WRITE(CLIN4,903)K(1),OLMLST(1)
-       WRITE(CLIN5,910),OLMLST(2)
-       WRITE(CLIN6,913),OLMLST(3)
-C---- Supress
+       WRITE(CLIN4,903)K(1),OLMLST(1),K(3),INPLST(1),k(4),DECLST(1)
+       WRITE(CLIN5,910),OLMLST(2),INPLST(2),DECLST(2)
+       WRITE(CLIN6,913),OLMLST(3),INPLST(3),DECLST(2)
+C---- Connection & Mes Flux
        WRITE(CLIN8,912) K(2),P(OLMCONF)
+       WRITE(CLIN9,914) k(5),WAGLST(1),k(6),CANLST(1),k(7),VALLST(1)
+       WRITE(CLIN10,914) k(8),INILST(1),k(9),CRSLST(1),k(10),INOLST(1)
 
-       WRITE(CLIN15,900)
-       WRITE(CLIN16,900)       
+       WRITE(CLIN11,900)
+       WRITE(CLIN12,900)  
+C----- MessageQ attach and detach
+       IF(OLMS_ATTACHSTS.NE.0) THEN                                          !ATTACH HAS BEEN DONE 
+         WRITE(CLIN13,919)  K(2), P(OLMCONF)                                   !OLMCOn PARAMETER
+         WRITE(CLIN14,9101) K(11),                                
+     *                        OLMS_ATTACHDAT(3),                                !DAY ATTACHED (DD)
+     *                        OLMS_ATTACHDAT(2),                                !MONTH ATTACHED (MM)
+     *                        OLMS_ATTACHDAT(1),                                !YEAR ATTACHED (YYYY)
+     *                        OLMS_ATTACHTIM                                    !TIME ATTACHED (H24:MI:SS)
+       ELSE
+        WRITE(CLIN13,9102) K(2), P(OLMCONF)                                   !EURCOn PARAMETER     
+        WRITE(CLIN14,9103) K(11)                                 
+       ENDIF
+
+       IF(OLMS_DETACHFLG.NE.0) THEN
+         WRITE(CLIN15,9104) K(12),         
+     *                        OLMS_DETACHDAT(3),                                !LAST DAY DETACHED (DD)
+     *                        OLMS_DETACHDAT(2),                                !LAST MONTH DETACHED (MM)
+     *                        OLMS_DETACHDAT(1),                                !LAST YEAR DETACHED (YYYY)
+     *                        OLMS_DETACHTIM                                    !LAST TIME DETACHED (H24:MI:SS)
+       ELSE                                                                  !DETACH HAS NOT BEEN DONE
+        WRITE(CLIN15,9105) K(12)
+       ENDIF
+  
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C----- FORMAT STATEMENTS
 C
 900     FORMAT(80(' '))
 901     FORMAT('**** OLM control snapshot ****')
-903     FORMAT('QUEUES   >  ',A7,'<',I4.0,'>',3X)
-910     FORMAT('BUFF 1   >  ',I4.0,3X)
-913     FORMAT('BUFF 2   >  ',I4.0,3X)
+903     FORMAT('QUEUES   >  ',A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X)
+910     FORMAT('BUFF 1   >  ',2X,I4.0,5X,I4.0,5X,I4.0,5X)
+913     FORMAT('BUFF 2   >  ',2X,I4.0,5X,I4.0,5X,I4.0,5X)
 C911     FORMAT('            ',1('*',A7,I6,3X))
-912     FORMAT('OLM      >   ',1('*',A7,I6,3X))        
+912     FORMAT('OLM      >   ',1('*',A7,I6,3X))     
+914     FORMAT('             ',3('*',A7,I6,3X))
+
+919     FORMAT('         >  ',1('*',A7,I6,3X)
+     *          1X,'COMOLM Attached?',2X,'Yes')                                 !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
+9101    FORMAT('            ',1('*',A7)
+     *          5X,'Time Attached',5X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)            !TIME COMOLM ATTACHED TO MESSAGEQ SERVER IN OLIMPO SYSTEM
+9103    FORMAT('            ',1('*',A7)
+     *          5X,'Time Attached',5X,'??.??.???? ??:??:??')                    !COMOLM IS NOT ATTACHED
+9104    FORMAT('            ',1('*',A7),
+     *          5X,'Time Last Detach',2X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)         !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
+9105    FORMAT('            ',1('*',A7),
+     *          5X,'Time Last Detach',2X,'??.??.???? ??:??:??')                 !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
+9102    FORMAT('         >  ',1('*',A7,I6,3X)
+     *          1X,'COMOLM Attached?',2X,'No')                                  !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C904     FORMAT(1X,'<',I4.0,'>')
