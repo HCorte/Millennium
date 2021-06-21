@@ -1,5 +1,6 @@
 C GLOBAL.DEF
 C
+C V74 01-JAN-2021 SCML  New Terminals Project
 C V73 04-MAR-2016 SCML  M16 PROJECT
 C                       MAXTYP changed from 18 to 21
 C                       New game type added for Raffle
@@ -1173,6 +1174,20 @@ C MAXIMUM BANKS USED BY SCML
 C
 	INTEGER*4 MAXBANKS
 	PARAMETER (MAXBANKS = 15)
+
+C----+------------------------------------------------------------------
+C V74| Adding support for OLM New term
+C----+------------------------------------------------------------------
+        INTEGER*4 NEWCH, OLDCH
+
+        PARAMETER(NEWCH=0)     ! FROM NEW CHANNEL
+        PARAMETER(OLDCH=1)     ! FROM OLD CHANNEL        
+        
+        INTEGER*4 NUMOLMTTYP
+        PARAMETER(NUMOLMTTYP=2)
+C----+------------------------------------------------------------------
+C V74| Adding support for OLM New term
+C----+------------------------------------------------------------------
 
 C----+------------------------------------------------------------------
 C V72| Adding support for IGS
