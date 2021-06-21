@@ -1,5 +1,6 @@
 C PROGRAM BLDSYS
 C
+C V81 13-MAY-2021 SCML New Terminals Project (COMOLM)
 C V80 01-APR-2015 SCML M16 PROJECT: added EUSPFIR, EUSPICA
 C                      SPBLRP renamed to EUSPBIR
 C                      EUSPREP renamed to EUSPGRR
@@ -147,7 +148,8 @@ CC----+------------------------------------------------------------------
 CC V77| Added OP Generation Flag: 0 - do not generate OPs; 1 - generate OPs
 CC----+------------------------------------------------------------------
 CV80        PARAMETER   (DSPPAR=140)         ! number of parameters 
-        PARAMETER   (DSPPAR=142)         ! number of parameters                 !V80
+C        PARAMETER   (DSPPAR=142)         ! number of parameters                 !V80
+        PARAMETER   (DSPPAR=143)         ! number of parameters                 !V81        
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
@@ -342,7 +344,8 @@ C----+------------------------------------------------------------------
 C    *             'IGSPFIN ','IGSPRNT ','PLAFINTO','        '/
 CV80     *             'IGSPFIN ','IGSPRNT ','PLAFINTO','IGSPICAN'/
      *             'IGSPFIN ','IGSPRNT ','PLAFINTO','IGSPICAN',                 !V80
-     *             'EUSPFIR ','EUSPICA '/                                       !V80
+CV81     *             'EUSPFIR ','EUSPICA '/                                       !V80
+     *             'EUSPFIR ','EUSPICA ','OLMCONF ','        '/                 !V81     
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
@@ -396,7 +399,10 @@ C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
 C    *            IGSPRNT,PLAFINTO,0/
 CV80     *            IGSPRNT,PLAFINTO,IGSPICAN/
-     *            IGSPRNT,PLAFINTO,IGSPICAN,EUSPFIR,EUSPICA/                    !V80
+Cv81     *            IGSPRNT,PLAFINTO,IGSPICAN,EUSPFIR,EUSPICA/                    !V80
+     *            IGSPRNT,PLAFINTO,IGSPICAN,EUSPFIR,EUSPICA,                     !V81 
+     *            OLMCONF,0/    
+
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
@@ -541,7 +547,9 @@ C----+------------------------------------------------------------------
 CV80     *            1/                          ! IGSPICAN
      *            1,                          ! IGSPICAN                        !V80
      *            1,                          ! EUSPFIR                         !V80
-     *            1/                          ! EUSPICA                         !V80
+CV81     *            1/                          ! EUSPICA                         !V80
+     *            1,                          ! EUSPICA                         !V81   
+     *            1/                          ! OLMCONF                         !V81
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
@@ -685,7 +693,9 @@ C----+------------------------------------------------------------------
 CV80     *            0/                          !     IGSIPCAN
      *            0,                          ! IGSPICAN                        !V80
      *            0,                          ! EUSPFIR                         !V80
-     *            0/                          ! EUSPICA                         !V80
+CV81     *            0/                          ! EUSPICA                         !V80
+     *            0,                          ! EUSPICA                         !V81
+     *            0/                          ! OLMCONF                         !V81
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
@@ -781,7 +791,9 @@ C----+------------------------------------------------------------------
 C    *               'Placrd FinRep TimOut','                    '/
 CV80     *               'Placrd FinRep TimOut','IGS Suppr Int Cancel'/
      *               'Placrd FinRep TimOut','IGS Suppr Int Cancel',             !V80
-     *               'EM Suppr Fin Report ','EM Suppr Int Cancel '/             !V80
+CV81     *               'EM Suppr Fin Report ','EM Suppr Int Cancel '/             !V80
+     *               'EM Suppr Fin Report ','EM Suppr Int Cancel ',             !V81
+     *               'OLM System Connect  ','                    '/             !V81          
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
