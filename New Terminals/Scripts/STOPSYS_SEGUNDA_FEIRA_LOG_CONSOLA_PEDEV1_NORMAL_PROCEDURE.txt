@@ -309,6 +309,14 @@ PODEV1::SCML>
 PODEV1::SCML>
 PODEV1::SCML>
 PODEV1::SCML> tell dayend y
+12:33:18 DAYEND    Posting clerk accounts to WORK:CLERK.FIL      
+12:33:18 DAYEND    Posting sales data to FILE:ASF.FIL        
+12:33:18 **TELL** DAYEND      Last update for terminal >     1 on 7333 Today > 7357 Continue update [Y/N]:                  
+PODEV1::SCML> tell dayend y
+PODEV1::SCML> 
+12:34:59 **TELL** DAYEND   Continue reporting CDC discrepencies [Y/N]                                                       
+PODEV1::SCML> tell dayend n
+PODEV1::SCML> 
 PODEV1::SCML>
               12:30:41 DAYEND    Posting sales data to FILE:DAF.FIL
 12:30:41 DAYEND    Posting game  data to FILE:L3F.FIL
