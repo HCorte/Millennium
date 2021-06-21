@@ -1,6 +1,7 @@
 C
 C PROGRAM TMIR
 C
+C V21 14-MAY-2021 SCML New Terminals Project - OLM
 C V20 18-APR-2016 SCML M16 PROJECT
 C V19 04-MAR-2015 SCML Bug fix 
 C V18 05-MAR-2014 SCML Placard Project.
@@ -102,6 +103,7 @@ C----+------------------------------------------------------------------
 	INTEGER*4   NUM1                    !
 	INTEGER*4   I                       !
 	INTEGER*4   FLAG                    !
+        INTEGER*4   CHAFLAG                 !V21
 	INTEGER*4   ETIM                    !
 	INTEGER*4   STIM                    !
 	INTEGER*4   SER                     !
@@ -154,6 +156,10 @@ CV20        INTEGER*4 SUMEUROVALID, SUMEUROWAGER, SUMEUROCANCEL
         CHARACTER*12 C12EMXSER/'            '/                                  !V20
         CHARACTER*3  EXEMOPT/'NO '/                                             !V20
 C
+C V21 - Start
+C        INTEGER*4    OLMTOTAL(0:NUMOLMTTYP)  !1 dimension simple array
+C V21 - End
+
 C V18 - Start
         INTEGER*4    IGSTOTAL(0:NUMIGSTTYP,2)  !
         LOGICAL      ODS_JUSTONE
@@ -185,6 +191,8 @@ C V18 - Start
 C
         LOGICAL     EXIGS/.FALSE./                                              !V20
         CHARACTER*3 EXIGSOPT/'NO '/                                             !V20
+C
+        CHARACTER*15 CHOPT/'ALL '/ !V21
 C
         INTEGER*4   LINCNT
         
@@ -252,6 +260,9 @@ C----+------------------------------------------------------------------
 C V17| Added support for new validation types
 C----+------------------------------------------------------------------
 C
+C V21 - Start
+C        CALL FASTSET(0, OLMTOTAL, (NUMOLMTTYP+1))      
+C V21 - Start          
 C V18 - Start
         CALL FASTSET(0, IGSTOTAL, (NUMIGSTTYP+1) *2)
 C V18 - End
@@ -412,6 +423,14 @@ C
           EXIGSOPT='YES'                                                        !V20
           EXIGS=.TRUE.                                                          !V20
         ENDIF                                                                   !V20
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC V21 - New Term - Begin CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        CALL WIMG(5,'Enter transaction channel (A=all/O=Olimpo/M=Other)  ')
+        CALL NEWOLDCHAN(CHAFLAG)
+        IF(CHAFLAG.EQ.3) CALL GSTOP(GEXIT_OPABORT)
+        IF(CHAFLAG.EQ.2) CHOPT='Olimpo(OLM)'
+        IF(CHAFLAG.EQ.4) CHOPT='Other(MXS/X2X)'
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC V21 - New Term - End CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
 C
 C EURO MIL PROJECT - GET EXTERNAL SERIAL 
 C
@@ -538,10 +557,7 @@ CV20        TYPE*,'Game Type(11)  -> Loto(1)/Sports(2)/Joker(4)/Results(15)/Pas(
 CV20	TYPE*,'Tra Status(1)  -> Good(1)/Void(2)/CashExchg(4)/Cash(5)/Reject(6)'
 CV20        TYPE*,'*******************************************************************'
         TYPE*,'***   OFFSETS   *****   VALUES   **************************************' !V20
-        TYPE*,'* Trx Status(1)...: Good(1)/Void(2)/CashExchg(4)/Cash(5)/Reject(6)    *' !V20
-        TYPE*,'* Trx Error(2)....: Noer(0)/Invl(1)/Synt(2)/Supr(3)/NotOn(4)/Sdor(5)  *' !V20
-        TYPE*,'*                   Sdrw(6)/Rety(15)/Vinq(16)/Grev(18)/Bcrs(33)       *' !V20
-        TYPE*,'* Trx Type(9).....: Wag(1)/Can(2)/Ican(3)/Val(4)/Ret(5)/Spe(7)/Crs(9) *' !V20
+        TYPE*,'* Trx Status(1)...: EXCLUDE IGS TRX -----> YESWag(1)/Can(2)/Ican(3)/Val(4)/Ret(5)/Spe(7)/Crs(9) *' !V20
         TYPE*,'*                   Eur(11)/Igs(12)                                   *' !V20
         TYPE*,'* Game Num(10)....: TotobolaNormal(1)/Totoloto(2)/TotobolaExtra2(3)   *' !V20
         TYPE*,'*                   Loto2(4)/Joker(5)/TotolotoSab(6)/TotolotoQua(7)   *' !V20
@@ -553,6 +569,7 @@ CV20        TYPE*,'*************************************************************
         TYPE*,'* Eur TrxType(25).: Wag(1)/Can(2)/Val(4)                              *' !V20
         TYPE*,'* Eur WagChan(45).: Retlr(1)/Web(2)/SMS(3)/PortalMed(4)/Mob(5)        *' !V20
         TYPE*,'* Igs TrxType(25).: Wag(0)/Can(1)/Val(2)/Pay(3)/Rep(4)                *' !V20
+C        TYPE*,'* New TerTran(133): New channel(1)/Old channel(2)                     *' !V21
         TYPE*,'***********************************************************************' !V20
 
 	DO I = 1, 5
@@ -606,6 +623,7 @@ C
 CV20     *	      (FILNAME(X),X=1,5),TAPNMS,(AGTOPT(Y:Y),Y=1,4),XSSER,XESER,
      *	      (FILNAME(X),X=1,5),TAPNMS,(AGTOPT(Y:Y),Y=1,4),                    !V20
      *         EXEMOPT, EXIGSOPT,                                               !V20
+     *         CHOPT,                                                           !V21
      *         C12EMXSER, C24XREF,                                              !V20
      *         XSSER,XESER,                                                     !V20
      *	      DISTIM(XSTIM),DISTIM(XETIM),REPTYP(REPIDX),SERTYP(SERIDX),
@@ -648,7 +666,29 @@ C
 
 	DO I = 1, 5
 	    IF(OFF(I).LT.0)                      GOTO 200
-	    IF(TRABUF(OFF(I)).NE.VALUE(I))       GOTO 40
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC V21 - New Terminals CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C            IF(OFF(I).EQ.TVOLMCOMF_IL) THEN
+C               IF(TRABUF(TGAMTYP).EQ.TLTO .OR. TRABUF(TGAMTYP).EQ.TSPT) THEN
+C                 IF(TRABUF(TTYP) .EQ. TWAG .AND. VALUE(I) .EQ. 1 .AND. TRABUF(TWCOLMCOMF_TLTO).EQ.0) GOTO 40
+C                 IF(TRABUF(TTYP) .EQ. TWAG .AND. VALUE(I) .EQ. 2 .AND. TRABUF(TWCOLMCOMF_TLTO).EQ.1) GOTO 40
+C                 IF(TRABUF(TTYP) .EQ. TCAN .AND. VALUE(I) .EQ. 1 .AND. TRABUF(TCOLMCOMF_TLTO).EQ.0) GOTO 40
+C                 IF(TRABUF(TTYP) .EQ. TCAN .AND. VALUE(I) .EQ. 2 .AND. TRABUF(TCOLMCOMF_TLTO).EQ.1) GOTO 40 
+C                 IF(TRABUF(TTYP) .EQ. TVAL .AND. VALUE(I) .EQ. 1 .AND. TRABUF(TVOLMCOMF_TLTO).EQ.0) GOTO 40
+C                 IF(TRABUF(TTYP) .EQ. TVAL .AND. VALUE(I) .EQ. 2 .AND. TRABUF(TVOLMCOMF_TLTO).EQ.1) GOTO 40        
+C               ELSE
+C                  IF(TRABUF(TGAMTYP).EQ.TINS .AND. TRABUF(TTYP).EQ.TCRS) THEN
+C                     IF(TRABUF(TITYP) .EQ.IVAL .AND. VALUE(I) .EQ. 1 .AND. TRABUF(TVOLMCOMF_IL).EQ.0) GOTO 40
+C                     IF(TRABUF(TITYP) .EQ.IVAL .AND. VALUE(I) .EQ. 2 .AND. TRABUF(TVOLMCOMF_IL).EQ.1) GOTO 40                         
+C                     IF(TRABUF(TTYP) .NE. IVAL .AND. VALUE(I) .EQ. 1 .AND. TRABUF(TGOLMCOMF_IL).EQ.0) GOTO 40
+C                     IF(TRABUF(TTYP) .NE. IVAL .AND. VALUE(I) .EQ. 2 .AND. TRABUF(TGOLMCOMF_IL).EQ.1) GOTO 40                         
+C                  ELSE 
+C                     GOTO 40
+C                  ENDIF      
+C               ENDIF                 
+C            ELSE
+                IF(TRABUF(OFF(I)).NE.VALUE(I))       GOTO 40 !V21 (old filter logic)
+C            ENDIF           
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC V21 - New Terminals CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
         END DO
 C
 C PRINT TRANSACTION
@@ -659,6 +699,27 @@ C
 C       CALL PRINTRA(TRABUF,PUNIT,DETAIL,SCRAM,TOTAL,CARY)
 C        INTEGER*4 EM_SERIAL,EM_CHK
 C        IF ((TRABUF(TTYP) .NE. TEUR) .AND. (.NOT. EM_JUSTONE)) THEN ! V18 - COMMENT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC V21 - New Terminals CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        IF(CHAFLAG .EQ. 2 .OR. CHAFLAG .EQ. 4) THEN
+          IF(TRABUF(TGAMTYP).EQ.TLTO .OR. TRABUF(TGAMTYP).EQ.TSPT) THEN
+              IF(TRABUF(TTYP) .EQ. TWAG .AND. CHAFLAG .EQ. 2 .AND. TRABUF(TWCOLMCOMF_TLTO).EQ.0) GOTO 40
+              IF(TRABUF(TTYP) .EQ. TWAG .AND. CHAFLAG .EQ. 4 .AND. TRABUF(TWCOLMCOMF_TLTO).EQ.1) GOTO 40
+              IF(TRABUF(TTYP) .EQ. TCAN .AND. CHAFLAG .EQ. 2 .AND. TRABUF(TCOLMCOMF_TLTO).EQ.0) GOTO 40
+              IF(TRABUF(TTYP) .EQ. TCAN .AND. CHAFLAG .EQ. 4 .AND. TRABUF(TCOLMCOMF_TLTO).EQ.1) GOTO 40 
+              IF(TRABUF(TTYP) .EQ. TVAL .AND. CHAFLAG .EQ. 2 .AND. TRABUF(TVOLMCOMF_TLTO).EQ.0) GOTO 40
+              IF(TRABUF(TTYP) .EQ. TVAL .AND. CHAFLAG .EQ. 4 .AND. TRABUF(TVOLMCOMF_TLTO).EQ.1) GOTO 40        
+          ELSE
+              IF(TRABUF(TGAMTYP).EQ.TINS .AND. TRABUF(TTYP).EQ.TCRS) THEN
+                  IF(TRABUF(TITYP) .EQ.IVAL .AND. CHAFLAG .EQ. 2 .AND. TRABUF(TVOLMCOMF_IL).EQ.0) GOTO 40
+                  IF(TRABUF(TITYP) .EQ.IVAL .AND. CHAFLAG .EQ. 4 .AND. TRABUF(TVOLMCOMF_IL).EQ.1) GOTO 40                         
+                  IF(TRABUF(TTYP) .NE. IVAL .AND. CHAFLAG .EQ. 2 .AND. TRABUF(TGOLMCOMF_IL).EQ.0) GOTO 40
+                  IF(TRABUF(TTYP) .NE. IVAL .AND. CHAFLAG .EQ. 4 .AND. TRABUF(TGOLMCOMF_IL).EQ.1) GOTO 40                         
+              ELSE 
+                  GOTO 40
+              ENDIF      
+          ENDIF
+        ENDIF
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC V21 - New Terminals CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
         IF ((TRABUF(TTYP) .NE. TEUR) .AND. (.NOT. EM_JUSTONE) .AND. 
      *     (TRABUF(TTYP) .NE. TIGS) .AND. (.NOT. ODS_JUSTONE)) THEN ! V18 - ADD
            CALL IGS_PRINTRA(TRABUF,PUNIT,DETAIL,LINCNT,SCRAM,TOTAL,CARY)
@@ -1230,6 +1291,7 @@ C
      *	      5X,'TERMINAL NUMBER -----> ',4A1,/,
      *        5X,'EXCLUDE EM TRX ------> ',A,/,                                 !V20
      *        5X,'EXCLUDE IGS TRX -----> ',A,/,                                 !V20
+     *        5X,'CHANNEL TRX ---------> ',A,/,                                 !V21
      *        5X,'EUROMIL EXT SER # ---> ',A,/,                                 !V20
      *        5X,'PLACARD EXT SER # ---> ',A,/,                                 !V20
      *	      5X,'STARTING SERIAL -----> ',I9,/,
@@ -1245,3 +1307,30 @@ CV20     *	      5X,'VALUES --------------> ',5(I4,' :'))
 
 C
 	END
+
+        SUBROUTINE NEWOLDCHAN(ANS)
+        IMPLICIT NONE
+C
+           INCLUDE 'INCLIB:SYSPARAM.DEF'
+           INCLUDE 'INCLIB:SYSEXTRN.DEF'
+
+           INTEGER*4  ANS
+           CHARACTER*1 A
+           ANS=0
+10	   CONTINUE
+           READ(5,900) A
+           IF(A.EQ.'A'.OR.A.EQ.'a') ANS=1
+           IF(A.EQ.'O'.OR.A.EQ.'o') ANS=2
+           IF(A.EQ.'E'.OR.A.EQ.'e') ANS=3
+           IF(A.EQ.'M'.OR.A.EQ.'m') ANS=4
+           IF(ANS.NE.0) RETURN
+
+C
+C INVALID RESPONSE
+C
+           WRITE(6,901)
+           GOTO 10
+
+900	   FORMAT(A1)
+901	   FORMAT('  *** Invalid input ***')
+        END
