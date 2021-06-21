@@ -40,7 +40,7 @@ run tmir
 d
 t
 prim:mtmf01.fil
-HenriqueLIWork
+HenriqueTmir
 3512
 y
 y
