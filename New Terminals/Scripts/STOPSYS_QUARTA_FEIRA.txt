@@ -1297,6 +1297,322 @@ valx:20210210_drawdiv.fil
 PODEV1::SCML>
 PODEV1::SCML>
 PODEV1::SCML>
+PODEV1::SCML> r taxmng
+10:30:56 CONSOLE
+10:30:56 CONSOLE  -----------------------------------------------------------
+10:30:56 CONSOLE  <<<<< TAXMNG - CALCULO DOS PREMIOS LIQUIDOS           >>>>>
+10:30:56 CONSOLE        GERA PREMIOS_IS_<GN>_<CCCAAAA>_aaaammdd.REP
+10:30:56 CONSOLE        GERA PREMIOS_PREV_IS_<GN>_<CCCAAAA>_aaaammdd.REP
+10:30:56 CONSOLE        GERA IS_<GSD>_aaaammdd.ASC (interface para o SAP)
+10:30:56 CONSOLE
+10:30:56 CONSOLE          GN = numero do jogo
+10:30:56 CONSOLE          CCC = numero do sorteio/extraccao/concurso
+10:30:56 CONSOLE          AAAA = ano do sorteio/extraccao/concurso
+10:30:56 CONSOLE          aaaammdd = data de geracao do ficheiro
+10:30:56 CONSOLE          GSD = descricao abreviada do nome do jogo
+10:30:56 CONSOLE  -----------------------------------------------------------
+10:30:56 CONSOLE  <<<<< CERTIFIQUE-SE QUE HA UMA COPIA DE SEGURANCA DO  >>>>>
+10:30:56 CONSOLE  <<<<< FICHEIRO VLF ANTES DO PROCESSAMENTO DOS JOGOS   >>>>>
+10:30:56 CONSOLE  <<<<< DE APOSTAS MUTUAS                         >>>>>
+10:30:56 CONSOLE  -----------------------------------------------------------
+10:30:56 CONSOLE
+                  J O G O S    D I S P O N I V E I S
+
+                  1 - TOTOBOLA NORMAL
+                  2 - JOKER
+                  3 - TOTOLOTO SABADO
+                  4 - TOTOLOTO QUARTA
+                  5 - CLASSICA
+                  6 - POPULAR
+                  7 - TOTOBOLA EXTRA 1
+
+                  E - Exit
+
+10:30:56 CONSOLE  Enter option:  >4
+10:31:11 CONSOLE  DESEJA PROCESSAR QUAL SORTEIO  (CCCAAAA)? >522021
+10:31:25 CONSOLE  522021
+10:31:25 CONSOLE  Confirma o SORTEIO  0522021 [Y/N]?  >y
+10:31:28 CONSOLE
+10:31:28 CONSOLE  A obter a configuracao do imposto de selo a aplicar...
+10:31:28 CONSOLE   Taxa de imposto:                     20.00
+10:31:28 CONSOLE   Menor premio aplicavel:            5000.00
+10:31:28 CONSOLE   Valor a amortizar no imposto:      5000.00
+10:31:28 CONSOLE
+10:31:28 CONSOLE  A obter o valor das shares do SORTEIO  0522021
+10:31:28 CONSOLE  do TOTOLOTO QUARTA...
+10:31:28 CONSOLE   Divisao 1:   142857.14
+10:31:28 CONSOLE   Divisao 2:        0.04
+10:31:28 CONSOLE   Divisao 3:        0.00
+10:31:28 CONSOLE   Divisao 4:        0.00
+10:31:28 CONSOLE   Divisao 5:        0.00
+10:31:28 CONSOLE   Divisao 6:        0.90
+10:31:28 CONSOLE
+10:31:28 CONSOLE  Allocating & clearing VALX:VLC.FIL           900000 sectors
+10:31:28 CONSOLE  Clearing       900017  VAX sectors in VALX:VLC.FIL
+10:31:29 CONSOLE  INITIALIZATION COMPLETE FOR VALX:VLC.FIL
+10:31:29 CONSOLE
+10:31:29 CONSOLE  A calcular o valor liquido dos premios, aguarde...
+10:31:29 CONSOLE
+10:31:29 CONSOLE  Bilhetes premiados do SORTEIO  0522021:           11
+10:31:29 CONSOLE   Com imposto de selo:                              7
+10:31:29 CONSOLE   Sem imposto de selo:                              4
+10:31:29 CONSOLE
+10:31:29 CONSOLE  Registos lidos do VALX:VLF.FIL:                  418
+10:31:29 CONSOLE  Registos escritos no VALX:VLC.FIL:               418
+10:31:29 CONSOLE  Registos atualizados no VALX:VLF.FIL:              7
+10:31:31 CONSOLE
+10:31:31 CONSOLE  Ficheiros gerados:
+
+Directory GXPROJ:[TSK]
+
+PREMIOS_IS_07_0522021_20210701.REP;1
+                                   12/18                 1-JUL-2021 10:31:28.14
+IS_LOTQ_20210701.ASC;1
+                                    2/18                 1-JUL-2021 10:31:28.14
+
+Total of 2 files, 14/36 blocks.
+10:31:31 CONSOLE
+10:31:31 CONSOLE  TAXMNG - Fim do processamento
+10:31:31 CONSOLE
+10:31:31 CONSOLE  Procedimento terminou sem erros [Y/N]?  >y
+10:31:35 CONSOLE
+10:31:35 CONSOLE  A renomear ficheiros...
+10:31:35 CONSOLE   Renaming VALX:VLF.OLD         to VALX:VLF.TMP
+10:31:35 CONSOLE   Renaming VALX:VLF.FIL         to VALX:VLF.OLD
+10:31:35 CONSOLE   Renaming VALX:VLC.FIL         to VALX:VLF.FIL
+10:31:35 CONSOLE   Renaming VALX:VLF.TMP         to VALX:VLC.FIL
+10:31:35 CONSOLE
+                  J O G O S    D I S P O N I V E I S
+
+                  1 - TOTOBOLA NORMAL
+                  2 - JOKER
+                  3 - TOTOLOTO SABADO
+                  4 - TOTOLOTO QUARTA
+                  5 - CLASSICA
+                  6 - POPULAR
+                  7 - TOTOBOLA EXTRA 1
+
+                  E - Exit
+
+10:31:35 CONSOLE  Enter option:  >e
+10:31:38 CONSOLE
+10:31:38 CONSOLE  STOP0003  ****  OPERATOR ABORT
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> r soupwin
+10:32:17 CONSOLE
+10:32:17 CONSOLE  *********************************************************
+10:32:17 CONSOLE  *                        SOUPWIN                        *
+10:32:17 CONSOLE  *                  INTERFACE COM O SOUP                 *
+10:32:17 CONSOLE  *********************************************************
+10:32:17 CONSOLE  *                                                       *
+10:32:17 CONSOLE  *    * GERA¦¦O DO FICHEIRO DE PR¦MIOS ATRIBUIDOS *      *
+10:32:17 CONSOLE  *                                                       *
+10:32:17 CONSOLE  *            MUTUAS  (SOUP_PA_GNCCCAAAA.ASC)            *
+10:32:17 CONSOLE  *             GN=GAME/CCC=CONCURSO/AAAA=ANO             *
+10:32:17 CONSOLE  *                                                       *
+10:32:17 CONSOLE  *            LOTARIA  (SOUP_PA_GNEEAAAA.ASC)            *
+10:32:17 CONSOLE  *       GN=GAME(08 ou 09)/ EE=EXTRAC¦¦O /AAAA=ANO       *
+10:32:17 CONSOLE  *                                                       *
+10:32:17 CONSOLE  * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+10:32:17 CONSOLE  *                                                       *
+10:32:17 CONSOLE  *  * GERA¦¦O DO  RELATORIO DE PREMIOS DE NIVEL 2 E 3 *  *
+10:32:17 CONSOLE  *                                                       *
+10:32:17 CONSOLE  *       MUTUAS  (REL_PA23_GG_SSSAAAA_AAAAMMDD.REP)      *
+10:32:17 CONSOLE  *  GG=GAME / SSS=SORTEIO / AAAA=ANO / MM=MES / DD=DIA   *
+10:32:17 CONSOLE  *                                                       *
+10:32:17 CONSOLE  * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+10:32:17 CONSOLE  *                                                       *
+10:32:17 CONSOLE  *    * GERA¦¦O DO  RELATORIO DE PREMIOS DE NIVEL 3 *    *
+10:32:17 CONSOLE  *                                                       *
+10:32:17 CONSOLE  *       MUTUAS  (REL_PA3_GG_SSSAAAA_AAAAMMDD.REP)       *
+10:32:17 CONSOLE  *  GG=GAME / SSS=SORTEIO / AAAA=ANO / MM=MES / DD=DIA   *
+10:32:17 CONSOLE  *                                                       *
+10:32:17 CONSOLE  *********************************************************
+10:32:17 CONSOLE
+                  J O G O S    D I S P O N I V E I S
+
+                  1 - TOTOBOLA NORMAL
+                  2 - JOKER
+                  3 - TOTOLOTO SABADO
+                  4 - TOTOLOTO QUARTA
+                  5 - CLASSICA
+                  6 - POPULAR
+                  7 - TOTOBOLA EXTRA 1
+
+                  E - Exit
+
+10:32:17 CONSOLE  Enter option:  >4
+10:32:22 CONSOLE  DESEJA PROCESSAR QUAL CONCURSO (CCCAAAA)? >522021
+10:32:38 CONSOLE  522021
+10:32:38 CONSOLE  Confirma o concurso 0522021,  (Y/N) ?  >y
+10:32:40 CONSOLE
+10:32:40 CONSOLE  A obter o valor das shares do concurso 0522021
+10:32:40 CONSOLE  do TOTOLOTO QUARTA...
+10:32:40 CONSOLE   Divisao 1:    142857.14
+10:32:40 CONSOLE   Divisao 2:         0.04
+10:32:40 CONSOLE   Divisao 3:         0.00
+10:32:40 CONSOLE   Divisao 4:         0.00
+10:32:40 CONSOLE   Divisao 5:         0.00
+10:32:40 CONSOLE   Divisao 6:         0.90
+10:32:40 CONSOLE
+10:32:40 CONSOLE  SOUPWIN-Aguarde, ficheiro de interface em processamento
+10:32:40 CONSOLE
+10:32:41 CONSOLE  Total de registos processados:            10
+10:32:41 CONSOLE     UCSH:                                   3
+10:32:41 CONSOLE     PPAY:                                   7
+10:32:41 CONSOLE     CASH:                                   0
+10:32:41 CONSOLE     BANK:                                   0
+10:32:41 CONSOLE
+10:32:41 CONSOLE     Ficheiros gerados com SUCESSO:
+
+Directory GXPROJ:[TSK]
+
+SOUP_AM_PA_070522021.ASC;1
+                                    0/72                 1-JUL-2021 10:32:40.56
+REL_PA23_07_0522021_20210701.REP;1
+                                    0/72                 1-JUL-2021 10:32:40.56
+REL_PA3_07_0522021_20210701.REP;1
+                                    0/72                 1-JUL-2021 10:32:40.56
+
+Total of 3 files, 0/216 blocks.
+10:32:41 CONSOLE  ***********************************************************
+10:32:41 CONSOLE
+10:32:41 CONSOLE  ***********************************************************
+10:32:41 CONSOLE                         SOUPWIN ENDED
+10:32:41 CONSOLE  ***********************************************************
+10:32:41 CONSOLE
+
+                  J O G O S    D I S P O N I V E I S
+
+                  1 - TOTOBOLA NORMAL
+                  2 - JOKER
+                  3 - TOTOLOTO SABADO
+                  4 - TOTOLOTO QUARTA
+                  5 - CLASSICA
+                  6 - POPULAR
+                  7 - TOTOBOLA EXTRA 1
+
+                  E - Exit
+
+10:32:41 CONSOLE  Enter option:  >e
+10:32:44 CONSOLE  STOP0003  ****  OPERATOR ABORT
+PODEV1::SCML>
+PODEV1::SCML> r soupfm
+10:32:59 CONSOLE  Copyright 2013 SCML. All rights reserved.
+
+<<<<< SOUP File Management   V02 >>>>>
+
+10:32:59 CONSOLE  Data CDC presente      :         7366  (2021-06-30)
+10:32:59 CONSOLE  -Insira a data CDC para geracao dos ficheiros   >7366
+10:33:06 CONSOLE   Nova data CDC escolhida:         7366  (2021-06-30)
+10:33:06 CONSOLE  Ficheiro TMF por omissao : PRIM:MTMF01.FIL
+10:33:06 CONSOLE  -Insira o nome do ficheiro TMF (VOLN:FILNAME)   >
+10:33:10 CONSOLE  Ficheiro PRG por omissao : WORK:UPURGE.FIL
+10:33:10 CONSOLE  -Insira o nome do ficheiro PRG (VOLN:FILNAME)   >
+
+           Soup FM - Menu de opcoes de geracao de ficheiros
+
+                11 - SoupFM LN Premios Pagos
+                12 - SoupFM LN Premios Caducados
+                13 - SoupFM LN Premios Devolvidos
+                14 - SoupFM AM Premios Pagos
+                15 - SoupFM AM Premios Caducados
+                 A - Todos os ficheiros para AM
+                 L - Todos os ficheiros para LN
+                 T - Todos os ficheiros
+                 E - Sair
+
+10:33:11 CONSOLE  Indique qual a opcao escolhida                 >t
+
+10:33:15 CONSOLE  Ira ser gerado o ficheiro SoupFM LN Premios Pagos
+10:33:15 CONSOLE  Ira ser gerado o ficheiro SoupFM LN Premios Caducados
+10:33:15 CONSOLE  Ira ser gerado o ficheiro SoupFM LN Rel Premios Caduc.
+10:33:15 CONSOLE  Ira ser gerado o ficheiro SoupFM LN Premios Devolvidos
+10:33:15 CONSOLE  Ira ser gerado o ficheiro SoupFM AM Premios Pagos
+10:33:15 CONSOLE  Ira ser gerado o ficheiro SoupFM AM Premios Caducados
+10:33:15 CONSOLE  Ira ser gerado o ficheiro SoupFM AM Rel Premios Caduc.
+10:33:15 CONSOLE  Aberto ficheiro SOUP_LN_PP_20210630.ASC
+10:33:15 CONSOLE  Aberto ficheiro SOUP_LN_PC_20210630.ASC
+10:33:15 CONSOLE  Aberto ficheiro SOUP_LN_PD_20210630.ASC
+10:33:15 CONSOLE  Aberto ficheiro SOUP_AM_PP_20210630.ASC
+10:33:15 CONSOLE  Aberto o ficheiro VALX:VLF.FIL
+10:33:15 CONSOLE  Aberto ficheiro SOUP_AM_PC_20210630.ASC
+10:33:15 CONSOLE  Aberto ficheiro REL_AM_PC_20210630.REP
+10:33:15 CONSOLE  Aberto ficheiro REL_LN_PC_20210630.REP
+10:33:15 CONSOLE
+-----------------------------------------------------------------------
+ Relatorio de geracao de ficheiros
+-----------------------------------------------------------------------
+ Ficheiro de transaccoes lido          : PRIM:MTMF01.FIL
+ Nr. transaccoes lidas                 :          477
+ Ficheiro de validacoes lido           : WORK:UPURGE.FIL
+ Nr. validacoes lidas                  :            0
+ Nr. ficheiros validacao passiva lidos :            0
+ Nr. validacoes passiva lidas          :            0
+-----------------------------------------------------------------------
+ Nome Ficheiro                    Nr. Linhas     Nr. Trans. Proc.
+-----------------------------------------------------------------------
+ SoupFM LN Premios Pagos                   2                 0
+     SOUP_LN_PP_20210630.ASC
+
+ SoupFM LN Premios Caducados               2                 0
+     SOUP_LN_PC_20210630.ASC
+
+ SoupFM LN Premios Devolvidos              2                 0
+     SOUP_LN_PD_20210630.ASC
+
+ SoupFM AM Premios Pagos                   2                 0
+     SOUP_AM_PP_20210630.ASC
+
+ SoupFM AM Premios Caducados               2                 0
+     SOUP_AM_PC_20210630.ASC
+
+ SoupFM AM Rel Premios Caduc.              2                 0
+     REL_AM_PC_20210630.REP
+
+ SoupFM LN Rel Premios Caduc.              2                 0
+     REL_LN_PC_20210630.REP
+
+
+           Soup FM - Menu de opcoes de geracao de ficheiros
+
+                11 - SoupFM LN Premios Pagos
+                12 - SoupFM LN Premios Caducados
+                13 - SoupFM LN Premios Devolvidos
+                14 - SoupFM AM Premios Pagos
+                15 - SoupFM AM Premios Caducados
+                 A - Todos os ficheiros para AM
+                 L - Todos os ficheiros para LN
+                 T - Todos os ficheiros
+                 E - Sair
+
+10:33:15 CONSOLE  Indique qual a opcao escolhida                 >e
+
+10:33:18 CONSOLE  STOP0003  ****  OPERATOR ABORT
+PODEV1::SCML>
+PODEV1::SCML> r qliktran
+10:33:24 CONSOLE
+10:33:24 CONSOLE  Copyright 2016 SCML. All rights reserved.
+10:33:24 CONSOLE
+10:33:24 CONSOLE  Running QLIKTRAN On Line Transactions Loader
+10:33:24 CONSOLE
+10:33:24 CONSOLE
+10:33:24 CONSOLE  Generated Transaction QLIK File: GXTSK:QLIK_20210630.CSV
+10:33:24 CONSOLE
+10:33:24 CONSOLE  STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML> r millrecon
+Opening transaction file with name MILLENNIUM_7366.ASC
+File opened, writing HEADER
+Opening transaction master file with name PRIM:MTMF01.FIL
+Processing Transactions from TMF...
+End of File
+Processing finished, writing TAIL
+Closing transaction file
+Program Ended
+PODEV1::SCML>
+PODEV1::SCML>
 PODEV1::SCML> r tmir
 11:12:14 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
 
@@ -1309,6 +1625,7 @@ PODEV1::SCML> r tmir
 11:12:42 CONSOLE  Enter terminal number (A=all)          >a
 11:12:44 CONSOLE  Exclude EM transactions (Y/N)          >y
 11:12:47 CONSOLE  Exclude IGS transactions (Y/N)         >y
+10:38:30 CONSOLE  Enter transaction channel (A=all/O=Olimpo/M=Other)   >a
 11:12:50 CONSOLE  Enter starting serial number (A=all/E=EuroMil/P=Placard)   >a
 11:12:57 CONSOLE  Enter starting time (A=all)            >a
 11:12:59 CONSOLE  Enter report option (Detail,Summary)   >d
@@ -2099,7 +2416,6 @@ OpenVMS V8.4  on node PODEV1   11-FEB-2021 11:16:36.38   Uptime  363 19:04:17
 00124F8B SCMLGUIWORK3    HIB      8      103   0 00:00:00.48     19604  19890
 00120B8D SCMLMONGOLS     HIB      7       25   0 00:00:00.45     17049  17145  S
 PODEV1::SCML>
-PODEV1::SCML> stop scmlpaspro
 11:16:40 GUILINK  GUILDOPCONN: Error completing bind socket       148
 
 PODEV1::SCML>
@@ -2130,84 +2446,141 @@ PODEV1::SCML>
 11:17:30 X2XMGR    open SAP                status            2 params        7       0      20
 PODEV1::SCML>
 PODEV1::SCML>
-              11:17:40 GUILINK  GUILDOPCONN: Error completing bind socket       148
-			  
-			  
-------------------------------------Start COMOLM--------------------------------------------------------
-Using username "console".
-Pre-authentication banner message from server:
-|
-| @SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
-End of banner message from server
-console@10.100.82.101's password:
+PODEV1::SCML> ewatch stop
+11:12:38 GUILINK  GUILDOPCONN: Error completing bind socket       148
 
-@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
-    Last interactive login on Thursday, 11-FEB-2021 10:44:08.58
-    Last non-interactive login on Tuesday, 9-FEB-2021 19:34:22.68
-Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
-Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
-Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
-%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
-Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
-                      List of Current Projects on PODEV1
-
-    Project Location   Product    Description
-
-    GOHOME                        GO to Home directory
-
-    GODMIL  DKD10:      AGOLS     DESV Bible
-    GOPROD  DKD11:      AGOLS     DESV Production
-    GOHIS1  DKD10:      AGOLS     DESV Historical 1
-    GOHIS2  DKD11:      AGOLS     DESV Historical 2
-    GOPORT  DKD0:       AGOLS     TEST Production
-    GOSCML  DKD5:       AGOLS     TEST SCML
-    GODPLX  DKD12:      AGOLS     TEST Duplex
-    GOTEST  DKD12:      AGOLS     TEST Integration
-
-Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
-
-%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
-Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
-%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
-%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
-
-APPLICATION :      ()
-
-DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
-
-GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
-Executing GXCOM:SETLOGDISKS.COM
-PODEV1::PORT> goscml
-%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
-%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
-%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
-%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
-%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
-%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
-
-APPLICATION :      ()
-
-DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
-
-GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
-Executing GXCOM:SETLOGDISKS.COM
-%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
-%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
+Stopping EWATCH process ewatch_FTA1526:
 PODEV1::SCML>
 PODEV1::SCML>
-PODEV1::SCML> set def [.igs]
-PODEV1::SCML> detrun comolm
-PODEV1::SCML> sh process scmlcomolm
-
-11-FEB-2021 11:22:34.50   User: CONSOLE          Process ID:   00113390
-                          Node: PODEV1           Process name: "SCMLCOMOLM"
-
-Terminal:
-User Identifier:    [GOSCML]
-Base priority:      6
-Default file spec:  Not available
-Number of Kthreads: 1 (System-wide limit: 2)
-
-Devices allocated:  BG11128:
 PODEV1::SCML>
-			  
+PODEV1::SCML> vision
+11:14:55 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+ERROR OPENING FILE LEVEL.FIL WILL USE LEVEL DEFAULTS
+
+11:14:58 CONSOLE  Please enter password  >
+***** Vision Commands *****              Th 01.07.2021  11:15:18    Primary-B
+PRInt                                   MENU1
+COPy                                    MENU2
+STOp                                    MENU3
+REF                                     MENU4
+***** Snapshots available in menu 1 *****
+ACTagt  <number>                        HELp    <number>
+AGTsnp  < date ><number>                INVsnp  <number>
+HOTsnp  <number>                        TSOdsnp <index> <event#>
+LOTto   <event#>                        JOKer   <index> <draw #>
+WITsnp  <index> <event#>                SELect  <index> <event#>
+SPTsnp  <index> <event#>                GAMsnp
+CLOse   <number>                        SLIsnp  <index> <event#>
+DATes   <event#>                        SCRsnp  <index> <event#>
+SCLosnp <index> <event#>                RSCsnp  <index> <event#>
+RWTsnp  <index> <event#>                NBRsnp  <index> <draw #>
+TWDsnp  <index> <number>                SPName  <index> <draw #>
+TSPsnp  <index> <number>                TATsnp  < date ><number>
+ATTsnp  <number>                        STGstat
+                                        STLstat <index>
+
+For help with snapshots, enter HELP MENU, HELP [snpname] or HELP num
+Enter vision command
+sys
+**** System control snapshot ****        Th 01.07.2021  11:17:38    Primary-B
+SYSTEM   >   cmdflu      0   *LOGBlo    125   *TAPesw      0   *DISKsw      0
+             cmdfrz      0   *CHKtim   9000   *CHKPnt          *STAPesw
+            *DPTtim      1   *MAXTra    500   *SYSSts      1   *ROMrev   F1F3
+            *DESFlg      0   *CANtim     20   *WRNper      0   *TVNupd      0
+            *MAXMes     50   *MESlog      5   *ODSupd    300   *JAKupd      0
+            *FPTTIm    100   *CANDRW      0   *PRETTIM    45   *GVTrev   0000
+            *MAXSpt  20000   *PCANTIM    20   *PMAXRTM   300   *PMAXCAN    10
+            *PMAXLOP  1000    PMAXSEK     1    PASTHRO   500    PDAYRSL     1
+SUPRESS  >  *SUPSPe      0   *SUPFIl      0   *SUPSUm      0   *SUPPUd      0
+            *SUPSYn      0   *SUPCOm      0   *SUPREM      0   *SUPFPt      1
+GLOBAL   >  *SUPWAg      0   *SUPCAn      0   *SUPVAl      0   *SUPRET      1
+            *SUPINs      0
+
+
+PERFORM  >   avgtim     15    mintim     11    maxtim     20
+--------------------- S Y S T E M   P E R F O R M A N C E ---------------------
+     Volume                  Buffer utilization                     Sales
+Serial number -          15 Available     - 2048       Wagered  -          0.00
+Transaction  #-           8 Input/dispat  -    0/   0  Canceled -          0.00
+Volume        -           2 Game_out/soft -    0/   0  Cashed   -          0.00
+% of TMF used -       0.00% X2X_Output    -         0  Returns  -          0.00
+Enter change, !game number, or vision command
+supwag 0
+**** System control snapshot ****        Th 01.07.2021  11:17:38    Primary-B
+SYSTEM   >   cmdflu      0   *LOGBlo    125   *TAPesw      0   *DISKsw      0
+             cmdfrz      0   *CHKtim   9000   *CHKPnt          *STAPesw
+            *DPTtim      1   *MAXTra    500   *SYSSts      1   *ROMrev   F1F3
+            *DESFlg      0   *CANtim     20   *WRNper      0   *TVNupd      0
+            *MAXMes     50   *MESlog      5   *ODSupd    300   *JAKupd      0
+            *FPTTIm    100   *CANDRW      0   *PRETTIM    45   *GVTrev   0000
+            *MAXSpt  20000   *PCANTIM    20   *PMAXRTM   300   *PMAXCAN    10
+            *PMAXLOP  1000    PMAXSEK     1    PASTHRO   500    PDAYRSL     1
+SUPRESS  >  *SUPSPe      0   *SUPFIl      0   *SUPSUm      0   *SUPPUd      0
+            *SUPSYn      0   *SUPCOm      0   *SUPREM      0   *SUPFPt      1
+GLOBAL   >  *SUPWAg      0   *SUPCAn      0   *SUPVAl      0   *SUPRET      1
+            *SUPINs      0
+
+
+PERFORM  >   avgtim     15    mintim     11    maxtim     20
+--------------------- S Y S T E M   P E R F O R M A N C E ---------------------
+     Volume                  Buffer utilization                     Sales
+Serial number -          15 Available     - 2048       Wagered  -          0.00
+Transaction  #-           8 Input/dispat  -    0/   0  Canceled -          0.00
+Volume        -           2 Game_out/soft -    0/   0  Cashed   -          0.00
+% of TMF used -       0.00% X2X_Output    -         0  Returns  -          0.00
+Enter change, !game number, or vision command
+supcan 0
+**** System control snapshot ****        Th 01.07.2021  11:17:38    Primary-B
+SYSTEM   >   cmdflu      0   *LOGBlo    125   *TAPesw      0   *DISKsw      0
+             cmdfrz      0   *CHKtim   9000   *CHKPnt          *STAPesw
+            *DPTtim      1   *MAXTra    500   *SYSSts      1   *ROMrev   F1F3
+            *DESFlg      0   *CANtim     20   *WRNper      0   *TVNupd      0
+            *MAXMes     50   *MESlog      5   *ODSupd    300   *JAKupd      0
+            *FPTTIm    100   *CANDRW      0   *PRETTIM    45   *GVTrev   0000
+            *MAXSpt  20000   *PCANTIM    20   *PMAXRTM   300   *PMAXCAN    10
+            *PMAXLOP  1000    PMAXSEK     1    PASTHRO   500    PDAYRSL     1
+SUPRESS  >  *SUPSPe      0   *SUPFIl      0   *SUPSUm      0   *SUPPUd      0
+            *SUPSYn      0   *SUPCOm      0   *SUPREM      0   *SUPFPt      1
+GLOBAL   >  *SUPWAg      0   *SUPCAn      0   *SUPVAl      0   *SUPRET      1
+            *SUPINs      0
+
+
+PERFORM  >   avgtim     15    mintim     11    maxtim     20
+--------------------- S Y S T E M   P E R F O R M A N C E ---------------------
+     Volume                  Buffer utilization                     Sales
+Serial number -          15 Available     - 2048       Wagered  -          0.00
+Transaction  #-           8 Input/dispat  -    0/   0  Canceled -          0.00
+Volume        -           2 Game_out/soft -    0/   0  Cashed   -          0.00
+% of TMF used -       0.00% X2X_Output    -         0  Returns  -          0.00
+Enter change, !game number, or vision command
+supval 0
+ **** System control snapshot ****        Th 01.07.2021  11:17:38    Primary-B
+SYSTEM   >   cmdflu      0   *LOGBlo    125   *TAPesw      0   *DISKsw      0
+             cmdfrz      0   *CHKtim   9000   *CHKPnt          *STAPesw
+            *DPTtim      1   *MAXTra    500   *SYSSts      1   *ROMrev   F1F3
+            *DESFlg      0   *CANtim     20   *WRNper      0   *TVNupd      0
+            *MAXMes     50   *MESlog      5   *ODSupd    300   *JAKupd      0
+            *FPTTIm    100   *CANDRW      0   *PRETTIM    45   *GVTrev   0000
+            *MAXSpt  20000   *PCANTIM    20   *PMAXRTM   300   *PMAXCAN    10
+            *PMAXLOP  1000    PMAXSEK     1    PASTHRO   500    PDAYRSL     1
+SUPRESS  >  *SUPSPe      0   *SUPFIl      0   *SUPSUm      0   *SUPPUd      0
+            *SUPSYn      0   *SUPCOm      0   *SUPREM      0   *SUPFPt      1
+GLOBAL   >  *SUPWAg      0   *SUPCAn      0   *SUPVAl      0   *SUPRET      1
+            *SUPINs      0
+
+
+PERFORM  >   avgtim     15    mintim     11    maxtim     20
+--------------------- S Y S T E M   P E R F O R M A N C E ---------------------
+     Volume                  Buffer utilization                     Sales
+Serial number -          15 Available     - 2048       Wagered  -          0.00
+Transaction  #-           8 Input/dispat  -    0/   0  Canceled -          0.00
+Volume        -           2 Game_out/soft -    0/   0  Cashed   -          0.00
+% of TMF used -       0.00% X2X_Output    -         0  Returns  -          0.00
+Enter change, !game number, or vision command
+supins 0
+ Interrupt
+
+PODEV1::SCML>
+ Interrupt
+
+PODEV1::SCML>
