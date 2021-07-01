@@ -34,6 +34,13 @@
 
       CONOLM = .FALSE.
       FIRSTRUN = .FALSE.
+      OLMS_ATTACHSTS = 0     !NOT ATTACHED TO MESSAGEQ SERVER
+      OLMS_DETACHFLG = 0     !A DETACHED FROM MESSAGEQ SERVER HAS NOT OCCURRED
+      OLMS_TOTOKYPUT = 0
+      OLMS_TOTOKYGET = 0
+      OLMS_TOTERRPUT = 0
+      OLMS_TOTERRGET = 0
+
 
       CALL CLR_OLMS_ATTACHDATTIM                                              
 C      CALL CLR_OLMS_DETACHDATTIM                                                 
@@ -101,7 +108,8 @@ C                       GET DATE AND TIME OF DETACH
 
 C          GET DATE AND TIME OF ATTACHMENT
            CALL GET_OLMS_ATTACHDATTIM 
-           OLMS_ATTACHSTS = 1            
+           OLMS_ATTACHSTS = 1   
+           OLMS_DETACHFLG = 0         
 
             CALL BUILD_MSG(MESS,2, TEOLM) 
             CALL BUILD_MSG(MESS,3, 1)
@@ -189,6 +197,7 @@ C      ENDIF
             GOTO 570  
       ENDIF   
       IF ((ST .NE. PAMS__SUCCESS) .AND. (ST .NE. PAMS__NOMOREMSG)) THEN
+            OLMS_TOTERRGET = OLMS_TOTERRGET + 1
             CALL MESSQ_EXIT(%REF(ST)) 
             IF (ST .EQ. PAMS__SUCCESS) THEN
                   CONOLM = .FALSE.
@@ -205,8 +214,10 @@ C      ENDIF
     
       IF(ST .EQ. PAMS__NOMOREMSG) THEN
             WTFORMESS = .TRUE.
+C            IF(OLMS_TOTNOMGET .LE. 99) OLMS_TOTNOMGET=OLMS_TOTNOMGET+1
             GOTO 570 
       ELSE IF(ST .EQ. PAMS__SUCCESS) THEN   
+            OLMS_TOTOKYGET = OLMS_TOTOKYGET + 1
             GOTO 570 
       ENDIF
 
@@ -231,6 +242,7 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             INCLUDE 'INCLIB:APUCOM.DEF'
             INCLUDE 'INCLIB:EURCON.DEF'
             INCLUDE 'INCLIB:DATBUF.DEF'
+            INCLUDE 'INCLIB:OLMCOM.DEF'            
 
             INTEGER*4  values(8)
             INTEGER*4  MESS(EDLEN)
@@ -476,7 +488,8 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
             INCLUDE 'INCLIB:QUECOM.DEF'
             INCLUDE 'INCLIB:APUCOM.DEF'
             INCLUDE 'INCLIB:IGSCON.DEF'
-            INCLUDE 'INCLIB:IGSDEBUG.DEF'    
+            INCLUDE 'INCLIB:IGSDEBUG.DEF'   
+            INCLUDE 'INCLIB:OLMCOM.DEF' 
       
             INTEGER*4 MESS(EDLEN)
             INTEGER*4 I4TEMP
@@ -562,6 +575,7 @@ C            ENDDO
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC           
             CALL MESSQ_PUT(%REF(STATUS)) 
             IF (STATUS .NE. PAMS__SUCCESS) THEN
+                  OLMS_TOTERRPUT = OLMS_TOTERRPUT + 1
                   CALL OPSTXT('??????????????  ERROR in sending to MessageQ   ????????????????????????')
 C ERRLOG   01/12/2021   ERRLOG  INVALID MESSAGE TYPE>  9 NUMBER>   4       --- TEOLM = 9           
                   CALL BUILD_MSG(MESS,1, OLM) 
@@ -589,10 +603,13 @@ C                  ENDDO
 
                   IF (STATUS .NE. PAMS__TIMEOUT) THEN 
                         CALL OPSTXT('WILL CONNECT TO FAILOVER HOST')
+                  ELSE
+                        OLMS_TOTTMOPUT = OLMS_TOTTMOPUT + 1      
                   ENDIF
 
             ENDIF
 
+            OLMS_TOTOKYPUT = OLMS_TOTOKYPUT + 1
             ST = STATUS
             RETURN
       END

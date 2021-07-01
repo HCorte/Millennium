@@ -76,10 +76,10 @@ C
 C
         EQUIVALENCE(PASPAS,PASSENT)
 C
-        DATA   K/'COMOLm  ','OLMCOn  ','Input  ','Output  ',
-     *           'WAGPro  ','CANPro  ','VALPro ',
-     *           'INSPro  ','CRSPro  ','INSOut ',
-     *           'OLMTMo  ','FINTMo  '/
+        DATA   K/'COMOLM  ','OLMCOn  ','INPUT  ','OUTPUT  ',
+     *           'WAGPRO  ','CANPRO  ','VALPRO ',
+     *           'INSPRO  ','CRSPRO  ','INSOUT ',
+     *           'OLMTMO  ','FINTMO  '/
         DATA DEFTPASS/'SUPORTE'/
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -190,8 +190,8 @@ C---- System
        WRITE(CLIN5,910),OLMLST(2),INPLST(2),DECLST(2)
        WRITE(CLIN6,913),OLMLST(3),INPLST(3),DECLST(2)
 C---- Connection & Mes Flux
-       WRITE(CLIN8,912) K(2),P(OLMCONF)
-       WRITE(CLIN9,914) k(5),WAGLST(1),k(6),CANLST(1),k(7),VALLST(1)
+C       WRITE(CLIN8,912) !K(2),P(OLMCONF)
+       WRITE(CLIN9,912) k(5),WAGLST(1),k(6),CANLST(1),k(7),VALLST(1)
        WRITE(CLIN10,914) k(8),INILST(1),k(9),CRSLST(1),k(10),INOLST(1)
 
        WRITE(CLIN11,900)
@@ -218,6 +218,17 @@ C----- MessageQ attach and detach
        ELSE                                                                  !DETACH HAS NOT BEEN DONE
         WRITE(CLIN15,9105) K(12)
        ENDIF
+
+       WRITE(CLIN17,950)
+       WRITE(CLIN18,9502) OLMS_TOTOKYPUT,                                      !TOTAL # OF MESSAGES SENT TO OLIMPO SYSTEM
+     *                     OLMS_TOTOKYGET                                      !TOTAL # OF MESSAGES RECEIVED FROM OLIMPO SYSTEM
+
+       WRITE(CLIN19,9503) OLMS_TOTERRPUT,                                      !TOTAL # OF ERRORS WHILE SENDING MESSAGES TO OLIMPO SYSTEM
+     *                     OLMS_TOTERRGET                                      !TOTAL # OF ERRORS WHILE GETTING MESSAGES FROM OLIMPO SYSTEM
+
+C       WRITE(CLIN20,9504) OLMS_TOTNOMGET                                         !TOTAL # OF TIMES THERE IS NO MORE MESSAGES TO READ FROM MESSAGEQ
+
+  
   
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -225,26 +236,32 @@ C----- FORMAT STATEMENTS
 C
 900     FORMAT(80(' '))
 901     FORMAT('**** OLM control snapshot ****')
-903     FORMAT('QUEUES   >  ',A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X)
-910     FORMAT('BUFF 1   >  ',2X,I4.0,5X,I4.0,5X,I4.0,5X)
-913     FORMAT('BUFF 2   >  ',2X,I4.0,5X,I4.0,5X,I4.0,5X)
+903     FORMAT('QUEUES  >  ',A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X)
+910     FORMAT('BUFF 1  >  ',2X,I4.0,5X,I4.0,5X,I4.0,5X)
+913     FORMAT('BUFF 2  >  ',2X,I4.0,5X,I4.0,5X,I4.0,5X)
 C911     FORMAT('            ',1('*',A7,I6,3X))
-912     FORMAT('OLM      >   ',1('*',A7,I6,3X))     
-914     FORMAT('             ',3('*',A7,I6,3X))
+C912     FORMAT('OLM      >   ',1('*',A7,I6,3X))
+912     FORMAT('OLM     >  ',3(A7,I6,3X))     
+914     FORMAT('           ',3(A7,I6,3X))
 
-919     FORMAT('         >  ',1('*',A7,I6,3X)
-     *          1X,'COMOLM Attached?',2X,'Yes')                                 !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
-9101    FORMAT('            ',1('*',A7)
-     *          5X,'Time Attached',5X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)            !TIME COMOLM ATTACHED TO MESSAGEQ SERVER IN OLIMPO SYSTEM
-9103    FORMAT('            ',1('*',A7)
-     *          5X,'Time Attached',5X,'??.??.???? ??:??:??')                    !COMOLM IS NOT ATTACHED
-9104    FORMAT('            ',1('*',A7),
-     *          5X,'Time Last Detach',2X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)         !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
-9105    FORMAT('            ',1('*',A7),
-     *          5X,'Time Last Detach',2X,'??.??.???? ??:??:??')                 !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
-9102    FORMAT('         >  ',1('*',A7,I6,3X)
-     *          1X,'COMOLM Attached?',2X,'No')                                  !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
-
+919     FORMAT('        > ',1('*',A7,I6,3X)
+     *          ,'COMOLM Attached?',2X,'Yes')                                 !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
+9101    FORMAT('          ',1X,1(A7)
+     *          9X,'Time Attached',5X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)            !TIME COMOLM ATTACHED TO MESSAGEQ SERVER IN OLIMPO SYSTEM
+9103    FORMAT('          ',1X,1(A7)
+     *          9X,'Time Attached',5X,'??.??.???? ??:??:??')                    !COMOLM IS NOT ATTACHED
+9104    FORMAT('          ',1X,1(A7),
+     *          9X,'Time Last Detach',2X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)         !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
+9105    FORMAT('          ',1X,1(A7),
+     *          9X,'Time Last Detach',2X,'??.??.???? ??:??:??')                 !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
+9102    FORMAT('        > ',1('*',A7,I6,3X)
+     *          ,'COMOLM Attached?',2X,'No')                                  !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
+950     FORMAT(19('-'),2X,'OLM   S Y S   S T A T I S T I C S',2X,19('-'))
+9502    FORMAT('Msg  PutQ/GetQ',4X,I0,'/',I0,                                   !TOTAL # OF MESSAGES SENT TO/RECEIVED FROM EUROMILLIONS SYSTEM
+     *         T37)                                      !TOTAL # OF WAGERS TIMED OUT/ALREADY TIMED OUT
+9503    FORMAT('Err  PutQ/GetQ',4X,I0,'/',I0,                                   !TOTAL # OF ERRORS SENDING TO/RECEIVING FROM EUROMILLIONS SYSTEM
+     *         T37)                                     !TOTAL # OF CANCELS TIMED OUT/ALREADY TIMED OUT
+C9504    FORMAT('No More Msg  GetQ',4X,I0)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C904     FORMAT(1X,'<',I4.0,'>')
 905     FORMAT(2X,I4.0)        
