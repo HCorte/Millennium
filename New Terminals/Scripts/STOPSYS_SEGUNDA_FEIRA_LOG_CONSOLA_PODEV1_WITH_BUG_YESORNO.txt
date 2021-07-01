@@ -921,20 +921,6 @@ OpenVMS V8.4  on node PODEV1   16-FEB-2021 12:44:03.72   Uptime  368 20:31:44
 000ED6A3 SCMLELOG        LEF      6  4831624   0 00:01:42.11       300    337
 PODEV1::SCML>
 PODEV1::SCML> r tmir
-12:44:10 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
-
-<<<<< TMIR Transaction Master File Inquiry   V01 >>>>>
-
-12:44:10 CONSOLE  Enter file device (Disk, Tape)         >d
-12:44:11 CONSOLE  Enter file type (Tmf, Carryover, Draw) >t
-12:44:14 CONSOLE  Enter file name (VOLN:FILNAME)         >Henrique-15-02-2021
-12:44:23 CONSOLE  Enter report file name:                >
- Interrupt
-
-PODEV1::SCML>
- Interrupt
-
-PODEV1::SCML> r tmir
 12:44:35 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
 
 <<<<< TMIR Transaction Master File Inquiry   V01 >>>>>
