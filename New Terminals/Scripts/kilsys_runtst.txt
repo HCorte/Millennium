@@ -57,10 +57,7 @@ GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
 Executing GXCOM:SETLOGDISKS.COM
 %DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
 %DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
-PODEV1::SCML> X-Authentication:{{X-X-Origin-Id:{{X-Origin-X-Origin-Request-Id:{{X-Origin-Request-X-Integratio
-n-Id:{{X-Integration-X-Channel-Id:Content-Type:application/json
- Interrupt
-
+PODEV1::SCML>
 PODEV1::SCML> kilsys
 
 ***       You have attempted to run KILSYS          ***
