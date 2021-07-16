@@ -1,5 +1,6 @@
 C NAMCMD.DEF
 C 
+C V41 14-JUL-2021 SCML New Terminals Project OLMCONF command name added
 C V40 31-MAR-2016 SCML M16 PROJECT: added new euromillions command names:
 C                      EUMILF, EUSPWAG, EUSPCAN, EUSPVAL, EUTIMOUT, EUSPGRR, 
 C                      EUSPBIR, EUSPICA, EUSPFIR, EUSPGWAG, EUSPGGRR and EUSPGICA
@@ -122,11 +123,11 @@ C
      *              '        ','        ','SUPSPE  ','SUPCOM  ',
      *              'SUPFIL  ','SUPSUM  ','SUPRET  ','SUPPUD  ',
      *              'SUPSYN  ','SUPSWI  ','        ','        '/
-        DATA (NAMPAR(K),K=57,NUMPAR)/
-     *              '        ',
+        DATA (NAMPAR(K),K=57,NUMPAR)/ 
+     *              '        ', !58
      *              'SUPGRE  ','        ','SUPGWA  ','        ',
-     *              'SUPGCA  ','        ','SUPGVA  ','        ',
-     *              235*'        ',
+     *              'SUPGCA  ','        ','SUPGVA  ','        ',!66
+     *              235*'        ',!301
      *              '        ','CHSDAY  ','NXTTRA  ','SYSSTS  ',
      *              'ROMREV  ','CANTIM  ','DESFLG  ','ACTTIM  ',
      *              'POOLACT ','COMSER  ','POLSER  ','ODSUPD  ',
@@ -139,8 +140,15 @@ C
      *              'TSPPER  ','TSLIAB  ','JAKUPD  ','TXTBRO  ',
      *              'TVNUPD  ','TSLWRN  ','TSTLIM  ','TSLMAX  ',
      *              'CANDRW  ','REDDEF  ','PCANTIM ','PMAXCAN ',
-     *              'PMAXRTM ','PMAXLOP ','PMAXSEK ','PASTHRO ',
-     *              'PSUPRSL','        ','        ','        ',
+     *              'PMAXRTM ','PMAXLOP ','PMAXSEK ','PASTHRO ',    
+C----+---+-------------+------------------------------------------------
+C V41|BEG| TERMINALS PROJECT | ADDED NEW OLIMPO COMMAND NAME
+C----+---+-------------+------------------------------------------------  
+C     *              'PSUPRSL','        ','         ','        ',   
+     *              'PSUPRSL','        ','OLMCONF  ','        ',
+C----+---+-------------+------------------------------------------------
+C V41|BEG| TERMINALS PROJECT | ADDED NEW OLIMPO COMMAND NAME
+C----+---+-------------+------------------------------------------------         
      *              '        ','        ','        ','        ',
      *              'DSPBDET ','TSWMAX  ','TVTIME  ','TSMXLI  ',
      *              'TSMXODD ','REM_LOG ','        ','        ',
@@ -159,11 +167,11 @@ C----+---+-------------+------------------------------------------------
      *              42*'        ',
      *              'EUMILF  ','EUSPWAG ','EUSPCAN ','EUSPVAL ',
      *              'EUTIMOUT','        ','        ','        ',
-     *              'EUSPGRR ','EUSPBIR ','        ',
+     *              'EUSPGRR ','EUSPBIR ','        ',!477
 C----+---+-------------+------------------------------------------------
 C V40|END| M16 PROJECT | ADDED NEW EUROMILLIONS COMMAND NAMES
 C----+---+-------------+------------------------------------------------
-C
+C                   
      *              'IGSCONF ','IGSPPLA ','IGSPWAG ','IGSPCAN ',
      *              'IGSPVAL ','IGSTOUT ','IGSPREP ','IGSPFIN ',
      *              'IGSPRNT ','IGSPGWAG','IGSPGCAN','IGSPGVAL',
