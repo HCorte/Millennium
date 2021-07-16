@@ -55,7 +55,7 @@ C
 C Get command number group and number
 C
 	CNUMBER=0
-	CNUMBER =  ((CBUF(3) * 1000) + CBUF(1))
+	CNUMBER =  ((CBUF(3) * 1000) + CBUF(1)) !1355
 C
 	DO 10 I=1,168
 	IF(CMDS(I,PASS).EQ.CNUMBER) GOTO 20
