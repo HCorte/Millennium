@@ -1,0 +1,2 @@
+$ INQUIRE/NOPUNCTUATION data1 "teste de input"
+$ WRITE SYS$OUTPUT "(''data1') INSERIDO"
