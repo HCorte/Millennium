@@ -66,19 +66,18 @@ C      CALL CLR_OLMS_DETACHDATTIM
             OLMS_DETACHFLG = 1              !DETACHED FROM MESSAGEQ SERVER              
             CALL GSTOP(GEXIT_SUCCESS) 
       ENDIF
-C      CALL OPSTXT(' not DSCLOS')
-C      IF (P(SYSTYP) .NE. LIVSYS) THEN
-C            CALL XWAIT(5, 2, ST)   
-C            FIRSTRUN = .TRUE.
-C            GOTO 10
-C      ENDIF
-C      CALL OPSTXT(' equal to LIVSYS')
-C      IF(DAYSTS .EQ. DSSUSP) THEN 
-C            CALL HOLD(0,STATUS)
-C            IF(DAYSTS .EQ. DSOPEN) GOTO 10 
-C            GOTO 10
-C      ENDIF
-C      CALL OPSTXT(' not DSSUSP')
+
+      IF (P(SYSTYP) .NE. LIVSYS) THEN
+            CALL XWAIT(5, 2, ST)   
+            FIRSTRUN = .TRUE.
+            GOTO 10
+      ENDIF
+
+      IF(DAYSTS .EQ. DSSUSP) THEN 
+            CALL HOLD(0,STATUS)
+            IF(DAYSTS .EQ. DSOPEN) GOTO 10 
+            GOTO 10
+      ENDIF
 
 543     CONTINUE
         IF (P(OLMCONF) .EQ. 0) THEN 
