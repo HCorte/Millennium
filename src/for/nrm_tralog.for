@@ -1269,11 +1269,15 @@ C
              I1TEMP(1)  = TRABUF(TWSYSN)
              I1TEMP(2)  = TRABUF(TWVSTS)
 C----+------------------------------------------------------------------
-C V60| New Terminals Project - Olimpo
+C V60| New Terminals Project - Olimpo               
+C  "transactionSerial": "210720-06-8335651551-095", Wager
+C  "transactionSerial": "210720-99-9099211396-820", Cancellation
 C----+------------------------------------------------------------------ 
              IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
 C               can insert in the most higher bit since the higher nible used to save const 1 and previously max 5 that is 0101               
                I1TEMP(3)  = TRABUF(TWDUR) + '10'X 
+             ELSE IF(TRABUF(TCOLMCOMF_TLTO) .EQ. 1) THEN
+               I1TEMP(3)  = TRABUF(TWDUR) + '20'X
              ELSE
                I1TEMP(3)  = TRABUF(TWDUR)
              ENDIF
@@ -1308,7 +1312,7 @@ C
 C
              I1TEMP(1)  = TRABUF(TWSRW)
              IF (TRABUF(TGAMTYP).EQ.TLTO) THEN                      !V52...
-               I1TEMP(2)  = IAND(TRABUF(TWNBET),'0F'X) + ISHFT(TRABUF(TWLUCK),4)
+               I1TEMP(2)  = IAND(TRABUF(TWNBET),'0F'X) + ISHFT(TRABUF(TWLUCK),4) 10000
              ELSE
                I1TEMP(2)  = IAND(TRABUF(TWNBET),'0F'X) + ISHFT(TRABUF(TWSPFRG),4)
              ENDIF                                                  !...V52
@@ -1353,8 +1357,8 @@ C                                           !TO KICKER STORAGE.
 C         
 C----+------------------------------------------------------------------
 C V60| New Terminals Project - Olimpo 
-C nota: confirmar se n√£o comessar no LOGBUF 19 
-C pois TWCEBM no TSPT(SPORTS) est√° ocupar a posi√ß√£o 18 ....
+C nota: confirmar se n„o comessar no LOGBUF 19 
+C pois TWCEBM no TSPT(SPORTS) est· ocupar a posiÁ„o 18 ....
 C----+------------------------------------------------------------------       
             IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
                LOGBUF(17) = TRABUF(TWCOLMSERL_TLTO)
