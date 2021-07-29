@@ -1,0 +1,467 @@
+Using username "console".
+Pre-authentication banner message from server:
+|
+| @SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+End of banner message from server
+console@10.100.82.101's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Thursday, 24-JUN-2021 09:32:37.56
+    Last non-interactive login on Wednesday, 23-JUN-2021 17:41:54.16
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+PODEV1::PORT> goscml
+%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
+%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
+%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
+PODEV1::SCML>
+PODEV1::SCML> r results
+09:44:18 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+
+
+Game results entry
+
+ 1 - Lotto
+ 2 - Sports
+ 3 - Numbers
+ 4 - Joker
+ 5 - Bingo
+ 6 - Wintip
+ 7 - Todays C
+ 8 - Todays T
+ 9 - Super D
+10 - Super T
+11 - Langen
+12 - Score
+13 - Super S
+14 - Instant
+15 - Results
+16 - Passive
+17 - EuroMil
+18 - Oddset
+19 - Raffle
+20 -
+21 -
+
+09:44:18 CONSOLE  Enter game type  >1
+09:45:00 CONSOLE  Enter game index  >4
+09:45:10 CONSOLE  Enter draw number [C-current draw]  >537
+Lotto   4  TOTOLOTO QUARTA Draw   537
+
+09:46:07 CONSOLE  Is this correct (Y/N)  >y
+09:46:10 CONSOLE   Lotto   4 draw  537
+09:46:10 CONSOLE  Enter first   number >1
+09:46:25 CONSOLE  Enter second  number >2
+09:46:26 CONSOLE  Enter third   number >3
+09:46:27 CONSOLE  Enter forth   number >4
+09:46:28 CONSOLE  Enter fifth   number >5
+09:46:29 CONSOLE  Enter Lucky Number   >1
+09:46:31 CONSOLE   Numbers entered: 01 02 03 04 05
+09:46:31 CONSOLE      Lucky Number: 01
+09:46:31 CONSOLE  Are the numbers entered correct [Y/N]  >y
+09:46:36 CONSOLE  Do You Have Special Totoloto Jackpot Fund [Y/N] ? >n
+09:46:43 CONSOLE   Waiting for verification from remote terminal
+09:46:48 CONSOLE   Waiting for verification from remote terminal
+09:46:53 CONSOLE   Waiting for verification from remote terminal
+09:46:58 CONSOLE   Waiting for verification from remote terminal
+09:47:03 CONSOLE   Waiting for verification from remote terminal
+09:47:08 CONSOLE   Waiting for verification from remote terminal
+09:47:13 CONSOLE   Waiting for verification from remote terminal
+09:47:18 CONSOLE   Waiting for verification from remote terminal
+09:47:23 CONSOLE   Waiting for verification from remote terminal
+09:47:28 CONSOLE   Waiting for verification from remote terminal
+09:47:33 CONSOLE   Waiting for verification from remote terminal
+09:47:38 CONSOLE   Waiting for verification from remote terminal
+09:47:43 CONSOLE   Waiting for verification from remote terminal
+09:47:48 CONSOLE   Waiting for verification from remote terminal
+09:47:53 CONSOLE   Waiting for verification from remote terminal
+09:47:58 CONSOLE   Waiting for verification from remote terminal
+09:48:03 CONSOLE   Waiting for verification from remote terminal
+Lotto   4 results entry complete
+09:48:03 CONSOLE  STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> stopsys
+
+
+Portugal ES Evolution System Shutdown
+
+
+09:50:27 STSYSTEM Copyright 2011 GTECH Corp. All rights reserved.
+PODEV1::SCML>
+              09:50:28 STSYSTEM You have attempted to run STOPSYS.
+09:50:28 STSYSTEM This program will perform end-of-day shutdown
+09:50:28 STSYSTEM of the game.  If you do not intend for this to
+09:50:28 STSYSTEM happen, you may abort now without any damage.
+09:50:28 **TELL** STSYSTEM Are you sure you want STOPSYS [Y/N]?                                                
+PODEV1::SCML> tell stsystem y
+PODEV1::SCML>
+              09:50:37 STSYSTEM  Verifying Game Closing
+09:50:37 LODIMGSS Copyright 2011 GTECH Corp. All rights reserved.
+09:50:37 LODIMGS2 Copyright 2011 GTECH Corp. All rights reserved.
+09:50:37 LODIMGS3 Copyright 2011 GTECH Corp. All rights reserved.
+09:50:37 STSYSTEM  Begining execution of GETOFSAL
+09:50:37 GETOFSAL Copyright 2011 GTECH Corp. All rights reserved.
+09:50:37 STSYSTEM  Begining execution of DAYEND
+09:50:37 GETOFSAL STOP0001  ****  SUCCESS
+09:50:37 DAYEND   Copyright 2011 GTECH Corp. All rights reserved.
+09:50:38 DAYEND   Wait 15 sec to send night game command...
+09:51:23 DAYEND    WAITING FOR CHECKPOINTS TO COMPLETE
+09:51:23 DAYEND    WILL WAIT           10  TIMES,           15
+ SECONDS EACH TIME
+
+Reply received on PODEV1 from user PORT_SQA at PODEV1 Batch   09:51:54
+IPS HAS BEEN NOTIFIED OF ONLINE STOPSYS AT 09:51:54
+
+PODEV1::SCML>
+              09:52:10 DAYEND   All tasks are stopped
+09:52:10 **TELL** DAYEND   Are you ready to update files?                                                      
+PODEV1::SCML>
+              09:52:23 STSYSTEM  Begining execution of SAVDRW
+09:52:23 SAVDRW   Copyright 2011 GTECH Corp. All rights reserved.
+09:52:23 SAVDRW   Allocating & clearing DRAW:TOTO7359.FIL         200 sectors
+09:52:23 SAVDRW   Clearing          215  VAX sectors in DRAW:TOTO7359.FIL
+09:52:23 SAVDRW   INITIALIZATION COMPLETE FOR DRAW:TOTO7359.FIL
+09:52:24 SAVDRW   Allocating & clearing DRAW:LOTS7359.FIL         200 sectors
+09:52:24 SAVDRW   Clearing          215  VAX sectors in DRAW:LOTS7359.FIL
+09:52:24 SAVDRW   INITIALIZATION COMPLETE FOR DRAW:LOTS7359.FIL
+09:52:24 SAVDRW   Allocating & clearing DRAW:LOTQ7359.FIL         200 sectors
+09:52:24 SAVDRW   Clearing          215  VAX sectors in DRAW:LOTQ7359.FIL
+09:52:24 SAVDRW   INITIALIZATION COMPLETE FOR DRAW:LOTQ7359.FIL
+09:52:24 SAVDRW   STOP0001  ****  SUCCESS
+09:52:25 SCANRETR Copyright 2011 GTECH Corp. All rights reserved.
+09:52:26 SCANRETR Scanning primary TMF : PRIM:MTMF01.FIL
+09:52:26 SCANRETR Loading the terminal retry file...
+09:52:26 SCANRETR
+09:52:26 SCANRETR         0 possibly unprinted tickets found.
+09:52:26 SCANRETR
+09:52:26 SCANRETR Updating the terminal retry file...
+09:52:26 SCANRETR STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML> tell dayend y
+PODEV1::SCML>
+              09:52:56 DAYEND    Posting sales data to FILE:DAF.FIL
+09:52:56 DAYEND    Posting game  data to FILE:L3F.FIL
+09:52:56 DAYEND    Posting game  data to FILE:L4F.FIL
+09:52:56 DAYEND    Posting game  data to FILE:S1F.FIL
+09:52:56 DAYEND    Posting game  data to FILE:S2F.FIL
+09:52:56 DAYEND    Posting game  data to FILE:S3F.FIL
+09:52:56 DAYEND   Saving ticket messages
+09:52:56 DAYEND    Game file update complete
+09:52:56 DAYEND    Posting clerk accounts to WORK:CLERK.FIL
+09:52:56 DAYEND    Posting sales data to FILE:ASF.FIL
+09:52:57 DAYEND            500  agents processed
+09:52:58 DAYEND           1000  agents processed
+09:52:59 DAYEND           1500  agents processed
+09:53:00 DAYEND           2000  agents processed
+09:53:00 DAYEND           2500  agents processed
+09:53:01 DAYEND           3000  agents processed
+09:53:02 DAYEND           3500  agents processed
+09:53:03 DAYEND           4000  agents processed
+09:53:04 DAYEND           4500  agents processed
+09:53:04 DAYEND           5000  agents processed
+09:53:05 DAYEND           5500  agents processed
+09:53:05 DAYEND           6000  agents processed
+09:53:06 DAYEND           6500  agents processed
+09:53:07 DAYEND           7000  agents processed
+09:53:08 DAYEND           7500  agents processed
+09:53:08 DAYEND           8000  agents processed
+09:53:09 DAYEND           8500  agents processed
+09:53:10 DAYEND           9000  agents processed
+09:53:10 DAYEND           9500  agents processed
+09:53:11 DAYEND          10000  agents processed
+09:53:11 DAYEND          10500  agents processed
+09:53:12 DAYEND          11000  agents processed
+09:53:12 DAYEND          11500  agents processed
+09:53:13 DAYEND          12000  agents processed
+09:53:13 DAYEND    Posting System Statistics File
+09:53:13 DAYEND    Posting Complete
+09:53:13 DAYEND   Updating pool files
+09:53:15 DAYEND   Testing pools  for consistency
+09:53:15 DAYEND   Pool file update complete
+09:53:15 DAYEND    DAYEND processing complete
+09:53:15 DAYEND   STOP0001  ****  SUCCESS
+09:53:16 STSYSTEM  Begining execution of TMFREPS
+09:53:16 TMFREP   Copyright 2011 GTECH Corp. All rights reserved.
+09:53:16 STSYSTEM  Checking for Winner Selections to be run
+09:53:16 STSYSTEM  There are WINSELS to be run on the following games:
+
+09:53:16 STSYSTEM           TOTOLOTO QUARTA
+09:53:16 STSYSTEM  Clearing Postponed Draw Section In WINCOM
+
+09:53:16 STSYSTEM  Starting VlfTsk Procedures, Please Enter
+09:53:16 STSYSTEM  StSystem CONT, When An Appropriate Message
+09:53:16 STSYSTEM  Apeears In Console ....
+09:53:16 VLFTSK   Copyright 2011 GTECH Corp. All rights reserved.
+09:53:16 **TELL** STSYSTEM Enter CONT or STOP                                                                  
+PODEV1::SCML>
+              09:53:16 TMFREP    <<<<< TMREPORTS Transaction Master File Scanning >>>>>
+09:53:16 TMFREP   Opening & Reading Distribution file...FILE:REP.FIL        ...
+09:53:16 VLFTSK   Checking WINSEL statuses
+
+09:53:16 VLFTSK    REGULAR WINSEL FOR GAMES :
+
+09:53:16 VLFTSK     TOTOLOTO QUARTA    GNUM=  7  DRAW=  537
+
+09:53:16 VLFTSK    RESULTS NOT IN - WINSEL WILL BE POSTPONED OR RUN LATER TODAY FOR GAMES :
+
+09:53:16 VLFTSK     TOTOLOTO QUARTA    GNUM=  7  DRAW=  534
+09:53:16 VLFTSK
+09:53:16 VLFTSK
+09:53:16 VLFTSK   Winner selections were postponed or cancelled
+09:53:16 VLFTSK   for the games listed above
+09:53:16 VLFTSK
+09:53:16 VLFTSK
+09:53:16 **TELL** VLFTSK   Are you sure you want to continue [Y/N]                                             
+PODEV1::SCML>
+              09:53:16 TMFREP    Now Scanning the TM for all transactions
+09:53:16 TMFREP   <<< TMREPS (ONLGAMS) V01 (ONLGAMS.REP)         >>>
+09:53:16 TMFREP   <<< Online sales by game - Totals Report      >>>
+
+
+09:53:16 TMFREP   <<< TMREPS (SYSTRPT) V01 (SYSSUM.REP)         >>>
+09:53:16 TMFREP   <<< System Transaction Report                 >>>
+
+09:53:16 TMFREP   Using default cartel number - 7
+09:53:16 TMFREP    NO CANCELLED WAGERS FOUND
+09:53:16 TMFREP   Producing System Sales Report
+
+09:53:16 TMFREP   <<<<< WHALE Transaction Distribution Analysis V01>>>>>
+
+09:53:16 TMFREP   Updating Report Statistics file
+09:53:16 TMFREP    Writing to Distribution file
+09:53:17 TMFREP   STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> tell vlftsk y
+PODEV1::SCML>
+09:54:53 **TELL** VLFTSK   Do You Want To Run Winner Selection Today [Y/N]                                     
+PODEV1::SCML> tell vlftsk y
+PODEV1::SCML>
+              09:55:13 VLFTSK    Begining execution of MULTIWIN
+09:55:13 MULTIWIN Copyright 2011 GTECH Corp. All rights reserved.
+09:55:13 **TELL** MULTIWIN Are you sure you want MULTIWIN [Y/N]?                                               
+PODEV1::SCML> tell multiwin y
+PODEV1::SCML>
+
+09:55:28 MULTIWIN  REGULAR WINSEL FOR GAMES :
+
+09:55:28 MULTIWIN   TOTOLOTO QUARTA    GNUM=  7  DRAW=  537
+
+09:55:28 MULTIWIN  RESULTS NOT IN - WINSEL WILL BE POSTPONED OR RUN LATER TODAY FOR GAMES :
+
+09:55:28 MULTIWIN   TOTOLOTO QUARTA    GNUM=  7  DRAW=  534
+
+09:55:28 MULTIWIN  === Select option ===
+09:55:28 MULTIWIN   1 - Add new game
+09:55:28 MULTIWIN   2 - Remove game
+09:55:28 MULTIWIN   3 - Continue with Multiwin
+09:55:28 MULTIWIN   E - Stop Multiwin
+
+09:55:28 **TELL** MULTIWIN Enter option #                                                                      
+PODEV1::SCML> tell multiwin 3
+PODEV1::SCML>
+              09:55:44 CRTVLC   Copyright 2011 GTECH Corp. All rights reserved.
+09:55:44 CRTTCC   Copyright 2011 GTECH Corp. All rights reserved.
+09:55:45 MULTIWIN Waiting for VLC to be cleared
+09:55:45 CRTTCC   Allocating & clearing CARX:TCC.FIL           500000 sectors
+09:55:45 CRTTCC   Clearing       500021  VAX sectors in CARX:TCC.FIL
+09:55:45 CRTVLC   Allocating & clearing VALX:VLC.FIL           900000 sectors
+09:55:45 CRTVLC   Clearing       900017  VAX sectors in VALX:VLC.FIL
+09:55:46 CRTTCC   INITIALIZATION COMPLETE FOR CARX:TCC.FIL
+09:55:46 CRTTCC    CARX:TCC.FIL         successfully allocated
+09:55:46 CRTTCC   STOP0001  ****  SUCCESS
+09:55:47 CRTVLC   INITIALIZATION COMPLETE FOR VALX:VLC.FIL
+09:55:47 CRTVLC   STOP0001  ****  SUCCESS
+09:55:49 MULTIWIN  Beginning the execution of MLCOPVLF
+09:55:49 MLCOPVLF Copyright 2011 GTECH Corp. All rights reserved.
+09:55:49 MULTIWIN Do you want to run TOTOLOTO QUARTA  draw  537 winner selection
+09:55:49 **TELL** MULTIWIN at a later date [Y/N]                                                               
+PODEV1::SCML>
+              09:55:49 MLCOPVLF  Copying VALX:VLF.FIL         to VALX:VLC.FIL
+09:55:58 MLCOPVLF VLF --> VLC file copy completed.
+09:55:58 MLCOPVLF STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML> tell multiwin n
+PODEV1::SCML>
+              09:56:22 MULTIWIN  Loading game data for Lotto   4 draw>  537 winner selection
+
+09:56:22 MULTIWIN  REGULAR WINSEL FOR GAMES :
+
+09:56:22 MULTIWIN   TOTOLOTO QUARTA    GNUM=  7  DRAW=  537
+09:56:22 **TELL** MULTIWIN Do you want to run WINSELS Y/N ?                                                    
+PODEV1::SCML> tell multiwin y
+PODEV1::SCML>
+              09:56:47 MULTIWIN WINSEL    started.
+09:56:47 MULTIWIN Clearing       900035  VAX sectors in WORK:VLW01.FIL
+09:56:48 MULTIWIN INITIALIZATION COMPLETE FOR WORK:VLW01.FIL
+09:56:48 MULTIWIN Clearing       500021  VAX sectors in WORK:TCW01.FIL
+09:56:49 MULTIWIN INITIALIZATION COMPLETE FOR WORK:TCW01.FIL
+09:56:49 WINSEL   Copyright 2011 GTECH Corp. All rights reserved.
+09:56:49 MULTIWIN WINSEL   running
+09:56:50 WINSEL    Carryover file winner selection started
+09:56:54 WINSEL    Carryover file winner selection complete
+09:56:54 WINSEL   FILE NOT FOUND: DRAW:LOTQ7353.FIL
+09:56:54 WINSEL    DRAW:LOTQ7353.FIL    open error>   -1
+09:56:54 **TELL** WINSEL   Enter new draw pack volume name:                                                    
+PODEV1::SCML>
+
+09:58:16 **TELL** STSYSTEM Enter CONT or STOP                                                                  
+PODEV1::SCML>
+              10:00:09 MULTIWIN WINSEL   running
+
+10:01:54 **TELL** WINSEL   Enter new draw pack volume name:                                                    
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> tell winsel DRAW:LOTQ7353.FIL
+
+10:03:29 MULTIWIN WINSEL   running
+
+10:06:54 **TELL** WINSEL   Enter new draw pack volume name:                                                    
+10:03:16 **TELL** STSYSTEM Enter CONT or STOP                                                                  
+PODEV1::SCML>
+              10:15:32 WINSEL   Mount DRAW pack and continue WINSEL
+PODEV1::SCML>
+10:15:32 **TELL** WINSEL   Enter CONT or STOP                                                                  
+PODEV1::SCML>
+              10:18:51 MULTIWIN WINSEL   running
+
+10:20:31 **TELL** STSYSTEM Enter CONT or STOP                                                                  
+PODEV1::SCML>
+
+10:20:32 **TELL** WINSEL   Enter CONT or STOP                                                                  
+PODEV1::SCML>
+              10:22:11 MULTIWIN WINSEL   running
+10:25:31 MULTIWIN WINSEL   running
+
+10:25:31 **TELL** STSYSTEM Enter CONT or STOP                                                                  
+PODEV1::SCML>
+
+10:25:32 **TELL** WINSEL   Enter CONT or STOP                                                                  
+PODEV1::SCML>
+              10:28:51 MULTIWIN WINSEL   running
+
+10:30:31 **TELL** STSYSTEM Enter CONT or STOP                                                                  
+PODEV1::SCML>
+
+10:30:32 **TELL** WINSEL   Enter CONT or STOP                                                                  
+PODEV1::SCML>
+              10:32:11 MULTIWIN WINSEL   running
+PODEV1::SCML>
+PODEV1::SCML> tell winsel cont
+PODEV1::SCML>
+              10:34:35 WINSEL   CONTINUING
+10:34:35 WINSEL   FILE NOT FOUND: DRAW:LOTQ7353.FIL
+10:34:35 WINSEL    DRAW:LOTQ7353.FIL    open error>   -1
+10:34:35 **TELL** WINSEL   Enter new draw pack volume name:                                                    
+PODEV1::SCML> tell winsel  DRAW:LOTQ7353.FIL
+PODEV1::SCML>
+              10:34:58 WINSEL   Mount DRAW pack and continue WINSEL
+10:34:58 **TELL** WINSEL   Enter CONT or STOP                                                                  
+PODEV1::SCML> tell winsel cont
+PODEV1::SCML>
+              10:35:22 WINSEL   CONTINUING
+10:35:22 WINSEL   FILE NOT FOUND: DRAW:LOTQ7353.FIL
+10:35:22 WINSEL    DRAW:LOTQ7353.FIL    open error>   -1
+10:35:22 **TELL** WINSEL   Enter new draw pack volume name:                                                    
+PODEV1::SCML>
+              10:35:31 MULTIWIN WINSEL   running
+
+10:35:31 **TELL** STSYSTEM Enter CONT or STOP                                                                  
+PODEV1::SCML>
+              10:38:51 MULTIWIN WINSEL   running
+
+10:40:22 **TELL** WINSEL   Enter new draw pack volume name:                                                    
+PODEV1::SCML>
+
+10:40:31 **TELL** STSYSTEM Enter CONT or STOP                                                                  
+PODEV1::SCML> tell winsel cont
+PODEV1::SCML>
+              10:40:46 WINSEL   Mount CONT pack and continue WINSEL
+10:40:46 **TELL** WINSEL   Enter CONT or STOP                                                                  
+PODEV1::SCML> tell winsel cont
+PODEV1::SCML>
+              10:41:43 WINSEL   CONTINUING
+10:41:43 WINSEL   FILE NOT FOUND: CONT:LOTQ7353.FIL
+10:41:43 WINSEL    CONT:LOTQ7353.FIL    open error>   -1
+10:41:43 **TELL** WINSEL   Enter new draw pack volume name:                                                    
+PODEV1::SCML> tell winsel draw:LOTQ7353.FIL
+10:42:11 MULTIWIN WINSEL   running
+PODEV1::SCML>
+              10:42:16 WINSEL   Mount DRAW pack and continue WINSEL
+10:42:16 **TELL** WINSEL   Enter CONT or STOP                                                                  
+PODEV1::SCML> tell winsel cont
+PODEV1::SCML>
+              10:42:38 WINSEL   CONTINUING
+10:42:38 WINSEL    Scanning file DRAW:LOTQ7353.FIL    for winners and carryovers
+10:42:38 WINSEL    Scanning file DRAW:LOTQ7354.FIL    for winners and carryovers
+10:42:38 WINSEL    Scanning file DRAW:LOTQ7355.FIL    for winners and carryovers
+10:42:38 WINSEL    Scanning file DRAW:LOTQ7356.FIL    for winners and carryovers
+10:42:38 WINSEL    Scanning file DRAW:LOTQ7357.FIL    for winners and carryovers
+10:42:38 WINSEL    Scanning file DRAW:LOTQ7358.FIL    for winners and carryovers
+10:42:38 WINSEL    Scanning file DRAW:LOTQ7359.FIL    for winners and carryovers
+10:42:38 WINSEL    Draw file scan complete
+10:42:38 WINSEL           0 records loaded to WORK:VLW01.FIL
+10:42:38 WINSEL           0 records loaded to WORK:TCW01.FIL
+10:42:38 WINSEL    Posting winsel data to FILE:L4F.FIL
+10:42:38 WINSEL   STOP0001  ****  SUCCESS
+10:42:40 WINRPT   Copyright 2011 GTECH Corp. All rights reserved.
+10:42:40 WINRPT   STOP0001  ****  SUCCESS
+10:42:42 BKKREP   Copyright 2011 GTECH Corp. All rights reserved.
+10:42:42 BKKREP
+10:42:42 BKKREP   <<<<< BKKREP  V01Book Keeping Report Generation >>>>>
+10:42:42 BKKREP
+10:42:42 BKKREP   STOP0001  ****  SUCCESS
+10:42:44 MULTIVLF Copyright 2011 GTECH Corp. All rights reserved.
+10:42:44 MULTITCF Copyright 2011 GTECH Corp. All rights reserved.
+10:42:44 **TELL** MULTIVLF Are you sure you want VLF multi-file merge [Y/N]?                                   
+PODEV1::SCML>
+10:42:44 **TELL** MULTITCF Are you sure you want TCF multi-file merge [Y/N]?                                   
+PODEV1::SCML>
+              10:42:46 MULTIWIN Waiting for completion of MULTIVLF and MULTITCF
+PODEV1::SCML>
+PODEV1::SCML>
