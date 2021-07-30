@@ -1329,7 +1329,6 @@ C----+------------------------------------------------------------------
               TRABUF(TWSYSN)   = ZEXT( I1TEMP(1) )
               TRABUF(TWVSTS)   = ZEXT( I1TEMP(2) ) 
               TRABUF(TWSYST)   = ZEXT( I1TEMP(4) )
-              
               IF(ISHFT(ZEXT(I1TEMP(3)),-4) .EQ. 1) THEN
                 TRABUF(TWDUR)    = ZEXT( IAND(I1TEMP(3),15) )
 
@@ -1346,6 +1345,8 @@ C TO USE FOR NEW TERMINALS 2021
                 LOGOFF = 21
                 BRDOFF = 11   
               ELSE IF(ISHFT(ZEXT(I1TEMP(3)),-5) .EQ. 1) THEN 
+                TRABUF(TWDUR)    = ZEXT( IAND(I1TEMP(3),15) )
+
                 TRABUF(TCOLMSERL_TLTO) = LOGBUF(17) 
                 TRABUF(TCOLMSERM_TLTO) = LOGBUF(18)    
                 TRABUF(TCOLMMIDL_TLTO) = LOGBUF(19)  
@@ -3062,14 +3063,37 @@ C
             TRABUF(TSORD)     = LOGBUF(8)
 C
             TRABUF(TSINF)     = LOGBUF(9)
+C----+------------------------------------------------------------------
+C V59| begin New Terminals Project - Olimpo
+C----+------------------------------------------------------------------  
+            IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).LE.3) THEN
+               CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,9) !position 10,11 not being used
+            ELSE
+               CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,24)  
+            ENDIF  
+            
+            IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).GT.3 .AND. TRABUF(TIBCH).LE.24) THEN
+               CALL MOVBYT(LOGBUF(17),1,BUFF(25),1,48)
+            ELSE
+               CALL MOVBYT(LOGBUF(17),1,BUFF(25),1,60)
+            ENDIF
+
+            IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).GT.24) THEN
+               CALL MOVBYT(LOGBUF(33),1,BUFF(85),1,48)
+            ELSE
+               CALL MOVBYT(LOGBUF(33),1,BUFF(85),1,36)
+            ENDIF                 
 C
-            CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,24) 
+C            CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,24) 
 C
-            IF(TRABUF(TIBCH).GE.9)
-     *        CALL MOVBYT(LOGBUF(17),1,BUFF(25),1,60) 
-            IF(TRABUF(TIBCH).GE.29)
-     *        CALL MOVBYT(LOGBUF(33),1,BUFF(85),1,36) 
+C            IF(TRABUF(TIBCH).GE.9)
+C     *        CALL MOVBYT(LOGBUF(17),1,BUFF(25),1,60) 
+C            IF(TRABUF(TIBCH).GE.29)
+C     *        CALL MOVBYT(LOGBUF(33),1,BUFF(85),1,36) 
 C
+C----+------------------------------------------------------------------
+C V59| end New Terminals Project - Olimpo
+C----+------------------------------------------------------------------  
             IND=1
             DO X = 0, TRABUF(TIBCH)-1     
 C
@@ -3091,42 +3115,59 @@ C
 C
             END DO
 C----+------------------------------------------------------------------
-C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------  
-            IF(TRABUF(TIBCH).GE.29) THEN
+C V59| begin New Terminals Project - Olimpo
+C----+------------------------------------------------------------------ 
+CCCCCCCCCCCCCCCCCCCCCCCCC 3º SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC  
+            IF(TRABUF(TIBCH).GE.24) THEN
               I4TEMP = LOGBUF(48)
               TRABUF(TGOLMCOMF_IL) = I1TEMP(1)              
               IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
-                I4TEMP = LOGBUF(43)
+                TRABUF(TGOLMSERH_IL) = I1TEMP(2)
+                TRABUF(TGOLMMIDH_IL) = I1TEMP(3)
+
+                I4TEMP = LOGBUF(45)
                 TRABUF(TGOLMSERL_IL) = I4TEMP
-                I4TEMP = LOGBUF(44)
+                I4TEMP = LOGBUF(46)  
                 TRABUF(TGOLMSERM_IL) = I4TEMP
-                I4TEMP = LOGBUF(45)  
-                TRABUF(TGOLMSERH_IL) = I4TEMP
-                I4TEMP = LOGBUF(46) 
-                TRABUF(TGOLMMIDL_IL) = I4TEMP
-                I4TEMP = LOGBUF(47)  
-                TRABUF(TGOLMMIDH_IL) = I4TEMP
+                I4TEMP = LOGBUF(47)                 
+                TRABUF(TGOLMMIDL_IL) = I4TEMP                 
               ENDIF
-            ELSE IF(TRABUF(TIBCH).LE.21) THEN   
+CCCCCCCCCCCCCCCCCCCCCCCCC 2º SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC               
+            ELSE IF(TRABUF(TIBCH).LE.24 .AND. TRABUF(TIBCH).GT.3) THEN   
               I4TEMP = LOGBUF(32)
               TRABUF(TGOLMCOMF_IL) = I1TEMP(1)
               IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
-                I4TEMP = LOGBUF(27)
+                TRABUF(TGOLMSERH_IL) = IITEMP(2)
+                TRABUF(TGOLMMIDH_IL) = IITEMP(3)
+
+                I4TEMP = LOGBUF(29)
                 TRABUF(TGOLMSERL_IL) = I4TEMP
-                I4TEMP = LOGBUF(28)
+                I4TEMP = LOGBUF(30)  
                 TRABUF(TGOLMSERM_IL) = I4TEMP
-                I4TEMP = LOGBUF(29)  
-                TRABUF(TGOLMSERH_IL) = I4TEMP
-                I4TEMP = LOGBUF(30) 
+                I4TEMP = LOGBUF(31) 
                 TRABUF(TGOLMMIDL_IL) = I4TEMP
-                I4TEMP = LOGBUF(31)  
-                TRABUF(TGOLMMIDH_IL) = I4TEMP
               ENDIF
+CCCCCCCCCCCCCCCCCCCCCCCCC 1º SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
+            ELSE IF(TRABUF(TIBCH).LE.3) THEN
+              I4TEMP = LOGBUF(12)  
+              TRABUF(TGOLMCOMF_IL) = I1TEMP(4) 
+              IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+                I4TEMP = LOGBUF(16)   
+                TRABUF(TGOLMSERH_IL) = I1TEMP(1)
+                TRABUF(TGOLMMIDH_IL) = I1TEMP(2)
+                                 
+                I4TEMP = LOGBUF(13)
+                TRABUF(TGOLMSERL_IL) = I4TEMP
+                I4TEMP = LOGBUF(14) 
+                TRABUF(TGOLMSERM_IL) = I4TEMP
+                I4TEMP = LOGBUF(15) 
+                TRABUF(TGOLMMIDL_IL) = I4TEMP
+              ENDIF 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC              
             ENDIF
             
 C----+------------------------------------------------------------------
-C V59| New Terminals Project - Olimpo
+C V59| end New Terminals Project - Olimpo
 C----+------------------------------------------------------------------              
 C
           ELSE IF(TRABUF(TITYP).EQ.ICNF) THEN
