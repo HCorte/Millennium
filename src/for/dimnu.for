@@ -192,9 +192,9 @@ C----+------------------------------------------------------------------
 C V10| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------ 
         IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
-           IF(TRABUF(TIBCH).LE.21) THEN  
+           IF(TRABUF(TIBCH).GT.3 .AND. TRABUF(TIBCH).LE.24) THEN  
               TRABUF(TSIZE) = 2
-           ELSE IF (TRABUF(TIBCH).GE.29) THEN 
+           ELSE IF (TRABUF(TIBCH).GT.24) THEN 
               TRABUF(TSIZE) = 3
            ENDIF
         ELSE
