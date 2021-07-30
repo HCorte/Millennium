@@ -1355,8 +1355,8 @@ C                                           !TO KICKER STORAGE.
 C         
 C----+------------------------------------------------------------------
 C V60| New Terminals Project - Olimpo 
-C nota: confirmar se não comessar no LOGBUF 19 
-C pois TWCEBM no TSPT(SPORTS) está ocupar a posição 18 ....
+C nota: confirmar se nï¿½o comessar no LOGBUF 19 
+C pois TWCEBM no TSPT(SPORTS) estï¿½ ocupar a posiï¿½ï¿½o 18 ....
 C----+------------------------------------------------------------------ 
             IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
                LOGBUF(17) = TRABUF(TWCOLMSERL_TLTO)
@@ -3057,7 +3057,7 @@ C----+------------------------------------------------------------------
             ENDIF
 
             IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).GT.24) THEN
-C               CALL MOVBYT(BUFF(85),1,LOGBUF(33),1,48)
+               CALL MOVBYT(BUFF(85),1,LOGBUF(33),1,48)
             ELSE
                CALL MOVBYT(BUFF(85),1,LOGBUF(33),1,36)
             ENDIF                       
@@ -3072,7 +3072,7 @@ C
 C                  
 C           Begin - Olimpo Serial Number & MessageID & Communication Flag
             IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
-CCCCCCCCCCCCCCCCCCCCCCCCC 3º SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC               
+CCCCCCCCCCCCCCCCCCCCCCCCC 3ï¿½ SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC               
                IF(TRABUF(TIBCH).GT.24) THEN
                   I4TEMP = TRABUF(TGOLMSERL_IL)
                   LOGBUF(45) = I4TEMP
@@ -3086,7 +3086,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCC 3º SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
                   I1TEMP(3) = TRABUF(TGOLMMIDH_IL)
                   I1TEMP(4) = 0
                   LOGBUF(48) = I4TEMP 
-CCCCCCCCCCCCCCCCCCCCCCCCC 2º SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC                 
+CCCCCCCCCCCCCCCCCCCCCCCCC 2ï¿½ SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC                 
                ELSE IF(TRABUF(TIBCH).LE.24 .AND. TRABUF(TIBCH).GT.3) THEN
                   I4TEMP = TRABUF(TGOLMSERL_IL)
                   LOGBUF(29) = I4TEMP
@@ -3100,7 +3100,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCC 2º SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
                   IITEMP(3) = TRABUF(TGOLMMIDH_IL)
                   IITEMP(4) = 0
                   LOGBUF(32) = I4TEMP 
-CCCCCCCCCCCCCCCCCCCCCCCCC 1º SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCC 1ï¿½ SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
                ELSE IF(TRABUF(TIBCH).LE.3) THEN
                   I1TEMP(1) = TRABUF(TGOLMSERH_IL)
                   I1TEMP(2) = TRABUF(TGOLMMIDH_IL)
