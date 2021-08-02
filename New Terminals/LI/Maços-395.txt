@@ -7,7 +7,7 @@ IPS_INV6010_20210324_110824.RPT
                                                                                                                                       
      Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
      -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
-     0000401  0000528  Available  X             0000401  0023356  Available               0000401  0030655  Available                  
+     0000401  0000528  Available  X             0000401  0023356  Available X              0000401  0030655  Available                  
      0000401  0039749  Available  X             0000401  0040108  Available               0000401  0055895  Available                  
      0000401  0055896  Available  X             0000401  0066315  Available               0000401  0074330  Available                  
      0000401  0079249  Available  X             0000401  0082381  Available               0000401  0082594  Available                  

@@ -43,7 +43,7 @@ IPS_INV6010_20210215_132456.RPT
      0000401  0166063  Available   x            0000401  0166064  Available   x            0000401  0166065  Available                  
      0000401  0166066  Available   x            0000401  0166067  Available               0000401  0166122  Available                  
      0000401  0167059  Available   x --           0000401  0174038  Available               0000401  0174039  Available                  
-     0000401  0174619  Available   x            0000401  0188260  Available               0000401  0198434  Available                  
+     0000401  0174619  Available   x            0000401  0188260  Available   X            0000401  0198434  Available                  
      0000401  0204027  Available   x              0000401  0206009  Available               0000401  0208032  Available                  
      0000401  0208033  Available   x            0000401  0209091  Available               0000401  0209092  Available                  
      0000401  0209093  Available   x            0000401  0211390  Missing-Full            0000401  0212123  Available                  
