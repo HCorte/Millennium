@@ -1355,8 +1355,8 @@ C                                           !TO KICKER STORAGE.
 C         
 C----+------------------------------------------------------------------
 C V60| New Terminals Project - Olimpo 
-C nota: confirmar se não comessar no LOGBUF 19 
-C pois TWCEBM no TSPT(SPORTS) está ocupar a posição 18 ....
+C nota: confirmar se nï¿½o comessar no LOGBUF 19 
+C pois TWCEBM no TSPT(SPORTS) estï¿½ ocupar a posiï¿½ï¿½o 18 ....
 C----+------------------------------------------------------------------ 
             IF(TRABUF(TWCOLMCOMF_TLTO) .EQ. 1) THEN
                LOGBUF(17) = TRABUF(TWCOLMSERL_TLTO)
