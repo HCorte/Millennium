@@ -3,6 +3,7 @@ C PROGRAM TSTLOG
 C
 C TSTLOG.FOR
 C
+C v24 15-JUL-2021 SCML New Terminals Project (OLM)
 C V23 31-MAR-2016 SCML M16 PROJECT
 C V22 31-MAY-2011 RXK CLEANED, NOT-USED GAMES SKIPPED
 C V21 19-MAY-2011 FJG Addequate for EVO
@@ -68,6 +69,14 @@ C
 	PARAMETER   (NOTUSD_CNT=4)
 	INTEGER*4   NOTUSD(NOTUSD_CNT)
         DATA NOTUSD/TGAMIND,TCDC_SOLD,TFAMTFLG,TWADDFW/
+        INTEGER*4  ST
+        INTEGER*4  X, BUFIDX, AUX_TICKET_VAL, AUX_GAME_NUM, AUX_INDEX
+        INTEGER*4 GNUM, TSQTY_AUX, TSGAM_AUX, GTYP_AUX
+        INTEGER*4 AUX_MAX_GAMES(3)
+        BYTE   BUFF(4)
+        AUX_MAX_GAMES(1) = 3
+        AUX_MAX_GAMES(2) = 24
+        AUX_MAX_GAMES(3) = 40
 C
 C TEST LOTTO/SPORTS WAGER CONVERSION
 C
@@ -1424,6 +1433,1210 @@ C
         TYPE*,'PASSIVE RETURN TRANSACTION DONE!'
         !TYPE*,'++++++++++++++++++++++++++++++++++'
 !===============================================================================        
+C v24 BEGIN
+C LOTTO TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+C
+!+++++++WAGER+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LOTTO NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    =9999
+        TRABUF(TTER)    =6000
+        TRABUF(TAGT)    ='000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  =0
+        TRABUF(TTIM)    ='00112233'X
+        TRABUF(TTSTCS)  = 'FE'X    !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = 'FD'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER
+C        TRABUF(TGAM)
+        TRABUF(TSTAT)   = GOOD
+CCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TTYP)    = TWAG
+        TRABUF(TTRN)    = 15         !TRANSACTION SEQUENCE NUMBER
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 4          !FILE STATUS
+        TRABUF(TINTRA)  = 1        !INTERNAL TRANSACTION FLAG
+        TRABUF(TSIZE)   = 3         !Number of Segments used in register the transaction/message in tmf file
+        TRABUF(TGAMTYP) = TLTO ! TLTO = 2 --- GAME TYPE
+        TRABUF(TGAMIND) = 4       !GAME INDEX 4 para totoloto de 4 feira (podia ser 3 de sabado)
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TTKID)   = 1       !TICKET ID
+        TRABUF(TFAMTFLG)  = 0 
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWCSER)  = 64000001  !CASH/CANCEL SERIAL #
+        TRABUF(TWAMT) = 10000 !BASE AMOUNT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TWBEG)   = 1 !STARTING DRAW # alls one because its deprecated (related with field TWDUR)
+        TRABUF(TWCTER)  = 6000      !CASH/CANCEL TERMINAL # (needs to be the same terminal as the register the Wager)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWQPF)   = 1  !QUICK PICK FLAGS  
+        TRABUF(TWSIMP)  = 10 !# OF SIMPLE WAGERS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWSYSN)  = 40      !SYSTEM NUMBER --- 
+        TRABUF(TWVSTS)  = VSBNKM    !VALIDATION STATUS -- (VSBNKM=17) !SET BANKING INFO/MULTI-DRAW
+        TRABUF(TWCOLMCOMF_TLTO)=1
+        TRABUF(TWDUR) = 1 !alls one because its deprecated (range 1-5 weeks the bet would replicate)      
+        TRABUF(TWSYST)  = FULSYS  !SYSTEM TYPE ---(NOSYS=0) NO SYSTEM || (FULSYS=1) !FULL SYSTEM  ||  (CHCSYS=4) !C-SYSTEM
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC FLAGS CCCCCCCCCCCCCCCC
+        TRABUF(TWNMRK)  = 7 !!#LOTTO MARKS/BOARD
+        TRABUF(TWMFLG)  = 1  !BET MULTIPILER FLAG
+        TRABUF(TWKGME)  = 0  !KICKER GAME # "0 no longer used"
+        TRABUF(TWKFLG)  = 0  !KICKER SOLD FLAG "0 no longer used"
+        TRABUF(TWFFLG)  = 0  !FRACTIONED WAGER FLAG "0 since no longer used"
+        TRABUF(TWADDFW) = 0  !PROMOTION - ADD 1 FREE WEEK "never used"
+        TRABUF(TWLMFI)  = 0  !LOTTO MONDAY FLAG INDICATOR "0 since no longer used"
+C        TRABUF(TGAMTYP) = TLTO     
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC   
+        TRABUF(TWCDCOFF)= 100 !CDC OFFSET FOR EXCH TKT. (FOR STATE) ....
+        TRABUF(TWMFRAC) = 0        !INITIAL DEFINED FRACTIONS    
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TWBNKID) = 888881  !BANK ID NUMBER
+        TRABUF(TWWEQP)  = 0         !WEIGHTED QP
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWBNKNM) = 99999991!BANK ACCOUNT NUMBER 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWSRW)   = 13 !# OF ROWS BET (SPORTS) (alls 13) with extra 14
+C        TRABUF(TGAMTYP) = TLTO 
+        TRABUF(TWNBET)  = 10 !NUMBER OF BETS/BOARDS (confirmar mais tarde) max de 15
+        TRABUF(TWLUCK)  = 1  !LUCKY NUMBER 
+C        TRABUF(TWSPFRG) = 10 !NUMBER OF RESULTS GAMES (SPORTS) (confirmar mais tarde)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TWCEBM)  = 0   !SPORTS GAME CANCELATION EVENTS BITMAP (confirmar mais tarde)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWKGME)  = 0   !KICKER GAME # "no longer in use so its 0"
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C        TRABUF(TAGT)  = '00AABBCC'X     
+        TRABUF(TWCOLMSERL_TLTO)='630FFFFF'X!1661992959                
+        TRABUF(TWCOLMSERM_TLTO)='6BC75E2D'X!1808227885                
+        TRABUF(TWCOLMSERH_TLTO)='5'X
+        TRABUF(TWCOLMMIDL_TLTO)='FFFFFFFF'X
+        TRABUF(TWCOLMMIDH_TLTO)='7F'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCC  wager            "transactionSerial": "210721-06-5858591847-214",  "210722-06-7294096008-457",
+CCCC  cancellation     "transactionSerial": "210721-99-2011303816-981",  "210722-99-9599519946-580"
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TWTKC) = 40  !TICKET CHARGE
+        TRABUF(TWTOT) = TRABUF(TWAMT)*TRABUF(TWDUR)+TRABUF(TWTKC)
+        DO I = TWBORD,TWBORD+21-1 !TWBEND (7 nibbles * 10 = 70 nibbles = 35 bytes) TWBORD=88   110-88=22
+                TRABUF(I) = I ! 35/4 = 8,75 = 9 Integers 88=0x110101F1,89,90,91,92,93,94,95,96,97 ... 110
+        ENDDO
+c        TRABUF(TWBORD) = '110101F1'X
+c        TRABUF(TWBORD+1) = '110101F1'X
+c        TRABUF(TWBORD+1) = '110101F1'X
+c        TRABUF(TWBORD+1) = '110101F1'X
+c        TRABUF(TWBORD+1) = '110101F1'X
+c        TRABUF(TWBORD+1) = '110101F1'X
+        TRABUF(TWEND)   = 1 !ENDING DRAW # alls one because its deprecated (related with field TWDUR)
+        CALL FASTSET(0,TRABUF(TWMULT),12)
+        CALL FASTSET(TRABUF(TWNMRK),TRABUF(TWNMRK+1),11)
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)        
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+        ENDDO         
+        TYPE*,'END TESTING LOTTO NEW TRANSACTION FIELDS DONE!'
+!===============================================================================        
+C v24 END
+C LOTTO TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+C MESID=1099511627775 - ffffffffff (max) || SERIAL=99999999999999999999 - 5.6BC75E2D.630FFFFF (max) || OLMFLAG=1
+!+++++++WAGER+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C 0300006(7) - 11189196 
+!===============================================================================   
+!===============================================================================        
+C v24 BEGIN
+C SPORTS TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+C
+!+++++++WAGER+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING SPORTS NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    =9999
+        TRABUF(TTER)    =6000
+        TRABUF(TAGT)    ='000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  =0
+        TRABUF(TTIM)    ='00112233'X
+        TRABUF(TTSTCS)  = 'FE'X    !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = 'FD'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER
+C        TRABUF(TGAM)
+        TRABUF(TSTAT)   = GOOD
+CCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TTYP)    = TWAG
+        TRABUF(TTRN)    =15         !TRANSACTION SEQUENCE NUMBER
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 4          !FILE STATUS
+        TRABUF(TINTRA)  = 1        !INTERNAL TRANSACTION FLAG
+        TRABUF(TSIZE)   = 3         !Number of Segments used in register the transaction/message in tmf file
+        TRABUF(TGAMTYP) = TSPT ! TLTO = 2 --- GAME TYPE
+        TRABUF(TGAMIND) = 4       !GAME INDEX 4 para totoloto de 4 feira (podia ser 3 de sabado)
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TTKID)   = 1       !TICKET ID
+        TRABUF(TFAMTFLG)  = 0 
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWCSER)  = 64000001  !CASH/CANCEL SERIAL #
+        TRABUF(TWAMT) = 10000 !BASE AMOUNT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TWBEG)   = 1 !STARTING DRAW # alls one because its deprecated (related with field TWDUR)
+        TRABUF(TWCTER)  = 6000      !CASH/CANCEL TERMINAL # (needs to be the same terminal as the register the Wager)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWQPF)   = 1  !QUICK PICK FLAGS  
+        TRABUF(TWSIMP)  = 10 !# OF SIMPLE WAGERS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWSYSN)  = 40      !SYSTEM NUMBER --- 
+        TRABUF(TWVSTS)  = VSBNKM    !VALIDATION STATUS -- (VSBNKM=17) !SET BANKING INFO/MULTI-DRAW
+        TRABUF(TWCOLMCOMF_TLTO)=1
+        TRABUF(TWDUR) = 1 !alls one because its deprecated (range 1-5 weeks the bet would replicate)      
+        TRABUF(TWSYST)  = FULSYS  !SYSTEM TYPE ---(NOSYS=0) NO SYSTEM || (FULSYS=1) !FULL SYSTEM  ||  (CHCSYS=4) !C-SYSTEM
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC FLAGS CCCCCCCCCCCCCCCC
+        TRABUF(TWNMRK)  = 7 !!#LOTTO MARKS/BOARD
+        TRABUF(TWMFLG)  = 1  !BET MULTIPILER FLAG
+        TRABUF(TWKGME)  = 0  !KICKER GAME # "0 no longer used"
+        TRABUF(TWKFLG)  = 0  !KICKER SOLD FLAG "0 no longer used"
+        TRABUF(TWFFLG)  = 0  !FRACTIONED WAGER FLAG "0 since no longer used"
+        TRABUF(TWADDFW) = 0  !PROMOTION - ADD 1 FREE WEEK "never used"
+        TRABUF(TWLMFI)  = 0  !LOTTO MONDAY FLAG INDICATOR "0 since no longer used"
+C        TRABUF(TGAMTYP) = TSPT     
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC   
+        TRABUF(TWCDCOFF)= 100 !CDC OFFSET FOR EXCH TKT. (FOR STATE) ....
+        TRABUF(TWMFRAC) = 0        !INITIAL DEFINED FRACTIONS    
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TWBNKID) = 888881  !BANK ID NUMBER
+        TRABUF(TWWEQP)  = 0         !WEIGHTED QP
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWBNKNM) = 99999991!BANK ACCOUNT NUMBER 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWSRW)   = 13 !# OF ROWS BET (SPORTS) (alls 13) with extra 14
+C        TRABUF(TGAMTYP) = TSPT 
+        TRABUF(TWNBET)  = 10      !NUMBER OF BETS/BOARDS (confirmar mais tarde)
+C        TRABUF(TWLUCK)  = 1  !LUCKY NUMBER 
+        TRABUF(TWSPFRG) = 10 !NUMBER OF RESULTS GAMES (SPORTS) (confirmar mais tarde)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  
+C        CALL UPDSPT(TRABUF,0,ST)
+C        CALL SET_CANCELATION_EVENTS_BITMAP(TRABUF)      
+C        TRABUF(TWCEBM)  = 0   !SPORTS GAME CANCELATION EVENTS BITMAP (confirmar mais tarde)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWKGME)  = 0   !KICKER GAME # "no longer in use so its 0"
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C        TRABUF(TAGT)  = '00AABBCC'X     
+        TRABUF(TWCOLMSERL_TLTO)='630FFFFF'X!1661992959                
+        TRABUF(TWCOLMSERM_TLTO)='6BC75E2D'X!1808227885                
+        TRABUF(TWCOLMSERH_TLTO)='5'X
+        TRABUF(TWCOLMMIDL_TLTO)='FFFFFFFF'X
+        TRABUF(TWCOLMMIDH_TLTO)='7F'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TWTKC) = 40  !TICKET CHARGE
+        TRABUF(TWTOT) = TRABUF(TWAMT)*TRABUF(TWDUR)+TRABUF(TWTKC)
+        DO I = TWBORD,TWBORD+17!15+15-1  !TWBEND (7 nibbles * 10 = 70 nibbles = 35 bytes)
+                TRABUF(I) = I ! 35/4 = 8,75 = 9 Integers
+        ENDDO     
+        TRABUF(TWEND)   = 1 !ENDING DRAW # alls one because its deprecated (related with field TWDUR)
+        CALL FASTSET(0,TRABUF(TWMULT),12)
+        CALL FASTSET(TRABUF(TWNMRK),TRABUF(TWNMRK+1),11)
+        CALL TRALOG(TRABUF,BUF)
+        CALL LOGTRA(TBUF,BUF)        
+        DO I=1,TRALEN
+            IF(TRABUF(I).NE.TBUF(I)) THEN
+                IF(I .NE. TWCEBM) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+            ENDIF
+        ENDDO         
+        TYPE*,'END TESTING SPORTS NEW TRANSACTION FIELDS DONE!'
+!===============================================================================        
+C v24 END
+C SPORTS TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+C MESID=1099511627775 - ffffffffff (max) || SERIAL=99999999999999999999 - 5.6BC75E2D.630FFFFF (max) || OLMFLAG=1
+!+++++++WAGER+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C 0300006(7) - 11189196       
+!===========================LOTTO CANCELLATION=========================================== 
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LOTTO CANCELLATION NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    =9999
+        TRABUF(TTER)    =6000
+        TRABUF(TAGT)    ='000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  =0
+        TRABUF(TTIM)    ='00112233'X
+        TRABUF(TTSTCS)  = 'FE'X    !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = '7F'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER
+C        TRABUF(TGAM)
+        TRABUF(TSTAT)   = GOOD
+CCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TTYP)    = TCAN
+        TRABUF(TTRN)    = 15         !TRANSACTION SEQUENCE NUMBER
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 4          !FILE STATUS
+        TRABUF(TINTRA)  = 1        !INTERNAL TRANSACTION FLAG
+        TRABUF(TSIZE)   = 3         !Number of Segments used in register the transaction/message in tmf file
+        TRABUF(TGAMTYP) = TLTO ! TLTO = 2 --- GAME TYPE
+        TRABUF(TGAMIND) = 4       !GAME INDEX 4 para totoloto de 4 feira (podia ser 3 de sabado)
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TTKID)   = 1       !TICKET ID
+        TRABUF(TFAMTFLG)  = 0 
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWCSER)  = 64000001  !CASH/CANCEL SERIAL #
+        TRABUF(TWAMT) = 10000 !BASE AMOUNT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TWBEG)   = 1 !STARTING DRAW # alls one because its deprecated (related with field TWDUR)
+        TRABUF(TWCTER)  = 6000      !CASH/CANCEL TERMINAL # (needs to be the same terminal as the register the Wager)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWQPF)   = 1  !QUICK PICK FLAGS  
+        TRABUF(TWSIMP)  = 10 !# OF SIMPLE WAGERS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWSYSN)  = 40      !SYSTEM NUMBER --- 
+        TRABUF(TWVSTS)  = VSBNKM    !VALIDATION STATUS -- (VSBNKM=17) !SET BANKING INFO/MULTI-DRAW
+        TRABUF(TWCOLMCOMF_TLTO)=1
+        TRABUF(TWDUR) = 1 !alls one because its deprecated (range 1-5 weeks the bet would replicate)      
+        TRABUF(TWSYST)  = FULSYS  !SYSTEM TYPE ---(NOSYS=0) NO SYSTEM || (FULSYS=1) !FULL SYSTEM  ||  (CHCSYS=4) !C-SYSTEM
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC FLAGS CCCCCCCCCCCCCCCC
+        TRABUF(TWNMRK)  = 7 !!#LOTTO MARKS/BOARD
+        TRABUF(TWMFLG)  = 1  !BET MULTIPILER FLAG
+        TRABUF(TWKGME)  = 0  !KICKER GAME # "0 no longer used"
+        TRABUF(TWKFLG)  = 0  !KICKER SOLD FLAG "0 no longer used"
+        TRABUF(TWFFLG)  = 0  !FRACTIONED WAGER FLAG "0 since no longer used"
+        TRABUF(TWADDFW) = 0  !PROMOTION - ADD 1 FREE WEEK "never used"
+        TRABUF(TWLMFI)  = 0  !LOTTO MONDAY FLAG INDICATOR "0 since no longer used"
+C        TRABUF(TGAMTYP) = TLTO     
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC   
+        TRABUF(TWCDCOFF)= 100 !CDC OFFSET FOR EXCH TKT. (FOR STATE) ....
+        TRABUF(TWMFRAC) = 0        !INITIAL DEFINED FRACTIONS    
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TWBNKID) = 888881  !BANK ID NUMBER
+        TRABUF(TWWEQP)  = 0         !WEIGHTED QP
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWBNKNM) = 99999991!BANK ACCOUNT NUMBER 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWSRW)   = 13 !# OF ROWS BET (SPORTS) (alls 13) with extra 14
+C        TRABUF(TGAMTYP) = TLTO 
+        TRABUF(TWNBET)  = 10 !NUMBER OF BETS/BOARDS (confirmar mais tarde) max de 15
+        TRABUF(TWLUCK)  = 1  !LUCKY NUMBER 
+C        TRABUF(TWSPFRG) = 10 !NUMBER OF RESULTS GAMES (SPORTS) (confirmar mais tarde)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TWCEBM)  = 0   !SPORTS GAME CANCELATION EVENTS BITMAP (confirmar mais tarde)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TWKGME)  = 0   !KICKER GAME # "no longer in use so its 0"
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  
+        TRABUF(TWTKC) = 40  !TICKET CHARGE
+        TRABUF(TWTOT) = TRABUF(TWAMT)*TRABUF(TWDUR)+TRABUF(TWTKC)      
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC     
+        TRABUF(TCOLMSERL_TLTO)='630FFFFF'X!1661992959
+        TRABUF(TCOLMSERM_TLTO)='6BC75E2D'X!1808227885  
+        TRABUF(TCOLMSERH_TLTO)='5'X
+        TRABUF(TCOLMMIDL_TLTO)='FFFFFFFF'X
+        TRABUF(TCOLMMIDH_TLTO)='7F'X!removed the most significant bit (FF) that is being interpreted as the sign bit (0:+ 1:-)
+        TRABUF(TCOLMCOMF_TLTO)=1
+        TRABUF(TWCOLMSERL_TLTO)=0                
+        TRABUF(TWCOLMSERM_TLTO)=0                
+        TRABUF(TWCOLMSERH_TLTO)=0
+        TRABUF(TWCOLMMIDL_TLTO)=0
+        TRABUF(TWCOLMMIDH_TLTO)=0
+        TRABUF(TWCOLMCOMF_TLTO)=0
+        TRABUF(TWEND)   = 1 !ENDING DRAW # alls one because its deprecated (related with field TWDUR)        
+        CALL TRALOG(TRABUF,BUF)
+C        I4TEMP = BUF(12)
+C        TYPE*,'FLAG:',I1TEMP(3)
+        CALL LOGTRA(TBUF,BUF)        
+        DO I=1,TRALEN
+            IF(TRABUF(I).NE.TBUF(I)) THEN
+                TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+            ENDIF
+        ENDDO         
+        TYPE*,'END TESTING LOTTO CANCELLATION NEW TRANSACTION FIELDS!' 
+!===============================================================================        
+C v24 BEGIN
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IRVMT+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================     
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LI IRVMT NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'  
+        AUX_TICKET_VAL = 1 
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TSER)    =64123499
+7000    CONTINUE
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN) 
+        TRABUF(TIBCH)   = AUX_TICKET_VAL !'F'X max value   !NUMBER IN BATCH
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TCDC)    = 9999
+        TRABUF(TTER)    = 6000
+        TRABUF(TAGT)    = '000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  = 0
+        TRABUF(TTIM)    = '00112233'X
+        TRABUF(TTSTCS)  = 'FE'X      !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = '7F'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER      
+        TRABUF(TSTAT)   = GOOD
+        TRABUF(TTYP)    = TCRS
+        TRABUF(TITYP)   = IVAL   ! NEW BANK VALIDATION MODE LAYOUT   
+        TRABUF(TIVMT)   = IRVMT             
+C        TRABUF(TSIZE)   = 3       !Number of Segments used in register the transaction/message in tmf file
+        TRABUF(TIIND)   = 'F'X
+        TRABUF(TIVALM)  = 'FF'X
+        TRABUF(TIVALT)  = 'FFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 0       !FILE STATUS
+        TRABUF(TINTRA)  = 1       !INTERNAL TRANSACTION FLAG
+        TRABUF(TGAMTYP) = TINS    !INSTANT TICKETS = 14 --- GAME TYPE
+        TRABUF(TGAMIND) = 1       !GAME INDEX 1
+C        TRABUF(TGAM)=GTNTAB(TINS,TRABUF(TGAMIND))
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC  
+C        TRABUF(TIPLIDTYP)   = 'FF'X     !PLAYER ID TYPE
+C        TRABUF(TINIBBA2)   = 'FF'X      !NIB ACCOUNT NUMBER (PART 2)
+C        TRABUF(TINIBCD)   = 'FF'X       !NIB CHECK DIGITS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TIPLCARD)  = 'FFFFFFFF'X!PLAYER ID
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TINIBBB)   = 'FFFF'X     !NIB BRANCH
+C        TRABUF(TINIBBO)   = 'FFFF'X     !NIB OFFICE
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TINIBBA1) = 'FFFFFFFF'X  !NIB ACCOUNT NUMBER (PART 1)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TINETPRZ)  = 'FFFFFFFF'X  !NET PRIZE AMOUNT                
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TVOLMCOMF_IL) = 1
+        TRABUF(TVOLMSERL_IL) = '630FFFFF'X!1661992959
+        TRABUF(TVOLMSERM_IL) = '6BC75E2D'X!1808227885       
+        TRABUF(TVOLMSERH_IL) = '5'X
+        TRABUF(TVOLMMIDL_IL) = 'FFFFFFFF'X
+        TRABUF(TVOLMMIDH_IL) = 'FF'X    
+        
+        TRABUF(TTKID)        = 1       !TICKET ID
+        TRABUF(TFAMTFLG)     = 0 
+        TRABUF(TIXRF)        = 'FFFFFFFF'X
+        TRABUF(TIVENV)       = '7F'X                  !ENVELOPE IDENTIFICATION NUMBER 127 max
+        TRABUF(TIVAGT)       = 'FFFFFF'X
+        TRABUF(TIVTYP)       = 'FF'X
+
+        BUFIDX               = 11
+        TRABUF(TIGAM1)       = 'FFF'X               !INSTANT GAME NUMBER            (43-49)
+        TRABUF(TIPCK1)       = 'FFFFFF'X            !INSTANT PACK NUMBER            (50-56)
+        TRABUF(TIVRN1)       = 'FFFFFFFF'X          !INSTANT VIRN NUMBER            (57-63)
+        TRABUF(TILTX1)       = 'FFFF'X              !INSTANT LATEX NUMBER           (64-70)
+        TRABUF(TIPCKSTS1)    = 'F'X                 !INSTANT PACK STATUS            (71-77)
+        TRABUF(TITIM1)       = 'FFFE'X              !INSTANT TIME CASHED AT GVT     (78-84) note:haves to be even number
+        TRABUF(TICDC1)       = 'FFFF'X              !INSTANT DATE CHASHED AT GVT    (85-91)
+        TRABUF(TISTS1)       = 'FF'X                !INSTANT VALIDATION STATUS      (92-98)
+        TRABUF(TIPRZ1)       = '7FFFFFFF'X          !INSTANT PRIZE FROM GAME PLAN   (99-105)
+C        DO 2000 X = 0, TRABUF(TIBCH)-1 
+C          I4TEMP     = IAND(TRABUF(TIPCK1+X),'00FFFFFF'X) 
+C          I1TEMP(4)  = TRABUF(TISTS1+X)
+C          LOGBUF(BUFIDX)  = I4TEMP
+C          BUFIDX = BUFIDX + 1 
+C          LOGBUF(BUFIDX) = TRABUF(TIVRN1+X)   
+C          BUFIDX         = BUFIDX + 1 
+CC
+C          I2TEMP(1)  = TRABUF(TILTX1+X)
+C          I2TEMP(2)  = IOR( ISHFT( TRABUF(TIPCKSTS1+X), 12), 
+C     *                            IAND(  TRABUF(TIGAM1+X),'0FFF'X) ) 
+C          LOGBUF(BUFIDX) = I4TEMP
+C          BUFIDX = BUFIDX + 1 
+CC
+C          I2TEMP(1)      = TRABUF(TITIM1+X)/2
+C          I2TEMP(2)      = TRABUF(TICDC1+X)
+C          LOGBUF(BUFIDX) = I4TEMP
+C          BUFIDX         = BUFIDX + 1 
+CC
+C          LOGBUF(BUFIDX) = TRABUF(TIPRZ1+X)
+C          BUFIDX = BUFIDX + 1 
+C
+C          IF (MOD(BUFIDX,16).EQ.0) BUFIDX = BUFIDX + 1 
+C2000      CONTINUE
+        TRABUF(TGOLMCOMF_IL) = 1
+        IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+          IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LT.4) THEN
+            TRABUF(TSIZE) = 2
+          ELSE IF (TRABUF(TIBCH).GE.4) THEN
+            TRABUF(TSIZE) = 3
+          ELSE
+            TRABUF(TSIZE) = 2
+          ENDIF
+        ELSE
+          IF(TRABUF(TIBCH).GE.1.AND.TRABUF(TIBCH).LE.4) THEN
+            TRABUF(TSIZE) = 2
+          ELSE IF (TRABUF(TIBCH).GE.5) THEN
+            TRABUF(TSIZE) = 3
+          ENDIF
+        ENDIF 
+        TRABUF(TGOLMCOMF_IL) = 0
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C THE MESSAGEID IS ONLY SAVED FOR VALIDATION OF ONE TICKET ALL OTHER CASES ITS NOT SAVED         C
+C FOR LI/INSTANT TRANSACTIONS TTKID, TFAMTFLG, TFRAC, TFRAC, TSUBERR, TCDC                       C
+C AND TCDC_SOLD ARE FIELDS IGNORED SINCE ALL ARE OVERRIDE BY TIXRF FIELD                         C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 
+        TYPE *,'TICKETS IN BATCH:',AUX_TICKET_VAL
+C        TYPE *,'TRABUF(TSIZE):',TRABUF(TSIZE)
+        CALL TRALOG(TRABUF,BUF)                    
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) THEN
+                IF(I.NE.25 .AND. 
+     *          I.NE.TTKID .AND.
+     *          I.NE.TFAMTFLG .AND.     
+     *          I.NE.TFRAC .AND.
+     *          I.NE.TSUBERR .AND.
+     *          I.NE.TCDC .AND.     
+     *          I.NE.TCDC_SOLD .AND.
+     *          (I.NE.TVOLMMIDL_IL .AND. TRABUF(TIBCH).NE.1) .AND.
+     *          (I.NE.TVOLMMIDH_IL .AND. TRABUF(TIBCH).NE.1)
+     *          ) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+           ENDIF
+        ENDDO     
+        AUX_TICKET_VAL = AUX_TICKET_VAL + 1
+        IF(AUX_TICKET_VAL .LE. 7) GOTO 7000  
+        TYPE*,'END TESTING LI IRVMT NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'                           
+!===============================================================================        
+C v24 END
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IRVMT+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================               
+!===============================================================================        
+C v24 BEGIN
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IBVMT+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================     
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LI IBVMT NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)    
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    = 9999
+        TRABUF(TTER)    = 6000
+        TRABUF(TAGT)    = '000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  = 0
+        TRABUF(TTIM)    = '00112233'X
+        TRABUF(TTSTCS)  = 'FE'X      !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = '7F'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER      
+        TRABUF(TSTAT)   = GOOD
+        TRABUF(TTYP)    = TCRS
+        TRABUF(TITYP)   = IVAL   ! NEW BANK VALIDATION MODE LAYOUT   
+        TRABUF(TIVMT)   = IBVMT             
+        TRABUF(TSIZE)   = 3       !Number of Segments used in register the transaction/message in tmf file (3 for the batch 7 tickets)
+        TRABUF(TIIND)   = 'F'X
+        TRABUF(TIBCH)   = 7       !'F'X max value   !NUMBER IN BATCH
+        TRABUF(TIVALM)  = 'FF'X
+        TRABUF(TIVALT)  = 'FFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 0       !FILE STATUS
+        TRABUF(TINTRA)  = 1       !INTERNAL TRANSACTION FLAG
+        TRABUF(TGAMTYP) = TINS    !INSTANT TICKETS = 14 --- GAME TYPE
+        TRABUF(TGAMIND) = 1       !GAME INDEX 1
+C        TRABUF(TGAM)=GTNTAB(TINS,TRABUF(TGAMIND))
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC  
+        TRABUF(TIPCK1)   = 'FFFFFF'X          !INSTANT PACK NUMBER            (50-56)
+        TRABUF(TISTS1)   = 'FF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TIVRN1)   = 'FFFFFFFF'X  
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                 
+        TRABUF(TILTX1)   = 'FFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC         
+        TRABUF(TIPCKSTS1)= 'F'X
+        TRABUF(TIGAM1)   = 'FFF'X   
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TITIM1)   = 'FFFE'X              !INSTANT TIME CASHED AT GVT   note:haves to be even number
+        TRABUF(TICDC1)   = 'FFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TIPRZ1)   = 'FFFFFFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TIPLIDTYP)   = 'FF'X     !PLAYER ID TYPE
+        TRABUF(TINIBBA2)   = 'FF'X      !NIB ACCOUNT NUMBER (PART 2)
+        TRABUF(TINIBCD)   = 'FF'X       !NIB CHECK DIGITS
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TIPLCARD)  = 'FFFFFFFF'X!PLAYER ID
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TINIBBB)   = 'FFFF'X     !NIB BRANCH
+        TRABUF(TINIBBO)   = 'FFFF'X     !NIB OFFICE
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TINIBBA1) = 'FFFFFFFF'X  !NIB ACCOUNT NUMBER (PART 1)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TINETPRZ)  = 'FFFFFFFF'X  !NET PRIZE AMOUNT                
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TVOLMCOMF_IL) = 1
+        TRABUF(TVOLMSERL_IL) = '630FFFFF'X!1661992959
+        TRABUF(TVOLMSERM_IL) = '6BC75E2D'X!1808227885       
+        TRABUF(TVOLMSERH_IL) = '5'X
+        TRABUF(TVOLMMIDL_IL) = 'FFFFFFFF'X
+        TRABUF(TVOLMMIDH_IL) = '7F'X    
+ 
+        
+        
+        TRABUF(TTKID)   = 1       !TICKET ID
+        TRABUF(TFAMTFLG)  = 0 
+        TRABUF(TIXRF) = 'FFFFFFFF'X
+        TRABUF(TIVENV) = '7F'X          !ENVELOPE IDENTIFICATION NUMBER
+        TRABUF(TIVAGT) = 'FFFFFF'X
+        TRABUF(TIVTYP) = 'FF'X
+        CALL TRALOG(TRABUF,BUF)            
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) THEN
+                IF(I.NE.25 .AND. 
+     *          I.NE.TTKID .AND.
+     *          I.NE.TFAMTFLG .AND.     
+     *          I.NE.TFRAC .AND.
+     *          I.NE.TSUBERR .AND.
+     *          I.NE.TCDC .AND.     
+     *          I.NE.TCDC_SOLD) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+           ENDIF
+        ENDDO         
+        TYPE*,'END TESTING LI IBVMT NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'                           
+!===============================================================================        
+C v24 END
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IBVMT+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================
+!===============================================================================        
+C v24 BEGIN
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL ILOT+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================     
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LI ILOT NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)    
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    =9999
+        TRABUF(TTER)    =6000
+        TRABUF(TAGT)    ='000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  =0
+        TRABUF(TTIM)    ='00112233'X
+        TRABUF(TTSTCS)  = 'FE'X      !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = '7F'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER      
+        TRABUF(TSTAT)   = GOOD
+        TRABUF(TTYP)    = TCRS
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 0       !FILE STATUS
+        TRABUF(TINTRA)  = 1       !INTERNAL TRANSACTION FLAG
+        TRABUF(TSIZE)   = 2       !Number of Segments used in register the transaction/message in tmf file
+        TRABUF(TGAMTYP) = TINS    !INSTANT TICKETS = 14 --- GAME TYPE
+        TRABUF(TGAMIND) = 1       !GAME INDEX 1
+C        TRABUF(TGAM)=GTNTAB(TINS,TRABUF(TGAMIND))
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TTKID)   = 1       !TICKET ID
+        TRABUF(TFAMTFLG)  = 0 
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+
+
+        TRABUF(TIXRF) = 'FFFFFFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TITYP)   = ILOT   !INSTANT TYPE     
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TLREP)   = 'FFFFFF'X           !INSTANT LOT REP NUMBER     65535
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TLCLS)   = 'FF'X           !INSTANT LOT CLASS NUMBER   65535
+        TRABUF(TLGAM)   = 0395              !INSTANT LOT GAME NUMBER
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TLSTR)   = 9999 !INSTANT LOT START SEQ #
+        TRABUF(TLEND)   = 9999 !INSTANT LOT END SEQ #
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C        I1TEMP(4)       = 0
+        TRABUF(TLPCK)   = 0000528           !INSTANT LOT PACK NUMBER
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TLAMT)   = 2500              !INSTANT LOT AMOUNT           
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TLCOM)   = 'FFFFFFFF'X        !INSTANT LOT COMMISION    
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TGOLMCOMF_IL) = 1
+        TRABUF(TGOLMSERL_IL) = '630FFFFF'X!1661992959
+        TRABUF(TGOLMSERM_IL) = '6BC75E2D'X!1808227885       
+        TRABUF(TGOLMSERH_IL) = '5'X
+        TRABUF(TGOLMMIDL_IL) = 'FFFFFFFF'X
+        TRABUF(TGOLMMIDH_IL) = '7F'X    
+    
+        CALL TRALOG(TRABUF,BUF)
+        I4TEMP = BUF(7)
+C        I4TEMP = BUF(9)
+C        TYPE*,'TLREP:',I4TEMP
+C        TYPE*,'TITYP:',TRABUF(TITYP)        
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) THEN
+                IF(I.NE.25 .AND. 
+     *          I.NE.TTKID .AND.
+     *          I.NE.TFAMTFLG .AND.     
+     *          I.NE.TFRAC .AND.
+     *          I.NE.TSUBERR .AND.
+     *          I.NE.TCDC .AND.     
+     *          I.NE.TCDC_SOLD) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+           ENDIF
+        ENDDO         
+        TYPE*,'END TESTING LI ILOT NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'                           
+!===============================================================================        
+C v24 END
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL ILOT+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================
+!===============================================================================        
+C v24 BEGIN
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL ICAR+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================     
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LI ICAR NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)    
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    =9999
+        TRABUF(TTER)    =6000
+        TRABUF(TAGT)    ='000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  =0
+        TRABUF(TTIM)    ='00112233'X
+        TRABUF(TTSTCS)  = 'FE'X      !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = '7F'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER      
+        TRABUF(TSTAT)   = GOOD
+        TRABUF(TTYP)    = TCRS
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 0           !FILE STATUS
+        TRABUF(TINTRA)  = 1        !INTERNAL TRANSACTION FLAG
+        TRABUF(TSIZE)   = 2         !Number of Segments used in register the transaction/message in tmf file
+        TRABUF(TGAMTYP) = TINS    !INSTANT TICKETS = 14 --- GAME TYPE
+        TRABUF(TGAMIND) = 1       !GAME INDEX 1
+C        TRABUF(TGAM)=GTNTAB(TINS,TRABUF(TGAMIND))
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TTKID)   = 1       !TICKET ID
+        TRABUF(TFAMTFLG)  = 0 
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+
+        TRABUF(TIXRF) = 'FFFFFFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TITYP)   = ICAR   !INSTANT TYPE     
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TCREP)   = 'FFFFFF'X           !INSTANT CAR REP NUMBER     65535
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TCCLS)   = 'FF'X             !INSTANT CAR CLASS NUMBER   65535
+        TRABUF(TCGAM)   = 0395              !INSTANT CAR GAME NUMBER
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TCCAR)   = 'FFFFFFFF'X              !INSTANT CAR CARTON NUMBER
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C        I1TEMP(4)       = 0
+        TRABUF(TCSTA)   = 'FFFFFFFF'X           !INSTANT CAR START PACK #
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TCEND)   = 'FFFFFFFF'X           !INSTANT CAR END PACK #       
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TCCNT)   = 'FFFFFFFF'X           !INSTANT CAR PACK COUNT  
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TGOLMCOMF_IL) = 1
+        TRABUF(TGOLMSERL_IL) = '630FFFFF'X!1661992959
+        TRABUF(TGOLMSERM_IL) = '6BC75E2D'X!1808227885       
+        TRABUF(TGOLMSERH_IL) = '5'X
+        TRABUF(TGOLMMIDL_IL) = 'FFFFFFFF'X
+        TRABUF(TGOLMMIDH_IL) = '7F'X    
+    
+
+        CALL TRALOG(TRABUF,BUF)
+        I4TEMP = BUF(7)
+C        I4TEMP = BUF(9)
+C        TYPE*,'TLREP:',I4TEMP
+C        TYPE*,'TITYP:',TRABUF(TITYP)        
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) THEN
+                IF(I.NE.25 .AND. 
+     *          I.NE.TTKID .AND.
+     *          I.NE.TFAMTFLG .AND.     
+     *          I.NE.TFRAC .AND.
+     *          I.NE.TSUBERR .AND.
+     *          I.NE.TCDC .AND.     
+     *          I.NE.TCDC_SOLD) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+           ENDIF
+        ENDDO         
+        TYPE*,'END TESTING LI ICAR NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'                           
+!===============================================================================        
+C v24 END
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL ICAR+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================
+!===============================================================================        
+C v24 BEGIN
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IQTA+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================     
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LI IQTA NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)    
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    =9999
+        TRABUF(TTER)    =6000
+        TRABUF(TAGT)    ='000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  =0
+        TRABUF(TTIM)    ='00112233'X
+        TRABUF(TTSTCS)  = 'FE'X      !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = '7F'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER      
+        TRABUF(TSTAT)   = GOOD
+        TRABUF(TTYP)    = TCRS
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 0           !FILE STATUS
+        TRABUF(TINTRA)  = 1        !INTERNAL TRANSACTION FLAG
+        TRABUF(TSIZE)   = 2         !Number of Segments used in register the transaction/message in tmf file
+        TRABUF(TGAMTYP) = TINS    !INSTANT TICKETS = 14 --- GAME TYPE
+        TRABUF(TGAMIND) = 1       !GAME INDEX 1
+C        TRABUF(TGAM)=GTNTAB(TINS,TRABUF(TGAMIND))
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TTKID)   = 1       !TICKET ID
+        TRABUF(TFAMTFLG)  = 0 
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+
+        TRABUF(TIXRF) = 'FFFFFFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TITYP)   = IQTA      
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TRGAM)   = 'FFF'X                !REPORT GAME NUMBER 1byte+1nibble
+        TRABUF(TRCLS)   = 'F'X                  !REPORT CLASS NUMBER
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TRNXT1)  = 'FFFF'X              !REPORT NEXT GAME/PRODUCT #
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TRNXT2)  = 'FFFFFFFF'X          !REPORT NEXT GAME/PRODUCT #
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TGOLMCOMF_IL) = 1
+        TRABUF(TGOLMSERL_IL) = '630FFFFF'X!1661992959
+        TRABUF(TGOLMSERM_IL) = '6BC75E2D'X!1808227885       
+        TRABUF(TGOLMSERH_IL) = '5'X
+        TRABUF(TGOLMMIDL_IL) = 'FFFFFFFF'X
+        TRABUF(TGOLMMIDH_IL) = '7F'X    
+    
+        CALL TRALOG(TRABUF,BUF)
+        I4TEMP = BUF(7)
+C        I4TEMP = BUF(9)
+C        TYPE*,'TLREP:',I4TEMP
+C        TYPE*,'TITYP:',TRABUF(TITYP)        
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) THEN
+                IF(I.NE.25 .AND. 
+     *          I.NE.TTKID .AND.
+     *          I.NE.TFAMTFLG .AND.     
+     *          I.NE.TFRAC .AND.
+     *          I.NE.TSUBERR .AND.
+     *          I.NE.TCDC .AND.     
+     *          I.NE.TCDC_SOLD) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+           ENDIF
+        ENDDO         
+        TYPE*,'END TESTING LI IQTA NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'                           
+!===============================================================================        
+C v24 END
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IQTA+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================
+!===============================================================================        
+C v24 BEGIN
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IORD+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================     
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LI IORD NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)    
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    =9999
+        TRABUF(TTER)    =6000
+        TRABUF(TAGT)    ='000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  =0
+        TRABUF(TTIM)    ='00112233'X
+        TRABUF(TTSTCS)  = 'FE'X      !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = '7F'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER      
+        TRABUF(TSTAT)   = GOOD
+        TRABUF(TTYP)    = TCRS
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 0           !FILE STATUS
+        TRABUF(TINTRA)  = 1        !INTERNAL TRANSACTION FLAG
+        TRABUF(TSIZE)   = 2         !Number of Segments used in register the transaction/message in tmf file
+        TRABUF(TGAMTYP) = TINS    !INSTANT TICKETS = 14 --- GAME TYPE
+        TRABUF(TGAMIND) = 1       !GAME INDEX 1
+C        TRABUF(TGAM)=GTNTAB(TINS,TRABUF(TGAMIND))
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TTKID)   = 1       !TICKET ID
+        TRABUF(TFAMTFLG)  = 0 
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+
+        TRABUF(TIXRF) = 'FFFFFFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TITYP)   = IORD      
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TGPGAM)   = 'FFFF'X               !GAME NUMBER
+        TRABUF(TGPNXT)   = 'FFFF'X               !CONTINUATION GAME NUMBER
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TGPAGT)  = 'FFFFFFFF'X          !RETAILER NUMBER OF CREDIT LIMIT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TGPRCL)  = 'FFFFFFFF'X          !REPORT NEXT GAME/PRODUCT #
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TGOLMCOMF_IL) = 1
+        TRABUF(TGOLMSERL_IL) = '630FFFFF'X!1661992959
+        TRABUF(TGOLMSERM_IL) = '6BC75E2D'X!1808227885       
+        TRABUF(TGOLMSERH_IL) = '5'X
+        TRABUF(TGOLMMIDL_IL) = 'FFFFFFFF'X
+        TRABUF(TGOLMMIDH_IL) = '7F'X    
+    
+        CALL TRALOG(TRABUF,BUF)     
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) THEN
+C                IF(I.NE.25) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+                IF(I.NE.25 .AND. 
+     *          I.NE.TTKID .AND.
+     *          I.NE.TFAMTFLG .AND.     
+     *          I.NE.TFRAC .AND.
+     *          I.NE.TSUBERR .AND.
+     *          I.NE.TCDC .AND.     
+     *          I.NE.TCDC_SOLD) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+           ENDIF
+        ENDDO         
+        TYPE*,'END TESTING LI IORD NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'                           
+!===============================================================================        
+C v24 END
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IORD+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================   
+!===============================================================================        
+C v24 BEGIN
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IMNU+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================     
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LI IMNU NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        AUX_GAME_NUM = 1 
+        AUX_INDEX = 1
+7010    CONTINUE        
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)   
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    =9999
+        TRABUF(TTER)    =6000
+        TRABUF(TAGT)    ='000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  =0
+        TRABUF(TTIM)    ='00112233'X
+        TRABUF(TTSTCS)  = 'FE'X      !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = '7F'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER      
+        TRABUF(TSTAT)   = GOOD       !STATUS  
+        TRABUF(TTYP)    = TCRS
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 0           !FILE STATUS
+        TRABUF(TINTRA)  = 1        !INTERNAL TRANSACTION FLAG
+        TRABUF(TSIZE)   = 1       !Number of Segments used in register the transaction/message in tmf file that also represents the internal serial number of MILL
+        TRABUF(TGAMTYP) = TINS    !INSTANT TICKETS = 14 --- GAME TYPE
+        TRABUF(TGAMIND) = 1       !GAME INDEX 1
+C        TRABUF(TGAM)=GTNTAB(TINS,TRABUF(TGAMIND))
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+C        TRABUF(TTKID)   = 1       !TICKET ID
+C        TRABUF(TFAMTFLG)  = 0 
+C        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+C        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+C        TRABUF(TCDC_SOLD)= 9990
+
+        TRABUF(TIXRF) = 'FFFFFFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TITYP)   = IMNU      
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TIBCH)   = AUX_GAME_NUM     !NUMBER IN BATCH - being the max value of 40 supported by IPS and
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  controlled at dimnu at "GET NUMBER OF ORDERS IN BATCH" returns a error message        
+        TRABUF(TSORD)  = 'FFFFFFFF'X         !ORDER NUMBER - 'FFFFFFFF'X 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TSINF)  = 'FFFFFFFF'X         !ORDER INFO
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        DO X = 0, AUX_GAME_NUM-1
+            TRABUF(TSGAM+X) = (436+X)+4096   !GAME (REQUESTED)  4535-4096=439 -- 31+3=34  (31-70)  last nible is alls 1 for Game Type that is Instant Game thats 0x1000=4096 constant
+            TRABUF(TSQTY+X) = 1              !SUPPLY QUANTITY (REQUESTED) 71+3=74  (71-110)
+        ENDDO
+C        TRABUF(TSSTK1) = 0                              !OUT OF STOCK BITMAP (1 TO 32)  (112)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TGOLMCOMF_IL) = 1
+        TRABUF(TGOLMSERL_IL) = '630FFFFF'X!1661992959
+        TRABUF(TGOLMSERM_IL) = '6BC75E2D'X!1808227885       
+        TRABUF(TGOLMSERH_IL) = '5'X
+        TRABUF(TGOLMMIDL_IL) = 'FFFFFFFF'X
+        TRABUF(TGOLMMIDH_IL) = '7F'X    
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
+           IF(TRABUF(TIBCH).GT.3 .AND. TRABUF(TIBCH).LE.24) THEN  
+              TRABUF(TSIZE) = 2
+           ELSE IF (TRABUF(TIBCH).GT.24) THEN 
+              TRABUF(TSIZE) = 3
+           ENDIF
+        ELSE
+           IF(TRABUF(TIBCH).GE.9.AND.TRABUF(TIBCH).LE.28) THEN
+              TRABUF(TSIZE) = 2
+           ELSE IF (TRABUF(TIBCH).GE.29) THEN
+              TRABUF(TSIZE) = 3
+           ENDIF
+        ENDIF    
+
+        TYPE *,'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+        TYPE *,'GAMES BLOCK:',AUX_MAX_GAMES(AUX_INDEX)
+        TYPE *,'Games in batch:',AUX_GAME_NUM
+C        TYPE *,'TRABUF(TSIZE):',TRABUF(TSIZE)
+
+        CALL TRALOG(TRABUF,BUF) 
+        
+        I4TEMP = BUF(10)
+C        TYPE *,'10 -- I1TEMP(1):',I1TEMP(1)
+C        TYPE *,'10 -- I1TEMP(2):',I1TEMP(2)
+C        TYPE *,'10 -- I1TEMP(3):',I1TEMP(3)
+C        TYPE *,'10 -- I1TEMP(4):',I1TEMP(4)
+C
+C        I4TEMP = BUF(11)
+C        TYPE *,'11 -- I1TEMP(1):',I1TEMP(1)
+C        TYPE *,'11 -- I1TEMP(2):',I1TEMP(2)
+C        TYPE *,'11 -- I1TEMP(3):',I1TEMP(3)
+C        TYPE *,'11 -- I1TEMP(4):',I1TEMP(4)
+C
+C        BUFF(1) = I1TEMP(3)
+C        BUFF(2) = I1TEMP(4)
+C        I4TEMP = BUF(12)
+C        TYPE *,'12 -- I1TEMP(1):',I1TEMP(1)
+C        TYPE *,'12 -- I1TEMP(2):',I1TEMP(2)
+C        TYPE *,'12 -- I1TEMP(3):',I1TEMP(3)
+C        TYPE *,'12 -- I1TEMP(4):',I1TEMP(4)
+
+        BUFF(3) = I1TEMP(1)
+        I1TEMP(1) = BUFF(1)
+        I1TEMP(2) = BUFF(2)
+        I1TEMP(3) = BUFF(3)
+        I1TEMP(4) = 0
+
+C        GTYP_AUX = ISHFT(I4TEMP,-20) !should alls be 1
+C        TYPE *,'GTYP (1)?:',GTYP_AUX
+C        GNUM = IAND(I4TEMP,'000FFFFF'X) 
+C        TSQTY_AUX = MOD(GNUM,1000)
+C        GNUM = (GNUM - GTYP_AUX)/1000
+C        TSGAM_AUX = ISHFT(GTYP_AUX,12) + IAND(GNUM,'0FFF'X)
+C        TYPE *,'GNUM (438)?:',GNUM
+C        TYPE *,'TSQTY (1)?:',TSQTY_AUX
+
+        CALL LOGTRA(TBUF,BUF)
+
+C        DO X = 0, AUX_GAME_NUM-1
+C          TYPE *,'Game Number:',IAND(TBUF(TSGAM+X),'0FFF'X)
+C          TYPE *,'Quantity Reserved:',TBUF(TSQTY+X)
+C        ENDDO        
+
+CCCCC
+CCCCC
+CCCCCCCCC
+CC
+CC
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) THEN
+C                IF(I.NE.25) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+                IF(I.NE.25 .AND. 
+     *          I.NE.TTKID .AND.
+     *          I.NE.TFAMTFLG .AND.     
+     *          I.NE.TFRAC .AND.
+     *          I.NE.TSUBERR .AND.
+     *          I.NE.TCDC .AND.     
+     *          I.NE.TCDC_SOLD) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+           ENDIF
+        ENDDO 
+        AUX_GAME_NUM = AUX_GAME_NUM + 1 
+        IF (AUX_GAME_NUM .GT. AUX_MAX_GAMES(AUX_INDEX)) THEN
+            AUX_INDEX = AUX_INDEX + 1
+            AUX_GAME_NUM = 1
+        ENDIF
+        IF (AUX_INDEX .LE. 3 .AND. AUX_GAME_NUM .LE. AUX_MAX_GAMES(AUX_INDEX)) GOTO 7010  !3 !24 !40 ciclys     
+        TYPE*,'END TESTING LI IMNU NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'                           
+!===============================================================================        
+C v24 END
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IMNU+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================  
+!===============================================================================        
+C v24 BEGIN
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL ICNF+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================     
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LI ICNF NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)    
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    =9999
+        TRABUF(TTER)    =6000
+        TRABUF(TAGT)    ='000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  =0
+        TRABUF(TTIM)    ='00112233'X
+        TRABUF(TTSTCS)  = 'FE'X      !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = '7F'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER      
+        TRABUF(TSTAT)   = GOOD
+        TRABUF(TTYP)    = TCRS
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 0           !FILE STATUS
+        TRABUF(TINTRA)  = 1        !INTERNAL TRANSACTION FLAG
+        TRABUF(TSIZE)   = 1         !Number of Segments used in register the transaction/message in tmf file
+        TRABUF(TGAMTYP) = TINS    !INSTANT TICKETS = 14 --- GAME TYPE
+        TRABUF(TGAMIND) = 1       !GAME INDEX 1
+C        TRABUF(TGAM)=GTNTAB(TINS,TRABUF(TGAMIND))
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TTKID)   = 1       !TICKET ID
+        TRABUF(TFAMTFLG)  = 0 
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+
+        TRABUF(TIXRF) = 'FFFFFFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TITYP)   = ICNF      !INSTANT ORDER CONFIRMATION
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TIINV1)   = '7FFF'X         !INSTANT INVOICE 1
+        TRABUF(TIINV2)   = '7FFF'X         !INSTANT INVOICE 2
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TIINV3)  = 'FFFFFFFF'X      !INSTANT INVOICE THREE
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TGOLMCOMF_IL) = 1
+        TRABUF(TGOLMSERL_IL) = '630FFFFF'X!1661992959
+        TRABUF(TGOLMSERM_IL) = '6BC75E2D'X!1808227885       
+        TRABUF(TGOLMSERH_IL) = '5'X
+        TRABUF(TGOLMMIDL_IL) = 'FFFFFFFF'X
+        TRABUF(TGOLMMIDH_IL) = '7F'X        
+        CALL TRALOG(TRABUF,BUF)      
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) THEN
+C                IF(I.NE.25) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+                IF(I.NE.25 .AND. 
+     *          I.NE.TTKID .AND.
+     *          I.NE.TFAMTFLG .AND.     
+     *          I.NE.TFRAC .AND.
+     *          I.NE.TSUBERR .AND.
+     *          I.NE.TCDC .AND.     
+     *          I.NE.TCDC_SOLD) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+           ENDIF
+        ENDDO         
+        TYPE*,'END TESTING LI ICNF NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'                           
+!===============================================================================        
+C v24 END
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL ICNF+++++++++++++++++++++++++++++++++++++++++++++++   
+!=============================================================================== 
+!===============================================================================        
+C v24 BEGIN
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IOACT+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================     
+        TYPE*,'==============================================='
+        TYPE*,'BEGIN TESTING LI IOACT NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'
+        CALL FASTSET(0,TRABUF,TRALEN)
+        CALL FASTSET(0,TBUF,TRALEN)    
+CCCCCCCCCCCC TRANSACTION HEADER CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+C        TRABUF(TSER)    =64123499
+        TRABUF(TCDC)    =9999
+        TRABUF(TTER)    =6000
+        TRABUF(TAGT)    ='000493E6'X!AGENT NUMBER 0300006
+        TRABUF(TNFRAC)  =0
+        TRABUF(TTIM)    ='00112233'X
+        TRABUF(TTSTCS)  = 'FE'X      !TERMINAL STATISTICS (max possible flags 1111 1110 the last is 0 because x01 is not used so alls 0)
+        TRABUF(TCHK)    = '7F'X      !MESSAGE CHECKSUM (generated from the size of the message with the CDC and another field)
+        TRABUF(TERR)    = NOER      
+        TRABUF(TSTAT)   = GOOD
+        TRABUF(TTYP)    = TCRS
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TFIL)    = 0           !FILE STATUS
+        TRABUF(TINTRA)  = 1        !INTERNAL TRANSACTION FLAG
+        TRABUF(TSIZE)   = 1         !Number of Segments used in register the transaction/message in tmf file
+        TRABUF(TGAMTYP) = TINS    !INSTANT TICKETS = 14 --- GAME TYPE
+        TRABUF(TGAMIND) = 1       !GAME INDEX 1
+C        TRABUF(TGAM)=GTNTAB(TINS,TRABUF(TGAMIND))
+CCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TTKID)   = 1       !TICKET ID
+        TRABUF(TFAMTFLG)  = 0 
+        TRABUF(TFRAC)   = 1         !# OF FRACTIONS (its LOTTO its not a fraction so alls 1?)
+        TRABUF(TSUBERR) = NOER
+C       TRABUF(TCDC)    =9999
+        TRABUF(TCDC_SOLD)= 9990
+
+        TRABUF(TIXRF) = 'FFFFFFFF'X
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC TRANSACTION BODY CCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        TRABUF(TITYP)   = IOACT      !INSTANT ORDER CONFIRMATION
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TIINV1)   = '7FFF'X         !INSTANT INVOICE 1
+        TRABUF(TIINV2)   = '7FFF'X         !INSTANT INVOICE 2
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TIINV3)  = 'FFFFFFFF'X      !INSTANT INVOICE THREE
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        TRABUF(TGOLMCOMF_IL) = 1
+        TRABUF(TGOLMSERL_IL) = '630FFFFF'X!1661992959
+        TRABUF(TGOLMSERM_IL) = '6BC75E2D'X!1808227885       
+        TRABUF(TGOLMSERH_IL) = '5'X
+        TRABUF(TGOLMMIDL_IL) = 'FFFFFFFF'X
+        TRABUF(TGOLMMIDH_IL) = '7F'X        
+        CALL TRALOG(TRABUF,BUF)      
+        CALL LOGTRA(TBUF,BUF)
+        DO I=1,TRALEN
+           IF(TRABUF(I).NE.TBUF(I)) THEN
+C                IF(I.NE.25) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+                IF(I.NE.25 .AND. 
+     *          I.NE.TTKID .AND.
+     *          I.NE.TFAMTFLG .AND.     
+     *          I.NE.TFRAC .AND.
+     *          I.NE.TSUBERR .AND.
+     *          I.NE.TCDC .AND.     
+     *          I.NE.TCDC_SOLD) TYPE*,'IND ',I,TRABUF(I),TBUF(I)
+           ENDIF
+        ENDDO         
+        TYPE*,'END TESTING LI IOACT NEW TRANSACTION FIELDS - MessageId,Serial Olimpo,Channel Flag'                           
+!===============================================================================        
+C v24 END
+C INSTANT LOTTERY TRANSACTIONS NEW FIELDS MESSAGEID, SERIAL OLIMPO, CHANNEL FLAG
+!++++++++++++++++++++++LI/IL IOACT+++++++++++++++++++++++++++++++++++++++++++++++   
+!===============================================================================         
+!===============================================================================  
 C
 C EM TRANSACTIONS
 C
@@ -1802,3 +3015,40 @@ C
         TYPE*,'==============================================='
         CALL GSTOP(GEXIT_SUCCESS)
         END
+
+C ******************************************************************************
+C
+C     SUBROUTINE: SET_CANCELATION_EVENTS_BITMAP
+C     AUTHOR    : J.H.R
+C     VERSION   : 01            DATE: 03 / 04 / 2017
+C
+C ******************************************************************************
+C
+C FUNCTION TO GE THE TOTAL NUMBER OF CANCELLED EVENTS FROM COMMON MEMORY
+C
+C==== OPTIONS /CHECK=NOOVERFLOW
+      SUBROUTINE SET_CANCELATION_EVENTS_BITMAP(TRABUF)
+      IMPLICIT NONE
+C
+      INCLUDE 'INCLIB:GLOBAL.DEF'
+      INCLUDE 'INCLIB:DESTRA.DEF'
+      INCLUDE 'INCLIB:SPTCOM.DEF'
+C
+      INTEGER * 4 ROW_IDX       ! ROW INDEX COUNTER
+C
+      IF(TRABUF(TSTAT)   .NE. GOOD) RETURN
+      IF(TRABUF(TERR)    .NE. NOER) RETURN
+      IF(TRABUF(TGAMTYP) .NE. TSPT) RETURN   ! ONLY SPORTS GAME TYPE
+C
+      IF(MIN(SPTMAX(TRABUF(TGAMIND)), SPGNBR) .GE. 33) THEN
+        CALL OPSTXT('WRONG DRAW SETUP TO TO UPDATE EVENT CANCELTAION BITMAP !!!')
+        RETURN
+      ENDIF
+C
+      TRABUF(TWCEBM) = 0
+C
+      DO ROW_IDX = 1, MIN(SPTMAX(TRABUF(TGAMIND)), SPGNBR)
+        IF(SPTECD(ROW_IDX, TRABUF(TGAMIND)) .NE. 0) CALL BSET(TRABUF(TWCEBM), 32 - ROW_IDX)
+      ENDDO
+C
+      END
