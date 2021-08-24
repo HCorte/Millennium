@@ -15,12 +15,12 @@ IPS_INV6010_20210324_110824.RPT
      0000401  0086260  Available  X             0000401  0098800  Available               0000401  0100671  Available                  
      0000401  0113529  Available  x             0000401  0113530  Available               0000401  0122230  Available                  
      0000401  0127948  Available  x             0000401  0127951  Available               0000401  0140086  Available                  
-     0000401  0148172  Available               0000401  0151363  Available               0000401  0151489  Available                  
+     0000401  0148172  Available  x             0000401  0151363  Available               0000401  0151489  Available                  
      0000401  0154183  Available               0000401  0154970  Available               0000401  0155577  Available                  
      0000401  0158692  Recovered-Full          0000401  0165694  Available               0000401  0173223  Available                  
-     0000401  0186327  Available               0000401  0187159  Available               0000401  0194722  Available                  
-     0000401  0216518  Available               0000401  0222752  Destroyed-Full          0000401  0225719  Available                  
-     0000401  0225720  Available               0000401  0227421  Available               0000401  0231641  Available                  
+     0000401  0186327  Available  X             0000401  0187159  Available               0000401  0194722  Available                  
+     0000401  0216518  Available  X             0000401  0222752  Destroyed-Full          0000401  0225719  Available                  
+     0000401  0225720  Available  X             0000401  0227421  Available               0000401  0231641  Available                  
      0000401  0238523  Available               0000401  0240515  Available               0000401  0243422  Available                  
      0000401  0244951  Available               0000401  0253148  Missing-Full            0000401  0258090  Available                  
      0000401  0258091  Available               0000401  0262758  Available               0000401  0264827  Available                  

@@ -30,9 +30,9 @@ IPS_INV6010_20210215_132456.RPT
                                                                                                                                       
      Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
      -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
-     0000401  0001025  Available               0000401  0001142  Available    X           0000401  0001406  Available                  
-     0000401  0006304  Available               0000401  0032061  Available               0000401  0033696  Available                  
-     0000401  0049218  Missing-Full            0000401  0066634  Available    x           0000401  0070526  Available                  
+     0000401  0001025  Available               0000401  0001142  Available    X           0000401  0001406  Available  X                
+     0000401  0006304  Available               0000401  0032061  Available               0000401  0033696  Available   X               
+     0000401  0049218  Missing-Full            0000401  0066634  Available    x           0000401  0070526  Available  X                
      0000401  0077444  Missing-Full            0000401  0087786  Available    x           0000401  0090862  Available                  
      0000401  0097462  Available   x            0000401  0099060  Available   x            0000401  0099547  Available                  
      0000401  0099732  Available   x            0000401  0102892  Available   x            0000401  0107693  Available                  
@@ -42,14 +42,14 @@ IPS_INV6010_20210215_132456.RPT
      0000401  0163184  Available   x              0000401  0163185  Available x              0000401  0163186  Available                  
      0000401  0166063  Available   x            0000401  0166064  Available   x            0000401  0166065  Available                  
      0000401  0166066  Available   x            0000401  0166067  Available               0000401  0166122  Available                  
-     0000401  0167059  Available   x --           0000401  0174038  Available               0000401  0174039  Available                  
+     0000401  0167059  Available   x --           0000401  0174038  Available  x             0000401  0174039  Available                  
      0000401  0174619  Available   x            0000401  0188260  Available               0000401  0198434  Available                  
-     0000401  0204027  Available   x              0000401  0206009  Available               0000401  0208032  Available                  
-     0000401  0208033  Available   x            0000401  0209091  Available               0000401  0209092  Available                  
+     0000401  0204027  Available   x              0000401  0206009  Available  X             0000401  0208032  Available                  
+     0000401  0208033  Available   x            0000401  0209091  Available    X           0000401  0209092  Available                  
      0000401  0209093  Available   x            0000401  0211390  Missing-Full            0000401  0212123  Available                  
-     0000401  0219491  Available   X            0000401  0219539  Available               0000401  0219818  Available                  
-     0000401  0219939  Available               0000401  0240989  Available               0000401  0240992  Available                  
-     0000401  0240996  Available               0000401  0240998  Available               0000401  0240999  Available                  
+     0000401  0219491  Available   X            0000401  0219539  Available    X           0000401  0219818  Available                  
+     0000401  0219939  Available               0000401  0240989  Available     X          0000401  0240992  Available                  
+     0000401  0240996  Available               0000401  0240998  Available     X          0000401  0240999  Available                  
      0000401  0241005  Available   x 1            0000401  0241006  Available               0000401  0241007  Available                  
      0000401  0241008  Available   x 2            0000401  0241009  Available               0000401  0241010  Available                  
      0000401  0241011  Available               0000401  0246819  Available               0000401  0246859  Available                  
