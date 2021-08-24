@@ -336,7 +336,14 @@ C        ENDIF
            TRABUF(TCOLMSERH_TLTO)=BPRO(SEROLM_OLM+8,BUF)
            TRABUF(TCOLMMIDL_TLTO)=PRO(MESSID_INT_OLM,BUF)
            TRABUF(TCOLMMIDH_TLTO)=BPRO(MESSID_OLM+4,BUF)
-           TRABUF(TCOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)
+           TRABUF(TCOLMCOMF_TLTO)=BPRO(CHOLM_OLM,BUF)  
+CCCCCCCCCCC RESETS THE VALUE OF THE WAGER TRANSACTION NEW FIELD (MESSID,SERIALOLM,FLAGCH)CCC          
+           TRABUF(TWCOLMSERL_TLTO)=0                
+           TRABUF(TWCOLMSERM_TLTO)=0                
+           TRABUF(TWCOLMSERH_TLTO)=0
+           TRABUF(TWCOLMMIDL_TLTO)=0
+           TRABUF(TWCOLMMIDH_TLTO)=0
+           TRABUF(TWCOLMCOMF_TLTO)=0
         ENDIF        
 C----+------------------------------------------------------------------
 C V15| New Terminals Project - Olimpo
