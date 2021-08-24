@@ -15,6 +15,18 @@ C       show the status of P(SUPSYN)
         PRINT *,'P(OLMCONF)=',P(OLMCONF)
         PAR.OLMCON = P(OLMCONF)    
 
+        PRINT *,'P(SYSTYP)',P(SYSTYP)
+        IF(P(SYSTYP) .NE. LIVSYS) THEN 
+            PRINT *,'Nao e Sistema primario (not live system):',LIVSYS
+        ELSE 
+            PRINT *,'E sistema primario (live system):',LIVSYS
+        ENDIF
+
+        PRINT *,'DAYSTS:',DAYSTS
+        PRINT *,'DSSUSP:',DSSUSP
+        PRINT *,'DSOPEN:',DSOPEN
+
+
         PRINT *,'P(SUPSYN)=',P(SUPSYN) 
         PRINT *,'P(SUPWEL)=',P(SUPWEL) 
         PRINT *,'P(NUMENC)=',P(NUMENC) 
