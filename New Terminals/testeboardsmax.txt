@@ -1,0 +1,75 @@
+{
+    "terminalCode": "{{agentnum}}",
+    "token": "{{token}}",
+    "wager": {
+        "playerIdentification": "a",
+        "playerIdentificationShdes": "b",
+        "playerContact": "c",
+        "playerCardCode": "d",
+        "ticketList": [
+            {
+                "quickPickIndicator": false,
+                "luckyNumber": 1,
+                "boardList": [
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    }
+                ],
+                "gameIndex": 3,
+                "numberOfBoards": 10,
+                "numberOfNumbers": 5,
+                "wagerAmount": {
+                  "value": 2,
+                  "formattedValue": "2€"
+                }
+            }
+        ]
+    }
+}
