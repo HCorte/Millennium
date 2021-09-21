@@ -1,0 +1,182 @@
+Wager:
+
+{
+  "terminalCode": "{{agentnum}}",
+  "token": "{{token}}",
+  "statistic": {
+    "additionalProp1": {},
+    "additionalProp2": {},
+    "additionalProp3": {}
+  },
+  "wager": {
+    "playerIdentification": "playerIdentification",
+    "playerIdentificationShdes": "playerIdentificationShdes",
+    "playerContact": "playerContact",
+    "playerCardCode": "playerCa",
+    "gameIndex": 1,
+    "ticketList": [
+      {
+        "boardList": [
+          {
+            "rowBet01": "1",
+            "rowBet02": "1",
+            "rowBet03": "1",
+            "rowBet04": "1",
+            "rowBet05": "1",
+            "rowBet06": "1",
+            "rowBet07": "1",
+            "rowBet08": "1",
+            "rowBet09": "1",
+            "rowBet10": "1",
+            "rowBet11": "1",
+            "rowBet12": "1",
+            "rowBet13": "1"
+          },
+          {
+            "rowBet01": "1",
+            "rowBet02": "1",
+            "rowBet03": "1",
+            "rowBet04": "1",
+            "rowBet05": "1",
+            "rowBet06": "1",
+            "rowBet07": "1",
+            "rowBet08": "1",
+            "rowBet09": "1",
+            "rowBet10": "1",
+            "rowBet11": "1",
+            "rowBet12": "1",
+            "rowBet13": "1"
+          },
+          {
+            "rowBet01": "1",
+            "rowBet02": "1",
+            "rowBet03": "1",
+            "rowBet04": "1",
+            "rowBet05": "1",
+            "rowBet06": "1",
+            "rowBet07": "1",
+            "rowBet08": "1",
+            "rowBet09": "1",
+            "rowBet10": "1",
+            "rowBet11": "1",
+            "rowBet12": "1",
+            "rowBet13": "1"
+          },
+          {
+            "rowBet01": "1",
+            "rowBet02": "1",
+            "rowBet03": "1",
+            "rowBet04": "1",
+            "rowBet05": "1",
+            "rowBet06": "1",
+            "rowBet07": "1",
+            "rowBet08": "1",
+            "rowBet09": "1",
+            "rowBet10": "1",
+            "rowBet11": "1",
+            "rowBet12": "1",
+            "rowBet13": "1"
+          },
+          {
+            "rowBet01": "1",
+            "rowBet02": "1",
+            "rowBet03": "1",
+            "rowBet04": "1",
+            "rowBet05": "1",
+            "rowBet06": "1",
+            "rowBet07": "1",
+            "rowBet08": "1",
+            "rowBet09": "1",
+            "rowBet10": "1",
+            "rowBet11": "1",
+            "rowBet12": "1",
+            "rowBet13": "1"
+          },
+          {
+            "rowBet01": "1",
+            "rowBet02": "1",
+            "rowBet03": "1",
+            "rowBet04": "1",
+            "rowBet05": "1",
+            "rowBet06": "1",
+            "rowBet07": "1",
+            "rowBet08": "1",
+            "rowBet09": "1",
+            "rowBet10": "1",
+            "rowBet11": "1",
+            "rowBet12": "1",
+            "rowBet13": "1"
+          },
+          {
+            "rowBet01": "1",
+            "rowBet02": "1",
+            "rowBet03": "1",
+            "rowBet04": "1",
+            "rowBet05": "1",
+            "rowBet06": "1",
+            "rowBet07": "1",
+            "rowBet08": "1",
+            "rowBet09": "1",
+            "rowBet10": "1",
+            "rowBet11": "1",
+            "rowBet12": "1",
+            "rowBet13": "1"
+          },
+          {
+            "rowBet01": "1",
+            "rowBet02": "1",
+            "rowBet03": "1",
+            "rowBet04": "1",
+            "rowBet05": "1",
+            "rowBet06": "1",
+            "rowBet07": "1",
+            "rowBet08": "1",
+            "rowBet09": "1",
+            "rowBet10": "1",
+            "rowBet11": "1",
+            "rowBet12": "1",
+            "rowBet13": "1"
+          },
+          {
+            "rowBet01": "1",
+            "rowBet02": "1",
+            "rowBet03": "1",
+            "rowBet04": "1",
+            "rowBet05": "1",
+            "rowBet06": "1",
+            "rowBet07": "1",
+            "rowBet08": "1",
+            "rowBet09": "1",
+            "rowBet10": "1",
+            "rowBet11": "1",
+            "rowBet12": "1",
+            "rowBet13": "1"
+          },
+          {
+            "rowBet01": "1",
+            "rowBet02": "1",
+            "rowBet03": "1",
+            "rowBet04": "1",
+            "rowBet05": "1",
+            "rowBet06": "1",
+            "rowBet07": "1",
+            "rowBet08": "1",
+            "rowBet09": "1",
+            "rowBet10": "1",
+            "rowBet11": "1",
+            "rowBet12": "1",
+            "rowBet13": "1"
+          }
+        ],
+        "super14": "1"
+      }
+    ],
+    "numberOfBoards": 10,
+    "wagerAmount": {
+      "value": 0.8,
+      "formattedValue": "€ 0,8"
+    }
+  }
+}
+
+

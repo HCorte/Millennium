@@ -1,0 +1,72 @@
+Wager:
+
+{
+    "terminalCode": "{{agentnum}}",
+    "token": "{{token}}",
+    "wager": {
+        "playerIdentification": "a",
+        "playerIdentificationShdes": "b",
+        "playerContact": "c",
+        "playerCardCode": "d",
+        "gameIndex": 3,
+        "ticketList": [
+            {
+                "quickPickIndicator": false,
+                "luckyNumber": 1,
+                "boardList": [
+                    {
+                        "numberList": [
+                         1,2,18,34,49 
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,3,34,49 
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,3,4,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,3,4,5 
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49 
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49
+                        ]
+                    },
+                    {
+                        "numberList": [
+                         1,2,18,34,49 
+                        ]
+                    }
+                ],
+                "numberOfBoards": 9,
+                "numberOfNumbers": 5,
+                "wagerAmount": {
+                  "value": 4.5,
+                  "formattedValue": "2.5€"
+                }
+            }
+        ]
+    }
+}
