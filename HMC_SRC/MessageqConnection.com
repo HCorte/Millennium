@@ -30,25 +30,43 @@ $ pipe/nosymbol/nological -
 show process SCMLCOMOLM | -
 search sys$pipe "Devices allocated:" | -
 ( read sys$pipe messageq_pb ; define/job messageq_aux &messageq_pb )
-$ device_aux = f$element(1,":",f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse"))
+$ device_info = f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse") 
+$ IF F$LOCATE("NOMATCHES",device_info) .NE. F$LENGTH(device_info)
+$ THEN
+$   WRITE SYS$OUTPUT "The process COMOLM does not exist"
+$   deassign/job messageq_aux
+$   EXIT
+$ ENDIF
+$ device_aux = f$element(1,":",device_info)
 $ deassign/job messageq_aux
-$ show symbol device_aux 
+$! show symbol device_aux 
 
 $ pipe/nosymbol/nological -
 show network "TCP/IP" /FULL | -
 search sys$pipe "''device_aux'" | -
 ( read sys$pipe messageq_host ; define/job messageq_aux &messageq_host )
 $ messageq_ip = f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse")
+$ IF F$LOCATE("NOMATCHES",messageq_ip) .NE. F$LENGTH(messageq_ip)
+$ THEN
+$   WRITE SYS$OUTPUT "There is no Device_socket(''device_aux') in network 'TCP/IP'"
+$   deassign/job messageq_aux
+$   EXIT
+$ ENDIF
 $ messageq_ip_pos = F$LOCATE("5000",messageq_ip)+4
 $ messageq_ip = F$EXTRACT(messageq_ip_pos,f$length(messageq_ip)-messageq_ip_pos,messageq_ip)   
 $ deassign/job messageq_aux
-$ show symbol messageq_ip 
+$! show symbol messageq_ip 
 $
 $ PRIMARY = 1
 $ PRIMARY_HOST = ""
 $ FAILOVER_HOST = ""
 $ PRIMARY_IP = ""
 $ FAILOVER_IP = ""
+$ IF F$SEARCH("GXOLM:DMQ.INI") .EQS. "" 
+$ THEN
+$   WRITE SYS$OUTPUT "The DMQ.INI files is missing at :"+F$TRNLNM("GXOLM")
+$   EXIT
+$ ENDIF
 $ OPEN/READ DMQFILE GXOLM:DMQ.INI
 $READ_DATA:
 $ read/end_of_file=FINISHED DMQFILE RECORD
@@ -60,10 +78,10 @@ $   IF PRIMARY .EQ. 1
 $   THEN 
 $       PRIMARY = 0
 $       PRIMARY_HOST = F$EXTRACT(9,f$length(RECORD)-9,RECORD) 
-$       show symbol PRIMARY_HOST 
+$!       show symbol PRIMARY_HOST 
 $   ELSE
 $       FAILOVER_HOST = F$EXTRACT(9,f$length(RECORD)-9,RECORD)
-$       show symbol FAILOVER_HOST
+$!       show symbol FAILOVER_HOST
 $       GOTO FINISHED
 $   ENDIF    
 $!   show symbol RECORD   
@@ -71,15 +89,27 @@ $ ENDIF
 $ GOTO READ_DATA
 $
 $FINISHED:
-$ close 
+$ close DMQFILE
+$! PRIMARY_HOST = ""
+$ IF PRIMARY_HOST .EQS. "" .OR. FAILOVER_HOST .EQS ""
+$ THEN
+$   WRITE SYS$OUTPUT "It was not possible to obtain the hosts names of messages from DMQ.INI in GXOLM"
+$   EXIT
+$ ENDIF
 $
 $ pipe/nosymbol/nological -
 TCPIP SH HOSTS | -
 search sys$pipe "''messageq_ip'" | -
 ( read sys$pipe messageq_pb_con ; define/job messageq_con &messageq_pb_con )
 $ messageq_connect = f$edit(f$trnlnm("messageq_con","lnm$job"),"collapse")
+$ IF F$LOCATE("NOMATCHES",messageq_connect) .NE. F$LENGTH(messageq_connect)
+$ THEN
+$   WRITE SYS$OUTPUT "There is no reference to ip:''messageq_ip' in Hosts files"
+$   deassign/job messageq_connect
+$   EXIT
+$ ENDIF
 $ deassign/job messageq_con
-$ show symbol messageq_connect 
+$! show symbol messageq_connect 
 $
 $ IF F$LOCATE(PRIMARY_HOST,messageq_connect) .NE. F$LENGTH(messageq_connect)
 $ THEN
@@ -89,8 +119,8 @@ $   IF F$LOCATE(FAILOVER_HOST,messageq_connect) .NE. F$LENGTH(messageq_connect)
 $   THEN
 $       WRITE SYS$OUTPUT "Millennium connected to FailOver MessageQ: ''messageq_ip'"
 $   ELSE
-$       WRITE SYS$OUTPUT "Error something whent wrong"
+$       WRITE SYS$OUTPUT "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
 $   ENDIF 
 $ ENDIF
 $
-$ WRITE SYS$OUTPUT "finished command procedure"
+$! WRITE SYS$OUTPUT "finished command procedure"
