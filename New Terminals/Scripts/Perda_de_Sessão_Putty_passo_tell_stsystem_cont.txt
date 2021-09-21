@@ -1,0 +1,1017 @@
+PERDEU-SE A SESSAO DO PUTTY ANTES DE DAR O COMANDO "TELL STSYSTEM CONT"
+EFECTUAR O PROCESSO EM BAIXO
+
+
+
+
+login as: console
+Pre-authentication banner message from server:
+|
+| @SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+End of banner message from server
+console@10.100.82.101's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Tuesday, 7-SEP-2021 09:54:29.40
+    Last non-interactive login on Tuesday, 7-SEP-2021 09:55:48.17
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+PODEV1::PORT> goscml
+%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
+%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
+%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
+PODEV1::SCML> shscml
+OpenVMS V8.4  on node PODEV1    7-SEP-2021 10:11:17.18   Uptime  571 17:04:41
+  Pid    Process Name    State  Pri      I/O       CPU       Page flts  Pages
+00008410 SCMLELOG        LEF      6     1508   0 00:00:00.41       307    344
+001568BE SCMLSTSYSTEM    HIB      8      754   0 00:00:00.47      8097   8142  S
+0015A8C5 SCMLLODIMGSS    HIB      8        6   0 00:00:00.03      5910   5939  S
+0013E0C6 SCMLLODIMGS2    HIB      8        6   0 00:00:00.02       647    678  S
+00163CC7 SCMLLODIMGS3    HIB      8        6   0 00:00:00.03      7047   7079  S
+PODEV1::SCML> runtst
+
+
+Portugal ES Evolution System Startup, Test Version
+
+
+Stopping ELOG process SCMLELOG
+Starting ELOG process SCMLELOG
+Starting EWATCH process ewatch_FTA1815:
+10:32:53 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+10:32:55 CONSOLE
+10:32:55 CONSOLE
+10:32:55 CONSOLE  You have attempted to run RESET.
+10:32:55 CONSOLE  This program will perform start-of-day functions.
+10:32:55 CONSOLE  If you do not intend for this to happen,
+10:32:55 CONSOLE  you may abort now without any damage.
+10:32:55 CONSOLE
+10:32:55 CONSOLE
+10:32:55 CONSOLE  Are you sure you want RESET [Y/N]?  >y
+10:32:59 CONSOLE
+10:32:59 CONSOLE   Clearing game commons
+10:32:59 CONSOLE   Reading system configuration file
+10:32:59 CONSOLE
+   PORTUGAL ES EVOLUTION SYSTEM STARTUP
+   PORTUGAL ES EVOLUTION SYSTEM STARTUP
+               PODEV1
+               PODEV1
+             07.09.2021
+             07.09.2021
+
+
+              1. CDC                       7435 (  Tu 07.09.2021 )
+              2. Restart from checkpoint     No
+              3. Backup tape logging         No
+              4. Backup disk logging        Yes
+              5. Connect to IPS             Yes ( IPS system 1 )
+              6. GVT end time          22:00:00
+              7. Connect to EuroMilhoes     Yes
+              8. Connect to IGS             Yes
+              9. Connect to Olimpo          Yes
+
+
+                 The system is in *** TEST *** mode
+
+
+10:32:59 CONSOLE  Enter option [C - bring up the system] >4
+   PORTUGAL ES EVOLUTION SYSTEM STARTUP
+   PORTUGAL ES EVOLUTION SYSTEM STARTUP
+               PODEV1
+               PODEV1
+             07.09.2021
+             07.09.2021
+
+
+              1. CDC                       7435 (  Tu 07.09.2021 )
+              2. Restart from checkpoint     No
+              3. Backup tape logging         No
+              4. Backup disk logging         No
+              5. Connect to IPS             Yes ( IPS system 1 )
+              6. GVT end time          22:00:00
+              7. Connect to EuroMilhoes     Yes
+              8. Connect to IGS             Yes
+              9. Connect to Olimpo          Yes
+
+
+                 The system is in *** TEST *** mode
+
+
+10:33:03 CONSOLE  Enter option [C - bring up the system] >
+ Interrupt
+
+PODEV1::SCML> kilsys
+
+***       You have attempted to run KILSYS          ***
+***       This program will bring down the system   ***
+***       If you do not intend for this to happen,  ***
+***       you may abort now without any damage.     ***
+
+Do you want to continue [Y/N] y
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+10:34:11 CONSOLE  KILSYS:*** SYSTEM IS GOING DOWN ***                                                                
+10:34:11 CONSOLE  STOPPING SCMLMONGOLS                                                                               
+10:34:11 CONSOLE  STOPPING SCMLDISPAT                                                                                
+10:34:11 CONSOLE  STOPPING SCMLNETMON                                                                                
+10:34:11 CONSOLE  STOPPING SCMLCANPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLCHKPNT                                                                                
+10:34:11 CONSOLE  STOPPING SCMLCMDPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLCTLPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLDCNPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLENCPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLENCPROI                                                                               
+10:34:11 CONSOLE  STOPPING SCMLAPULOG                                                                                
+10:34:11 CONSOLE  STOPPING SCMLERRLOG                                                                                
+10:34:11 CONSOLE  STOPPING SCMLGCLOSE                                                                                
+10:34:11 CONSOLE  STOPPING SCMLINCPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLLANPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLLOGGER                                                                                
+10:34:11 CONSOLE  STOPPING SCMLLODIMG                                                                                
+10:34:11 CONSOLE  STOPPING SCMLLODIMG2                                                                               
+10:34:11 CONSOLE  STOPPING SCMLLODIMG3                                                                               
+10:34:11 CONSOLE  STOPPING SCMLLODIMG4                                                                               
+10:34:11 CONSOLE  STOPPING SCMLLODIMG5                                                                               
+10:34:11 CONSOLE  STOPPING SCMLLODIMG6                                                                               
+10:34:11 CONSOLE  STOPPING SCMLLODIMG7                                                                               
+10:34:11 CONSOLE  STOPPING SCMLNBRPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLNETLOG                                                                                
+10:34:11 CONSOLE  STOPPING SCMLNETMGR                                                                                
+10:34:11 CONSOLE  STOPPING SCMLNOTPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLOVERPRO                                                                               
+10:34:11 CONSOLE  STOPPING SCMLPOOLPRO                                                                               
+10:34:11 CONSOLE  STOPPING SCMLREPCAN                                                                                
+10:34:11 CONSOLE  STOPPING SCMLSLOCHK                                                                                
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+10:34:11 CONSOLE  STOPPING SCMLSPESRV                                                                                
+10:34:11 CONSOLE  STOPPING SCMLSPESRVF                                                                               
+10:34:11 CONSOLE  STOPPING SCMLTAPLOG                                                                                
+10:34:11 CONSOLE  STOPPING SCMLTIMER                                                                                 
+10:34:11 CONSOLE  STOPPING SCMLVALPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLWAGPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLBNGPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLODDPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLODSPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLX2XMGR                                                                                
+10:34:11 CONSOLE  STOPPING SCMLX2XPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLX2XREL                                                                                
+10:34:11 CONSOLE  STOPPING SCMLX2XRAPP                                                                               
+10:34:11 CONSOLE  STOPPING SCMLUNSPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLCRSPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLFPTPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLINSPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLINSOUT                                                                                
+10:34:11 CONSOLE  STOPPING SCMLTCPASST                                                                               
+10:34:11 CONSOLE  STOPPING SCMLGUIMGR                                                                                
+10:34:11 CONSOLE  STOPPING SCMLGUILINK                                                                               
+10:34:11 CONSOLE  STOPPING SCMLGUIWORK1                                                                              
+10:34:11 CONSOLE  STOPPING SCMLGUIWORK2                                                                              
+10:34:11 CONSOLE  STOPPING SCMLGUIWORK3                                                                              
+10:34:11 CONSOLE  STOPPING SCMLPASVAL                                                                                
+10:34:11 CONSOLE  STOPPING SCMLPASPRO                                                                                
+10:34:11 CONSOLE  STOPPING SCMLTMFMON                                                                                
+10:34:11 CONSOLE  STOPPING SCMLINMGR                                                                                 
+10:34:11 CONSOLE  STOPPING SCMLOUTMGR                                                                                
+10:34:11 CONSOLE  STOPPING SCMLCOMMGR                                                                                
+10:34:11 CONSOLE  STOPPING SCMLMDCMNG                                                                                
+10:34:11 CONSOLE  STOPPING SCMLMXSRV                                                                                 
+10:34:11 CONSOLE  STOPPING SCMLINIGS                                                                                 
+10:34:11 CONSOLE  STOPPING SCMLOUTIGS                                                                                
+10:34:11 CONSOLE  STOPPING SCMLCOMIGS                                                                                
+10:34:11 CONSOLE  STOPPING SCMLABPAUDIT                                                                              
+10:34:11 CONSOLE  STOPPING SCMLCOMOLM                                                                                
+10:34:11 CONSOLE  *** SYSTEM IS DOWN ***                            :I[          0]H[       5]                       
+PODEV1::SCML> kilsys
+
+***       You have attempted to run KILSYS          ***
+***       This program will bring down the system   ***
+***       If you do not intend for this to happen,  ***
+***       you may abort now without any damage.     ***
+
+Do you want to continue [Y/N] y
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+%SYSTEM-W-NONEXPR, nonexistent process
+PODEV1::SCML> shscml
+PODEV1::SCML> r clrfil
+10:35:27 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+10:35:27 CONSOLE  ENTER FILE NAME >prim:mtmf01.fil
+10:35:37 CONSOLE  Clearing       292031  VAX sectors in prim:mtmf01.fil
+10:35:37 CONSOLE  INITIALIZATION COMPLETE FOR prim:mtmf01.fil
+10:35:37 CONSOLE  STOP0001  ****  SUCCESS
+PODEV1::SCML> runtst
+
+
+Portugal ES Evolution System Startup, Test Version
+
+
+Starting ELOG process SCMLELOG
+Stopping EWATCH process ewatch_FTA1815:
+Starting EWATCH process ewatch_FTA1815:
+10:35:45 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+10:35:47 CONSOLE
+10:35:47 CONSOLE
+10:35:47 CONSOLE  You have attempted to run RESET.
+10:35:47 CONSOLE  This program will perform start-of-day functions.
+10:35:47 CONSOLE  If you do not intend for this to happen,
+10:35:47 CONSOLE  you may abort now without any damage.
+10:35:47 CONSOLE
+10:35:47 CONSOLE
+10:35:47 CONSOLE  Are you sure you want RESET [Y/N]?  >y
+10:35:52 CONSOLE
+10:35:52 CONSOLE   Clearing game commons
+10:35:52 CONSOLE   Reading system configuration file
+10:35:52 CONSOLE
+   PORTUGAL ES EVOLUTION SYSTEM STARTUP
+   PORTUGAL ES EVOLUTION SYSTEM STARTUP
+               PODEV1
+               PODEV1
+             07.09.2021
+             07.09.2021
+
+
+              1. CDC                       7435 (  Tu 07.09.2021 )
+              2. Restart from checkpoint     No
+              3. Backup tape logging         No
+              4. Backup disk logging        Yes
+              5. Connect to IPS             Yes ( IPS system 1 )
+              6. GVT end time          22:00:00
+              7. Connect to EuroMilhoes     Yes
+              8. Connect to IGS             Yes
+              9. Connect to Olimpo          Yes
+
+
+                 The system is in *** TEST *** mode
+
+
+10:35:52 CONSOLE  Enter option [C - bring up the system] >4
+   PORTUGAL ES EVOLUTION SYSTEM STARTUP
+   PORTUGAL ES EVOLUTION SYSTEM STARTUP
+               PODEV1
+               PODEV1
+             07.09.2021
+             07.09.2021
+
+
+              1. CDC                       7435 (  Tu 07.09.2021 )
+              2. Restart from checkpoint     No
+              3. Backup tape logging         No
+              4. Backup disk logging         No
+              5. Connect to IPS             Yes ( IPS system 1 )
+              6. GVT end time          22:00:00
+              7. Connect to EuroMilhoes     Yes
+              8. Connect to IGS             Yes
+              9. Connect to Olimpo          Yes
+
+
+                 The system is in *** TEST *** mode
+
+
+10:35:57 CONSOLE  Enter option [C - bring up the system] >c
+10:36:00 CONSOLE
+10:36:00 CONSOLE  Loading config files of games of EuroMillions gaming system
+10:36:00 CONSOLE   Reading EUM1 configuration file
+10:36:00 CONSOLE   Loading EUM1 configuration file into memory
+10:36:00 CONSOLE   Reading RAF2 configuration file
+10:36:00 CONSOLE   Loading RAF2 configuration file into memory
+10:36:00 CONSOLE
+10:36:00 CONSOLE   Games active today
+10:36:00 CONSOLE
+10:36:00 CONSOLE   TOTOBOLA NORMAL  - Draw - 1057
+10:36:00 CONSOLE   TOTOLOTO SABADO  - Draw - 0548
+10:36:00 CONSOLE   TOTOLOTO QUARTA  - Draw - 0548
+10:36:00 CONSOLE
+10:36:00 CONSOLE  Are these correct? (Y/N)  >y
+10:36:03 LODIMG   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:03 LODIMG2  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:03 LODIMG3  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:03 LODIMG4  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:03 CLRCRK    Beginning initialization of CLERK.FIL
+10:36:03 CLRCRK   Allocating & clearing WORK:CLERK.FIL         835600 sectors
+10:36:03 CLRCRK   Clearing       835613  VAX sectors in WORK:CLERK.FIL
+10:36:03 LODAGT   Copyright 2011 GTECH Corp. All rights reserved.
+10:36:04 CONSOLE  Loading X2XCOM
+10:36:03 LODIMG5  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:04 LODAGT    Loading Agent information
+10:36:04 LODAGT    Terminal     9 invalid pass number
+10:36:04 LODAGT    Terminal     9 invalid pass number  2
+10:36:04 LODAGT    Terminal     9 invalid pass number  3
+10:36:04 LODAGT    Terminal     9 invalid pass number  4
+10:36:04 LODAGT    Terminal     9 invalid pass number  5
+10:36:04 LODAGT    Terminal     9 invalid pass number  6
+10:36:04 LODAGT    Terminal     9 invalid pass number  7
+10:36:04 LODAGT    Terminal     9 invalid pass number  8
+10:36:04 LODAGT    Terminal     9 invalid SAP number
+10:36:04 LODAGT    Terminal     9 invalid cartel number
+10:36:04 LODAGT    Terminal    16 invalid pass number
+10:36:04 LODAGT    Terminal    16 invalid pass number  2
+10:36:04 LODAGT    Terminal    16 invalid pass number  3
+10:36:04 LODAGT    Terminal    16 invalid pass number  4
+10:36:04 LODAGT    Terminal    16 invalid pass number  5
+10:36:04 LODAGT    Terminal    16 invalid pass number  6
+10:36:04 LODAGT    Terminal    16 invalid pass number  7
+10:36:04 LODAGT    Terminal    16 invalid pass number  8
+10:36:04 LODAGT    Terminal    16 invalid SAP number
+10:36:04 LODAGT    Terminal    16 invalid cartel number
+10:36:04 LODAGT    Terminal    17 invalid pass number
+10:36:04 LODAGT    Terminal    17 invalid pass number  2
+10:36:04 LODAGT    Terminal    17 invalid pass number  3
+10:36:04 LODAGT    Terminal    17 invalid pass number  4
+10:36:04 LODAGT    Terminal    17 invalid pass number  5
+10:36:04 LODAGT    Terminal    17 invalid pass number  6
+10:36:04 LODAGT    Terminal    17 invalid pass number  7
+10:36:04 LODAGT    Terminal    17 invalid pass number  8
+10:36:04 LODAGT    Terminal    17 invalid SAP number
+10:36:04 LODAGT    Terminal    17 invalid cartel number
+10:36:04 LODAGT    Terminal    18 invalid pass number
+10:36:04 LODAGT    Terminal    18 invalid pass number  2
+10:36:04 LODAGT    Terminal    18 invalid pass number  3
+10:36:04 LODAGT    Terminal    18 invalid pass number  4
+10:36:04 LODAGT    Terminal    18 invalid pass number  5
+10:36:04 LODAGT    Terminal    18 invalid pass number  6
+10:36:04 LODAGT    Terminal    18 invalid pass number  7
+10:36:04 LODAGT    Terminal    18 invalid pass number  8
+10:36:04 LODAGT    Terminal    18 invalid SAP number
+10:36:04 LODAGT    Terminal    18 invalid cartel number
+10:36:04 LODAGT    Terminal    19 invalid pass number
+10:36:04 LODAGT    Terminal    19 invalid pass number  2
+10:36:04 LODAGT    Terminal    19 invalid pass number  3
+10:36:04 LODAGT    Terminal    19 invalid pass number  4
+10:36:04 LODAGT    Terminal    19 invalid pass number  5
+10:36:04 LODAGT    Terminal    19 invalid pass number  6
+10:36:04 LODAGT    Terminal    19 invalid pass number  7
+10:36:04 LODAGT    Terminal    19 invalid pass number  8
+10:36:04 LODAGT    Terminal    19 invalid SAP number
+10:36:04 LODAGT    Terminal    19 invalid cartel number
+10:36:04 LODAGT    Terminal    20 invalid pass number
+10:36:04 LODAGT    Terminal    20 invalid pass number  2
+10:36:04 LODAGT    Terminal    20 invalid pass number  3
+10:36:04 LODAGT    Terminal    20 invalid pass number  4
+10:36:04 LODAGT    Terminal    20 invalid pass number  5
+10:36:04 LODAGT    Terminal    20 invalid pass number  6
+10:36:04 LODAGT    Terminal    20 invalid pass number  7
+10:36:04 LODAGT    Terminal    20 invalid pass number  8
+10:36:04 LODAGT    Terminal    20 invalid SAP number
+10:36:04 LODAGT    Terminal    20 invalid cartel number
+10:36:04 LODAGT    Terminal    21 invalid pass number
+10:36:04 LODAGT    Terminal    21 invalid pass number  2
+10:36:04 LODAGT    Terminal    21 invalid pass number  3
+10:36:04 LODAGT    Terminal    21 invalid pass number  4
+10:36:04 LODAGT    Terminal    21 invalid pass number  5
+10:36:04 LODAGT    Terminal    21 invalid pass number  6
+10:36:04 LODAGT    Terminal    21 invalid pass number  7
+10:36:04 LODAGT    Terminal    21 invalid pass number  8
+10:36:04 LODAGT    Terminal    21 invalid SAP number
+10:36:04 LODAGT    Terminal    21 invalid cartel number
+10:36:04 LODAGT    Terminal    22 invalid pass number
+10:36:04 LODAGT    Terminal    22 invalid pass number  2
+10:36:04 LODAGT    Terminal    22 invalid pass number  3
+10:36:04 LODAGT    Terminal    22 invalid pass number  4
+10:36:04 LODAGT    Terminal    22 invalid pass number  5
+10:36:04 LODAGT    Terminal    22 invalid pass number  6
+10:36:04 LODAGT    Terminal    22 invalid pass number  7
+10:36:04 LODAGT    Terminal    22 invalid pass number  8
+10:36:04 LODAGT    Terminal    22 invalid SAP number
+10:36:04 LODAGT    Terminal    22 invalid cartel number
+10:36:04 LODAGT    Terminal    23 invalid pass number
+10:36:04 LODAGT    Terminal    23 invalid pass number  2
+10:36:04 LODAGT    Terminal    23 invalid pass number  3
+10:36:04 LODAGT    Terminal    23 invalid pass number  4
+10:36:04 LODAGT    Terminal    23 invalid pass number  5
+10:36:04 LODAGT    Terminal    23 invalid pass number  6
+10:36:04 LODAGT    Terminal    23 invalid pass number  7
+10:36:04 LODAGT    Terminal    23 invalid pass number  8
+10:36:04 LODAGT    Terminal    23 invalid SAP number
+10:36:04 LODAGT    Terminal    23 invalid cartel number
+10:36:04 LODAGT    Terminal    24 invalid pass number
+10:36:04 LODAGT    Terminal    24 invalid pass number  2
+10:36:04 LODAGT    Terminal    24 invalid pass number  3
+10:36:04 LODAGT    Terminal    24 invalid pass number  4
+10:36:04 LODAGT    Terminal    24 invalid pass number  5
+10:36:04 LODAGT    Terminal    24 invalid pass number  6
+10:36:04 LODAGT    Terminal    24 invalid pass number  7
+10:36:04 LODAGT    Terminal    24 invalid pass number  8
+10:36:04 LODAGT    Terminal    24 invalid SAP number
+10:36:04 LODAGT    Terminal    24 invalid cartel number
+10:36:04 LODAGT    Terminal    25 invalid pass number
+10:36:04 LODAGT    Terminal    25 invalid pass number  2
+10:36:04 LODAGT    Terminal    25 invalid pass number  3
+10:36:04 LODAGT    Terminal    25 invalid pass number  4
+10:36:04 LODAGT    Terminal    25 invalid pass number  5
+10:36:04 LODAGT    Terminal    25 invalid pass number  6
+10:36:04 LODAGT    Terminal    25 invalid pass number  7
+10:36:04 LODAGT    Terminal    25 invalid pass number  8
+10:36:04 LODAGT    Terminal    25 invalid SAP number
+10:36:04 LODAGT    Terminal    25 invalid cartel number
+10:36:04 LODAGT    Terminal    26 invalid pass number
+10:36:04 LODAGT    Terminal    26 invalid pass number  2
+10:36:04 LODAGT    Terminal    26 invalid pass number  3
+10:36:04 LODAGT    Terminal    26 invalid pass number  4
+10:36:04 LODAGT    Terminal    26 invalid pass number  5
+10:36:04 LODAGT    Terminal    26 invalid pass number  6
+10:36:04 LODAGT    Terminal    26 invalid pass number  7
+10:36:04 LODAGT    Terminal    26 invalid pass number  8
+10:36:04 LODAGT    Terminal    26 invalid SAP number
+10:36:04 LODAGT    Terminal    26 invalid cartel number
+10:36:04 LODAGT    Terminal    27 invalid pass number
+10:36:04 LODAGT    Terminal    27 invalid pass number  2
+10:36:04 LODAGT    Terminal    27 invalid pass number  3
+10:36:04 LODAGT    Terminal    27 invalid pass number  4
+10:36:04 LODAGT    Terminal    27 invalid pass number  5
+10:36:04 LODAGT    Terminal    27 invalid pass number  6
+10:36:04 LODAGT    Terminal    27 invalid pass number  7
+10:36:04 LODAGT    Terminal    27 invalid pass number  8
+10:36:04 LODAGT    Terminal    27 invalid SAP number
+10:36:04 LODAGT    Terminal    27 invalid cartel number
+10:36:04 LODAGT    Terminal    28 invalid pass number
+10:36:04 LODAGT    Terminal    28 invalid pass number  2
+10:36:04 LODAGT    Terminal    28 invalid pass number  3
+10:36:04 LODAGT    Terminal    28 invalid pass number  4
+10:36:04 LODAGT    Terminal    28 invalid pass number  5
+10:36:04 LODAGT    Terminal    28 invalid pass number  6
+10:36:04 LODAGT    Terminal    28 invalid pass number  7
+10:36:04 LODAGT    Terminal    28 invalid pass number  8
+10:36:04 LODAGT    Terminal    28 invalid SAP number
+10:36:04 LODAGT    Terminal    28 invalid cartel number
+10:36:04 LODAGT    Terminal    29 invalid pass number
+10:36:04 LODAGT    Terminal    29 invalid pass number  2
+10:36:04 LODAGT    Terminal    29 invalid pass number  3
+10:36:04 LODAGT    Terminal    29 invalid pass number  4
+10:36:04 LODAGT    Terminal    29 invalid pass number  5
+10:36:04 LODAGT    Terminal    29 invalid pass number  6
+10:36:04 LODAGT    Terminal    29 invalid pass number  7
+10:36:04 LODAGT    Terminal    29 invalid pass number  8
+10:36:04 LODAGT    Terminal    29 invalid SAP number
+10:36:04 LODAGT    Terminal    29 invalid cartel number
+10:36:04 LODAGT    Terminal    30 invalid pass number
+10:36:04 LODAGT    Terminal    30 invalid pass number  2
+10:36:04 LODAGT    Terminal    30 invalid pass number  3
+10:36:04 LODAGT    Terminal    30 invalid pass number  4
+10:36:04 LODAGT    Terminal    30 invalid pass number  5
+10:36:04 LODAGT    Terminal    30 invalid pass number  6
+10:36:04 LODAGT    Terminal    30 invalid pass number  7
+10:36:04 LODAGT    Terminal    30 invalid pass number  8
+10:36:04 LODAGT    Terminal    30 invalid SAP number
+10:36:04 LODAGT    Terminal    30 invalid cartel number
+10:36:04 LODAGT    Terminal    31 invalid pass number
+10:36:04 LODAGT    Terminal    31 invalid pass number  2
+10:36:04 LODAGT    Terminal    31 invalid pass number  3
+10:36:04 LODAGT    Terminal    31 invalid pass number  4
+10:36:04 LODAGT    Terminal    31 invalid pass number  5
+10:36:04 LODAGT    Terminal    31 invalid pass number  6
+10:36:04 LODAGT    Terminal    31 invalid pass number  7
+10:36:04 LODAGT    Terminal    31 invalid pass number  8
+10:36:04 LODAGT    Terminal    31 invalid SAP number
+10:36:04 LODAGT    Terminal    31 invalid cartel number
+10:36:04 LODAGT    Terminal    32 invalid pass number
+10:36:04 LODAGT    Terminal    32 invalid pass number  2
+10:36:04 LODAGT    Terminal    32 invalid pass number  3
+10:36:04 LODAGT    Terminal    32 invalid pass number  4
+10:36:04 LODAGT    Terminal    32 invalid pass number  5
+10:36:04 LODAGT    Terminal    32 invalid pass number  6
+10:36:04 CONSOLE  Loading global parameters
+10:36:04 LODAGT    Terminal    32 invalid pass number  7
+10:36:04 LODAGT    Terminal    32 invalid pass number  8
+10:36:04 LODAGT    Terminal    32 invalid SAP number
+10:36:04 LODAGT    Terminal    32 invalid cartel number
+10:36:04 CONSOLE  Loading network ports
+10:36:04 CONSOLE  Loading local ports
+10:36:04 CONSOLE  Loading checksums
+10:36:04 CONSOLE  Loading station classes
+10:36:04 CONSOLE  Loading stations
+10:36:04 LODAGT           1000  agents processed
+10:36:04 LODAGT           2000  agents processed
+10:36:04 LODAGT           3000  agents processed
+10:36:04 LODAGT           4000  agents processed
+10:36:04 LODAGT           5000  agents processed
+10:36:04 LODAGT           6000  agents processed
+10:36:05 LODAGT           7000  agents processed
+10:36:05 LODAGT           8000  agents processed
+10:36:05 LODAGT           9000  agents processed
+10:36:05 LODAGT          10000  agents processed
+10:36:05 CLRCRK   INITIALIZATION COMPLETE FOR WORK:CLERK.FIL
+10:36:05 CLRCRK    CLERK.FIL initialisation complete
+10:36:05 LODAGT          11000  agents processed
+10:36:05 LODAGT          12000  agents processed
+10:36:05 CONSOLE  Number of stations enabled:         4523
+10:36:05 CONSOLE  Loading terminals
+10:36:05 LODAGT
+10:36:05 LODAGT             10  terminal(s) not defined in X2X
+10:36:05 LODAGT   Read LODAGT.REP for details!
+10:36:05 LODAGT
+10:36:05 CONSOLE  Loading relay processes
+10:36:05 CONSOLE  Loading relay groups
+10:36:05 CONSOLE  Loading message common from SMF file
+10:36:07 CONSOLE  Message common load complete
+10:36:07 CONSOLE   Loading game number  1 Sports   1 game data
+10:36:07 CONSOLE   Loading Sports   system file
+10:36:07 CONSOLE   Loading Sports   statistics
+10:36:07 CONSOLE   Loading game number  1 Sports   1 game text
+10:36:07 CONSOLE  Loading inactive TOTOBOLA EXTRA 2 draw    4
+10:36:07 CONSOLE   Loading game number  3 Sports   2 game data
+10:36:07 CONSOLE   Loading Sports   statistics
+10:36:07 CONSOLE   Loading game number  6 Lotto    3 game data
+10:36:07 CONSOLE   Loading Lotto    system file
+10:36:07 CONSOLE   Loading game number  7 Lotto    4 game data
+10:36:07 CONSOLE  Loading inactive TOTOBOLA EXTRA 1 draw  307
+10:36:07 CONSOLE   Loading game number 10 Sports   3 game data
+10:36:07 CONSOLE   Loading Sports   statistics
+10:36:07 CONSOLE   Loading ticket messages
+10:36:07 CONSOLE   Ticket message load complete
+10:36:07 CONSOLE  Loading reserve fund / roll pool file
+10:36:07 CONSOLE   Loading WEKDRW table for game number  1 TOTOBOLA NORMAL
+10:36:07 CONSOLE   Loading WEKDRW table for game number  2 TOTOLOTO
+10:36:07 CONSOLE   Loading WEKDRW table for game number  3 TOTOBOLA EXTRA 2
+10:36:07 CONSOLE   Loading WEKDRW table for game number  4 LOT2
+10:36:07 CONSOLE   Loading WEKDRW table for game number  5 JOKER
+10:36:07 CONSOLE   Loading WEKDRW table for game number  6 TOTOLOTO SABADO
+10:36:07 CONSOLE   Loading CCCDRW table for game number  6 TOTOLOTO SABADO
+10:36:07 CONSOLE   Loading WEKDRW table for game number  7 TOTOLOTO QUARTA
+10:36:07 CONSOLE   Loading CCCDRW table for game number  7 TOTOLOTO QUARTA
+10:36:07 CONSOLE   Loading WEKDRW table for game number  8 CLASSICA
+10:36:07 CONSOLE   Loading WEKDRW table for game number  9 POPULAR
+10:36:07 CONSOLE   Loading WEKDRW table for game number 10 TOTOBOLA EXTRA 1
+10:36:09 CONSOLE   Reprocessing carryovers
+10:36:09 CONSOLE  Restoring lotto pools
+10:36:10 CONSOLE  Lotto pool restore complete.
+10:36:10 POOLPRO  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:11 LOGGER   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:11 TIMER    Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:11 REPCAN   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:11 VALPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:11 ERRLOG   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:11 PASVAL   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:11 PASPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:13 REPROX   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:15 OVERPRO  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:15 TMFMON   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:18 REPROX   Reprocessing of TMF started ....                                                                   
+10:36:18 REPROX   Reprocessing of TMF complete ...                                                                   
+10:36:18 REPROX   STOP0001  ****  SUCCESS                                                                            
+10:36:19 CONSOLE
+10:36:19 CONSOLE  System configuration
+10:36:19 CONSOLE  ===========================
+10:36:19 CONSOLE  System A is POSYSD
+10:36:19 CONSOLE  System B is PODEV1
+10:36:19 CONSOLE  ===========================
+10:36:19 CONSOLE
+10:36:19 CONSOLE
+10:36:19 CONSOLE  This is system B ( PODEV1 )
+10:36:19 CONSOLE
+10:36:19 CONSOLE  Which system is the PRIMARY system ( A,  B  ?) >b
+10:36:24 CONSOLE  Is system  A being brought up?                     >n
+10:36:25 CONSOLE
+10:36:25 CONSOLE   Systems assignments:
+10:36:25 CONSOLE             This is system B. System B is PRIMARY  system
+10:36:25 CONSOLE   Game brought up in SIMPLEX -  only 1 system configured
+10:36:25 CONSOLE
+10:36:25 CONSOLE  Is this correct  [Y/N] ? >y
+10:36:29 CONSOLE   Checkpointing commons
+10:36:29 CHKPNT   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:29 CONSOLE   STARTING WAGPRO
+10:36:29 CONSOLE   STARTING INIGS
+10:36:29 CONSOLE   STARTING ODDPRO
+10:36:29 CONSOLE   STARTING CANPRO
+10:36:29 WAGPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:29 INIGS     Copyright 2014 SCML. All rights reserved.                                                         
+10:36:29 ODDPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:29 CANPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:30 CONSOLE   STARTING SPESRV
+10:36:30 CONSOLE   STARTING SPESRVF
+10:36:30 CONSOLE   STARTING INCPRO
+10:36:30 CONSOLE   STARTING CMDPRO
+10:36:30 CONSOLE   STARTING DISPAT
+10:36:30 SPESRV   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:30 SPESRVF  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:30 INCPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:30 CMDPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:30 DISPAT   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:30 CONSOLE   STARTING NETMGR
+10:36:30 CONSOLE   STARTING X2XPRO
+10:36:30 CONSOLE   STARTING X2XREL
+10:36:30 CONSOLE   STARTING APULOG
+10:36:30 CONSOLE   STARTING NETLOG
+10:36:30 NETMGR   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:30 X2XPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:30 X2XREL   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:30 APULOG   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:30 ERRLOG   09/07/2021  CHKPNT  WORK:CHK0.FIL        CHECKPOINT COMPLETE                                       
+10:36:30 NETLOG   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:31 CONSOLE   STARTING ENCPROI
+10:36:31 CONSOLE   STARTING X2XMGR
+10:36:31 CONSOLE   STARTING OUTIGS
+10:36:31 ENCPROI  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:31 CONSOLE   STARTING MXSRV
+10:36:31 X2XMGR   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:31 OUTIGS    Copyright 2014 SCML. All rights reserved.                                                         
+10:36:31 OUTIGS    ******************* OUTIGS *******************                                                    
+10:36:31 CONSOLE   STARTING INSPRO
+10:36:31 CONSOLE   STARTING INSOUT
+10:36:32 CONSOLE   STARTING CRSPRO
+10:36:32 CONSOLE   STARTING GUIMGR
+10:36:31 MXSRV    MXSRV Data encryption not possible: KEYSTORE not configured                                        
+10:36:31 INSPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:31 INSOUT   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:32 CRSPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:32 GUIMGR   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:32 CONSOLE   STARTING INMGR
+10:36:32 CONSOLE   STARTING OUTMGR
+10:36:33 CONSOLE   STARTING COMMGR
+10:36:32 INMGR     Copyright 2004 SCML/Accenture. All rights reserved.                                               
+10:36:32 INMGR     ******************* INMGR ****************                                                        
+10:36:32 OUTMGR    Copyright 2004 SCML/Accenture. All rights reserved.                                               
+10:36:33 OUTMGR    ******************* OUTMGR ****************                                                       
+10:36:33 CONSOLE   STARTING TAPLOG
+10:36:33 CONSOLE   STARTING SLOCHK
+10:36:33 CONSOLE   STARTING LANPRO
+10:36:33 CONSOLE   STARTING GCLOSE
+10:36:33 CONSOLE   STARTING FPTPRO
+10:36:33 COMMGR    Copyright 2004 SCML/Accenture. All rights reserved.                                               
+10:36:33 TAPLOG   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:33 SLOCHK   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:33 LANPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:33 GCLOSE   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:33 FPTPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:33 CONSOLE   STARTING COMIGS
+10:36:33 CONSOLE   STARTING COMOLM
+10:36:33 COMIGS    Copyright 2014 SCML. All rights reserved.                                                         
+10:36:33 COMOLM    Copyright 2014 SCML. All rights reserved.                                                         
+10:36:33 DCNPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:34 CTLPRO   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:34 X2XRAPP  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:34 NETMON   Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:35 INIGS     ******************* INIGS *******************                                                     
+10:36:43 GUIMGR   # of PTS users loaded                             :I[          1]H[       1]                       
+10:36:43 GUILINK  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:44 GUIWORK1 Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:44 CONSOLE  LANPRO is not up, waiting .... >
+                                                  10:36:44 GUIWORK2 Copyright 2011 GTECH Corp. All rights reserved.  
+10:36:44 GUIWORK3 Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:44 DCNPRO   *** DN_INIT - CAN'T TRANSLATE GTECH_REMSYS% ***   :I[          3]H[       0]                       
+10:36:44 DCNPRO   *** DN_INIT - CAN'T TRANSLATE GTECH_REMTSK% ***   :I[          3]H[       0]                       
+10:36:44 DCNPRO   *** DN_INIT - CAN'T TRANSLATE GTECH_REMSYS% ***   :I[          4]H[       0]                       
+10:36:44 DCNPRO   *** DN_INIT - CAN'T TRANSLATE GTECH_REMTSK% ***   :I[          4]H[       0]                       
+10:36:44 DCNPRO   *** DN_INIT - CAN'T TRANSLATE GTECH_REMSYS% ***   :I[          5]H[       0]                       
+10:36:44 DCNPRO   *** DN_INIT - CAN'T TRANSLATE GTECH_REMTSK% ***   :I[          5]H[       0]                       
+10:36:44 DCNPRO   *** DN_INIT - NETWORK NAME IS: GTECH2             :I[          2]H[       0]                       
+10:36:44 DCNPRO   *** FATAL: DN_INIT - CAN'T DECLARE NETWORK NAME **:I[         20]H[      14]                       
+10:36:44 TCPASST  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:45 INSOUT   GETIGNAM: Error opening INSNAM.FIL, status        :I[         29]H[      1D]                       
+
+10:36:45 CONSOLE  LANPRO is up now...
+
+=======================================================
+10:36:45 CONSOLE  If you wish to enable X2X communications do the
+following:
+1. Bring up VISION on PRIMARY system
+2. Goto the X2GBLSNP snapshot (GAMESTAT should be idle)
+3. Enter "GAMST 2" to request X2XMGR to come online
+4. Watch GAME STATE change to "req X2XMGR" to "onlin"
+=======================================================
+
+10:36:45 CONSOLE  Activating LANS
+10:36:45 CONSOLE  STOP0001  ****  SUCCESS
+10:36:46 MONGOLS  Copyright 2011 GTECH Corp. All rights reserved.
+10:36:45 LANPRO   **** MAILBOX CREATED ****                         :I[          0]H[       0]                       
+10:36:45 LANPRO   **** LAN ACTIVATED ****                           :I[          1]H[FFFFFFFF]                       
+10:36:45 LANPRO   **** LAN STATION IS UP NOW ****                   :I[          1]H[       2]                       
+10:36:45 STARTER  Copyright 2011 GTECH Corp. All rights reserved.                                                    
+10:36:45 COMMGR    ******************* COMMGR ****************                                                       
+10:36:45 STARTER  STOP0001  ****  SUCCESS                                                                            
+10:36:45 LANPRO   ATTEMPTING CONNECTION                             :I[          1]H[       4]                       
+10:36:46 LANPRO   %SYSTEM-F-BADPARAM, bad parameter value:I[         20]H[      14]                                  
+10:36:46 ERRLOG   09/07/2021  COMMGR  CONNECTED TO MESSAGEQ OF EURO MILHOES                                          
+10:36:46 LANPRO   %SYSTEM-F-BADPARAM, bad parameter value:I[         20]H[      14]                                  
+10:36:46 CTLPRO   *** CONNECTION ESTABLISHED ***                    :I[          2]H[       4]                       
+10:36:46 COMOLM    ******************* COMOLM RUNNING *******************                                            
+10:36:46 COMIGS    ******************* COMIGS *******************                                                    
+10:36:46 ERRLOG   09/07/2021  COMOLM  CONNECTED TO MESSAGEQ OF OLIMPO                                                
+10:36:46 ERRLOG   09/07/2021  COMIGS  CONNECTED TO MESSAGEQ OF IGS                                                   
+PODEV1::SCML>
+              10:36:46 MONGOLS  Cannot open MONGOLS.FIL - using default values.                                      
+10:36:46 MONGOLS  WILL MONITOR ALL PROCCESSES                                                                        
+10:36:46 MONGOLS  MONITOR FREQUENCY IS 100          MILLISECONDS PER PROC                                            
+10:36:46 MONGOLS  DEFAULT LIMITS PERCENT IS 20                                                                       
+10:36:49 GUILINK  GUILDOPCONN: Error completing bind socket       148                                                
+10:36:59 GUILINK  GUILDOPCONN: Error completing bind socket       148                                                
+10:36:59 TCPASST  10:36:59 TCPASST  TCP_COIOCOMP: Good TCP/IP connection with Instant System IP 187                  
+10:37:05 MONGOLS  THE PROCESS SCMLDCNPRO      DOES NOT EXIST !                                                       
+10:37:05 ERRLOG   09/07/2021  CRSPRO  BAD length received from the IPS disconnecting len=                            
+10:37:05 TCPASST  10:37:05 TCPASST  TCP_RDIOCOMP: Error completing read     2096                                     
+10:37:05 TCPASST  10:37:05 TCPASST  TCP_RDIOCOMP: Error completing read     2096                                     
+10:37:05 TCPASST  10:37:05 TCPASST  TCP_RDIOCOMP: Error completing read     2096                                     
+10:37:07 TCPASST  10:37:07 TCPASST  TCP_COIOCOMP: Good TCP/IP connection with Instant System IP 187                  
+10:37:09 GUILINK  GUILDOPCONN: Error completing bind socket       148                                                
+10:37:19 GUILINK  GUILDOPCONN: Error completing bind socket       148                                                
+10:37:23 MXSRV    MXSRV MX accepting conn from POESC7-POS with IP addr 10.9.25.228, port 44107, socket 4             
+10:37:29 GUILINK  GUILDOPCONN: Error completing bind socket       148                                                
+PODEV1::SCML>
+PODEV1::SCML>
+              10:37:39 GUILINK  GUILDOPCONN: Error completing bind socket       148                                  shscml
+OpenVMS V8.4  on node PODEV1    7-SEP-2021 10:37:41.13   Uptime  571 17:31:05
+  Pid    Process Name    State  Pri      I/O       CPU       Page flts  Pages
+001E8212 SCMLELOG        LEF      8      874   0 00:00:00.48       307    344
+001E4E18 SCMLLODIMG      HIB      7        6   0 00:00:01.04     22847  22873
+001E8E19 SCMLLODIMG2     HIB      8        6   0 00:00:01.51     22530  22556
+001E8A1B SCMLLODIMG3     HIB      8        6   0 00:00:00.58     17096  17125
+001FAE1D SCMLLODIMG4     HIB      8        6   0 00:00:00.69     12296  12328
+001F221E SCMLLODIMG5     HIB      8        6   0 00:00:02.02     20565  20598
+001E6621 SCMLPOOLPRO     HIB      8       29   0 00:00:00.40     26346  26396
+001E4A27 SCMLLOGGER      HIB      8       17   0 00:00:00.51     17081  17127
+001E5628 SCMLTIMER       HIB      6        6   0 00:00:00.46      8232   8266
+001E7629 SCMLREPCAN      HIB      6       13   0 00:00:00.46     15045  15116
+001E962A SCMLVALPRO      HIB      8        6   0 00:00:00.42     15074  15210
+001E862B SCMLERRLOG      HIB      6       22   0 00:00:00.37      8321   8366
+001DA62C SCMLPASVAL      HIB      8        8   0 00:00:00.45     15052  15182
+001E1A2D SCMLPASPRO      HIB      8        6   0 00:00:00.45     15058  15196
+001E2A30 SCMLOVERPRO     HIB      8        6   0 00:00:00.48      8655   8691
+001EC631 SCMLTMFMON      HIB      8       13   0 00:00:00.39      8057   8093
+001D8235 SCMLCHKPNT      HIB      6       25   0 00:00:00.32     21404  21438
+001ECE36 SCMLWAGPRO      HIB      6        6   0 00:00:00.43     15770  15910
+001D6238 SCMLINIGS       HIB      6        8   0 00:00:00.58     15092  15144
+001E963A SCMLODDPRO      HIB      6        6   0 00:00:00.48     17232  17400
+001E2E3C SCMLCANPRO      HIB      6        6   0 00:00:00.45     15016  15068
+001EDA3D SCMLSPESRV      HIB      6        6   0 00:00:00.44     18382  18611
+001F663F SCMLSPESRVF     HIB      6        6   0 00:00:00.58     18183  18299
+001F6640 SCMLINCPRO      HIB      6        6   0 00:00:00.47     17352  17508
+001EA242 SCMLCMDPRO      HIB      6        6   0 00:00:00.47     33797  33951
+001ECA43 SCMLDISPAT      HIB      8        6   0 00:00:00.36     10330  10369
+001F2245 SCMLNETMGR      HIB      8        6   0 00:00:00.44     39069  39295
+001E7646 SCMLX2XPRO      HIB      8       32   0 00:00:00.42     10568  10636
+001F5647 SCMLX2XREL      HIB      8       41   0 00:00:00.29     11272  11318
+001F4E48 SCMLAPULOG      HIB      8        6   0 00:00:00.44      8232   8266
+001F264A SCMLNETLOG      CEF      7        6   0 00:00:00.42      8295   8334
+001E7E4B SCMLENCPROI     HIB      8        6   0 00:00:00.49     17031  17079
+001EE64D SCMLX2XMGR      HIB      8        6   0 00:00:00.48     18876  18937
+001E524E SCMLOUTIGS      HIB      6        8   0 00:00:00.43     15095  15157
+001F2A50 SCMLMXSRV       HIB      8     7037   0 00:00:00.05      2981   3060
+001DAE51 SCMLINSPRO      HIB      6        6   0 00:00:00.46     15076  15134
+001EEE53 SCMLINSOUT      HIB      6        8   0 00:00:00.52     18069  18226
+001EB254 SCMLCRSPRO      HIB      8       10   0 00:00:00.39     17039  17078
+001EAA56 SCMLGUIMGR      HIB      8       32   0 00:00:00.43     16641  16678
+001E6E57 SCMLINMGR       HIB      6        7   0 00:00:00.43     15095  15143
+001DDE59 SCMLOUTMGR      HIB      6        7   0 00:00:00.46     16354  16408
+001EDE5D SCMLCOMMGR      HIB      7      274   0 00:00:00.48     16111  16286
+001DBE5E SCMLTAPLOG      HIB      6        6   0 00:00:00.49      8233   8270
+001D665F SCMLSLOCHK      HIB      8        6   0 00:00:00.42     17065  17096
+001DF261 SCMLLANPRO      CEF      8       53   0 00:00:00.45      8563   8640
+001E8E62 SCMLGCLOSE      HIB      7        6   0 00:00:00.37      8441   8486
+001E6264 SCMLFPTPRO      HIB      8        6   0 00:00:00.52     15009  15042
+001EA665 SCMLCOMIGS      HIB      7      764   0 00:00:00.57     16121  16314
+001E7A66 SCMLCOMOLM      HIB      7      774   0 00:00:00.68     16112  16266
+001E1E68 SCMLCTLPRO      CEF      8        8   0 00:00:00.39     10250  10288
+001DD66A SCMLX2XRAPP     HIB      8        6   0 00:00:00.49     11241  11276
+001E926B SCMLNETMON      HIB      8        6   0 00:00:00.41      8293   8327
+001DF26D SCMLGUILINK     CEF      7       24   0 00:00:00.31       595    636
+001DBA6E SCMLGUIWORK1    HIB      8      105   0 00:00:00.56     19606  19892
+001E9270 SCMLGUIWORK2    HIB      8      105   0 00:00:00.50     19606  19892
+001E9671 SCMLGUIWORK3    HIB      8      108   0 00:00:00.60     19606  19892
+001E5E73 SCMLTCPASST     CEF      7       34   0 00:00:00.37      8062   8101
+001E2675 SCMLMONGOLS     HIB      7       26   0 00:00:00.47     17051  17186  S
+PODEV1::SCML>
+              10:37:49 GUILINK  GUILDOPCONN: Error completing bind socket       148                                  
+PODEV1::SCML>
+PODEV1::SCML> r x2gamstart
+10:37:52 CONSOLE  STOP0001  ****  SUCCESS
+PODEV1::SCML>
+              10:37:59 GUILINK  GUILDOPCONN: Error completing bind socket       148                                  
+10:38:02 LANPRO   ATTEMPTING CONNECTION                             :I[          1]H[      20]                       
+10:38:02 LANPRO   READING ETHERNET ADDRESS                          :I[          1]H[      20]                       
+10:38:02 LANPRO   **** LAN STARTED ****                             :I[          1]H[      20]                       
+10:38:03 X2XMGR    open SAP                status            2 params        7       0      20
+10:38:09 GUILINK  GUILDOPCONN: Error completing bind socket       148                                                
+PODEV1::SCML>
+PODEV1::SCML> ewatch stop
+Stopping EWATCH process ewatch_FTA1815:
+PODEV1::SCML> vision
+10:38:14 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+ERROR OPENING FILE LEVEL.FIL WILL USE LEVEL DEFAULTS
+
+10:38:17 CONSOLE  Please enter password  >
+***** Vision Commands *****              Tu 07.09.2021  10:38:19    Primary-B
+PRInt                                   MENU1
+COPy                                    MENU2
+STOp                                    MENU3
+REF                                     MENU4
+***** Snapshots available in menu 1 *****
+ACTagt  <number>                        HELp    <number>
+AGTsnp  < date ><number>                INVsnp  <number>
+HOTsnp  <number>                        TSOdsnp <index> <event#>
+LOTto   <event#>                        JOKer   <index> <draw #>
+WITsnp  <index> <event#>                SELect  <index> <event#>
+SPTsnp  <index> <event#>                GAMsnp
+CLOse   <number>                        SLIsnp  <index> <event#>
+DATes   <event#>                        SCRsnp  <index> <event#>
+SCLosnp <index> <event#>                RSCsnp  <index> <event#>
+RWTsnp  <index> <event#>                NBRsnp  <index> <draw #>
+TWDsnp  <index> <number>                SPName  <index> <draw #>
+TSPsnp  <index> <number>                TATsnp  < date ><number>
+ATTsnp  <number>                        STGstat
+                                        STLstat <index>
+
+For help with snapshots, enter HELP MENU, HELP [snpname] or HELP num
+Enter vision command
+SYS
+**** System control snapshot ****        Tu 07.09.2021  10:47:23    Primary-B
+SYSTEM   >   cmdflu      0   *LOGBlo    125   *TAPesw      0   *DISKsw      0
+             cmdfrz      0   *CHKtim   9000   *CHKPnt          *STAPesw
+            *DPTtim      1   *MAXTra    500   *SYSSts      1   *ROMrev   F1F3
+            *DESFlg      0   *CANtim     20   *WRNper      0   *TVNupd      0
+            *MAXMes     50   *MESlog      5   *ODSupd    300   *JAKupd      0
+            *FPTTIm    100   *CANDRW      0   *PRETTIM    45   *GVTrev   0000
+            *MAXSpt  20000   *PCANTIM    20   *PMAXRTM   300   *PMAXCAN    10
+            *PMAXLOP  1000    PMAXSEK     1    PASTHRO   500    PDAYRSL     1
+SUPRESS  >  *SUPSPe      0   *SUPFIl      0   *SUPSUm      0   *SUPPUd      0
+            *SUPSYn      0   *SUPCOm      0   *SUPREM      0   *SUPFPt      1
+GLOBAL   >  *SUPWAg      0   *SUPCAn      0   *SUPVAl      0   *SUPRET      1
+            *SUPINs      0
+
+
+PERFORM  >   avgtim     15    mintim     11    maxtim     20
+--------------------- S Y S T E M   P E R F O R M A N C E ---------------------
+     Volume                  Buffer utilization                     Sales
+Serial number -          15 Available     - 2048       Wagered  -          0.00
+Transaction  #-           8 Input/dispat  -    0/   0  Canceled -          0.00
+Volume        -           0 Game_out/soft -    0/   0  Cashed   -          0.00
+% of TMF used -       0.00% X2X_Output    -         0  Returns  -          0.00
+Enter change, !game number, or vision command
+supva 00
+ Interrupt
+
+PODEV1::SCML>
+ Interrupt
+
+PODEV1::SCML>
