@@ -1,4 +1,4 @@
-   INVENTÁRIO View Report HCORTE / 23.04.2021  
+   INVENTï¿½RIO View Report HCORTE / 23.04.2021  
 View Report  Logoff | Help  
 
                   
@@ -31,7 +31,7 @@ IPS_INV6010_20210423_164653.RPT
      Retailer  Pack    Status                  Retailer  Pack    Status                  Retailer  Pack    Status                     
      -------  -------  --------------------    -------  -------  --------------------    -------  -------  --------------------       
      0000401  0000141  Available   X            0000401  0000142  Available               0000401  0000143  Available                  
-     0000401  0000150  Available               0000401  0000151  Available               0000401  0000152  Available                  
+     0000401  0000150  Available   X            0000401  0000151  Available               0000401  0000152  Available                  
      0000401  0000153  Available               0000401  0000154  Available               0000401  0000155  Available                  
      0000401  0000156  Available               0000401  0000157  Available               0000401  0000158  Available                  
      0000401  0000159  Available               0000401  0000160  Available               0000401  0000161  Available                  

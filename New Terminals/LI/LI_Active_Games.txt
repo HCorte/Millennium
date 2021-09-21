@@ -1,0 +1,889 @@
+{
+    "header": {
+        "timestamp": "03/09/2021 11:46:38",
+        "status": true,
+        "info": {
+            "code": "IM_CIJLIS",
+            "message": "Carregamento do inventário dos jogos da Lotaria Instantânea foi efetuado com sucesso.",
+            "description": "Carregamento do inventário dos jogos da Lotaria Instantânea foi efetuado com sucesso.",
+            "messageCode": "IM_CIJLIS"
+        }
+    },
+    "data": {
+        "instantGameParametersResult": {
+            "transactionDate": "03/09/2021 11:46:03",
+            "transactionSerial": "210903-15-1280109011-818",
+            "instantGameParameterResult": {
+                "secondsSinceMidnight": 42736,
+                "date": "03/09/2021 11:52:16",
+                "julianDate": 246,
+                "externalSerialNumber": 12715008,
+                "checkDigits": 225,
+                "serialNumber": "246-12715008-225",
+                "resultCode": 0,
+                "checksum": 0,
+                "retailerCreditLimit": {
+                    "value": 1598145.0,
+                    "formattedValue": "€ 1.598.145,00"
+                },
+                "gameList": [
+                    {
+                        "gameNumber": 363,
+                        "shortGameName": "JOG363",
+                        "longGameName": "RÁPIDO 200",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 366,
+                        "shortGameName": "JOG366",
+                        "longGameName": "Rápido 100",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 100
+                    },
+                    {
+                        "gameNumber": 388,
+                        "shortGameName": "JOG388",
+                        "longGameName": "PÉ DE MEIA",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 390,
+                        "shortGameName": "JOG390",
+                        "longGameName": "MEGA PÉ DE MEIA",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 20
+                    },
+                    {
+                        "gameNumber": 392,
+                        "shortGameName": "JOG392",
+                        "longGameName": "OURO E PRATA",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 394,
+                        "shortGameName": "JOG394",
+                        "longGameName": "NÚMERO DOS EUROS",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 395,
+                        "shortGameName": "JOG395",
+                        "longGameName": "100X",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 20
+                    },
+                    {
+                        "gameNumber": 398,
+                        "shortGameName": "JOG398",
+                        "longGameName": "MINI PÉ-DE-MEIA",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 100
+                    },
+                    {
+                        "gameNumber": 399,
+                        "shortGameName": "JOG399",
+                        "longGameName": "Super Pé de Meia",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 400,
+                        "shortGameName": "JOG400",
+                        "longGameName": "GRANDE SORTE",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 401,
+                        "shortGameName": "JOG401",
+                        "longGameName": "2020 Ano para Ganhar",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 402,
+                        "shortGameName": "JOG402",
+                        "longGameName": "10X",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 100
+                    },
+                    {
+                        "gameNumber": 403,
+                        "shortGameName": "JOG403",
+                        "longGameName": "ANO DO RATO",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 1.0,
+                            "formattedValue": "€ 1,00"
+                        },
+                        "ticketsPerPack": 100
+                    },
+                    {
+                        "gameNumber": 404,
+                        "shortGameName": "JOG404",
+                        "longGameName": "RECOMPENSA",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 1.0,
+                            "formattedValue": "€ 1,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 405,
+                        "shortGameName": "JOG405",
+                        "longGameName": "20X",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 1.0,
+                            "formattedValue": "€ 1,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 406,
+                        "shortGameName": "JOG406",
+                        "longGameName": "SÃO VALENTIM",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 1.0,
+                            "formattedValue": "€ 1,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 407,
+                        "shortGameName": "JOG407",
+                        "longGameName": "ARANHA DA SORTE",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 408,
+                        "shortGameName": "JOG408",
+                        "longGameName": "RÁPIDO 100",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 100
+                    },
+                    {
+                        "gameNumber": 409,
+                        "shortGameName": "JOG409",
+                        "longGameName": "ABELHA DOURADA",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 410,
+                        "shortGameName": "JOG410",
+                        "longGameName": "BOA PÁSCOA",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 411,
+                        "shortGameName": "JOG411",
+                        "longGameName": "50X",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 412,
+                        "shortGameName": "JOG412",
+                        "longGameName": "PÉ-DE-MEIA",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 413,
+                        "shortGameName": "JOG413",
+                        "longGameName": "SUPER PÉ-DE-MEIA",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 414,
+                        "shortGameName": "JOG414",
+                        "longGameName": "DINHEIRO SURPRESA",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 100
+                    },
+                    {
+                        "gameNumber": 415,
+                        "shortGameName": "JOG415",
+                        "longGameName": "MEGA PÉ-DE-MEIA",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 10.0,
+                            "formattedValue": "€ 10,00"
+                        },
+                        "ticketsPerPack": 20
+                    },
+                    {
+                        "gameNumber": 416,
+                        "shortGameName": "JOG416",
+                        "longGameName": "FONTE DOS EUROS",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 10.0,
+                            "formattedValue": "€ 10,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 417,
+                        "shortGameName": "JOG417",
+                        "longGameName": "RECOMPENSA",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 10.0,
+                            "formattedValue": "€ 10,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 418,
+                        "shortGameName": "JOG418",
+                        "longGameName": "GRANDE SORTE",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 10.0,
+                            "formattedValue": "€ 10,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 419,
+                        "shortGameName": "JOG419",
+                        "longGameName": "20X",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 420,
+                        "shortGameName": "JOG420",
+                        "longGameName": "RASPADINHA 25 ANOS",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 20
+                    },
+                    {
+                        "gameNumber": 421,
+                        "shortGameName": "JOG421",
+                        "longGameName": "10X",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 100
+                    },
+                    {
+                        "gameNumber": 422,
+                        "shortGameName": "JOG422",
+                        "longGameName": "SUPER RECOMPENSA",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 423,
+                        "shortGameName": "JOG423",
+                        "longGameName": "RASPADINHA DE VERÃO",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 424,
+                        "shortGameName": "JOG424",
+                        "longGameName": "ARANHA DA SORTE",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 425,
+                        "shortGameName": "JOG425",
+                        "longGameName": "MINI PÉ-DE-MEIA",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 100
+                    },
+                    {
+                        "gameNumber": 426,
+                        "shortGameName": "JOG426",
+                        "longGameName": "50X",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 2.0,
+                            "formattedValue": "€ 2,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 427,
+                        "shortGameName": "JOG427",
+                        "longGameName": "RODA DOS PRÉMIOS",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 428,
+                        "shortGameName": "JOG428",
+                        "longGameName": "CUBO DO GALO",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 429,
+                        "shortGameName": "JOG429",
+                        "longGameName": "DIA DAS BRUXAS",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 430,
+                        "shortGameName": "JOG430",
+                        "longGameName": "TREVO DOS EUROS",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 100
+                    },
+                    {
+                        "gameNumber": 431,
+                        "shortGameName": "JOG431",
+                        "longGameName": "RECOMPENSA",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 432,
+                        "shortGameName": "JOG432",
+                        "longGameName": "RASPADINHA 25 ANOS",
+                        "flags": 0,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": false,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 20
+                    },
+                    {
+                        "gameNumber": 433,
+                        "shortGameName": "JOG433",
+                        "longGameName": "LINHA DOS PRÉMIOS",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 434,
+                        "shortGameName": "JOG434",
+                        "longGameName": "GRANDE SORTE",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 435,
+                        "shortGameName": "JOG435",
+                        "longGameName": "FELIZ NATAL",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 35
+                    },
+                    {
+                        "gameNumber": 436,
+                        "shortGameName": "JOG436",
+                        "longGameName": "PRESENTES DE NATAL",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 437,
+                        "shortGameName": "JOG437",
+                        "longGameName": "20X",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 438,
+                        "shortGameName": "JOG438",
+                        "longGameName": "13 MÁGICO",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 439,
+                        "shortGameName": "JOG439",
+                        "longGameName": "PÉ DE MEIA          ",
+                        "flags": 4,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": true,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 0
+                    },
+                    {
+                        "gameNumber": 440,
+                        "shortGameName": "JOG440",
+                        "longGameName": "2021 ANO PARA GANHAR",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 441,
+                        "shortGameName": "JOG441",
+                        "longGameName": "ARANHA DA SORTE     ",
+                        "flags": 4,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": true,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 0
+                    },
+                    {
+                        "gameNumber": 442,
+                        "shortGameName": "JOG442",
+                        "longGameName": "RÁPIDO 200",
+                        "flags": 4,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": true,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 3.0,
+                            "formattedValue": "€ 3,00"
+                        },
+                        "ticketsPerPack": 0
+                    },
+                    {
+                        "gameNumber": 443,
+                        "shortGameName": "JOG443",
+                        "longGameName": "EUROS A SUBIR       ",
+                        "flags": 4,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": true,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 0
+                    },
+                    {
+                        "gameNumber": 444,
+                        "shortGameName": "JOG444",
+                        "longGameName": "ANO DO BOI",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 100
+                    },
+                    {
+                        "gameNumber": 445,
+                        "shortGameName": "JOG445",
+                        "longGameName": "SÃO VALENTIM",
+                        "flags": 15,
+                        "distributionEnabled": true,
+                        "validationEnabled": true,
+                        "activationEnabled": true,
+                        "telesalesEnabled": true,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 50
+                    },
+                    {
+                        "gameNumber": 446,
+                        "shortGameName": "JOG446",
+                        "longGameName": "RECOMPENSA          ",
+                        "flags": 4,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": true,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 5.0,
+                            "formattedValue": "€ 5,00"
+                        },
+                        "ticketsPerPack": 0
+                    },
+                    {
+                        "gameNumber": 447,
+                        "shortGameName": "JOG447",
+                        "longGameName": "10X                 ",
+                        "flags": 4,
+                        "distributionEnabled": false,
+                        "validationEnabled": false,
+                        "activationEnabled": true,
+                        "telesalesEnabled": false,
+                        "ticketCost": {
+                            "value": 1.0,
+                            "formattedValue": "€ 1,00"
+                        },
+                        "ticketsPerPack": 0
+                    }
+                ]
+            }
+        }
+    }
+}
