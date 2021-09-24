@@ -1,10 +1,10 @@
 $! GXSRC:ERRLOG.LNK
 $!
 $! $Log:   GXAFIP:[GOLS]ERRLOG.LNV  $
-$! 
+$!
 $!    Rev 1.2   13 Jan 1997 20:02:06   GPK
 $! Rita's fixex for IPS
-$! 
+$!
 $!    Rev 1.1   14 Jul 1996 20:40:12   HXK
 $! Changed layout to allow NORMLIB (Pat Nestor, Mike Pindrik)
 $!
@@ -29,6 +29,7 @@ X2FLDNAM,-
 ATOH,-
 HTOA,-
 MESIGS,-
+MESOLM,-
 STDLIB:NORMLIB/LIB, -
 OBJLIB:PSECT.OPT/OPTION,-
 SYS$INPUT/OPTION
