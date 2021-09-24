@@ -1,5 +1,6 @@
 $!
 $! $Log:   GXAFIN:[GOLS]KILSYS.COV  $
+$! V03 16-APR-2020 SCML Added COMOLM
 $!
 $! V02 30-MAR-2016 SCML Added MDCMNG and ABPAUDIT
 $!
