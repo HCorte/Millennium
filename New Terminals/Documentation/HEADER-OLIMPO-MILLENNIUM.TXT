@@ -1,0 +1,107 @@
+YYMMDD-GG-NNNNNNNNNN-KKK
+
+991231 = 19,918861781817377011657710110785 bits = 2,5 bytes
+
+  999999999999999999999 = 69,760489992634609305275265324236 bits = 8,73 bytes -> 9 bytes
+  401231999999999999999 = 68,442998569500630877856854210649 bits = 8,56 bytes -> 9 bytes
+
+    9223372036854775807 <- 8 bytes com sinal
+   18446744073709551615 <- 8 bytes sem sinal
+  
+        999999999999999 = 49,828921423310433775359750553377 bits = 6,23 bytes -> 7 bytes
+   99999999999999999999 = 66,438561897747246957391961639379 bits = 8,31 bytes -> 9 bytes
+
+    YYMMDD =     991231 = 19,918861781817377011657710110785 bits = 2,49 bytes -> 3 bytes
+	             999999 = 19,931567126628411850257166027671 bits = 2,49 bytes -> 3 bytes
+				 301231 = 18,200510721355401033559399955287 bits = 2,28 bytes -> 3 bytes
+NNNNNNNNNN = 9999999999 = 33,219280948729353974607084478953 bits = 4,16 bytes -> 5 bytes
+       KKK =        999 = 9,9643408677924183262190210094566 bits = 1,25 bytes -> 2 bytes 
+        GG =         99 = 6,6293566200796096191068409346214 bits = 0,83 bytes -> 1 byte
+		
+		                                                                      -> 11 bytes
+
+  YYMMDDGG =   99999999 = 26,575424744671948301938168836969 bits = 3,33 bytes
+               99123199 = 26,56271941249475430137439093042  bits = 3,32 bytes
+			   30123199 = 24,844371652560268953066698307542 bits = 3,11 bytes
+YYMMDDGGKKK	= 99999999999 = 36,541209043746558876164551955558 bits = 4,57 bytes -> 5 bytes
+
+ 
+----------------------------------------
+ HEADER DAS MENSAGENS OLIMPO-MILLENNIUM
+----------------------------------------
+ ID DA MENSAGEM OLIMPO        - 8 BYTES
+ CÓDIGO DO TERMINAL           - 4 BYTES
+ TERMINAL ID MILLENIUM        - 2 BYTES
+ # SÉRIE OLIMPO - YYMMDD      - 3 BYTES
+ # SÉRIE OLIMPO - GG          - 1 BYTE
+ # SÉRIE OLIMPO - NNNNNNNNNN  - 5 BYTES
+ # SÉRIE OLIMPO - KKK         - 2 BYTES
+ DATA CDC                     - 2 BYTES
+ DATA JULIANA                 - 2 BYTES
+---------------------------------------
+                               29 BYTES
+
++---------------------------------------------+
+| HEADER DAS MENSAGENS OLIMPO<->MILLENNIUM    |
++---------------------------------------------+----------+-------+-------------------------------------+
+| # | NOME CAMPO HEADER                       | # BYTES  | MÍN.  | MÁX. (c/ sinal) (# DÍGITOS)         |
++---+-----------------------------------------+----------|-------+-------------------------------------+
+| 1 |ID DA MENSAGEM OLIMPO                    |     5    |   0   |                549.755.813.887 (12) |
+| 2 |CÓDIGO DO TERMINAL (7 dígitos)           |     4    |   0   |                  2.147.483.647 (10) |
+| 3 |TERMINAL ID MILLENIUM                    |     2    |   0   |                         32.767 ( 5) |
+| 4 |# SÉRIE OLIMPO (21 dígitos)              |     9    |   0   |  2.361.183.241.434.822.606.847 (22) |
+| 5 |DATA CDC                                 |     2    |   0   |                         32.767 ( 5) |
+| 6 |DATA JULIANA                             |     2    |   0   |                         32.767 ( 5) |
++---+-----------------------------------------+----------+-------+-------------------------------------+
+                                        TOTAL |    24    |
+
++---------------------------------------------+
+| HEADER DAS MENSAGENS OLIMPO<->MILLENNIUM    |
++---------------------------------------------+----------+-------+-------------------------------------+------------------------------
+| # | NOME CAMPO HEADER                       | # BYTES  | MÍN.  | MÁX. (c/ sinal) (# DÍGITOS)         | FIELD NAME SOURCE CODE
++---+-----------------------------------------+----------|-------+-------------------------------------+------------------------------
+| 1 |ID DA MENSAGEM OLIMPO                    |     8    |   0   |      9.223.372.036.854.775.807 (19) | MESSID_OLM
+| 2 |CÓDIGO DO TERMINAL (7 dígitos)           |     4    |   0   |                  2.147.483.647 (10) | HPRO(TERNUM, SBUF)
+| 3 |TERMINAL ID MILLENIUM                    |     2    |   0   |                         32.767 ( 5) | AGTTAB(AGTNUM, TERMINALNUM)
+| 4 |# SÉRIE OLIMPO (21 dígitos)              |     9    |   0   |  2.361.183.241.434.822.606.847 (22) | SEROLM_INT_OLM
+| 5 |DATA CDC                                 |     2    |   0   |                         32.767 ( 5) | DAYCDC
+| 6 |DATA JULIANA                             |     2    |   0   |                         32.767 ( 5) | DAYJUL
+| 7 |TOTAL AMOUNT                             |     4    |   0   |                  2.147.483.647 (10) | TWTOT_OLM
++---+-----------------------------------------+----------+-------+-------------------------------------+------------------------------
+                                        TOTAL |    28    |
+
+
+
+1- MENSAGEM VALIDAÇÃO LI MODO ENVELOPE (TERMINAL PRIVILEGIADO)
+2C 
+DD 
+D9 25 
+02 
+00 00 
+00 
+00 01 86 9A 
+00 
+00 00 00 0B 
+01 
+00 6F 
+00 10 F4 47 
+06 9F 6B C7 
+04 57 
+00 00 00 00
+
+2- MENSAGEM VALIDAÇÃO LI MODO ENVELOPE (TERMINAL PRIVILEGIADO)
+2F 
+DD 
+6A 70 
+02 
+00 00 
+00 
+00 01 86 9A 
+00 
+00 00 00 63 
+01 
+03 78 
+00 87 A2 38 
+34 FB 5E 38 
+22 B8 
+00 00 00 00
