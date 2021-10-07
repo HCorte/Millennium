@@ -10,7 +10,7 @@ $!
 $!#####################################################################################
 
 
-$ DEFINE SYS$INPUT 'F$TRNLNM("SYS$COMMAND")'
+$! DEFINE SYS$INPUT 'F$TRNLNM("SYS$COMMAND")' !enter in conflict with SYS$CREPRC SYS$INPUT (that is this script)
 $!#####################################################################################################
 $! pipe SH PROCESS SCMLCOMOLM | SEARCH SYS$PIPE "Devices allocated" > DEVICEAUX.DAT
 $! WAIT 00:00:01
@@ -93,7 +93,8 @@ $ close DMQFILE
 $! PRIMARY_HOST = ""
 $ IF PRIMARY_HOST .EQS. "" .OR. FAILOVER_HOST .EQS ""
 $ THEN
-$   WRITE SYS$OUTPUT "It was not possible to obtain the hosts names of messages from DMQ.INI in GXOLM"
+$!   WRITE SYS$OUTPUT "It was not possible to obtain the hosts names of messages from DMQ.INI in GXOLM"
+$   define/job millconnect "It was not possible to obtain the hosts names of messages from DMQ.INI in GXOLM"
 $   EXIT
 $ ENDIF
 $
@@ -104,7 +105,8 @@ search sys$pipe "''messageq_ip'" | -
 $ messageq_connect = f$edit(f$trnlnm("messageq_con","lnm$job"),"collapse")
 $ IF F$LOCATE("NOMATCHES",messageq_connect) .NE. F$LENGTH(messageq_connect)
 $ THEN
-$   WRITE SYS$OUTPUT "There is no reference to ip:''messageq_ip' in Hosts files"
+$!   WRITE SYS$OUTPUT "There is no reference to ip:''messageq_ip' in Hosts files"
+$   define/job millconnect "There is no reference to ip:''messageq_ip' in Hosts files"
 $   deassign/job messageq_connect
 $   EXIT
 $ ENDIF
@@ -113,13 +115,16 @@ $! show symbol messageq_connect
 $
 $ IF F$LOCATE(PRIMARY_HOST,messageq_connect) .NE. F$LENGTH(messageq_connect)
 $ THEN
-$   WRITE SYS$OUTPUT "Millennium connected to Primary MessageQ: ''messageq_ip'"
+$!   WRITE SYS$OUTPUT "Millennium connected to Primary MessageQ: ''messageq_ip'"
+$   define/job millconnect "Millennium connected to Primary MessageQ: ''messageq_ip'"
 $ ELSE
 $   IF F$LOCATE(FAILOVER_HOST,messageq_connect) .NE. F$LENGTH(messageq_connect)
 $   THEN
-$       WRITE SYS$OUTPUT "Millennium connected to FailOver MessageQ: ''messageq_ip'"
+$!       WRITE SYS$OUTPUT "Millennium connected to FailOver MessageQ: ''messageq_ip'"
+$       define/job millconnect "Millennium connected to FailOver MessageQ: ''messageq_ip'"
 $   ELSE
-$       WRITE SYS$OUTPUT "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
+$!       WRITE SYS$OUTPUT "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
+$       define/job millconnect "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
 $   ENDIF 
 $ ENDIF
 $
