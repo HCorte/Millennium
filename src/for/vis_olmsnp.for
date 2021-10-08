@@ -26,7 +26,8 @@ C=======OPTIONS /CHECK=NOOVERFLOW/EXT
         IMPLICIT NONE
 C
         INCLUDE '(LIB$ROUTINES)' 
-        INCLUDE '($SSDEF)'     ! SS$_ symbols/definitions               
+        INCLUDE '($SSDEF)'     ! SS$_ symbols/definitions              
+        INCLUDE '($JPIDEF)' 
 C
         INCLUDE 'INCLIB:SYSPARAM.DEF'
         INCLUDE 'INCLIB:SYSEXTRN.DEF'
@@ -74,8 +75,9 @@ C
         INTEGER*4  STATUS
         INTEGER*4  VALUE
         INTEGER*4  POS
-        INTEGER*4  pidadr,SYS$CREPRC,STATLOG
+        INTEGER*4  pidadr,SYS$CREPRC,STATLOG,STPROC
         LOGICAL    MILL_CON_STATUS /0/        
+        CHARACTER*8 PROCESS_ID
 C
         INTEGER*4  MAXPRM
         PARAMETER (MAXPRM=12)
@@ -197,13 +199,15 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C        CALL OPSTXT('Middle')
         IF(MILL_CON_STATUS .EQ. 0) THEN
           ISTAT = SYS$CREPRC(pidadr,"SYS$SYSTEM:LOGINOUT.EXE",
-     *    "DKD5:[SCML.TSK.OLM]MESSAGEQCONNECTION.COM",          !input
-     *    "DKD5:[SCML.TSK.OLM]MILLCON.LOG",                     !output
-     *    "DKD5:[SCML.TSK.OLM]ERR_MILLCON.LOG",,,,,,,)          !error
+     *    "GXOLM:MESSAGEQCONNECTION.COM",          !input
+     *    "GXOLM:MILLCON.LOG",                     !output
+     *    "GXOLM:ERR_MILLCON.LOG",,,"MILLCON",,,,)          !error
 
           CALL OPS('ISTAT:',ISTAT,ISTAT)
-          CALL OPSTXT('absolute path DKD5:[SCML.TSK.OLM]')
-          MILL_CON_STATUS = 1
+C          CALL OPSTXT('absolute path DKD5:[SCML.TSK.OLM]')
+          STPROC = LIB$GETJPI(JPI$_PID,pidadr,,,PROCESS_ID,)
+          CALL OPSTXT(PROCESS_ID)
+C          MILL_CON_STATUS = 1
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
           STATLOG = lib$get_logical("MILLCONNECT",MILLCON)
           CALL OPS('STATLOG:',STATLOG,STATLOG)
@@ -262,7 +266,7 @@ C----- MessageQ attach and detach
         WRITE(CLIN15,9105) K(12)
        ENDIF
 
-       WRITE(CLIN17,922) MILLCON
+       WRITE(CLIN17,922) PROCESS_ID,MILLCON
 
        WRITE(CLIN19,950)
        WRITE(CLIN20,9502) OLMS_TOTOKYPUT,                                      !TOTAL # OF MESSAGES SENT TO OLIMPO SYSTEM
@@ -291,7 +295,7 @@ C912     FORMAT('OLM      >   ',1('*',A7,I6,3X))
 
 919     FORMAT('        > ',1('*',A7,I6,3X)
      *          ,'COMOLM Attached?',2X,'Yes')                                 !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
-922     FORMAT('          ',A60)
+922     FORMAT('   (',A8,')',3X,A60)
 9101    FORMAT('          ',1X,1(A7)
      *          9X,'Time Attached',5X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)            !TIME COMOLM ATTACHED TO MESSAGEQ SERVER IN OLIMPO SYSTEM
 9103    FORMAT('          ',1X,1(A7)
