@@ -5,7 +5,7 @@ $! for debug purposes use dcl: sh log /table=lnm$job
 $! to see the key value pair obtained from pipe subprocess value obtain 
 $! and passed to this main process by the usage of this table of jobs 
 $! in code "define/job messageq_aux &messageq_pb" to define the key value pair writen 
-$! to the table
+$! to the logical table
 $!
 $!#####################################################################################
 
