@@ -1,4 +1,4 @@
-      PROGRAM OLMCON
+      PROGRAM GMGN
         IMPLICIT NONE
         INCLUDE 'INCLIB:SYSDEFINE.DEF'
         INCLUDE 'INCLIB:GLOBAL.DEF'
@@ -19,7 +19,7 @@ C        INCLUDE 'OLMCON.DEF'
       
 11      CONTINUE
         IF(RUNPROG) THEN
-          PRINT *, 'To Exit GMGN press e'
+          PRINT *, 'To Exit GMGN (General Management) press e'
           PRINT *, 'To remove/free all buffers in use in MILL press (1) A'
           PRINT *, 'To remove/free a block of buffer in use in MILL press (2) O'
           PRINT *, 'See All the Buffers in the App Queue press (3) W'
