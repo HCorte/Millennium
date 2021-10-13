@@ -75,12 +75,13 @@ C
         INTEGER*4  STATUS
         INTEGER*4  VALUE
         INTEGER*4  POS
-        INTEGER*4  pidadr,SYS$CREPRC,STATLOG,STPROC
-        LOGICAL    MILL_CON_STATUS /0/        
-        CHARACTER*8 PROCESS_ID
+        INTEGER*4  pidadr,SYS$CREPRC,STATLOG,STPROC,POS_AUX,STR$TRIM,SIZE_AUX
+        LOGICAL    MILL_CON_STATUS /0/, REGLOG /0/        
+        CHARACTER*20 PROCESS_ID,OUTPUT_PATH,ERR_MSG
+        CHARACTER*13 IP_ADDRESS
 C
         INTEGER*4  MAXPRM
-        PARAMETER (MAXPRM=12)
+        PARAMETER (MAXPRM=13)
 C
         REAL*8       K(MAXPRM)                                                  !SNAPSHOT PARAMETER DESCRIPTION
 C
@@ -89,7 +90,7 @@ C
         DATA   K/'COMOLM  ','OLMCOn  ','INPUT  ','OUTPUT  ',
      *           'WAGPRO  ','CANPRO  ','VALPRO ',
      *           'INSPRO  ','CRSPRO  ','INSOUT ',
-     *           'OLMTMO  ','FINTMO  '/
+     *           'OLMTMO  ','FINTMO  ','REGLOG '/
         DATA DEFTPASS/'SUPORTE'/
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -116,7 +117,7 @@ C CLEAR COMMAND MESSAGE BUFFER
 C
 2       CONTINUE
         CALL FASTSET(0,BUF,CDLEN)
-        GOTO(200,506,200,200,200,200,200) KEYNUM   
+        GOTO(200,506,200,200,200,200,200,200,200,200,200,200,507) KEYNUM   
         
         GOTO 200          
 C
@@ -139,6 +140,13 @@ C        P(OLMCONF)=VALUE
 C        GOTO 300
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
+C
+C Register the logs of Script run in process
+C
+507     CONTINUE
+        IF(VALUE.LT.0.OR.VALUE.GT.1) GOTO 211
+        REGLOG = VALUE       
+        GOTO 300
 C
 C INPUT ERROR
 C
@@ -167,6 +175,14 @@ C
 210     CONTINUE
         WRITE(CLIN23,805)
 805     FORMAT('Invalid value (0-Disconnect 1-Connect /to Olimpo)')
+
+        RETURN
+
+211     CONTINUE
+        WRITE(CLIN23,806)
+806     FORMAT('Invalid value (0-No Log 1-Log)')
+
+        RETURN        
 C
 C QUEUE COMMAND BUFFER TO SYSTEM INPUT INPUT QUEUE
 C     
@@ -198,20 +214,29 @@ C        What MessageQ MILL is connected to (Primary or Failover)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C        CALL OPSTXT('Middle')
         IF(MILL_CON_STATUS .EQ. 0) THEN
+          IF(REGLOG) THEN
+                OUTPUT_PATH = "GXOLM:MILLCON.LOG"
+          ELSE
+                OUTPUT_PATH = "NLA0:" !its null device
+          ENDIF
+
           ISTAT = SYS$CREPRC(pidadr,"SYS$SYSTEM:LOGINOUT.EXE",
      *    "GXOLM:MESSAGEQCONNECTION.COM",          !input
-     *    "GXOLM:MILLCON.LOG",                     !output
-     *    "GXOLM:ERR_MILLCON.LOG",,,"MILLCON",,,,)          !error
+C     *    "GXOLM:MILLCON.LOG",                    !output log
+     *    OUTPUT_PATH,                             !output log
+     *    "GXOLM:ERR_MILLCON.LOG",                 !error log
+     *    ,,"MILLCON",,,,)                  !process name       
 
           CALL OPS('ISTAT:',ISTAT,ISTAT)
-C          CALL OPSTXT('absolute path DKD5:[SCML.TSK.OLM]')
           STPROC = LIB$GETJPI(JPI$_PID,pidadr,,,PROCESS_ID,)
           CALL OPSTXT(PROCESS_ID)
 C          MILL_CON_STATUS = 1
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
           STATLOG = lib$get_logical("MILLCONNECT",MILLCON)
           CALL OPS('STATLOG:',STATLOG,STATLOG)
-          IF(.NOT. STATLOG) CALL LIB$SIGNAL(%VAL(STATLOG))
+          POS_AUX = LIB$INDEX(MILLCON,",")
+          IP_ADDRESS = MILLCON(POS_AUX+1:LIB$LEN(MILLCON)-(POS_AUX+1))
+C          IF(.NOT. STATLOG) CALL LIB$SIGNAL(%VAL(STATLOG))
 C           CALL OPSTXT(MILLCON)
 C           CALL OPSTXT(millcon)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -266,7 +291,14 @@ C----- MessageQ attach and detach
         WRITE(CLIN15,9105) K(12)
        ENDIF
 
-       WRITE(CLIN17,922) PROCESS_ID,MILLCON
+C       WRITE(CLIN17,922) PROCESS_ID,MILLCON
+       IF(IP_ADDRESS .EQ. 'ERR') THEN
+C         STATLOG = STR$TRIM(ERR_MSG,MILLCON(1:POS_AUX-1),SIZE_AUX)
+         ERR_MSG = MILLCON(1:POS_AUX-1)
+         WRITE(CLIN17,923) ERR_MSG
+       ELSE 
+         WRITE(CLIN17,922) MILLCON(1:POS_AUX-1),IP_ADDRESS,PROCESS_ID,K(13),REGLOG
+       ENDIF
 
        WRITE(CLIN19,950)
        WRITE(CLIN20,9502) OLMS_TOTOKYPUT,                                      !TOTAL # OF MESSAGES SENT TO OLIMPO SYSTEM
@@ -295,7 +327,9 @@ C912     FORMAT('OLM      >   ',1('*',A7,I6,3X))
 
 919     FORMAT('        > ',1('*',A7,I6,3X)
      *          ,'COMOLM Attached?',2X,'Yes')                                 !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
-922     FORMAT('   (',A8,')',3X,A60)
+C922     FORMAT('   (',A8,')',3X,A60)
+922     FORMAT('MESSQ   > ',A8,9X,'IP:',A13,2X,'PID:',A8,2X,A6,2X,I1)
+923     FORMAT('MESSQ ER> ',A40)
 9101    FORMAT('          ',1X,1(A7)
      *          9X,'Time Attached',5X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)            !TIME COMOLM ATTACHED TO MESSAGEQ SERVER IN OLIMPO SYSTEM
 9103    FORMAT('          ',1X,1(A7)
