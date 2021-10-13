@@ -1,0 +1,190 @@
+CODIGOS A IMPLEMENTAR NO CANCELAMENTO: (erros funcionais)
+
+Sugestão: 
+Adicionar ao excel os erros que estão presentes no documento das mensagens
+1	= 	Time Limit Exceeded
+2	=	Invalid Cancel
+3	=	Already Cancelled
+4	=	Wrong Terminal
+5	=	Maximum number of cancellations by day reached
+6	=	Passive IO error
+7	=	Cancellation only possible by cancelling the main wager
+8	=	The sports full draw has been cancelled
+
+
+- Ação: Pedido de cancelamento ultrapassa o tempo permitido:
+   - status Millennium: 1 (Time limit exceeded)
+   - message shdes: EC_09067
+   - message text: Cancelamento de Pedido (AF: trocar "Pedido" por "Aposta") - Limite de tempo excedido
+   
+- Ação: Cancelamento de aposta inválida:
+   - status Millennium: 2 (Invalid cancel)
+   - message shdes: EC_09092
+   - message text: Não é possível cancelar o pedido {0}
+
+- Ação: quando a aposta já foi anulada anteriormente e alguém tentar anular pela segunda vez (AF: Tentativa de cancelamento a uma aposta cancelada anteriormente):
+   - status Millennium: 3 (Already Cancelled)
+   - message shdes: EC_02004
+   - message text: Já anulado
+   
+- Ação: quando o cancelamento é feito no terminal errado: (AF: Tentativa de cancelamento num terminal diferente do terminal da aposta)
+   - status Millennium: 4 (Wrong terminal)
+   - message shdes: EC_60038
+   - message text: Aposta não registada neste terminal
+
+- Ação: (AF: Excessivos cancelamentos diários)
+   - status Millennium: 5 (Max number of cancellations by day reached)
+   - message shdes: NAO EXISTE
+   - message text: Limite máximo de cancelamentos atingido
+
+---------------------------------
+CODIGOS A IMPLEMENTAR NA VALIDACAO: (erros funcionais)
+
+Sugestão: 
+Adicionar ao excel os erros que estão presentes no documento das mensagens
+0	=	"NO RESULTS YET OR NOT A WINNER"
+1	=	"RESULTS NOT CONFIRMED"
+2	=	"NO SUCH TICKET" — i.e. invalid serial no.
+3	=	"CAN'T PAY YET"
+4	=	"ALREADY CASHED"
+7	=	Reserved for future bank payment
+9	=	"CASH AT LOTTERY"
+14	=	Reserved for future bank payment
+18	=	"NO DETAILS AVAILABLE"
+30	=	"WINNER HOLDING LIMIT"
+31	=	“NO RESULTS YET”
+
+
+
+- Ação: quando ainda não existe um prémio: 
+   - validation status Millennium: 0 (Not results yet or not a winner)
+   - message shdes:  EC_09002 (temporario ate arranjar outro codigo) "VIRN"
+   - message text: Não há prémios ainda (AF: Ainda não foi efetuado o escrutinio do jogo)
+   
+- Ação: quando não é aposta premiada:
+   - validation status Millennium: 0 (Not results yet or not a winner)
+   - message shdes: IM_ANP
+   - message text: Aposta não premiada
+   
+- Ação: quando os resultados ainda não foram confirmados:
+   - validation status Millennium: 1 (Results not confirmed)
+   - message shdes:  EC_09002 (temporario ate arranjar outro codigo)
+   - message text: (AF: Resultados não confirmados)
+ 
+- Ação: quando o serial number da validação é inválido: 
+   - validation status Millennium: 2 (NO SUCH TICKET)
+   - message shdes: EC_60044 (normal); EC_60045 (privilegiado) criar mensagem identica no contexto do hades
+   - message text: 
+   
+- Ação: quando ainda não é possivel pagar o prémio: 
+   - validation status Millennium: 3 (CANT PAY YET)
+   - message shdes: EC_09002 (temporario ate arranjar outro codigo) 
+   - message text: (AF: Validar se não existe já um erro para este erro)
+
+- Ação: quando o prémio já foi pago:
+   - validation status Millennium: 4 (Already cashed)
+   - message shdes: EC_02026
+   - message text: Já pago
+
+- quando o prize level do prémio é 4 (pagamento na santa casa):
+   - validation status: 9 (Cash at lottery)
+   - message shdes: IM_VP_PAVS
+   - message text: Validação efetuada com sucesso
+
+
+----------------------------
+CODIGOS A IMPLEMENTAR NO PAGAMENTO: (erros funcionais)
+
+Sugestão: 
+Adicionar ao excel os erros que estão presentes no documento das mensagens
+0	=	"NO RESULTS YET OR NOT A WINNER"
+1	=	"RESULTS NOT CONFIRMED"
+2	=	"NO SUCH TICKET" — i.e. invalid serial no.
+3	=	"CAN'T PAY YET"
+4	=	"ALREADY CASHED"
+7	=	Reserved for future bank payment
+9	=	"CASH AT LOTTERY"
+14	=	Reserved for future bank payment
+18	=	"NO DETAILS AVAILABLE"
+30	=	"WINNER HOLDING LIMIT"
+31	=	“NO RESULTS YET”
+
+- Ação: quando não é vencedor de prémio:
+   - payment status: 0 (Not a winner)
+   - message shdes: IM_ANP
+   - message text: Aposta não premiada
+   
+- Ação: quando ainda não são reconhecidos os resultados ??? CONFIRMAR
+   - payment status: 1 (Results not in)
+   - message shdes: 
+   - message text: 
+   
+- Ação: quando o serial number do pagamento é inválido: 
+   - payment status: 2 (Invalid serial number)
+   - message shdes: EC_15005
+   - message text: O Serial {0} é inválido 
+
+- Ação: quando ainda não é possivel efectuar o pagamento: (NAO ESTA NA T_MESSAGE, VI NO ISSUE 361 DO ATENAS)
+   - payment status: 3 (CAN'T PAY YET)
+   - message shdes: IM_VP_PAND
+   - message text: O prémio {prizedWagerId} referente à aposta {wagerId}, ainda não está disponivel.
+   
+- Ação: quando o prémio já foi pago:
+   - payment status: 4 (Already cashed)
+   - message shdes: IM_PJP
+   - message text: Prémio já pago
+   
+- Ação: quando o prémio já foi reclamado:
+   - payment status: 5 (Already claimed)
+   - message shdes: 
+   - message text: 
+   
+----------------------------
+
+OUTROS: (erros funcionais)
+
+- quando o report target > 8
+   - ainda não existe erro para esta excepção
+   
+
+- quando se tenta registar duas apostas multiplas no mesmo boletim:
+   - ainda não existe erro para esta excepção 
+   
+
+- obter relatório para chaves e resultados para draw que ainda não aconteceu:
+   - devolver o ultimo draw possivel
+   - message text: não existe para esta excepção
+   
+
+ERROS MILLENNIUM - (Erros que técnicos)
+
+1 =		Invalid 					- Mensagem inválida
+2 =		Syntax Error 				- Erro na construção da mensagem 
+3 =		Function Suppressed			- Exemplo: Pode indicar que o sistema IPS está em baixo 
+4 =		Not Signed On				- Não efetuou SignOn no Millennium
+5 =		System Dormant				- (Este erro creio que não é necessário implementar, é habitual ver este erro na comunicação com o Euromilhões)
+6 =		Drawing Break				- ???
+7 =		Liability Limit Exceeded 	- ???
+8 =		Non-drawing Day				- ???
+9 =		DES Encryption Error		- Erro na encriptação da mensagem
+10 =	Results Not In				- ???
+11 =	Invalid Terminal Number		- Código terminal inválido
+12 =	Security Violation (>10 sign-on) - Excessivos SignOn's
+13 =	Bad Checksum				- Erro na geração do Checksum
+14 =	Bad Game Status				- ???
+15 =	Retry Transaction			- ???
+18 =	Game Revision Error			- O Game Revision / Control Revision está incorreto
+19 =	Can Not Fraction Ticket		- ???
+20 =	Already Fractioned			- ???
+21 =	Unfractioned				- ???
+22 =	Card Present (Pass # mismatch) - ???
+23 =	No Card Present at SON (Do not SON) - ???
+31 =	Combination Closed			- ???
+32 =	Odds exceeded				- ???
+36 =    Invalid Agent Or Password In Sign On - Código de terminal ou palavra-passe inválido
+37 =	Not available passive number found - ???
+38 =	Passive IO error 			- ???
+39 =	Blocked NIF					- Nif Bloqueado
+
+
+
