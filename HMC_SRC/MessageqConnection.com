@@ -33,8 +33,9 @@ search sys$pipe "Devices allocated:" | -
 $ device_info = f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse") 
 $ IF F$LOCATE("NOMATCHES",device_info) .NE. F$LENGTH(device_info)
 $ THEN
-$   WRITE SYS$OUTPUT "The process COMOLM does not exist"
+$!   WRITE SYS$OUTPUT "The process COMOLM does not exist"
 $   deassign/job messageq_aux
+$   define/job millconnect "process COMOLM missing,ERR"
 $   EXIT
 $ ENDIF
 $ device_aux = f$element(1,":",device_info)
@@ -48,8 +49,9 @@ search sys$pipe "''device_aux'" | -
 $ messageq_ip = f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse")
 $ IF F$LOCATE("NOMATCHES",messageq_ip) .NE. F$LENGTH(messageq_ip)
 $ THEN
-$   WRITE SYS$OUTPUT "There is no Device_socket(''device_aux') in network 'TCP/IP'"
+$!   WRITE SYS$OUTPUT "There is no Device_socket(''device_aux') in network 'TCP/IP'"
 $   deassign/job messageq_aux
+$   define/job millconnect "Device Socket missing,ERR"
 $   EXIT
 $ ENDIF
 $ messageq_ip_pos = F$LOCATE("5000",messageq_ip)+4
@@ -64,7 +66,8 @@ $ PRIMARY_IP = ""
 $ FAILOVER_IP = ""
 $ IF F$SEARCH("GXOLM:DMQ.INI") .EQS. "" 
 $ THEN
-$   WRITE SYS$OUTPUT "The DMQ.INI files is missing at :"+F$TRNLNM("GXOLM")
+$!   WRITE SYS$OUTPUT "The DMQ.INI files is missing at :"+F$TRNLNM("GXOLM")
+$   define/job millconnect "DMQ.INI file missing,ERR"
 $   EXIT
 $ ENDIF
 $ OPEN/READ DMQFILE GXOLM:DMQ.INI
@@ -94,7 +97,7 @@ $! PRIMARY_HOST = ""
 $ IF PRIMARY_HOST .EQS. "" .OR. FAILOVER_HOST .EQS ""
 $ THEN
 $!   WRITE SYS$OUTPUT "It was not possible to obtain the hosts names of messages from DMQ.INI in GXOLM"
-$   define/job millconnect "It was not possible to obtain the hosts names of messages from DMQ.INI in GXOLM"
+$   define/job millconnect "HOSTS NAMES MISSING IN DMQ.INI,ERR"
 $   EXIT
 $ ENDIF
 $
@@ -106,7 +109,7 @@ $ messageq_connect = f$edit(f$trnlnm("messageq_con","lnm$job"),"collapse")
 $ IF F$LOCATE("NOMATCHES",messageq_connect) .NE. F$LENGTH(messageq_connect)
 $ THEN
 $!   WRITE SYS$OUTPUT "There is no reference to ip:''messageq_ip' in Hosts files"
-$   define/job millconnect "There is no reference to ip:''messageq_ip' in Hosts files"
+$   define/job millconnect "IP:''messageq_ip' MISSING IN HOSTS FILE,ERR"
 $   deassign/job messageq_connect
 $   EXIT
 $ ENDIF
@@ -116,15 +119,18 @@ $
 $ IF F$LOCATE(PRIMARY_HOST,messageq_connect) .NE. F$LENGTH(messageq_connect)
 $ THEN
 $!   WRITE SYS$OUTPUT "Millennium connected to Primary MessageQ: ''messageq_ip'"
-$   define/job millconnect "Millennium connected to Primary MessageQ: ''messageq_ip'"
+$!   define/job millconnect "Millennium connected to Primary MessageQ: ''messageq_ip'"
+$    define/job millconnect "Primary,''messageq_ip'"
 $ ELSE
 $   IF F$LOCATE(FAILOVER_HOST,messageq_connect) .NE. F$LENGTH(messageq_connect)
 $   THEN
 $!       WRITE SYS$OUTPUT "Millennium connected to FailOver MessageQ: ''messageq_ip'"
-$       define/job millconnect "Millennium connected to FailOver MessageQ: ''messageq_ip'"
+$!       define/job millconnect "Millennium connected to FailOver MessageQ: ''messageq_ip'"
+$        define/job millconnect "FailOver,''messageq_ip'"
 $   ELSE
 $!       WRITE SYS$OUTPUT "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
-$       define/job millconnect "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
+$!       define/job millconnect "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
+$        define/job millconnect "No Match found,ERR"
 $   ENDIF 
 $ ENDIF
 $
