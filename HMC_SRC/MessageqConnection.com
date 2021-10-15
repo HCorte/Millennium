@@ -24,40 +24,44 @@ $! WRITE SYS$OUTPUT DEVICE_AUX
 $! goto read_loop
 $!done_loop:
 $! WRITE SYS$OUTPUT "Finished..."
+$! Logical Name PROCOLM = SCMLCOMOLM
 $!#####################################################################################################
 
 $ pipe/nosymbol/nological -
 show process SCMLCOMOLM | -
 search sys$pipe "Devices allocated:" | -
-( read sys$pipe messageq_pb ; define/job messageq_aux &messageq_pb )
-$ device_info = f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse") 
+( read sys$pipe messageq_pb ; define/job millconnect &messageq_pb )
+$! device_info = f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse") 
+$ device_info = f$edit(f$trnlnm("millconnect","lnm$job"),"collapse") 
 $ IF F$LOCATE("NOMATCHES",device_info) .NE. F$LENGTH(device_info)
 $ THEN
 $!   WRITE SYS$OUTPUT "The process COMOLM does not exist"
-$   deassign/job messageq_aux
+$!   deassign/job messageq_aux
 $   define/job millconnect "process COMOLM missing,ERR"
 $   EXIT
 $ ENDIF
 $ device_aux = f$element(1,":",device_info)
-$ deassign/job messageq_aux
-$! show symbol device_aux 
+$ show symbol device_aux 
+$! deassign/job messageq_aux
 
 $ pipe/nosymbol/nological -
 show network "TCP/IP" /FULL | -
 search sys$pipe "''device_aux'" | -
-( read sys$pipe messageq_host ; define/job messageq_aux &messageq_host )
-$ messageq_ip = f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse")
+( read sys$pipe messageq_host ; define/job millconnect &messageq_host )
+$! messageq_ip = f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse")
+$ messageq_ip = f$edit(f$trnlnm("millconnect","lnm$job"),"collapse")
+$! sh symbol messageq_ip
 $ IF F$LOCATE("NOMATCHES",messageq_ip) .NE. F$LENGTH(messageq_ip)
 $ THEN
 $!   WRITE SYS$OUTPUT "There is no Device_socket(''device_aux') in network 'TCP/IP'"
-$   deassign/job messageq_aux
+$!   deassign/job messageq_aux
 $   define/job millconnect "Device Socket missing,ERR"
 $   EXIT
 $ ENDIF
 $ messageq_ip_pos = F$LOCATE("5000",messageq_ip)+4
 $ messageq_ip = F$EXTRACT(messageq_ip_pos,f$length(messageq_ip)-messageq_ip_pos,messageq_ip)   
-$ deassign/job messageq_aux
-$! show symbol messageq_ip 
+$ show symbol messageq_ip 
+$! deassign/job messageq_aux
 $
 $ PRIMARY = 1
 $ PRIMARY_HOST = ""
@@ -93,7 +97,8 @@ $ GOTO READ_DATA
 $
 $FINISHED:
 $ close DMQFILE
-$! PRIMARY_HOST = ""
+$ show symbol PRIMARY_HOST
+$ show symbol FAILOVER_HOST
 $ IF PRIMARY_HOST .EQS. "" .OR. FAILOVER_HOST .EQS ""
 $ THEN
 $!   WRITE SYS$OUTPUT "It was not possible to obtain the hosts names of messages from DMQ.INI in GXOLM"
@@ -104,29 +109,38 @@ $
 $ pipe/nosymbol/nological -
 TCPIP SH HOSTS | -
 search sys$pipe "''messageq_ip'" | -
-( read sys$pipe messageq_pb_con ; define/job messageq_con &messageq_pb_con )
-$ messageq_connect = f$edit(f$trnlnm("messageq_con","lnm$job"),"collapse")
+( read sys$pipe messageq_pb_con ; define/job millconnect &messageq_pb_con )
+$! messageq_connect = f$edit(f$trnlnm("messageq_con","lnm$job"),"collapse")
+$ messageq_connect = f$edit(f$trnlnm("millconnect","lnm$job"),"collapse")
+$ show symbol messageq_connect
 $ IF F$LOCATE("NOMATCHES",messageq_connect) .NE. F$LENGTH(messageq_connect)
 $ THEN
 $!   WRITE SYS$OUTPUT "There is no reference to ip:''messageq_ip' in Hosts files"
 $   define/job millconnect "IP:''messageq_ip' MISSING IN HOSTS FILE,ERR"
-$   deassign/job messageq_connect
+$!   deassign/job messageq_con
 $   EXIT
 $ ENDIF
-$ deassign/job messageq_con
-$! show symbol messageq_connect 
+$! deassign/job messageq_con 
+$ host = f$element(1,",",messageq_connect)
+$ IF(host .EQS. ",") 
+$ THEN
+$   position = f$length(messageq_ip)
+$   host = f$extract(position,f$length(messageq_connect)-position,messageq_connect)
+$   IF f$element(0,".",host) .NES. "." THEN host = f$element(0,".",host)       
+$ ENDIF
+$ show symbol host
 $
 $ IF F$LOCATE(PRIMARY_HOST,messageq_connect) .NE. F$LENGTH(messageq_connect)
 $ THEN
 $!   WRITE SYS$OUTPUT "Millennium connected to Primary MessageQ: ''messageq_ip'"
 $!   define/job millconnect "Millennium connected to Primary MessageQ: ''messageq_ip'"
-$    define/job millconnect "Primary,''messageq_ip'"
+$    define/job millconnect "Primary,''messageq_ip',''host'"
 $ ELSE
 $   IF F$LOCATE(FAILOVER_HOST,messageq_connect) .NE. F$LENGTH(messageq_connect)
 $   THEN
 $!       WRITE SYS$OUTPUT "Millennium connected to FailOver MessageQ: ''messageq_ip'"
 $!       define/job millconnect "Millennium connected to FailOver MessageQ: ''messageq_ip'"
-$        define/job millconnect "FailOver,''messageq_ip'"
+$        define/job millconnect "FailOver,''messageq_ip',''host'"
 $   ELSE
 $!       WRITE SYS$OUTPUT "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
 $!       define/job millconnect "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
