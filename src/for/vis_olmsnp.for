@@ -64,7 +64,8 @@ C
 
         INTEGER*4 OLMLST(3),OLMTTL,INPLST(3)   
         INTEGER*4 DECLST(3),WAGLST(3),CANLST(3),VALLST(3)  
-        INTEGER*4 INILST(3),CRSLST(3),INOLST(3)  
+        INTEGER*4 INILST(3),CRSLST(3),INOLST(3)
+        INTEGER*4 SPELST(3),DISLST(3)  
         INTEGER*4  BUF(CDLEN)     
         INTEGER*4  MESS(EDLEN)  
         CHARACTER*20  PASPAS        
@@ -86,7 +87,7 @@ C        INTEGER*4  STR$ELEMENT,STR$TRIM,SIZE_AUX
         CHARACTER*13 IP_ADDRESS
 C
         INTEGER*4  MAXPRM
-        PARAMETER (MAXPRM=14)
+        PARAMETER (MAXPRM=16)
 C
         REAL*8       K(MAXPRM)                                                  !SNAPSHOT PARAMETER DESCRIPTION
 C
@@ -95,7 +96,8 @@ C
         DATA   K/'COMOLM  ','OLMCOn  ','INPUT   ','OUTPUT  ',
      *           'WAGPRO  ','CANPRO  ','VALPRO  ',
      *           'INSPRO  ','CRSPRO  ','INSOUT  ',
-     *           'OLMTMO  ','FINTMO  ','REGLOG  ','REGERLOG'/
+     *           'OLMTMO  ','FINTMO  ','REGLOG  ','REGERLOG',
+     *           'SPESRV  ','DISPAT  '/
         DATA DEFTPASS/'SUPORTE'/
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -123,7 +125,7 @@ C
 2       CONTINUE
         CALL FASTSET(0,BUF,CDLEN)
         GOTO(200,506,200,200,200,200,200,200,200,200,200,200
-     *  ,507,509) KEYNUM   
+     *  ,507,509,200,200) KEYNUM   
         
         GOTO 200          
 C
@@ -222,7 +224,9 @@ C        CALL OPSTXT('Starting')
         CALL QIMAGE(QUETAB(1,VAL),VALLST,3)
         CALL QIMAGE(QUETAB(1,INI),INILST,3)
         CALL QIMAGE(QUETAB(1,CRS),CRSLST,3)
-        CALL QIMAGE(QUETAB(1,INO),INOLST,3)      
+        CALL QIMAGE(QUETAB(1,INO),INOLST,3)  
+        CALL QIMAGE(QUETAB(1,SPE),SPELST,3)  
+        CALL QIMAGE(QUETAB(1,DIS),DISLST,3)      
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
 C        What MessageQ MILL is connected to (Primary or Failover)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -276,8 +280,9 @@ C---- Connection & Mes Flux
 C       WRITE(CLIN8,912) !K(2),P(OLMCONF)
        WRITE(CLIN9,912) k(5),WAGLST(1),k(6),CANLST(1),k(7),VALLST(1)
        WRITE(CLIN10,914) k(8),INILST(1),k(9),CRSLST(1),k(10),INOLST(1)
+       WRITE(CLIN11,915) k(15),SPELST(1),k(16),DISLST(1)
 
-       WRITE(CLIN11,900)
+C       WRITE(CLIN11,900)
        WRITE(CLIN12,900)  
 C----- MessageQ attach and detach
        IF(OLMS_ATTACHSTS.NE.0) THEN                                          !ATTACH HAS BEEN DONE 
@@ -337,6 +342,7 @@ C911     FORMAT('            ',1('*',A7,I6,3X))
 C912     FORMAT('OLM      >   ',1('*',A7,I6,3X))
 912     FORMAT('OLM     >  ',3(A7,I6,3X))     
 914     FORMAT('           ',3(A7,I6,3X))
+915     FORMAT('           ',2(A7,I6,3X))
 
 919     FORMAT('        > ',1('*',A7,I6,3X)
      *          ,'COMOLM Attached?',2X,'Yes')                                 !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
