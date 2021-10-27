@@ -1,14 +1,11 @@
 C
 C SUBROUTINE OLMSNP
 C
-C
 C VIS_OLMSNP.FOR
 C
-C V03 30-MAR-2016 SCML M16 PROJECT
-C V02 20-JUL-2015 SCML Adding support for IGS internal cancel flags
-C V01 08-APR-2014 SCML Placard Project
+C V01 26-OCT-2021 SCML New Terminals Project
 C
-C EUR SYSTEM CONTROL SNAPSHOT
+C OLM SYSTEM CONTROL SNAPSHOT
 C
 C
 C ERROR MESSAGE #  DESCRIPTION
@@ -18,7 +15,7 @@ C       6          PASSWORD ERROR WHILE TRYING TO CHANGE EM FIN TIMEOUT
 C
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C Copyright 2016 SCML Corporation. All rights reserved.
+C Copyright 2021 SCML Corporation. All rights reserved.
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C=======OPTIONS /CHECK=NOOVERFLOW/EXT
@@ -76,15 +73,31 @@ C
         INTEGER*4  STATUS
         INTEGER*4  VALUE
         INTEGER*4  POS
-        INTEGER*4  pidadr,STATLOG,STPROC,POS_AUX
-       INTEGER*4  SYS$CREPRC,STR$ELEMENT          
+        INTEGER*4  pidadr,STATLOG,STPROC,POS_AUX,STATDAY
+        INTEGER*4  CURRENT_DAYS,FILE_DAYS
+        INTEGER*8  FILE_DAYS_AUX
+        INTEGER*1  FILE_DAYS_OLD
+        INTEGER*4  FILES_DAY,FILESTAT,FILE_CONTEXT /0/,FILE_SCRIPT_CONT /0/
+        CHARACTER*50 FILES_NAMES_PATH 
+        CHARACTER*25 FILE_NAME
+        CHARACTER*2 FILE_DAY
+        CHARACTER*3 FILE_MONTH
+        CHARACTER*4 FILE_YEAR
+        CHARACTER*20 FILE_SYS_DATE        
+        INTEGER*4 STATUS_ELEM, STATUS_BINTIM, STATUS_DELETE
+        INTEGER*4  SYS$CREPRC,STR$ELEMENT,SYS$BINTIM           
 C        INTEGER*4  STR$ELEMENT,STR$TRIM,SIZE_AUX
         CHARACTER*40 MESSCON
-        LOGICAL    MILL_CON_STATUS /0/, REGLOG /0/, REGLOGER /0/        
-        CHARACTER*20 PROCESS_ID,OUTPUT_PATH,ERROR_PATH
+        LOGICAL    MILL_CON_STATUS /0/, REGLOG /1/, REGLOGER /1/  
+        LOGICAL    PURGE_LOG_VALIDATION /0/      
+        CHARACTER*20 PROCESS_ID,OUTPUT_PATH_AUX,ERROR_PATH_AUX
+        CHARACTER*34 OUTPUT_PATH,ERROR_PATH,SCRIPT_PATH
         CHARACTER*25 HOST
         CHARACTER*40 ERR_MSG
         CHARACTER*13 IP_ADDRESS
+        CHARACTER*11 TODAY_DATE
+        INTEGER*1  MAX_WRITES_LOG /0/, MAX_WRITES_ERR /0/
+        
 C
         INTEGER*4  MAXPRM
         PARAMETER (MAXPRM=16)
@@ -96,7 +109,7 @@ C
         DATA   K/'COMOLM  ','OLMCOn  ','INPUT   ','OUTPUT  ',
      *           'WAGPRO  ','CANPRO  ','VALPRO  ',
      *           'INSPRO  ','CRSPRO  ','INSOUT  ',
-     *           'OLMTMO  ','FINTMO  ','REGLOG  ','REGERLOG',
+     *           'OLMTMO  ','FINTMO  ','SUPLOG  ','SUPELOG',
      *           'SPESRV  ','DISPAT  '/
         DATA DEFTPASS/'SUPORTE'/
 C
@@ -232,29 +245,115 @@ C        What MessageQ MILL is connected to (Primary or Failover)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C        CALL OPSTXT('Middle')
         IF(MILL_CON_STATUS .EQ. 0) THEN
-          IF(REGLOG) THEN
-                OUTPUT_PATH = "GXOLM:MILLCON.LOG"
+          IF(REGLOG .EQ. 0) THEN
+C                OUTPUT_PATH = "GXOLM:MILLCON.LOG"
+                IF(PURGE_LOG_VALIDATION .EQ. 0) THEN
+                        STATDAY = LIB$DAY(CURRENT_DAYS)
+C                       FILES_DAY 
+C                        CALL OPS("CURRENT_DAYS: ",CURRENT_DAYS,0)
+C                       FILE_CONTEXT = 0
+
+c                       FILESTAT = LIB$FIND_FILE("GXOLM:MILLCON*.LOG;1",FILES_NAMES_PATH,FILE_CONTEXT)
+C                        FILESTAT = 65537
+                        DO WHILE(LIB$FIND_FILE("GXOLM:MILLCON*.LOG;1",FILES_NAMES_PATH,FILE_CONTEXT) .EQ. 65537 )
+C                           FILESTAT = LIB$FIND_FILE("GXOLM:MILLCON*.LOG;1",FILES_NAMES_PATH,FILE_CONTEXT)    
+C                           CALL OPS("MAX_WRITES_LOG",MAX_WRITES_LOG,MAX_WRITES_LOG)
+C                           CALL OPS("FILESTAT",FILESTAT,FILESTAT)
+C                           CALL OPSTXT("NAME PATH: "//FILES_NAMES_PATH)
+                           STATUS_ELEM = STR$ELEMENT(FILE_DAY,1,"-",FILES_NAMES_PATH)
+                           STATUS_ELEM = STR$ELEMENT(FILE_MONTH,2,"-",FILES_NAMES_PATH)
+                           STATUS_ELEM = STR$ELEMENT(FILE_YEAR,3,"-",FILES_NAMES_PATH)
+C                           CALL OPSTXT("FILE DATE: "//FILE_DAY//"-"//FILE_MONTH//"-"//FILE_YEAR)
+                           FILE_SYS_DATE = FILE_DAY//"-"//FILE_MONTH//"-"//FILE_YEAR
+                           STATUS_BINTIM = SYS$BINTIM(FILE_SYS_DATE,FILE_DAYS_AUX)
+C                           CALL OPS("FILE_DAYS_AUX: ",FILE_DAYS_AUX,FILE_DAYS_AUX)
+C                           CALL OPSTXT("FILE SYS DATE: "//FILE_SYS_DATE)
+                           STATDAY = LIB$DAY(FILE_DAYS,FILE_DAYS_AUX)
+C                           CALL OPS('FILE DAYS STATUS: ',STATDAY,0)
+C                           CALL OPS("FILE DAYS: ",FILE_DAYS,0)
+                           FILE_DAYS_OLD = CURRENT_DAYS-FILE_DAYS 
+C                           CALL OPS("FILE DAYS OLD: ",FILE_DAYS_OLD,0)  
+                           IF(FILE_DAYS_OLD .GT. 7) THEN
+C                             CALL OPSTXT('REMOVE FILE: '//FILES_NAMES_PATH)
+                             IF(LIB$MATCHC("MILLCON",FILES_NAMES_PATH)) THEN
+C                                CALL OPSTXT('...VALID LOG FILE TO REMOVE...')
+                                STATUS_ELEM = STR$ELEMENT(FILE_NAME,1,"]",FILES_NAMES_PATH)
+C                                CALL OPSTXT('...VALID LOG FILE TO REMOVE ('//FILE_NAME//')...')
+                                STATUS_DELETE = LIB$DELETE_FILE('GXOLM:'//FILE_NAME)
+                                IF(STATUS_DELETE .EQ. SS$_NORMAL) THEN
+                                  CALL OPSTXT('FILED REMOVED: '//FILES_NAMES_PATH)    
+                                ENDIF
+                             ENDIF
+                           ENDIF  
+                        ENDDO 
+                        PURGE_LOG_VALIDATION = 1
+                ENDIF       
+                
+C               AFTER 7 DAYS THE OLD LOGS ARE PURGE/DELETED FROM SYSTEM                
+
+
+C                CALL OPS("STATLOG DATE TIME: ",STATLOG,STATLOG)
+C                CALL OPSTXT(TODAY_DATE)
+                STATLOG = LIB$DATE_TIME(TODAY_DATE)
+                IF(STATLOG .NE. SS$_NORMAL .AND. STATLOG .NE. 1409041) THEN
+                  TODAY_DATE = ""     
+                ENDIF        
+                STATLOG = lib$get_logical("MSQLOG",OUTPUT_PATH_AUX)
+                OUTPUT_PATH = OUTPUT_PATH_AUX//"-"//TODAY_DATE//".LOG;1"
+C                STR$ELEMENT(MESSCON,0,",",MILLCON)
+C                STR$ELEMENT(MESSCON,0,",",MILLCON)
+                IF(STATLOG .NE. SS$_NORMAL) THEN
+                  OUTPUT_PATH = "GXOLM:MILLCON-"//TODAY_DATE//".LOG;1"        
+                ENDIF
+                MAX_WRITES_LOG = MAX_WRITES_LOG + 1
+                IF(MAX_WRITES_LOG .EQ. 6) THEN 
+                    REGLOG = 1   
+                    MAX_WRITES_LOG = 0 
+                    FILE_CONTEXT = 0
+                ENDIF        
           ELSE
                 OUTPUT_PATH = "NLA0:" !its null device
           ENDIF
-          IF(REGLOGER) THEN
-                ERROR_PATH = "GXOLM:ERR_MILLCON.LOG"
+          IF(REGLOGER .EQ. 0) THEN
+                STATLOG = LIB$DATE_TIME(TODAY_DATE)
+                STATLOG = lib$get_logical("MERLOG",ERROR_PATH_AUX) 
+                ERROR_PATH = ERROR_PATH_AUX//"-"//TODAY_DATE//".LOG;1"
+                IF(STATLOG .NE. SS$_NORMAL) THEN
+                  ERROR_PATH = "GXOLM:ERR_MILLCON-"//TODAY_DATE//".LOG;1"       
+                ENDIF   
+                MAX_WRITES_ERR = MAX_WRITES_ERR + 1
+                IF(MAX_WRITES_ERR .EQ. 6) THEN 
+                    REGLOG = 1    
+                    MAX_WRITES_ERR = 0
+                ENDIF                                            
           ELSE
                 ERROR_PATH = "NLA0:" !its null device
           ENDIF
 CCCCCCCCCC Confirm that the script exists CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
+C                LIB$FIND_FILE("GXOLM:MESSAGEQCONNECTION.COM",,FILE_SCRIPT_CONT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                        
+
+          STATLOG = lib$get_logical("OLM_MESSQ_ATTACH_SCRIPT",SCRIPT_PATH)
+          IF(STATLOG .NE. SS$_NORMAL) THEN
+             SCRIPT_PATH = "GXOLM:MESSAGEQCONNECTION.COM"       
+          ENDIF
+
           ISTAT = SYS$CREPRC(pidadr,"SYS$SYSTEM:LOGINOUT.EXE",
-     *    "GXOLM:MESSAGEQCONNECTION.COM",          !input
+C     *    "GXOLM:MESSAGEQCONNECTION.COM",          !input
+     *    SCRIPT_PATH,                             !input
      *    OUTPUT_PATH,                             !output log
-     *    ERROR_PATH,                 !error log
-     *    ,,"MILLCON",,,,)                  !process name       
+     *    ERROR_PATH,                              !error log
+     *    ,,"MILLCON",,,,)                         !process name       
 
 CCCCCCCCCC GET THE PID OF PROCESS MILLCON (optional)CCCCCCCCCCCCCCCC     
 C          STPROC = LIB$GETJPI(JPI$_PID,pidadr,,,PROCESS_ID,)
 C          MILL_CON_STATUS = 1
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
           STATLOG = lib$get_logical("MILLCONNECT",MILLCON)
+          IF(STATLOG .NE. SS$_NORMAL) THEN
+                MILLCON = "FAIL TO GET LOGICAL MILLCONNECT,ERR"        
+          ENDIF          
 C          IF(.NOT. STATLOG) CALL LIB$SIGNAL(%VAL(STATLOG))          
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C  COULD BE USED STR$ELEMENT(MESSCON,0,",",MILLCON) as alternative C
@@ -265,6 +364,9 @@ C          IP_ADDRESS = MILLCON(POS_AUX+1:LIB$LEN(MILLCON)-(POS_AUX+1))
           STATLOG = STR$ELEMENT(MESSCON,0,",",MILLCON)
           STATLOG = STR$ELEMENT(IP_ADDRESS,1,",",MILLCON)
           STATLOG = STR$ELEMENT(HOST,2,",",MILLCON)
+C          CALL OPSTXT('MESSCON:'//MESSCON)
+C          CALL OPSTXT('IP_ADDRESS:'//IP_ADDRESS)
+C          CALL OPSTXT('HOST:'//HOST)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       ENDIF
 
@@ -273,58 +375,83 @@ C      GET GAME FLAGS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
        WRITE(CLIN1,901)
 C---- System 
+C       WRITE(CLIN4,903)K(1),OLMLST(1),K(3),INPLST(1),k(4),DECLST(1),k(15),SPELST(1),k(16),DISLST(1)
        WRITE(CLIN4,903)K(1),OLMLST(1),K(3),INPLST(1),k(4),DECLST(1)
        WRITE(CLIN5,910),OLMLST(2),INPLST(2),DECLST(2)
-       WRITE(CLIN6,913),OLMLST(3),INPLST(3),DECLST(2)
+       WRITE(CLIN6,913),OLMLST(3),INPLST(3),DECLST(3)
 C---- Connection & Mes Flux
 C       WRITE(CLIN8,912) !K(2),P(OLMCONF)
-       WRITE(CLIN9,912) k(5),WAGLST(1),k(6),CANLST(1),k(7),VALLST(1)
-       WRITE(CLIN10,914) k(8),INILST(1),k(9),CRSLST(1),k(10),INOLST(1)
-       WRITE(CLIN11,915) k(15),SPELST(1),k(16),DISLST(1)
+       WRITE(CLIN8,912) k(5),WAGLST(1),k(6),CANLST(1),k(7),VALLST(1),k(16),DISLST(1)
+       WRITE(CLIN9,914) k(8),INILST(1),k(9),CRSLST(1),k(10),INOLST(1),k(15),SPELST(1)
+C       WRITE(CLIN11,915) k(15),SPELST(1),k(16),DISLST(1)
+
+C       WRITE(CLIN11,916) "GETSUC",OLMS_GETMESSUC,"PUTSUC",OLMS_PUTMESSUC,"GETFAI",OLMS_GETMESFAI,"PUTFAI",OLMS_PUTMESFAI
 
 C       WRITE(CLIN11,900)
-       WRITE(CLIN12,900)  
+       WRITE(CLIN10,900)  
 C----- MessageQ attach and detach
        IF(OLMS_ATTACHSTS.NE.0) THEN                                          !ATTACH HAS BEEN DONE 
-         WRITE(CLIN13,919)  K(2), P(OLMCONF)                                   !OLMCOn PARAMETER
-         WRITE(CLIN14,9101) K(11),                                
-     *                        OLMS_ATTACHDAT(3),                                !DAY ATTACHED (DD)
-     *                        OLMS_ATTACHDAT(2),                                !MONTH ATTACHED (MM)
-     *                        OLMS_ATTACHDAT(1),                                !YEAR ATTACHED (YYYY)
-     *                        OLMS_ATTACHTIM                                    !TIME ATTACHED (H24:MI:SS)
+         WRITE(CLIN11,919)  K(2), P(OLMCONF)                                   !OLMCOn PARAMETER
+         IF(IP_ADDRESS .EQ. 'ERR') THEN
+            WRITE(CLIN12,9110) K(11),
+     *                         MESSCON               
+         ELSE
+            WRITE(CLIN12,9101) K(11),                               
+     *                         HOST,
+     *                         MESSCON                 
+         ENDIF       
+C     *                        OLMS_ATTACHDAT(3),                                !DAY ATTACHED (DD)
+C     *                        OLMS_ATTACHDAT(2),                                !MONTH ATTACHED (MM)
+C     *                        OLMS_ATTACHDAT(1),                                !YEAR ATTACHED (YYYY)
+C     *                        OLMS_ATTACHTIM                                    !TIME ATTACHED (H24:MI:SS)
+        WRITE(CLIN13,9104) K(12), 
+     *                     OLMS_ATTACHDAT(3),                                !DAY ATTACHED (DD)
+     *                     OLMS_ATTACHDAT(2),                                !MONTH ATTACHED (MM)
+     *                     OLMS_ATTACHDAT(1),                                !YEAR ATTACHED (YYYY)
+     *                     OLMS_ATTACHTIM                                    !TIME ATTACHED (H24:MI:SS)              
        ELSE
-        WRITE(CLIN13,9102) K(2), P(OLMCONF)                                   !EURCOn PARAMETER     
-        WRITE(CLIN14,9103) K(11)                                 
+        WRITE(CLIN11,9102) K(2), P(OLMCONF)                                   !EURCOn PARAMETER     
+        IF(IP_ADDRESS .EQ. 'ERR') THEN
+           WRITE(CLIN12,9110) K(11),
+     *                        MESSCON 
+        ELSE
+           WRITE(CLIN12,9101) K(11),                               
+     *                        HOST,
+     *                        MESSCON                 
+        ENDIF
+        WRITE(CLIN13,9103) K(12)                                
        ENDIF
 
        IF(OLMS_DETACHFLG.NE.0) THEN
-         WRITE(CLIN15,9104) K(12),         
+         WRITE(CLIN14,9108) K(13),REGLOG,         
      *                        OLMS_DETACHDAT(3),                                !LAST DAY DETACHED (DD)
      *                        OLMS_DETACHDAT(2),                                !LAST MONTH DETACHED (MM)
      *                        OLMS_DETACHDAT(1),                                !LAST YEAR DETACHED (YYYY)
      *                        OLMS_DETACHTIM                                    !LAST TIME DETACHED (H24:MI:SS)
        ELSE                                                                  !DETACH HAS NOT BEEN DONE
-        WRITE(CLIN15,9105) K(12)
+        WRITE(CLIN14,9106) K(13),REGLOG
        ENDIF
 
-C       WRITE(CLIN17,922) PROCESS_ID,MILLCON
-       IF(IP_ADDRESS .EQ. 'ERR') THEN
-C         STATLOG = STR$TRIM(ERR_MSG,MILLCON(1:POS_AUX-1),SIZE_AUX)
-C         ERR_MSG = MILLCON(1:POS_AUX-1)
-         WRITE(CLIN17,923) MESSCON
-       ELSE 
-C         WRITE(CLIN17,922) MESSCON,IP_ADDRESS,PROCESS_ID,K(13),REGLOG
-        WRITE(CLIN17,922) MESSCON,IP_ADDRESS,HOST
-        WRITE(CLIN18,924) K(13),REGLOG,k(14),REGLOGER 
-       ENDIF
+       WRITE(CLIN15,9107) K(14),REGLOGER
 
-       WRITE(CLIN20,950)
-       WRITE(CLIN21,9502) OLMS_TOTOKYPUT,                                      !TOTAL # OF MESSAGES SENT TO OLIMPO SYSTEM
+C       IF(IP_ADDRESS .EQ. 'ERR') THEN
+C         WRITE(CLIN16,923) MESSCON
+C       ELSE 
+C        WRITE(CLIN16,922) MESSCON,IP_ADDRESS,HOST
+C        WRITE(CLIN17,924) K(13),REGLOG,k(14),REGLOGER 
+C       ENDIF
+
+       WRITE(CLIN17,950)
+       WRITE(CLIN18,9502) OLMS_TOTOKYPUT,                                      !TOTAL # OF MESSAGES SENT TO OLIMPO SYSTEM
      *                     OLMS_TOTOKYGET                                      !TOTAL # OF MESSAGES RECEIVED FROM OLIMPO SYSTEM
 
-       WRITE(CLIN22,9503) OLMS_TOTERRPUT,                                      !TOTAL # OF ERRORS WHILE SENDING MESSAGES TO OLIMPO SYSTEM
+       WRITE(CLIN19,9503) OLMS_TOTERRPUT,                                      !TOTAL # OF ERRORS WHILE SENDING MESSAGES TO OLIMPO SYSTEM
      *                     OLMS_TOTERRGET                                      !TOTAL # OF ERRORS WHILE GETTING MESSAGES FROM OLIMPO SYSTEM
-
+       WRITE(CLIN20,9510) OLMS_GETMESSUC,
+     *                    OLMS_PUTMESSUC  
+       WRITE(CLIN21,9511) OLMS_GETMESFAI,
+     *                    OLMS_PUTMESFAI     
+       WRITE(CLIN22,9513) OLMS_GETTERFAI       
 C       WRITE(CLIN22,9504) OLMS_TOTNOMGET                                         !TOTAL # OF TIMES THERE IS NO MORE MESSAGES TO READ FROM MESSAGEQ
 
   
@@ -335,41 +462,58 @@ C----- FORMAT STATEMENTS
 C
 900     FORMAT(80(' '))
 901     FORMAT('**** OLM control snapshot ****')
-903     FORMAT('QUEUES  >  ',A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X,A7,'<',I4.0,'>',3X)
-910     FORMAT('BUFF 1  >  ',2X,I4.0,5X,I4.0,5X,I4.0,5X)
-913     FORMAT('BUFF 2  >  ',2X,I4.0,5X,I4.0,5X,I4.0,5X)
+903     FORMAT('QUEUES  >  ',A7,'<',I4.0,'>',1X,A7,'<',I4.0,'>',
+     *  1X,A7,'<',I4.0,'>')
+C     *  1X,A7,'<',I4.0,'>',
+C     *  1X,A7,'<',I4.0,'>')
+910     FORMAT('BUFF 1  >  ',8X,I4.0,10X,I4.0,10X,I4.0,10X)
+C     *  ,I4.0,10X,I4.0)
+913     FORMAT('BUFF 2  >  ',8X,I4.0,10X,I4.0,10X,I4.0,10X)
+C     *  ,I4.0,10X,I4.0)
 C911     FORMAT('            ',1('*',A7,I6,3X))
 C912     FORMAT('OLM      >   ',1('*',A7,I6,3X))
-912     FORMAT('OLM     >  ',3(A7,I6,3X))     
-914     FORMAT('           ',3(A7,I6,3X))
-915     FORMAT('           ',2(A7,I6,3X))
+912     FORMAT('OLM     >  ',4(A7,I6,1X))     
+914     FORMAT('           ',4(A7,I6,1X))
+C915     FORMAT('           ',2(A7,I6,3X))
+916     FORMAT('MESID   >  ',4(A6,1X,I6,1X))
 
-919     FORMAT('        > ',1('*',A7,I6,3X)
+919     FORMAT('        > ',1('*',A7,I6,1X)
      *          ,'COMOLM Attached?',2X,'Yes')                                 !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
 C922     FORMAT('   (',A8,')',3X,A60)
 C922     FORMAT('MESSQ   > ',A8,9X,'IP:',A13,2X,'PID:',A8,2X,A6,2X,I1)
 C922     FORMAT('MESSQ   > ',A8,9X,'IP:',A13,2X,'HOST:',A20,2X,A6,2X,I1)
-922     FORMAT('MESSQ   >  ',A8,8X,'IP ',A13,2X,'HOST ',A25)
+922     FORMAT('MESSQ   >  ',A8,6X,'IP ',A13,2X,'HOST ',A25)
 923     FORMAT('MESSQ ER>  ',A40)
-924     FORMAT('           ',A8,4X,I1,3X,A8,4X,I1)
+924     FORMAT('           ',A8,4X,I1,1X,A8,4X,I1)
 9101    FORMAT('          ',1X,1(A7)
-     *          9X,'Time Attached',5X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)            !TIME COMOLM ATTACHED TO MESSAGEQ SERVER IN OLIMPO SYSTEM
+     *          7X,'Attached to',7X,A20,1X,'(',A8,')')
+9110    FORMAT('          ',1X,1(A7)
+     *          7X,'Attached to',7X,A25)     
+C     *          7X,'Time Attached',5X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)            !TIME COMOLM ATTACHED TO MESSAGEQ SERVER IN OLIMPO SYSTEM
+
 9103    FORMAT('          ',1X,1(A7)
-     *          9X,'Time Attached',5X,'??.??.???? ??:??:??')                    !COMOLM IS NOT ATTACHED
+     *          7X,'Time Attached',5X,'??.??.???? ??:??:??')                    !COMOLM IS NOT ATTACHED
 9104    FORMAT('          ',1X,1(A7),
-     *          9X,'Time Last Detach',2X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)         !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
-9105    FORMAT('          ',1X,1(A7),
-     *          9X,'Time Last Detach',2X,'??.??.???? ??:??:??')                 !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
-9102    FORMAT('        > ',1('*',A7,I6,3X)
+     *          7X,'Time Attached',5X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)
+C     *          7X,'Time Last Detach',2X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)         !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
+9108    FORMAT('          ',1X,1(A7),
+     *          5X,I1,1X,'Time Last Detach',2X,I2.2,'.',I2.2,'.',I4.4,1X,2A4)
+C9105    FORMAT('          ',1X,1(A7),
+C     *          7X,'Time Last Detach',2X,'??.??.???? ??:??:??')  
+C     *          7X,'Time Last Detach',2X,'??.??.???? ??:??:??')                 !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
+9106   FORMAT('          ',1X,1(A7),5X,I1,
+     *          1X,'Time Last Detach',2X,'??.??.???? ??:??:??')    
+9107    FORMAT('          ',1X,1(A7),5X,I1)
+9102    FORMAT('        > ',1('*',A7,I6,1X)
      *          ,'COMOLM Attached?',2X,'No')                                  !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
 950     FORMAT(19('-'),2X,'O L M   S Y S   S T A T I S T I C S',2X,19('-'))
-9502    FORMAT('Msg  PutQ/GetQ',4X,I0,'/',I0,                                   !TOTAL # OF MESSAGES SENT TO/RECEIVED FROM EUROMILLIONS SYSTEM
+9502    FORMAT('Msg   PutQcount/GetQcount',4X,I0,'/',I0,                                   !TOTAL # OF MESSAGES SENT TO/RECEIVED FROM EUROMILLIONS SYSTEM
      *         T37)                                      !TOTAL # OF WAGERS TIMED OUT/ALREADY TIMED OUT
-9503    FORMAT('Err  PutQ/GetQ',4X,I0,'/',I0,                                   !TOTAL # OF ERRORS SENDING TO/RECEIVING FROM EUROMILLIONS SYSTEM
+9503    FORMAT('Err   PutQcount/GetQcount',4X,I0,'/',I0,                                   !TOTAL # OF ERRORS SENDING TO/RECEIVING FROM EUROMILLIONS SYSTEM
      *         T37)                                     !TOTAL # OF CANCELS TIMED OUT/ALREADY TIMED OUT
-C9504    FORMAT('No More Msg  GetQ',4X,I0)
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C904     FORMAT(1X,'<',I4.0,'>')
+9510    FORMAT('MsgId PutQsucce/GetQsucce',4X,I0,'/',I0) 
+9511    FORMAT('MsgId PutQerror/GetQerror',4X,I0,'/',I0)
+9513    FORMAT('MsgId GetTererror        ',4X,I0) 
 905     FORMAT(2X,I4.0)        
         END        
 
