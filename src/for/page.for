@@ -410,7 +410,14 @@ C
 	ENDIF
         IF(XKEY.EQ.KEY) GOTO 20
         KEY=XKEY                                                  
-        XMOPT=MOPT                                                
+        XMOPT=MOPT        
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C     KEY haves the value of 0 to 40 of the option chosen     C  
+C     XMOPT haves the value of 1 to 4 that corresponds        C  
+C     to the Menu of the option chosen                        C  
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C     vai ler de uma flag que indica se já esteve na tela olm
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
         SMODE=.FALSE.                                             
         CALL SPACES                                               
         CLR=1                                                     
@@ -1347,7 +1354,10 @@ C Available to use
 C
 8023    CONTINUE
         IF(LIN23(1).EQ.BLANK) WRITE (CLIN23,9260) 
-        CALL OLMSNP(SLINE)          
+        CALL OLMSNP(SLINE)
+CCCCCCCCCCCCCCCCCCCCCC activa a flag que entrou na tela olm
+CCCCCCCCCCCCCCCCCCCCCC poderia defenir um array que indicava 
+CCCCCCCCCCCCCCCCCCCCCC pelo posição a tela proveniente                  
         GOTO 60          
 C
 8024    CONTINUE
