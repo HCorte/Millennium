@@ -74,23 +74,28 @@ C
         INTEGER*4  VALUE
         INTEGER*4  POS
         INTEGER*4  pidadr,STATLOG,STPROC,POS_AUX,STATDAY
+C        INTEGER*4  STATUSTRIM
         INTEGER*4  CURRENT_DAYS,FILE_DAYS
         INTEGER*8  FILE_DAYS_AUX
         INTEGER*1  FILE_DAYS_OLD
-        INTEGER*4  FILES_DAY,FILESTAT,FILE_CONTEXT /0/,FILE_SCRIPT_CONT /0/
-        CHARACTER*50 FILES_NAMES_PATH 
+        INTEGER*4  FILES_DAY,FILESTAT
+        INTEGER*4  ERROR_FILE_CONTEXT /0/,FILE_CONTEXT /0/,FILE_SCRIPT_CONT /0/
+        CHARACTER*50 FILES_NAMES_PATH, ERROR_FILES_NAMES_PATH
         CHARACTER*25 FILE_NAME
+        CHARACTER*29 ERR_FILE_NAME
         CHARACTER*2 FILE_DAY
         CHARACTER*3 FILE_MONTH
         CHARACTER*4 FILE_YEAR
         CHARACTER*20 FILE_SYS_DATE        
-        INTEGER*4 STATUS_ELEM, STATUS_BINTIM, STATUS_DELETE
-        INTEGER*4  SYS$CREPRC,STR$ELEMENT,SYS$BINTIM           
+        INTEGER*4 STATUS_ELEM, STATUS_BINTIM, STATUS_DELETE, TRIM_LENGTH
+        INTEGER*4  SYS$CREPRC,STR$ELEMENT,SYS$BINTIM,STR$TRIM          
 C        INTEGER*4  STR$ELEMENT,STR$TRIM,SIZE_AUX
         CHARACTER*40 MESSCON
         LOGICAL    MILL_CON_STATUS /0/, REGLOG /1/, REGLOGER /1/  
-        LOGICAL    PURGE_LOG_VALIDATION /0/      
-        CHARACTER*20 PROCESS_ID,OUTPUT_PATH_AUX,ERROR_PATH_AUX
+        LOGICAL    PURGE_LOG_VALIDATION /0/, ERR_PURGE_LOG_VALIDATION /0/     
+        CHARACTER*20 PROCESS_ID,ERROR_PATH_AUX
+        CHARACTER*15 OUTPUT_PATH_AUX
+C        CHARACTER*20 OUTPUT_PATH_AUX_TRIMED
         CHARACTER*34 OUTPUT_PATH,ERROR_PATH,SCRIPT_PATH
         CHARACTER*25 HOST
         CHARACTER*40 ERR_MSG
@@ -273,7 +278,7 @@ C                           CALL OPS('FILE DAYS STATUS: ',STATDAY,0)
 C                           CALL OPS("FILE DAYS: ",FILE_DAYS,0)
                            FILE_DAYS_OLD = CURRENT_DAYS-FILE_DAYS 
 C                           CALL OPS("FILE DAYS OLD: ",FILE_DAYS_OLD,0)  
-                           IF(FILE_DAYS_OLD .GT. 7) THEN
+                           IF(FILE_DAYS_OLD .GT. 6) THEN
 C                             CALL OPSTXT('REMOVE FILE: '//FILES_NAMES_PATH)
                              IF(LIB$MATCHC("MILLCON",FILES_NAMES_PATH)) THEN
 C                                CALL OPSTXT('...VALID LOG FILE TO REMOVE...')
@@ -281,7 +286,7 @@ C                                CALL OPSTXT('...VALID LOG FILE TO REMOVE...')
 C                                CALL OPSTXT('...VALID LOG FILE TO REMOVE ('//FILE_NAME//')...')
                                 STATUS_DELETE = LIB$DELETE_FILE('GXOLM:'//FILE_NAME)
                                 IF(STATUS_DELETE .EQ. SS$_NORMAL) THEN
-                                  CALL OPSTXT('FILED REMOVED: '//FILES_NAMES_PATH)    
+                                  CALL OPSTXT('FILE REMOVED: '//FILES_NAMES_PATH)    
                                 ENDIF
                              ENDIF
                            ENDIF  
@@ -298,11 +303,18 @@ C                CALL OPSTXT(TODAY_DATE)
                 IF(STATLOG .NE. SS$_NORMAL .AND. STATLOG .NE. 1409041) THEN
                   TODAY_DATE = ""     
                 ENDIF        
-                STATLOG = lib$get_logical("MSQLOG",OUTPUT_PATH_AUX)
+                STATLOG = LIB$GET_LOGICAL("OLM_MILCON_LOG",OUTPUT_PATH_AUX)
+C                CALL OPS("Get_logical_status:",STATLOG,0)
+C                CALL OPSTXT(OUTPUT_PATH_AUX//"OOO")
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC NEED TRIM TO REMOVE EXTRA WHITE SPACES CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                STATUSTRIM = STR$TRIM(OUTPUT_PATH_AUX_TRIMED,OUTPUT_PATH_AUX,TRIM_LENGTH)
+C                CALL OPSTXT(OUTPUT_PATH_AUX_TRIMED//"...")
+C                CALL OPS("TRIM_LENGTH:",TRIM_LENGTH,0)
+C                OUTPUT_PATH (34) = OUTPUT_PATH_AUX (15) + "-" (1) + TODAY_DATE (DD-MMM-YYYY) (11) + (6)-> 33
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
                 OUTPUT_PATH = OUTPUT_PATH_AUX//"-"//TODAY_DATE//".LOG;1"
-C                STR$ELEMENT(MESSCON,0,",",MILLCON)
-C                STR$ELEMENT(MESSCON,0,",",MILLCON)
-                IF(STATLOG .NE. SS$_NORMAL) THEN
+C                CALL OPSTXT("path final: "//OUTPUT_PATH)
+                IF(STATLOG .NE. SS$_NORMAL) THEN     
                   OUTPUT_PATH = "GXOLM:MILLCON-"//TODAY_DATE//".LOG;1"        
                 ENDIF
                 MAX_WRITES_LOG = MAX_WRITES_LOG + 1
@@ -315,15 +327,53 @@ C                STR$ELEMENT(MESSCON,0,",",MILLCON)
                 OUTPUT_PATH = "NLA0:" !its null device
           ENDIF
           IF(REGLOGER .EQ. 0) THEN
-                STATLOG = LIB$DATE_TIME(TODAY_DATE)
-                STATLOG = lib$get_logical("MERLOG",ERROR_PATH_AUX) 
+             IF(ERR_PURGE_LOG_VALIDATION .EQ. 0) THEN
+                 STATDAY = LIB$DAY(CURRENT_DAYS)
+                 DO WHILE(LIB$FIND_FILE("GXOLM:ERR_MILLCON*.LOG;1",ERROR_FILES_NAMES_PATH,ERROR_FILE_CONTEXT) .EQ. 65537 )
+                     CALL OPSTXT("NAME PATH: "//ERROR_FILES_NAMES_PATH)
+                     STATUS_ELEM = STR$ELEMENT(FILE_DAY,1,"-",ERROR_FILES_NAMES_PATH)
+                     STATUS_ELEM = STR$ELEMENT(FILE_MONTH,2,"-",ERROR_FILES_NAMES_PATH)
+                     STATUS_ELEM = STR$ELEMENT(FILE_YEAR,3,"-",ERROR_FILES_NAMES_PATH)    
+                     FILE_SYS_DATE = FILE_DAY//"-"//FILE_MONTH//"-"//FILE_YEAR
+                     CALL OPSTXT("FILE SYS DATE: "//FILE_SYS_DATE)
+                     STATUS_BINTIM = SYS$BINTIM(FILE_SYS_DATE,FILE_DAYS_AUX)
+                     STATDAY = LIB$DAY(FILE_DAYS,FILE_DAYS_AUX)   
+                     CALL OPS("FILE DAYS: ",FILE_DAYS,0) 
+                     FILE_DAYS_OLD = CURRENT_DAYS-FILE_DAYS  
+                     CALL OPS("FILE DAYS OLD: ",FILE_DAYS_OLD,0)  
+                     IF(FILE_DAYS_OLD .GT. 6) THEN
+C                            CALL OPSTXT('REMOVE FILE: '//FILES_NAMES_PATH)
+C     here FILES_NAMES_PATH haves the filename and its path can be used LIB$DELETE_FILE(FILES_NAMES_PATH) 
+C     directly the use of LIB$MATCHC and STR$ELEMENT to retrive the filename without the path 
+C     is to have more control in the directory that the file will be removed...                  
+C
+                       IF(LIB$MATCHC("ERR_MILLCON",ERROR_FILES_NAMES_PATH)) THEN 
+                          CALL OPSTXT("here...")
+                          CALL OPSTXT("NAME PATH: "//ERROR_FILES_NAMES_PATH)
+                          STATUS_ELEM = STR$ELEMENT(ERR_FILE_NAME,1,"]",ERROR_FILES_NAMES_PATH)
+                          CALL OPSTXT("FILE NAME: "//ERR_FILE_NAME)
+                          STATUS_DELETE = LIB$DELETE_FILE('GXOLM:'//ERR_FILE_NAME)
+                          IF(STATUS_DELETE .EQ. SS$_NORMAL) THEN
+                            CALL OPSTXT('FILE REMOVED: '//ERROR_FILES_NAMES_PATH)    
+                          ENDIF
+                       ENDIF
+                     ENDIF                        
+                 ENDDO
+                 ERR_PURGE_LOG_VALIDATION = 1 
+             ENDIF   
+                
+                STATLOG = LIB$DATE_TIME(TODAY_DATE)  
+                IF(STATLOG .NE. SS$_NORMAL .AND. STATLOG .NE. 1409041) THEN
+                  TODAY_DATE = ""     
+                ENDIF              
+                STATLOG = lib$get_logical("OLM_ERR_LOG",ERROR_PATH_AUX) 
                 ERROR_PATH = ERROR_PATH_AUX//"-"//TODAY_DATE//".LOG;1"
                 IF(STATLOG .NE. SS$_NORMAL) THEN
                   ERROR_PATH = "GXOLM:ERR_MILLCON-"//TODAY_DATE//".LOG;1"       
                 ENDIF   
                 MAX_WRITES_ERR = MAX_WRITES_ERR + 1
                 IF(MAX_WRITES_ERR .EQ. 6) THEN 
-                    REGLOG = 1    
+                    REGLOGER = 1    
                     MAX_WRITES_ERR = 0
                 ENDIF                                            
           ELSE
@@ -334,13 +384,12 @@ CCCCCCCCCC Confirm that the script exists CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C                LIB$FIND_FILE("GXOLM:MESSAGEQCONNECTION.COM",,FILE_SCRIPT_CONT
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                        
 
-          STATLOG = lib$get_logical("OLM_MESSQ_ATTACH_SCRIPT",SCRIPT_PATH)
+          STATLOG = lib$get_logical("OLM_MESSQ_SEE_ATTACH_SCRIPT",SCRIPT_PATH)
           IF(STATLOG .NE. SS$_NORMAL) THEN
              SCRIPT_PATH = "GXOLM:MESSAGEQCONNECTION.COM"       
           ENDIF
 
           ISTAT = SYS$CREPRC(pidadr,"SYS$SYSTEM:LOGINOUT.EXE",
-C     *    "GXOLM:MESSAGEQCONNECTION.COM",          !input
      *    SCRIPT_PATH,                             !input
      *    OUTPUT_PATH,                             !output log
      *    ERROR_PATH,                              !error log
