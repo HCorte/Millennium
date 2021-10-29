@@ -103,7 +103,9 @@ C
         INCLUDE 'INCLIB:PRMAGT.DEF'
         INCLUDE 'INCLIB:VISCOM.DEF'
         INCLUDE 'INCLIB:CONCOM.DEF'
-        INCLUDE 'INCLIB:DESNET.DEF'                                     
+        INCLUDE 'INCLIB:DESNET.DEF'   
+C
+        INCLUDE '(LIB$ROUTINES)'                                          
 C                                                                               
         INTEGER*4 MENU(114)     !
         INTEGER*4 MENU1(114)    !what to display where for menu 1
@@ -153,7 +155,10 @@ C
         CHARACTER    SPACE       !                                 
         CHARACTER*30 COPFILNAM
 C        CHARACTER*2 NCOPY       !
-C        CHARACTER*2 YCOPY       !                                   
+C        CHARACTER*2 YCOPY       !         
+
+        LOGICAL   FROMSNAP_OLM /0/
+        INTEGER*8 STAT_LOGICAL
 
         LOGICAL     GOBACK
         CHARACTER*4 C4NAME      !
@@ -416,8 +421,19 @@ C     KEY haves the value of 0 to 40 of the option chosen     C
 C     XMOPT haves the value of 1 to 4 that corresponds        C  
 C     to the Menu of the option chosen                        C  
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C     vai ler de uma flag que indica se já esteve na tela olm
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C gona read a flag to see if user already been in olm snapshotC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                                            
+        IF(FROMSNAP_OLM .EQ. 1 .AND. XMOPT .NE. 4) THEN
+            STAT_LOGICAL = LIB$DELETE_LOGICAL("OLM_DMQSRV_FAILOVER_HOST","LNM$JOB")
+            STAT_LOGICAL = LIB$DELETE_LOGICAL("OLM_DMQSRV_PRIMARY_HOST","LNM$JOB")
+            CALL OPS("REMOVE LOGICAL",STAT_LOGICAL,0)
+            FROMSNAP_OLM = 0
+        ELSEIF(FROMSNAP_OLM .EQ. 1 .AND. KEY .NE. 33) THEN
+            STAT_LOGICAL = LIB$DELETE_LOGICAL("OLM_DMQSRV_FAILOVER_HOST","LNM$JOB")
+            STAT_LOGICAL = LIB$DELETE_LOGICAL("OLM_DMQSRV_PRIMARY_HOST","LNM$JOB")  
+            CALL OPS("REMOVE LOGICAL",STAT_LOGICAL,0)
+            FROMSNAP_OLM = 0
+        ENDIF                
         SMODE=.FALSE.                                             
         CALL SPACES                                               
         CLR=1                                                     
@@ -1356,6 +1372,7 @@ C
         IF(LIN23(1).EQ.BLANK) WRITE (CLIN23,9260) 
         CALL OLMSNP(SLINE)
 CCCCCCCCCCCCCCCCCCCCCC activa a flag que entrou na tela olm
+        FROMSNAP_OLM = 1
 CCCCCCCCCCCCCCCCCCCCCC poderia defenir um array que indicava 
 CCCCCCCCCCCCCCCCCCCCCC pelo posição a tela proveniente                  
         GOTO 60          
