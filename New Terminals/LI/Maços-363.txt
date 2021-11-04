@@ -34,18 +34,18 @@ IPS_INV6010_20210215_132456.RPT
      0000401  0006304  Available               0000401  0032061  Available               0000401  0033696  Available   X               
      0000401  0049218  Missing-Full            0000401  0066634  Available    x           0000401  0070526  Available  X                
      0000401  0077444  Missing-Full            0000401  0087786  Available    x           0000401  0090862  Available                  
-     0000401  0097462  Available   x            0000401  0099060  Available   x            0000401  0099547  Available                  
-     0000401  0099732  Available   x            0000401  0102892  Available   x            0000401  0107693  Available                  
-     0000401  0126091  Available   x            0000401  0128335  Available   x            0000401  0130073  Available                  
-     0000401  0137357  Available   x            0000401  0148156  Available   x            0000401  0152647  Available                  
-     0000401  0158943  Available               0000401  0163182  Available    x           0000401  0163183  Available                  
-     0000401  0163184  Available   x              0000401  0163185  Available x              0000401  0163186  Available                  
-     0000401  0166063  Available   x            0000401  0166064  Available   x            0000401  0166065  Available                  
-     0000401  0166066  Available   x            0000401  0166067  Available               0000401  0166122  Available                  
-     0000401  0167059  Available   x --           0000401  0174038  Available  x             0000401  0174039  Available                  
+     0000401  0097462  Available   x            0000401  0099060  Available   x            0000401  0099547  Available  X                
+     0000401  0099732  Available   x            0000401  0102892  Available   x            0000401  0107693  Available  X                
+     0000401  0126091  Available   x            0000401  0128335  Available   x            0000401  0130073  Available  X                
+     0000401  0137357  Available   x            0000401  0148156  Available   x            0000401  0152647  Available  X                
+     0000401  0158943  Available               0000401  0163182  Available    x           0000401  0163183  Available   X               
+     0000401  0163184  Available   x              0000401  0163185  Available x              0000401  0163186  Available X                 
+     0000401  0166063  Available   x            0000401  0166064  Available   x            0000401  0166065  Available   X               
+     0000401  0166066  Available   x            0000401  0166067  Available               0000401  0166122  Available    X              
+     0000401  0167059  Available   x --           0000401  0174038  Available  x             0000401  0174039  Available X                 
      0000401  0174619  Available   x            0000401  0188260  Available               0000401  0198434  Available                  
-     0000401  0204027  Available   x              0000401  0206009  Available  X             0000401  0208032  Available                  
-     0000401  0208033  Available   x            0000401  0209091  Available    X           0000401  0209092  Available                  
+     0000401  0204027  Available   x              0000401  0206009  Available  X             0000401  0208032  Available X                 
+     0000401  0208033  Available   x            0000401  0209091  Available    X           0000401  0209092  Available   X               
      0000401  0209093  Available   x            0000401  0211390  Missing-Full            0000401  0212123  Available                  
      0000401  0219491  Available   X            0000401  0219539  Available    X           0000401  0219818  Available                  
      0000401  0219939  Available               0000401  0240989  Available     X          0000401  0240992  Available                  
@@ -67,10 +67,10 @@ IPS_INV6010_20210215_132456.RPT
      0000401  0380495  Available  X             0000401  0383331  Available               0000401  0383332  Available                  
      0000401  0399244  Available  X             0000401  0401054  Available               0000401  0402094  Available                  
      0000401  0403417  Available  X             0000401  0404164  Available               0000401  0404165  Available                  
-     0000401  0416399  Available  X             0000401  0416400  Available               0000401  0416923  Missing-Full               
-     0000401  0416924  Missing-Full            0000401  0421166  Available               0000401  0429052  Available                  
-     0000401  0429053  Available  X             0000401  0429054  Available               0000401  0429055  Available                  
-     0000401  0429056  Available  X             0000401  0429057  Available               0000401  0429058  Available                  
+     0000401  0416399  Available  X             0000401  0416400  Available     X          0000401  0416923  Missing-Full               
+     0000401  0416924  Missing-Full            0000401  0421166  Available      X         0000401  0429052  Available                  
+     0000401  0429053  Available  X             0000401  0429054  Available     X          0000401  0429055  Available                  
+     0000401  0429056  Available  X             0000401  0429057  Available     X          0000401  0429058  Available                  
                                                                                                                                      
 IPS_INV6010_20210215_132456.RPT                                                                                                       
 2021-02-16 Tuesday                                      Henrique/15/02/2021          PODEV1  System: 15 02 2021    13:33:12.00        
