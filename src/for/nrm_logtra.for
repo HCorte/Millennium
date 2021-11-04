@@ -111,7 +111,7 @@ C Copyright 2000 GTECH Corporation. All rights reserved.
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C=======OPTIONS /CHECK=NOOVERFLOW
-SUBROUTINE LOGTRA(TRABUF,LOGBUF)
+        SUBROUTINE LOGTRA(TRABUF,LOGBUF)
         IMPLICIT NONE
 C
         INCLUDE 'INCLIB:SYSPARAM.DEF'
