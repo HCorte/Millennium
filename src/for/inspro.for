@@ -148,12 +148,12 @@ C V30| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------  
         ITYP = BPRO(BINPTAB+2-1,BUF)
         TRABUF(TITYP)=IAND(ITYP,'0F'X)
-        IF(TRABUF(TITYP).EQ.IVAL) THEN !PARAMETER (IVAL=13) - INSTANT VALIDATION -> 0xDD Valida��o/Pagamento Pr�mio LI ---> OIVAL
+        IF(TRABUF(TITYP).EQ.IVAL) THEN !PARAMETER (IVAL=13) - INSTANT VALIDATION -> 0xDD Validation/Payment prize LI ---> OIVAL
           CALL DIVAL(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
         ELSE IF (TRABUF(TITYP).EQ.ILOT) THEN !PARAMETER (ILOT=2 ) - INSTANT LOT (not used)
           CALL DILOT(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF),AGTPAS,
      *               SALPAS)
-        ELSE IF (TRABUF(TITYP).EQ.ICAR) THEN !PARAMETER (ICAR=8 ) - INSTANT CARTON STATUS CHANGE (used) -> 0xD2 Altera��o de Estado Ma�o ----> D8
+        ELSE IF (TRABUF(TITYP).EQ.ICAR) THEN !PARAMETER (ICAR=8 ) - INSTANT CARTON STATUS CHANGE (used) -> 0xD2 pack status change ----> D8
           CALL DICAR(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF),AGTPAS,
      *               SALPAS)
         ELSE IF (TRABUF(TITYP).EQ.IQTA) THEN !(IQTA=3 ) - INSTANT QUOTA REPORT
@@ -188,6 +188,7 @@ C----+------------------------------------------------------------------
           TRABUF(TITYP)=IVAL
           TRABUF(TERR)=SYNT
         ENDIF       
+  
         
 C
 C CHECK IF TRANSACTION TYPE IS SUPRESSED ON
@@ -371,7 +372,7 @@ C
            IF(CRSCNT(1)-CRSCNT(2).GT.P(MAXCRS))   TRABUF(TERR)=SUPR
         ENDIF
 95	CONTINUE
-        IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT              
+        IF(TRABUF(TERR).NE.NOER) TRABUF(TSTAT)=REJT             
         CALL TRALOG(TRABUF,APUBUF(2,BUF))         
         PRO(INPTAB,BUF)=TRABUF(TSIZE)
         HPRO(TRCODE,BUF)=TYPCRS
