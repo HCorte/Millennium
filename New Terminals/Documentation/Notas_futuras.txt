@@ -1,0 +1,28 @@
+Absolute Time: dd-mmm-yyyy hh:mm:ss.cc
+
+VSI Fortran for OpenVMS User Manual
+    --> Chapter 5. Performance: Making Programs Run Faster .............................................. 133
+
+VSI_PROGRAM_CONCEPTS_VOL_I
+	--> 4.8.1.1. Executing a Program at a Specified Time
+	
+	
+In a program that creates a subprocess, you can cause the subprocess to share the input, output, or
+error device of the creating process. You must first follow these steps:
+	1. Use the Get Device/Volume Information (SYS$GETDVIW) system service to obtain the device
+	name for the logical name SYS$INPUT, SYS$OUTPUT, or SYS$ERROR.	
+	
+2.1 String Semantics in the Run-Time Library
+The semantics of a string refers to the conventions that determine how a string
+is stored, written, and read. The Alpha and VAX architectures support three
+string semantics: fixed length, varying length, and dynamic length.
+
+2.1.1 Fixed-Length Strings
+	Fixed-length strings have the following attributes:
+	• An address
+	• A length
+	The length of a fixed-length string is constant. It is usually initialized when
+	the program is compiled or linked. After initialization, this length is read but
+	never written. When a Run-Time Library routine copies a source string into a
+	longer fixed-length destination string, the routine pads the destination string
+	with trailing blanks.	
