@@ -80,7 +80,7 @@ $ FAILOVER_HOST = ""
 $ PRIMARY_IP = ""
 $ FAILOVER_IP = ""
 $! IF F$SEARCH("GXOLM:DMQ.INI") .EQS. "" 
-$ dmq_ini_path = f$edit(f$trnlnm("OLMINI","lnm$system"),"collapse")
+$ dmq_ini_path = f$edit(f$trnlnm("OLM_DMQCL_INI_FILE","lnm$system"),"collapse")
 $ show symbol dmq_ini_path
 $ IF F$SEARCH("''dmq_ini_path'") .EQS. "" 
 $ THEN
@@ -89,8 +89,8 @@ $   define/job/nolog millconnect "DMQ.INI file missing,ERR"
 $   EXIT
 $ ENDIF
 $! validate if Primary and FailOver Host logical names are defined
-$ PRIMARY_HOST = f$edit(f$trnlnm("PRIMARY_HOST_OLM","lnm$job"),"collapse")
-$ FAILOVER_HOST = f$edit(f$trnlnm("FAILOVER_HOST_OLM","lnm$job"),"collapse")
+$ PRIMARY_HOST = f$edit(f$trnlnm("OLM_DMQSRV_PRIMARY_HOST","lnm$job"),"collapse")
+$ FAILOVER_HOST = f$edit(f$trnlnm("OLM_DMQSRV_FAILOVER_HOST","lnm$job"),"collapse")
 $ sh symbol PRIMARY_HOST
 $ sh symbol FAILOVER_HOST
 $
@@ -134,8 +134,8 @@ $   define/job/nolog millconnect "HOSTS NAMES MISSING IN DMQ.INI,ERR"
 $   EXIT
 $ ENDIF
 $
-$ define/job/system/nolog PRIMARY_HOST_OLM "''PRIMARY_HOST'"
-$ define/job/system/nolog FAILOVER_HOST_OLM "''FAILOVER_HOST'"
+$ define/job/supervisor/nolog OLM_DMQSRV_PRIMARY_HOST "''PRIMARY_HOST'"
+$ define/job/supervisor/nolog OLM_DMQSRV_FAILOVER_HOST "''FAILOVER_HOST'"
 $ WRITE SYS$OUTPUT "Created logical names of primary and failover Hosts"
 $
 $EXISTS_LOG_HOST:
