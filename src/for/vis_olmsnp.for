@@ -8,12 +8,6 @@ C
 C OLM SYSTEM CONTROL SNAPSHOT
 C
 C
-C ERROR MESSAGE #  DESCRIPTION
-C ---------------  -----------------------------------------------------
-C       5          PASSWORD ERROR WHILE TRYING TO CHANGE EM TIMEOUT
-C       6          PASSWORD ERROR WHILE TRYING TO CHANGE EM FIN TIMEOUT
-C
-C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C Copyright 2021 SCML Corporation. All rights reserved.
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -81,7 +75,10 @@ C        INTEGER*4  STATUSTRIM
         INTEGER*4  FILES_DAY,FILESTAT
         INTEGER*4  ERROR_FILE_CONTEXT /0/,FILE_CONTEXT /0/,FILE_SCRIPT_CONT /0/
         CHARACTER*50 FILES_NAMES_PATH, ERROR_FILES_NAMES_PATH
-        CHARACTER*25 FILE_NAME
+        CHARACTER*28 FILE_NAME_AUX_ERR
+        CHARACTER*32 FILE_NAME_VER_ERR        
+        CHARACTER*25 FILE_NAME,FILE_NAME_AUX
+        CHARACTER*28 FILE_NAME_VER
         CHARACTER*29 ERR_FILE_NAME
         CHARACTER*2 FILE_DAY
         CHARACTER*3 FILE_MONTH
@@ -96,12 +93,14 @@ C        INTEGER*4  STR$ELEMENT,STR$TRIM,SIZE_AUX
         CHARACTER*20 PROCESS_ID,ERROR_PATH_AUX
         CHARACTER*15 OUTPUT_PATH_AUX
 C        CHARACTER*20 OUTPUT_PATH_AUX_TRIMED
-        CHARACTER*34 OUTPUT_PATH,ERROR_PATH,SCRIPT_PATH
+        CHARACTER*34 OUTPUT_PATH,SCRIPT_PATH
+        CHARACTER*40 ERROR_PATH
         CHARACTER*25 HOST
         CHARACTER*40 ERR_MSG
         CHARACTER*13 IP_ADDRESS
         CHARACTER*11 TODAY_DATE
-        INTEGER*1  MAX_WRITES_LOG /0/, MAX_WRITES_ERR /0/
+        INTEGER*1    MAX_WRITES_LOG /0/, MAX_WRITES_ERR /0/
+        CHARACTER*2  VERSION_NUM, ERRVERSION_NUM
         
 C
         INTEGER*4  MAXPRM
@@ -251,96 +250,93 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C        CALL OPSTXT('Middle')
         IF(MILL_CON_STATUS .EQ. 0) THEN
           IF(REGLOG .EQ. 0) THEN
-C                OUTPUT_PATH = "GXOLM:MILLCON.LOG"
-                IF(PURGE_LOG_VALIDATION .EQ. 0) THEN
-                        STATDAY = LIB$DAY(CURRENT_DAYS)
-C                       FILES_DAY 
-C                        CALL OPS("CURRENT_DAYS: ",CURRENT_DAYS,0)
-C                       FILE_CONTEXT = 0
+C           BEGIN PURGE - AFTER 7 DAYS THE OLD LOGS ARE PURGE/DELETED FROM SYSTEM                
+            IF(PURGE_LOG_VALIDATION .EQ. 0) THEN
+                STATDAY = LIB$DAY(CURRENT_DAYS)
+                DO WHILE(LIB$FIND_FILE("GXOLM:MILLCON*.LOG;1",FILES_NAMES_PATH,
+     *          FILE_CONTEXT) .EQ. 65537 )
+C                  FILESTAT = LIB$FIND_FILE("GXOLM:MILLCON*.LOG;1",FILES_NAMES_PATH,FILE_CONTEXT)    
+                   STATUS_ELEM = STR$ELEMENT(FILE_DAY,1,"-",FILES_NAMES_PATH)
+                   STATUS_ELEM = STR$ELEMENT(FILE_MONTH,2,"-",FILES_NAMES_PATH)
+                   STATUS_ELEM = STR$ELEMENT(FILE_YEAR,3,"-",FILES_NAMES_PATH)
+                   FILE_SYS_DATE = FILE_DAY//"-"//FILE_MONTH//"-"//FILE_YEAR
+                   STATUS_BINTIM = SYS$BINTIM(FILE_SYS_DATE,FILE_DAYS_AUX)    
+                   STATDAY = LIB$DAY(FILE_DAYS,FILE_DAYS_AUX)
+                   FILE_DAYS_OLD = CURRENT_DAYS-FILE_DAYS 
 
-c                       FILESTAT = LIB$FIND_FILE("GXOLM:MILLCON*.LOG;1",FILES_NAMES_PATH,FILE_CONTEXT)
-C                        FILESTAT = 65537
-                        DO WHILE(LIB$FIND_FILE("GXOLM:MILLCON*.LOG;1",FILES_NAMES_PATH,FILE_CONTEXT) .EQ. 65537 )
-C                           FILESTAT = LIB$FIND_FILE("GXOLM:MILLCON*.LOG;1",FILES_NAMES_PATH,FILE_CONTEXT)    
-C                           CALL OPS("MAX_WRITES_LOG",MAX_WRITES_LOG,MAX_WRITES_LOG)
-C                           CALL OPS("FILESTAT",FILESTAT,FILESTAT)
-C                           CALL OPSTXT("NAME PATH: "//FILES_NAMES_PATH)
-                           STATUS_ELEM = STR$ELEMENT(FILE_DAY,1,"-",FILES_NAMES_PATH)
-                           STATUS_ELEM = STR$ELEMENT(FILE_MONTH,2,"-",FILES_NAMES_PATH)
-                           STATUS_ELEM = STR$ELEMENT(FILE_YEAR,3,"-",FILES_NAMES_PATH)
-C                           CALL OPSTXT("FILE DATE: "//FILE_DAY//"-"//FILE_MONTH//"-"//FILE_YEAR)
-                           FILE_SYS_DATE = FILE_DAY//"-"//FILE_MONTH//"-"//FILE_YEAR
-                           STATUS_BINTIM = SYS$BINTIM(FILE_SYS_DATE,FILE_DAYS_AUX)
-C                           CALL OPS("FILE_DAYS_AUX: ",FILE_DAYS_AUX,FILE_DAYS_AUX)
-C                           CALL OPSTXT("FILE SYS DATE: "//FILE_SYS_DATE)
-                           STATDAY = LIB$DAY(FILE_DAYS,FILE_DAYS_AUX)
-C                           CALL OPS('FILE DAYS STATUS: ',STATDAY,0)
-C                           CALL OPS("FILE DAYS: ",FILE_DAYS,0)
-                           FILE_DAYS_OLD = CURRENT_DAYS-FILE_DAYS 
-C                           CALL OPS("FILE DAYS OLD: ",FILE_DAYS_OLD,0)  
-                           IF(FILE_DAYS_OLD .GT. 6) THEN
-C                             CALL OPSTXT('REMOVE FILE: '//FILES_NAMES_PATH)
-                             IF(LIB$MATCHC("MILLCON",FILES_NAMES_PATH)) THEN
-C                                CALL OPSTXT('...VALID LOG FILE TO REMOVE...')
-                                STATUS_ELEM = STR$ELEMENT(FILE_NAME,1,"]",FILES_NAMES_PATH)
-C                                CALL OPSTXT('...VALID LOG FILE TO REMOVE ('//FILE_NAME//')...')
-                                STATUS_DELETE = LIB$DELETE_FILE('GXOLM:'//FILE_NAME)
-                                IF(STATUS_DELETE .EQ. SS$_NORMAL) THEN
-                                  CALL OPSTXT('FILE REMOVED: '//FILES_NAMES_PATH)    
-                                ENDIF
-                             ENDIF
-                           ENDIF  
-                        ENDDO 
-                        PURGE_LOG_VALIDATION = 1
-                ENDIF       
+                   IF(FILE_DAYS_OLD .GT. 6) THEN
+                     IF(LIB$MATCHC("MILLCON",FILES_NAMES_PATH)) THEN
+                        STATUS_ELEM = STR$ELEMENT(FILE_NAME,1,"]",FILES_NAMES_PATH)
+C       Remove MAX_WRITES_LOG versions of the file in case its generated more then one version
+                        MAX_WRITES_LOG = 0
+                        DO WHILE(MAX_WRITES_LOG .LT. 7)
+                          MAX_WRITES_LOG = MAX_WRITES_LOG + 1      
+                          STATUS_ELEM = STR$ELEMENT(FILE_NAME_AUX,0,";",FILE_NAME)
+                          write(VERSION_NUM,1200) MAX_WRITES_LOG   
+                          CALL OPSTXT('FILE NAME:'//FILE_NAME_AUX) 
+                          CALL OPSTXT('Version files:'//VERSION_NUM)     
+                          FILE_NAME_VER = FILE_NAME_AUX//";"//VERSION_NUM
+                          CALL OPSTXT('FILE NAME VERSION:'//FILE_NAME_VER)    
+C                          CALL OPS('Version files:',MAX_WRITES_LOG,0)
+                                             
+                          STATUS_DELETE = LIB$DELETE_FILE('GXOLM:'//FILE_NAME_VER)
+                          IF(STATUS_DELETE .EQ. SS$_NORMAL) THEN
+C                            CALL OPSTXT('FILE REMOVED: '//FILES_NAMES_PATH) 
+                             CALL OPSTXT('FILE REMOVED: '//'GXOLM:'//FILE_NAME_VER) 
+                          ENDIF
+                        ENDDO
+                        MAX_WRITES_LOG = 0
+                     ENDIF
+                   ENDIF  
+                ENDDO 
+                PURGE_LOG_VALIDATION = 1
+            ENDIF       
+C           END PURGE                
                 
-C               AFTER 7 DAYS THE OLD LOGS ARE PURGE/DELETED FROM SYSTEM                
-
-
-C                CALL OPS("STATLOG DATE TIME: ",STATLOG,STATLOG)
-C                CALL OPSTXT(TODAY_DATE)
-                STATLOG = LIB$DATE_TIME(TODAY_DATE)
-                IF(STATLOG .NE. SS$_NORMAL .AND. STATLOG .NE. 1409041) THEN
-                  TODAY_DATE = ""     
-                ENDIF        
-                STATLOG = LIB$GET_LOGICAL("OLM_MILCON_LOG",OUTPUT_PATH_AUX)
-C                CALL OPS("Get_logical_status:",STATLOG,0)
-C                CALL OPSTXT(OUTPUT_PATH_AUX//"OOO")
+            STATLOG = LIB$DATE_TIME(TODAY_DATE)
+            IF(STATLOG .NE. SS$_NORMAL .AND. STATLOG .NE. 1409041) THEN
+              TODAY_DATE = ""     
+            ENDIF        
+            STATLOG = LIB$GET_LOGICAL("OLM_MILCON_LOG",OUTPUT_PATH_AUX)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC NEED TRIM TO REMOVE EXTRA WHITE SPACES CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C                STATUSTRIM = STR$TRIM(OUTPUT_PATH_AUX_TRIMED,OUTPUT_PATH_AUX,TRIM_LENGTH)
 C                CALL OPSTXT(OUTPUT_PATH_AUX_TRIMED//"...")
 C                CALL OPS("TRIM_LENGTH:",TRIM_LENGTH,0)
 C                OUTPUT_PATH (34) = OUTPUT_PATH_AUX (15) + "-" (1) + TODAY_DATE (DD-MMM-YYYY) (11) + (6)-> 33
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-                OUTPUT_PATH = OUTPUT_PATH_AUX//"-"//TODAY_DATE//".LOG;1"
-C                CALL OPSTXT("path final: "//OUTPUT_PATH)
-                IF(STATLOG .NE. SS$_NORMAL) THEN     
-                  OUTPUT_PATH = "GXOLM:MILLCON-"//TODAY_DATE//".LOG;1"        
-                ENDIF
-                MAX_WRITES_LOG = MAX_WRITES_LOG + 1
-                IF(MAX_WRITES_LOG .EQ. 6) THEN 
-                    REGLOG = 1   
-                    MAX_WRITES_LOG = 0 
-                    FILE_CONTEXT = 0
-                ENDIF        
+C            instead of //".LOG;1" use //".LOG;"//MAX_WRITES_LOG  (make shure its not 0)  
+             MAX_WRITES_LOG = MAX_WRITES_LOG + 1         
+             write(VERSION_NUM,1200) MAX_WRITES_LOG           
+             OUTPUT_PATH = OUTPUT_PATH_AUX//"-"//TODAY_DATE//".LOG;"//VERSION_NUM
+             
+             IF(STATLOG .NE. SS$_NORMAL) THEN     
+               OUTPUT_PATH = "GXOLM:MILLCON-"//TODAY_DATE//".LOG;"//VERSION_NUM        
+             ENDIF
+
+             IF(MAX_WRITES_LOG .EQ. 6) THEN 
+                 REGLOG = 1   
+                 MAX_WRITES_LOG = 0 
+                 FILE_CONTEXT = 0
+             ENDIF        
           ELSE
                 OUTPUT_PATH = "NLA0:" !its null device
           ENDIF
           IF(REGLOGER .EQ. 0) THEN
+C           BEGIN PURGE - AFTER 7 DAYS THE OLD LOGS ARE PURGE/DELETED FROM SYSTEM                 
              IF(ERR_PURGE_LOG_VALIDATION .EQ. 0) THEN
                  STATDAY = LIB$DAY(CURRENT_DAYS)
-                 DO WHILE(LIB$FIND_FILE("GXOLM:ERR_MILLCON*.LOG;1",ERROR_FILES_NAMES_PATH,ERROR_FILE_CONTEXT) .EQ. 65537 )
-                     CALL OPSTXT("NAME PATH: "//ERROR_FILES_NAMES_PATH)
+                 DO WHILE(LIB$FIND_FILE("GXOLM:ERR_MILLCON*.LOG;1",
+     *           ERROR_FILES_NAMES_PATH,ERROR_FILE_CONTEXT) .EQ. 65537 )
+
                      STATUS_ELEM = STR$ELEMENT(FILE_DAY,1,"-",ERROR_FILES_NAMES_PATH)
                      STATUS_ELEM = STR$ELEMENT(FILE_MONTH,2,"-",ERROR_FILES_NAMES_PATH)
                      STATUS_ELEM = STR$ELEMENT(FILE_YEAR,3,"-",ERROR_FILES_NAMES_PATH)    
                      FILE_SYS_DATE = FILE_DAY//"-"//FILE_MONTH//"-"//FILE_YEAR
-                     CALL OPSTXT("FILE SYS DATE: "//FILE_SYS_DATE)
+
                      STATUS_BINTIM = SYS$BINTIM(FILE_SYS_DATE,FILE_DAYS_AUX)
                      STATDAY = LIB$DAY(FILE_DAYS,FILE_DAYS_AUX)   
-                     CALL OPS("FILE DAYS: ",FILE_DAYS,0) 
                      FILE_DAYS_OLD = CURRENT_DAYS-FILE_DAYS  
-                     CALL OPS("FILE DAYS OLD: ",FILE_DAYS_OLD,0)  
+ 
                      IF(FILE_DAYS_OLD .GT. 6) THEN
 C                            CALL OPSTXT('REMOVE FILE: '//FILES_NAMES_PATH)
 C     here FILES_NAMES_PATH haves the filename and its path can be used LIB$DELETE_FILE(FILES_NAMES_PATH) 
@@ -348,34 +344,48 @@ C     directly the use of LIB$MATCHC and STR$ELEMENT to retrive the filename wit
 C     is to have more control in the directory that the file will be removed...                  
 C
                        IF(LIB$MATCHC("ERR_MILLCON",ERROR_FILES_NAMES_PATH)) THEN 
-                          CALL OPSTXT("here...")
-                          CALL OPSTXT("NAME PATH: "//ERROR_FILES_NAMES_PATH)
                           STATUS_ELEM = STR$ELEMENT(ERR_FILE_NAME,1,"]",ERROR_FILES_NAMES_PATH)
-                          CALL OPSTXT("FILE NAME: "//ERR_FILE_NAME)
-                          STATUS_DELETE = LIB$DELETE_FILE('GXOLM:'//ERR_FILE_NAME)
-                          IF(STATUS_DELETE .EQ. SS$_NORMAL) THEN
-                            CALL OPSTXT('FILE REMOVED: '//ERROR_FILES_NAMES_PATH)    
-                          ENDIF
+
+                          MAX_WRITES_ERR = 0
+                          DO WHILE(MAX_WRITES_ERR .LT. 7)
+                            MAX_WRITES_ERR = MAX_WRITES_ERR + 1     
+                            STATUS_ELEM = STR$ELEMENT(FILE_NAME_AUX_ERR,0,";",ERR_FILE_NAME)
+                            WRITE(VERSION_NUM,1200) MAX_WRITES_ERR   
+                            FILE_NAME_VER_ERR = FILE_NAME_AUX_ERR
+     *                      //";"//VERSION_NUM 
+                            CALL OPSTXT('FILE NAME VERSION:'//FILE_NAME_VER_ERR)                                                   
+                            STATUS_DELETE = LIB$DELETE_FILE('GXOLM:'//FILE_NAME_VER_ERR)
+                            IF(STATUS_DELETE .EQ. SS$_NORMAL) THEN
+C                              CALL OPSTXT('FILE REMOVED: '//ERROR_FILES_NAMES_PATH) 
+                               CALL OPSTXT('FILE REMOVED: '//'GXOLM:'//FILE_NAME_VER_ERR)  
+                            ENDIF
+                          ENDDO
+                          MAX_WRITES_ERR = 0
                        ENDIF
                      ENDIF                        
                  ENDDO
                  ERR_PURGE_LOG_VALIDATION = 1 
              ENDIF   
+C            END PURGE 
                 
-                STATLOG = LIB$DATE_TIME(TODAY_DATE)  
-                IF(STATLOG .NE. SS$_NORMAL .AND. STATLOG .NE. 1409041) THEN
-                  TODAY_DATE = ""     
-                ENDIF              
-                STATLOG = lib$get_logical("OLM_ERR_LOG",ERROR_PATH_AUX) 
-                ERROR_PATH = ERROR_PATH_AUX//"-"//TODAY_DATE//".LOG;1"
-                IF(STATLOG .NE. SS$_NORMAL) THEN
-                  ERROR_PATH = "GXOLM:ERR_MILLCON-"//TODAY_DATE//".LOG;1"       
-                ENDIF   
-                MAX_WRITES_ERR = MAX_WRITES_ERR + 1
-                IF(MAX_WRITES_ERR .EQ. 6) THEN 
-                    REGLOGER = 1    
-                    MAX_WRITES_ERR = 0
-                ENDIF                                            
+             STATLOG = LIB$DATE_TIME(TODAY_DATE)  
+             IF(STATLOG .NE. SS$_NORMAL .AND. STATLOG .NE. 1409041) THEN
+               TODAY_DATE = ""     
+             ENDIF              
+             STATLOG = lib$get_logical("OLM_ERR_LOG",ERROR_PATH_AUX) 
+             MAX_WRITES_ERR = MAX_WRITES_ERR + 1
+             write(ERRVERSION_NUM,1200) MAX_WRITES_ERR              
+             ERROR_PATH = ERROR_PATH_AUX//"-"//TODAY_DATE
+     *       //".LOG;"//ERRVERSION_NUM
+             IF(STATLOG .NE. SS$_NORMAL) THEN
+               ERROR_PATH = "GXOLM:ERR_MILLCON-"//TODAY_DATE
+     *         //".LOG;"//ERRVERSION_NUM       
+             ENDIF   
+
+             IF(MAX_WRITES_ERR .EQ. 6) THEN 
+                 REGLOGER = 1    
+                 MAX_WRITES_ERR = 0
+             ENDIF                                            
           ELSE
                 ERROR_PATH = "NLA0:" !its null device
           ENDIF
@@ -403,19 +413,10 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
           IF(STATLOG .NE. SS$_NORMAL) THEN
                 MILLCON = "FAIL TO GET LOGICAL MILLCONNECT,ERR"        
           ENDIF          
-C          IF(.NOT. STATLOG) CALL LIB$SIGNAL(%VAL(STATLOG))          
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C  COULD BE USED STR$ELEMENT(MESSCON,0,",",MILLCON) as alternative C
-C  COULD BE USED STR$ELEMENT(IP_ADDRESS,1,",",MILLCON)             C 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC         
-C          POS_AUX = LIB$INDEX(MILLCON,",")
-C          IP_ADDRESS = MILLCON(POS_AUX+1:LIB$LEN(MILLCON)-(POS_AUX+1))
+C          IF(.NOT. STATLOG) CALL LIB$SIGNAL(%VAL(STATLOG))                 
           STATLOG = STR$ELEMENT(MESSCON,0,",",MILLCON)
           STATLOG = STR$ELEMENT(IP_ADDRESS,1,",",MILLCON)
           STATLOG = STR$ELEMENT(HOST,2,",",MILLCON)
-C          CALL OPSTXT('MESSCON:'//MESSCON)
-C          CALL OPSTXT('IP_ADDRESS:'//IP_ADDRESS)
-C          CALL OPSTXT('HOST:'//HOST)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       ENDIF
 
@@ -564,6 +565,7 @@ C     *          7X,'Time Last Detach',2X,'??.??.???? ??:??:??')                
 9511    FORMAT('MsgId PutQerror/GetQerror',4X,I0,'/',I0)
 9513    FORMAT('MsgId GetTererror        ',4X,I0) 
 905     FORMAT(2X,I4.0)        
+1200    FORMAT(I1)
         END        
 
 
