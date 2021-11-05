@@ -30,9 +30,9 @@ $!##############################################################################
 $ pipe/nosymbol/nological -
 show process SCMLCOMOLM | -
 search sys$pipe "Devices allocated:" | -
-( read sys$pipe messageq_pb ; define/job/nolog millconnect &messageq_pb )
+( read sys$pipe messageq_pb ; define/group/nolog millconnect &messageq_pb )
 $! device_info = f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse") 
-$ device_info = f$edit(f$trnlnm("millconnect","lnm$job"),"collapse") 
+$ device_info = f$edit(f$trnlnm("millconnect","lnm$group"),"collapse") 
 $ IF F$LOCATE("NOMATCHES",device_info) .NE. F$LENGTH(device_info)
 $ THEN
 $!   WRITE SYS$OUTPUT "The process COMOLM does not exist"
@@ -40,14 +40,16 @@ $!   deassign/job messageq_aux
 $   pipe/nosymbol/nological - 
     show process SCMLCOMOLM | -
     search sys$pipe "Process name:" | -
-    ( read sys$pipe messageq_pb ; define/job/nolog millconnect &messageq_pb )
-$   device_info = f$edit(f$trnlnm("millconnect","lnm$job"),"collapse")
+    ( read sys$pipe messageq_pb ; define/group/nolog millconnect &messageq_pb )
+$   device_info = f$edit(f$trnlnm("millconnect","lnm$group"),"collapse")
 $   IF F$LOCATE("NOMATCHES",device_info) .NE. F$LENGTH(device_info)
 $   THEN     
-$       define/job/nolog millconnect "process COMOLM missing,ERR"
+$!       define/job/nolog millconnect "process COMOLM missing,ERR"
+$       define/group/nolog millconnect "process COMOLM missing,ERR"
 $       EXIT
 $   ELSE
-$       define/job/nolog millconnect "Not Attached,ERR"      
+$!       define/job/nolog millconnect "Not Attached,ERR"
+$       define/group/nolog millconnect "Not Attached,ERR"      
 $       EXIT
 $   ENDIF
 $ ENDIF
@@ -58,15 +60,16 @@ $! deassign/job messageq_aux
 $ pipe/nosymbol/nological -
 show network "TCP/IP" /FULL | -
 search sys$pipe "''device_aux'" | -
-( read sys$pipe messageq_host ; define/job/nolog millconnect &messageq_host )
+( read sys$pipe messageq_host ; define/group/nolog millconnect &messageq_host )
 $! messageq_ip = f$edit(f$trnlnm("messageq_aux","lnm$job"),"collapse")
-$ messageq_ip = f$edit(f$trnlnm("millconnect","lnm$job"),"collapse")
+$ messageq_ip = f$edit(f$trnlnm("millconnect","lnm$group"),"collapse")
 $! sh symbol messageq_ip
 $ IF F$LOCATE("NOMATCHES",messageq_ip) .NE. F$LENGTH(messageq_ip)
 $ THEN
 $!   WRITE SYS$OUTPUT "There is no Device_socket(''device_aux') in network 'TCP/IP'"
 $!   deassign/job messageq_aux
-$   define/job millconnect/nolog "Device Socket missing,ERR"
+$!   define/job millconnect/nolog "Device Socket missing,ERR"
+$   define/group millconnect/nolog "Device Socket missing,ERR"
 $   EXIT
 $ ENDIF
 $ messageq_ip_pos = F$LOCATE("5000",messageq_ip)+4
@@ -85,7 +88,8 @@ $ show symbol dmq_ini_path
 $ IF F$SEARCH("''dmq_ini_path'") .EQS. "" 
 $ THEN
 $!   WRITE SYS$OUTPUT "The DMQ.INI files is missing at :"+F$TRNLNM("GXOLM")
-$   define/job/nolog millconnect "DMQ.INI file missing,ERR"
+$!   define/job/nolog millconnect "DMQ.INI file missing,ERR"
+$   define/group/nolog millconnect "DMQ.INI file missing,ERR"
 $   EXIT
 $ ENDIF
 $! validate if Primary and FailOver Host logical names are defined
@@ -130,26 +134,30 @@ $ show symbol FAILOVER_HOST
 $ IF PRIMARY_HOST .EQS. "" .OR. FAILOVER_HOST .EQS ""
 $ THEN
 $!   WRITE SYS$OUTPUT "It was not possible to obtain the hosts names of messages from DMQ.INI in GXOLM"
-$   define/job/nolog millconnect "HOSTS NAMES MISSING IN DMQ.INI,ERR"
+$!   define/job/nolog millconnect "HOSTS NAMES MISSING IN DMQ.INI,ERR"
+$   define/group/nolog millconnect "HOSTS NAMES MISSING IN DMQ.INI,ERR"
 $   EXIT
 $ ENDIF
 $
-$ define/job/supervisor/nolog OLM_DMQSRV_PRIMARY_HOST "''PRIMARY_HOST'"
-$ define/job/supervisor/nolog OLM_DMQSRV_FAILOVER_HOST "''FAILOVER_HOST'"
+$! define/job/supervisor/nolog OLM_DMQSRV_PRIMARY_HOST "''PRIMARY_HOST'"
+$! define/job/supervisor/nolog OLM_DMQSRV_FAILOVER_HOST "''FAILOVER_HOST'"
+$ define/group/supervisor/nolog OLM_DMQSRV_PRIMARY_HOST "''PRIMARY_HOST'"
+$ define/group/supervisor/nolog OLM_DMQSRV_FAILOVER_HOST "''FAILOVER_HOST'"
 $ WRITE SYS$OUTPUT "Created logical names of primary and failover Hosts"
 $
 $EXISTS_LOG_HOST:
 $ pipe/nosymbol/nological -
 TCPIP SH HOSTS | -
 search sys$pipe "''messageq_ip'" | -
-( read sys$pipe messageq_pb_con ; define/job/nolog millconnect &messageq_pb_con )
+( read sys$pipe messageq_pb_con ; define/group/nolog millconnect &messageq_pb_con )
 $! messageq_connect = f$edit(f$trnlnm("messageq_con","lnm$job"),"collapse")
-$ messageq_connect = f$edit(f$trnlnm("millconnect","lnm$job"),"collapse")
+$ messageq_connect = f$edit(f$trnlnm("millconnect","lnm$group"),"collapse")
 $ show symbol messageq_connect
 $ IF F$LOCATE("NOMATCHES",messageq_connect) .NE. F$LENGTH(messageq_connect)
 $ THEN
 $!   WRITE SYS$OUTPUT "There is no reference to ip:''messageq_ip' in Hosts files"
-$   define/job/nolog millconnect "IP:''messageq_ip' MISSING IN HOSTS FILE,ERR"
+$!   define/job/nolog millconnect "IP:''messageq_ip' MISSING IN HOSTS FILE,ERR"
+$   define/group/nolog millconnect "IP:''messageq_ip' MISSING IN HOSTS FILE,ERR"
 $!   deassign/job messageq_con
 $   EXIT
 $ ENDIF
@@ -167,17 +175,20 @@ $ IF F$LOCATE(PRIMARY_HOST,messageq_connect) .NE. F$LENGTH(messageq_connect)
 $ THEN
 $!   WRITE SYS$OUTPUT "Millennium connected to Primary MessageQ: ''messageq_ip'"
 $!   define/job millconnect "Millennium connected to Primary MessageQ: ''messageq_ip'"
-$    define/job/nolog millconnect "Primary,''messageq_ip',''host'"
+$!    define/job/nolog millconnect "Primary,''messageq_ip',''host'"
+$    define/group/nolog millconnect "Primary,''messageq_ip',''host'"
 $ ELSE
 $   IF F$LOCATE(FAILOVER_HOST,messageq_connect) .NE. F$LENGTH(messageq_connect)
 $   THEN
 $!       WRITE SYS$OUTPUT "Millennium connected to FailOver MessageQ: ''messageq_ip'"
 $!       define/job millconnect "Millennium connected to FailOver MessageQ: ''messageq_ip'"
-$        define/job/nolog millconnect "FailOver,''messageq_ip',''host'"
+$!        define/job/nolog millconnect "FailOver,''messageq_ip',''host'"
+$        define/group/nolog millconnect "FailOver,''messageq_ip',''host'"
 $   ELSE
 $!       WRITE SYS$OUTPUT "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
 $!       define/job millconnect "It wasn't possible to match the Ip from Hosts file to the Ip used by COMOLM"
-$        define/job/nolog millconnect "No Match found,ERR"
+$!        define/job/nolog millconnect "No Match found,ERR"
+$         define/group/nolog "No Match found,ERR"
 $   ENDIF 
 $ ENDIF
 $
