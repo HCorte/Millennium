@@ -255,12 +255,15 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             INTEGER*4 I4AUX(2)
             INTEGER*1 I1AUX(8)
             EQUIVALENCE(I8AUX,I4AUX,I1AUX) 
-            INTEGER*8 AUX_ID      
+C            INTEGER*8 AUX_ID      
 
             INTEGER*4 ST,STATUS,MTYPE,MSUBTYPE
             INTEGER*4 XRFNUM,AGENTNR   
             
             character*34 XRFNUMSTR, AGENTNRSTR, MTYPESTR, MSUBTYPESTR
+            CHARACTER*5 TERMINALNUM_STR,NUMAGT_STR
+            CHARACTER*7 AGENT_NUM_STR
+            CHARACTER*12 MESSAGEID_STR
 
             COMMON /FROM_OLM/ MESS_FROM_OLM, MESS_FROM_LEN
             BYTE MESS_FROM_OLM(1024) 
@@ -270,7 +273,7 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             INTEGER*4 MESSAGEID_POS /1/, AGENT_NUM_POS /6/, TERMINAL_NUM_POS /10/, SERIAL_OLM_POS /12/   
             INTEGER*4 DAYCDC_POS /21/, DAYJUL_POS /23/, TOTAL_AMOUNT_POS /25/, BUFFER_HEADER_LENTH /29/   
 
-            LOGICAL  DMPDBG
+C            LOGICAL  TERFROHEAD /1/
             DATA    ERRTYP /Z90/            
             BYTE    ERRMSG(5)
             INTEGER MESS_BODY                        
@@ -301,42 +304,83 @@ C                 may comment this buffer body reset since with length size info
                   I1TEMP(4) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  0))!3
                   AGENT_NUM = I4TEMP
 
-                  I1TEMP(1) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0))!0
-                  I1TEMP(2) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1))!1
+                  I1TEMP(1) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  1))!1
+                  I1TEMP(2) = ZEXT (MESS_FROM_OLM(TERMINAL_NUM_POS +  0))!0
                   I1TEMP(3) = 0
                   I1TEMP(4) = 0
                   TERMINALNUM = I4TEMP
 
-C                 If its diferent from 0000 then terminal number is defined in the header
-                  IF(TERMINALNUM .EQ. 0) THEN                       
-                        CALL FIND_AGENT(AGENT_NUM,TERMINALNUM,ST)
-
-                        IF(ST .EQ. -1)THEN
-                              ST = -8                            
+                  IF(TERMINALNUM .LT.1 .OR. TERMINALNUM .GT. NUMAGT) THEN 
+C                       If its diferent from 0000 then terminal number is defined in the header
+                        IF(TERMINALNUM .EQ. 0) THEN                       
+                              CALL FIND_AGENT(AGENT_NUM,TERMINALNUM,ST)
+                              IF(ST .EQ. -1)THEN                           
+                                    TYPE*, ' '                                            
+                                    TYPE*, 'FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:',AGENT_NUM
+                                    TYPE*, ' '                        
+                                    CALL OPS('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:',AGENT_NUM,AGENT_NUM)
+                                    I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+                                    I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
+                                    I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
+                                    I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+                                    I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))  
+                                    OLMS_GETTERFAI = I8AUX                                 
+                                    ST = -8                            
+                              ENDIF
+                        ELSE
+                              write(NUMAGT_STR,200) NUMAGT
+                              write(TERMINALNUM_STR,200) TERMINALNUM
+                              TYPE*, ' '
+                              TYPE*, ' TERMINAL CODE IS INVALID LOWER THEN 1 OR GREATER THEN ',NUMAGT_STR,
+     *                  ' THE TERMINAL CODE RECEIVED IS ',TERMINALNUM_STR
+                              CALL OPSTXT(' TERMINAL CODE IS INVALID LOWER THEN 1 OR GREATER THEN '//NUMAGT_STR//
+     *                  ' THE TERMINAL CODE RECEIVED IS '//TERMINALNUM_STR)  
+                              I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+                              I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
+                              I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
+                              I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+                              I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)) 
+                              OLMS_GETTERFAI = I8AUX                                                       
+                              ST = -9
+                        ENDIF 
+                  ELSE
+                        IF(AGENT_NUM .NE. AGTTAB(AGTNUM,TERMINALNUM) ) THEN
+                              TYPE*, ' '                                            
+                              TYPE*, 'Received in the header unmatched Terminal Number:',TERMINALNUM,' and Agent Number:',AGENT_NUM
+                              TYPE*, ' '
+                              write(TERMINALNUM_STR,200) TERMINALNUM  
+                              write(AGENT_NUM_STR,210) AGENT_NUM                            
+                              CALL OPSTXT('Received in the header umatched Terminal Number:'//TERMINALNUM_STR
+     *                        //' and Agent Number:'//AGENT_NUM_STR)
+                              I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+                              I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
+                              I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
+                              I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+                              I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))  
+                              OLMS_GETTERFAI = I8AUX   
+                              ST = -8
                         ENDIF
-                  ENDIF
-              
-                  IF(AGENT_NUM .NE. AGTTAB(AGTNUM,TERMINALNUM) ) THEN
-                        TYPE*, ' '                                            
-                        TYPE*, 'Received in the header umatched Terminal Number:',TERMINALNUM, 'and Agent Number', AGENT_NUM
-                        ST = -8
-                  ENDIF
+                  ENDIF                 
                         
-                  IF (ST.NE.0) THEN
-                        CALL OPS('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:',TERMINALNUM,TERMINALNUM)
-                  ENDIF                   
+C                  IF (ST.NE.0) THEN
+C                        TYPE*, ' '                                            
+C                        TYPE*, 'FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:',TERMINALNUM
+C                        TYPE*, ' '                        
+C                        CALL OPS('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:',TERMINALNUM,TERMINALNUM)
+C                  ENDIF                   
 
-C apos x tentativas secanhar ver se caio alguma mensagem de resposta na queue aplicacional para ser enviado para o MessageQ (ou pouco provavel pois nesse caso também não tinha buffers livres...)                  
+C apos x tentativas secanhar ver se caio alguma mensagem de resposta na queue aplicacional para ser enviado para o MessageQ (ou pouco provavel pois nesse caso tambï¿½m nï¿½o tinha buffers livres...)                  
 C adicionar uma variabel do vision que indique logo que aconteceu no dia xx as hh horas e mm de minutes uma falta de procom buffers
                   IF (PROBUF.LE.0) THEN
 C                       remember that while QUEMES subroutine uses GETBUF thats not true for OPS that uses caixa de email                        
                         
-                        I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
-                        I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+                        I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+                        I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
                         I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
-                        I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
-                        I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
-                        MESSAGEID = I8AUX                      
+                        I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+                        I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
+                        MESSAGEID = I8AUX    
+                        OLMS_GETMESFAI = MESSAGEID                  
                          
                         TYPE*, ' '                                            
                         TYPE*, 'Unable to allocate PROCOM buffer for Agent Number ', TERMINALNUM, 
@@ -344,14 +388,15 @@ C                       remember that while QUEMES subroutine uses GETBUF thats 
 C        (importante)               SEE BETHER METHOD OF WRITING IN ONE LINE INSTEAD OF WRITING IN FOR CYCLE                        
                         DO I=1, MESS_FROM_LEN  
                               TYPE*, MESS_FROM_OLM(I)                               
-                        ENDDO   
-                      
+                        ENDDO
+
+                        write(TERMINALNUM_STR,200) TERMINALNUM  
+                        write(MESSAGEID_STR,220) MESSAGEID
+                        CALL OPSTXT('Unable to allocate PROCOM buffer for Agent Number '//TERMINALNUM_STR// 
+     *                   ' MESSAGEID:'//MESSAGEID_STR) 
+C     *                   ' TYPE:'//TYPE//' SUBTYPE:'//SUBTYPE//' MESSAGEID:'//MESSAGEID) 
                         ST = -10 
                   ENDIF
-
-                  IF(TERMINALNUM .LT.1 .OR. TERMINALNUM .GT. NUMAGT) THEN 
-                        ST = -9
-                  ENDIF 
 
                   BPRO(MESSID_OLM + 4,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
                   BPRO(MESSID_OLM + 3,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
@@ -428,8 +473,16 @@ CCCCCCCCCCCCCCCCCCCCCCC Send to Encproi instead of Dispatcher CCCCCCCCCCCCCCCCCC
 C                  PARAMETER (ENCRYPTION_ON='00000008'X) --> ENCRYPTION ON IN PROCOM BUF
 C                  P(DESFLG_TYPE) = 0 <---> Encrypted Mode |||| P(DESFLG_TYPE) = 1 <---> Decrypted Mode
 C                  IAND(PRO(INPTAB,BUF_NO),ENCRYPTION_ON) --> 8x and value lower then 8x (decrypted) will alls return 0
-                  CALL QUEINP (PROBUF,ST)
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC    
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+                  I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4)) !BPRO(MESSID_OLM + 4,PROBUF)
+                  I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3)) !BPRO(MESSID_OLM + 3,PROBUF)
+                  I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2)) !BPRO(MESSID_OLM + 2,PROBUF)
+                  I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1)) !BPRO(MESSID_OLM + 1,PROBUF)
+                  I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)) !BPRO(MESSID_OLM + 0,PROBUF)
+
+                  OLMS_GETMESSUC = I8AUX 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 
+                  CALL QUEINP (PROBUF,ST)   
                   ST = STATUS
                   RETURN
             ENDIF 
@@ -445,8 +498,19 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
             CALL OPS('ERROR: BAD STATUS WHILE GET FROM MESSAGEQ!!',ST,0)
             CALL OPSTXT('WILL CONNECT TO FAILOVER HOST')
 
+            I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+            I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
+            I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
+            I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+            I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
+            OLMS_GETMESFAI = I8AUX    
+
             RETURN
-        ENDIF        
+        ENDIF   
+        
+200     format(I5)
+210     format(I7)
+220     format(I0)        
 
       END
 
@@ -496,10 +560,10 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
             BYTE      I1TEMP(4)
             EQUIVALENCE (I4TEMP,I2TEMP,I1TEMP)     
 
-C            INTEGER*8 I8AUX
-C            INTEGER*4 I4AUX(2)
-C            INTEGER*1 I1AUX(8)
-C            EQUIVALENCE(I8AUX,I4AUX,I1AUX)                 
+            INTEGER*8 I8AUX
+            INTEGER*4 I4AUX(2)
+            INTEGER*1 I1AUX(8)
+            EQUIVALENCE(I8AUX,I4AUX,I1AUX)                 
             
             COMMON /TO_OLM/ MESS_TO_OLM, MESS_TO_LEN 
             BYTE MESS_TO_OLM(1024)
@@ -575,6 +639,13 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
             CALL MESSQ_PUT(%REF(STATUS)) 
             IF (STATUS .NE. PAMS__SUCCESS) THEN
                   OLMS_TOTERRPUT = OLMS_TOTERRPUT + 1
+                  I1AUX(1) = MESS_TO_OLM(MESSAGEID_POS + 0)
+                  I1AUX(2) = MESS_TO_OLM(MESSAGEID_POS + 1)
+                  I1AUX(3) = MESS_TO_OLM(MESSAGEID_POS + 2)
+                  I1AUX(4) = MESS_TO_OLM(MESSAGEID_POS + 3)
+                  I1AUX(5) = MESS_TO_OLM(MESSAGEID_POS + 4)
+                  OLMS_PUTMESFAI = I8AUX
+
                   CALL OPSTXT('??????????????  ERROR in sending to MessageQ   ????????????????????????')
 C ERRLOG   01/12/2021   ERRLOG  INVALID MESSAGE TYPE>  9 NUMBER>   4       --- TEOLM = 9           
                   CALL BUILD_MSG(MESS,1, OLM) 
@@ -605,7 +676,14 @@ C                  ENDDO
                   ELSE
                         OLMS_TOTTMOPUT = OLMS_TOTTMOPUT + 1      
                   ENDIF
-
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+            ELSE      
+                  I1AUX(1) = MESS_TO_OLM(MESSAGEID_POS + 0)
+                  I1AUX(2) = MESS_TO_OLM(MESSAGEID_POS + 1)
+                  I1AUX(3) = MESS_TO_OLM(MESSAGEID_POS + 2)
+                  I1AUX(4) = MESS_TO_OLM(MESSAGEID_POS + 3)
+                  I1AUX(5) = MESS_TO_OLM(MESSAGEID_POS + 4)
+                  OLMS_PUTMESSUC = I8AUX                  
             ENDIF
 
             OLMS_TOTOKYPUT = OLMS_TOTOKYPUT + 1

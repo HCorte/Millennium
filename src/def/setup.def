@@ -25,7 +25,7 @@ C
 	    INTEGER*4 BAKLOG                   ! BACKUP DISK LOGGING
 	    INTEGER*4 IPSCON                   ! CONNECT TO IPS
 	    INTEGER*4 GVTTIM                   ! GVT END TIME
-		INTEGER*4 EURCON		       ! EURO MIL CONNECT
+	    INTEGER*4 EURCON		       ! EURO MIL CONNECT
 C----+------------------------------------------------------------------
 C V02| Adding support for IGS
 C----+------------------------------------------------------------------
@@ -36,7 +36,8 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V03| Adding support for OLM
 C----+------------------------------------------------------------------
-            INTEGER*4 OLMCON		       ! NEW TERMINALS CONNECT
+	    INTEGER*4 OLMCON		       ! NEW TERMINALS CONNECT
+            INTEGER*4 REGLOG                   ! SUPRESS SCRIPT LOGS
 C----+------------------------------------------------------------------
 C V03| Adding support for OLM
 C----+------------------------------------------------------------------

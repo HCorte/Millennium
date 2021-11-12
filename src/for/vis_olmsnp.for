@@ -46,10 +46,6 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       LOCAL VARIABLES
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-        INTEGER*4  GSOLM    !GAME SUPRESS (LI, Totoloto and Totobola from Olimpo)
-        INTEGER*4  GSGRR    !GAME SUPRESS GAME RESULTS REPORT
-        INTEGER*4  GSICA    !GAME SUPRESS INTERNAL CANCELLATION
-
         INTEGER*4  ST
         INTEGER*4  KEYNUM        
 
@@ -70,7 +66,7 @@ C
         INTEGER*4  pidadr,STATLOG,STPROC,POS_AUX,STATDAY
 C        INTEGER*4  STATUSTRIM
         INTEGER*4  CURRENT_DAYS,FILE_DAYS
-        INTEGER*8  FILE_DAYS_AUX
+        INTEGER*4  FILE_DAYS_AUX !8 bytes in documentation
         INTEGER*1  FILE_DAYS_OLD
         INTEGER*4  FILES_DAY,FILESTAT
         INTEGER*4  ERROR_FILE_CONTEXT /0/,FILE_CONTEXT /0/,FILE_SCRIPT_CONT /0/
@@ -88,7 +84,7 @@ C        INTEGER*4  STATUSTRIM
         INTEGER*4  SYS$CREPRC,STR$ELEMENT,SYS$BINTIM,STR$TRIM          
 C        INTEGER*4  STR$ELEMENT,STR$TRIM,SIZE_AUX
         CHARACTER*40 MESSCON
-        LOGICAL    MILL_CON_STATUS /0/, REGLOG /1/, REGLOGER /1/  
+        LOGICAL    MILL_CON_STATUS /0/, REGLOG_LOCAL /1/, REGLOGER /1/, REGLOG_LOCAL_STATUS  
         LOGICAL    PURGE_LOG_VALIDATION /0/, ERR_PURGE_LOG_VALIDATION /0/     
         CHARACTER*20 PROCESS_ID,ERROR_PATH_AUX
         CHARACTER*15 OUTPUT_PATH_AUX
@@ -169,16 +165,27 @@ C
 C Register the output logs of Script run in process
 C
 507     CONTINUE
+        IF(P(REGLOG) .NE. 0) GOTO 212
         IF(VALUE.LT.0.OR.VALUE.GT.1) GOTO 211
-        REGLOG = VALUE       
-        GOTO 300
+C        CALL OPSTXT('Register the output logs of Script run in process')
+        REGLOG_LOCAL = VALUE    
+        BUF(1)=REGLOG
+        BUF(2)=2
+        BUF(3)=TCPAR
+        GOTO 250            
+C        GOTO 300
 C
 C Register the error logs of Script run in process
 C
 509     CONTINUE
+        IF(P(REGLOG) .NE. 0) GOTO 212
         IF(VALUE.LT.0.OR.VALUE.GT.1) GOTO 211
-        REGLOGER = VALUE       
-        GOTO 300
+        REGLOGER = VALUE    
+        BUF(1)=REGLOG
+        BUF(2)=3
+        BUF(3)=TCPAR
+        GOTO 250    
+C        GOTO 300
 
 C
 C INPUT ERROR
@@ -209,13 +216,19 @@ C
         WRITE(CLIN23,805)
 805     FORMAT('Invalid value (0-Disconnect 1-Connect /to Olimpo)')
 
-        RETURN
+        RETURN    
 
 211     CONTINUE
         WRITE(CLIN23,806)
-806     FORMAT('Invalid value (0-No Log 1-Log)')
+806     FORMAT('Invalid value (1-No Log(Suppress) 0-Log (NOT Suppress))')
 
-        RETURN        
+        RETURN 
+        
+212     CONTINUE
+        WRITE(CLIN23,807)
+807     FORMAT('Log registration already active or disabled by system')
+
+        RETURN         
 C
 C QUEUE COMMAND BUFFER TO SYSTEM INPUT INPUT QUEUE
 C     
@@ -248,13 +261,19 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C        What MessageQ MILL is connected to (Primary or Failover)                      C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
         IF(MILL_CON_STATUS .EQ. 0) THEN
-          IF(REGLOG .EQ. 0) THEN
+          IF(REGLOG_LOCAL .EQ. 0 .AND. REGLOGER .EQ. 1) THEN
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                
 C           BEGIN PURGE - AFTER 7 DAYS THE OLD LOGS ARE PURGE/DELETED FROM SYSTEM      C 
 C           SEARCHS FOR ALL FILES STARTING WITH "MILLCON" AND ENDS WITH VERSION 1      C
 C           EACH LOG FILE CONTAIN THE DATE OF CREATION DD-MMM-YY AS PART OF ITS NAME   C
 c           WITH IT VALIDATES THE AGE OF THE FILE                                      C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC         
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  
+C            P(REGLOG) = 2 
+C            BUF(1)=REGLOG
+C            BUF(2)=1
+C            BUF(3)=TCPAR    
+C            BUF(6)=IDNUM
+C            CALL VISCMD(BUF,ST)  
             IF(PURGE_LOG_VALIDATION .EQ. 0) THEN
                 STATDAY = LIB$DAY(CURRENT_DAYS)
                 DO WHILE(LIB$FIND_FILE("GXOLM:MILLCON*.LOG;1",FILES_NAMES_PATH,
@@ -276,7 +295,7 @@ C       Remove MAX_WRITES_LOG versions of the file in case its generated more th
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C      DELETE ALL VERSION'S OF FILES (KEPT 6 VERSIONS PER DAY) OBTAIN THE FILE NAME    C
 C      AND ADD THE VERSION FILE UP 6 FOR REMOVEL, usage of FILE_NAME_AUX is to         C   
-C      avoid the warning "Expression does not contribute to result"                    C                                                            C    
+C      avoid the warning "Expression does not contribute to result"                    C                                                                
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                        
                         DO WHILE(MAX_WRITES_LOG .LT. 7)
                           MAX_WRITES_LOG = MAX_WRITES_LOG + 1      
@@ -323,14 +342,21 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
              ENDIF
 
              IF(MAX_WRITES_LOG .EQ. 6) THEN 
-                 REGLOG = 1   
+                 REGLOG_LOCAL = 1   
+C                 P(REGLOG) = 0
                  MAX_WRITES_LOG = 0 
                  FILE_CONTEXT = 0
+                 BUF(1)=REGLOG
+                 BUF(2)=0
+                 BUF(3)=TCPAR    
+                 BUF(6)=IDNUM
+                 CALL VISCMD(BUF,ST)  
              ENDIF        
           ELSE
                 OUTPUT_PATH = "NLA0:" !its null device
           ENDIF
-          IF(REGLOGER .EQ. 0) THEN
+          IF(REGLOGER .EQ. 0 .AND. REGLOG_LOCAL .EQ. 1) THEN
+C            P(REGLOG) = 2    
 C           BEGIN PURGE - AFTER 7 DAYS THE OLD LOGS ARE PURGE/DELETED FROM SYSTEM                 
              IF(ERR_PURGE_LOG_VALIDATION .EQ. 0) THEN
                  STATDAY = LIB$DAY(CURRENT_DAYS)
@@ -392,13 +418,18 @@ C            END PURGE
 
              IF(MAX_WRITES_ERR .EQ. 6) THEN 
                  REGLOGER = 1    
+C                 P(REGLOG) = 0
+                 BUF(1)=REGLOG
+                 BUF(2)=0
+                 BUF(3)=TCPAR    
+                 BUF(6)=IDNUM
+                 CALL VISCMD(BUF,ST) 
                  MAX_WRITES_ERR = 0
              ENDIF                                            
           ELSE
                 ERROR_PATH = "NLA0:" !its null device
           ENDIF
 CCCCCCCCCC Confirm that the script exists CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-
 C                LIB$FIND_FILE("GXOLM:MESSAGEQCONNECTION.COM",,FILE_SCRIPT_CONT
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                        
 
@@ -425,7 +456,7 @@ C          IF(.NOT. STATLOG) CALL LIB$SIGNAL(%VAL(STATLOG))
           STATLOG = STR$ELEMENT(MESSCON,0,",",MILLCON)
           STATLOG = STR$ELEMENT(IP_ADDRESS,1,",",MILLCON)
           STATLOG = STR$ELEMENT(HOST,2,",",MILLCON)
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 
       ENDIF
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -480,17 +511,39 @@ C     *                        OLMS_ATTACHTIM                                   
         WRITE(CLIN13,9103) K(12)                                
        ENDIF
 
-       IF(OLMS_DETACHFLG.NE.0) THEN
-         WRITE(CLIN14,9108) K(13),REGLOG,         
+C       CALL OPSTXT('---------------------------------------------')
+C       CALL OPS('P(REGLOG)=',P(REGLOG),0)
+C       CALL OPS('REGLOG_LOCAL=',REGLOG_LOCAL,0)
+C       CALL OPSTXT('---------------------------------------------')
+
+       IF(P(REGLOG) .EQ. 2 .AND. REGLOG_LOCAL .EQ. 0) THEN
+             REGLOG_LOCAL_STATUS = 0
+       ELSEIF(P(REGLOG) .EQ. 2 .AND. REGLOG_LOCAL .EQ. 1) THEN
+            REGLOG_LOCAL_STATUS = 0    
+       ELSE
+            REGLOG_LOCAL_STATUS = 1  
+       ENDIF  
+
+       IF(OLMS_DETACHFLG.NE.0) THEN      
+         WRITE(CLIN14,9108) K(13),
+     *                        REGLOG_LOCAL_STATUS,         
      *                        OLMS_DETACHDAT(3),                                !LAST DAY DETACHED (DD)
      *                        OLMS_DETACHDAT(2),                                !LAST MONTH DETACHED (MM)
      *                        OLMS_DETACHDAT(1),                                !LAST YEAR DETACHED (YYYY)
      *                        OLMS_DETACHTIM                                    !LAST TIME DETACHED (H24:MI:SS)
        ELSE                                                                  !DETACH HAS NOT BEEN DONE
-        WRITE(CLIN14,9106) K(13),REGLOG
+        WRITE(CLIN14,9106) K(13),REGLOG_LOCAL_STATUS
        ENDIF
 
-       WRITE(CLIN15,9107) K(14),REGLOGER
+       IF(P(REGLOG) .EQ. 3 .AND. REGLOGER .EQ. 0) THEN
+            REGLOG_LOCAL_STATUS = 0
+       ELSEIF(P(REGLOG) .EQ. 3 .AND. REGLOGER .EQ. 1) THEN
+            REGLOG_LOCAL_STATUS = 0    
+       ELSE
+            REGLOG_LOCAL_STATUS = 1  
+       ENDIF
+
+       WRITE(CLIN15,9107) K(14),REGLOG_LOCAL_STATUS
 
 C       IF(IP_ADDRESS .EQ. 'ERR') THEN
 C         WRITE(CLIN16,923) MESSCON

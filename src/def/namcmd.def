@@ -1,6 +1,7 @@
 C NAMCMD.DEF
 C 
 C V41 14-JUL-2021 SCML New Terminals Project OLMCONF command name added
+C                      as well REGLOG to control the logs
 C V40 31-MAR-2016 SCML M16 PROJECT: added new euromillions command names:
 C                      EUMILF, EUSPWAG, EUSPCAN, EUSPVAL, EUTIMOUT, EUSPGRR, 
 C                      EUSPBIR, EUSPICA, EUSPFIR, EUSPGWAG, EUSPGGRR and EUSPGICA
@@ -145,7 +146,7 @@ C----+---+-------------+------------------------------------------------
 C V41|BEG| TERMINALS PROJECT | ADDED NEW OLIMPO COMMAND NAME
 C----+---+-------------+------------------------------------------------  
 C     *              'PSUPRSL','        ','         ','        ',   
-     *              'PSUPRSL','        ','OLMCONF  ','        ',
+     *              'PSUPRSL','        ','OLMCONF  ','REGLOG   ',
 C----+---+-------------+------------------------------------------------
 C V41|BEG| TERMINALS PROJECT | ADDED NEW OLIMPO COMMAND NAME
 C----+---+-------------+------------------------------------------------         
