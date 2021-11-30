@@ -1,0 +1,885 @@
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE     1
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF 
+    FILE NAME -----------> draw:TOTO7494.FIL   
+    TAPE DRIVE ---------->                     
+    TERMINAL NUMBER -----> ALL 
+    EXCLUDE EM TRX ------> YES
+    EXCLUDE IGS TRX -----> YES
+    EUROMIL EXT SER # --->             
+    PLACARD EXT SER # --->                         
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL  
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE     1
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+     OLM Channel > Yes   Message ID > 82393   OLM Serial # > 211105-01-4153279764-408
+  GOOD  NOER   WAG  32000027 12:56:44  4547   C  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82401   OLM Serial # > 211105-01-0291247330-801
+  GOOD  NOER   WAG  32000063 13:37:51  4547   8  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82403   OLM Serial # > 211105-01-1774133811-276
+  GOOD  NOER   WAG  32000069 13:42:51  4547   A  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82437   OLM Serial # > 211105-01-9439221067-564
+  GOOD  NOER   WAG  32000113 13:55:07  4547   B  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82648   OLM Serial # > 211105-01-5370766991-728
+  VOID  NOER   WAG  32000374 15:26:01  4042   B  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000376  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82650   OLM Serial # > 211105-01-7676190929-707
+  VOID  NOER   WAG  32000379 15:26:25  4042   D  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000381  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82652   OLM Serial # > 211105-01-9981614867-686
+  VOID  NOER   WAG  32000384 15:26:37  4042   F  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000387  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                              TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE     2
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82654   OLM Serial # > 211105-01-2287038805-935
+  VOID  NOER   WAG  32000390 15:26:48  4042   9  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000392  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 82702   OLM Serial # > 211105-01-2228061193-015
+  GOOD  NOER   WAG  32000493 15:29:18  4042   9  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82703   OLM Serial # > 211105-01-8380773162-368
+  GOOD  NOER   WAG  32000495 15:29:21  4042   A  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82704   OLM Serial # > 211105-01-4533485131-991
+  GOOD  NOER   WAG  32000497 15:29:24  4042   B  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82705   OLM Serial # > 211105-01-0686197100-617
+  GOOD  NOER   WAG  32000499 15:29:27  4042   C  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                              TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE     3
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82706   OLM Serial # > 211105-01-6838909069-970
+  GOOD  NOER   WAG  32000501 15:29:29  4042   D  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82707   OLM Serial # > 211105-01-2991621038-596
+  GOOD  NOER   WAG  32000504 15:29:32  4042   E  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 82708   OLM Serial # > 211105-01-9144333007-949
+  GOOD  NOER   WAG  32000508 15:29:34  4042   F  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 82797   OLM Serial # > 211105-01-4459763116-838
+  VOID  NOER   WAG  32000613 15:42:13  4042   F  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000615  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82799   OLM Serial # > 211105-01-6765187054-817
+  VOID  NOER   WAG  32000618 15:42:26  4042   9  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000620  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82801   OLM Serial # > 211105-01-9070610992-796
+  VOID  NOER   WAG  32000623 15:42:38  4042   B  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000626  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE     4
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82803   OLM Serial # > 211105-01-1376034930-048
+  VOID  NOER   WAG  32000629 15:42:51  4042   D  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000631  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 82851   OLM Serial # > 211105-01-9011633380-873
+  GOOD  NOER   WAG  32000732 15:45:45  4042   D  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82852   OLM Serial # > 211105-01-5164345349-499
+  GOOD  NOER   WAG  32000734 15:45:48  4042   E  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82853   OLM Serial # > 211105-01-1317057318-125
+  GOOD  NOER   WAG  32000736 15:45:51  4042   F  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82854   OLM Serial # > 211105-01-7469769287-478
+  GOOD  NOER   WAG  32000738 15:45:54  4042   8  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                              TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE     5
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82855   OLM Serial # > 211105-01-3622481256-104
+  GOOD  NOER   WAG  32000741 15:45:57  4042   9  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82856   OLM Serial # > 211105-01-2080617163-706
+  GOOD  NOER   WAG  32000744 15:46:00  4042   A  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 82857   OLM Serial # > 211105-01-8233329132-062
+  GOOD  NOER   WAG  32000746 15:46:03  4042   B  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 82891   OLM Serial # > 211105-01-4356552295-225
+  VOID  NOER   WAG  32000798 15:51:03  4042   D  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000802  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82894   OLM Serial # > 211105-01-2814688202-827
+  VOID  NOER   WAG  32000805 15:51:15  4042   8  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000807  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                              TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE     6
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                                                                                  
+     OLM Channel > Yes   Message ID > 82896   OLM Serial # > 211105-01-5120112140-806
+  VOID  NOER   WAG  32000810 15:51:25  4042   A  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000813  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82898   OLM Serial # > 211105-01-7425536078-785
+  VOID  NOER   WAG  32000816 15:51:36  4042   C  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000818  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 82923   OLM Serial # > 211105-01-1243335303-969
+  GOOD  NOER   WAG  32000871 15:53:05  1985   F  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X-                             SYS TYPE >    FULL   ROWS >     2
+                                                                                  
+     OLM Channel > Yes   Message ID > 82949   OLM Serial # > 211105-01-4282830280-072
+  GOOD  NOER   WAG  32000924 15:54:45  4042   C  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82950   OLM Serial # > 211105-01-0435542249-695
+  GOOD  NOER   WAG  32000926 15:54:52  4042   D  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82951   OLM Serial # > 211105-01-6588254218-051
+  GOOD  NOER   WAG  32000928 15:54:58  4042   E  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                              TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE     7
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82952   OLM Serial # > 211105-01-2740966187-674
+  GOOD  NOER   WAG  32000930 15:55:01  4042   F  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82953   OLM Serial # > 211105-01-8893678156-030
+  GOOD  NOER   WAG  32000933 15:55:04  4042   8  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 82954   OLM Serial # > 211105-01-5046390125-653
+  GOOD  NOER   WAG  32000936 15:55:07  4042   9  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 82955   OLM Serial # > 211105-01-1199102094-279
+  GOOD  NOER   WAG  32000938 15:55:10  4042   A  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 82992   OLM Serial # > 211105-01-0347075831-312
+  GOOD  NOER   WAG  32001004 16:26:31  1985   8  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE     8
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X-                             SYS TYPE >    FULL   ROWS >     2
+                                                                                  
+     OLM Channel > Yes   Message ID > 82996   OLM Serial # > 211105-01-5706739149-621
+  VOID  NOER   WAG  32001016 16:28:36  1985   C  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32001018  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X-                             SYS TYPE >    FULL   ROWS >     2
+                                                                                  
+     OLM Channel > Yes   Message ID > 83057   OLM Serial # > 211105-01-5618272731-238
+  GOOD  NOER   WAG  32001108 17:15:45  4547   E  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83060   OLM Serial # > 211105-01-0229120607-466
+  VOID  NOER   WAG  32001115 17:18:50  3355   A  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32001117  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83062   OLM Serial # > 211105-01-2534544545-445
+  VOID  NOER   WAG  32001120 17:19:03  3355   C  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32001122  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83064   OLM Serial # > 211105-01-4839968483-424
+  VOID  NOER   WAG  32001125 17:19:16  3355   E  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32001126  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83066   OLM Serial # > 211105-01-3298104390-029
+  VOID  NOER   WAG  32001129 17:19:28  3355   8  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32001131  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                       TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE     9
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+     OLM Channel > Yes   Message ID > 83131   OLM Serial # > 211105-01-0140654189-083
+  GOOD  NOER   WAG  32001245 17:22:18  3355   8  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83132   OLM Serial # > 211105-01-6293366158-436
+  GOOD  NOER   WAG  32001247 17:22:21  3355   9  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83133   OLM Serial # > 211105-01-2446078127-062
+  GOOD  NOER   WAG  32001249 17:22:24  3355   A  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83134   OLM Serial # > 211105-01-8598790096-415
+  GOOD  NOER   WAG  32001251 17:22:27  3355   B  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83135   OLM Serial # > 211105-01-4751502065-041
+  GOOD  NOER   WAG  32001254 17:22:30  3355   C  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                              TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE    10
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83136   OLM Serial # > 211105-01-0904214034-664
+  GOOD  NOER   WAG  32001257 17:22:32  3355   D  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 83137   OLM Serial # > 211105-01-7056926003-020
+  GOOD  NOER   WAG  32001259 17:22:35  3355   E  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 83174   OLM Serial # > 211105-01-2401844918-369
+  VOID  NOER   WAG  32001319 17:33:22  3355   9  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32001321  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83176   OLM Serial # > 211105-01-4707268856-348
+  VOID  NOER   WAG  32001324 17:33:32  3355   B  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32001326  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83178   OLM Serial # > 211105-01-7012692794-327
+  VOID  NOER   WAG  32001329 17:33:43  3355   D  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32001332  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                       TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE    11
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+     OLM Channel > Yes   Message ID > 83180   OLM Serial # > 211105-01-9318116732-306
+  VOID  NOER   WAG  32001335 17:33:54  3355   F  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32001337  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 83228   OLM Serial # > 211105-01-6953715182-404
+  GOOD  NOER   WAG  32001438 17:36:22  3355   F  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83229   OLM Serial # > 211105-01-3106427151-030
+  GOOD  NOER   WAG  32001440 17:36:25  3355   8  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83230   OLM Serial # > 211105-01-9259139120-383
+  GOOD  NOER   WAG  32001442 17:36:27  3355   9  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83231   OLM Serial # > 211105-01-5411851089-009
+  GOOD  NOER   WAG  32001444 17:36:30  3355   A  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83232   OLM Serial # > 211105-01-1564563058-632
+  GOOD  NOER   WAG  32001447 17:36:33  3355   B  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE    12
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83233   OLM Serial # > 211105-01-7717275027-985
+  GOOD  NOER   WAG  32001450 17:36:35  3355   C  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 83234   OLM Serial # > 211105-01-3869986996-611
+  GOOD  NOER   WAG  32001452 17:36:37  3355   D  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 83702   OLM Serial # > 211108-01-9341307316-567
+  VOID  NOER   WAG  32003928 09:26:22  3355   8  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32003930  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83704   OLM Serial # > 211108-01-1646731254-816
+  VOID  NOER   WAG  32003933 09:26:42  3355   A  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32003935  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83706   OLM Serial # > 211108-01-3952155192-795
+  VOID  NOER   WAG  32003938 09:26:55  3355   C  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32003941  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                              TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE    13
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83708   OLM Serial # > 211108-01-6257579130-774
+  VOID  NOER   WAG  32003944 09:27:06  3355   E  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32003946  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 83756   OLM Serial # > 211108-01-2336569084-247
+  GOOD  NOER   WAG  32004045 09:29:44  3355   E  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83757   OLM Serial # > 211108-01-8489281053-600
+  GOOD  NOER   WAG  32004047 09:29:46  3355   F  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: -X-                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83758   OLM Serial # > 211108-01-4641993022-226
+  GOOD  NOER   WAG  32004049 09:29:49  3355   8  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83759   OLM Serial # > 211108-01-0794704991-849
+  GOOD  NOER   WAG  32004051 09:29:51  3355   9  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                              TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:58:35 PAGE    14
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                                                                                  
+     OLM Channel > Yes   Message ID > 83760   OLM Serial # > 211108-01-6947416960-205
+  GOOD  NOER   WAG  32004054 09:29:54  3355   A  7494    1 Sports      1    3 1065 THRU  1065     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: --2                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- -X-                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1--                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- --2 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- -X- 1-- 1-- -X- 1-- 1-- --2 1-- 1-- --2                         
+      -X- --2 1-- 1-- 1-- 1-- 1-- --2 1-- --2 1-- 1-- --2                         
+                                                                                  
+     OLM Channel > Yes   Message ID > 83761   OLM Serial # > 211108-01-3100128929-828
+  GOOD  NOER   WAG  32004057 09:29:57  3355   B  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+     OLM Channel > Yes   Message ID > 83762   OLM Serial # > 211108-01-9252840898-184
+  GOOD  NOER   WAG  32004059 09:29:59  3355   C  7494    1 Sports      1    2 1065 THRU  1065     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7494
+      SUPER 14: 1--                                                                         
+      1X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1X2                             SYS TYPE >    FULL   ROWS >     6
+                                                                                  
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales               49              133.00            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       0                0.00            0.00            0.00            0.00            0.00
+
+Total Instant Message Transactions 
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        0
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          0
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions          0
+
+Total Passive Returns and Validations 
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0                
+Total IGS Transactions          0

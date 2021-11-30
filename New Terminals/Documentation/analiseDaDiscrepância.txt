@@ -1,0 +1,163 @@
+C     DSPSAL(SPGENT)                 ;SALES DATA                             -----------  dsprec.def   
+
+C     LSPSAL(SPGENT,NUMSPT)          ;SALES DATA                      -----------  lsprec.def
+
+PARAMETER(TGGENT = 25)         ! NUMBER OF SALES ENTRIES  -----------  prmtgl.def
+
+
+
+----------------------------------------------------------------------------------------------
+
+ condição em win_pstgdf.for
+
+
+
+C SPORTS GAMES
+
+....
+
+C
+
+C COMPARE WINSEL SALES FIGURES WITH DAILY SALES FIGURES
+
+C
+
+    DO 1100 DAY=1,SPGENT
+
+    IF(DAY.EQ.2) THEN
+
+        LSPSAL(DAY,GIND) = LSPSAL(DAY,GIND) + DSPSAL(DAY)
+
+        GOTO 1100
+
+    ENDIF
+
+
+
+    IF(DSPSAL(DAY).NE.LSPSAL(DAY,GIND).AND.DAY.NE.2) THEN
+
+      WRITE(6,901) IAM(),GTNAMES(TSPT),GIND,DAY,
+
+     *                 CMONY(DSPSAL(DAY),12,BETUNIT),
+
+     *             CMONY(LSPSAL(DAY,GIND),12,BETUNIT)
+
+      CALL GPAUSE
+
+    ENDIF
+
+1100    CONTINUE
+
+
+
+C
+
+C UPDATE ADVANCE SALES FOR NEXT DRAW
+
+C
+
+    DSPSAL(1)=SADVSAL(GIND)
+
+
+
+------------------------- nrm_gamlog.for ---------------------------
+
+C
+
+C CONVERT SPORTS GAME RECORD
+
+C
+
+        CALL FASTMOV(LSPSAL(1,GIND),DSPSAL,SPGENT)
+
+
+
+
+
+-------------------------  nrm_loggam.for --------------------------
+
+C
+
+C CONVERT SPORTS GAME RECORD
+
+C
+
+        CALL FASTMOV(DSPSAL,LSPSAL(1,GIND),SPGENT)
+
+
+
+--------------------------cnvspt.for----------------------------
+
+
+
+    ENDDO
+
+    DO I=1,SPGENT
+
+        DSPSAL(I) = ODSPSAL(I)  
+
+    ENDDO
+
+
+
+--------------------------dsprec_old.def ----------------------
+
+C     ODSPSAL(SPGENT)                 ;SALES DATA
+
+
+
+
+
+--------------------------cmdspt.for---------------------------
+C ******************************************************************************
+C
+C     SUBROUTINE: CHANGE_THE_DRAW_DATE_TO_TODAY
+C     AUTHOR    : J.H.R
+C     VERSION   : 01            DATE: 03 / 04 / 2017
+C
+C ******************************************************************************
+C
+C FUNCTION TO CHANGE THE DRAW DATE TO TODAY DUE THE DRAW HAS BEEN CANCELLED
+...
+...
+C
+
+C MOVE SALES TABLE BY DAY ACCODING WITH THE NEW DRAW DATE -- SET THE SALES IN THE CORRECT DAY --
+
+C
+
+      DO IDX = 3, SPGENT
+
+         IF(IDX + DATE_OFFSET .LE.  SPGENT) THEN
+
+            DSPSAL(IDX) = DSPSAL(IDX + DATE_OFFSET)
+
+         ELSE
+
+            DSPSAL(IDX) = 0   ! NO MORE SALES TO BE MOVED, SO RESET THE VALUE
+
+         ENDIF
+
+      ENDDO
+
+C
+
+      IF(DRAW_IN_MEM) CALL FASTMOV(DSPSAL(1), SPTSAL(1, GIND), SPGENT)
+
+------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
+wagpro.for ---> updsub.for
+
+DAYTYP 
+C    DAYTYP(NUMTOT,NUMFIN,MAXGAM)  FINANCIAL TOTALS BY TYPE       300
+
+
+
+
+
+show logical FILE
+FILE:asf.fil - agent sales files
+
+FILE:*.*.FIL
