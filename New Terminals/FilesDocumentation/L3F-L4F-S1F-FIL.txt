@@ -1,0 +1,18 @@
+LLTREC of each game (DLTREC for Totoloto,DSPREC for Totobola) where the structer haves information about
+each game including Sales data (DLTSAL(SPGENT),DSPSAL(SPGENT) each respective field of the games) 
+
+This struct corresponds to record read from the binary files with the use of RMS (Record Management Services)
+and RAB (Record Access Block) that the buffer that is use to write the data/record read  is the
+DLTREC or DSPREC for each file L3F.FIL/L4F.FIL and S1F.FIL the position of the Record is obtain 
+by the draw since the record contain the information of that draw.
+
+This files can be found in the gxtsk directory (TSK), and contains information about WINSEL that 
+is information about Winner Selection.
+
+
+DLTSAL contains SALES DATA and is array of SPGENT size that is 25 positions each means a day
+1º -> Advance
+2º -> Offline
+3º -> last day of the draw if its Totoloto de Sabado its a Saturday thats 06.11.2021 for example
+4º -> 
+
