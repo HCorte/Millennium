@@ -6,7 +6,7 @@
 	],
 	"settings": {
 		"files.associations": {
-			"*.def": "fortran_fixed-form",
+			"*.def": "FortranFixedForm",
 			"*.h_file_content": "c"
 		},
 		"vmssoftware.project-dep.buildName": "DEBUG"
