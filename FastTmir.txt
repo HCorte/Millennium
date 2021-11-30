@@ -3,7 +3,7 @@ r tmir
 d
 t
 prim:mtmf01.fil
-Henrique-24-10-2021
+Henrique-28-11-2021
 a
 y
 y
@@ -13,6 +13,76 @@ a
 d
 n
 a
+
+
+------------------
+r tmir
+d
+d
+draw:TOTO7496.FIL
+TOTO-07-11-2021
+a
+y
+y
+a
+a
+a
+d
+n
+a
+
+copy TOTO-07-11-2021.dat  gxolm:TOTO-07-11-2021.dat
+
+------------------
+r tmir
+d
+d
+draw:LOTS7499.FIL
+LOTS-10-11-2021
+a
+y
+y
+a
+a
+a
+d
+n
+a
+
+copy LOTS-10-11-2021.dat  gxolm:LOTS-10-11-2021.dat
+
+------------------
+r tmir
+d
+d
+draw:LOTQ7504.FIL
+LOTQ-15-11-2021
+a
+y
+y
+a
+a
+a
+d
+n
+a
+
+copy LOTQ-15-11-2021.dat  gxolm:LOTQ-15-11-2021.dat
+
+---------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 r tmir
