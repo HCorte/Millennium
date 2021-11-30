@@ -1,0 +1,736 @@
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE     1
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF 
+    FILE NAME -----------> draw:LOTS7487.FIL   
+    TAPE DRIVE ---------->                     
+    TERMINAL NUMBER -----> ALL 
+    EXCLUDE EM TRX ------> YES
+    EXCLUDE IGS TRX -----> YES
+    EUROMIL EXT SER # --->             
+    PLACARD EXT SER # --->                         
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL  
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE     1
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+     OLM Channel > Yes   Message ID > 79459   OLM Serial # > 211029-06-0683647233-070
+  VOID  NOER   WAG  32000225 15:27:15  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000227  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79476   OLM Serial # > 211029-06-5279750706-795
+  GOOD  NOER   WAG  32000263 15:28:13  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79477   OLM Serial # > 211029-06-1432462675-421
+  GOOD  NOER   WAG  32000265 15:28:16  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 07 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79478   OLM Serial # > 211029-06-7585174644-774
+  GOOD  NOER   WAG  32000267 15:28:18  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 07 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79479   OLM Serial # > 211029-06-3737886613-400
+  GOOD  NOER   WAG  32000269 15:28:21  4042   A  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 07                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79480   OLM Serial # > 211029-06-9890598582-753
+  GOOD  NOER   WAG  32000271 15:28:23  4042   B  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79481   OLM Serial # > 211029-06-6043310551-379
+  GOOD  NOER   WAG  32000273 15:28:26  4042   C  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79482   OLM Serial # > 211029-06-2196022520-005
+  GOOD  NOER   WAG  32000275 15:28:28  4042   D  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         07 09 12 21 33                                           
+   Lucky Number  1                                                                     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE     2
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                                                                                  
+     OLM Channel > Yes   Message ID > 79483   OLM Serial # > 211029-06-8348734489-358
+  GOOD  NOER   WAG  32000277 15:28:30  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79484   OLM Serial # > 211029-06-4501446458-981
+  GOOD  NOER   WAG  32000279 15:28:33  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 07 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79485   OLM Serial # > 211029-06-0654158427-607
+  GOOD  NOER   WAG  32000281 15:28:35  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 07 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79486   OLM Serial # > 211029-06-2959582365-586
+  GOOD  NOER   WAG  32000283 15:28:38  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 07                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79497   OLM Serial # > 211029-06-0639414024-377
+  GOOD  NOER   WAG  32000305 15:29:04  4042   C  7487    6 Lotto       3    2  555 THRU   555     --NONE--        5.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79498   OLM Serial # > 211029-06-6792125993-730
+  GOOD  NOER   WAG  32000307 15:29:07  4042   D  7487    6 Lotto       3    2  555 THRU   555     --NONE--       18.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07                                         SYS TYPE >    FULL   ROWS >    21
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79499   OLM Serial # > 211029-06-2944837962-356
+  GOOD  NOER   WAG  32000309 15:29:09  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--       50.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08                                      SYS TYPE >    FULL   ROWS >    56
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79500   OLM Serial # > 211029-06-9097549931-709
+  GOOD  NOER   WAG  32000311 15:29:12  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--      113.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE     3
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05 06 07 08 09                                   SYS TYPE >    FULL   ROWS >   126
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79501   OLM Serial # > 211029-06-5250261900-335
+  GOOD  NOER   WAG  32000313 15:29:14  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--      226.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09 10                                SYS TYPE >    FULL   ROWS >   252
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79502   OLM Serial # > 211029-06-1402973869-958
+  GOOD  NOER   WAG  32000315 15:29:16  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--      415.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09 10 11                             SYS TYPE >    FULL   ROWS >   462
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79547   OLM Serial # > 211029-06-3664164598-247
+  VOID  NOER   WAG  32000397 15:36:57  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000399  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79564   OLM Serial # > 211029-06-4412980040-598
+  GOOD  NOER   WAG  32000434 15:37:55  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79565   OLM Serial # > 211029-06-0565692009-224
+  GOOD  NOER   WAG  32000436 15:37:57  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 07 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79566   OLM Serial # > 211029-06-6718403978-577
+  GOOD  NOER   WAG  32000438 15:37:59  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 07 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79567   OLM Serial # > 211029-06-2871115947-203
+  GOOD  NOER   WAG  32000440 15:38:02  4042   A  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 07                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79568   OLM Serial # > 211029-06-9023827916-556
+  GOOD  NOER   WAG  32000442 15:38:04  4042   B  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE     4
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79569   OLM Serial # > 211029-06-5176539885-182
+  GOOD  NOER   WAG  32000444 15:38:07  4042   C  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79570   OLM Serial # > 211029-06-1329251854-805
+  GOOD  NOER   WAG  32000446 15:38:09  4042   D  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         07 09 12 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79571   OLM Serial # > 211029-06-7481963823-161
+  GOOD  NOER   WAG  32000448 15:38:11  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79572   OLM Serial # > 211029-06-3634675792-784
+  GOOD  NOER   WAG  32000450 15:38:14  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 07 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79573   OLM Serial # > 211029-06-9787387761-140
+  GOOD  NOER   WAG  32000452 15:38:16  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 07 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79574   OLM Serial # > 211029-06-5940099730-763
+  GOOD  NOER   WAG  32000454 15:38:19  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 07                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79585   OLM Serial # > 211029-06-3619931389-554
+  GOOD  NOER   WAG  32000478 15:38:47  4042   C  7487    6 Lotto       3    2  555 THRU   555     --NONE--        5.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79586   OLM Serial # > 211029-06-9772643358-907
+  GOOD  NOER   WAG  32000480 15:38:50  4042   D  7487    6 Lotto       3    2  555 THRU   555     --NONE--       18.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE     5
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05 06 07                                         SYS TYPE >    FULL   ROWS >    21
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79587   OLM Serial # > 211029-06-5925355327-533
+  GOOD  NOER   WAG  32000482 15:38:53  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--       50.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08                                      SYS TYPE >    FULL   ROWS >    56
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79588   OLM Serial # > 211029-06-2078067296-159
+  GOOD  NOER   WAG  32000484 15:38:56  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--      113.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09                                   SYS TYPE >    FULL   ROWS >   126
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79589   OLM Serial # > 211029-06-8230779265-512
+  GOOD  NOER   WAG  32000486 15:38:59  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--      226.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09 10                                SYS TYPE >    FULL   ROWS >   252
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79590   OLM Serial # > 211029-06-4383491234-138
+  GOOD  NOER   WAG  32000488 15:39:02  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--      415.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09 10 11                             SYS TYPE >    FULL   ROWS >   462
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79635   OLM Serial # > 211029-06-5088073467-796
+  VOID  NOER   WAG  32000572 15:46:52  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000574  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79652   OLM Serial # > 211029-06-9684176940-524
+  GOOD  NOER   WAG  32000609 15:47:49  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79653   OLM Serial # > 211029-06-5836888909-150
+  GOOD  NOER   WAG  32000611 15:47:51  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 07 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79654   OLM Serial # > 211029-06-1989600878-773
+  GOOD  NOER   WAG  32000613 15:47:53  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE     6
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 07 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79655   OLM Serial # > 211029-06-8142312847-129
+  GOOD  NOER   WAG  32000615 15:47:56  4042   A  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 07                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79656   OLM Serial # > 211029-06-4295024816-752
+  GOOD  NOER   WAG  32000617 15:47:58  4042   B  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79657   OLM Serial # > 211029-06-0447736785-378
+  GOOD  NOER   WAG  32000619 15:48:00  4042   C  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79658   OLM Serial # > 211029-06-6600448754-731
+  GOOD  NOER   WAG  32000621 15:48:02  4042   D  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         07 09 12 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79659   OLM Serial # > 211029-06-2753160723-357
+  GOOD  NOER   WAG  32000623 15:48:05  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79660   OLM Serial # > 211029-06-8905872692-710
+  GOOD  NOER   WAG  32000625 15:48:07  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 07 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79661   OLM Serial # > 211029-06-5058584661-336
+  GOOD  NOER   WAG  32000626 15:48:10  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 07 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79662   OLM Serial # > 211029-06-1211296630-959
+  GOOD  NOER   WAG  32000628 15:48:12  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE     7
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 07                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79673   OLM Serial # > 211029-06-8891128289-480
+  GOOD  NOER   WAG  32000650 15:48:38  4042   C  7487    6 Lotto       3    2  555 THRU   555     --NONE--        5.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79674   OLM Serial # > 211029-06-5043840258-106
+  GOOD  NOER   WAG  32000652 15:48:40  4042   D  7487    6 Lotto       3    2  555 THRU   555     --NONE--       18.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07                                         SYS TYPE >    FULL   ROWS >    21
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79675   OLM Serial # > 211029-06-1196552227-729
+  GOOD  NOER   WAG  32000654 15:48:43  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--       50.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08                                      SYS TYPE >    FULL   ROWS >    56
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79676   OLM Serial # > 211029-06-7349264196-085
+  GOOD  NOER   WAG  32000656 15:48:45  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--      113.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09                                   SYS TYPE >    FULL   ROWS >   126
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79677   OLM Serial # > 211029-06-3501976165-708
+  GOOD  NOER   WAG  32000658 15:48:48  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--      226.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09 10                                SYS TYPE >    FULL   ROWS >   252
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79678   OLM Serial # > 211029-06-9654688134-064
+  GOOD  NOER   WAG  32000660 15:48:50  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--      415.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09 10 11                             SYS TYPE >    FULL   ROWS >   462
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79723   OLM Serial # > 211029-06-1915878863-620
+  VOID  NOER   WAG  32000745 15:57:31  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000747  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79740   OLM Serial # > 211029-06-6511982336-348
+  GOOD  NOER   WAG  32000781 15:58:28  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE     8
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 07 09 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79741   OLM Serial # > 211029-06-2664694305-971
+  GOOD  NOER   WAG  32000783 15:58:30  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 07 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79742   OLM Serial # > 211029-06-8817406274-327
+  GOOD  NOER   WAG  32000785 15:58:32  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 07 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79743   OLM Serial # > 211029-06-4970118243-950
+  GOOD  NOER   WAG  32000787 15:58:35  4042   A  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 07                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79744   OLM Serial # > 211029-06-1122830212-576
+  GOOD  NOER   WAG  32000789 15:58:37  4042   B  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79745   OLM Serial # > 211029-06-7275542181-929
+  GOOD  NOER   WAG  32000791 15:58:39  4042   C  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79746   OLM Serial # > 211029-06-3428254150-555
+  GOOD  NOER   WAG  32000793 15:58:41  4042   D  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         07 09 12 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79747   OLM Serial # > 211029-06-9580966119-908
+  GOOD  NOER   WAG  32000795 15:58:44  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79748   OLM Serial # > 211029-06-5733678088-534
+  GOOD  NOER   WAG  32000797 15:58:46  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE     9
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 07 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79749   OLM Serial # > 211029-06-1886390057-160
+  GOOD  NOER   WAG  32000799 15:58:48  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 07 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79750   OLM Serial # > 211029-06-8039102026-513
+  GOOD  NOER   WAG  32000801 15:58:51  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 07                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79761   OLM Serial # > 211029-06-5718933685-304
+  GOOD  NOER   WAG  32000823 15:59:16  4042   C  7487    6 Lotto       3    2  555 THRU   555     --NONE--        5.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79762   OLM Serial # > 211029-06-1871645654-927
+  GOOD  NOER   WAG  32000825 15:59:19  4042   D  7487    6 Lotto       3    2  555 THRU   555     --NONE--       18.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07                                         SYS TYPE >    FULL   ROWS >    21
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79763   OLM Serial # > 211029-06-8024357623-283
+  GOOD  NOER   WAG  32000829 15:59:21  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--       50.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08                                      SYS TYPE >    FULL   ROWS >    56
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79764   OLM Serial # > 211029-06-4177069592-906
+  GOOD  NOER   WAG  32000831 15:59:23  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--      113.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09                                   SYS TYPE >    FULL   ROWS >   126
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79765   OLM Serial # > 211029-06-0329781561-532
+  GOOD  NOER   WAG  32000833 15:59:26  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--      226.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09 10                                SYS TYPE >    FULL   ROWS >   252
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79766   OLM Serial # > 211029-06-6482493530-885
+  GOOD  NOER   WAG  32000835 15:59:28  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--      415.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE    10
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05 06 07 08 09 10 11                             SYS TYPE >    FULL   ROWS >   462
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79811   OLM Serial # > 211029-06-7950635608-130
+  VOID  NOER   WAG  32000923 16:11:47  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000925  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79828   OLM Serial # > 211029-06-4852163019-107
+  GOOD  NOER   WAG  32000960 16:12:45  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79829   OLM Serial # > 211029-06-1004874988-730
+  GOOD  NOER   WAG  32000962 16:12:48  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 07 21 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79830   OLM Serial # > 211029-06-7157586957-086
+  GOOD  NOER   WAG  32000964 16:12:50  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 07 33                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79831   OLM Serial # > 211029-06-3310298926-709
+  GOOD  NOER   WAG  32000966 16:12:52  4042   A  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 07                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79832   OLM Serial # > 211029-06-9463010895-065
+  GOOD  NOER   WAG  32000968 16:12:54  4042   B  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05                                           
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79833   OLM Serial # > 211029-06-5615722864-688
+  GOOD  NOER   WAG  32000970 16:12:57  4042   C  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79834   OLM Serial # > 211029-06-1768434833-314
+  GOOD  NOER   WAG  32000972 16:12:59  4042   D  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE    11
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         07 09 12 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79835   OLM Serial # > 211029-06-7921146802-667
+  GOOD  NOER   WAG  32000974 16:13:02  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 07 09 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79836   OLM Serial # > 211029-06-4073858771-293
+  GOOD  NOER   WAG  32000976 16:13:04  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 07 21 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79837   OLM Serial # > 211029-06-0226570740-916
+  GOOD  NOER   WAG  32000978 16:13:06  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 07 33                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79838   OLM Serial # > 211029-06-6379282709-272
+  GOOD  NOER   WAG  32000980 16:13:09  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--        0.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 07                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79849   OLM Serial # > 211029-06-4059114368-063
+  GOOD  NOER   WAG  32001001 16:13:35  4042   C  7487    6 Lotto       3    2  555 THRU   555     --NONE--        5.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79850   OLM Serial # > 211029-06-0211826337-686
+  GOOD  NOER   WAG  32001003 16:13:37  4042   D  7487    6 Lotto       3    2  555 THRU   555     --NONE--       18.90    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07                                         SYS TYPE >    FULL   ROWS >    21
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79851   OLM Serial # > 211029-06-6364538306-042
+  GOOD  NOER   WAG  32001005 16:13:40  4042   E  7487    6 Lotto       3    2  555 THRU   555     --NONE--       50.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08                                      SYS TYPE >    FULL   ROWS >    56
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79852   OLM Serial # > 211029-06-2517250275-665
+  GOOD  NOER   WAG  32001007 16:13:42  4042   F  7487    6 Lotto       3    2  555 THRU   555     --NONE--      113.40    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                15:04:39 PAGE    12
+ 22.11.2021                               T R A N S A C T I O N   F I L E   R E P O R T                         22.11.2021 CDC 7511
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05 06 07 08 09                                   SYS TYPE >    FULL   ROWS >   126
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79853   OLM Serial # > 211029-06-8669962244-021
+  GOOD  NOER   WAG  32001009 16:13:44  4042   8  7487    6 Lotto       3    2  555 THRU   555     --NONE--      226.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09 10                                SYS TYPE >    FULL   ROWS >   252
+   Lucky Number  3                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 79854   OLM Serial # > 211029-06-4822674213-644
+  GOOD  NOER   WAG  32001011 16:13:47  4042   9  7487    6 Lotto       3    2  555 THRU   555     --NONE--      415.80    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7487
+                         01 02 03 04 05 06 07 08 09 10 11                             SYS TYPE >    FULL   ROWS >   462
+   Lucky Number  3                                                                
+                                                                                  
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales               85             4203.00            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       0                0.00            0.00            0.00            0.00            0.00
+
+Total Instant Message Transactions 
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        0
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          0
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions          0
+
+Total Passive Returns and Validations 
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0                
+Total IGS Transactions          0
