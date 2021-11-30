@@ -1,0 +1,11 @@
+
+This files Draw:LOT7489.FIL are information about the draws more specific the information of the 
+MTMF01.FIL is writen to this files to keep the information even after the clrfil of TMF file wagers
+cancelations, valitions or any type of transactions.
+
+
+When to get the information about the transactions of a day create a tmir of file in draw folder
+that the logical name DRAW points to have to search by the DCD and the Type of Game 
+(Totoloto=LOT and GameIndex=S corresponds 3 that is Sabado or GameIndex=Q corresponds 4 that is Quarta)
+(Totobola=TOT and GameIndex=O corresponds 1 that is totobola normal or GameIndex=1 that corresponds 3
+that is totobola extra). 
