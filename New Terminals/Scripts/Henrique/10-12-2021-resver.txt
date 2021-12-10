@@ -1,0 +1,92 @@
+Using username "console".
+Pre-authentication banner message from server:
+|
+| @SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+End of banner message from server
+console@10.100.82.101's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Friday, 10-DEC-2021 10:23:29.67
+    Last non-interactive login on Thursday, 9-DEC-2021 15:42:12.84
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+PODEV1::PORT> goscml
+%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
+%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
+%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> r resver
+10:50:25 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+10:50:25 CONSOLE   Sports  3  TOTOBOLA EXTRA 1Draw   308
+
+10:50:25 CONSOLE  Enter row    1:        >1
+10:50:28 CONSOLE  Enter row    2:        >1
+10:50:28 CONSOLE  Enter row    3:        >1
+10:50:29 CONSOLE  Enter row    4:        >1
+10:50:29 CONSOLE  Enter row    5:        >1
+10:50:29 CONSOLE  Enter row    6:        >1
+10:50:30 CONSOLE  Enter row    7:        >1
+10:50:30 CONSOLE  Enter row    8:        >1
+10:50:31 CONSOLE  Enter row    9:        >1
+10:50:31 CONSOLE  Enter row   10:        >1
+10:50:32 CONSOLE  Enter row   11:        >1
+10:50:32 CONSOLE  Enter row   12:        >1
+10:50:33 CONSOLE  Enter row   13:        >1
+10:50:33 CONSOLE  Enter SUPER 14 row:    >1
+Sports  3 results entered 1 1 1 1 1 1 1 1 1 1 1 1 1
+SUPER 14 results entered 1
+10:50:34 CONSOLE  Are the results entered ok [Y/N]?  >y
+10:50:36 CONSOLE   Sports  3 results entry complete
+10:50:36 CONSOLE  STOP0001  ****  SUCCESS
+PODEV1::SCML>
+
+Reply received on PODEV1 from user PORT_SQA at PODEV1 Batch   10:52:36
+IPS HAS BEEN NOTIFIED OF ONLINE STOPSYS AT 10:52:35
+
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML>
