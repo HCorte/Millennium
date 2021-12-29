@@ -4,9 +4,36 @@ C      INCLUDE 'INCLIB:PRMLOG.DEF'
       INCLUDE 'INCLIB:OLMAUDIT.DEF'
 
          RECORD /OLM_AUDIT_CONF/ CONF
-           
-         CALL SYSTEM_STATUS()
-         CALL PROCESS_TMF(CONF)
+         !211229-06-3139466976-822
+         CHARACTER*24 SERIAL_NUMBER /''/
+         CHARACTER*20 MESSID_NUMBER
+         CHARACTER*1  OPTION
+         INTEGER*1    PARAM_ID /0/
+
+         PRINT *,'SEARCH FOR SERIAL NUMBER (EXTERNAL)? [Y/N] :'
+         READ(5,100) OPTION
+         IF(OPTION .EQ. 'y' .OR. OPTION .EQ. 'Y' ) THEN 
+            PRINT *,'WHAT IS THE SERIAL NUMBER: '
+            READ(5,100) SERIAL_NUMBER
+c            PRINT *,'SERIAL NUMBER SELECTED: ',SERIAL_NUMBER
+
+C           CALL SYSTEM_STATUS()
+            CALL PROCESS_TMF(CONF,SERIAL_NUMBER,PARAM_ID)
+         
+         ELSE
+            PRINT *,'SEARCH FOR MESSAGE ID? [Y/N] :'
+            READ(5,100) OPTION
+            IF(OPTION .EQ. 'y' .OR. OPTION .EQ. 'Y' ) THEN
+               PRINT *,'WHAT IS THE MESSAGE ID: '
+               READ(5,100) MESSID_NUMBER
+               PARAM_ID = 1
+               CALL PROCESS_TMF(CONF,MESSID_NUMBER,PARAM_ID)
+            ELSE   
+               CALL PROCESS_TMF(CONF,SERIAL_NUMBER,PARAM_ID)
+            ENDIF
+         ENDIF   
+
+100      FORMAT(A)
 
       END
 
@@ -26,14 +53,15 @@ C           PRINT *,'STOPSYS: ',STOPSYS
       RETURN
       END
 
-      SUBROUTINE PROCESS_TMF(CONF)
+      SUBROUTINE PROCESS_TMF(CONF,SERIAL_NUMBER,PARAM_ID)
       IMPLICIT NONE
 
       INCLUDE 'INCLIB:OLMAUDIT.DEF'
 
       INTEGER*4 I,CNT
+      INTEGER*1 PARAM_ID
       RECORD /OLM_AUDIT_CONF/ CONF
-        
+      CHARACTER*(*) SERIAL_NUMBER  
 
 CC         CONF.TRX_SER = CONF.P_LAST_TRX_NR
 
@@ -42,10 +70,10 @@ CC         CONF.TRX_SER = CONF.P_LAST_TRX_NR
          PRINT *,'[OLMAUDIT]:[CTG]: Begin TMF read cycle'          
 
          DO WHILE(.NOT. CONF.EOT)
-             CALL READ_TMF_TRX(CONF)
+             CALL READ_TMF_TRX(CONF,SERIAL_NUMBER,PARAM_ID)
              CNT = CNT + 1
              IF(.NOT. CONF.EOT) THEN
-                PRINT *,'TRANSACTION SERIAL: ',CONF.TRX_SER
+C                PRINT *,'TRANSACTION SERIAL: ',CONF.TRX_SER
 CCCCCCCCCCCC                
 C                  CALL WRITE_REPORT_TRX(CONF)
 C                 for audit recover the savepoint other wise ignore it
@@ -118,7 +146,7 @@ C     *                      ' close error')
         
       END
 
-      SUBROUTINE READ_TMF_TRX(CONF)
+      SUBROUTINE READ_TMF_TRX(CONF,SERIAL_NUMBER,PARAM_ID)
       IMPLICIT NONE
          
       INCLUDE 'INCLIB:SYSPARAM.DEF'
@@ -128,13 +156,15 @@ C     *                      ' close error')
  
          RECORD /OLM_AUDIT_CONF/ CONF
          INTEGER*4 I
+         CHARACTER*(*) SERIAL_NUMBER
+         INTEGER*1 PARAM_ID
 
          INTEGER*8  I8TMP
          INTEGER*4  I4TMP(2)
          EQUIVALENCE (I8TMP,I4TMP)
 
          REAL*16     SERIALNUM_OLM
-         CHARACTER*24  SERIALNUM_OLMSTR,  SERIAL_AUX
+         CHARACTER*24  SERIALNUM_OLMSTR,  SERIAL_AUX, MESSID_STR
 
          INTEGER*8  MESSID
          REAL*16     OVER8BYTES
@@ -156,10 +186,10 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
          CALL FASTSET(0,CONF.LOGREC,LREC*3)
  
 C         CALL LOG_I4(CONF,AA_LOG_LEVEL_TRACE,'ReadTmfTrx:CONF.TRX_SER',CONF.TRX_SER)
-         PRINT *,'Transaction Serial: ',CONF.TRX_SER
+C         PRINT *,'Transaction Serial: ',CONF.TRX_SER
          CALL READTMF(CONF.LOGREC,CONF.TRX_SER,CONF.EOT)
          CONF.ST = 0
-         PRINT *,'IS END OF FILE EOF?: ',CONF.EOT
+C         PRINT *,'IS END OF FILE EOF?: ',CONF.EOT
 C         CALL LOG_L(CONF,AA_LOG_LEVEL_TRACE,'ReadTmfTrx:CONF.EOT',CONF.EOT)
          IF( CONF.EOT ) THEN
              CONF.ST = 1 
@@ -179,7 +209,9 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
          I4TMP(1) = ZEXT(CONF.TRABUF(TWCOLMMIDL_TLTO)) 
          I4TMP(2) = ZEXT(CONF.TRABUF(TWCOLMMIDH_TLTO)) 
-         MESSID = I8TMP  
+         MESSID = I8TMP 
+         
+         WRITE(MESSID_STR,980) MESSID
          
          I4TMP(1) = ZEXT(CONF.TRABUF(TWCOLMSERL_TLTO)) 
          I4TMP(2) = ZEXT(CONF.TRABUF(TWCOLMSERM_TLTO))
@@ -188,24 +220,42 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
          WRITE(SERIAL_AUX,990) SERIALNUM_OLM          
          SERIALNUM_OLMSTR = SERIAL_AUX(1:6)//'-'//SERIAL_AUX(7:8)//'-'//SERIAL_AUX(9:18)//'-'//SERIAL_AUX(19:21) 
 
-         IF ( CONF.TRABUF(TGOLMCOMF_IL) .EQ. 1 
+         IF ((CONF.TRABUF(TGOLMCOMF_IL) .EQ. 1 
      *   .OR. CONF.TRABUF(TVOLMCOMF_IL) .EQ. 1 
      *   .OR. CONF.TRABUF(TWCOLMCOMF_TLTO) .EQ. 1 
      *   .OR. CONF.TRABUF(TCOLMCOMF_TLTO) .EQ. 1 
-     *   .OR. CONF.TRABUF(TVOLMCOMF_TLTO)) CHANNEL = 1 
+     *   .OR. CONF.TRABUF(TVOLMCOMF_TLTO) .EQ. 1)
+     *   .AND. MESSID .NE. 0) CHANNEL = 1 
 
-         PRINT *,'Transaction Internal Serial readed: ',CONF.TRABUF(TSER)
-         IF(CHANNEL .EQ. 1) THEN
-           PRINT *,'Transaction Olimpo Serial   readed: ',SERIALNUM_OLMSTR
-           PRINT *,'Transaction Message Id      readed: ',MESSID
-         ENDIF
          CALL CHANNEL_STR(CHANNEL,MSG)
-         PRINT *,"Transaction Channel Flag(''CHANNEL') readed: ",MSG
-C         PRINT *,'Transaction Serial          readed: ',CONF.TRABUF(TSER)
-C         PRINT *,'Transaction Serial          readed: ',CONF.TRABUF(TSER)
+C         PRINT *,'PARAM_ID:',PARAM_ID
+C         PRINT *,'MESSID_STR:',MESSID_STR
+         IF(MESSID_STR .EQ. SERIAL_NUMBER) PRINT *,'SERIAL_NUMBER:',SERIAL_NUMBER
+C         PRINT *,'SERIAL_NUMBER:',SERIAL_NUMBER
+         IF(CHANNEL) THEN
+            IF( 
+     *         (PARAM_ID .EQ. 1 .AND. MESSID_STR .EQ. SERIAL_NUMBER) .OR. 
+     *         (PARAM_ID .EQ. 0 .AND. SERIAL_NUMBER .EQ. '') .OR. 
+     *         (PARAM_ID .EQ. 0 .AND. SERIAL_NUMBER .NE. '' .AND. SERIAL_NUMBER .EQ. SERIALNUM_OLMSTR) 
+     *      ) THEN
+               PRINT *,'Transaction Serial: ',CONF.TRX_SER
+C               PRINT *,'IS END OF FILE EOF?: ',CONF.EOT
 
+               PRINT *,'Transaction Internal Serial readed: ',CONF.TRABUF(TSER)
+               PRINT *,"Transaction Channel Flag(",CHANNEL,") readed: ",MSG
 
-990     FORMAT(F22.0)   
+               PRINT *,'Transaction Olimpo Serial   readed: ',SERIALNUM_OLMSTR
+               PRINT *,'Transaction Message Id      readed: ',MESSID
+            ENDIF
+         ENDIF
+
+        CHANNEL = 0 
+
+        RETURN
+
+980     FORMAT(I8)
+990     FORMAT(F22.0) 
+  
 
       END
 
@@ -252,9 +302,7 @@ C         PRINT *,'Transaction Serial          readed: ',CONF.TRABUF(TSER)
          PRINT *,'LINE: ',LINE
  
          DO I = 1, 32
-
-            CALL SHOW_CONVERSION(ILINE(I))
-
+D           CALL SHOW_CONVERSION(ILINE(I))
             CONF.ICONV(I) = ILINE(I)
          ENDDO
             
