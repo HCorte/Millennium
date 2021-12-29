@@ -1,0 +1,330 @@
+Using username "console".
+Pre-authentication banner message from server:
+|
+| @SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+End of banner message from server
+console@10.100.82.101's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Monday, 27-DEC-2021 09:56:38.08
+    Last non-interactive login on Friday, 24-DEC-2021 11:25:36.85
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+PODEV1::PORT> goscml
+%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
+%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
+%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
+PODEV1::SCML>
+PODEV1::SCML>
+PODEV1::SCML> vision
+10:22:44 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+ERROR OPENING FILE LEVEL.FIL WILL USE LEVEL DEFAULTS
+
+10:22:48 CONSOLE  Please enter password  >
+***** Vision Commands *****              Fr 24.12.2021  10:22:48    Primary-B
+PRInt                                   MENU1
+COPy                                    MENU2
+STOp                                    MENU3
+REF                                     MENU4
+***** Snapshots available in menu 1 *****
+ACTagt  <number>                        HELp    <number>
+AGTsnp  < date ><number>                INVsnp  <number>
+HOTsnp  <number>                        TSOdsnp <index> <event#>
+LOTto   <event#>                        JOKer   <index> <draw #>
+WITsnp  <index> <event#>                SELect  <index> <event#>
+SPTsnp  <index> <event#>                GAMsnp
+CLOse   <number>                        SLIsnp  <index> <event#>
+DATes   <event#>                        SCRsnp  <index> <event#>
+SCLosnp <index> <event#>                RSCsnp  <index> <event#>
+RWTsnp  <index> <event#>                NBRsnp  <index> <draw #>
+TWDsnp  <index> <number>                SPName  <index> <draw #>
+TSPsnp  <index> <number>                TATsnp  < date ><number>
+ATTsnp  <number>                        STGstat
+                                        STLstat <index>
+
+For help with snapshots, enter HELP MENU, HELP [snpname] or HELP num
+Enter vision command
+sys
+**** System control snapshot ****        Fr 24.12.2021  10:22:52    Primary-B
+SYSTEM   >   cmdflu      0   *LOGBlo    125   *TAPesw      0   *DISKsw      0
+             cmdfrz      0   *CHKtim   9000   *CHKPnt          *STAPesw
+            *DPTtim      1   *MAXTra    500   *SYSSts      1   *ROMrev   F1F3
+            *DESFlg      0   *CANtim     20   *WRNper      0   *TVNupd      0
+            *MAXMes     50   *MESlog      5   *ODSupd    300   *JAKupd      0
+            *FPTTIm    100   *CANDRW      0   *PRETTIM    45   *GVTrev   0000
+            *MAXSpt  20000   *PCANTIM    20   *PMAXRTM   300   *PMAXCAN    10
+            *PMAXLOP  1000    PMAXSEK     1    PASTHRO   500    PDAYRSL     1
+SUPRESS  >  *SUPSPe      0   *SUPFIl      0   *SUPSUm      0   *SUPPUd      0
+            *SUPSYn      0   *SUPCOm      0   *SUPREM      0   *SUPFPt      1
+GLOBAL   >  *SUPWAg      0   *SUPCAn      0   *SUPVAl      0   *SUPRET      1
+            *SUPINs      0
+
+
+PERFORM  >   avgtim      0    mintim      0    maxtim      0
+--------------------- S Y S T E M   P E R F O R M A N C E ---------------------
+     Volume                  Buffer utilization                     Sales
+Serial number -          15 Available     - 2048       Wagered  -          0.00
+Transaction  #-           8 Input/dispat  -    0/   0  Canceled -          0.00
+Volume        -           0 Game_out/soft -    0/   0  Cashed   -          0.00
+% of TMF used -       0.00% X2X_Output    -         0  Returns  -          0.00
+Enter change, !game number, or vision command
+lot
+Lotto 3    5/49 game data for draw  563  Fr 24.12.2021  10:39:49    Primary-B
+TOTOLOTO SABADO                     Draw Sa 25.12.2021  19:00:00
+DrawId 103/2021   (Round 52)  pools are **open** [-----GAME  OPEN-----] ( 3)
+--DIV-- ----POOL--- ----SHARES WON---- --FRACTIONS PAID-- ---------SALES--------
+
+1(5L/5)       0.00      0        0.00       0        0.00 Advance           0.00
+2(5 /5)       0.00      0        0.00       0        0.00 Offline           0.00
+3(4 /5)       0.00      0        0.00       0        0.00 25.12.2021        0.00
+4(3 /5)       0.00      0        0.00       0        0.00 24.12.2021        0.00
+5(2 /5)       0.00      0        0.00       0        0.00 23.12.2021        0.00
+6(LUCK)---FIXED---      0        0.00       0        0.00 22.12.2021        0.00
+Total                   0        0.00       0        0.00 21.12.2021        0.00
+                                                          20.12.2021        0.00
+                                                          19.12.2021        0.00
+                                                          18.12.2021        0.00
+                                                          17.12.2021        0.00
+                                                          Previous          0.00
+Guaranteed:   1000000.00      FromFund:         0.00      Total             0.00
+
+                                                          Rollover          0.00
+
+
+Enter !game index or draw number or /year-week
+sys
+**** System control snapshot ****        Sa 25.12.2021  10:40:07    Primary-B
+SYSTEM   >   cmdflu      0   *LOGBlo    125   *TAPesw      0   *DISKsw      0
+             cmdfrz      0   *CHKtim   9000   *CHKPnt          *STAPesw
+            *DPTtim      1   *MAXTra    500   *SYSSts      1   *ROMrev   F1F3
+            *DESFlg      0   *CANtim     20   *WRNper      0   *TVNupd      0
+            *MAXMes     50   *MESlog      5   *ODSupd    300   *JAKupd      0
+            *FPTTIm    100   *CANDRW      0   *PRETTIM    45   *GVTrev   0000
+            *MAXSpt  20000   *PCANTIM    20   *PMAXRTM   300   *PMAXCAN    10
+            *PMAXLOP  1000    PMAXSEK     1    PASTHRO   500    PDAYRSL     1
+SUPRESS  >  *SUPSPe      0   *SUPFIl      0   *SUPSUm      0   *SUPPUd      0
+            *SUPSYn      0   *SUPCOm      0   *SUPREM      0   *SUPFPt      1
+GLOBAL   >  *SUPWAg      1   *SUPCAn      1   *SUPVAl      1   *SUPRET      1
+            *SUPINs      1
+
+
+PERFORM  >   avgtim     15    mintim     11    maxtim     20
+--------------------- S Y S T E M   P E R F O R M A N C E ---------------------
+     Volume                  Buffer utilization                     Sales
+Serial number -           1 Available     - 2048       Wagered  -          0.00
+Transaction  #-           1 Input/dispat  -    0/   0  Canceled -          0.00
+Volume        -           0 Game_out/soft -    0/   0  Cashed   -          0.00
+% of TMF used -       0.00% X2X_Output    -         0  Returns  -          0.00
+Enter change, !game number, or vision command
+lot
+Lotto 3    5/49 game data for draw  563  Sa 25.12.2021  10:40:59    Primary-B
+TOTOLOTO SABADO                     Draw Sa 25.12.2021  19:00:02
+DrawId 103/2021   (Round 52)  pools are *closed* [End of game bef draw] ( 4)
+--DIV-- ----POOL--- ----SHARES WON---- --FRACTIONS PAID-- ---------SALES--------
+
+1(5L/5)       0.00      0        0.00       0        0.00 Advance           0.00
+2(5 /5)       0.00      0        0.00       0        0.00 Offline           0.00
+3(4 /5)       0.00      0        0.00       0        0.00 25.12.2021        0.00
+4(3 /5)       0.00      0        0.00       0        0.00 24.12.2021        0.00
+5(2 /5)       0.00      0        0.00       0        0.00 23.12.2021        0.00
+6(LUCK)---FIXED---      0        0.00       0        0.00 22.12.2021        0.00
+Total                   0        0.00       0        0.00 21.12.2021        0.00
+                                                          20.12.2021        0.00
+                                                          19.12.2021        0.00
+                                                          18.12.2021        0.00
+                                                          17.12.2021        0.00
+                                                          Previous          0.00
+Guaranteed:   1000000.00      FromFund:         0.00      Total             0.00
+
+                                                          Rollover          0.00
+
+
+Enter !game index or draw number or /year-week
+spt
+Sports   1 game data for draw 1072       Sa 25.12.2021  10:41:51    Primary-B
+                    Draw Su 26.12.2021  14:00:02
+Round 52/2021             ** End of game/before drawing **   4
+---DIV-- ---POOL--- ----SHARES WON---- ---FRACTIONS PAID- ---------SALES--------
+
+1(S14)       13.07      0        0.00       0        0.00 Advance           0.00
+2(13 )       11.32      0        0.00       0        0.00 Offline           0.00
+3(12 )        9.58      0        0.00       0        0.00 25.12.2021        0.00
+4(11 )        9.58      0        0.00       0        0.00 24.12.2021        0.00
+                                                          23.12.2021        0.00
+                                                          22.12.2021        0.00
+                                                          21.12.2021        0.00
+                                                          20.12.2021       67.00
+Total                   0        0.00       0        0.00 19.12.2021        0.00
+                                                          18.12.2021        0.00
+                                                          17.12.2021        0.00
+Week counter    :     0                                   Previous          0.00
+                                                          Total            67.00
+                                                          Rollover 1        0.00
+                                                          Rollover 2        0.00
+                                                          Rollover 3        0.00
+                                                          Rollover 4        0.00
+Enter !game index or draw number or /year-week
+lot
+Lotto 3    5/49 game data for draw  563  Sa 25.12.2021  10:43:09    Primary-B
+TOTOLOTO SABADO                     Draw Sa 25.12.2021  19:00:02
+DrawId 103/2021   (Round 52)  pools are *closed* [Winning numbers verd] ( 6)
+--DIV-- ----POOL--- ----SHARES WON---- --FRACTIONS PAID-- ---------SALES--------
+
+1(5L/5)       0.00      0        0.00       0        0.00 Advance           0.00
+2(5 /5)       0.00      0        0.00       0        0.00 Offline           0.00
+3(4 /5)       0.00      0        0.00       0        0.00 25.12.2021        0.00
+4(3 /5)       0.00      0        0.00       0        0.00 24.12.2021        0.00
+5(2 /5)       0.00      0        0.00       0        0.00 23.12.2021        0.00
+6(LUCK)       0.00      0        0.00       0        0.00 22.12.2021        0.00
+Total                   0        0.00       0        0.00 21.12.2021        0.00
+                                                          20.12.2021        0.00
+                                                          19.12.2021        0.00
+                                                          18.12.2021        0.00
+                                                          17.12.2021        0.00
+                                                          Previous          0.00
+Guaranteed:   1000000.00      FromFund:         0.00      Total             0.00
+
+Winning numbers : 01 02 03 04 05   Lucky:01            Rollover          0.00
+
+
+Enter !game index or draw number or /year-week
+spt
+Sports   1 game data for draw 1072       Sa 25.12.2021  10:44:46    Primary-B
+                    Draw Su 26.12.2021  14:00:02
+Round 52/2021             ** Winning numbers verified **     6
+---DIV-- ---POOL--- ----SHARES WON---- ---FRACTIONS PAID- ---------SALES--------
+
+1(S14)       13.07      0        0.00       0        0.00 Advance           0.00
+2(13 )       11.32      0        0.00       0        0.00 Offline           0.00
+3(12 )        9.58      0        0.00       0        0.00 25.12.2021        0.00
+4(11 )        9.58      0        0.00       0        0.00 24.12.2021        0.00
+                                                          23.12.2021        0.00
+                                                          22.12.2021        0.00
+                                                          21.12.2021        0.00
+                                                          20.12.2021       67.00
+Total                   0        0.00       0        0.00 19.12.2021        0.00
+                                                          18.12.2021        0.00
+                                                          17.12.2021        0.00
+Week counter    :     0                                   Previous          0.00
+                                                          Total            67.00
+Winning row     : 1 1 1 1 1 1 1 1 1 1 1 1 1               Rollover 1        0.00
+Winning S14     : 1                                       Rollover 2        0.00
+                                                          Rollover 3        0.00
+                                                          Rollover 4        0.00
+Enter !game index or draw number or /year-week
+lot
+Lotto 3    5/49 game data for draw  563  Sa 25.12.2021  11:13:40    Primary-B
+TOTOLOTO SABADO                     Draw Sa 25.12.2021  19:00:02
+DrawId 103/2021   (Round 52)  pools are *final*  [*Results are  FINAL*] ( 8)
+--DIV-- ----PRIZE-- ----SHARES WON---- --FRACTIONS PAID-- ---------SALES--------
+
+1(5L/5)       0.00      0        0.00       0        0.00 Advance           0.00
+2(5 /5)       0.00      0        0.00       0        0.00 Offline           0.00
+3(4 /5)       0.00      0        0.00       0        0.00 25.12.2021        0.00
+4(3 /5)       0.00      0        0.00       0        0.00 24.12.2021        0.00
+5(2 /5)       0.00      0        0.00       0        0.00 23.12.2021        0.00
+6(LUCK)       0.00      0        0.00       0        0.00 22.12.2021        0.00
+Total                   0        0.00       0        0.00 21.12.2021        0.00
+                                                          20.12.2021        0.00
+                                                          19.12.2021        0.00
+                                                          18.12.2021        0.00
+                                                          17.12.2021        0.00
+                                                          Previous          0.00
+Guaranteed:   1000000.00      FromFund:   1000000.00      Total             0.00
+
+Winning numbers : 01 02 03 04 05   Lucky:01            Rollover          0.00
+
+
+Enter !game index or draw number or /year-week
+spt
+Sports   1 game data for draw 1072       Su 26.12.2021  11:37:53    Primary-B
+                    Draw Su 26.12.2021  14:00:02
+Round 52/2021             ** Results are final **            8
+---DIV-- ---PRIZE-- ----SHARES WON---- ---FRACTIONS PAID- ---------SALES--------
+
+1(S14)        1.00     13       13.00       0        0.00 Advance           0.00
+2(13 )        0.51     22       11.22       0        0.00 Offline           0.00
+3(12 )        0.35     27        9.45       0        0.00 25.12.2021        0.00
+4(11 )        0.23     40        9.20       0        0.00 24.12.2021        0.00
+                                                          23.12.2021        0.00
+                                                          22.12.2021        0.00
+                                                          21.12.2021        0.00
+                                                          20.12.2021       67.00
+Total                 102       42.87       0        0.00 19.12.2021        0.00
+                                                          18.12.2021        0.00
+                                                          17.12.2021        0.00
+Week counter    :     0                                   Previous          0.00
+                                                          Total            67.00
+Winning row     : 1 1 1 1 1 1 1 1 1 1 1 1 1               Rollover 1        0.00
+Winning S14     : 1                                       Rollover 2        0.00
+                                                          Rollover 3        0.00
+                                                          Rollover 4        0.00
+Enter !game index or draw number or /year-week
+sys2
+**** System control snapshot ****        Mo 27.12.2021  11:47:45    Primary-B
+SYSTEM   >   cmdflu      0   *LOGBlo    125   *TAPesw      0   *DISKsw      0
+             cmdfrz      0   *CHKtim   9000   *CHKPnt          *STAPesw
+            *DPTtim      1   *MAXTra    500   *SYSSts      1   *ROMrev   F1F3
+            *DESFlg      0   *CANtim     20   *WRNper      0   *TVNupd      0
+            *MAXMes     50   *MESlog      5   *ODSupd    300   *JAKupd      0
+            *FPTTIm    100   *CANDRW      0   *PRETTIM    45   *GVTrev   0000
+            *MAXSpt  20000   *PCANTIM    20   *PMAXRTM   300   *PMAXCAN    10
+            *PMAXLOP  1000    PMAXSEK     1    PASTHRO   500    PDAYRSL     1
+SUPRESS  >  *SUPSPe      0   *SUPFIl      0   *SUPSUm      0   *SUPPUd      0
+            *SUPSYn      0   *SUPCOm      0   *SUPREM      0   *SUPFPt      1
+GLOBAL   >  *SUPWAg      0   *SUPCAn      0   *SUPVAl      0   *SUPRET      1
+            *SUPINs      0
+
+
+PERFORM  >   avgtim     15    mintim     11    maxtim     20
+--------------------- S Y S T E M   P E R F O R M A N C E ---------------------
+     Volume                  Buffer utilization                     Sales
+Serial number -          15 Available     - 2048       Wagered  -          0.00
+Transaction  #-           8 Input/dispat  -    0/   0  Canceled -          0.00
+Volume        -           0 Game_out/soft -    0/   0  Cashed   -          0.00
+% of TMF used -       0.00% X2X_Output    -         0  Returns  -          0.00
+Enter change, !game number, or vision command
+supins 0
