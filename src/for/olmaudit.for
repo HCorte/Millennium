@@ -38,25 +38,25 @@ C           PRINT *,'STOPSYS: ',STOPSYS
 CC         CONF.TRX_SER = CONF.P_LAST_TRX_NR
 
          CALL OPEN_TMF(CONF)   
-C         CNT = 0
-C         PRINT *,'[OLMAUDIT]:[CTG]: Begin TMF read cycle'          
-C
-C         DO WHILE(.NOT. CONF.EOT)
-C             CALL READ_TMF_TRX(CONF)
-C             CNT = CNT + 1
-C             IF(.NOT. CONF.EOT) THEN
-C                PRINT *,'TRANSACTION SERIAL: ',CONF.TRX_SER
+         CNT = 0
+         PRINT *,'[OLMAUDIT]:[CTG]: Begin TMF read cycle'          
+
+         DO WHILE(.NOT. CONF.EOT)
+             CALL READ_TMF_TRX(CONF)
+             CNT = CNT + 1
+             IF(.NOT. CONF.EOT) THEN
+                PRINT *,'TRANSACTION SERIAL: ',CONF.TRX_SER
 CCCCCCCCCCCC                
 C                  CALL WRITE_REPORT_TRX(CONF)
 C                 for audit recover the savepoint other wise ignore it
 C                  CONF.P_LAST_TRX_NR = CONF.TRX_SER
 CCCCCCCCCCCC
-C             ELSE 
-C                PRINT *,'REACHED THE EOF - END OF FILE'
-C             ENDIF
-C         ENDDO
-C         PRINT *,'[OLMAUDIT]:[CTG]: End TMF read cycle' 
-C         CALL CLOSE_TMF(CONF)     
+             ELSE 
+                PRINT *,'REACHED THE EOF - END OF FILE'
+             ENDIF
+         ENDDO
+         PRINT *,'[OLMAUDIT]:[CTG]: End TMF read cycle' 
+         CALL CLOSE_TMF(CONF)     
 
       RETURN
       END
@@ -79,24 +79,23 @@ C         CALL CLOSE_TMF(CONF)
 
 
            CALL CONVERT_FILENAME(CONF, AA_CI_SRC_TMF_FILE)
-C           PRINT *,(CONF.ICONV,,)
+
+C          28*4 its the max number any value higher gives overflow (30,31,32,etc...)
+           WRITE(6,3000) (CONF.ICONV(k),k=1,28)
 
 
-           WRITE(6,3000) (CONF.ICONV(k),k=1,32)
+           CALL OPENWY(CONF.LUN_TMF
+     *                 ,CONF.ICONV
+     *                 ,0,4,0,CONF.ST)
+           CALL TOPEN(CONF.LUN_TMF)
+   
+           IF(CONF.ST .NE. 0) THEN
+                   CALL FILERR(CONF.ICONV,1,CONF.ST,0)
+                   CALL GSTOP(GEXIT_FATAL)
+           ENDIF
+           CONF.EOT = .FALSE.
 
-
-C           CALL OPENWY(CONF.LUN_TMF
-C     *                 ,CONF.ICONV
-C     *                 ,0,4,0,CONF.ST)
-C           CALL TOPEN(CONF.LUN_TMF)
-C   
-C           IF(CONF.ST .NE. 0) THEN
-C                   CALL FILERR(CONF.ICONV,1,CONF.ST,0)
-C                   CALL GSTOP(GEXIT_FATAL)
-C           ENDIF
-C           CONF.EOT = .FALSE.
-
-3000    FORMAT(2X,'TMF File Name:',32A4)           
+3000    FORMAT(2X,'TMF File Name:',28A4)           
       END
 
       SUBROUTINE CLOSE_TMF(CONF)
@@ -246,7 +245,7 @@ C         PRINT *,'Transaction Serial          readed: ',CONF.TRABUF(TSER)
  
 
          PRINT *,'CONF_PARAMS: ',CONF.CONF_PARAMS(AA_I_VALUE, INDEX)
-         LINE = AA_CONF_DEF_VALUE(INDEX)  !TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE, INDEX)))
+         LINE = TRIM(AA_CONF_DEF_VALUE(INDEX))  !TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE, INDEX)))
 
          PRINT *,'AA_I_VALUE: ',AA_I_VALUE !2
          PRINT *,'INDEX: ',INDEX !1
@@ -254,37 +253,48 @@ C         PRINT *,'Transaction Serial          readed: ',CONF.TRABUF(TSER)
  
          DO I = 1, 32
 
-            PRINT *,'ILINE integer value: ',ILINE(I)
-            WRITE (6, 1000) ILINE(I)
-            WRITE (6, 1010) IAND(ILINE(I),'FF000000'X)
-            WRITE (6, 1020) IAND(ILINE(I),'00FF0000'X)
-            WRITE (6, 1030) IAND(ILINE(I),'0000FF00'X)
-            WRITE (6, 1040) IAND(ILINE(I),'000000FF'X)
-
-            PRINT *,'Characters: ',
-     *      CHAR(IAND(ILINE(I),'000000FF'X)),
-     *      CHAR(ISHFT(IAND(ILINE(I),'0000FF00'X),-8)),
-     *      CHAR(ISHFT(IAND(ILINE(I),'00FF0000'X),-16)),
-     *      CHAR(ISHFT(IAND(ILINE(I),'FF000000'X),-24))
-
-            PRINT '(A)'
-            PRINT '(A)'
-
-C            CALL SHOW_CONVERSION(ILINE(I))
+            CALL SHOW_CONVERSION(ILINE(I))
 
             CONF.ICONV(I) = ILINE(I)
          ENDDO
-        
+            
+      END
+
+      SUBROUTINE SHOW_CONVERSION(INT_CONV)
+      IMPLICIT NONE
+
+      INTEGER*4 INT_CONV
+
+         IF (INT_CONV .EQ. 538976288) GOTO 500 !only spaces no content...
+         PRINT *,'ILINE integer value: ',INT_CONV
+         WRITE (6, 1000) INT_CONV
+         WRITE (6, 1010) IAND(INT_CONV,'FF000000'X)
+         WRITE (6, 1020) IAND(INT_CONV,'00FF0000'X)
+         WRITE (6, 1030) IAND(INT_CONV,'0000FF00'X)
+         WRITE (6, 1040) IAND(INT_CONV,'000000FF'X)
+
+         PRINT *,'Characters: ',
+     *   CHAR(IAND(INT_CONV,'000000FF'X)),
+     *   CHAR(ISHFT(IAND(INT_CONV,'0000FF00'X),-8)),
+     *   CHAR(ISHFT(IAND(INT_CONV,'00FF0000'X),-16)),
+     *   CHAR(ISHFT(IAND(INT_CONV,'FF000000'X),-24))
+
+         PRINT '(A)'
+         PRINT '(A)'
+
+500      CONTINUE         
+         RETURN 
+
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC         
 C        Z format for Hexa follow by 8 number of digits in this case 4bytes needs 8 digits Hexa        C
 C        the .8 forcess to show at least 8 digits that means it keeps left 0 explicitly                C
-C        for spaces that is its not filled is 20 --> Space hex code: 20
+C        for spaces that is its not filled is 20 --> Space hex code: 20                                C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC             
 1000     FORMAT(1X,'Hexa Value:',Z8.8) 
 1010     FORMAT(1X,'Hexa Value first  byte:',Z8.8) 
 1020     FORMAT(1X,'Hexa Value second byte:',Z8.8) 
 1030     FORMAT(1X,'Hexa Value third  byte:',Z8.8) 
-1040     FORMAT(1X,'Hexa Value fourth byte:',Z8.8)         
+1040     FORMAT(1X,'Hexa Value fourth byte:',Z8.8)              
       END
 
    
