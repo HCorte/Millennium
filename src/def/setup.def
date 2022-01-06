@@ -37,7 +37,7 @@ C----+------------------------------------------------------------------
 C V03| Adding support for OLM
 C----+------------------------------------------------------------------
 	    INTEGER*4 OLMCON		       ! NEW TERMINALS CONNECT
-            INTEGER*4 REGLOG                   ! SUPRESS SCRIPT LOGS
+C            INTEGER*4 REGLOG                   ! SUPRESS SCRIPT LOGS
 C----+------------------------------------------------------------------
 C V03| Adding support for OLM
 C----+------------------------------------------------------------------
