@@ -15,6 +15,8 @@ C       show the status of P(SUPSYN)
 
         PRINT *,'P(REGLOG)=',P(REGLOG)
         PRINT *,'P(OLMCONF)=',P(OLMCONF)
+
+
         PAR.OLMCON = P(OLMCONF)    
 C        PAR.REGLOG = P(REGLOG)
 
@@ -85,6 +87,9 @@ C       CONSTANTS for TCF file logic
         INCLUDE 'INCLIB:PRMHSH.DEF'
 C       buffer TRABUF
         INCLUDE 'INCLIB:DESTRA.DEF'
+C       get process information
+C	INCLUDE	    '($SYSSRVNAM)'
+        INCLUDE	    '($JPIDEF)'        
 
         CHARACTER*3 YESNO(0:1)
         DATA YESNO  /' No','Yes'/
@@ -104,7 +109,8 @@ c      LOGICAL
 
         RECORD/SETUP/ PAR
         INTEGER*4 GNUM, DRAW, GIND, k, DAY
-
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC   
+C read binary file variables
         RECORD	    /RABDEF/ RAB
         INTEGER*4   FDB(FDB_LENGTH)
         
@@ -120,7 +126,21 @@ C
         INTEGER*4  TUBSIZ
 	PARAMETER (TUBSIZ=I4BUCSIZ*7)
         INTEGER*4 TCFBUF(TUBSIZ)
-        INTEGER*4 LOGBUF(LREC*3)	!
+        INTEGER*4 LOGBUF(LREC*3)	!     
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       option 6 variables
+        INTEGER*4  GTYP                ! game type
+        INTEGER*4  EXT                 ! status
+C        
+	INTEGER*4	I4ITEM(4)
+	INTEGER*2	I2ITEM(6)
+	EQUIVALENCE	(I4ITEM,I2ITEM)     
+        CHARACTER*7 TN
+        INTEGER*4   TNL		! LENGTH OF THE 'TN'
+        INTEGER*4   NDX
+        CHARACTER*8 TNAME	! OUTPUT
+
         
 10	CONTINUE        
 
@@ -132,6 +152,7 @@ C        PRINT *, 'ENTER OPTION 1  AND ACTIVE/DISABLE LOG REGISTRATION'
         PRINT *, 'ENTER OPTION 3 to see game data'
         PRINT *, '4 - Print file names defined in the MILL system'
         PRINT *, '5 - Read TCF file information'
+        PRINT *, '6 - Test read parameter input'
         print '(A)'
         READ *, OPTION
 
@@ -440,6 +461,10 @@ C       PARAMETER(NUMLTO=4)   !NUMBER OF LOTTO GAMES
         print '(A)'
 C        print *,'Validation File Name:',SFNAMES(1,VLF)
         WRITE(6,3010) SFNAMES(1,VLF)
+        WRITE(6,3010) SFNAMES(2,VLF)
+        WRITE(6,3010) SFNAMES(3,VLF)
+        WRITE(6,3010) SFNAMES(4,VLF)
+        WRITE(6,3010) SFNAMES(5,VLF)
         WRITE(6,3000) (SFNAMES(k,VLF),k=1,5),(SFNAMES(k,TCF),k=1,5)
         print '(A)'
 
@@ -494,7 +519,32 @@ C        LLTSAL(DATIND,GIND)
         GOTO 10         
 
 600     CONTINUE
-        PRINT *, 'WRONG OPTION .... ITS NOT 6 BUT 9'
+C        WRITE(5,3900) (K,GTNAMES(K),K=1,MAXTYP) 
+C        CALL INPNUM_AUX('Enter game type ',GTYP,1,MAXTYP,EXT)
+C        PRINT *,'GAME TYPE CHOSEN IS:',GTYP
+
+C	SET PARAMETERS FOR 'GETJPI' CALL
+C
+	I2ITEM(1) = 7
+	I2ITEM(2) = JPI$_TERMINAL
+C       Getting addresses by the %LOC function
+	I4ITEM(2) = %LOC(TN)
+	I4ITEM(3) = %LOC(TNL)
+	I4ITEM(4) = 0		    !TO TERMINATE LIST
+        ST = SYS$GETJPIW( ,%VAL(0),,I4ITEM,,,)
+
+        TNAME = TN
+	NDX=INDEX(TNAME,':')
+	IF(NDX.EQ.0)THEN
+	  TNAME(8:8)=':'
+	ENDIF
+
+        PRINT *,'process name:',TN
+        PRINT *,'process name length:',TNL
+        PRINT *,'process final name:',TNAME
+        print '(A)'
+        print '(A)'
+
         GOTO 10  
 
 700     CONTINUE
@@ -517,6 +567,8 @@ C        GOTO 10
         print *,'!!!Error in closing file!!!'
         GOTO 10
 
+3900     FORMAT(//,' Game share/tax report',//,                               
+     *         <MAXTYP>(1X,I2,' - ',A8,/))    
 9012    FORMAT(15X,'9. Connect to Olimpo',T45,1X,A3)  
 1900	FORMAT(1X,"Game Name:",4A4,3X,'File Name: ',5A4,3X,'For Game Num:',I1)
 2500    FORMAT('Validation File Name',5A4,3X,'Validation File Name',5A4,3X)
@@ -524,4 +576,15 @@ C        GOTO 10
 3000    FORMAT(2X,'Validation File Name:',5A4,2X,'Carry Over File:',5A4)
 3010    FORMAT(2X,'System File Name:',A4)
 
+      END
+
+      
+      SUBROUTINE INPNUM_AUX(STRING,NUM,LOW,HIGH,EXT)
+      IMPLICIT NONE
+C
+      CHARACTER   STRING*(*)
+      INTEGER*4   NUM,LOW,HIGH,EXT
+C
+      CALL XXXNUM(.FALSE., STRING,NUM,LOW,HIGH,EXT)
+      RETURN
       END

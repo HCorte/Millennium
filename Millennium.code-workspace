@@ -9,6 +9,13 @@
 			"*.def": "FortranFixedForm",
 			"*.h_file_content": "c"
 		},
-		"vmssoftware.project-dep.buildName": "DEBUG"
+		"vmssoftware.project-dep.buildName": "DEBUG",
+		"search.exclude": {
+			"**/HMC": true,
+			"**/New Terminals": true
+		},
+		"fortran-ls.executablePath": "C:\\Users\\105864\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python39\\Scripts",
+		"fortran.includePaths": ["/src"],
+		"fortran.symbols": ["function", "subroutine"]
 	}
 }
