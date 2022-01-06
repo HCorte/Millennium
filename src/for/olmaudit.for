@@ -10,28 +10,52 @@ C      INCLUDE 'INCLIB:PRMLOG.DEF'
          CHARACTER*1  OPTION
          INTEGER*1    PARAM_ID /0/
 
-         PRINT *,'SEARCH FOR SERIAL NUMBER (EXTERNAL)? [Y/N] :'
-         READ(5,100) OPTION
-         IF(OPTION .EQ. 'y' .OR. OPTION .EQ. 'Y' ) THEN 
-            PRINT *,'WHAT IS THE SERIAL NUMBER: '
-            READ(5,100) SERIAL_NUMBER
-c            PRINT *,'SERIAL NUMBER SELECTED: ',SERIAL_NUMBER
-
-C           CALL SYSTEM_STATUS()
-            CALL PROCESS_TMF(CONF,SERIAL_NUMBER,PARAM_ID)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC         
+C        Initializing structures especialy the field CONF_PARAMS          C
+C        logic from abaudit.for see if its better to have in a logical    C
+C        table and insert the key/value pair as its being done in job     C
+C        table to get info from messageq Millennium attachs (comolm)      C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+         CALL INIT_CONF (CONF)
+C        Loading data from configuration file
+         CALL LOAD_CONFIG_FILE(CONF)      
          
-         ELSE
-            PRINT *,'SEARCH FOR MESSAGE ID? [Y/N] :'
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C        TMF FILE HAVES THE INTERNAL SERIAL THAT REPRESENTS THE RECORDS    C
+C        POSITION THAT'S ITS PK OF SORTS SEE RLOG.FOR (OFFSET AND INDEX OF C
+C        THE BLOCK) SO SHOULD BE BETTER TO USE ISN (INTERNAL SERIAL NUMBER)C 
+C        FETCH DIRECTLY A RECORD INSTEAD OF OBTAINING ALL RECORDS UNTIL IT C
+C        FINDS THE RIGHT ONE.                                              C   
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC         
+         DO WHILE(.TRUE.)
+            PRINT '(A)'
+            PRINT '(A)'
+            PRINT *,'SEARCH FOR SERIAL NUMBER (EXTERNAL)? [Y/N] :'
             READ(5,100) OPTION
-            IF(OPTION .EQ. 'y' .OR. OPTION .EQ. 'Y' ) THEN
-               PRINT *,'WHAT IS THE MESSAGE ID: '
-               READ(5,100) MESSID_NUMBER
-               PARAM_ID = 1
-               CALL PROCESS_TMF(CONF,MESSID_NUMBER,PARAM_ID)
-            ELSE   
+            IF(OPTION .EQ. 'E' .OR. OPTION .EQ. 'e') EXIT
+            IF(OPTION .EQ. 'y' .OR. OPTION .EQ. 'Y' ) THEN 
+               PRINT *,'WHAT IS THE SERIAL NUMBER: '
+               READ(5,100) SERIAL_NUMBER
+c               PRINT *,'SERIAL NUMBER SELECTED: ',SERIAL_NUMBER
+
+C              CALL SYSTEM_STATUS()
                CALL PROCESS_TMF(CONF,SERIAL_NUMBER,PARAM_ID)
+            
+            ELSE
+               PRINT *,'SEARCH FOR MESSAGE ID? [Y/N] :'
+               READ(5,100) OPTION
+               IF(OPTION .EQ. 'E' .OR. OPTION .EQ. 'e') EXIT
+               IF(OPTION .EQ. 'y' .OR. OPTION .EQ. 'Y' ) THEN
+                  PRINT *,'WHAT IS THE MESSAGE ID: '
+                  READ(5,100) MESSID_NUMBER
+                  PARAM_ID = 1
+                  CALL PROCESS_TMF(CONF,MESSID_NUMBER,PARAM_ID)
+               ELSE   
+                  CALL PROCESS_TMF(CONF,SERIAL_NUMBER,PARAM_ID)
+               ENDIF
             ENDIF
-         ENDIF   
+            PARAM_ID = 0
+         ENDDO   
 
 100      FORMAT(A)
 
@@ -67,6 +91,7 @@ CC         CONF.TRX_SER = CONF.P_LAST_TRX_NR
 
          CALL OPEN_TMF(CONF)   
          CNT = 0
+C         PRINT *,'SERIAL_NUMBER:',SERIAL_NUMBER,'  PARAM_ID:',PARAM_ID
          PRINT *,'[OLMAUDIT]:[CTG]: Begin TMF read cycle'          
 
          DO WHILE(.NOT. CONF.EOT)
@@ -86,6 +111,11 @@ CCCCCCCCCCCC
          PRINT *,'[OLMAUDIT]:[CTG]: End TMF read cycle' 
          CALL CLOSE_TMF(CONF)     
 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C               reset for the next iteration                             C                
+                CONF.EOT = .FALSE.
+                CONF.TRX_SER = 0
+
       RETURN
       END
 
@@ -103,6 +133,10 @@ CCCCCCCCCCCC
            IF(CONF.LUN_TMF .EQ. 0) THEN
                    CALL FIND_AVAILABLE_LUN(CONF.LUN_TMF,CONF.ST)
            ENDIF
+C          No LUN available kills the process 
+C          (something to improve like await to see if some becames available)
+           IF(CONF.ST .NE. 0) CALL GSTOP(GEXIT_FATAL)
+
            PRINT *,TRIM(AA_CONF_NAME(AA_CI_SRC_TMF_FILE)),' : ',AA_CONF_DEF_VALUE(AA_CI_SRC_TMF_FILE)
 
 
@@ -164,9 +198,10 @@ C     *                      ' close error')
          EQUIVALENCE (I8TMP,I4TMP)
 
          REAL*16     SERIALNUM_OLM
-         CHARACTER*24  SERIALNUM_OLMSTR,  SERIAL_AUX, MESSID_STR
+         CHARACTER*24  SERIALNUM_OLMSTR,  SERIAL_AUX
+         CHARACTER*32 MESSID_STR
 
-         INTEGER*8  MESSID
+         INTEGER*8  MESSID,PARAM_INT /0/
          REAL*16     OVER8BYTES
          PARAMETER  (OVER8BYTES = 18446744073709551616.0) 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -181,6 +216,8 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
          CHARACTER*30 MSG 
  
          CONF.TMF_READ_SUCCESS      = .FALSE.
+C         PRINT *,'!!!READ_TMF_TRX!!!'
+C         PRINT *,'SERIAL_NUMBER:',SERIAL_NUMBER,'  PARAM_ID:',PARAM_ID
  
          CALL FASTSET(0,CONF.TRABUF,TRALEN)
          CALL FASTSET(0,CONF.LOGREC,LREC*3)
@@ -191,10 +228,13 @@ C         PRINT *,'Transaction Serial: ',CONF.TRX_SER
          CONF.ST = 0
 C         PRINT *,'IS END OF FILE EOF?: ',CONF.EOT
 C         CALL LOG_L(CONF,AA_LOG_LEVEL_TRACE,'ReadTmfTrx:CONF.EOT',CONF.EOT)
+
+CCCCCCCCCCC Its a loop so dont         
          IF( CONF.EOT ) THEN
              CONF.ST = 1 
              RETURN
          ENDIF
+
          CALL LOGTRA(CONF.TRABUF,CONF.LOGREC)
          CONF.TMF_READ_SUCCESS      = .TRUE.
 C         CALL LOG_I4(CONF,AA_LOG_LEVEL_TRACE,'ReadTmfTrx:CONF.TRABUF(TSER)',CONF.TRABUF(TSER))
@@ -210,9 +250,16 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
          I4TMP(1) = ZEXT(CONF.TRABUF(TWCOLMMIDL_TLTO)) 
          I4TMP(2) = ZEXT(CONF.TRABUF(TWCOLMMIDH_TLTO)) 
          MESSID = I8TMP 
+C         WRITE(MESSID_STR,980) MESSID
+
+         IF(PARAM_ID .EQ. 1 .OR. PARAM_ID .EQ. '1') THEN
+C            WRITE(PARAM_INT,980) SERIAL_NUMBER
+            READ(SERIAL_NUMBER,'(I8)') PARAM_INT  
+C            PRINT *,'PARAM_INT: ',PARAM_INT
+         ENDIF
          
-         WRITE(MESSID_STR,980) MESSID
-         
+
+
          I4TMP(1) = ZEXT(CONF.TRABUF(TWCOLMSERL_TLTO)) 
          I4TMP(2) = ZEXT(CONF.TRABUF(TWCOLMSERM_TLTO))
          
@@ -226,15 +273,21 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
      *   .OR. CONF.TRABUF(TCOLMCOMF_TLTO) .EQ. 1 
      *   .OR. CONF.TRABUF(TVOLMCOMF_TLTO) .EQ. 1)
      *   .AND. MESSID .NE. 0) CHANNEL = 1 
-
+   
          CALL CHANNEL_STR(CHANNEL,MSG)
 C         PRINT *,'PARAM_ID:',PARAM_ID
-C         PRINT *,'MESSID_STR:',MESSID_STR
-         IF(MESSID_STR .EQ. SERIAL_NUMBER) PRINT *,'SERIAL_NUMBER:',SERIAL_NUMBER
-C         PRINT *,'SERIAL_NUMBER:',SERIAL_NUMBER
+
+C         IF(MESSID_STR .EQ. SERIAL_NUMBER) PRINT *,'SERIAL_NUMBER:',SERIAL_NUMBER
+
+
+
          IF(CHANNEL) THEN
+C            PRINT *,'MESSID: ',MESSID
+C            PRINT *,'SERIAL_NUMBER aaaa:',SERIAL_NUMBER
+C            PRINT *,'PARAM_INT aaaa:',PARAM_INT
+C            IF(MESSID .EQ. PARAM_INT) PRINT *,'SERIAL_NUMBER !!!:',SERIAL_NUMBER
             IF( 
-     *         (PARAM_ID .EQ. 1 .AND. MESSID_STR .EQ. SERIAL_NUMBER) .OR. 
+     *         (PARAM_ID .EQ. 1 .AND. MESSID .EQ. PARAM_INT) .OR. 
      *         (PARAM_ID .EQ. 0 .AND. SERIAL_NUMBER .EQ. '') .OR. 
      *         (PARAM_ID .EQ. 0 .AND. SERIAL_NUMBER .NE. '' .AND. SERIAL_NUMBER .EQ. SERIALNUM_OLMSTR) 
      *      ) THEN
@@ -246,6 +299,8 @@ C               PRINT *,'IS END OF FILE EOF?: ',CONF.EOT
 
                PRINT *,'Transaction Olimpo Serial   readed: ',SERIALNUM_OLMSTR
                PRINT *,'Transaction Message Id      readed: ',MESSID
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC               
+               PRINT *,'MESSID_STR:',MESSID_STR
             ENDIF
          ENDIF
 
@@ -253,7 +308,8 @@ C               PRINT *,'IS END OF FILE EOF?: ',CONF.EOT
 
         RETURN
 
-980     FORMAT(I8)
+C980     FORMAT(I8)
+980     FORMAT(A24)
 990     FORMAT(F22.0) 
   
 
@@ -290,16 +346,17 @@ C               PRINT *,'IS END OF FILE EOF?: ',CONF.EOT
          EQUIVALENCE(LINE,ILINE)
          BYTE AUX_BYTE
 
-         PRINT *,'File Type: ',AA_CONF_NAME(INDEX)
-         PRINT *,'File Name: ',AA_CONF_DEF_VALUE(INDEX)
+C         PRINT *,'File Type: ',AA_CONF_NAME(INDEX)
+C         PRINT *,'File Name: ',AA_CONF_DEF_VALUE(INDEX)
  
 
-         PRINT *,'CONF_PARAMS: ',CONF.CONF_PARAMS(AA_I_VALUE, INDEX)
-         LINE = TRIM(AA_CONF_DEF_VALUE(INDEX))  !TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE, INDEX)))
+C         PRINT *,'CONF_PARAMS: ',CONF.CONF_PARAMS(AA_I_VALUE, INDEX)
+         LINE = TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE, INDEX)))
+C         LINE = TRIM(AA_CONF_DEF_VALUE(INDEX))  
 
-         PRINT *,'AA_I_VALUE: ',AA_I_VALUE !2
-         PRINT *,'INDEX: ',INDEX !1
-         PRINT *,'LINE: ',LINE
+C         PRINT *,'AA_I_VALUE: ',AA_I_VALUE !2
+C         PRINT *,'INDEX: ',INDEX !1
+C         PRINT *,'LINE: ',LINE
  
          DO I = 1, 32
 D           CALL SHOW_CONVERSION(ILINE(I))
@@ -345,4 +402,128 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 1040     FORMAT(1X,'Hexa Value fourth byte:',Z8.8)              
       END
 
+      SUBROUTINE INIT_CONF (CONF)
+      IMPLICIT NONE
+
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:SYSEXTRN.DEF'
+      INCLUDE 'INCLIB:GLOBAL.DEF'
+      INCLUDE 'INCLIB:CONCOM.DEF'
+      INCLUDE 'INCLIB:ABPAUDIT.DEF'
+ 
+         RECORD /ABP_AUDIT_CONF/ CONF
+         INTEGER*4 I, LEN
+         
+C         CALL L_DEBUG(CONF,'[ABPAUDIT]:Initializing CONF structure')
+         PRINT *,'[OLMAUDIT]:Initializing CONF structure'
+         DO I = 1, AA_MAX_NR_PARAMS
+             CONF.CONF_PARAMS(AA_I_NAME ,I) = TRIM(AA_CONF_NAME(I))
+             CONF.CONF_PARAMS(AA_I_VALUE,I) = TRIM(AA_CONF_DEF_VALUE(I))
+         ENDDO
+ 
+         CONF.NR_SUC_WAGER_TRX      = 0
+         CONF.NR_SUC_CANCEL_TRX     = 0
+         CONF.NR_TOT_WAGER_TRX      = 0
+         CONF.NR_TOT_CANCEL_TRX     = 0
+         CONF.NR_ANALYZED_TRX       = 0
+         CONF.NR_TOT_SUC_TRX        = 0
+         CONF.FORCE_CONTINGENCY     = .FALSE.
+         CONF.STOPSYS               = .FALSE.
+         CONF.START_OF_DAY          = .FALSE.
+         CONF.END_OF_DAY            = .FALSE.
+         CONF.END_OF_TURN           = .FALSE.
+         CONF.LAST_TIME_TODAY       = .FALSE.
+         CONF.TMF_READ_SUCCESS      = .FALSE.
+         CONF.TMF_REC_IN_RANGE      = 0
+         CONF.LUN_TMF               = 0
+         CONF.LUN_OUTPUT            = 0
+         CONF.LUN_CONF              = 0
+         CONF.ST                    = 0
+         CONF.EOT                   = .FALSE.
+         CONF.TRX_SER               = 0
+         CONF.REMAINING_CYCLE_TIME  = 0
+         CALL FASTSET(0,CONF.TRABUF,TRALEN)
+         CALL FASTSET(0,CONF.ICONV,32)
+         CALL FASTSET(0,CONF.LOGREC,LREC*3)
+         CALL FASTSET(0,CONF.OUTPUT_FILENAME,32)
+ 
+C         CALL UPDATE_CONF(CONF)
+C 
+C         CONF.REMAINING_CYCLE_TIME  = CONF.P_CYCLE_WAIT_TIME
+C         
+C         CALL FORMATTED_TO_UNIX(CONF.P_CHECKPOINT_TIME,CONF.CHECKPOINT_TIME_UX)
+         RETURN
+         
+      END
+
+      SUBROUTINE LOAD_CONFIG_FILE(CONF)
+      IMPLICIT NONE
+      
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:SYSEXTRN.DEF'
+      INCLUDE 'INCLIB:ABPAUDIT.DEF'
+ 
+         RECORD /ABP_AUDIT_CONF/ CONF
+         
+         CHARACTER*1024 LINE
+         
+         LOGICAL CFG_FILE_EXISTS, EOF
+         INTEGER*4 I
+ 
+         INQUIRE(FILE = TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)), 
+     *          EXIST = CFG_FILE_EXISTS)
+
+         IF(CFG_FILE_EXISTS) THEN
+             CONF.ST = 0
+             IF(CONF.LUN_CONF .EQ. 0) THEN
+                 CALL FIND_AVAILABLE_LUN(CONF.LUN_CONF,CONF.ST)
+             ENDIF
+             IF(CONF.ST .NE. 0) CALL GSTOP(GEXIT_FATAL)
+ 
+             OPEN(UNIT = CONF.LUN_CONF
+     *         , FILE = TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE))
+     *         , IOSTAT = CONF.ST, STATUS = 'OLD')
+             IF(CONF.ST .NE. 0) THEN
+                 PRINT *,TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)) //
+     *                       ' open error'
+                 RETURN
+             ENDIF
+             
+C            continue from here the analyse  -------         
+             EOF = .FALSE.
+             DO WHILE(.NOT. EOF)
+                 CALL GET_TXT_LINE_FROM_FILE(CONF.LUN_CONF,LINE,EOF)
+                 IF(.NOT. EOF) THEN
+                     CALL PARSE_TXT_LINE(LINE, CONF)
+                 ENDIF
+             ENDDO
+             
+             CALL UPDATE_CONF (CONF)
+             
+             CLOSE(CONF.LUN_CONF, IOSTAT = CONF.ST)
+             IF(CONF.ST .NE. 0) THEN
+                 CALL L_ERROR(CONF,TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)) //
+     *                       ' close error')
+                 RETURN
+             ENDIF
+             CALL L_DEBUG(CONF,'Configuration load succeeded!')
+             CALL L_DEBUG(CONF,'-  Loaded file '// 
+     *            TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)) // ' !')
+             CALL L_DEBUG(CONF,'-  Configurations read:')
+             DO I = 1, AA_MAX_NR_PARAMS
+                 IF(TRIM(CONF.CONF_PARAMS(AA_I_NAME ,I)) .NE. '') THEN
+                     CALL L_DEBUG(CONF,'   -  ' //
+     *                    TRIM(CONF.CONF_PARAMS(AA_I_NAME ,I)) // ' = ' //
+     *                    TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE ,I))))
+                 ENDIF
+             ENDDO
+         ELSE
+             PRINT *,'Configuration load failed!'
+             PRINT *,'-  File ' // 
+     *       TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)) //
+     *       ' does not exist!'
+         ENDIF
+ 
+         RETURN
+      END
    
