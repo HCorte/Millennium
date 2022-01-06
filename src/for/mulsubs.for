@@ -60,6 +60,9 @@ C
       ENDIF
 C         
       IF(MODE.EQ.2) THEN                    ! COPY FROM BUFFER
+C     FCNT !# OF DRAW FILES PER WINTSK      
+C     PARAMETER(MAXWTSK= 15)  !MAX. # OF WINSEL TASKS   
+C     NTSK = 1 -> FCNT(1)     
          FILCNT=FCNT(NTSK)
          IF(FILCNT.EQ.0) RETURN
          LGT=LC*FILCNT

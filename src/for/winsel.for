@@ -176,7 +176,8 @@ C
 
         IF(STOPMOD.EQ.WINMANUAL) THEN
              CALL WIN_WININT(CFILES,FILTYPE,FILCNT)
-        ELSE
+		ELSE
+C            mulnam.def --- TSKWNAM		WINTSK -> index 1 --- NTSK=1	
              NTSK=INDTSK('WINTSK  ')
              CALL STORFIL(NTSK,CFILES,FILTYPE,FILCNT,2,1)
         ENDIF
