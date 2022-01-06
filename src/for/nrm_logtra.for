@@ -11,7 +11,7 @@ C V56 24-OCT-2013 SCML Added TIVMT,TIPLIDTYP,TINIBBA2,TINIBCD,TIPLCARD,TINIBBB
 C                      TINIBBO,TINIBBA1,TINETPRZ and TIVDESCR to instant
 C                      validation, regarding new bank validation mode.
 C V55 23-SEP-2013 SCML TVPLIDTYP added
-C V54 19-MAY-2011 FJG  FIX LOGBUF(16) 
+C V54 19-MAY-2011 FJG  FIX LOGBUF(16)
 C V53 12-APR-2011 FJG  ACCENTURE MERGE FOR EM2
 C V52 06-JAN-2011 FJG  MILLENNIUM MXSRV
 C V51 22-NOV-2010 MAC  LUCKY NUMBER
@@ -45,11 +45,11 @@ C V30 18-MAR-1999 RXK  Gtyp+gind in 5+3 bits change.
 C V29 05-FEB-1999 UXN  Jokeri game index checking added.
 C V28 20-AUG-1998 RXK  New JOKER added.
 C V27 17-JUN-1997 RXK  Changes for Bingo Fullhouse
-C V26 11-FEB-1997 RXK  IMNU=instant supply message, IORD=instant games names 
+C V26 11-FEB-1997 RXK  IMNU=instant supply message, IORD=instant games names
 C                      request message
 C V25 06-FEB-1997 RXK  Instant validation section changed
 C V24 05-DEC-1996 HXK  Updated for Finland IPS pre-release
-C V23 17-APR-1996 HXK  Release of Finland for X.25, Telephone Betting, 
+C V23 17-APR-1996 HXK  Release of Finland for X.25, Telephone Betting,
 C                      Instant Pass Thru Phase 1
 C V22 06-JAN-1996 HXK  Fix for logging of Double / Couple
 C V21 04-JAN-1996 HXK  Further changes for Double / Couple batch
@@ -64,12 +64,12 @@ C V14 08-JAN-1994 HXK  change to handle amounts for score system bets
 C V13 14-SEP-1993 GXA  Added Retreiving of TCDC_SOLD from offset loged.
 C V12 10-SEP-1993 GXA  Changed TWBNK to TVBNK in Validation transactions.
 C V11 23-AUG-1993 GXA  Changed Toto Select record layout, inorder to fit amount
-C                      bet. Used for system bets. Record could extend to two 
+C                      bet. Used for system bets. Record could extend to two
 C                      log records if bank info usd
-C V10 26-JUL-1993 GXA  Added System Type and Number to Toto Select one board 
+C V10 26-JUL-1993 GXA  Added System Type and Number to Toto Select one board
 C                      bets.
-C V09 16-JUL-1993 GXA  Removed Discount Amt from Lotto,Sports,Spede and Ravi 
-C                      due to increased wager amounts due to Free systems. 
+C V09 16-JUL-1993 GXA  Removed Discount Amt from Lotto,Sports,Spede and Ravi
+C                      due to increased wager amounts due to Free systems.
 C                      (No space in log record).
 C V08 26-MAY-1993 GXA  Released for Finland Dec Conversion / Oddset.
 C V07 21-JAN-1993 DAB  Initial Release
@@ -79,7 +79,7 @@ C V06 19-AUG-1992 GCAN ADDED KICKER TO TOTO SELECT AND SIPLIFIED TOTO SELECT
 C                      BOARD DATA IN RECORD.
 C V05 07-AUG-1992 GCAN FIXED SCORE AMOUNT BET.
 C V04 26-JAN-1992 GCAN FIXED WIN TIP AMOUNT BET.
-C V03 13-DEC-1991 DAS  NEW X2X CODE 
+C V03 13-DEC-1991 DAS  NEW X2X CODE
 C V02 07-OCT-1991 MTK  INITAL RELEASE FOR NETHERLANDS
 C V01 01-AUG-1990 XXX  RELEASED FOR VAX
 C
@@ -111,7 +111,7 @@ C Copyright 2000 GTECH Corporation. All rights reserved.
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C=======OPTIONS /CHECK=NOOVERFLOW
-        SUBROUTINE LOGTRA(TRABUF,LOGBUF)
+SUBROUTINE LOGTRA(TRABUF,LOGBUF)
         IMPLICIT NONE
 C
         INCLUDE 'INCLIB:SYSPARAM.DEF'
@@ -142,7 +142,7 @@ C        EQUIVALENCE (I4TEMP_AUX,I2TEMP_AUX,I1TEMP_AUX)
 C        BYTE      CHCOM_FLAG
 
         INTEGER*4 I,J,X,KIND, BDATA_VER
-        INTEGER*4 OPREQ   
+        INTEGER*4 OPREQ
 C
         LOGICAL     KIKFLG                        !KICKER FLAG (IS IT LOGGED?)
 C
@@ -156,42 +156,42 @@ C DECODE TRANSACTION HEADER INFORMATION
         TRABUF(TSER)     = IAND(LOGBUF(1),'3FFFFFFF'X)
 C
         I4TEMP           = LOGBUF(2)
-        TRABUF(TCDC)     = ZEXT( I2TEMP(1) ) 
-        TRABUF(TTER)     = I2TEMP(2) 
+        TRABUF(TCDC)     = ZEXT( I2TEMP(1) )
+        TRABUF(TTER)     = I2TEMP(2)
 
-        TRABUF(TAGT)     = IAND(LOGBUF(3),'00FFFFFF'X) 
-        TRABUF(TNFRAC)   = IAND(ISHFT(LOGBUF(3),-24),'000000FF'X)      
-        TRABUF(TTIM)     = IAND(LOGBUF(4),'00FFFFFF'X) 
+        TRABUF(TAGT)     = IAND(LOGBUF(3),'00FFFFFF'X)
+        TRABUF(TNFRAC)   = IAND(ISHFT(LOGBUF(3),-24),'000000FF'X)
+        TRABUF(TTIM)     = IAND(LOGBUF(4),'00FFFFFF'X)
 
-        TRABUF(TTSTCS)   = IAND(ISHFT(LOGBUF(4),-24),'000000FF'X) 
+        TRABUF(TTSTCS)   = IAND(ISHFT(LOGBUF(4),-24),'000000FF'X)
 
         I4TEMP           = LOGBUF(5)
-        TRABUF(TCHK)     = ZEXT(I2TEMP(1)) 
-        TRABUF(TERR)     = ZEXT(I1TEMP(3)) 
-        X                = ZEXT(I1TEMP(4)) 
-        TRABUF(TGAM)     = IAND (X,'7F'X ) 
+        TRABUF(TCHK)     = ZEXT(I2TEMP(1))
+        TRABUF(TERR)     = ZEXT(I1TEMP(3))
+        X                = ZEXT(I1TEMP(4))
+        TRABUF(TGAM)     = IAND (X,'7F'X )
 C
         I4TEMP           = LOGBUF(6)
-        TRABUF(TSTAT)    = ZEXT(I1TEMP(1)) 
-        X                = ZEXT(I1TEMP(2)) 
+        TRABUF(TSTAT)    = ZEXT(I1TEMP(1))
+        X                = ZEXT(I1TEMP(2))
 
-        TRABUF(TTYP)     = ISHFT( X, -4 ) 
-        TRABUF(TTRN)     = IAND (X,'0F'X ) 
-        X                = ZEXT (I1TEMP(3)) 
+        TRABUF(TTYP)     = ISHFT( X, -4 )
+        TRABUF(TTRN)     = IAND (X,'0F'X )
+        X                = ZEXT (I1TEMP(3))
 
-        TRABUF(TSIZE)    = ISHFT( X, -4 ) 
-        IF( IAND( X, 8) .NE. 0 ) TRABUF(TINTRA) = 1 
+        TRABUF(TSIZE)    = ISHFT( X, -4 )
+        IF( IAND( X, 8) .NE. 0 ) TRABUF(TINTRA) = 1
 
         TRABUF(TFIL)     = IAND ( X, '07'X )
-        X                = ZEXT(I1TEMP(4)) 
+        X                = ZEXT(I1TEMP(4))
 
-        TRABUF(TGAMTYP)  = ISHFT( X, -3 ) 
-        TRABUF(TGAMIND)  = IAND ( X,'07'X ) 
+        TRABUF(TGAMTYP)  = ISHFT( X, -3 )
+        TRABUF(TGAMIND)  = IAND ( X,'07'X )
 
         I4TEMP = LOGBUF(7)
         X                = ZEXT( I1TEMP(1) )
         TRABUF(TTKID)    = IAND( X, '7F'X)
-        TRABUF(TFAMTFLG) = ISHFT(X, -7) 
+        TRABUF(TFAMTFLG) = ISHFT(X, -7)
         TRABUF(TFRAC)    = ZEXT( I1TEMP(2) )
         TRABUF(TSUBERR)  = ZEXT( I1TEMP(3) )
         TRABUF(TCDC_SOLD)= TRABUF(TCDC) - ZEXT( I1TEMP(4) )
@@ -199,36 +199,36 @@ C
 C PROJECT EURO MIL
 C
         IF (TRABUF(TTYP) .EQ. TEUR) THEN ! PUT INTO TRABUF VALUES THAT ARE IN TMF
-            I4TEMP = LOGBUF(8) 
+            I4TEMP = LOGBUF(8)
             TRABUF(TEUTYP) = ZEXT(I1TEMP(1)) ! TRANSACTION TYPE - EURO MILHOES
             TRABUF(TEUCHK) = ZEXT(I2TEMP(2)) ! TRANSACTION CHECK DIGITS - EURO MILHOES
-            
+
             TRABUF(TEUSER) = LOGBUF(9) ! TRANSACTION SERIAL - EURO MILHOES
             TRABUF(TEUMESSQ) = LOGBUF(10) ! MESSAGEQ SEQ NUMBER
-            
-            IF (TRABUF(TEUTYP) .EQ. TWAG) THEN 
-              
+
+            IF (TRABUF(TEUTYP) .EQ. TWAG) THEN
+
               I4TEMP = LOGBUF(11)
               TRABUF (TEUWBEGW) = ZEXT(I1TEMP(1))
               TRABUF (TEUWBEGY) = ZEXT(I1TEMP(2))
               TRABUF (TEUWENDW) = ZEXT(I1TEMP(3))
               TRABUF (TEUWENDY) = ZEXT(I1TEMP(4))
 
-	      I4TEMP = LOGBUF(12)
+              I4TEMP = LOGBUF(12)
               TRABUF (TEUWDUR)  = ZEXT(I1TEMP(1))
               TRABUF (TEUWNBET) = ZEXT(I1TEMP(2))
               TRABUF (TEUWQP)   = ZEXT(I2TEMP(2))
-              
+
               I4TEMP = LOGBUF(13)
               TRABUF (TEUWNMK) = ZEXT(I1TEMP(1))
               TRABUF (TEUWNST) = ZEXT(I1TEMP(2))
-              
+
               I4TEMP = LOGBUF(14)
               TRABUF (TEUWTIMEH) = ZEXT(I1TEMP(1))
               TRABUF (TEUWTIMEM) = ZEXT(I1TEMP(2))
               TRABUF (TEUWTIMES) = ZEXT(I1TEMP(3))
 
-              I4TEMP = LOGBUF(15) 
+              I4TEMP = LOGBUF(15)
               TRABUF (TEUWOFS1) = I2TEMP(1)
               TRABUF (TEUWOFS2) = I2TEMP(2)
 C
@@ -238,8 +238,8 @@ C
               TRABUF (TEUWDRWIND) = I1TEMP(1)
 
               LOGOFF = 17
-              BRDOFF = 15               
-              
+              BRDOFF = 15
+
               CALL FASTMOV(LOGBUF(LOGOFF), TRABUF(TEUWBOARD), BRDOFF)
 C----+---+-------------+------------------------------------------------
 C V58|BEG| M16 PROJECT | EM WAGER NEW FIELDS
@@ -297,20 +297,20 @@ C----+---+-------------+------------------------------------------------
 C V58|END| M16 PROJECT | EM WAGER NEW FIELDS
 C----+---+-------------+------------------------------------------------
            ENDIF
-            
-           IF (TRABUF(TEUTYP) .EQ. TCAN) THEN 
-              
+
+           IF (TRABUF(TEUTYP) .EQ. TCAN) THEN
+
               I4TEMP = LOGBUF(11)
               TRABUF (TEUCWJUL) = ZEXT(I2TEMP(1))
-              TRABUF (TEUCWCKD)	= ZEXT(I1TEMP(3))
-              
+              TRABUF (TEUCWCKD) = ZEXT(I1TEMP(3))
+
               TRABUF(TEUCWSER)  = LOGBUF(12)
-              
+
               I4TEMP = LOGBUF(13)
               TRABUF (TEUCTIMEH) = ZEXT(I1TEMP(1))
               TRABUF (TEUCTIMEM) = ZEXT(I1TEMP(2))
               TRABUF (TEUCTIMES) = ZEXT(I1TEMP(3))
-              TRABUF (TEUCST)    = ZEXT(I1TEMP(4))           
+              TRABUF (TEUCST)    = ZEXT(I1TEMP(4))
               TRABUF (TEUCAM) = LOGBUF(14)
 C----+---+-------------+------------------------------------------------
 C V58|BEG| M16 PROJECT | EM CANCELLATION NEW FIELDS
@@ -326,31 +326,32 @@ C
               TRABUF(TEUC_SMCSN) = IAND(LOGBUF(19),'00FFFFFF'X)                 !SM CANCELLATION EXTERNAL SERIAL NUMBER (3 BYTES)
               TRABUF(TEUC_SMCCD) = IAND(ISHFT(LOGBUF(19),-24),'000000FF'X)      !SM CANCELLATION CHECK DIGITS           (1 BYTE )
 C
-              TRABUF(TEUC_SMWCA) = LOGBUF(20)                                   !SM WAGER CANCELLATION AMOUNT (WAGER UNITS) (4 BYTES)
+              TRABUF(TEUC_SMWCA) = LOGBUF(20)                                   !SM WAGER CANCELLATION AMOUNT (WAGER UNITS) (4 BYTES
+)
 C----+---+-------------+------------------------------------------------
 C V58|END| M16 PROJECT | EM CANCELLATION NEW FIELDS
 C----+---+-------------+------------------------------------------------
               GOTO 9000
-            ENDIF            
+            ENDIF
 
-            IF (TRABUF(TEUTYP) .EQ. TVAL) THEN 
-              
+            IF (TRABUF(TEUTYP) .EQ. TVAL) THEN
+
               I4TEMP = LOGBUF(11)
               TRABUF (TEUVSBT)  = ZEXT(I1TEMP(1))
               TRABUF (TEUVWCKD) = ZEXT(I1TEMP(2))
-              TRABUF (TEUVWJUL)	= ZEXT(I2TEMP(2))
-              
+              TRABUF (TEUVWJUL) = ZEXT(I2TEMP(2))
+
               TRABUF(TEUVWSER) = LOGBUF(12)
 
               I4TEMP = LOGBUF(13)
               TRABUF (TEUVTIMEH) = ZEXT(I1TEMP(1))
               TRABUF (TEUVTIMEM) = ZEXT(I1TEMP(2))
               TRABUF (TEUVTIMES) = ZEXT(I1TEMP(3))
-              TRABUF (TEUVST) = ZEXT(I1TEMP(4)) 
-              
+              TRABUF (TEUVST) = ZEXT(I1TEMP(4))
+
               TRABUF (TEUVCAM) = LOGBUF(14)
               TRABUF (TEUVRAM) = LOGBUF(15)
-C+++++++++++++V50+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++              
+C+++++++++++++V50+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
               I4TEMP = LOGBUF(16)
               TRABUF(TEUVCAMH) = ZEXT(I1TEMP(1))
 C----+------------------------------------------------------------------
@@ -365,16 +366,16 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V56| Adding new validation messages' fields
 C----+------------------------------------------------------------------
-              TRABUF(TEUVPLCARD) = LOGBUF(17)  
-        
+              TRABUF(TEUVPLCARD) = LOGBUF(17)
+
               I4TEMP          =  LOGBUF(18)
               TRABUF(TEUVNIBBB) = ZEXT( I2TEMP(1) )
               TRABUF(TEUVNIBBO) = ZEXT( I2TEMP(2) )
-        
-              TRABUF(TEUVNIBBA1) =  LOGBUF(19)           
-        
+
+              TRABUF(TEUVNIBBA1) =  LOGBUF(19)
+
               I4TEMP           =  LOGBUF(20)
-              TRABUF(TEUVNIBBA2) = ZEXT( I1TEMP(1) )  
+              TRABUF(TEUVNIBBA2) = ZEXT( I1TEMP(1) )
               TRABUF(TEUVNIBCD)  = ZEXT( I1TEMP(2) )
 C----+------------------------------------------------------------------
 C V56| Adding new validation messages' fields
@@ -396,53 +397,53 @@ C----+---+-------------+------------------------------------------------
 
 C+++++++++++++V50+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
               IF (TRABUF (TEUVST) .EQ. 11) THEN
-C                LOGBUF(16) USED FOR TEUVCAMH AND TEUVRAMH. SEE ABOVE      	
-C              	 I4TEMP = LOGBUF(16)
-C              	 TRABUF(TEUEVWCKD) = I1TEMP(3)
-              	 
-              	 TRABUF(TEUEVWSER) = LOGBUF(17)
-                 
+C                LOGBUF(16) USED FOR TEUVCAMH AND TEUVRAMH. SEE ABOVE
+C                I4TEMP = LOGBUF(16)
+C                TRABUF(TEUEVWCKD) = I1TEMP(3)
+
+                 TRABUF(TEUEVWSER) = LOGBUF(17)
+
                  I4TEMP = LOGBUF(18)
                  TRABUF (TEUVEBEGW) = I1TEMP(1)
                  TRABUF (TEUVEBEGY) = I1TEMP(2)
                  TRABUF (TEUVEENDW) = I1TEMP(3)
-                 TRABUF (TEUVEENDY) = I1TEMP(4)	
-                 
+                 TRABUF (TEUVEENDY) = I1TEMP(4)
+
                  I4TEMP = LOGBUF(19)
                  TRABUF (TEUVEDUR)  = I1TEMP(1)
                  TRABUF (TEUVENBET) = I1TEMP(2)
                  TRABUF (TEUVEQP)   = I2TEMP(2)
-                 
+
                  I4TEMP = LOGBUF(20)
                  TRABUF (TEUVENMK) = I1TEMP(1)
                  TRABUF (TEUVENST) = I1TEMP(2)
-                 
+
                  I4TEMP = LOGBUF(21)
                  TRABUF (TEUVETIMEH) = I1TEMP(1)
                  TRABUF (TEUVETIMEM) = I1TEMP(2)
                  TRABUF (TEUVETIMES) = I1TEMP(3)
                  TRABUF (TEUEVWCKD)  = I1TEMP(4)
-                 
+
                  I4TEMP = LOGBUF(22)
                  TRABUF (TEUVEOFS1) = I2TEMP(1)
                  TRABUF (TEUVEOFS2) = I2TEMP(2)
-                 
+
                  LOGOFF = 23
-                 BRDOFF = 9              
-                 
-                 CALL FASTMOV(LOGBUF(LOGOFF), TRABUF(TEUVEBOARD), BRDOFF)              	 
-              	 
+                 BRDOFF = 9
+
+                 CALL FASTMOV(LOGBUF(LOGOFF), TRABUF(TEUVEBOARD), BRDOFF)
+
               ENDIF
-              
+
               GOTO 9000
-            ENDIF            
-        
+            ENDIF
+
             GOTO 9000
         ENDIF
 C----+------------------------------------------------------------------
 C V57| Added support to PLACARD Project - IGS
 C----+------------------------------------------------------------------
-        IF (TRABUF(TTYP) .EQ. TIGS) THEN 
+        IF (TRABUF(TTYP) .EQ. TIGS) THEN
 C----+------------------------------------------------------------------
 C    |
 C    |
@@ -451,7 +452,7 @@ C    |
 C    |
 C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
-C V57| Handling IGS transaction header: IGS TRANSACTION TYPE 
+C V57| Handling IGS transaction header: IGS TRANSACTION TYPE
 C----+------------------------------------------------------------------
             TRABUF (TIGS_TTYP) = LOGBUF(8)  ! (1 byte)
 C----+------------------------------------------------------------------
@@ -463,8 +464,8 @@ C V57| Handling IGS transaction header: IGS ERROR CODE DESCRIPTION, SYSTEM CODE 
 C----+------------------------------------------------------------------
             TRABUF (TIGS_XERR + 0) = LOGBUF(10) ! (9 bytes) 28
             TRABUF (TIGS_XERR + 1) = LOGBUF(11) ! 29
-            I4TEMP = LOGBUF(12) 
-            TRABUF (TIGS_XERR + 2) = ZEXT(I1TEMP(1)) ! (1 byte) 30            
+            I4TEMP = LOGBUF(12)
+            TRABUF (TIGS_XERR + 2) = ZEXT(I1TEMP(1)) ! (1 byte) 30
             TRABUF (TIGS_SERR)     = ZEXT(I1TEMP(2)) ! (1 byte)
 C----+------------------------------------------------------------------
 C    |
@@ -491,11 +492,11 @@ C V57| Handling wager transactions: SUBTYPE ID
 C    | - Be careful when placing information here, because bytes #4 of -
 C    | - words #16,#32,#48 are used for record extension               -
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(16) 
+                I4TEMP = LOGBUF(16)
                 TRABUF (TIGSW_STID) = I2TEMP(1)  ! (2 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: UNIT STAKE OF THE BET
-C----+------------------------------------------------------------------  
+C----+------------------------------------------------------------------
                 TRABUF (TIGSW_USTK) = LOGBUF(17) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: TOTAL BETS/NUMBER OF SELECTIONS (MAX = 8)
@@ -504,44 +505,44 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET REFERENCE DATE (YYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(19)                
-                TRABUF (TIGSW_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)                                    
-                TRABUF (TIGSW_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)                                      
+                I4TEMP = LOGBUF(19)
+                TRABUF (TIGSW_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)
+                TRABUF (TIGSW_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)
                 TRABUF (TIGSW_WRDD) = ZEXT(I1TEMP(3)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET REFERENCE GAME
-C----+------------------------------------------------------------------                              
+C----+------------------------------------------------------------------
                 TRABUF (TIGSW_WRGM) = LOGBUF(20) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET REFERENCE SERIAL NUMBER (LOW FOUR BYTES)
-C----+------------------------------------------------------------------     
+C----+------------------------------------------------------------------
                 TRABUF (TIGSW_WRSL) = LOGBUF(21) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE)
-C----+------------------------------------------------------------------      
+C----+------------------------------------------------------------------
                 TRABUF (TIGSW_WRSH) = LOGBUF(22) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET REFERENCE CHECK DIGITS
-C----+------------------------------------------------------------------                       
+C----+------------------------------------------------------------------
                 TRABUF (TIGSW_WRCD) = LOGBUF(23) ! (2 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET CREATION DATE (YYYYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(24)                                   
-                TRABUF (TIGSW_WCDY) = ZEXT(I2TEMP(1)) ! (2 bytes)                                      
-                TRABUF (TIGSW_WCDM) = ZEXT(I1TEMP(3)) ! (1 byte)               
+                I4TEMP = LOGBUF(24)
+                TRABUF (TIGSW_WCDY) = ZEXT(I2TEMP(1)) ! (2 bytes)
+                TRABUF (TIGSW_WCDM) = ZEXT(I1TEMP(3)) ! (1 byte)
                 TRABUF (TIGSW_WCDD) = ZEXT(I1TEMP(4)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET CREATION TIME (HHMISS)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(25)                                       
-                TRABUF (TIGSW_WCTH) = ZEXT(I1TEMP(1)) ! (1 byte)                     
-                TRABUF (TIGSW_WCTM) = ZEXT(I1TEMP(2)) ! (1 byte)                                     
+                I4TEMP = LOGBUF(25)
+                TRABUF (TIGSW_WCTH) = ZEXT(I1TEMP(1)) ! (1 byte)
+                TRABUF (TIGSW_WCTM) = ZEXT(I1TEMP(2)) ! (1 byte)
                 TRABUF (TIGSW_WCTS) = ZEXT(I1TEMP(3)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET LAST EVENT DATE (YYYYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(26)                 
+                I4TEMP = LOGBUF(26)
                 TRABUF (TIGSW_LEDY) = ZEXT(I2TEMP(1)) ! (2 bytes)
                 TRABUF (TIGSW_LEDM) = ZEXT(I1TEMP(3)) ! (1 byte)
                 TRABUF (TIGSW_LEDD) = ZEXT(I1TEMP(4)) ! (1 byte)
@@ -551,11 +552,11 @@ C----+------------------------------------------------------------------
                 TRABUF (TIGSW_TSTK) = LOGBUF(27) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: BET MAXIMUM POSSIBLE RETURNS
-C----+------------------------------------------------------------------                    
+C----+------------------------------------------------------------------
                 TRABUF (TIGSW_MAXR) = LOGBUF(28) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling wager transactions: PLAYER NIF NUMBER
-C----+------------------------------------------------------------------                           
+C----+------------------------------------------------------------------
                 TRABUF (TIGSW_PNIF) = LOGBUF(29) ! (4 bytes)
                 GOTO 9000
             ENDIF
@@ -569,18 +570,18 @@ C----+------------------------------------------------------------------
             IF (TRABUF(TIGS_TTYP) .EQ. IGSCAN) THEN
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: TERMINAL MESSAGE ID (LOW 4 BYTES)
-C----+------------------------------------------------------------------               
+C----+------------------------------------------------------------------
                 TRABUF (TIGSC_MIDL) = LOGBUF(13) ! (4 bytes)
 C----+------------------------------------------------------------------
-C V57| Handling cancellation transactions: TERMINAL MESSAGE ID (HIGH 4 BYTES) -> Terminal Number               
-C----+------------------------------------------------------------------              
+C V57| Handling cancellation transactions: TERMINAL MESSAGE ID (HIGH 4 BYTES) -> Terminal Number
+C----+------------------------------------------------------------------
                 TRABUF (TIGSC_MIDH) = LOGBUF(14) ! (4 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: BET REFERENCE DATE (YYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP     = LOGBUF(15)                
-                TRABUF (TIGSC_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)                             
-                TRABUF (TIGSC_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)                                      
+                I4TEMP     = LOGBUF(15)
+                TRABUF (TIGSC_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)
+                TRABUF (TIGSC_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)
                 TRABUF (TIGSC_WRDD) = ZEXT(I1TEMP(3)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: BET REFERENCE GAME
@@ -591,10 +592,10 @@ C----+------------------------------------------------------------------
                 TRABUF (TIGSC_WRGM) = ZEXT(I1TEMP(1)) ! (1 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: BET REFERENCE SERIAL NUMBER (LOW FOUR BYTES)
-C----+------------------------------------------------------------------     
+C----+------------------------------------------------------------------
                 TRABUF (TIGSC_WRSL) = LOGBUF(17) ! (4 bytes)
 C----+------------------------------------------------------------------
-C V57| Handling cancellation transactions: BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE)      
+C V57| Handling cancellation transactions: BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE)
 C----+------------------------------------------------------------------
                 TRABUF (TIGSC_WRSH) = LOGBUF(18) ! (1 byte)
 C----+------------------------------------------------------------------
@@ -603,7 +604,7 @@ C----+------------------------------------------------------------------
                 TRABUF (TIGSC_WRCD) = LOGBUF(19) ! (2 bytes)
 C----+------------------------------------------------------------------
 C V57| Handling cancellation transactions: CANCEL STATUS, CANCEL REFERENCE GAME
-C----+------------------------------------------------------------------                       
+C----+------------------------------------------------------------------
                 I4TEMP     = LOGBUF(20)
                 TRABUF (TIGSC_CRGM) = ZEXT(I1TEMP(2)) ! (1 byte)
 C----+------------------------------------------------------------------
@@ -664,7 +665,7 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V57| Handling validation transactions: BET REFERENCE DATE (YYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP     = LOGBUF(15) 
+                I4TEMP     = LOGBUF(15)
                 TRABUF (TIGSV_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)
                 TRABUF (TIGSV_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)
                 TRABUF (TIGSV_WRDD) = ZEXT(I1TEMP(3)) ! (1 byte)
@@ -673,7 +674,7 @@ C V57| Handling validation transactions: BET REFERENCE GAME
 C    | - Be careful when placing information here, because bytes #4 of -
 C    | - words #16,#32,#48 are used for record extension               -
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(16) 
+                I4TEMP = LOGBUF(16)
                 TRABUF (TIGSV_WRGM) = ZEXT(I1TEMP(1)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling validation transactions: BET REFERENCE SERIAL NUMBER (LOW FOUR BYTES)
@@ -695,7 +696,7 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V57| Handling validation transactions: WAGER VALIDATION DATE (YYYYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP  = LOGBUF(21) 
+                I4TEMP  = LOGBUF(21)
                 TRABUF (TIGSV_WVDY) = ZEXT(I2TEMP(1)) ! (2 bytes)
                 TRABUF (TIGSV_WVDM) = ZEXT(I1TEMP(3)) ! (1 byte)
                 TRABUF (TIGSV_WVDD) = ZEXT(I1TEMP(4)) ! (1 byte)
@@ -703,7 +704,7 @@ C----+------------------------------------------------------------------
 C V57| Handling validation transactions: WAGER VALIDATION TIME (HHMISS)
 C    |                                   PLAYER NIF NUMBER CONFIRMATION NEEDED FLAG
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(22) 
+                I4TEMP = LOGBUF(22)
                 TRABUF (TIGSV_WVTH) = ZEXT(I1TEMP(1)) ! (1 byte)
                 TRABUF (TIGSV_WVTM) = ZEXT(I1TEMP(2)) ! (1 byte)
                 TRABUF (TIGSV_WVTS) = ZEXT(I1TEMP(3)) ! (1 byte)
@@ -745,7 +746,7 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V57| Handling payment transactions: BET REFERENCE DATE (YYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(15) 
+                I4TEMP = LOGBUF(15)
                 TRABUF (TIGSP_WRDY) = ZEXT(I1TEMP(1)) ! (1 byte)
                 TRABUF (TIGSP_WRDM) = ZEXT(I1TEMP(2)) ! (1 byte)
                 TRABUF (TIGSP_WRDD) = ZEXT(I1TEMP(3)) ! (1 byte)
@@ -765,7 +766,7 @@ C V57| Handling payment transactions: BET REFERENCE SERIAL NUMBER (HIGH ONE BYTE
 C                                     PAYMENT MODE,
 C    |                                BET REFERENCE CHECK DIGITS
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(18) 
+                I4TEMP = LOGBUF(18)
                 TRABUF (TIGSP_WRSH) = ZEXT(I1TEMP(1)) ! (1 byte)
                 TRABUF (TIGSP_PMOD) = ZEXT(I1TEMP(2)) ! (1 byte)
                 TRABUF (TIGSP_WRCD) = ZEXT(I2TEMP(2)) ! (2 bytes)
@@ -776,20 +777,20 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V57| Handling payment transactions: PLAYER NIB, PLAYER ID TYPE
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(20) 
+                I4TEMP = LOGBUF(20)
                 TRABUF (TIGSP_NIBB) = ZEXT(I2TEMP(1)) ! (2 bytes)  NIB Branch
                 TRABUF (TIGSP_NIBO) = ZEXT(I2TEMP(2)) ! (2 bytes)  NIB Office
 
                 TRABUF (TIGSP_NIA1) = LOGBUF(21) ! (4 bytes)  NIB Account Number Part 1
-                
-                I4TEMP = LOGBUF(22) 
+
+                I4TEMP = LOGBUF(22)
                 TRABUF (TIGSP_NIA2) = ZEXT(I1TEMP(1)) ! (1 byte)   NIB Account Number Part 2
                 TRABUF (TIGSP_NICD) = ZEXT(I1TEMP(2)) ! (1 byte)   NIB Check digits
                 TRABUF (TIGSP_IDTY) = ZEXT(I1TEMP(3)) ! (1 byte)   Player Id Type
 C----+------------------------------------------------------------------
 C V57| Handling payment transactions: PAYMENT REFERENCE DATE (YYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(23) 
+                I4TEMP = LOGBUF(23)
                 TRABUF (TIGSP_PRDY) = ZEXT(I1TEMP(1)) ! (1 byte)
                 TRABUF (TIGSP_PRDM) = ZEXT(I1TEMP(2)) ! (1 byte)
                 TRABUF (TIGSP_PRDD) = ZEXT(I1TEMP(3)) ! (1 byte)
@@ -809,14 +810,14 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V57| Handling payment transactions: PRIZE PAYMENT DATE (YYYYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(26) 
+                I4TEMP = LOGBUF(26)
                 TRABUF (TIGSP_PPDY) = ZEXT(I2TEMP(1)) ! (2 bytes)
                 TRABUF (TIGSP_PPDM) = ZEXT(I1TEMP(3)) ! (1 byte)
                 TRABUF (TIGSP_PPDD) = ZEXT(I1TEMP(4)) ! (1 byte)
 C----+------------------------------------------------------------------
 C V57| Handling payment transactions: PRIZE PAYMENT TIME (HHMISS)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(27) 
+                I4TEMP = LOGBUF(27)
                 TRABUF (TIGSP_PPTH) = ZEXT(I1TEMP(1)) ! (1 byte)
                 TRABUF (TIGSP_PPTM) = ZEXT(I1TEMP(2)) ! (1 byte)
                 TRABUF (TIGSP_PPTS) = ZEXT(I1TEMP(3)) ! (1 byte)
@@ -872,7 +873,7 @@ C----+------------------------------------------------------------------
 C----+------------------------------------------------------------------
 C V57| Handling game programme report transactions: PROGRAMME REPORT DATE (YYYYMMDD)
 C----+------------------------------------------------------------------
-                I4TEMP = LOGBUF(18) 
+                I4TEMP = LOGBUF(18)
                 TRABUF (TIGSR_PRDY) = ZEXT(I2TEMP(1)) ! (2 bytes)
                 TRABUF (TIGSR_PRDM) = ZEXT(I1TEMP(3)) ! (1 byte)
                 TRABUF (TIGSR_PRDD) = ZEXT(I1TEMP(4)) ! (1 byte)
@@ -907,7 +908,7 @@ C DECODE PASSIVE GAMES
 C
         IF(TRABUF(TGAMTYP).EQ.TPAS) THEN
 
-	  I4TEMP = LOGBUF(12)
+          I4TEMP = LOGBUF(12)
           IF(TRABUF(TTYP).EQ.TVAL) THEN
              TRABUF(TVEPVAL) = I1TEMP(4)
           ELSEIF(TRABUF(TTYP).EQ.TWAG) THEN
@@ -932,7 +933,7 @@ C
               TRABUF(TWCTER)   = ZEXT( I2TEMP(2) )
 C
               I4TEMP           = LOGBUF(11)
-              TRABUF(TWQPF)    = ZEXT( I2TEMP(1) )        
+              TRABUF(TWQPF)    = ZEXT( I2TEMP(1) )
               TRABUF(TWNBET)   = ZEXT( I1TEMP(4) )
 C
               I4TEMP           = LOGBUF(12)
@@ -949,7 +950,7 @@ C
 
                  TRABUF(TWEPSN)   = LOGBUF(14)
 
-                 I4TEMP           = LOGBUF(15) 
+                 I4TEMP           = LOGBUF(15)
                  TRABUF(TWEPSF)   = ZEXT( I1TEMP(1) )
                  TRABUF(TWEPSS)   = ZEXT( I1TEMP(2) )
 
@@ -962,8 +963,8 @@ C
 
                  TRABUF(TWEPSD)   = LOGBUF(14)
 
-                 TRABUF(TWEPRM)   = LOGBUF(15) 
-       
+                 TRABUF(TWEPRM)   = LOGBUF(15)
+
                  I4TEMP           = LOGBUF(16)
                  TRABUF(TWEPNE)   = ZEXT( I1TEMP(1) )
                  TRABUF(TWEPNF)   = ZEXT( I1TEMP(2) )
@@ -978,25 +979,25 @@ C
                  IF(TRABUF(TWEPOP).EQ.EPASREL) GOTO 9000
 
                  I4TEMP             = LOGBUF(20)
-                 TRABUF(TWEPNFR1)   = ZEXT( I1TEMP(1) ) 
-                 TRABUF(TWEPNFR2)   = ZEXT( I1TEMP(2) ) 
-                 TRABUF(TWEPNFR3)   = ZEXT( I1TEMP(3) ) 
+                 TRABUF(TWEPNFR1)   = ZEXT( I1TEMP(1) )
+                 TRABUF(TWEPNFR2)   = ZEXT( I1TEMP(2) )
+                 TRABUF(TWEPNFR3)   = ZEXT( I1TEMP(3) )
 
                  I4TEMP             = LOGBUF(21)
-                 TRABUF(TWEPSER1_1) = ZEXT( I1TEMP(1) ) 
-                 TRABUF(TWEPSER1_2) = ZEXT( I1TEMP(2) ) 
-                 TRABUF(TWEPSER1_3) = ZEXT( I1TEMP(3) ) 
-                 TRABUF(TWEPSER1_4) = ZEXT( I1TEMP(4) ) 
+                 TRABUF(TWEPSER1_1) = ZEXT( I1TEMP(1) )
+                 TRABUF(TWEPSER1_2) = ZEXT( I1TEMP(2) )
+                 TRABUF(TWEPSER1_3) = ZEXT( I1TEMP(3) )
+                 TRABUF(TWEPSER1_4) = ZEXT( I1TEMP(4) )
 
                  I4TEMP             = LOGBUF(22)
-                 TRABUF(TWEPSER1_5) = ZEXT( I1TEMP(1) ) 
-                 TRABUF(TWEPSER1_6) = ZEXT( I1TEMP(2) ) 
-                 TRABUF(TWEPSER1_7) = ZEXT( I1TEMP(3) ) 
-                 TRABUF(TWEPSER1_8) = ZEXT( I1TEMP(4) ) 
+                 TRABUF(TWEPSER1_5) = ZEXT( I1TEMP(1) )
+                 TRABUF(TWEPSER1_6) = ZEXT( I1TEMP(2) )
+                 TRABUF(TWEPSER1_7) = ZEXT( I1TEMP(3) )
+                 TRABUF(TWEPSER1_8) = ZEXT( I1TEMP(4) )
 
                  I4TEMP             = LOGBUF(23)
-                 TRABUF(TWEPSER1_9) = ZEXT( I1TEMP(1) ) 
-                 TRABUF(TWEPSER1_10)= ZEXT( I1TEMP(2) ) 
+                 TRABUF(TWEPSER1_9) = ZEXT( I1TEMP(1) )
+                 TRABUF(TWEPSER1_10)= ZEXT( I1TEMP(2) )
                  TRABUF(TWEPFRC1_1) = ZEXT( I1TEMP(3) )
                  TRABUF(TWEPFRC1_2) = ZEXT( I1TEMP(4) )
 
@@ -1013,20 +1014,20 @@ C
                  TRABUF(TWEPFRC1_10)= ZEXT( I1TEMP(4) )
 
                  I4TEMP             = LOGBUF(26)
-                 TRABUF(TWEPSER2_1) = ZEXT( I1TEMP(1) ) 
-                 TRABUF(TWEPSER2_2) = ZEXT( I1TEMP(2) ) 
-                 TRABUF(TWEPSER2_3) = ZEXT( I1TEMP(3) ) 
-                 TRABUF(TWEPSER2_4) = ZEXT( I1TEMP(4) ) 
+                 TRABUF(TWEPSER2_1) = ZEXT( I1TEMP(1) )
+                 TRABUF(TWEPSER2_2) = ZEXT( I1TEMP(2) )
+                 TRABUF(TWEPSER2_3) = ZEXT( I1TEMP(3) )
+                 TRABUF(TWEPSER2_4) = ZEXT( I1TEMP(4) )
 
                  I4TEMP             = LOGBUF(27)
-                 TRABUF(TWEPSER2_5) = ZEXT( I1TEMP(1) ) 
-                 TRABUF(TWEPSER2_6) = ZEXT( I1TEMP(2) ) 
-                 TRABUF(TWEPSER2_7) = ZEXT( I1TEMP(3) ) 
-                 TRABUF(TWEPSER2_8) = ZEXT( I1TEMP(4) ) 
+                 TRABUF(TWEPSER2_5) = ZEXT( I1TEMP(1) )
+                 TRABUF(TWEPSER2_6) = ZEXT( I1TEMP(2) )
+                 TRABUF(TWEPSER2_7) = ZEXT( I1TEMP(3) )
+                 TRABUF(TWEPSER2_8) = ZEXT( I1TEMP(4) )
 
                  I4TEMP             = LOGBUF(28)
-                 TRABUF(TWEPSER2_9) = ZEXT( I1TEMP(1) ) 
-                 TRABUF(TWEPSER2_10)= ZEXT( I1TEMP(2) ) 
+                 TRABUF(TWEPSER2_9) = ZEXT( I1TEMP(1) )
+                 TRABUF(TWEPSER2_10)= ZEXT( I1TEMP(2) )
                  TRABUF(TWEPFRC2_1) = ZEXT( I1TEMP(3) )
                  TRABUF(TWEPFRC2_2) = ZEXT( I1TEMP(4) )
 
@@ -1043,22 +1044,22 @@ C
                  TRABUF(TWEPFRC2_10)= ZEXT( I1TEMP(4) )
 
                  I4TEMP             = LOGBUF(31)
-                 TRABUF(TWEPSER3_1) = ZEXT( I1TEMP(1) ) 
-                 TRABUF(TWEPSER3_2) = ZEXT( I1TEMP(2) ) 
-                 TRABUF(TWEPSER3_3) = ZEXT( I1TEMP(3) ) 
-                 TRABUF(TWEPSER3_4) = ZEXT( I1TEMP(4) ) 
+                 TRABUF(TWEPSER3_1) = ZEXT( I1TEMP(1) )
+                 TRABUF(TWEPSER3_2) = ZEXT( I1TEMP(2) )
+                 TRABUF(TWEPSER3_3) = ZEXT( I1TEMP(3) )
+                 TRABUF(TWEPSER3_4) = ZEXT( I1TEMP(4) )
 C
 C BEGIN CONTINUATION RECORD 2
 C
                  I4TEMP             = LOGBUF(33)
-                 TRABUF(TWEPSER3_5) = ZEXT( I1TEMP(1) ) 
-                 TRABUF(TWEPSER3_6) = ZEXT( I1TEMP(2) ) 
-                 TRABUF(TWEPSER3_7) = ZEXT( I1TEMP(3) ) 
-                 TRABUF(TWEPSER3_8) = ZEXT( I1TEMP(4) ) 
+                 TRABUF(TWEPSER3_5) = ZEXT( I1TEMP(1) )
+                 TRABUF(TWEPSER3_6) = ZEXT( I1TEMP(2) )
+                 TRABUF(TWEPSER3_7) = ZEXT( I1TEMP(3) )
+                 TRABUF(TWEPSER3_8) = ZEXT( I1TEMP(4) )
 
                  I4TEMP             = LOGBUF(34)
-                 TRABUF(TWEPSER3_9) = ZEXT( I1TEMP(1) ) 
-                 TRABUF(TWEPSER3_10)= ZEXT( I1TEMP(2) ) 
+                 TRABUF(TWEPSER3_9) = ZEXT( I1TEMP(1) )
+                 TRABUF(TWEPSER3_10)= ZEXT( I1TEMP(2) )
                  TRABUF(TWEPFRC3_1) = ZEXT( I1TEMP(3) )
                  TRABUF(TWEPFRC3_2) = ZEXT( I1TEMP(4) )
 
@@ -1075,155 +1076,155 @@ C
                  TRABUF(TWEPFRC3_10)= ZEXT( I1TEMP(4) )
 
               ENDIF
-              GOTO 9000   
+              GOTO 9000
 
         ENDIF
 
         IF(TRABUF(TTYP).EQ.TRET) THEN        !RETURNS OF PPASSIVE TICKETS
 
-	  I4TEMP         =  LOGBUF(8)
-	  TRABUF(TPTCK)  =  ISHFT (I1TEMP(4),-4)
-	  TRABUF(TPRETYP)=  IAND (I1TEMP(4), '0F'X)
+          I4TEMP         =  LOGBUF(8)
+          TRABUF(TPTCK)  =  ISHFT (I1TEMP(4),-4)
+          TRABUF(TPRETYP)=  IAND (I1TEMP(4), '0F'X)
           TRABUF(TPNUM1) =  IAND(I4TEMP,'00FFFFFF'X)
 
-	  TRABUF(TPKEY1) =  LOGBUF(9)
-	  TRABUF(TPPAY1) =  LOGBUF(10)
+          TRABUF(TPKEY1) =  LOGBUF(9)
+          TRABUF(TPPAY1) =  LOGBUF(10)
 
           I4TEMP         =  LOGBUF(11)
-	  TRABUF(TPEMIS1)=  ZEXT( I2TEMP(1) )	  
-	  TRABUF(TPSER1) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN1) =  ZEXT( I1TEMP(4) )	  
+          TRABUF(TPEMIS1)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER1) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN1) =  ZEXT( I1TEMP(4) )
 
-	  I4TEMP         =  LOGBUF(12)
+          I4TEMP         =  LOGBUF(12)
           TRABUF(TPNUM2) =  IAND(I4TEMP,'00FFFFFF'X)
-          ! OPREQ is in I1TEMP(4), this is decoded above  
+          ! OPREQ is in I1TEMP(4), this is decoded above
 
-	  TRABUF(TPKEY2) =  LOGBUF(13)
-	  TRABUF(TPPAY2) =  LOGBUF(14)
+          TRABUF(TPKEY2) =  LOGBUF(13)
+          TRABUF(TPPAY2) =  LOGBUF(14)
 
           I4TEMP         =  LOGBUF(15)
-	  TRABUF(TPEMIS2)=  ZEXT( I2TEMP(1) )	  
-	  TRABUF(TPSER2) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN2) =  ZEXT( I1TEMP(4) )	  
+          TRABUF(TPEMIS2)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER2) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN2) =  ZEXT( I1TEMP(4) )
 
-	  I4TEMP         =  LOGBUF(16)
-	  TRABUF(TPOFFTER)= ZEXT( I2TEMP(1) )
-	  X              =  ZEXT( I1TEMP(3) )
-	  TRABUF(TPSTS1) =  IAND (X , '0F'X)
-	  TRABUF(TPSTS2) =  ISHFT(X, -4)
+          I4TEMP         =  LOGBUF(16)
+          TRABUF(TPOFFTER)= ZEXT( I2TEMP(1) )
+          X              =  ZEXT( I1TEMP(3) )
+          TRABUF(TPSTS1) =  IAND (X , '0F'X)
+          TRABUF(TPSTS2) =  ISHFT(X, -4)
 
           IF(TRABUF(TSIZE).EQ.1) GOTO 9000
 C
 C  *** PASSIVE UNSOLD TICKETS CONTINUATION RECORD 1 ***
 C
-	  TRABUF(TPKEY3) =  LOGBUF(17)	  
-	  TRABUF(TPPAY3) =  LOGBUF(18)	  
+          TRABUF(TPKEY3) =  LOGBUF(17)
+          TRABUF(TPPAY3) =  LOGBUF(18)
 
-	  I4TEMP         =  LOGBUF(19)
-	  TRABUF(TPEMIS3)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER3) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN3) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(19)
+          TRABUF(TPEMIS3)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER3) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN3) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY4) =  LOGBUF(20)	  
-	  TRABUF(TPPAY4) =  LOGBUF(21)	  
+          TRABUF(TPKEY4) =  LOGBUF(20)
+          TRABUF(TPPAY4) =  LOGBUF(21)
 
-	  I4TEMP         =  LOGBUF(22)
-	  TRABUF(TPEMIS4)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER4) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN4) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(22)
+          TRABUF(TPEMIS4)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER4) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN4) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY5) =  LOGBUF(23)	  
-	  TRABUF(TPPAY5) =  LOGBUF(24)	  
+          TRABUF(TPKEY5) =  LOGBUF(23)
+          TRABUF(TPPAY5) =  LOGBUF(24)
 
-	  I4TEMP         =  LOGBUF(25)
-	  TRABUF(TPEMIS5)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER5) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN5) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(25)
+          TRABUF(TPEMIS5)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER5) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN5) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY6) =  LOGBUF(26)	  
-	  TRABUF(TPPAY6) =  LOGBUF(27)	  
+          TRABUF(TPKEY6) =  LOGBUF(26)
+          TRABUF(TPPAY6) =  LOGBUF(27)
 
-	  I4TEMP         =  LOGBUF(28)
-	  TRABUF(TPEMIS6)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER6) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN6) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(28)
+          TRABUF(TPEMIS6)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER6) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN6) =  ZEXT( I1TEMP(4) )
 
-	  I4TEMP         =  LOGBUF(29)
+          I4TEMP         =  LOGBUF(29)
           TRABUF(TPNUM3) =  IAND(I4TEMP,'00FFFFFF'X)
-	  X              =  ZEXT( I1TEMP(4) )
-	  TRABUF(TPSTS3) =  IAND (X , '0F'X)
-	  TRABUF(TPSTS4) =  ISHFT(X, -4)
+          X              =  ZEXT( I1TEMP(4) )
+          TRABUF(TPSTS3) =  IAND (X , '0F'X)
+          TRABUF(TPSTS4) =  ISHFT(X, -4)
 
-	  I4TEMP         =  LOGBUF(30)
+          I4TEMP         =  LOGBUF(30)
           TRABUF(TPNUM4) =  IAND(I4TEMP,'00FFFFFF'X)
-	  X              =  ZEXT( I1TEMP(4) )
-	  TRABUF(TPSTS5) =  IAND (X , '0F'X)
-	  TRABUF(TPSTS6) =  ISHFT(X, -4)
+          X              =  ZEXT( I1TEMP(4) )
+          TRABUF(TPSTS5) =  IAND (X , '0F'X)
+          TRABUF(TPSTS6) =  ISHFT(X, -4)
 
-	  I4TEMP         =  LOGBUF(31)
+          I4TEMP         =  LOGBUF(31)
           TRABUF(TPNUM5) =  IAND(I4TEMP,'00FFFFFF'X)
           TRABUF(TPFRCNT)=  ZEXT( I1TEMP(4) )
 
-	  I4TEMP         =  LOGBUF(32)
+          I4TEMP         =  LOGBUF(32)
           TRABUF(TPNUM6) =  IAND(I4TEMP,'00FFFFFF'X)
 
           IF(TRABUF(TSIZE).EQ.2) GOTO 9000
 C
 C  *** PASSIVE UNSOLD TICKETS CONTINUATION RECORD 2 ***
 C
-	  TRABUF(TPKEY7) =  LOGBUF(33)	  
-	  TRABUF(TPPAY7) =  LOGBUF(34)	  
+          TRABUF(TPKEY7) =  LOGBUF(33)
+          TRABUF(TPPAY7) =  LOGBUF(34)
 
-	  I4TEMP         =  LOGBUF(35)
-	  TRABUF(TPEMIS7)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER7) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN7) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(35)
+          TRABUF(TPEMIS7)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER7) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN7) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY8) =  LOGBUF(36)	  
-	  TRABUF(TPPAY8) =  LOGBUF(37)	  
+          TRABUF(TPKEY8) =  LOGBUF(36)
+          TRABUF(TPPAY8) =  LOGBUF(37)
 
-	  I4TEMP         =  LOGBUF(38)
-	  TRABUF(TPEMIS8)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER8) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN8) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(38)
+          TRABUF(TPEMIS8)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER8) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN8) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY9) =  LOGBUF(39)	  
-	  TRABUF(TPPAY9) =  LOGBUF(40)	  
+          TRABUF(TPKEY9) =  LOGBUF(39)
+          TRABUF(TPPAY9) =  LOGBUF(40)
 
-	  I4TEMP         =  LOGBUF(41)
-	  TRABUF(TPEMIS9)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER9) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN9) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(41)
+          TRABUF(TPEMIS9)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER9) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN9) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY10) =  LOGBUF(42)	  
-	  TRABUF(TPPAY10) =  LOGBUF(43)	  
+          TRABUF(TPKEY10) =  LOGBUF(42)
+          TRABUF(TPPAY10) =  LOGBUF(43)
 
-	  I4TEMP          =  LOGBUF(44)
-	  TRABUF(TPEMIS10)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER10) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN10) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP          =  LOGBUF(44)
+          TRABUF(TPEMIS10)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER10) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN10) =  ZEXT( I1TEMP(4) )
 
-	  I4TEMP          =  LOGBUF(45)
+          I4TEMP          =  LOGBUF(45)
           TRABUF(TPNUM7)  =  IAND(I4TEMP,'00FFFFFF'X)
-	  X               =  ZEXT( I1TEMP(4) )
-	  TRABUF(TPSTS7)  =  IAND (X , '0F'X)
-	  TRABUF(TPSTS8)  =  ISHFT(X, -4)
+          X               =  ZEXT( I1TEMP(4) )
+          TRABUF(TPSTS7)  =  IAND (X , '0F'X)
+          TRABUF(TPSTS8)  =  ISHFT(X, -4)
 
-	  I4TEMP          =  LOGBUF(46)
+          I4TEMP          =  LOGBUF(46)
           TRABUF(TPNUM8)  =  IAND(I4TEMP,'00FFFFFF'X)
-	  X               =  ZEXT( I1TEMP(4) )
-	  TRABUF(TPSTS9)  =  IAND (X , '0F'X)
-	  TRABUF(TPSTS10) =  ISHFT(X, -4)
+          X               =  ZEXT( I1TEMP(4) )
+          TRABUF(TPSTS9)  =  IAND (X , '0F'X)
+          TRABUF(TPSTS10) =  ISHFT(X, -4)
 
-	  I4TEMP          =  LOGBUF(47)
+          I4TEMP          =  LOGBUF(47)
           TRABUF(TPNUM9)  =  IAND(I4TEMP,'00FFFFFF'X)
 
-	  I4TEMP          =  LOGBUF(48)
+          I4TEMP          =  LOGBUF(48)
           TRABUF(TPNUM10) =  IAND(I4TEMP,'00FFFFFF'X)
 
-      	  GOTO 9000
+          GOTO 9000
 
-	ENDIF
+        ENDIF
 C
 C DECODE WAGERS/CANCELLATIONS/DELETIONS
 C
@@ -1234,27 +1235,27 @@ C
 C
 C DECODE LOTTO/SPORTS/SPEDEN WAGER BODY
 C
-           IF(TRABUF(TGAMTYP).EQ.TLTO.OR.TRABUF(TGAMTYP).EQ.TSPT 
-     *     .OR.TRABUF(TGAMTYP).EQ.TTGL) THEN 
+           IF(TRABUF(TGAMTYP).EQ.TLTO.OR.TRABUF(TGAMTYP).EQ.TSPT
+     *     .OR.TRABUF(TGAMTYP).EQ.TTGL) THEN
 C
               TRABUF(TWCSER)   = LOGBUF(8)
-C 
+C
               TRABUF(TWAMT)    = LOGBUF(9)
 C
               I4TEMP           = LOGBUF(10)
               TRABUF(TWBEG)    = ZEXT( I2TEMP(1) )
               TRABUF(TWCTER)   = ZEXT( I2TEMP(2) )
-C 
+C
               I4TEMP           = LOGBUF(11)
               TRABUF(TWQPF)    = ZEXT( I2TEMP(1) )
               TRABUF(TWSIMP)   = ZEXT( I2TEMP(2) )
-C 
+C
 C              I4TEMP           = LOGBUF(12)
 C              TRABUF(TWSYSN)   = ZEXT( I1TEMP(1) )
-C              TRABUF(TWVSTS)   = ZEXT( I1TEMP(2) ) 
+C              TRABUF(TWVSTS)   = ZEXT( I1TEMP(2) )
 C              TRABUF(TWDUR)    = ZEXT( I1TEMP(3) )
 C              TRABUF(TWSYST)   = ZEXT( I1TEMP(4) )
-C 
+C
               BDATA_VER = 0
               KIKFLG = .FALSE.
               I4TEMP           = LOGBUF(13)
@@ -1278,8 +1279,8 @@ C
 C
               I4TEMP = LOGBUF(16)
               TRABUF(TWSRW)    = ZEXT( I1TEMP(1) )
-	      X                = ZEXT( I1TEMP(2) )
-	      TRABUF(TWNBET)   = IAND (X , '0F'X)
+              X                = ZEXT( I1TEMP(2) )
+              TRABUF(TWNBET)   = IAND (X , '0F'X)
               IF (TRABUF(TGAMTYP).EQ.TLTO) THEN                      !V51...
                 TRABUF(TWLUCK)  = ISHFT(X, -4)
               ELSE
@@ -1315,56 +1316,56 @@ C
                  I4TEMP = LOGBUF(20)
                  TRABUF(TWKBEG)  = ZEXT( I2TEMP(1) )
 C
-                 LOGOFF = 21                    
+                 LOGOFF = 21
                  BRDOFF = 11                    !WE LOOSE SPACE FOR BOARD DATA
 C                                               !TO KICKER STORAGE.
               ENDIF
 C
-C   
+C
 
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------   
+C----+------------------------------------------------------------------
               I4TEMP           = LOGBUF(12)
               TRABUF(TWSYSN)   = ZEXT( I1TEMP(1) )
-              TRABUF(TWVSTS)   = ZEXT( I1TEMP(2) ) 
+              TRABUF(TWVSTS)   = ZEXT( I1TEMP(2) )
               TRABUF(TWSYST)   = ZEXT( I1TEMP(4) )
               IF(ISHFT(ZEXT(I1TEMP(3)),-4) .EQ. 1) THEN
                 TRABUF(TWDUR)    = ZEXT( IAND(I1TEMP(3),15) )
 
-                TRABUF(TWCOLMSERL_TLTO) = LOGBUF(17) 
+                TRABUF(TWCOLMSERL_TLTO) = LOGBUF(17)
                 TRABUF(TWCOLMSERM_TLTO) = LOGBUF(18)
                 TRABUF(TWCOLMMIDL_TLTO) = LOGBUF(19)
-                I4TEMP = LOGBUF(20) 
+                I4TEMP = LOGBUF(20)
                 TRABUF(TWCOLMSERH_TLTO) = I1TEMP(1)
                 TRABUF(TWCOLMMIDH_TLTO) = I1TEMP(2)
                 TRABUF(TWCOLMCOMF_TLTO) = I1TEMP(3)
 
 C WE LOSE SPACE FOR BOARD DATA
-C TO USE FOR NEW TERMINALS 2021                  
+C TO USE FOR NEW TERMINALS 2021
                 LOGOFF = 21
-                BRDOFF = 11   
-              ELSE IF(ISHFT(ZEXT(I1TEMP(3)),-5) .EQ. 1) THEN 
+                BRDOFF = 11
+              ELSE IF(ISHFT(ZEXT(I1TEMP(3)),-5) .EQ. 1) THEN
                 TRABUF(TWDUR)    = ZEXT( IAND(I1TEMP(3),15) )
 
-                TRABUF(TCOLMSERL_TLTO) = LOGBUF(17) 
-                TRABUF(TCOLMSERM_TLTO) = LOGBUF(18)    
-                TRABUF(TCOLMMIDL_TLTO) = LOGBUF(19)  
-                I4TEMP = LOGBUF(20) 
-                TRABUF(TCOLMSERH_TLTO) = I1TEMP(1)     
-                TRABUF(TCOLMMIDH_TLTO) = I1TEMP(2)  
-                TRABUF(TCOLMCOMF_TLTO) = I1TEMP(3)     
+                TRABUF(TCOLMSERL_TLTO) = LOGBUF(17)
+                TRABUF(TCOLMSERM_TLTO) = LOGBUF(18)
+                TRABUF(TCOLMMIDL_TLTO) = LOGBUF(19)
+                I4TEMP = LOGBUF(20)
+                TRABUF(TCOLMSERH_TLTO) = I1TEMP(1)
+                TRABUF(TCOLMMIDH_TLTO) = I1TEMP(2)
+                TRABUF(TCOLMCOMF_TLTO) = I1TEMP(3)
 C WE LOSE SPACE FOR BOARD DATA
-C TO USE FOR NEW TERMINALS 2021                  
+C TO USE FOR NEW TERMINALS 2021
                 LOGOFF = 21
-                BRDOFF = 11                                                                               
+                BRDOFF = 11
               ELSE
                 TRABUF(TWDUR)    = ZEXT( I1TEMP(3) )
               ENDIF
-              
+
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------                   
+C----+------------------------------------------------------------------
               CALL FASTMOV(LOGBUF(LOGOFF), TRABUF(TWBORD), BRDOFF)
 C
 C           *** NOW SET CALCULATED FIELDS ***
@@ -1375,7 +1376,7 @@ C
               IF(TRABUF(TWKGME).NE.0)THEN
                  TRABUF(TWKEND) = TRABUF(TWKBEG)+ TRABUF(TWKDUR)-1
                  TRABUF(TWTOT)  = TRABUF(TWTOT) +
-     *                            TRABUF(TWKAMT)*TRABUF(TWKDUR) 
+     *                            TRABUF(TWKAMT)*TRABUF(TWKDUR)
               ENDIF
               CALL FASTSET(TRABUF(TWNMRK),TRABUF(TWNMRK+1),11)
 C
@@ -1386,28 +1387,28 @@ C
               CALL FASTMOV(LOGBUF(33), TRABUF(TWBORD+BRDOFF), 15)
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------ 
+C----+------------------------------------------------------------------
 
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------               
+C----+------------------------------------------------------------------
               GOTO 9000
            ENDIF
 C
 C DECODE KICKER (ONLY) WAGER BODY
 C
            IF(TRABUF(TGAMTYP).EQ.TKIK) THEN
-C 
+C
              TRABUF(TWCSER)  = LOGBUF(8)
-C 
+C
              I4TEMP          = LOGBUF(9)
              TRABUF(TWAMT)   = ZEXT( I2TEMP(1) )
              TRABUF(TWDAMT)  = ZEXT( I2TEMP(2) )
-C 
+C
              I4TEMP          = LOGBUF(10)
              TRABUF(TWBEG)   = ZEXT( I2TEMP(1) )
              TRABUF(TWCTER)  = ZEXT( I2TEMP(2) )
-C 
+C
              TRABUF(TWKICK)  = LOGBUF(11)
              TRABUF(TWKICK2) = LOGBUF(12)
              I4TEMP          = LOGBUF(13)
@@ -1429,9 +1430,9 @@ C
              I4TEMP          = LOGBUF(16)
              TRABUF(TWQPF)   = ZEXT( I2TEMP(1) )
              TRABUF(TWSYST)  = ZEXT( I1TEMP(3) )
-	     KIND            = TRABUF(TGAMIND)
-	     
-	     TRABUF(TWLNKSER)= IAND(LOGBUF(29),'00FFFFFF'X)
+             KIND            = TRABUF(TGAMIND)
+
+             TRABUF(TWLNKSER)= IAND(LOGBUF(29),'00FFFFFF'X)
              TRABUF(TWLNKCHK)= IAND(ISHFT(LOGBUF(29),-24),'000000FF'X)
 C
 C           *** NOW SET CALCULATED FIELDS AND SOME KICKER FIELDS ***
@@ -1440,7 +1441,7 @@ C
              TRABUF(TWKBEG)  = TRABUF(TWBEG)
              TRABUF(TWEND)   = TRABUF(TWBEG)+TRABUF(TWDUR)-1
              TRABUF(TWKEND)  = TRABUF(TWEND)
-             TRABUF(TWKDUR)  = TRABUF(TWDUR)   
+             TRABUF(TWKDUR)  = TRABUF(TWDUR)
              TRABUF(TWKAMT)  = TRABUF(TWAMT)
              TRABUF(TWTOT)   = TRABUF(TWDUR) * TRABUF(TWAMT) +
      *                         TRABUF(TWTKC)
@@ -1450,13 +1451,13 @@ C
 C NUMBERS WAGER BODY
 C
           IF(TRABUF(TGAMTYP).EQ.TNBR) THEN
-C 
+C
             TRABUF(TWCSER)  = LOGBUF(8)
 C
             I4TEMP          = LOGBUF(9)
             TRABUF(TWAMT)   = ZEXT( I2TEMP(1) )
             TRABUF(TWDAMT)  = ZEXT( I2TEMP(2) )
- 
+
             I4TEMP          = LOGBUF(10)
             TRABUF(TWBEG)   = ZEXT( I2TEMP(1) )
             TRABUF(TWCTER)  = ZEXT( I2TEMP(2) )
@@ -1586,7 +1587,7 @@ C
 C
 C SET CALCULATED FIELDS
 C
-             TRABUF(TWEND) = TRABUF(TWBEG)      
+             TRABUF(TWEND) = TRABUF(TWBEG)
              TRABUF(TWDUR) = 1
              IF(TRABUF(TWSYST).EQ.FULSYS) THEN
                 TRABUF(TWAMT) = TRABUF(TWSAMT)*TRABUF(TWSYSN)
@@ -1594,7 +1595,7 @@ C
                 TRABUF(TWAMT) = TRABUF(TWSAMT)+TRABUF(TWSAMT+TWSBLEN)+
      *                          TRABUF(TWSAMT+TWSBLEN*2)
              ENDIF
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
 C
              IF(TRABUF(TSIZE).EQ.1) GOTO 9000
@@ -1622,7 +1623,7 @@ C
              TRABUF(TWSSCR1+TWSBLEN*5) = ZEXT( I1TEMP(3) )
              TRABUF(TWSSCR2+TWSBLEN*5) = ZEXT( I1TEMP(4) )
 C
-             I4TEMP = LOGBUF(22) 
+             I4TEMP = LOGBUF(22)
              TRABUF(TWSSCR1+TWSBLEN*6) = ZEXT( I1TEMP(1) )
              TRABUF(TWSSCR2+TWSBLEN*6) = ZEXT( I1TEMP(2) )
              TRABUF(TWSSCR1+TWSBLEN*7) = ZEXT( I1TEMP(3) )
@@ -1643,8 +1644,8 @@ C
      *                     TRABUF(TWSAMT+TWSBLEN*6) +
      *                     TRABUF(TWSAMT+TWSBLEN*7) +
      *                     TRABUF(TWSAMT+TWSBLEN*8) +
-     *                     TRABUF(TWSAMT+TWSBLEN*9) 
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+     *                     TRABUF(TWSAMT+TWSBLEN*9)
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
              GOTO 9000
           ENDIF
@@ -1661,7 +1662,7 @@ C
 C
              I4TEMP = LOGBUF(10)
              TRABUF(TWWAMT )  = ZEXT( I2TEMP(1) )
-             TRABUF(TWWAMT+TWWBLEN) = ZEXT( I2TEMP(2) ) 
+             TRABUF(TWWAMT+TWWBLEN) = ZEXT( I2TEMP(2) )
 C
              I4TEMP = LOGBUF(11)
              TRABUF(TWWAMT+TWWBLEN*2) = ZEXT( I2TEMP(1) )
@@ -1695,10 +1696,10 @@ C
 C SET CALCULATED FIELDS
 C
              TRABUF(TWAMT) = TRABUF(TWWAMT) + TRABUF(TWWAMT+TWWBLEN) +
-     *                      TRABUF(TWWAMT+TWWBLEN*2) 
+     *                      TRABUF(TWWAMT+TWWBLEN*2)
              TRABUF(TWEND) = TRABUF(TWBEG)
              TRABUF(TWDUR) = 1
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
 C
              IF(TRABUF(TSIZE).EQ.1) GOTO 9000
@@ -1716,7 +1717,7 @@ C
              TRABUF(TWWAMT+TWWBLEN*8) = ZEXT( I2TEMP(2) )
 C
              I4TEMP = LOGBUF(20)
-             TRABUF(TWWAMT+TWWBLEN*9) = ZEXT( I2TEMP(1) )     
+             TRABUF(TWWAMT+TWWBLEN*9) = ZEXT( I2TEMP(1) )
              TRABUF(TWWROW+TWWBLEN*3) = ZEXT( I1TEMP(3) )
              TRABUF(TWWROW+TWWBLEN*4) = ZEXT( I1TEMP(4) )
 C
@@ -1739,7 +1740,7 @@ C
      *                     TRABUF(TWWAMT+TWWBLEN*7) +
      *                     TRABUF(TWWAMT+TWWBLEN*8) +
      *                     TRABUF(TWWAMT+TWWBLEN*9)
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
              GOTO 9000
           ENDIF
@@ -1790,7 +1791,7 @@ C
 C
 C SET CALCULATED FIELDS
 C
-             TRABUF(TWEND) = TRABUF(TWBEG)      
+             TRABUF(TWEND) = TRABUF(TWBEG)
              TRABUF(TWDUR) = 1
              IF(TRABUF(TWSYST).EQ.FULSYS) THEN
                 TRABUF(TWAMT) = TRABUF(TWDBAMT)*TRABUF(TWSYSN)
@@ -1800,7 +1801,7 @@ C
      *                          TRABUF(TWDBAMT+TWDBBLEN*2)
              ENDIF
 C
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
 C
              IF(TRABUF(TSIZE).EQ.1) GOTO 9000
@@ -1828,7 +1829,7 @@ C
              TRABUF(TWDBROW1+TWDBBLEN*5) = ZEXT( I1TEMP(3) )
              TRABUF(TWDBROW2+TWDBBLEN*5) = ZEXT( I1TEMP(4) )
 C
-             I4TEMP = LOGBUF(22) 
+             I4TEMP = LOGBUF(22)
              TRABUF(TWDBROW1+TWDBBLEN*6) = ZEXT( I1TEMP(1) )
              TRABUF(TWDBROW2+TWDBBLEN*6) = ZEXT( I1TEMP(2) )
              TRABUF(TWDBROW1+TWDBBLEN*7) = ZEXT( I1TEMP(3) )
@@ -1852,10 +1853,10 @@ C
 C
 C SET CALCULATED FIELDS
 C
-	     DO I=3, TRABUF(TWNBET)-1
+             DO I=3, TRABUF(TWNBET)-1
                 TRABUF(TWAMT)=TRABUF(TWAMT)+TRABUF(TWDBAMT+TWDBBLEN*I)
-	     ENDDO
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             ENDDO
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
              GOTO 9000
           ENDIF
@@ -1906,7 +1907,7 @@ C
 C
 C SET CALCULATED FIELDS
 C
-             TRABUF(TWEND) = TRABUF(TWBEG)      
+             TRABUF(TWEND) = TRABUF(TWBEG)
              TRABUF(TWDUR) = 1
              IF(TRABUF(TWSYST).EQ.FULSYS) THEN
                 TRABUF(TWAMT) = TRABUF(TWCPAMT)*TRABUF(TWSYSN)
@@ -1915,7 +1916,7 @@ C
      *                          TRABUF(TWCPAMT+TWCPBLEN)+
      *                          TRABUF(TWCPAMT+TWCPBLEN*2)
              ENDIF
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
 C
              IF(TRABUF(TSIZE).EQ.1) GOTO 9000
@@ -1943,7 +1944,7 @@ C
              TRABUF(TWCPROW1+TWCPBLEN*5) = ZEXT( I1TEMP(3) )
              TRABUF(TWCPROW2+TWCPBLEN*5) = ZEXT( I1TEMP(4) )
 C
-             I4TEMP = LOGBUF(22) 
+             I4TEMP = LOGBUF(22)
              TRABUF(TWCPROW1+TWCPBLEN*6) = ZEXT( I1TEMP(1) )
              TRABUF(TWCPROW2+TWCPBLEN*6) = ZEXT( I1TEMP(2) )
              TRABUF(TWCPROW1+TWCPBLEN*7) = ZEXT( I1TEMP(3) )
@@ -1967,10 +1968,10 @@ C
 C
 C SET CALCULATED FIELDS
 C
-	     DO I=3,TRABUF(TWNBET)-1
+             DO I=3,TRABUF(TWNBET)-1
                 TRABUF(TWAMT)=TRABUF(TWAMT)+TRABUF(TWCPAMT+TWCPBLEN*I)
              ENDDO
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
              GOTO 9000
           ENDIF
@@ -2065,9 +2066,9 @@ C
 C
              TRABUF(TWBNKNM) = LOGBUF(31)
 C
-             I4TEMP = LOGBUF(32) 
+             I4TEMP = LOGBUF(32)
              I1TEMP(4) = 0
-             TRABUF(TWBNKID) = I4TEMP 
+             TRABUF(TWBNKID) = I4TEMP
 C
 C SET CALCULATED FIELDS
 C
@@ -2163,8 +2164,8 @@ C
              TRABUF(TWTTMA)  = ZEXT(I1TEMP(1))
              TRABUF(TWTTMB)  = ZEXT(I1TEMP(2))
              TRABUF(TWTTMC)  = ZEXT(I1TEMP(3))
-             TRABUF(TWTTBET) = ZEXT(I1TEMP(4)) 
-                     
+             TRABUF(TWTTBET) = ZEXT(I1TEMP(4))
+
              I4TEMP = LOGBUF(12)
              TRABUF(TWTTBET+1) = ZEXT(I1TEMP(1))
              TRABUF(TWTTBET+2) = ZEXT(I1TEMP(2))
@@ -2188,15 +2189,15 @@ C
 C
 C SET CALCULATED FIELDS
 C
-             TRABUF(TWAMT) = TRABUF(TWTTAMT) 
-             IF(TRABUF(TWSYSN).GT.0) 
+             TRABUF(TWAMT) = TRABUF(TWTTAMT)
+             IF(TRABUF(TWSYSN).GT.0)
      *          TRABUF(TWAMT) = TRABUF(TWTTAMT)*TRABUF(TWSYSN)
              TRABUF(TWEND) = TRABUF(TWBEG)
              TRABUF(TWDUR) = 1
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
 C
-             TRABUF(TWNBET) = 1  
+             TRABUF(TWNBET) = 1
              IF(TRABUF(TWSYST).EQ.NOSYS) GOTO 9000
 C
              I4TEMP = LOGBUF(17)
@@ -2254,7 +2255,7 @@ C
 
              I4TEMP = LOGBUF(11)
              X               = ZEXT(I1TEMP(1))
-             TRABUF(TWSSHM1) = ISHFT( X, -4 ) 
+             TRABUF(TWSSHM1) = ISHFT( X, -4 )
              TRABUF(TWSSAW1) = IAND ( X,'0F'X )
              X               = ZEXT(I1TEMP(2))
              TRABUF(TWSSHM2) = ISHFT( X, -4 )
@@ -2262,8 +2263,8 @@ C
              X               = ZEXT(I1TEMP(3))
              TRABUF(TWSSHM3) = ISHFT( X, -4 )
              TRABUF(TWSSAW3) = IAND ( X,'0F'X )
-             TRABUF(TWSSBET) = ZEXT(I1TEMP(4)) 
-                     
+             TRABUF(TWSSBET) = ZEXT(I1TEMP(4))
+
              I4TEMP = LOGBUF(12)
              TRABUF(TWSSBET+1) = ZEXT(I1TEMP(1))
              TRABUF(TWSSBET+2) = ZEXT(I1TEMP(2))
@@ -2291,20 +2292,20 @@ C
 C
 C SET CALCULATED FIELDS
 C
-             TRABUF(TWAMT) = TRABUF(TWSSAMT)  !if system then see below also 
+             TRABUF(TWAMT) = TRABUF(TWSSAMT)  !if system then see below also
              TRABUF(TWEND) = TRABUF(TWBEG)
              TRABUF(TWDUR) = 1
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
 C
-             TRABUF(TWNBET) = 1  
-             TRABUF(TWSYSN) = 1  
+             TRABUF(TWNBET) = 1
+             TRABUF(TWSYSN) = 1
              IF(TRABUF(TWSYST).EQ.NOSYS) GOTO 9000
 C
              I4TEMP = LOGBUF(17)
              TRABUF(TWSYSN) = I4TEMP
              TRABUF(TWAMT) = TRABUF(TWSSAMT)*TRABUF(TWSYSN)
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
 
              I4TEMP = LOGBUF(18)
@@ -2363,8 +2364,8 @@ C
              TRABUF(TWSTM1)  = ZEXT(I1TEMP(1))
              TRABUF(TWSTM2)  = ZEXT(I1TEMP(2))
              TRABUF(TWSTM3)  = ZEXT(I1TEMP(3))
-             TRABUF(TWSTBET) = ZEXT(I1TEMP(4)) 
-                     
+             TRABUF(TWSTBET) = ZEXT(I1TEMP(4))
+
              I4TEMP = LOGBUF(12)
              TRABUF(TWSTBET+1) = ZEXT(I1TEMP(1))
              TRABUF(TWSTBET+2) = ZEXT(I1TEMP(2))
@@ -2388,15 +2389,15 @@ C
 C
 C SET CALCULATED FIELDS
 C
-             TRABUF(TWAMT) = TRABUF(TWSTAMT) 
-             IF(TRABUF(TWSYSN).GT.0) 
+             TRABUF(TWAMT) = TRABUF(TWSTAMT)
+             IF(TRABUF(TWSYSN).GT.0)
      *          TRABUF(TWAMT) = TRABUF(TWSTAMT)*TRABUF(TWSYSN)
              TRABUF(TWEND) = TRABUF(TWBEG)
              TRABUF(TWDUR) = 1
-             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) + 
+             TRABUF(TWTOT) = (TRABUF(TWAMT) * TRABUF(TWDUR)) +
      *                        TRABUF(TWTKC)
 C
-             TRABUF(TWNBET) = 1  
+             TRABUF(TWNBET) = 1
              IF(TRABUF(TWSYST).EQ.NOSYS) GOTO 9000
 C
              I4TEMP = LOGBUF(17)
@@ -2424,7 +2425,7 @@ C
 C
              GOTO 9000
           ENDIF
-C    
+C
 C ANY OTHER TYPE OF WAGER, JUST RETURN
 C
           GOTO 9000
@@ -2432,17 +2433,17 @@ C
         ENDIF
 C
 C DECODE VALIDATION BODY
-C 
+C
         IF( (TRABUF(TTYP).EQ.TVAL.OR.TRABUF(TTYP).EQ.TREF) .AND.
      *       TRABUF(TGAMTYP).NE.TPAS .OR.
      *       TRABUF(TTYP).EQ.TVAL.AND.
-     *       TRABUF(TGAMTYP).EQ.TPAS.AND.TRABUF(TVEPVAL).NE.0 ) THEN     
- 
+     *       TRABUF(TGAMTYP).EQ.TPAS.AND.TRABUF(TVEPVAL).NE.0 ) THEN
+
            TRABUF(TVSER)  = LOGBUF(8)
            TRABUF(TVEXC)  = LOGBUF(9)
            TRABUF(TVPAY)  = LOGBUF(10)
            TRABUF(TVKPAY) = LOGBUF(11)
-	   I4TEMP         = LOGBUF(12)
+           I4TEMP         = LOGBUF(12)
            TRABUF(TVREF)  = IAND(I4TEMP,'00FFFFFF'X)
            ! here in I1TEMP(4) is TRABUF(TVEPVAL)
 C
@@ -2457,7 +2458,7 @@ C
            TRABUF(TVSTER) = ZEXT( I2TEMP(1) )
            TRABUF(TVCWT)  = ZEXT( I1TEMP(3) )
            TRABUF(TVTYPE) = ZEXT( I1TEMP(4) )
-C 
+C
            I4TEMP         = LOGBUF(16)
            TRABUF(TVCODE) = ZEXT( I1TEMP(1) )
            TRABUF(TVKGME) = ZEXT( I1TEMP(2) )
@@ -2471,76 +2472,76 @@ C
 C
            TRABUF(TVBNKNUM) = LOGBUF(18)
 C
-	   TRABUF(TVOPPAY)  = LOGBUF(19)   !V39
-	   TRABUF(TVKOPPAY) = LOGBUF(20)   !V39
+           TRABUF(TVOPPAY)  = LOGBUF(19)   !V39
+           TRABUF(TVKOPPAY) = LOGBUF(20)   !V39
 
 C----+------------------------------------------------------------------
 C V57| Adding new validation messages fields
 C----+------------------------------------------------------------------
            IF(TRABUF(TGAMTYP).NE.TPAS) THEN
-                TRABUF(TVPLCARD) = LOGBUF(21)  
-        
+                TRABUF(TVPLCARD) = LOGBUF(21)
+
                 I4TEMP          =  LOGBUF(22)
                 TRABUF(TVNIBBB) = ZEXT( I2TEMP(1) )
                 TRABUF(TVNIBBO) = ZEXT( I2TEMP(2) )
-        
-                TRABUF(TVNIBBA1) =  LOGBUF(23)           
-        
+
+                TRABUF(TVNIBBA1) =  LOGBUF(23)
+
                 I4TEMP           =  LOGBUF(24)
-                TRABUF(TVNIBBA2) = ZEXT( I1TEMP(1) )  
+                TRABUF(TVNIBBA2) = ZEXT( I1TEMP(1) )
                 TRABUF(TVNIBCD)  = ZEXT( I1TEMP(2) )
                 TRABUF(TVPLIDTYP) = ZEXT( I1TEMP(3) ) !V55
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------                   
+C----+------------------------------------------------------------------
                 TRABUF(TVOLMSERL_TLTO) = LOGBUF(25)
                 TRABUF(TVOLMSERM_TLTO) = LOGBUF(26)
                 TRABUF(TVOLMMIDL_TLTO) = LOGBUF(28)
                 I4TEMP = LOGBUF(27)
                 TRABUF(TVOLMSERH_TLTO) = I1TEMP(1)
                 TRABUF(TVOLMMIDH_TLTO) = I1TEMP(2)
-                TRABUF(TVOLMCOMF_TLTO) = I1TEMP(3)                
+                TRABUF(TVOLMCOMF_TLTO) = I1TEMP(3)
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------                 
+C----+------------------------------------------------------------------
                 GOTO 9000
-           ENDIF  
+           ENDIF
 C----+------------------------------------------------------------------
 C V57| Adding new validation messages fields
 C----+------------------------------------------------------------------
 
-	   I4TEMP         =  LOGBUF(21)
-	   TRABUF(TPTCK)  =  ISHFT (I1TEMP(4), -4)
+           I4TEMP         =  LOGBUF(21)
+           TRABUF(TPTCK)  =  ISHFT (I1TEMP(4), -4)
            TRABUF(TPNUM1) =  IAND(I4TEMP,'00FFFFFF'X)
 
-	   TRABUF(TPKEY1) =  LOGBUF(22)
-	   TRABUF(TPPAY1) =  LOGBUF(23)
+           TRABUF(TPKEY1) =  LOGBUF(22)
+           TRABUF(TPPAY1) =  LOGBUF(23)
 
            I4TEMP         =  LOGBUF(24)
-	   TRABUF(TPEMIS1)=  ZEXT( I2TEMP(1) )	  
-	   TRABUF(TPSER1) =  ZEXT( I1TEMP(3) )	  
-	   TRABUF(TPTEN1) =  ZEXT( I1TEMP(4) )	  
- 
+           TRABUF(TPEMIS1)=  ZEXT( I2TEMP(1) )
+           TRABUF(TPSER1) =  ZEXT( I1TEMP(3) )
+           TRABUF(TPTEN1) =  ZEXT( I1TEMP(4) )
+
            I4TEMP         =  LOGBUF(25)
            TRABUF(TPSTS1) =  ZEXT( I1TEMP(1) )
            TRABUF(TVEPTYP)  = ZEXT( I1TEMP(2) )
            TRABUF(TPOFFTER) = ZEXT( I2TEMP(2) )
 
            I4TEMP         =  LOGBUF(26)
-           TRABUF(TVEPWK) =  ZEXT( I1TEMP(1) ) 
-           TRABUF(TVEPYR) =  ZEXT( I1TEMP(2) ) 
+           TRABUF(TVEPWK) =  ZEXT( I1TEMP(1) )
+           TRABUF(TVEPYR) =  ZEXT( I1TEMP(2) )
            TRABUF(TVPLIDTYP) = ZEXT( I1TEMP(3) ) !V55
 
-           TRABUF(TVPLCARD) = LOGBUF(27)  
+           TRABUF(TVPLCARD) = LOGBUF(27)
 
            I4TEMP          =  LOGBUF(28)
            TRABUF(TVNIBBB) = ZEXT( I2TEMP(1) )
            TRABUF(TVNIBBO) = ZEXT( I2TEMP(2) )
 
-           TRABUF(TVNIBBA1) =  LOGBUF(29)           
+           TRABUF(TVNIBBA1) =  LOGBUF(29)
 
            I4TEMP           =  LOGBUF(30)
-           TRABUF(TVNIBBA2) = ZEXT( I1TEMP(1) )  
+           TRABUF(TVNIBBA2) = ZEXT( I1TEMP(1) )
            TRABUF(TVNIBCD)  = ZEXT( I1TEMP(2) )
 
            GOTO 9000
@@ -2548,151 +2549,151 @@ C----+------------------------------------------------------------------
 C
 C PASSIVE LOTTERY "BUNCH" VALIDATION
 C
-	IF(TRABUF(TTYP).EQ.TVAL .AND. TRABUF(TGAMTYP).EQ.TPAS.AND.
+        IF(TRABUF(TTYP).EQ.TVAL .AND. TRABUF(TGAMTYP).EQ.TPAS.AND.
      *    TRABUF(TVEPVAL).EQ.0) THEN
 
-          TRABUF(TVEPTYP) = 0  
+          TRABUF(TVEPTYP) = 0
 
-	  I4TEMP         =  LOGBUF(8)
-	  TRABUF(TPTCK)  =  ISHFT (I1TEMP(4), -4)
+          I4TEMP         =  LOGBUF(8)
+          TRABUF(TPTCK)  =  ISHFT (I1TEMP(4), -4)
           TRABUF(TPNUM1) =  IAND(I4TEMP,'00FFFFFF'X)
 
-	  TRABUF(TPKEY1) =  LOGBUF(9)
-	  TRABUF(TPPAY1) =  LOGBUF(10)
+          TRABUF(TPKEY1) =  LOGBUF(9)
+          TRABUF(TPPAY1) =  LOGBUF(10)
 
           I4TEMP         =  LOGBUF(11)
-	  TRABUF(TPEMIS1)=  ZEXT( I2TEMP(1) )	  
-	  TRABUF(TPSER1) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN1) =  ZEXT( I1TEMP(4) )	  
+          TRABUF(TPEMIS1)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER1) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN1) =  ZEXT( I1TEMP(4) )
 
-	  I4TEMP         =  LOGBUF(12)
+          I4TEMP         =  LOGBUF(12)
           TRABUF(TPNUM2) =  IAND(I4TEMP,'00FFFFFF'X)
           ! here in I1TEMP(4) is TRABUF(TVEPVAL)
 
-	  TRABUF(TPKEY2) =  LOGBUF(13)
-	  TRABUF(TPPAY2) =  LOGBUF(14)
+          TRABUF(TPKEY2) =  LOGBUF(13)
+          TRABUF(TPPAY2) =  LOGBUF(14)
 
           I4TEMP         =  LOGBUF(15)
-	  TRABUF(TPEMIS2)=  ZEXT( I2TEMP(1) )	  
-	  TRABUF(TPSER2) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN2) =  ZEXT( I1TEMP(4) )	  
+          TRABUF(TPEMIS2)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER2) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN2) =  ZEXT( I1TEMP(4) )
 
-	  I4TEMP         =  LOGBUF(16)
-	  TRABUF(TPOFFTER)= ZEXT( I2TEMP(1) )
-	  X              =  ZEXT( I1TEMP(3) )
-	  TRABUF(TPSTS1) =  IAND (X , '0F'X)
-	  TRABUF(TPSTS2) =  ISHFT(X, -4)
+          I4TEMP         =  LOGBUF(16)
+          TRABUF(TPOFFTER)= ZEXT( I2TEMP(1) )
+          X              =  ZEXT( I1TEMP(3) )
+          TRABUF(TPSTS1) =  IAND (X , '0F'X)
+          TRABUF(TPSTS2) =  ISHFT(X, -4)
 
           IF(TRABUF(TSIZE).EQ.1) GOTO 9000
 C
 C  *** PASSIVE CONTINUATION RECORD 1 ***
 C
-	  TRABUF(TPKEY3) =  LOGBUF(17)	  
-	  TRABUF(TPPAY3) =  LOGBUF(18)
+          TRABUF(TPKEY3) =  LOGBUF(17)
+          TRABUF(TPPAY3) =  LOGBUF(18)
 
-	  I4TEMP         =  LOGBUF(19)
-	  TRABUF(TPEMIS3)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER3) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN3) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(19)
+          TRABUF(TPEMIS3)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER3) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN3) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY4) =  LOGBUF(20)	  
-	  TRABUF(TPPAY4) =  LOGBUF(21)	  
+          TRABUF(TPKEY4) =  LOGBUF(20)
+          TRABUF(TPPAY4) =  LOGBUF(21)
 
-	  I4TEMP         =  LOGBUF(22)
-	  TRABUF(TPEMIS4)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER4) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN4) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(22)
+          TRABUF(TPEMIS4)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER4) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN4) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY5) =  LOGBUF(23)	  
-	  TRABUF(TPPAY5) =  LOGBUF(24)	  
+          TRABUF(TPKEY5) =  LOGBUF(23)
+          TRABUF(TPPAY5) =  LOGBUF(24)
 
-	  I4TEMP         =  LOGBUF(25)
-	  TRABUF(TPEMIS5)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER5) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN5) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(25)
+          TRABUF(TPEMIS5)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER5) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN5) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY6) =  LOGBUF(26)	  
-	  TRABUF(TPPAY6) =  LOGBUF(27)	  
+          TRABUF(TPKEY6) =  LOGBUF(26)
+          TRABUF(TPPAY6) =  LOGBUF(27)
 
-	  I4TEMP         =  LOGBUF(28)
-	  TRABUF(TPEMIS6)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER6) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN6) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(28)
+          TRABUF(TPEMIS6)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER6) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN6) =  ZEXT( I1TEMP(4) )
 
-	  I4TEMP         =  LOGBUF(29)
+          I4TEMP         =  LOGBUF(29)
           TRABUF(TPNUM3) =  IAND(I4TEMP,'00FFFFFF'X)
-	  X              =  ZEXT( I1TEMP(4) )
-	  TRABUF(TPSTS3) =  IAND (X , '0F'X)
-	  TRABUF(TPSTS4) =  ISHFT(X, -4)
+          X              =  ZEXT( I1TEMP(4) )
+          TRABUF(TPSTS3) =  IAND (X , '0F'X)
+          TRABUF(TPSTS4) =  ISHFT(X, -4)
 
-	  I4TEMP         =  LOGBUF(30)
+          I4TEMP         =  LOGBUF(30)
           TRABUF(TPNUM4) =  IAND(I4TEMP,'00FFFFFF'X)
-	  X              =  ZEXT( I1TEMP(4) )
-	  TRABUF(TPSTS5) =  IAND (X , '0F'X)
-	  TRABUF(TPSTS6) =  ISHFT(X, -4)
+          X              =  ZEXT( I1TEMP(4) )
+          TRABUF(TPSTS5) =  IAND (X , '0F'X)
+          TRABUF(TPSTS6) =  ISHFT(X, -4)
 
-	  I4TEMP         =  LOGBUF(31)
+          I4TEMP         =  LOGBUF(31)
           TRABUF(TPNUM5) =  IAND(I4TEMP,'00FFFFFF'X)
 
-	  I4TEMP         =  LOGBUF(32)
+          I4TEMP         =  LOGBUF(32)
           TRABUF(TPNUM6) =  IAND(I4TEMP,'00FFFFFF'X)
 
           IF(TRABUF(TSIZE).EQ.2) GOTO 9000
 C
 C  *** PASSIVE CONTINUATION RECORD 2 ***
 C
-	  TRABUF(TPKEY7) =  LOGBUF(33)	  
-	  TRABUF(TPPAY7) =  LOGBUF(34)
+          TRABUF(TPKEY7) =  LOGBUF(33)
+          TRABUF(TPPAY7) =  LOGBUF(34)
 
-	  I4TEMP         =  LOGBUF(35)
-	  TRABUF(TPEMIS7)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER7) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN7) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(35)
+          TRABUF(TPEMIS7)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER7) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN7) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY8) =  LOGBUF(36)	  
-	  TRABUF(TPPAY8) =  LOGBUF(37)	  
+          TRABUF(TPKEY8) =  LOGBUF(36)
+          TRABUF(TPPAY8) =  LOGBUF(37)
 
-	  I4TEMP         =  LOGBUF(38)
-	  TRABUF(TPEMIS8)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER8) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN8) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(38)
+          TRABUF(TPEMIS8)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER8) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN8) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY9) =  LOGBUF(39)	  
-	  TRABUF(TPPAY9) =  LOGBUF(40)	  
+          TRABUF(TPKEY9) =  LOGBUF(39)
+          TRABUF(TPPAY9) =  LOGBUF(40)
 
-	  I4TEMP         =  LOGBUF(41)
-	  TRABUF(TPEMIS9)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER9) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN9) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP         =  LOGBUF(41)
+          TRABUF(TPEMIS9)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER9) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN9) =  ZEXT( I1TEMP(4) )
 
-	  TRABUF(TPKEY10) =  LOGBUF(42)	  
-	  TRABUF(TPPAY10) =  LOGBUF(43)
+          TRABUF(TPKEY10) =  LOGBUF(42)
+          TRABUF(TPPAY10) =  LOGBUF(43)
 
-	  I4TEMP          =  LOGBUF(44)
-	  TRABUF(TPEMIS10)=  ZEXT( I2TEMP(1) )
-	  TRABUF(TPSER10) =  ZEXT( I1TEMP(3) )	  
-	  TRABUF(TPTEN10) =  ZEXT( I1TEMP(4) )	  
+          I4TEMP          =  LOGBUF(44)
+          TRABUF(TPEMIS10)=  ZEXT( I2TEMP(1) )
+          TRABUF(TPSER10) =  ZEXT( I1TEMP(3) )
+          TRABUF(TPTEN10) =  ZEXT( I1TEMP(4) )
 
-	  I4TEMP          =  LOGBUF(45)
+          I4TEMP          =  LOGBUF(45)
           TRABUF(TPNUM7)  =  IAND(I4TEMP,'00FFFFFF'X)
-	  X               =  ZEXT( I1TEMP(4) )
-	  TRABUF(TPSTS7)  =  IAND (X , '0F'X)
-	  TRABUF(TPSTS8)  =  ISHFT(X, -4)
+          X               =  ZEXT( I1TEMP(4) )
+          TRABUF(TPSTS7)  =  IAND (X , '0F'X)
+          TRABUF(TPSTS8)  =  ISHFT(X, -4)
 
-	  I4TEMP          =  LOGBUF(46)
+          I4TEMP          =  LOGBUF(46)
           TRABUF(TPNUM8)  =  IAND(I4TEMP,'00FFFFFF'X)
-	  X               =  ZEXT( I1TEMP(4) )
-	  TRABUF(TPSTS9)  =  IAND (X , '0F'X)
-	  TRABUF(TPSTS10) =  ISHFT(X, -4)
+          X               =  ZEXT( I1TEMP(4) )
+          TRABUF(TPSTS9)  =  IAND (X , '0F'X)
+          TRABUF(TPSTS10) =  ISHFT(X, -4)
 
-	  I4TEMP          =  LOGBUF(47)
+          I4TEMP          =  LOGBUF(47)
           TRABUF(TPNUM9)  =  IAND(I4TEMP,'00FFFFFF'X)
 
-	  I4TEMP          =  LOGBUF(48)
+          I4TEMP          =  LOGBUF(48)
           TRABUF(TPNUM10) =  IAND(I4TEMP,'00FFFFFF'X)
 
-	  GOTO 9000
-	ENDIF
+          GOTO 9000
+        ENDIF
 C
 C DECODE INSTANTS
 C
@@ -2720,20 +2721,20 @@ C
 
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------            
+C----+------------------------------------------------------------------
 C New Terminal Project TIVENV only uses 2 digits = 1 byte (99<256)
 C           TRABUF(TIVENV)    = LOGBUF(9)
             I4TEMP =  LOGBUF(9)
             IF(ISHFT(I1TEMP(1), -7) .EQ. 1) THEN
                 TRABUF(TVOLMSERL_IL) =  ISHFT(I4TEMP, -8)
-                TRABUF(TVOLMCOMF_IL) =  ISHFT(ZEXT(I1TEMP(1)), -7) 
+                TRABUF(TVOLMCOMF_IL) =  ISHFT(ZEXT(I1TEMP(1)), -7)
                 TRABUF(TIVENV) = IAND(I1TEMP(1),'7F'X)
             ELSE
-                TRABUF(TIVENV) = IAND(I1TEMP(1),'7F'X) 
+                TRABUF(TIVENV) = IAND(I1TEMP(1),'7F'X)
             ENDIF
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------    
+C----+------------------------------------------------------------------
 C
             I4TEMP = LOGBUF(10)
             TRABUF(TIVTYP) = ZEXT(I1TEMP(4))
@@ -2743,38 +2744,38 @@ C
             IF(TRABUF(TIVMT) .EQ. IRVMT) THEN !OLD LAYOUT
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------     
-              IF(TRABUF(TVOLMCOMF_IL) .EQ. 1) THEN      
-                IF(TRABUF(TIBCH) .GE. 4) THEN           
+C----+------------------------------------------------------------------
+              IF(TRABUF(TVOLMCOMF_IL) .EQ. 1) THEN
+                IF(TRABUF(TIBCH) .GE. 4) THEN
                    I4TEMP = LOGBUF(32)
                    TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
                    TRABUF(TVOLMSERM_IL) = ISHFT( IAND(I4TEMP,'FFFFFF'X), -8)
                    I4TEMP = LOGBUF(48)
                    TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FFFF'X), 16), TRABUF(TVOLMSERM_IL) )
                    TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(3) )
-                ELSEIF(TRABUF(TIBCH) .GT. 1) THEN                            
+                ELSEIF(TRABUF(TIBCH) .GT. 1) THEN
                    I4TEMP = LOGBUF(32)
                    TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
                    TRABUF(TVOLMSERM_IL) = ISHFT( IAND(I4TEMP,'FFFFFF'X), -8)
                    I4TEMP = LOGBUF(31)
                    TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FFFF'X), 16), TRABUF(TVOLMSERM_IL) )
-                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(3) )                                 
-                ELSE                          
-                   I4TEMP = LOGBUF(17)  
+                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(3) )
+                ELSE
+                   I4TEMP = LOGBUF(17)
                    TRABUF(TVOLMSERL_IL) = IOR( TRABUF(TVOLMSERL_IL), ISHFT( IAND( I4TEMP,'FF'X), 24) )
                    TRABUF(TVOLMSERM_IL) = ISHFT(I4TEMP, -8)
                    I4TEMP = LOGBUF(18)
                    TRABUF(TVOLMSERM_IL) = IOR( ISHFT(IAND( I4TEMP,'FF'X), 24), TRABUF(TVOLMSERM_IL) )
-                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(2) )      
+                   TRABUF(TVOLMSERH_IL) = ZEXT( I1TEMP(2) )
                    I4TEMP = LOGBUF(19)
                    TRABUF(TVOLMMIDL_IL) = I4TEMP
                    I4TEMP = LOGBUF(20)
-                   TRABUF(TVOLMMIDH_IL) = I4TEMP 
-                ENDIF     
+                   TRABUF(TVOLMMIDH_IL) = I4TEMP
+                ENDIF
               ENDIF
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------                   
+C----+------------------------------------------------------------------
 C
               BUFIDX = 11
 C
@@ -2810,7 +2811,7 @@ C
               IF(TRABUF(TIVTYP) .EQ. IVTP_NCP) THEN
                  CALL FASTMOV(LOGBUF(17), TRABUF(TIVDESCR), 5)
               ENDIF
-              
+
             ELSEIF(TRABUF(TIVMT) .EQ. IBVMT) THEN ! NEW BANK VALIDATION MODE LAYOUT
 !-------->>V56 -------------------------------------------------------------------
                 ! TRABUF(TIBCH) IS ALWAYS ONE
@@ -2907,7 +2908,7 @@ C
 C
             I4TEMP          = LOGBUF(9)
             TRABUF(TLCLS)   = ZEXT( I1TEMP(1) )
-	    TRABUF(TLGAM)   = ZEXT( I2TEMP(2) )
+            TRABUF(TLGAM)   = ZEXT( I2TEMP(2) )
 C
             I4TEMP          = LOGBUF(10)
             TRABUF(TLSTR)   = ZEXT( I2TEMP(1) )
@@ -2923,23 +2924,23 @@ C
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------
-            I4TEMP  = LOGBUF(20)  
+            I4TEMP  = LOGBUF(20)
             TRABUF(TGOLMCOMF_IL) = I4TEMP
             IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
               I4TEMP = LOGBUF(14)
               TRABUF(TGOLMSERL_IL) = I4TEMP
               I4TEMP = LOGBUF(15)
-              TRABUF(TGOLMSERM_IL) = I4TEMP 
-              I4TEMP = LOGBUF(17) 
+              TRABUF(TGOLMSERM_IL) = I4TEMP
+              I4TEMP = LOGBUF(17)
               TRABUF(TGOLMSERH_IL) = I4TEMP
               I4TEMP  = LOGBUF(18)
               TRABUF(TGOLMMIDL_IL) = I4TEMP
               I4TEMP = LOGBUF(19)
               TRABUF(TGOLMMIDH_IL) = I4TEMP
-            ENDIF 
+            ENDIF
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------            
+C----+------------------------------------------------------------------
 C
           ELSE IF(TRABUF(TITYP).EQ.ICAR) THEN
 C
@@ -2947,7 +2948,7 @@ C
 C
             I4TEMP          = LOGBUF(9)
             TRABUF(TCCLS)   = ZEXT( I1TEMP(1) )
-	    TRABUF(TCGAM)   = ZEXT( I2TEMP(2) )
+            TRABUF(TCGAM)   = ZEXT( I2TEMP(2) )
 C
             TRABUF(TCCAR)   = LOGBUF(10)
 C
@@ -2959,31 +2960,31 @@ C
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------
-            I4TEMP  = LOGBUF(20)  
+            I4TEMP  = LOGBUF(20)
             TRABUF(TGOLMCOMF_IL) = I4TEMP
             IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
               I4TEMP = LOGBUF(14)
               TRABUF(TGOLMSERL_IL) = I4TEMP
               I4TEMP = LOGBUF(15)
-              TRABUF(TGOLMSERM_IL) = I4TEMP 
-              I4TEMP = LOGBUF(17) 
+              TRABUF(TGOLMSERM_IL) = I4TEMP
+              I4TEMP = LOGBUF(17)
               TRABUF(TGOLMSERH_IL) = I4TEMP
               I4TEMP  = LOGBUF(18)
               TRABUF(TGOLMMIDL_IL) = I4TEMP
               I4TEMP = LOGBUF(19)
-              TRABUF(TGOLMMIDH_IL) = I4TEMP 
+              TRABUF(TGOLMMIDH_IL) = I4TEMP
             ENDIF
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------            
+C----+------------------------------------------------------------------
 C
           ELSE IF(TRABUF(TITYP).EQ.IQTA.OR.
      *            TRABUF(TITYP).EQ.IINV.OR.
      *            TRABUF(TiTYP).EQ.ISET) THEN
 C
             I4TEMP          = LOGBUF(8)
-	    X               = ZEXT( I2TEMP(1) )
-	    TRABUF(TRGAM)   = ISHFT( X, -4 )
+            X               = ZEXT( I2TEMP(1) )
+            TRABUF(TRGAM)   = ISHFT( X, -4 )
             TRABUF(TRCLS)   = IAND( X, '0F'X )
             TRABUF(TRNXT1)  = ZEXT( I2TEMP(2) )
 C
@@ -2998,16 +2999,16 @@ C----+------------------------------------------------------------------
                 TRABUF(TGOLMSERL_IL) = I4TEMP
                 I4TEMP = LOGBUF(11)
                 TRABUF(TGOLMSERM_IL) = I4TEMP
-                I4TEMP = LOGBUF(12)  
+                I4TEMP = LOGBUF(12)
                 TRABUF(TGOLMSERH_IL) = I4TEMP
-                I4TEMP = LOGBUF(13) 
+                I4TEMP = LOGBUF(13)
                 TRABUF(TGOLMMIDL_IL) = I4TEMP
-                I4TEMP = LOGBUF(14)  
+                I4TEMP = LOGBUF(14)
                 TRABUF(TGOLMMIDH_IL) = I4TEMP
             ENDIF
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------            
+C----+------------------------------------------------------------------
 C
           ELSE IF(TRABUF(TITYP).EQ.IFIN) THEN
 C
@@ -3036,24 +3037,26 @@ C
             TRABUF(TGPRCL)  = LOGBUF(10)
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------ 
-            I4TEMP = LOGBUF(17)
-            TRABUF(TGOLMCOMF_IL) = I4TEMP
+C----+------------------------------------------------------------------
+            I4TEMP          = LOGBUF(16)
+            TRABUF(TGOLMCOMF_IL) = ZEXT( I1TEMP(3) )
+C            I4TEMP = LOGBUF(17)
+C            TRABUF(TGOLMCOMF_IL) = I4TEMP
             IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
               I4TEMP = LOGBUF(11)
               TRABUF(TGOLMSERL_IL) = I4TEMP
               I4TEMP = LOGBUF(12)
               TRABUF(TGOLMSERM_IL) = I4TEMP
-              I4TEMP = LOGBUF(13)  
+              I4TEMP = LOGBUF(13)
               TRABUF(TGOLMSERH_IL) = I4TEMP
-              I4TEMP = LOGBUF(14) 
+              I4TEMP = LOGBUF(14)
               TRABUF(TGOLMMIDL_IL) = I4TEMP
-              I4TEMP = LOGBUF(15)  
+              I4TEMP = LOGBUF(15)
               TRABUF(TGOLMMIDH_IL) = I4TEMP
             ENDIF
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------             
+C----+------------------------------------------------------------------
 C
           ELSE IF(TRABUF(TITYP).EQ.IMNU) THEN
 C
@@ -3066,24 +3069,24 @@ C
 
 C----+------------------------------------------------------------------
 C V59| begin New Terminals Project - Olimpo
-C----+------------------------------------------------------------------ 
-CCCCCCCCCCCCCCCCCCCCCCCCC THIRD SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC  
+C----+------------------------------------------------------------------
+CCCCCCCCCCCCCCCCCCCCCCCCC THIRD SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
             IF(TRABUF(TIBCH).GT.24) THEN
               I4TEMP = LOGBUF(48)
-              TRABUF(TGOLMCOMF_IL) = I1TEMP(1)              
+              TRABUF(TGOLMCOMF_IL) = I1TEMP(1)
               IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
                 TRABUF(TGOLMSERH_IL) = I1TEMP(2)
                 TRABUF(TGOLMMIDH_IL) = I1TEMP(3)
 
                 I4TEMP = LOGBUF(45)
                 TRABUF(TGOLMSERL_IL) = I4TEMP
-                I4TEMP = LOGBUF(46)  
+                I4TEMP = LOGBUF(46)
                 TRABUF(TGOLMSERM_IL) = I4TEMP
-                I4TEMP = LOGBUF(47)                 
-                TRABUF(TGOLMMIDL_IL) = I4TEMP                 
+                I4TEMP = LOGBUF(47)
+                TRABUF(TGOLMMIDL_IL) = I4TEMP
               ENDIF
-CCCCCCCCCCCCCCCCCCCCCCCCC SECOND SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC               
-            ELSE IF(TRABUF(TIBCH).LE.24 .AND. TRABUF(TIBCH).GT.3) THEN   
+CCCCCCCCCCCCCCCCCCCCCCCCC SECOND SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
+            ELSE IF(TRABUF(TIBCH).LE.24 .AND. TRABUF(TIBCH).GT.3) THEN
               I4TEMP = LOGBUF(32)
               TRABUF(TGOLMCOMF_IL) = I1TEMP(1)
               IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
@@ -3092,43 +3095,43 @@ CCCCCCCCCCCCCCCCCCCCCCCCC SECOND SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
 
                 I4TEMP = LOGBUF(29)
                 TRABUF(TGOLMSERL_IL) = I4TEMP
-                I4TEMP = LOGBUF(30)  
+                I4TEMP = LOGBUF(30)
                 TRABUF(TGOLMSERM_IL) = I4TEMP
-                I4TEMP = LOGBUF(31) 
+                I4TEMP = LOGBUF(31)
                 TRABUF(TGOLMMIDL_IL) = I4TEMP
               ENDIF
 CCCCCCCCCCCCCCCCCCCCCCCCC FIRST SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
             ELSE IF(TRABUF(TIBCH).LE.3) THEN
-              I4TEMP = LOGBUF(12)  
-              TRABUF(TGOLMSERH_IL) = I1TEMP(2) 
-              TRABUF(TGOLMMIDH_IL) = I1TEMP(3) 
-              TRABUF(TGOLMCOMF_IL) = I1TEMP(4) 
+              I4TEMP = LOGBUF(12)
+              TRABUF(TGOLMSERH_IL) = I1TEMP(2)
+              TRABUF(TGOLMMIDH_IL) = I1TEMP(3)
+              TRABUF(TGOLMCOMF_IL) = I1TEMP(4)
               IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
                 I4TEMP = LOGBUF(13)
                 TRABUF(TGOLMSERL_IL) = I4TEMP
-                I4TEMP = LOGBUF(14) 
+                I4TEMP = LOGBUF(14)
                 TRABUF(TGOLMSERM_IL) = I4TEMP
-                I4TEMP = LOGBUF(15) 
+                I4TEMP = LOGBUF(15)
                 TRABUF(TGOLMMIDL_IL) = I4TEMP
-              ENDIF 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC              
+              ENDIF
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
             ENDIF
-            
+
 C----+------------------------------------------------------------------
 C V59| end New Terminals Project - Olimpo
-C----+------------------------------------------------------------------ 
+C----+------------------------------------------------------------------
 
 C----+------------------------------------------------------------------
 C V59| begin New Terminals Project - Olimpo
-C----+------------------------------------------------------------------  
+C----+------------------------------------------------------------------
             IF(TRABUF(TGOLMCOMF_IL).NE.1) THEN
                CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,24)
             ELSE IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).LE.3) THEN
                CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,9) !position 10,11 not being used
             ELSE IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).GT.3) THEN
-               CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,24)  
-            ENDIF  
-            
+               CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,24)
+            ENDIF
+
             IF(TRABUF(TGOLMCOMF_IL).NE.1 .AND. TRABUF(TIBCH).GE.9) THEN
                CALL MOVBYT(LOGBUF(17),1,BUFF(25),1,60)
             ELSE IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).GT.3 .AND. TRABUF(TIBCH).LE.24) THEN
@@ -3141,20 +3144,20 @@ C----+------------------------------------------------------------------
                CALL MOVBYT(LOGBUF(33),1,BUFF(85),1,36)
             ELSE IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).GT.24) THEN
                CALL MOVBYT(LOGBUF(33),1,BUFF(85),1,36)
-            ENDIF                 
+            ENDIF
 C
-C            CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,24) 
+C            CALL MOVBYT(LOGBUF(10),1,BUFF(1),1,24)
 C
 C            IF(TRABUF(TIBCH).GE.9)
-C     *        CALL MOVBYT(LOGBUF(17),1,BUFF(25),1,60) 
+C     *        CALL MOVBYT(LOGBUF(17),1,BUFF(25),1,60)
 C            IF(TRABUF(TIBCH).GE.29)
-C     *        CALL MOVBYT(LOGBUF(33),1,BUFF(85),1,36) 
+C     *        CALL MOVBYT(LOGBUF(33),1,BUFF(85),1,36)
 C
 C----+------------------------------------------------------------------
 C V59| end New Terminals Project - Olimpo
-C----+------------------------------------------------------------------  
+C----+------------------------------------------------------------------
             IND=1
-            DO X = 0, TRABUF(TIBCH)-1     
+            DO X = 0, TRABUF(TIBCH)-1
 C
                 I4TEMP = 0
                 CALL MOVBYT(BUFF,IND,I4TEMP,1,3)
@@ -3173,7 +3176,7 @@ C
                 TRABUF(TSGAM+X) = ISHFT(GTYP,12) + IAND(GNUM,'0FFF'X)
 C
             END DO
-             
+
 C
           ELSE IF(TRABUF(TITYP).EQ.ICNF) THEN
 C
@@ -3184,7 +3187,7 @@ C
             TRABUF(TIINV3) = LOGBUF(9)
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------ 
+C----+------------------------------------------------------------------
             I4TEMP = LOGBUF(15)
             TRABUF(TGOLMCOMF_IL) = I4TEMP
             IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
@@ -3192,16 +3195,16 @@ C----+------------------------------------------------------------------
               TRABUF(TGOLMSERL_IL) = I4TEMP
               I4TEMP = LOGBUF(11)
               TRABUF(TGOLMSERM_IL) = I4TEMP
-              I4TEMP = LOGBUF(12)  
+              I4TEMP = LOGBUF(12)
               TRABUF(TGOLMSERH_IL) = I4TEMP
-              I4TEMP = LOGBUF(13) 
+              I4TEMP = LOGBUF(13)
               TRABUF(TGOLMMIDL_IL) = I4TEMP
-              I4TEMP = LOGBUF(14)  
+              I4TEMP = LOGBUF(14)
               TRABUF(TGOLMMIDH_IL) = I4TEMP
             ENDIF
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------              
+C----+------------------------------------------------------------------
 C
           ELSE IF(TRABUF(TITYP).EQ.IOACT) THEN
 C
@@ -3212,7 +3215,7 @@ C
             TRABUF(TOINV3) = LOGBUF(9)
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------ 
+C----+------------------------------------------------------------------
             I4TEMP = LOGBUF(15)
             TRABUF(TGOLMCOMF_IL) = I4TEMP
             IF(TRABUF(TGOLMCOMF_IL) .EQ. 1) THEN
@@ -3220,16 +3223,16 @@ C----+------------------------------------------------------------------
               TRABUF(TGOLMSERL_IL) = I4TEMP
               I4TEMP = LOGBUF(11)
               TRABUF(TGOLMSERM_IL) = I4TEMP
-              I4TEMP = LOGBUF(12)  
+              I4TEMP = LOGBUF(12)
               TRABUF(TGOLMSERH_IL) = I4TEMP
-              I4TEMP = LOGBUF(13) 
+              I4TEMP = LOGBUF(13)
               TRABUF(TGOLMMIDL_IL) = I4TEMP
-              I4TEMP = LOGBUF(14)  
+              I4TEMP = LOGBUF(14)
               TRABUF(TGOLMMIDH_IL) = I4TEMP
             ENDIF
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------            
+C----+------------------------------------------------------------------
 C
           ELSE IF(TRABUF(TITYP).EQ.ISON.OR.
      *            TRABUF(TITYP).EQ.ISOF) THEN
@@ -3287,7 +3290,7 @@ C
 C
             TRABUF(TIFSEREP)      = LOGBUF(9)
 
-            I4TEMP                = LOGBUF(10) 
+            I4TEMP                = LOGBUF(10)
             TRABUF(TIFSECLS)      = I2TEMP(1)
 C
           ENDIF
@@ -3394,15 +3397,15 @@ C
 C
 C ONLINE AGENT UPDATE
 C
-	  ELSE IF(TRABUF(TSFUN).EQ.TAGTINF) THEN
-	      I4TEMP     = LOGBUF(8)
+          ELSE IF(TRABUF(TSFUN).EQ.TAGTINF) THEN
+              I4TEMP     = LOGBUF(8)
               TRABUF(TSNEW) = ZEXT(I1TEMP(1))     ! number of items
 
               CALL MOVBYT(LOGBUF(8),2,TRABUF(TSDT1),1,31)
               CALL MOVBYT(LOGBUF(17),1,TRABUF(TSDT1),32,LREC*4-1)
               CALL MOVBYT(LOGBUF(33),1,TRABUF(TSDT1),95,LREC*4-1)
 
-	      GOTO 9000
+              GOTO 9000
 C
 C MX LOG TRANSACTIONS
 C                                                             !MXSRV
@@ -3414,7 +3417,7 @@ C                                                             !MXSRV
              I4TEMP             = LOGBUF(16)                  !MXSRV
              TRABUF(TMXL_ERCODE)= I1TEMP(3)                   !MXSRV
              I4TEMP             = LOGBUF(32)                  !MXSRV
-             TRABUF(TMXL_DATLEN)= I2TEMP(1)                   !MXSRV      
+             TRABUF(TMXL_DATLEN)= I2TEMP(1)                   !MXSRV
 C
 C NORMAL SPECIAL SERVICE RECORD.
 C
@@ -3430,7 +3433,7 @@ C
 C
               I4TEMP        = LOGBUF(16)
               TRABUF(TSSGN) = ZEXT( I1TEMP(3) )
-              IF(TRABUF(TSIZE).GT.1) 
+              IF(TRABUF(TSIZE).GT.1)
      *           CALL FASTMOV(LOGBUF(17),TRABUF(TSDT7),15)
 
 C----+------------------------------------------------------------------
@@ -3444,7 +3447,7 @@ C              TRABUF(TSDT12) = LOGBUF(22)
 C              TRABUF(TSDT13) = LOGBUF(23)
 C----+------------------------------------------------------------------
 C V59| New Terminals Project - Olimpo
-C----+------------------------------------------------------------------      
+C----+------------------------------------------------------------------
 C
            ENDIF
            GOTO 9000
@@ -3470,7 +3473,7 @@ C
 C CONTINUATION RECORD 2
 C
            TRABUF(TCMDT5) = LOGBUF(17)
-	   TRABUF(TCMLIN) = LOGBUF(18)
+           TRABUF(TCMLIN) = LOGBUF(18)
 C
            GOTO 9000
 C
