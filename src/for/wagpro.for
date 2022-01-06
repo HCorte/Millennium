@@ -181,6 +181,7 @@ C----+------------------------------------------------------------------
 C V28| New Terminals Project - Olimpo
 C----+------------------------------------------------------------------
         GTYP = BPRO(BINPTAB+5,BUF)
+
         IF(GTYP.EQ.TLTO) THEN   
             CALL DLOTTO(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
         ELSE IF(GTYP.EQ.TSPT) THEN
@@ -190,6 +191,7 @@ C----+------------------------------------------------------------------
         ELSE
             CALL DKICK(PRO(INPTAB,BUF),TRABUF,HPRO(INPLEN,BUF))
         ENDIF
+
 C
 C CHECK IF TRANSACTION TYPE IS SUPRESSED ON
 C AGENT AND GLOBAL LEVELS
@@ -360,12 +362,16 @@ C
 C
 C UPDATE FINANCIAL INFORMATION
 C
+        
         IF(TRABUF(TSTAT).EQ.GOOD) THEN
+C           UPDSUB updates Sales Data in ltocom more
+C           specific its updgam.for               
+D            CALL OPS('LTOSAL(DAY,NUMLTO) before:',LTOSAL(4,4),0)    
             CALL UPDSUB(TRABUF)
+D            CALL OPS('LTOSAL(DAY,NUMLTO) after:',LTOSAL(4,4),0)
             CALL UPDSTA(TRABUF)
             PERFRM(1,GAME)=PERFRM(1,GAME)+1
         ENDIF
-
         CALL TRALOG(TRABUF,PRO(WRKTAB,BUF))
         IF(TRABUF(TERR).EQ.TBAD) HPRO(ENCOVR,BUF)=-1!TBAD=BAD TERMINAL NUMBER | ENCOVR=encryption override flag
         IF(HPRO(SIMMOD,BUF).EQ.-999) THEN
