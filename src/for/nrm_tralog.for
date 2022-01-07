@@ -3067,7 +3067,7 @@ C----+------------------------------------------------------------------
             ENDIF
 
             IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).GT.24) THEN
-               CALL MOVBYT(BUFF(85),1,LOGBUF(33),1,48)
+               CALL MOVBYT(BUFF(85),1,LOGBUF(33),1,36)
             ELSE
                CALL MOVBYT(BUFF(85),1,LOGBUF(33),1,36)
             ENDIF
@@ -3110,12 +3110,6 @@ CCCCCCCCCCCCCCCCCCCCCCCCC SECOND SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
                   IITEMP(3) = TRABUF(TGOLMMIDH_IL)
                   IITEMP(4) = 0
                   LOGBUF(32) = I4TEMP 
-CCCCCCCCCCCCCCCCCCCCCCCCC 1� SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
-               ELSE IF(TRABUF(TIBCH).LE.3) THEN
-                  I1TEMP(1) = TRABUF(TGOLMSERH_IL)
-                  I1TEMP(2) = TRABUF(TGOLMMIDH_IL)
-                  I1TEMP(4) = 0
-                  LOGBUF(32) = I4TEMP
 CCCCCCCCCCCCCCCCCCCCCCCCC FIRST SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
                ELSE IF(TRABUF(TIBCH).LE.3) THEN
                   I4TEMP = LOGBUF(12)
