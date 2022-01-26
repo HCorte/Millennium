@@ -409,12 +409,12 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       INCLUDE 'INCLIB:SYSEXTRN.DEF'
       INCLUDE 'INCLIB:GLOBAL.DEF'
       INCLUDE 'INCLIB:CONCOM.DEF'
-      INCLUDE 'INCLIB:ABPAUDIT.DEF'
+      INCLUDE 'INCLIB:OLMAUDIT.DEF'
  
-         RECORD /ABP_AUDIT_CONF/ CONF
+         RECORD /OLM_AUDIT_CONF/ CONF
          INTEGER*4 I, LEN
          
-C         CALL L_DEBUG(CONF,'[ABPAUDIT]:Initializing CONF structure')
+C         CALL L_DEBUG(CONF,'[OLMAUDIT]:Initializing CONF structure')
          PRINT *,'[OLMAUDIT]:Initializing CONF structure'
          DO I = 1, AA_MAX_NR_PARAMS
              CONF.CONF_PARAMS(AA_I_NAME ,I) = TRIM(AA_CONF_NAME(I))
@@ -461,9 +461,9 @@ C         CALL FORMATTED_TO_UNIX(CONF.P_CHECKPOINT_TIME,CONF.CHECKPOINT_TIME_UX)
       
       INCLUDE 'INCLIB:SYSPARAM.DEF'
       INCLUDE 'INCLIB:SYSEXTRN.DEF'
-      INCLUDE 'INCLIB:ABPAUDIT.DEF'
+      INCLUDE 'INCLIB:OLMAUDIT.DEF'
  
-         RECORD /ABP_AUDIT_CONF/ CONF
+         RECORD /OLM_AUDIT_CONF/ CONF
          
          CHARACTER*1024 LINE
          
@@ -482,14 +482,15 @@ C         CALL FORMATTED_TO_UNIX(CONF.P_CHECKPOINT_TIME,CONF.CHECKPOINT_TIME_UX)
  
              OPEN(UNIT = CONF.LUN_CONF
      *         , FILE = TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE))
-     *         , IOSTAT = CONF.ST, STATUS = 'OLD')
+     *         , IOSTAT = CONF.ST
+     *         , STATUS = 'OLD')
+
              IF(CONF.ST .NE. 0) THEN
                  PRINT *,TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)) //
      *                       ' open error'
                  RETURN
              ENDIF
-             
-C            continue from here the analyse  -------         
+                   
              EOF = .FALSE.
              DO WHILE(.NOT. EOF)
                  CALL GET_TXT_LINE_FROM_FILE(CONF.LUN_CONF,LINE,EOF)
@@ -502,19 +503,20 @@ C            continue from here the analyse  -------
              
              CLOSE(CONF.LUN_CONF, IOSTAT = CONF.ST)
              IF(CONF.ST .NE. 0) THEN
-                 CALL L_ERROR(CONF,TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)) //
-     *                       ' close error')
+                 PRINT *,TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)) //
+     *                       ' close error'
                  RETURN
              ENDIF
-             CALL L_DEBUG(CONF,'Configuration load succeeded!')
-             CALL L_DEBUG(CONF,'-  Loaded file '// 
-     *            TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)) // ' !')
-             CALL L_DEBUG(CONF,'-  Configurations read:')
+
+             PRINT *,'Configuration load succeeded!'             
+             PRINT *,'-  Loaded file '//
+     *               TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)) // ' !'
+             PRINT *,CONF,'-  Configurations read:'
              DO I = 1, AA_MAX_NR_PARAMS
                  IF(TRIM(CONF.CONF_PARAMS(AA_I_NAME ,I)) .NE. '') THEN
-                     CALL L_DEBUG(CONF,'   -  ' //
+                    PRINT *,'   -  ' //
      *                    TRIM(CONF.CONF_PARAMS(AA_I_NAME ,I)) // ' = ' //
-     *                    TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE ,I))))
+     *                    TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE ,I)))
                  ENDIF
              ENDDO
          ELSE
@@ -522,8 +524,402 @@ C            continue from here the analyse  -------
              PRINT *,'-  File ' // 
      *       TRIM(CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CONF_FILE)) //
      *       ' does not exist!'
+
+            PRINT *,'Start creation of Config file from .def default'
          ENDIF
  
          RETURN
       END
+
+      SUBROUTINE GET_TXT_LINE_FROM_FILE(LUN,LINE,EOF)
+      IMPLICIT NONE  
+
+      INCLUDE 'INCLIB:SYSDEFINE.DEF'
+
+        LOGICAL   EOF
+        INTEGER*4 LUN
+
+        CHARACTER*1024 LINE
+
+        READ(UNIT = LUN,FMT='(A)',END = 100) LINE
+        RETURN
+
+100     CONTINUE
+        EOF = .TRUE.
+        RETURN
+      END
+
+      SUBROUTINE PARSE_TXT_LINE(LINE, CONF)
+      IMPLICIT NONE
+      
+      INCLUDE 'INCLIB:SYSDEFINE.DEF'
+      INCLUDE 'INCLIB:OLMAUDIT.DEF'
+
+        RECORD /OLM_AUDIT_CONF/ CONF
+
+        CHARACTER*1024 LINE
+
+        CHARACTER*128 NAME
+        CHARACTER*1024 VAL
+        
+        INTEGER*4 INDEX, I, I4VAL, J, K
+        
+        INTEGER*4 CTOI
+        
+        DO I = 1,128
+            NAME(I:I) = CHAR(0)
+        ENDDO
+        
+        DO I = 1,1024
+            VAL(I:I) = CHAR(0)
+        ENDDO
+        
+        I = 1
+        INDEX = 0
+        
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       if starts with ! its a comment and # must also mean something like that
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        IF(LINE(1:1) .EQ. '!' .OR. LINE(1:1) .EQ. '#') THEN
+            RETURN
+        ENDIF
+        
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       Find the position of = by reading one by one caracther                      C
+C       when found split's and obtains the key value pair                           C
+C       and exists the cycle of reading (there should exit                          C
+C       a function that returns the index of first match of a caracther ...)        C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        DO WHILE(I .LE. 1024 .AND. INDEX .EQ. 0)
+            IF(LINE(I:I) .EQ. '=') THEN
+                NAME = TRIM(LINE(1:I-1))
+                VAL = TRIM(LINE(I+1:1024))
+                INDEX = I
+            ENDIF
+            I = I + 1
+        ENDDO 
+
+        IF(INDEX .EQ. 0) THEN
+            RETURN
+        ENDIF
+        
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       from the configuration file writes that config into memory                  C
+C       that is the olmaudit conf parameters since the order by not be respected    C
+C       from the file parameter name sees the match name in memory and records      C
+C       its position thats used to field with the corresponding value               C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC         
+        J = 1
+        K = 0
+        DO WHILE(J .LE. AA_MAX_NR_PARAMS .AND. K .EQ. 0)
+            IF(NAME .EQ. TRIM(AA_CONF_NAME(J))) THEN
+                K = J
+            ENDIF
+            J = J + 1
+        ENDDO
+        
+        IF(K .NE. 0) THEN
+            CONF.CONF_PARAMS(AA_I_VALUE,K) = TRIM(VAL)
+        ENDIF
+        
+        RETURN
+      END
+
+      SUBROUTINE UPDATE_CONF (CONF)
+      IMPLICIT NONE 
+
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:SYSEXTRN.DEF'
+      INCLUDE 'INCLIB:GLOBAL.DEF'
+      INCLUDE 'INCLIB:OLMAUDIT.DEF'
+
+        RECORD /OLM_AUDIT_CONF/ CONF
+        INTEGER*4 I, LEN
+        INTEGER*8 TS
+        
+        CONF.NR_SUC_WAGER_TRX      = 0
+        CONF.NR_SUC_CANCEL_TRX     = 0
+        CONF.NR_TOT_WAGER_TRX      = 0
+        CONF.NR_TOT_CANCEL_TRX     = 0
+        CONF.NR_ANALYZED_TRX       = 0
+        CONF.NR_TOT_SUC_TRX        = 0
+        
+C        CONF.P_MIN_RANGE_TRX_TIME = CTOI(TRIM(
+C     *    CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_MIN_RANGE_TRX_TIME)),LEN)
+C
+C        CONF.P_WAIT_TIME           = CTOI(TRIM(
+C     *    CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_WAIT_TIME)),LEN)
+C
+C        CONF.P_CYCLE_WAIT_TIME           = CTOI(TRIM(
+C     *    CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CYCLE_WAIT_TIME)),LEN)
+C
+C        CONF.P_LAST_TRX_NR         = CTOI(TRIM(
+C     *    CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_LAST_TRX_NR)),LEN)
+
+        IF(  TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE
+     *                   ,AA_CI_FORCE_CONTINGENCY))) .EQ. 'Y'
+     *  .OR. TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE
+     *                   ,AA_CI_FORCE_CONTINGENCY))) .EQ. 'y') THEN
+            CONF.P_FORCE_CONTINGENCY   = .TRUE. 
+        ELSE
+            CONF.P_FORCE_CONTINGENCY   = .FALSE. 
+        ENDIF
+
+C        CONF.P_LAST_TIME           = CTOI8(TRIM(
+C     *    CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_LAST_TIME)),LEN)
+C
+C        CONF.P_LOG_LEVEL           = CTOI(TRIM(
+C     *    CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_LOG_LEVEL)),LEN)
+
+        IF(  TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE
+     *                   ,AA_CI_PRINT_ONLY_GOOD_TRX))) .EQ. 'N'
+     *  .OR. TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE
+     *                   ,AA_CI_PRINT_ONLY_GOOD_TRX))) .EQ. 'n') THEN
+            CONF.P_PRINT_ONLY_GOOD_TRX = .FALSE. 
+        ELSE
+            CONF.P_PRINT_ONLY_GOOD_TRX = .TRUE. 
+        ENDIF
+
+        IF(  TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE
+     *                   ,AA_CI_SINGLE_OUTPUT_FILE))) .EQ. 'N'
+     *  .OR. TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE
+     *                   ,AA_CI_SINGLE_OUTPUT_FILE))) .EQ. 'n') THEN
+            CONF.P_SINGLE_OUTPUT_FILE = .FALSE. 
+        ELSE
+            CONF.P_SINGLE_OUTPUT_FILE = .TRUE. 
+        ENDIF
+
+
+        IF(.NOT. CONF.P_SINGLE_OUTPUT_FILE) THEN
+            CALL GET_TIME_MS(TS)
+            TS = TS / KZEXT(1000)
+            
+            WRITE(CONF.OUTPUT_FILENAME,901) TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE
+     *                                          ,AA_CI_OUTPUT_FILE_PREFIX)))
+     *                                    , TS
+     *                                    , TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE
+     *                                          ,AA_CI_OUTPUT_FILE_SUFFIX)))
+901         FORMAT(A,'_',I0,'.',A)
+        ELSE
+            WRITE(CONF.OUTPUT_FILENAME,902) TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE
+     *                                          ,AA_CI_OUTPUT_FILE_PREFIX)))
+     *                                    , TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE
+     *                                          ,AA_CI_OUTPUT_FILE_SUFFIX)))
+902         FORMAT(A,'.',A)
+        ENDIF
+
+C        CONF.P_CHECKPOINT_TIME         = CTOI8(TRIM(
+C     *    CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_CHECKPOINT_TIME)),LEN)
+C     
+C        CALL FORMATTED_TO_UNIX(CONF.P_CHECKPOINT_TIME, CONF.CHECKPOINT_TIME_UX)
+C        CONF.P_DELTA_CHECKPOINT_TIME   = CTOI(TRIM(
+C     *    CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_DELTA_CHECKPOINT_TIME)),LEN)
+C
+C        CONF.P_LAST_CDC                = CTOI(TRIM(
+C     *    CONF.CONF_PARAMS(AA_I_VALUE,AA_CI_LAST_CDC)),LEN)
+        
+        CALL DUMP_CONF_PARAMS(CONF)
+
+      END
    
+
+
+      SUBROUTINE DUMP_CONF_PARAMS(CONF)
+      IMPLICIT NONE
+
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE 'INCLIB:SYSEXTRN.DEF'
+      INCLUDE 'INCLIB:OLMAUDIT.DEF'
+
+        RECORD /OLM_AUDIT_CONF/ CONF
+
+        CHARACTER*65 LINE
+
+        PRINT '(A)','Dumping configuration parameters:'
+        CALL LOG_I4(CONF,AA_LOG_LEVEL_DEBUG,' Min.Range Trx Time (s)',CONF.P_MIN_RANGE_TRX_TIME)
+        CALL LOG_I4(CONF,AA_LOG_LEVEL_DEBUG,'          Wait Time (s)',CONF.P_WAIT_TIME)
+        CALL LOG_I4(CONF,AA_LOG_LEVEL_DEBUG,'    Cycle Wait Time (s)',CONF.P_CYCLE_WAIT_TIME)
+        CALL LOG_I4(CONF,AA_LOG_LEVEL_DEBUG,'            Last Trx Nr',CONF.P_LAST_TRX_NR)
+        CALL LOG_L (CONF,AA_LOG_LEVEL_DEBUG,'      Force Contingency',CONF.P_FORCE_CONTINGENCY)
+        CALL LOG_I8(CONF,AA_LOG_LEVEL_DEBUG,'         Last Time (ms)',CONF.P_LAST_TIME)
+        CALL LOG_I4(CONF,AA_LOG_LEVEL_DEBUG,'              Log Level',CONF.P_LOG_LEVEL)
+        CALL LOG_L (CONF,AA_LOG_LEVEL_DEBUG,'  Print Only Good Trxs.',CONF.P_PRINT_ONLY_GOOD_TRX)
+        CALL LOG_L (CONF,AA_LOG_LEVEL_DEBUG,'     Single Output File',CONF.P_SINGLE_OUTPUT_FILE)
+        CALL LOG_S (CONF,AA_LOG_LEVEL_DEBUG,'        Output Filename',CONF.OUTPUT_FILENAME)
+        CALL LOG_I8(CONF,AA_LOG_LEVEL_DEBUG,'    Checkpoint time (s)',CONF.P_CHECKPOINT_TIME)
+        CALL LOG_I4(CONF,AA_LOG_LEVEL_DEBUG,'               Last CDC',CONF.P_LAST_CDC)
+
+        RETURN 
+      END
+
+      SUBROUTINE LOG_I4(CONF,LOG_LEVEL,STRING,I4)
+        IMPLICIT NONE
+        
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:OLMAUDIT.DEF'
+
+        RECORD /OLM_AUDIT_CONF/ CONF
+        INTEGER*4 LOG_LEVEL
+        INTEGER*4 I4
+        CHARACTER*(*) STRING
+        CHARACTER*64 LINE
+        
+        IF(LOG_LEVEL .LE. CONF.P_LOG_LEVEL .AND. LOG_LEVEL .NE. AA_LOG_LEVEL_NONE) THEN
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C       WRITE THE FIRST PARAMETER IS UNIT=6 OR A VARIABLE that serves as output        C
+C       from a cast of sorts in this case convert a int into string more specific      C
+C       the input is conjunction of a string and int into a output of a string         C
+C       INPUT: STRING,I4  OUTPUT: LINE (shoud limit the input string to 60 caracthers) C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC               
+            WRITE(LINE,901) TRIM(STRING),I4
+901         FORMAT(A32,' : ',I)
+            CALL OPSTXT(TRIM(LINE))
+            TYPE *, IAM(), AA_LOG_LEVEL_DESC(LOG_LEVEL),' ',TRIM(LINE)
+        ENDIF
+        
+        RETURN
+        END
+
+        SUBROUTINE LOG_I8(CONF,LOG_LEVEL,STRING,I8)
+        IMPLICIT NONE
+        
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:OLMAUDIT.DEF'
+
+        RECORD /OLM_AUDIT_CONF/ CONF
+        INTEGER*4 LOG_LEVEL
+        INTEGER*8 I8
+        CHARACTER*(*) STRING
+        CHARACTER*64 LINE
+        
+        IF(LOG_LEVEL .LE. CONF.P_LOG_LEVEL .AND. LOG_LEVEL .NE. AA_LOG_LEVEL_NONE) THEN
+            WRITE(LINE,901) TRIM(STRING),I8
+901         FORMAT(A32,' : ',I)
+            CALL OPSTXT(TRIM(LINE))
+            TYPE *, IAM(), AA_LOG_LEVEL_DESC(LOG_LEVEL),' ',TRIM(LINE)
+        ENDIF
+        
+        RETURN
+        END
+
+
+        SUBROUTINE LOG_L(CONF,LOG_LEVEL,STRING,L)
+        IMPLICIT NONE
+        
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:OLMAUDIT.DEF'
+
+        RECORD /OLM_AUDIT_CONF/ CONF
+        INTEGER*4 LOG_LEVEL
+        LOGICAL L
+        CHARACTER*(*) STRING
+        CHARACTER*64 LINE
+        
+        IF(LOG_LEVEL .LE. CONF.P_LOG_LEVEL .AND. LOG_LEVEL .NE. AA_LOG_LEVEL_NONE) THEN
+            WRITE(LINE,901) TRIM(STRING),L
+901         FORMAT(A32,' : ',L)
+            CALL OPSTXT(TRIM(LINE))
+            TYPE *, IAM(), AA_LOG_LEVEL_DESC(LOG_LEVEL),' ',TRIM(LINE)
+        ENDIF
+        
+        RETURN
+        END
+
+        SUBROUTINE LOG_S(CONF,LOG_LEVEL,STRING,S)
+        IMPLICIT NONE
+        
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+        INCLUDE 'INCLIB:OLMAUDIT.DEF'
+
+        RECORD /OLM_AUDIT_CONF/ CONF
+        INTEGER*4 LOG_LEVEL
+        LOGICAL L
+        CHARACTER*(*) STRING,S
+        CHARACTER*132 LINE
+        
+        IF(LOG_LEVEL .LE. CONF.P_LOG_LEVEL .AND. LOG_LEVEL .NE. AA_LOG_LEVEL_NONE) THEN
+            WRITE(LINE,901) TRIM(STRING),TRIM(S)
+901         FORMAT(A32,' : ',A)
+            CALL OPSTXT(TRIM(LINE))
+            TYPE *, IAM(), AA_LOG_LEVEL_DESC(LOG_LEVEL),' ',TRIM(LINE)
+        ENDIF
+        
+        RETURN
+        END
+
+        SUBROUTINE GET_TIME_MS(TIME_MS_YYYYMMDDHHMISSMLS)
+        IMPLICIT NONE
+
+        INCLUDE 'INCLIB:SYSPARAM.DEF'
+        INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C ARGUMENTS
+        INTEGER*8 TIME_MS, TIME_MS_YYYYMMDDHHMISSMLS
+
+C INTERNAL VARIABLES
+        INTEGER*4 TIM(8), I, YYYY,MM,DD, JDAY
+        CHARACTER*12 CLOCK(3)
+C
+C       values (1) is the 4-digit year
+C       values (2) is the month of the year
+C       values (3) is the day of the year
+C       values (4) is the time difference with respect to
+C                   Coordinated Universal Time (UTC) in minutes
+C       values (5) is the hour of the day (range 0 to 23)
+C       values (6) is the minutes of the hour (range 0 to 59).
+C       values (7) is the seconds of the minute (range 0 to 59).
+C       values (8) is the milliseconds of the second (range 0 to 999).
+
+
+        CALL DATE_AND_TIME(CLOCK(1),CLOCK(2),CLOCK(3),TIM)
+
+        TIME_MS_YYYYMMDDHHMISSMLS = 
+     *    KZEXT(TIM(8))
+     *  + KZEXT(TIM(7)) * KZEXT(1000)
+     *  + KZEXT(TIM(6)) * KZEXT(1000) * KZEXT(100)
+     *  + KZEXT(TIM(5)) * KZEXT(1000) * KZEXT(100) * KZEXT(100)
+     *  + KZEXT(TIM(3)) * KZEXT(1000) * KZEXT(100) * KZEXT(100) * KZEXT(100)
+     *  + KZEXT(TIM(2)) * KZEXT(1000) * KZEXT(100) * KZEXT(100) * KZEXT(100) * KZEXT(100)
+     *  + KZEXT(TIM(1)) * KZEXT(1000) * KZEXT(100) * KZEXT(100) * KZEXT(100) * KZEXT(100) * KZEXT(100)
+
+        RETURN
+        END
+
+        SUBROUTINE WRITE_CFG_FILE(CONF)
+        IMPLICIT NONE
+        
+        INCLUDE 'INCLIB:SYSDEFINE.DEF'
+        INCLUDE 'INCLIB:ABPAUDIT.DEF'
+
+        RECORD /ABP_AUDIT_CONF/ CONF
+
+        INTEGER*4 I
+        CHARACTER*32 TIMESTAMP
+        CHARACTER*124 LINE
+        
+        WRITE(CONF.LUN_CONF, 901) 
+901     FORMAT(128('#'))
+902     FORMAT('# ',A,' #')
+913     FORMAT(A)
+
+        CALL GET_TIMESTAMP(TIMESTAMP)
+
+        WRITE(LINE,913) 'Configuration file for module ABPAUDIT'
+        WRITE(CONF.LUN_CONF, 902) LINE
+        WRITE(LINE,913) TRIM('Written by ABPAUDIT on ' // TRIM(TIMESTAMP))
+        WRITE(CONF.LUN_CONF, 902) LINE 
+        WRITE(CONF.LUN_CONF, 901) 
+
+        DO I = 1, AA_MAX_NR_PARAMS
+            IF(TRIM(CONF.CONF_PARAMS(AA_I_NAME,I)) .NE. '') THEN 
+                WRITE(CONF.LUN_CONF, 903) TRIM(CONF.CONF_PARAMS(AA_I_NAME,I))
+     *              , TRIM(ADJUSTL(CONF.CONF_PARAMS(AA_I_VALUE,I)))
+903             FORMAT(A,' = ',A)
+            ENDIF
+        ENDDO
+        
+        RETURN
+        END
