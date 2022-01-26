@@ -1,0 +1,103 @@
+Using username "console".
+Pre-authentication banner message from server:
+|
+| @SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+End of banner message from server
+console@10.100.82.101's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Monday, 10-JAN-2022 09:39:47.55
+    Last non-interactive login on Friday, 7-JAN-2022 13:53:08.38
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.CONSOLE]LOGIN.COM;7
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD0:[PORT.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+PODEV1::PORT> goscml
+%DCL-I-SUPERSEDE, previous value of LNM$GROUP has been superseded
+%DCL-I-SUPERSEDE, previous value of GXPROJ has been superseded
+%DCL-I-SUPERSEDE, previous value of GXUIC has been superseded
+%DCL-I-SUPERSEDE, previous value of PROJECT has been superseded
+%DCL-I-SUPERSEDE, previous value of RELEASE_TYPE has been superseded
+%DCL-I-SUPERSEDE, previous value of PRODUCT has been superseded
+
+APPLICATION :      ()
+
+DEFAULT PATH:    PODEV1::DKD5:[SCML.][TSK]
+
+GXCOM:SETLOGIMAGE: SETTING LOGICAL NAMES FOR SHARED IMAGES
+Executing GXCOM:SETLOGDISKS.COM
+%DCL-I-SUPERSEDE, previous value of DECC$SYSTEM_INCLUDE has been superseded
+%DCL-I-SUPERSEDE, previous value of DECC$TEXT_LIBRARY has been superseded
+PODEV1::SCML>
+PODEV1::SCML> r resver
+10:00:37 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+10:00:37 CONSOLE   Lotto   3  TOTOLOTO SABADO Draw   565
+
+10:00:37 CONSOLE   Lotto   3 draw  565
+10:00:37 CONSOLE  Enter first   number >1
+10:00:39 CONSOLE  Enter second  number >2
+10:00:40 CONSOLE  Enter third   number >3
+10:00:40 CONSOLE  Enter forth   number >4
+10:00:41 CONSOLE  Enter fifth   number >5
+10:00:42 CONSOLE  Enter Lucky Number   >1
+10:00:43 CONSOLE   Numbers entered: 01 02 03 04 05
+10:00:43 CONSOLE      Lucky Number: 01
+10:00:43 CONSOLE  Are the numbers entered correct (Y/N)  >y
+10:00:44 CONSOLE  Do Your Have Special Totoloto Jackpot Fund [Y/N] ? >n
+10:00:46 CONSOLE   Lotto   3 results entry complete
+10:00:46 CONSOLE  STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML> r resver
+10:01:49 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+10:01:49 CONSOLE   Sports  1  TOTOBOLA NORMAL Draw  1074
+
+10:01:49 CONSOLE  Enter row    1:        >1
+10:01:50 CONSOLE  Enter row    2:        >1
+10:01:51 CONSOLE  Enter row    3:        >1
+10:01:51 CONSOLE  Enter row    4:        >1
+10:01:51 CONSOLE  Enter row    5:        >1
+10:01:52 CONSOLE  Enter row    6:        >1
+10:01:52 CONSOLE  Enter row    7:        >1
+10:01:52 CONSOLE  Enter row    8:        >1
+10:01:52 CONSOLE  Enter row    9:        >1
+10:01:53 CONSOLE  Enter row   10:        >1
+10:01:53 CONSOLE  Enter row   11:        >1
+10:01:54 CONSOLE  Enter row   12:        >1
+10:01:54 CONSOLE  Enter row   13:        >1
+10:01:55 CONSOLE  Enter SUPER 14 row:    >1
+Sports  1 results entered 1 1 1 1 1 1 1 1 1 1 1 1 1
+SUPER 14 results entered 1
+10:01:55 CONSOLE  Are the results entered ok [Y/N]?  >y
+10:01:57 CONSOLE   Sports  1 results entry complete
+10:01:57 CONSOLE  STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML>
