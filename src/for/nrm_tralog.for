@@ -3066,9 +3066,9 @@ C----+------------------------------------------------------------------
                CALL MOVBYT(BUFF(25),1,LOGBUF(17),1,60)
             ENDIF
 
-            IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).GT.24) THEN
+            IF(TRABUF(TGOLMCOMF_IL).NE.1 .AND. TRABUF(TIBCH).GE.29) THEN
                CALL MOVBYT(BUFF(85),1,LOGBUF(33),1,36)
-            ELSE
+            ELSE IF(TRABUF(TGOLMCOMF_IL).EQ.1 .AND. TRABUF(TIBCH).GT.24) THEN
                CALL MOVBYT(BUFF(85),1,LOGBUF(33),1,36)
             ENDIF
 C
@@ -3103,23 +3103,13 @@ CCCCCCCCCCCCCCCCCCCCCCCCC SECOND SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
                   I4TEMP = TRABUF(TGOLMSERM_IL)
                   LOGBUF(30) = I4TEMP
                   I4TEMP = TRABUF(TGOLMMIDL_IL)
-                  LOGBUF(31) = I4TEMP 
-                  
-                  IITEMP(1) = TRABUF(TGOLMCOMF_IL)
-                  IITEMP(2) = TRABUF(TGOLMSERH_IL)
-                  IITEMP(3) = TRABUF(TGOLMMIDH_IL)
-                  IITEMP(4) = 0
-                  LOGBUF(32) = I4TEMP 
-CCCCCCCCCCCCCCCCCCCCCCCCC FIRST SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
-               ELSE IF(TRABUF(TIBCH).LE.3) THEN
-                  I4TEMP = LOGBUF(12)
+
+                  I1TEMP(1) = TRABUF(TGOLMCOMF_IL)
                   I1TEMP(2) = TRABUF(TGOLMSERH_IL)
                   I1TEMP(3) = TRABUF(TGOLMMIDH_IL)
-                  I1TEMP(4) = TRABUF(TGOLMCOMF_IL)
-                  LOGBUF(12) = I4TEMP
-                  I4TEMP = TRABUF(TGOLMSERL_IL)
-                  LOGBUF(13) = I4TEMP
-                  I4TEMP = TRABUF(TGOLMSERM_IL)
+                  I1TEMP(4) = 0
+                  LOGBUF(32) = I4TEMP
+CCCCCCCCCCCCCCCCCCCCCCCCC FIRST SEGMENT CCCCCCCCCCCCCCCCCCCCCCCCC
                   LOGBUF(14) = I4TEMP
                   I4TEMP = TRABUF(TGOLMMIDL_IL)
                   LOGBUF(15) = I4TEMP

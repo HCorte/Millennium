@@ -1,0 +1,276 @@
+C
+C OLMAUDIT.DEF
+C
+C V01 2021.12.14 SCML (H.C.) Creation 
+C
+
+
+C
+C Declare auxiliary constants and structures for OLM Audit
+C
+        INCLUDE 'INCLIB:DESTRA.DEF'
+        INCLUDE 'INCLIB:PRMLOG.DEF'
+        
+        ! Index for Name part of CONF_PARAMS
+        INTEGER*4 AA_I_NAME
+        PARAMETER(AA_I_NAME      = 1)
+        
+        ! Index for Value part of CONF_PARAMS
+        INTEGER*4 AA_I_VALUE
+        PARAMETER(AA_I_VALUE     = 2)
+        
+        ! Size of tuple part of CONF_PARAMS
+        INTEGER*4 AA_MAX_TUPLE
+        PARAMETER(AA_MAX_TUPLE = 2)
+        
+        ! Maximum number of CONF_PARAMS
+        INTEGER*4 AA_MAX_NR_PARAMS
+        PARAMETER(AA_MAX_NR_PARAMS = 16)
+        
+        ! Structure that contains CONF_PARAMS and derived values
+        STRUCTURE /OLM_AUDIT_CONF/
+            ! Text of CONF_PARAMS
+            CHARACTER*128 CONF_PARAMS(AA_MAX_TUPLE,AA_MAX_NR_PARAMS)
+            
+            ! Work parameters
+            ! Maximum cutoff time for transaction analysis (in seconds)
+            INTEGER*4 P_MIN_RANGE_TRX_TIME  !  5 minutes (in seconds) by default
+            ! Range time for transaction analysis (in seconds)
+            INTEGER*4 P_WAIT_TIME           !  1 minute  (in seconds) by default
+            ! Waiting time between cycles (in seconds)
+            INTEGER*4 P_CYCLE_WAIT_TIME     ! 10 minutes (in seconds) by default
+            ! Last successful analyzed transaction (checkpoint)
+            INTEGER*4 P_LAST_TRX_NR
+            ! Force contingency
+            LOGICAL   P_FORCE_CONTINGENCY
+            ! Last time in milliseconds in which OLMAUDIT run successfully
+            INTEGER*8 P_LAST_TIME
+            ! Log level
+            INTEGER*4 P_LOG_LEVEL           !  1 (Error) by default
+            ! Print only good transactions
+            LOGICAL   P_PRINT_ONLY_GOOD_TRX
+            ! Single output file
+            LOGICAL   P_SINGLE_OUTPUT_FILE
+            ! Checkpoint time (in YYYYMMDDHHMISS format)
+            INTEGER*8 P_CHECKPOINT_TIME
+            ! Delta checkpoint time (in seconds)
+            INTEGER*4 P_DELTA_CHECKPOINT_TIME
+            ! Last CDC
+            INTEGER*4 P_LAST_CDC            !  0 by default
+            
+            ! Auxiliary variables 
+            ! Number of successful wager transactions analyzed since last cutoff
+            INTEGER*4 NR_SUC_WAGER_TRX
+            ! Number of successful cancellation transactions analyzed since last cutoff
+            INTEGER*4 NR_SUC_CANCEL_TRX
+            ! Number of wager transactions analyzed since last cutoff
+            INTEGER*4 NR_TOT_WAGER_TRX
+            ! Number of cancellation transactions analyzed since last cutoff
+            INTEGER*4 NR_TOT_CANCEL_TRX
+            ! Number of transactions analyzed 
+            INTEGER*4 NR_ANALYZED_TRX
+            ! Number of total successful transactions analyzed since last cutoff
+            INTEGER*4 NR_TOT_SUC_TRX
+            ! Contingency forced 
+            LOGICAL FORCE_CONTINGENCY
+            ! STOPSYS is set 
+            LOGICAL STOPSYS
+            ! Start-of-day is set 
+            LOGICAL START_OF_DAY
+            ! End-of-day is set 
+            LOGICAL END_OF_DAY
+            ! End-of-turn is set 
+            LOGICAL END_OF_TURN
+            ! Last time was today ? 
+            LOGICAL LAST_TIME_TODAY
+            ! TMF record read with success ?
+            LOGICAL TMF_READ_SUCCESS
+            ! TMF record in time range ?
+            INTEGER*4 TMF_REC_IN_RANGE
+            ! LUN for TMF file
+            INTEGER*4 LUN_TMF
+            ! LUN for Output file
+            INTEGER*4 LUN_OUTPUT
+            ! LUN for Config file
+            INTEGER*4 LUN_CONF
+            ! Status 
+            INTEGER*4 ST
+            ! TRABUF read from TMF
+            INTEGER*4 TRABUF(TRALEN)
+            ! LOGREC read from TMF
+            INTEGER*4 LOGREC(LREC*3)
+            ! End of TMF
+            LOGICAL   EOT
+            ! Current TRX serial
+            INTEGER*4 TRX_SER
+            ! Current Char -> Integer*4 conversion buf
+            INTEGER*4 ICONV(32)
+            ! Output file name
+            CHARACTER*128 OUTPUT_FILENAME
+            ! Remaining cycle time
+            INTEGER*4 REMAINING_CYCLE_TIME
+            ! Checkpoint time (in unix format)
+            INTEGER*8 CHECKPOINT_TIME_UX
+        END STRUCTURE
+        
+        ! Index of SRC_TMF_FILE
+        INTEGER*4 AA_CI_SRC_TMF_FILE
+        PARAMETER(AA_CI_SRC_TMF_FILE          = 1)
+        
+        ! Index of OUTPUT_FILE_PREFIX
+        INTEGER*4 AA_CI_OUTPUT_FILE_PREFIX
+        PARAMETER(AA_CI_OUTPUT_FILE_PREFIX    = 2)
+        
+        ! Index of OUTPUT_FILE_SUFFIX
+        INTEGER*4 AA_CI_OUTPUT_FILE_SUFFIX
+        PARAMETER(AA_CI_OUTPUT_FILE_SUFFIX    = 3)
+        
+        ! Index of SINGLE_OUTPUT_FILE
+        INTEGER*4 AA_CI_SINGLE_OUTPUT_FILE
+        PARAMETER(AA_CI_SINGLE_OUTPUT_FILE    = 4)
+        
+        ! Index of CONF_FILE
+        INTEGER*4 AA_CI_CONF_FILE
+        PARAMETER(AA_CI_CONF_FILE             = 5)
+        
+        ! Index of MIN_RANGE_TRX_TIME
+        INTEGER*4 AA_CI_MIN_RANGE_TRX_TIME
+        PARAMETER(AA_CI_MIN_RANGE_TRX_TIME    = 6)
+        
+        ! Index of WAIT_TIME
+        INTEGER*4 AA_CI_WAIT_TIME
+        PARAMETER(AA_CI_WAIT_TIME             = 7)
+        
+        ! Index of CYCLE_WAIT_TIME
+        INTEGER*4 AA_CI_CYCLE_WAIT_TIME
+        PARAMETER(AA_CI_CYCLE_WAIT_TIME       = 8)
+        
+        ! Index of LAST_TRX_NR
+        INTEGER*4 AA_CI_LAST_TRX_NR
+        PARAMETER(AA_CI_LAST_TRX_NR           = 9)
+        
+        ! Index of FORCE_CONTINGENCY
+        INTEGER*4 AA_CI_FORCE_CONTINGENCY
+        PARAMETER(AA_CI_FORCE_CONTINGENCY     = 10)
+        
+        ! Index of LAST_TIME
+        INTEGER*4 AA_CI_LAST_TIME
+        PARAMETER(AA_CI_LAST_TIME             = 11)
+        
+        ! Index of LOG_LEVEL
+        INTEGER*4 AA_CI_LOG_LEVEL
+        PARAMETER(AA_CI_LOG_LEVEL             = 12)
+        
+        ! Index of PRINT_ONLY_GOOD_TRX
+        INTEGER*4 AA_CI_PRINT_ONLY_GOOD_TRX
+        PARAMETER(AA_CI_PRINT_ONLY_GOOD_TRX   = 13)
+        
+        ! Index of CHECKPOINT_TIME
+        INTEGER*4 AA_CI_CHECKPOINT_TIME
+        PARAMETER(AA_CI_CHECKPOINT_TIME       = 14)
+        
+        ! Index of DELTA_CHECKPOINT_TIME
+        INTEGER*4 AA_CI_DELTA_CHECKPOINT_TIME
+        PARAMETER(AA_CI_DELTA_CHECKPOINT_TIME = 15)
+        
+        ! Index of LAST_CDC
+        INTEGER*4 AA_CI_LAST_CDC
+        PARAMETER(AA_CI_LAST_CDC              = 16)
+        
+        ! CONF parameter names (for initialization purposes)
+        INTEGER*4    AA_IXI
+        CHARACTER*32 AA_CONF_NAME(AA_MAX_NR_PARAMS)
+        DATA (AA_CONF_NAME(AA_IXI),AA_IXI=1,AA_MAX_NR_PARAMS)/
+     *    !0        1         2         3 3
+     *    !1---+----0----+----0----+----0-2
+     *    'SRC_TMF_FILE                    ' !  1
+     *  , 'OUTPUT_FILE_PREFIX              ' !  2
+     *  , 'OUTPUT_FILE_SUFFIX              ' !  3
+     *  , 'SINGLE_OUTPUT_FILE              ' !  4
+     *  , 'CONF_FILE                       ' !  5
+     *  , 'MIN_RANGE_TRX_TIME              ' !  6
+     *  , 'WAIT_TIME                       ' !  7
+     *  , 'CYCLE_WAIT_TIME                 ' !  8
+     *  , 'LAST_TRX_NR                     ' !  9
+     *  , 'FORCE_CONTINGENCY               ' ! 10
+     *  , 'LAST_TIME                       ' ! 11
+     *  , 'LOG_LEVEL                       ' ! 12
+     *  , 'PRINT_ONLY_GOOD_TRX             ' ! 13
+     *  , 'CHECKPOINT_TIME                 ' ! 14
+     *  , 'DELTA_CHECKPOINT_TIME           ' ! 15
+     *  , 'LAST_CDC                        ' ! 16
+     *  /
+        
+        ! CONF parameter default values (for initialization purposes)
+        CHARACTER*40 AA_CONF_DEF_VALUE(AA_MAX_NR_PARAMS)
+        DATA (AA_CONF_DEF_VALUE(AA_IXI),AA_IXI=1,AA_MAX_NR_PARAMS)/
+     *    !0        1         2         3         4
+     *    !1---+----0----+----0----+----0----+----0
+     *    'PRIM:MTMF01.FIL                         ' !  1:SRC_TMF_FILE
+     *  , 'GXPROJ:[TSK.OLMAUDIT.OUTPUT]OLMAUDIT    ' !  2:OUTPUT_FILE_PREFIX
+     *  , 'ASC                                     ' !  3:OUTPUT_FILE_SUFFIX
+     *  , 'N                                       ' !  4:SINGLE_OUTPUT_FILE
+     *  , 'GXOLM_AUDIT:OLMAUDIT.CFG                ' !  5:CONF_FILE
+     *  , '300                                     ' !  6:MIN_RANGE_TRX_TIME (in seconds)
+     *  , '15                                      ' !  7:WAIT_TIME(in seconds)
+     *  , '300                                     ' !  8:CYCLE_WAIT_TIME(in seconds)
+     *  , '1                                       ' !  9:LAST_TRX_NR
+     *  , 'N                                       ' ! 10:FORCE_CONTINGENCY (Y/N)
+     *  , '0                                       ' ! 11:LAST_TIME(in YYYYMMDDHHMISSMLS format)
+     *  , '1                                       ' ! 12:LOG_LEVEL
+     *  , 'Y                                       ' ! 13:PRINT_ONLY_GOOD_TRX (Y/N)
+     *  , '20010501000000                          ' ! 14:CHECKPOINT_TIME (in YYYYMMDDHHMISS format)
+     *  , '60                                      ' ! 15:DELTA_CHECKPOINT_TIME (in seconds)
+     *  , '0                                       ' ! 16:LAST_CDC
+     *  /
+     
+        ! Log level : None
+        INTEGER*4 AA_LOG_LEVEL_NONE
+        PARAMETER(AA_LOG_LEVEL_NONE  = -1)
+        
+        ! Log level : All
+        INTEGER*4 AA_LOG_LEVEL_ALL
+        PARAMETER(AA_LOG_LEVEL_ALL   = 0)
+        
+        ! Log level : Error
+        INTEGER*4 AA_LOG_LEVEL_ERROR
+        PARAMETER(AA_LOG_LEVEL_ERROR = 1)
+        
+        ! Log level : Warn
+        INTEGER*4 AA_LOG_LEVEL_WARN
+        PARAMETER(AA_LOG_LEVEL_WARN  = 2)
+        
+        ! Log level : Info
+        INTEGER*4 AA_LOG_LEVEL_INFO
+        PARAMETER(AA_LOG_LEVEL_INFO  = 3)
+        
+        ! Log level : Debug
+        INTEGER*4 AA_LOG_LEVEL_DEBUG
+        PARAMETER(AA_LOG_LEVEL_DEBUG = 4)
+
+        ! Log level : Trace
+        INTEGER*4 AA_LOG_LEVEL_TRACE
+        PARAMETER(AA_LOG_LEVEL_TRACE = 5)
+
+        ! LOG_LEVEL_DESC
+        CHARACTER*7 AA_LOG_LEVEL_DESC(AA_LOG_LEVEL_NONE:AA_LOG_LEVEL_TRACE)
+        DATA (AA_LOG_LEVEL_DESC(AA_IXI),AA_IXI=AA_LOG_LEVEL_NONE,AA_LOG_LEVEL_TRACE)/
+     *    '[NONE ]' ! None
+     *  , '[ALL  ]' ! All
+     *  , '[ERROR]' ! Error
+     *  , '[WARN ]' ! Warn
+     *  , '[INFO ]' ! Info
+     *  , '[DEBUG]' ! Debug
+     *  , '[TRACE]' ! Trace
+     *  /
+        
+C        INTERFACE
+C            
+C            INTEGER*8 FUNCTION CTOI8(STR_BUF, TOT_CNV)
+C            IMPLICIT NONE
+C            CHARACTER STR_BUF*(*)
+C            INTEGER*4 TOT_CNV
+C            END FUNCTION
+C            
+C        END INTERFACE
+     

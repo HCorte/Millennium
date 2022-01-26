@@ -256,6 +256,8 @@ C PROCESS AS NORMAL.
 C
 
         LSTSER = AGTTAB(ALSTRA,TER)          ! rev 1.10
+C       The New Terminals don't have retrys so jumps to the normal process        
+C        IF(BPRO(CHOLM_OLM,BUF).EQ.1) GOTO 80 
         IF(LSTSER.EQ.0) GOTO 80              ! rev 1.10
 
         IF(HPRO(SIMMOD,BUF).EQ.-999) GOTO 80    !NO RETRIES FOR SIM
