@@ -210,7 +210,7 @@ C
      *  , 'GXPROJ:[TSK.OLMAUDIT.OUTPUT]OLMAUDIT    ' !  2:OUTPUT_FILE_PREFIX
      *  , 'ASC                                     ' !  3:OUTPUT_FILE_SUFFIX
      *  , 'N                                       ' !  4:SINGLE_OUTPUT_FILE
-     *  , 'OLMAUDIT:OLMAUDIT.CFG                   ' !  5:CONF_FILE
+     *  , 'GXOLM_AUDIT:OLMAUDIT.CFG                ' !  5:CONF_FILE
      *  , '300                                     ' !  6:MIN_RANGE_TRX_TIME (in seconds)
      *  , '15                                      ' !  7:WAIT_TIME(in seconds)
      *  , '300                                     ' !  8:CYCLE_WAIT_TIME(in seconds)
