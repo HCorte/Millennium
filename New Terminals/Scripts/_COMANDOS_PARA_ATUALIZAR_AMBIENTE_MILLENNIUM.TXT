@@ -85,3 +85,44 @@ CÓPIA DOS FICHEIROS A PARTIR DA MÁQUINA DESTINO
 
 
 -- FIM --
+
+----------------------------------PODEV1 para POSYSD ------------------------------------------
+
+dir PODEV1"console console"::SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT.DSS]dss_logicals.com;0
+
+dir PODEV1"console console"::DKD10:[DMIL.TSK.OLM]COMOLM.EXE;0
+
+
+
+POSYSD::SCML> sh def
+  GXPROJ:[TSK]
+POSYSD::SCML>copy PODEV1"console console"::DKD10:[dmil.tsk]*.exe;0 *.exe;0
+
+
+POSYSD::SCML> set def gxigs
+POSYSD::SCML> sh def
+  GXPROJ:[TSK.IGS]
+POSYSD::SCML>
+POSYSD::SCML> copy PODEV1"console console"::DKD10:[DMIL.TSK.IGS]*.exe;0 *.exe;0
+
+
+POSYSD::SCML> set def gxolm
+POSYSD::SCML> sh def
+  GXPROJ:[TSK.OLM]
+POSYSD::SCML> copy PODEV1"console console"::DKD10:[DMIL.TSK.OLM]*.exe;0 *.exe;0  
+
+POSYSD::SCML> set def gxutl
+POSYSD::SCML> sh def
+  GXPROJ:[UTL]
+POSYSD::SCML> copy PODEV1"console console"::DKD10:[dmil.utl]*.exe;0 *.exe;0
+
+POSYSD::SCML> set def gxtsk
+POSYSD::SCML> sh def
+GXPROJ:[TSK]
+POSYSD::SCML> copy PODEV1"console console"::DKD10:[dmil.tsk]*.esh;0 *.esh;0
+
+POSYSD::SCML> remcom (primeiro)
+POSYSD::SCML> inscom
+
+POSYSD::SCML>
+POSYSD::SCML> runtst
