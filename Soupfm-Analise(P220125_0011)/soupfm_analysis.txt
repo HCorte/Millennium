@@ -1,0 +1,42 @@
+soupfm_am_expired.for
+-> 207 page
+
+
+
+record of validation
+VALREC -> desval.def
+record size VALLEN
+prmval.def -> (VALLEN=78)
+with all the fields that represent this record
+    (VWCDC=24)   !WINSEL CDC --- this means the day that ticket got prize (winner ticke)
+
+soupfm_common.for
+    READ_PRGREC_BLK  subroutine what reads from file and inserts a record/buffer that is UPREC defined in prgrec.def
+    UPREC -> UPBUF
+             prmvlf.def
+
+subroutine GET_PRG_FILENAME is where its defined the location of purge file
+    OPEN_FILE_SOUPFM_PRG_BLK <--- that points to the file to read in this purgefile defined in soupfm.def
+        INTEGER*4  IDX_PRG_FILE
+        PARAMETER (IDX_PRG_FILE = 2)
+
+    DEFAULT_FILES_NAME <---- soupfm.def
+            DATA  DEFAULT_FILES_NAME /
+         *            'PRIM:MTMF01.FIL             '
+         *          , 'WORK:UPURGE.FIL             '    
+    
+SOUPFM_REC defined in soupfm:
+    RECORD /SOUPFMSTRUCT/ SOUPFM_REC
+
+and initalized in:
+    CALL INIT_SOUPFM_REC(SOUPFM_REC)
+
+
+RAB$L_BKT -> bucket code (BKT) field !!! 7.3 RAB$L_BKT Field !!! 
+    This field contains a relative record number or a numeric value representing the
+    virtual block number to be accessed
+RAB$W_USZ -> record buffer size ( 2bytes ) !! set # of bytes to transfer  
+RAB$L_UBF -> User record buffer address (4bytes) that points to a structer/class that represents the record
+    
+
+
