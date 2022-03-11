@@ -1,0 +1,513 @@
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:09:02 PAGE     1
+ 10.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         10.02.2022 CDC 7591
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF 
+    FILE NAME -----------> prim:mtmf01.fil     
+    TAPE DRIVE ---------->                     
+    TERMINAL NUMBER -----> ALL 
+    EXCLUDE EM TRX ------> YES
+    EXCLUDE IGS TRX -----> YES
+    EUROMIL EXT SER # --->             
+    PLACARD EXT SER # --->                         
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL  
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:09:02 PAGE     1
+ 10.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         10.02.2022 CDC 7591
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000001 11:13:35     0   0  7591    0             0    2 SUPWAG   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000003 11:13:55     0   0  7591    0             0    2 SUPCAN   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000005 11:14:17     0   0  7591    0             0    2 SUPINS   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000007 11:14:21     0   0  7591    0             0    2 SUPVAL   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   SPE  32000009 11:14:50  4350   B  7591    0             0    2 SON  OLD>       0 NEW>       0 AGT> 04-00001
+  GOOD  NOER   CMD  32000011 11:16:56     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9EA8
+  GOOD  NOER   CMD  32000013 11:22:08     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9FE0
+  GOOD  NOER   CMD  32000015 11:27:20     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A118
+  GOOD  NOER   CMD  32000017 11:31:29     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       0 NEW>       1
+  GOOD  NOER   CMD  32000019 11:32:32     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A250
+  GOOD  NOER   CMD  32000021 11:37:45     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A389
+  GOOD  NOER   CMD  32000023 11:42:57     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A4C1
+  GOOD  NOER   CMD  32000025 11:48:09     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A5F9
+  GOOD  NOER   CMD  32000027 11:50:59     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000029 11:53:21     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A731
+  GOOD  NOER   CMD  32000031 11:58:33     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A869
+  GOOD  NOER   CMD  32000033 12:00:01     0   0  7591    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       B
+  GOOD  NOER   CMD  32000035 12:03:45     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A9A1
+  GOOD  NOER   CMD  32000037 12:08:57     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AAD9
+  GOOD  NOER   CMD  32000039 12:10:29     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000041 12:14:09     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AC11
+  GOOD  NOER   CMD  32000043 12:19:22     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AD4A
+  GOOD  NOER   CMD  32000045 12:24:34     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AE82
+  GOOD  NOER   CMD  32000047 12:29:46     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AFBA
+  GOOD  NOER   CMD  32000049 12:29:59     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000051 12:34:58     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B0F2
+  GOOD  NOER   CMD  32000053 12:40:10     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B22A
+  GOOD  NOER   CMD  32000055 12:45:22     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B362
+  GOOD  NOER   CMD  32000057 12:49:29     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000059 12:50:34     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B49A
+  GOOD  NOER   CMD  32000061 12:55:47     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B5D3
+  GOOD  NOER   CMD  32000063 13:00:01     0   0  7591    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       C
+  GOOD  NOER   CMD  32000065 13:00:59     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B70B
+  GOOD  NOER   CMD  32000067 13:06:11     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B843
+  GOOD  NOER   CMD  32000069 13:09:00     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000071 13:11:23     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B97B
+  GOOD  NOER   CMD  32000073 13:16:35     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BAB3
+  GOOD  NOER   CMD  32000075 13:21:47     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BBEB
+  GOOD  NOER   CMD  32000077 13:26:59     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BD23     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:09:02 PAGE     2
+ 10.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         10.02.2022 CDC 7591
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000079 13:28:30     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000081 13:32:12     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BE5C
+  GOOD  NOER   CMD  32000083 13:37:24     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BF94
+  GOOD  NOER   CMD  32000085 13:42:36     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C0CC
+  GOOD  NOER   CMD  32000087 13:47:48     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C204
+  GOOD  NOER   CMD  32000089 13:48:00     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000091 13:53:00     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C33C
+  GOOD  NOER   CMD  32000093 13:58:12     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C474
+  GOOD  NOER   CMD  32000095 14:00:01     0   0  7591    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       D
+  GOOD  NOER   CMD  32000097 14:03:24     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C5AC
+  GOOD  NOER   SPE  32000099 14:06:41   251   8  7591    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000101 14:06:59   251   9  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 0  MsgQ Ref #> 0  Host Message ID> 1644502019218  XGames ND> 111
+
+  GOOD  NOER   SPE  32000103 14:07:16   251   A  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 1  MsgQ Ref #> 1  Host Message ID> 1644502036477  XGames ND> 111
+
+  GOOD  NOER   SPE  32000105 14:07:22   251   B  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 2  MsgQ Ref #> 2  Host Message ID> 1644502042580  XGames ND> 111
+
+  GOOD  NOER   CMD  32000107 14:07:30     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   SPE  32000109 14:07:34   251   C  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 3  MsgQ Ref #> 3  Host Message ID> 1644502054529  XGames ND> 111
+
+  GOOD  NOER   SPE  32000111 14:07:41   251   D  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 4  MsgQ Ref #> 4  Host Message ID> 1644502060929  XGames ND> 111
+
+  GOOD  NOER   SPE  32000113 14:07:49   251   E  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 5  MsgQ Ref #> 5  Host Message ID> 1644502069033  XGames ND> 111
+
+  GOOD  NOER   SPE  32000115 14:07:55   251   F  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 6  MsgQ Ref #> 6  Host Message ID> 1644502075086  XGames ND> 111
+
+  GOOD  NOER   SPE  32000117 14:08:10   251   8  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 7  MsgQ Ref #> 7  Host Message ID> 1644502090044  XGames ND> 111
+
+  GOOD  NOER   SPE  32000119 14:08:15   251   9  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 8  MsgQ Ref #> 8  Host Message ID> 1644502095445  XGames ND> 111
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:09:02 PAGE     3
+ 10.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         10.02.2022 CDC 7591
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000121 14:08:37     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C6E5
+  GOOD  NOER   SPE  32000123 14:11:31   251   A  7591    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000125 14:11:47   251   B  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 0  MsgQ Ref #> 9  Host Message ID> 1644502306904  XGames ND> 111
+
+  GOOD  NOER   SPE  32000126 14:12:20   251   C  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 1  MsgQ Ref #> 10  Host Message ID> 1644502340721  XGames ND> 111
+
+  GOOD  NOER   SPE  32000128 14:12:39   251   D  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 2  MsgQ Ref #> 11  Host Message ID> 1644502359780  XGames ND> 111
+
+  GOOD  NOER   SPE  32000130 14:13:12   251   E  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 3  MsgQ Ref #> 12  Host Message ID> 1644502392547  XGames ND> 111
+
+  GOOD  NOER   SPE  32000132 14:13:28   251   F  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 4  MsgQ Ref #> 13  Host Message ID> 1644502408905  XGames ND> 111
+
+  GOOD  NOER   SPE  32000134 14:13:48   251   8  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 5  MsgQ Ref #> 14  Host Message ID> 1644502428765  XGames ND> 111
+
+  GOOD  NOER   CMD  32000136 14:13:49     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C81D
+  GOOD  NOER   SPE  32000138 14:13:57   251   9  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 6  MsgQ Ref #> 15  Host Message ID> 1644502437569  XGames ND> 111
+
+  GOOD  NOER   SPE  32000140 14:14:04   251   A  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 7  MsgQ Ref #> 16  Host Message ID> 1644502444122  XGames ND> 111
+
+  GOOD  NOER   SPE  32000142 14:14:08   251   B  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 2  Subclass> 8  MsgQ Ref #> 17  Host Message ID> 1644502448675  XGames ND> 111
+
+  GOOD  NOER   CMD  32000144 14:19:01     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C955
+  GOOD  NOER   CMD  32000146 14:24:13     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CA8D
+  GOOD  NOER   SPE  32000148 14:26:30   251   C  7591    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000150 14:26:56   251   D  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 4  Subclass> 0  MsgQ Ref #> 18  Host Message ID> 1644503216310  XGames ND> 111
+
+  GOOD  NOER   CMD  32000152 14:27:00     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   SPE  32000154 14:27:02   251   E  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 4  Subclass> 1  MsgQ Ref #> 19  Host Message ID> 1644503222664  XGames ND> 111
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:09:02 PAGE     4
+ 10.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         10.02.2022 CDC 7591
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000156 14:27:11   251   F  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 4  Subclass> 2  MsgQ Ref #> 20  Host Message ID> 1644503231167  XGames ND> 111
+
+  GOOD  NOER   SPE  32000158 14:27:21   251   8  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 4  Subclass> 3  MsgQ Ref #> 21  Host Message ID> 1644503240972  XGames ND> 111
+
+  GOOD  NOER   SPE  32000160 14:27:32   251   9  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 4  Subclass> 4  MsgQ Ref #> 22  Host Message ID> 1644503252478  XGames ND> 111
+
+  GOOD  NOER   SPE  32000162 14:27:39   251   A  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 4  Subclass> 5  MsgQ Ref #> 23  Host Message ID> 1644503258982  XGames ND> 111
+
+  GOOD  NOER   SPE  32000164 14:27:53   251   B  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 4  Subclass> 6  MsgQ Ref #> 24  Host Message ID> 1644503273438  XGames ND> 111
+
+  GOOD  NOER   SPE  32000166 14:28:03   251   C  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 4  Subclass> 7  MsgQ Ref #> 25  Host Message ID> 1644503282943  XGames ND> 111
+
+  GOOD  NOER   SPE  32000168 14:28:12   251   D  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 4  Subclass> 8  MsgQ Ref #> 26  Host Message ID> 1644503292198  XGames ND> 111
+
+  GOOD  NOER   CMD  32000170 14:29:25     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CBC5
+  GOOD  NOER   CMD  32000172 14:34:37     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CCFD
+  GOOD  NOER   CMD  32000174 14:39:49     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CE35
+  GOOD  NOER   SPE  32000176 14:44:12   251   E  7591    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000178 14:44:25   251   F  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 8  Subclass> 0  MsgQ Ref #> 27  Host Message ID> 1644504264934  XGames ND> 111
+
+  GOOD  NOER   SPE  32000180 14:44:34   251   8  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 8  Subclass> 1  MsgQ Ref #> 28  Host Message ID> 1644504274589  XGames ND> 111
+
+  GOOD  NOER   SPE  32000182 14:44:41   251   9  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 8  Subclass> 2  MsgQ Ref #> 29  Host Message ID> 1644504281593  XGames ND> 111
+
+  GOOD  NOER   SPE  32000184 14:44:50   251   A  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 8  Subclass> 3  MsgQ Ref #> 30  Host Message ID> 1644504290397  XGames ND> 111
+
+  GOOD  NOER   SPE  32000186 14:44:57   251   B  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 8  Subclass> 4  MsgQ Ref #> 31  Host Message ID> 1644504296900  XGames ND> 111
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:09:02 PAGE     5
+ 10.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         10.02.2022 CDC 7591
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000188 14:45:02     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CF6E
+  GOOD  NOER   SPE  32000190 14:45:04   251   C  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 8  Subclass> 5  MsgQ Ref #> 32  Host Message ID> 1644504304253  XGames ND> 111
+
+  GOOD  NOER   SPE  32000192 14:45:15   251   D  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 8  Subclass> 6  MsgQ Ref #> 33  Host Message ID> 1644504315209  XGames ND> 111
+
+  GOOD  NOER   SPE  32000194 14:45:23   251   E  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 8  Subclass> 7  MsgQ Ref #> 34  Host Message ID> 1644504323763  XGames ND> 111
+
+  GOOD  NOER   SPE  32000196 14:45:30   251   F  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 8  Subclass> 8  MsgQ Ref #> 35  Host Message ID> 1644504330366  XGames ND> 111
+
+  GOOD  NOER   CMD  32000198 14:46:30     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000200 14:50:14     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D0A6
+  GOOD  NOER   SPE  32000202 14:53:56   251   8  7591    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000204 14:54:13   251   9  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 1  Subclass> 0  MsgQ Ref #> 36  Host Message ID> 1644504852989  XSystems ND> 11
+
+  GOOD  NOER   SPE  32000206 14:54:26   251   A  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 1  Subclass> 1  MsgQ Ref #> 37  Host Message ID> 1644504866245  XSystems ND> 11
+
+  GOOD  NOER   SPE  32000208 14:54:37   251   B  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 1  Subclass> 2  MsgQ Ref #> 38  Host Message ID> 1644504877151  XSystems ND> 11
+
+  GOOD  NOER   SPE  32000210 14:54:45   251   C  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 1  Subclass> 3  MsgQ Ref #> 39  Host Message ID> 1644504885005  XSystems ND> 11
+
+  GOOD  NOER   SPE  32000212 14:54:57   251   D  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 1  Subclass> 4  MsgQ Ref #> 40  Host Message ID> 1644504897511  XSystems ND> 11
+
+  GOOD  NOER   SPE  32000214 14:55:08   251   E  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 1  Subclass> 5  MsgQ Ref #> 41  Host Message ID> 1644504908666  XSystems ND> 11
+
+  GOOD  NOER   SPE  32000216 14:55:14   251   F  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 1  Subclass> 6  MsgQ Ref #> 42  Host Message ID> 1644504914870  XSystems ND> 11
+
+  GOOD  NOER   SPE  32000218 14:55:21   251   8  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 1  Subclass> 7  MsgQ Ref #> 43  Host Message ID> 1644504921373  XSystems ND> 11
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:09:02 PAGE     6
+ 10.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         10.02.2022 CDC 7591
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000220 14:55:26     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D1DE
+  GOOD  NOER   SPE  32000222 14:55:56   251   9  7591    0             0    2 SREP OLD>       0 NEW>       0 AGT> 24-01035
+         Class> 1  Subclass> 8  MsgQ Ref #> 44  Host Message ID> 1644504956037  XSystems ND> 11
+
+  GOOD  NOER   CMD  32000224 15:00:01     0   0  7591    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       E
+  GOOD  NOER   CMD  32000226 15:00:38     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D316
+  GOOD  NOER   SPE  32000228 15:00:59  4547   D  7591    0             0    2 SON  OLD>       0 NEW>       0 AGT> 01-00001
+     OLM Channel > Yes   Message ID > 96896   OLM Serial # > 201763-32-2862189466-604
+  GOOD  NOER   WAG  32000230 15:01:22  4547   E  7591    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7591
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000232 15:05:50     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D44E
+  GOOD  NOER   CMD  32000234 15:06:00     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+     OLM Channel > Yes   Message ID > 96897   OLM Serial # > 201763-32-4359820351-306
+  GOOD  NOER   WAG  32000236 15:07:27  4547   F  7591    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7591
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 96898   OLM Serial # > 201763-32-1276092164-516
+  GOOD  NOER   WAG  32000238 15:08:08  4547   8  7591    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7591
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 96899   OLM Serial # > 201763-31-8192363978-723
+  GOOD  NOER   WAG  32000240 15:09:21  4547   9  7591    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7591
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 96900   OLM Serial # > 201763-31-7414059730-909
+  REJT  RETY   WAG  32000242 15:10:44  4547   9  7591    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7591
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000244 15:11:02     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D586
+  GOOD  NOER   CMD  32000246 15:16:14     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D6BE
+     OLM Channel > Yes   Message ID > 96901   OLM Serial # > 201763-31-6562033467-942
+  REJT  VINQ   VAL  32000248 15:19:45  4547   B  7591    7 Lotto       4    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+  GOOD  NOER   CMD  32000250 15:21:27     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D7F7     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:09:02 PAGE     7
+ 10.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         10.02.2022 CDC 7591
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+     OLM Channel > Yes   Message ID > 96902   OLM Serial # > 201763-32-3478305281-879
+  REJT  VINQ   VAL  32000251 15:22:01  4547   B  7591    7 Lotto       4    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+     OLM Channel > Yes   Message ID > 96903   OLM Serial # > 201763-31-8837968599-461
+  REJT  VINQ   VAL  32000253 15:25:14  4547   D  7591    7 Lotto       4    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+  GOOD  NOER   CMD  32000255 15:25:30     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+     OLM Channel > Yes   Message ID > 96904   OLM Serial # > 201763-32-5754240413-398
+  REJT  VINQ   VAL  32000257 15:26:15  4547   D  7591    7 Lotto       4    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+  GOOD  NOER   CMD  32000259 15:26:39     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D92F
+  GOOD  NOER   CMD  32000261 15:31:51     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DA67
+     OLM Channel > Yes   Message ID > 96905   OLM Serial # > 201763-31-6488311452-789
+  REJT  VINQ   VAL  32000263 15:32:16  4547   D  7591    7 Lotto       4    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+  GOOD  NOER   CMD  32000265 15:37:03     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DB9F
+     OLM Channel > Yes   Message ID > 96906   OLM Serial # > 201763-31-6458822647-326
+  REJT  VINQ   VAL  32000267 15:37:45  4547   D  7591    7 Lotto       4    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+  GOOD  NOER   CMD  32000269 15:42:15     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DCD7
+     OLM Channel > Yes   Message ID > 96907   OLM Serial # > 201763-31-9468828817-966
+  REJT  VINQ   VAL  32000271 15:43:44  4547   D  7591    7 Lotto       4    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+  GOOD  NOER   CMD  32000273 15:45:00     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+     OLM Channel > Yes   Message ID > 96908   OLM Serial # > 201763-32-0995948508-131
+  GOOD  NOER   WAG  32000275 15:45:18  4547   A  7591    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7591
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 96909   OLM Serial # > 201763-31-9454084414-736
+  REJT  VINQ   VAL  32000277 15:45:50  4547   B  7591    7 Lotto       4    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+     OLM Channel > Yes   Message ID > 96910   OLM Serial # > 201763-32-4064932290-694
+  REJT  VINQ   VAL  32000279 15:46:14  4547   B  7591    7 Lotto       4    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+  GOOD  NOER   CMD  32000281 15:47:27     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DE0F
+  GOOD  NOER   CMD  32000283 15:52:39     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DF47
+  GOOD  NOER   CMD  32000285 15:57:52     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E080
+     OLM Channel > Yes   Message ID > 96911   OLM Serial # > 201763-32-4740025717-892
+  GOOD  NOER   VAL  32000287 15:59:15  4547   D  7591    7 Lotto       4    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+  GOOD  NOER   CMD  32000289 16:00:01     0   0  7591    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       F
+     OLM Channel > Yes   Message ID > 96911   OLM Serial # > 201763-32-4740025717-892
+  REJT  RETY   VAL  32000291 16:00:20  4547   D  7591    0             0    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+     OLM Channel > Yes   Message ID > 96911   OLM Serial # > 201763-32-4740025717-892
+  REJT  RETY   VAL  32000293 16:01:27  4547   D  7591    0             0    2 AMT>       0.22 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7533   32000033 OPAMT:       0.22
+     OLM Channel > Yes   Message ID > 96914   OLM Serial # > 201763-32-3932232663-618
+  VOID  NOER   WAG  32000295 16:02:50  4547   8  7591    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000299  TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7591     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                16:09:02 PAGE     8
+ 10.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         10.02.2022 CDC 7591
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000297 16:03:04     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E1B8
+     OLM Channel > Yes   Message ID > 96915   OLM Serial # > 201764-25-4695792509-343
+  GOOD  NOER   CAN  32000299 16:03:43  4547   9  7591    7 Lotto       4    3  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000295  TFILE:NONE                   Kb:   0 Ke:   0 sold> 7591
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000302 16:04:30     0   0  7591    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+     OLM Channel > Yes   Message ID > 96916   OLM Serial # > 201764-25-1612064322-553
+  REJT  RETY   CAN  32000304 16:04:59  4547   9  7591    7 Lotto       4    3  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER ----> 00000000 - 00000000  CANCEL NUM >   32000295  TFILE:NONE                   Kb:   0 Ke:   0 sold> 7591
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CRS  32000307 16:07:27  4547   B  7591 IORD     99           1
+     OLM Channel > Yes   Message ID > 96917   OLM Serial # > 201763-41-0055455826-409
+         Instant game           363        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #     4026215
+         Instant crs ref #  32000000
+  GOOD  NOER   CMD  32000308 16:08:16     0   0  7591    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E2F0
+  REJT  RETY   CRS  32000310 16:08:36  4547   B  7591 IORD      0           1
+     OLM Channel > Yes   Message ID > 96918   OLM Serial # > 201763-41-5415119144-718
+         Instant game           363        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant game             0        0        0        0        0        0        0        0
+         Instant quantity         1        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant quantity         0        0        0        0        0        0        0        0
+         Instant order #           0
+         Instant crs ref #         0
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales                5                5.00            0.00            0.00            0.00            0.00
+Total cancels              1                1.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               1                0.22            0.00            0.22            0.00            0.22
+Total Instant Cashes       0                0.00            0.00            0.00            0.00            0.00
+
+Total Instant Message Transactions 
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        2
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          0
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions          2
+
+Total Passive Returns and Validations 
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0                
+Total IGS Transactions          0
