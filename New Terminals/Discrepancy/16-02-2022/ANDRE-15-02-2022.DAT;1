@@ -1,0 +1,2529 @@
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE     1
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF 
+    FILE NAME -----------> prim:mtmf01.fil     
+    TAPE DRIVE ---------->                     
+    TERMINAL NUMBER -----> ALL 
+    EXCLUDE EM TRX ------> YES
+    EXCLUDE IGS TRX -----> YES
+    EUROMIL EXT SER # --->             
+    PLACARD EXT SER # --->                         
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL  
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE     1
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000001 10:34:10  4547   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 01-00001
+  GOOD  NOER   SPE  32000003 10:34:10  4547   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 01-00001
+  GOOD  NOER   CMD  32000005 10:35:27     0   0  7596    0             0    2 SUPWAG   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000007 10:35:32     0   0  7596    0             0    2 SUPINS   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000009 10:35:36     0   0  7596    0             0    2 SUPCAN   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000011 10:35:52     0   0  7596    0             0    2 SUPVAL   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   SPE  32000013 10:36:35  4350   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 04-00001
+  GOOD  NOER   CMD  32000015 10:39:07     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    95CB
+  GOOD  NOER   CMD  32000017 10:44:19     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9703
+  GOOD  NOER   CMD  32000019 10:49:31     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    983B
+  GOOD  NOER   CMD  32000021 10:53:35     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       0 NEW>       1
+  GOOD  NOER   CMD  32000023 10:54:43     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9973
+  GOOD  NOER   CMD  32000025 10:59:55     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9AAB
+  GOOD  NOER   CMD  32000027 11:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       A
+  GOOD  NOER   CMD  32000029 11:05:07     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9BE3
+  GOOD  NOER   SPE  32000031 11:10:11   259   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000033 11:10:15   251   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000035 11:10:18   259   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   CMD  32000037 11:10:20     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9D1B
+  GOOD  NOER   SPE  32000039 11:10:22   251   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000041 11:12:37   259   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000043 11:12:40   251   D  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000045 11:12:44   259   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000047 11:12:47   251   E  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   CMD  32000049 11:13:05     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000051 11:15:32     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9E54
+  GOOD  NOER   SPE  32000053 11:16:11  4189   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01008
+  GOOD  NOER   SPE  32000055 11:16:15   866   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01010
+  GOOD  NOER   SPE  32000057 11:16:18   908   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01011
+  GOOD  NOER   SPE  32000059 11:16:22  4405   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01012
+  GOOD  NOER   SPE  32000061 11:16:25  3675   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01022
+  GOOD  NOER   SPE  32000063 11:16:29  1869   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01023
+  GOOD  NOER   SPE  32000065 11:16:32  1402   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01025
+  GOOD  NOER   SPE  32000067 11:16:36  2272   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01033
+  GOOD  NOER   SPE  32000069 11:16:40   967   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01034
+  GOOD  NOER   SPE  32000071 11:16:43  1515   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01042
+  GOOD  NOER   SPE  32000073 11:16:47  1187   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-01045
+  GOOD  NOER   SPE  32000075 11:16:50  1913   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00086
+  GOOD  NOER   CMD  32000077 11:20:44     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9F8C     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE     2
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000079 11:25:56     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A0C4
+  GOOD  NOER   SPE  32000081 11:26:06  2585   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   SPE  32000083 11:26:09   259   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000085 11:26:13   251   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000087 11:26:16  2585   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   SPE  32000089 11:31:08  2585   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   CMD  32000091 11:31:08     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A1FC
+  GOOD  NOER   SPE  32000093 11:31:12   259   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000095 11:31:15   251   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000097 11:31:19  2585   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   SPE  32000099 11:31:22   259   D  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000101 11:31:26   251   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000103 11:32:09  2585   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   SPE  32000105 11:32:12   259   E  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000107 11:32:16   251   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   CMD  32000109 11:32:35     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   SPE  32000111 11:32:52  2585   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   SPE  32000113 11:32:56   259   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000115 11:32:59   251   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000117 11:33:43  2585   D  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   SPE  32000119 11:33:47   259   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000121 11:33:50   251   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   SPE  32000123 11:35:31  3787   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00100
+  GOOD  NOER   SPE  32000125 11:35:35  3789   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00103
+  GOOD  NOER   SPE  32000126 11:35:39  2874   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00126
+  GOOD  NOER   SPE  32000128 11:35:42  1333   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00130
+  GOOD  NOER   SPE  32000130 11:35:46  2620   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00172
+  GOOD  NOER   SPE  32000132 11:35:50  2015   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01017
+  GOOD  NOER   SPE  32000134 11:35:53  4271   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01018
+  GOOD  NOER   SPE  32000136 11:35:57  2796   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01024
+  GOOD  NOER   SPE  32000138 11:36:00  4355   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01042
+  GOOD  NOER   SPE  32000140 11:36:04  2000   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01055
+  GOOD  NOER   SPE  32000142 11:36:07   713   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00052
+  GOOD  NOER   SPE  32000144 11:36:11  4277   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00094
+  GOOD  NOER   SPE  32000146 11:36:14   254   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00147
+  GOOD  NOER   SPE  32000148 11:36:18  3772   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00153
+  GOOD  NOER   CMD  32000150 11:36:20     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A334
+  GOOD  NOER   SPE  32000152 11:36:21  2860   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00219
+  GOOD  NOER   SPE  32000154 11:36:25  3061   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00239     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE     3
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000156 11:36:28  3274   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00241
+  GOOD  NOER   SPE  32000158 11:36:32  1640   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00258
+  GOOD  NOER   SPE  32000160 11:36:35  2407   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00267
+  GOOD  NOER   SPE  32000162 11:36:39  4002   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00274
+  GOOD  NOER   SPE  32000164 11:36:42  1783   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00276
+  GOOD  NOER   SPE  32000166 11:36:46  3332   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00286
+  GOOD  NOER   SPE  32000168 11:36:49   417   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00294
+  GOOD  NOER   SPE  32000170 11:36:53  2164   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00319
+  GOOD  NOER   SPE  32000172 11:36:56  1552   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00324
+  GOOD  NOER   SPE  32000174 11:37:00  3548   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01000
+  GOOD  NOER   SPE  32000176 11:37:03  1709   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01001
+  GOOD  NOER   SPE  32000178 11:37:07  3039   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01021
+  GOOD  NOER   SPE  32000180 11:37:10  3276   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01027
+  GOOD  NOER   SPE  32000182 11:37:14  3591   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01030
+  GOOD  NOER   SPE  32000184 11:37:17   441   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01031
+  GOOD  NOER   SPE  32000186 11:37:21  2925   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01037
+  GOOD  NOER   SPE  32000188 11:37:24  2389   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01050
+  GOOD  NOER   SPE  32000190 11:37:28   903   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01052
+  GOOD  NOER   SPE  32000192 11:37:31  3840   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01073
+  GOOD  NOER   SPE  32000194 11:37:35  2208   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00007
+  GOOD  NOER   SPE  32000196 11:37:38  3912   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00116
+  GOOD  NOER   SPE  32000198 11:37:42  3624   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00123
+  GOOD  NOER   SPE  32000200 11:37:45  1148   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00139
+  GOOD  NOER   SPE  32000202 11:37:48  1324   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00140
+  GOOD  NOER   SPE  32000204 11:37:52   292   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00143
+  GOOD  NOER   SPE  32000206 11:37:55  3481   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01001
+  GOOD  NOER   SPE  32000208 11:37:59  1499   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01011
+  GOOD  NOER   SPE  32000210 11:38:03   911   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01012
+  GOOD  NOER   SPE  32000212 11:38:07  3363   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01021
+  GOOD  NOER   SPE  32000214 11:38:10  1800   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01024
+  GOOD  NOER   SPE  32000216 11:38:14  1406   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01031
+  GOOD  NOER   SPE  32000218 11:38:18  1141   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01044
+  GOOD  NOER   SPE  32000220 11:38:22  1282   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01048
+  GOOD  NOER   SPE  32000222 11:38:26  3952   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01056
+  GOOD  NOER   SPE  32000224 11:38:29  2420   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 22-00041
+  GOOD  NOER   SPE  32000226 11:38:33  3653   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 22-00048
+  GOOD  NOER   SPE  32000228 11:38:37   630   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01001
+  GOOD  NOER   SPE  32000230 11:38:41   459   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01002
+  GOOD  NOER   SPE  32000232 11:38:44   437   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01004     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE     4
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000234 11:38:48  2187   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-00008
+  GOOD  NOER   SPE  32000236 11:38:52  1085   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-00064
+  GOOD  NOER   SPE  32000238 11:38:56   649   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01008
+  GOOD  NOER   SPE  32000240 11:38:59  2585   E  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   SPE  32000242 11:39:03   259   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000244 11:39:07   251   D  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   CMD  32000246 11:41:32     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A46C
+  GOOD  NOER   SPE  32000248 11:42:01  3787   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00100
+  GOOD  NOER   SPE  32000250 11:42:05  3789   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00103
+  GOOD  NOER   SPE  32000251 11:42:09  2874   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00126
+  GOOD  NOER   SPE  32000253 11:42:12  1333   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00130
+  GOOD  NOER   SPE  32000255 11:42:16  2620   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00172
+  GOOD  NOER   SPE  32000257 11:42:20  2015   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01017
+  GOOD  NOER   SPE  32000259 11:42:23  4271   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01018
+  GOOD  NOER   SPE  32000261 11:42:27  2796   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01024
+  GOOD  NOER   SPE  32000263 11:42:31  4355   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01042
+  GOOD  NOER   SPE  32000265 11:42:36  2000   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01055
+  GOOD  NOER   SPE  32000267 11:42:40   713   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00052
+  GOOD  NOER   SPE  32000269 11:42:43  4277   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00094
+  GOOD  NOER   SPE  32000271 11:42:47   254   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00147
+  GOOD  NOER   SPE  32000273 11:42:50  3772   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00153
+  GOOD  NOER   SPE  32000275 11:42:54  2860   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00219
+  GOOD  NOER   SPE  32000277 11:42:58  3061   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00239
+  GOOD  NOER   SPE  32000279 11:43:01  3274   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00241
+  GOOD  NOER   SPE  32000281 11:43:05  1640   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00258
+  GOOD  NOER   SPE  32000283 11:43:09  2407   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00267
+  GOOD  NOER   SPE  32000285 11:43:13  4002   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00274
+  GOOD  NOER   SPE  32000287 11:43:17  1783   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00276
+  GOOD  NOER   SPE  32000289 11:43:21  3332   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00286
+  GOOD  NOER   SPE  32000291 11:43:25   417   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00294
+  GOOD  NOER   SPE  32000293 11:43:28  2164   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00319
+  GOOD  NOER   SPE  32000295 11:43:32  1552   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00324
+  GOOD  NOER   SPE  32000297 11:43:36  3548   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01000
+  GOOD  NOER   SPE  32000299 11:43:40  1709   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01001
+  GOOD  NOER   SPE  32000301 11:43:43  3039   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01021
+  GOOD  NOER   SPE  32000303 11:43:47  3276   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01027
+  GOOD  NOER   SPE  32000305 11:43:50  3591   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01030
+  GOOD  NOER   SPE  32000307 11:43:54   441   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01031
+  GOOD  NOER   SPE  32000309 11:43:58  2925   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01037     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE     5
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000311 11:44:01  2389   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01050
+  GOOD  NOER   SPE  32000313 11:44:05   903   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01052
+  GOOD  NOER   SPE  32000315 11:44:09  3840   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01073
+  GOOD  NOER   SPE  32000317 11:44:13  2208   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00007
+  GOOD  NOER   SPE  32000319 11:44:16  3912   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00116
+  GOOD  NOER   SPE  32000321 11:44:20  3624   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00123
+  GOOD  NOER   SPE  32000323 11:44:23  1148   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00139
+  GOOD  NOER   SPE  32000325 11:44:27  1324   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00140
+  GOOD  NOER   SPE  32000327 11:44:30   292   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00143
+  GOOD  NOER   SPE  32000329 11:44:34  3481   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01001
+  GOOD  NOER   SPE  32000331 11:44:37  1499   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01011
+  GOOD  NOER   SPE  32000333 11:44:41   911   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01012
+  GOOD  NOER   SPE  32000335 11:44:45  3363   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01021
+  GOOD  NOER   SPE  32000337 11:44:49  1800   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01024
+  GOOD  NOER   SPE  32000339 11:44:52  1406   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01031
+  GOOD  NOER   SPE  32000341 11:44:56  1141   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01044
+  GOOD  NOER   SPE  32000343 11:45:00  1282   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01048
+  GOOD  NOER   SPE  32000345 11:45:03  3952   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01056
+  GOOD  NOER   SPE  32000347 11:45:07  2420   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 22-00041
+  GOOD  NOER   SPE  32000349 11:45:10  3653   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 22-00048
+  GOOD  NOER   SPE  32000351 11:45:14   630   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01001
+  GOOD  NOER   SPE  32000353 11:45:18   459   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01002
+  GOOD  NOER   SPE  32000355 11:45:21   437   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01004
+  GOOD  NOER   SPE  32000357 11:45:25  2187   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-00008
+  GOOD  NOER   SPE  32000359 11:45:28  1085   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-00064
+  GOOD  NOER   SPE  32000361 11:45:32   649   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01008
+  GOOD  NOER   SPE  32000363 11:45:36  2585   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   SPE  32000365 11:45:40   259   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000367 11:45:44   251   E  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   CMD  32000369 11:46:44     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A5A4
+  GOOD  NOER   SPE  32000371 11:48:30  3787   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00100
+  GOOD  NOER   SPE  32000373 11:48:34  3789   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00103
+  GOOD  NOER   SPE  32000375 11:48:37  2874   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00126
+  GOOD  NOER   SPE  32000376 11:48:41  1333   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00130
+  GOOD  NOER   SPE  32000378 11:48:45  2620   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00172
+  GOOD  NOER   SPE  32000380 11:48:48  2015   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01017
+  GOOD  NOER   SPE  32000382 11:48:52  4271   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01018
+  GOOD  NOER   SPE  32000384 11:48:56  2796   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01024
+  GOOD  NOER   SPE  32000386 11:48:59  4355   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01042     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE     6
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000388 11:49:03  2000   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01055
+  GOOD  NOER   SPE  32000390 11:49:07   713   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00052
+  GOOD  NOER   SPE  32000392 11:49:11  4277   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00094
+  GOOD  NOER   SPE  32000394 11:49:15   254   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00147
+  GOOD  NOER   SPE  32000396 11:49:18  3772   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00153
+  GOOD  NOER   SPE  32000398 11:49:22  2860   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00219
+  GOOD  NOER   SPE  32000400 11:49:25  3061   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00239
+  GOOD  NOER   SPE  32000402 11:49:29  3274   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00241
+  GOOD  NOER   SPE  32000404 11:49:33  1640   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00258
+  GOOD  NOER   SPE  32000406 11:49:37  2407   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00267
+  GOOD  NOER   SPE  32000408 11:49:41  4002   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00274
+  GOOD  NOER   SPE  32000410 11:49:45  1783   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00276
+  GOOD  NOER   SPE  32000412 11:49:48  3332   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00286
+  GOOD  NOER   SPE  32000414 11:49:52   417   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00294
+  GOOD  NOER   SPE  32000416 11:49:56  2164   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00319
+  GOOD  NOER   SPE  32000418 11:49:59  1552   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00324
+  GOOD  NOER   SPE  32000420 11:50:03  3548   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01000
+  GOOD  NOER   SPE  32000422 11:50:06  1709   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01001
+  GOOD  NOER   SPE  32000424 11:50:10  3039   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01021
+  GOOD  NOER   SPE  32000426 11:50:13  3276   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01027
+  GOOD  NOER   SPE  32000428 11:50:17  3591   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01030
+  GOOD  NOER   SPE  32000430 11:50:21   441   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01031
+  GOOD  NOER   SPE  32000432 11:50:26  2925   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01037
+  GOOD  NOER   SPE  32000434 11:50:30  2389   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01050
+  GOOD  NOER   SPE  32000436 11:50:34   903   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01052
+  GOOD  NOER   SPE  32000438 11:50:38  3840   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01073
+  GOOD  NOER   SPE  32000440 11:50:43  2208   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00007
+  GOOD  NOER   SPE  32000442 11:50:46  3912   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00116
+  GOOD  NOER   SPE  32000444 11:50:50  3624   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00123
+  GOOD  NOER   SPE  32000446 11:50:54  1148   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00139
+  GOOD  NOER   SPE  32000448 11:50:58  1324   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00140
+  GOOD  NOER   SPE  32000450 11:51:02   292   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00143
+  GOOD  NOER   SPE  32000452 11:51:06  3481   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01001
+  GOOD  NOER   SPE  32000454 11:51:09  1499   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01011
+  GOOD  NOER   SPE  32000456 11:51:13   911   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01012
+  GOOD  NOER   SPE  32000458 11:51:17  3363   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01021
+  GOOD  NOER   SPE  32000460 11:51:21  1800   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01024
+  GOOD  NOER   SPE  32000462 11:51:24  1406   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01031
+  GOOD  NOER   SPE  32000464 11:51:28  1141   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01044     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE     7
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000466 11:51:32  1282   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01048
+  GOOD  NOER   SPE  32000468 11:51:35  3952   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01056
+  GOOD  NOER   SPE  32000470 11:51:39  2420   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 22-00041
+  GOOD  NOER   SPE  32000472 11:51:43  3653   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 22-00048
+  GOOD  NOER   SPE  32000474 11:51:47   630   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01001
+  GOOD  NOER   SPE  32000476 11:51:51   459   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01002
+  GOOD  NOER   SPE  32000478 11:51:54   437   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01004
+  GOOD  NOER   CMD  32000480 11:51:57     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A6DD
+  GOOD  NOER   SPE  32000482 11:51:58  2187   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-00008
+  GOOD  NOER   SPE  32000484 11:52:01  1085   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-00064
+  GOOD  NOER   CMD  32000486 11:52:05     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   SPE  32000488 11:52:06   649   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01008
+  GOOD  NOER   SPE  32000490 11:52:10  2585   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   SPE  32000492 11:52:13   259   B  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000494 11:52:17   251   F  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   CMD  32000496 11:57:09     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A815
+  GOOD  NOER   CMD  32000498 12:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       B
+  GOOD  NOER   CMD  32000500 12:02:21     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A94D
+  GOOD  NOER   CMD  32000501 12:07:33     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AA85
+  GOOD  NOER   CMD  32000503 12:11:35     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000505 12:12:45     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    ABBD
+  GOOD  NOER   CMD  32000507 12:17:57     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    ACF5
+  GOOD  NOER   CMD  32000509 12:23:09     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AE2D
+  GOOD  NOER   CMD  32000511 12:28:22     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AF66
+  GOOD  NOER   CMD  32000513 12:31:05     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000515 12:33:34     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B09E
+  GOOD  NOER   SPE  32000517 12:37:38  4547   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 01-00001
+  GOOD  NOER   CRS  32000519 12:37:49  4547   A  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97740   OLM Serial # > 201768-41-1713709805-076
+         Retailer, who gets the credit      0100001
+         Instant game #             446
+         Instant pack #          325615
+         Instant virn #       572528871
+         Instant crs ref #     32000000
+         Instant latex             8439
+         Instant Time             45468
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE     8
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000521 12:38:46     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B1D6
+  GOOD  NOER   SPE  32000523 12:39:13  3787   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00100
+  GOOD  NOER   SPE  32000525 12:39:17  3789   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00103
+  GOOD  NOER   SPE  32000527 12:39:20  2874   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00126
+  GOOD  NOER   SPE  32000529 12:39:24  1333   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00130
+  GOOD  NOER   SPE  32000531 12:39:27  2620   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-00172
+  GOOD  NOER   SPE  32000533 12:39:31  2015   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01017
+  GOOD  NOER   SPE  32000535 12:39:34  4271   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01018
+  GOOD  NOER   SPE  32000537 12:39:37  2796   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01024
+  GOOD  NOER   SPE  32000539 12:39:41  4355   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01042
+  GOOD  NOER   SPE  32000541 12:39:44  2000   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 19-01055
+  GOOD  NOER   SPE  32000543 12:39:47   713   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00052
+  GOOD  NOER   SPE  32000545 12:39:51  4277   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00094
+  GOOD  NOER   SPE  32000547 12:39:54   254   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00147
+  GOOD  NOER   SPE  32000549 12:39:57  3772   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00153
+  GOOD  NOER   SPE  32000551 12:40:01  2860   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00219
+  GOOD  NOER   SPE  32000553 12:40:04  3061   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00239
+  GOOD  NOER   SPE  32000555 12:40:07  3274   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00241
+  GOOD  NOER   SPE  32000557 12:40:11  1640   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00258
+  GOOD  NOER   SPE  32000559 12:40:14  2407   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00267
+  GOOD  NOER   SPE  32000561 12:40:17  4002   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00274
+  GOOD  NOER   SPE  32000563 12:40:21  1783   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00276
+  GOOD  NOER   SPE  32000565 12:40:24  3332   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00286
+  GOOD  NOER   SPE  32000567 12:40:27   417   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00294
+  GOOD  NOER   SPE  32000569 12:40:31  2164   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00319
+  GOOD  NOER   SPE  32000571 12:40:34  1552   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-00324
+  GOOD  NOER   SPE  32000573 12:40:38  3548   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01000
+  GOOD  NOER   SPE  32000575 12:40:41  1709   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01001
+  GOOD  NOER   SPE  32000577 12:40:44  3039   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01021
+  GOOD  NOER   SPE  32000579 12:40:48  3276   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01027
+  GOOD  NOER   SPE  32000581 12:40:51  3591   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01030
+  GOOD  NOER   SPE  32000583 12:40:56   441   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01031
+  GOOD  NOER   SPE  32000585 12:40:59  2925   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01037
+  GOOD  NOER   SPE  32000587 12:41:03  2389   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01050
+  GOOD  NOER   SPE  32000589 12:41:06   903   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01052
+  GOOD  NOER   SPE  32000591 12:41:09  3840   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 20-01073
+  GOOD  NOER   SPE  32000593 12:41:12  2208   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00007
+  GOOD  NOER   SPE  32000595 12:41:16  3912   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00116
+  GOOD  NOER   SPE  32000597 12:41:19  3624   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00123     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE     9
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000599 12:41:22  1148   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00139
+  GOOD  NOER   SPE  32000601 12:41:26  1324   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00140
+  GOOD  NOER   SPE  32000603 12:41:29   292   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-00143
+  GOOD  NOER   SPE  32000605 12:41:32  3481   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01001
+  GOOD  NOER   SPE  32000607 12:41:36  1499   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01011
+  GOOD  NOER   SPE  32000609 12:41:39   911   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01012
+  GOOD  NOER   SPE  32000611 12:41:42  3363   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01021
+  GOOD  NOER   SPE  32000613 12:41:45  1800   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01024
+  GOOD  NOER   SPE  32000615 12:41:49  1406   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01031
+  GOOD  NOER   SPE  32000617 12:41:52  1141   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01044
+  GOOD  NOER   SPE  32000619 12:41:55  1282   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01048
+  GOOD  NOER   SPE  32000621 12:41:59  3952   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 21-01056
+  GOOD  NOER   SPE  32000623 12:42:02  2420   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 22-00041
+  GOOD  NOER   SPE  32000625 12:42:05  3653   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 22-00048
+  GOOD  NOER   SPE  32000626 12:42:08   630   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01001
+  GOOD  NOER   SPE  32000628 12:42:12   459   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01002
+  GOOD  NOER   SPE  32000630 12:42:15   437   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 23-01004
+  GOOD  NOER   SPE  32000632 12:42:18  2187   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-00008
+  GOOD  NOER   SPE  32000634 12:42:22  1085   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-00064
+  GOOD  NOER   SPE  32000636 12:42:25   649   A  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01008
+  GOOD  NOER   SPE  32000638 12:42:28  2585   9  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01013
+  GOOD  NOER   SPE  32000640 12:42:32   259   C  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01017
+  GOOD  NOER   SPE  32000642 12:42:35   251   8  7596    0             0    2 SON  OLD>       0 NEW>       0 AGT> 24-01035
+  GOOD  NOER   CRS  32000644 12:42:39  3787   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97802   OLM Serial # > 201768-41-4605760751-870
+         Retailer, who gets the credit      1900100
+         Instant game #             437
+         Instant pack #          447262
+         Instant virn #       887774581
+         Instant crs ref #     32000001
+         Instant latex             1464
+         Instant Time             45758
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+  GOOD  NOER   CRS  32000646 12:42:42  3789   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97803   OLM Serial # > 201768-41-0758472720-496
+         Retailer, who gets the credit      1900103
+         Instant game #             437
+         Instant pack #          602612
+         Instant virn #       512752497
+         Instant crs ref #     32000002
+         Instant latex             7933
+         Instant Time             45760
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             4.00
+         Net Prize Amount          4.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    10
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000648 12:42:44  2874   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97804   OLM Serial # > 201768-40-6911184690-119
+         Retailer, who gets the credit      1900126
+         Instant game #             437
+         Instant pack #          507600
+         Instant virn #       598917819
+         Instant crs ref #     32000003
+         Instant latex             3283
+         Instant Time             45764
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             5.00
+         Net Prize Amount          5.00
+  GOOD  NOER   CRS  32000650 12:42:47  1333   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97805   OLM Serial # > 201768-41-3063896658-475
+         Retailer, who gets the credit      1900130
+         Instant game #             437
+         Instant pack #          593876
+         Instant virn #        80111629
+         Instant crs ref #     32000004
+         Instant latex             9459
+         Instant Time             45766
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            20.00
+         Net Prize Amount         20.00
+  GOOD  NOER   CRS  32000652 12:42:50  2620   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97806   OLM Serial # > 201768-40-9216608628-098
+         Retailer, who gets the credit      1900172
+         Instant game #             437
+         Instant pack #          647958
+         Instant virn #       610756111
+         Instant crs ref #     32000005
+         Instant latex             7932
+         Instant Time             45770
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    11
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000654 12:42:53  2015   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97807   OLM Serial # > 201768-41-5369320596-454
+         Retailer, who gets the credit      1901017
+         Instant game #             438
+         Instant pack #          324516
+         Instant virn #       554577143
+         Instant crs ref #     32000006
+         Instant latex             4805
+         Instant Time             45772
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            20.00
+         Net Prize Amount         20.00
+  GOOD  NOER   CRS  32000656 12:42:56  4271   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97808   OLM Serial # > 201768-41-1522032566-077
+         Retailer, who gets the credit      1901018
+         Instant game #             438
+         Instant pack #          329985
+         Instant virn #       801240212
+         Instant crs ref #     32000007
+         Instant latex             6622
+         Instant Time             45776
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+  REJT  BCRS   CRS  32000658 12:42:59  2796   B  7596 IVAL     91           1
+     OLM Channel > Yes   Message ID > 97809   OLM Serial # > 201768-40-7674744534-703
+         Retailer, who gets the credit      1901024
+         Instant game #             438
+         Instant pack #          322333
+         Instant virn #       981121954
+         Instant crs ref #     32000008
+         Instant latex             7635
+         Instant Time             45778
+         Instant CDC               7596
+         Instant Status              91
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    12
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000660 12:43:02  4355   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97810   OLM Serial # > 201768-41-3827456504-056
+         Retailer, who gets the credit      1901042
+         Instant game #             438
+         Instant pack #          264642
+         Instant virn #        48944330
+         Instant crs ref #     32000009
+         Instant latex             4801
+         Instant Time             45782
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00
+  GOOD  NOER   CRS  32000662 12:43:06  2000   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97811   OLM Serial # > 201768-40-9980168472-682
+         Retailer, who gets the credit      1901055
+         Instant game #             439
+         Instant pack #          487128
+         Instant virn #       384455067
+         Instant crs ref #     32000010
+         Instant latex             8036
+         Instant Time             45784
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000664 12:43:09   713   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97812   OLM Serial # > 201768-40-6132880442-305
+         Retailer, who gets the credit      2000052
+         Instant game #             439
+         Instant pack #          487128
+         Instant virn #       237437466
+         Instant crs ref #     32000011
+         Instant latex             1971
+         Instant Time             45788
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    13
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000666 12:43:12  4277   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97813   OLM Serial # > 201768-41-2285592410-661
+         Retailer, who gets the credit      2000094
+         Instant game #             439
+         Instant pack #          483684
+         Instant virn #       407578558
+         Instant crs ref #     32000012
+         Instant latex             3894
+         Instant Time             45790
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000668 12:43:15   254   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97814   OLM Serial # > 201768-40-8438304380-284
+         Retailer, who gets the credit      2000147
+         Instant game #             439
+         Instant pack #          486039
+         Instant virn #       393943893
+         Instant crs ref #     32000013
+         Instant latex             9444
+         Instant Time             45794
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000670 12:43:18  3772   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97815   OLM Serial # > 201768-41-4591016348-640
+         Retailer, who gets the credit      2000153
+         Instant game #             439
+         Instant pack #          466820
+         Instant virn #       670653235
+         Instant crs ref #     32000014
+         Instant latex             7539
+         Instant Time             45798
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    14
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000672 12:43:21  2860   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97816   OLM Serial # > 201768-41-0743728318-263
+         Retailer, who gets the credit      2000219
+         Instant game #             440
+         Instant pack #          218959
+         Instant virn #       802885865
+         Instant crs ref #     32000015
+         Instant latex             1979
+         Instant Time             45800
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            20.00
+         Net Prize Amount         20.00
+  REJT  BCRS   CRS  32000674 12:43:24  3061   D  7596 IVAL     89           1
+     OLM Channel > Yes   Message ID > 97817   OLM Serial # > 201768-40-6896440286-889
+         Retailer, who gets the credit      2000239
+         Instant game #             440
+         Instant pack #           84590
+         Instant virn #       956534920
+         Instant crs ref #     32000016
+         Instant latex             5403
+         Instant Time             45804
+         Instant CDC               7596
+         Instant Status              89
+         Instant Pack Sts             0
+         Actual Amount             5.00
+         Net Prize Amount          5.00
+  GOOD  NOER   CRS  32000676 12:43:27  3274   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97818   OLM Serial # > 201768-41-3049152256-242
+         Retailer, who gets the credit      2000241
+         Instant game #             440
+         Instant pack #          212765
+         Instant virn #       866757572
+         Instant crs ref #     32000017
+         Instant latex             6118
+         Instant Time             45806
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    15
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000678 12:43:30  1640   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97819   OLM Serial # > 201768-40-9201864224-868
+         Retailer, who gets the credit      2000258
+         Instant game #             440
+         Instant pack #          221608
+         Instant virn #       432898303
+         Instant crs ref #     32000018
+         Instant latex              252
+         Instant Time             45810
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00
+  GOOD  NOER   CRS  32000680 12:43:33  2407   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97820   OLM Serial # > 201768-41-5354576194-221
+         Retailer, who gets the credit      2000267
+         Instant game #             441
+         Instant pack #          329056
+         Instant virn #       792873733
+         Instant crs ref #     32000019
+         Instant latex             8949
+         Instant Time             45812
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000682 12:43:36  4002   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97821   OLM Serial # > 201768-41-3812712100-826
+         Retailer, who gets the credit      2000274
+         Instant game #             441
+         Instant pack #          335960
+         Instant virn #       554340799
+         Instant crs ref #     32000020
+         Instant latex             6314
+         Instant Time             45816
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    16
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000684 12:43:39  1783   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97822   OLM Serial # > 201768-40-9965424069-452
+         Retailer, who gets the credit      2000276
+         Instant game #             441
+         Instant pack #          317903
+         Instant virn #       232442974
+         Instant crs ref #     32000021
+         Instant latex             9443
+         Instant Time             45818
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000686 12:43:42  3332   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97823   OLM Serial # > 201768-40-6118136039-075
+         Retailer, who gets the credit      2000286
+         Instant game #             441
+         Instant pack #          329739
+         Instant virn #       208666313
+         Instant crs ref #     32000022
+         Instant latex             9341
+         Instant Time             45822
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000688 12:43:45   417   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97824   OLM Serial # > 201768-41-2270848007-431
+         Retailer, who gets the credit      2000294
+         Instant game #             442
+         Instant pack #          168557
+         Instant virn #       647958482
+         Instant crs ref #     32000023
+         Instant latex              354
+         Instant Time             45824
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    17
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000690 12:43:48  2164   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97825   OLM Serial # > 201768-40-8423559977-054
+         Retailer, who gets the credit      2000319
+         Instant game #             442
+         Instant pack #          165502
+         Instant virn #       121996343
+         Instant crs ref #     32000024
+         Instant latex             4094
+         Instant Time             45826
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000692 12:43:51  1552   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97826   OLM Serial # > 201768-41-4576271945-410
+         Retailer, who gets the credit      2000324
+         Instant game #             442
+         Instant pack #          165677
+         Instant virn #       297251077
+         Instant crs ref #     32000025
+         Instant latex             3899
+         Instant Time             45830
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000694 12:43:54  3548   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97827   OLM Serial # > 201768-41-0728983915-033
+         Retailer, who gets the credit      2001000
+         Instant game #             442
+         Instant pack #          150352
+         Instant virn #       944556621
+         Instant crs ref #     32000026
+         Instant latex             8749
+         Instant Time             45834
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    18
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000696 12:43:57  1709   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97828   OLM Serial # > 201768-40-6881695883-659
+         Retailer, who gets the credit      2001001
+         Instant game #             442
+         Instant pack #          166139
+         Instant virn #        30035030
+         Instant crs ref #     32000027
+         Instant latex             9551
+         Instant Time             45836
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CMD  32000698 12:43:58     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B30E
+  GOOD  NOER   CRS  32000700 12:44:00  3039   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97829   OLM Serial # > 201768-41-3034407853-012
+         Retailer, who gets the credit      2001021
+         Instant game #             443
+         Instant pack #          225571
+         Instant virn #       238931855
+         Instant crs ref #     32000028
+         Instant latex             3585
+         Instant Time             45840
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000702 12:44:03  3276   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97830   OLM Serial # > 201768-40-9187119821-638
+         Retailer, who gets the credit      2001027
+         Instant game #             443
+         Instant pack #          100532
+         Instant virn #       642277073
+         Instant crs ref #     32000029
+         Instant latex             6528
+         Instant Time             45842
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    19
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000704 12:44:06  3591   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97831   OLM Serial # > 201768-41-5339831790-991
+         Retailer, who gets the credit      2001030
+         Instant game #             443
+         Instant pack #          265227
+         Instant virn #       844495104
+         Instant crs ref #     32000030
+         Instant latex             2488
+         Instant Time             45844
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000706 12:44:08   441   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97832   OLM Serial # > 201768-41-1492543759-617
+         Retailer, who gets the credit      2001031
+         Instant game #             443
+         Instant pack #          131971
+         Instant virn #        17215261
+         Instant crs ref #     32000031
+         Instant latex             7229
+         Instant Time             45848
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000708 12:44:11  2925   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97833   OLM Serial # > 201768-40-7645255729-240
+         Retailer, who gets the credit      2001037
+         Instant game #             443
+         Instant pack #          224135
+         Instant virn #       754918295
+         Instant crs ref #     32000032
+         Instant latex             1460
+         Instant Time             45850
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    20
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000710 12:44:14  2389   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97834   OLM Serial # > 201768-41-3797967697-596
+         Retailer, who gets the credit      2001050
+         Instant game #             443
+         Instant pack #          224135
+         Instant virn #       546117657
+         Instant crs ref #     32000033
+         Instant latex             7833
+         Instant Time             45854
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000712 12:44:17   903   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97835   OLM Serial # > 201768-40-6103391635-845
+         Retailer, who gets the credit      2001052
+         Instant game #             444
+         Instant pack #          195116
+         Instant virn #       762359445
+         Instant crs ref #     32000034
+         Instant latex             1267
+         Instant Time             45856
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00
+  GOOD  NOER   CRS  32000714 12:44:20  3840   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97836   OLM Serial # > 201768-41-0714239511-803
+         Retailer, who gets the credit      2001073
+         Instant game #             444
+         Instant pack #          218899
+         Instant virn #       370678130
+         Instant crs ref #     32000035
+         Instant latex             5713
+         Instant Time             45860
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             1.00
+         Net Prize Amount          1.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    21
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000716 12:44:23  2208   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97837   OLM Serial # > 201768-40-6866951480-429
+         Retailer, who gets the credit      2100007
+         Instant game #             444
+         Instant pack #          192157
+         Instant virn #       666022766
+         Instant crs ref #     32000036
+         Instant latex             9756
+         Instant Time             45862
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+  GOOD  NOER   CRS  32000718 12:44:26  3912   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97838   OLM Serial # > 201768-40-9172375418-408
+         Retailer, who gets the credit      2100116
+         Instant game #             444
+         Instant pack #          170987
+         Instant virn #       754651165
+         Instant crs ref #     32000037
+         Instant latex             4290
+         Instant Time             45866
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             1.00
+         Net Prize Amount          1.00
+  GOOD  NOER   CRS  32000720 12:44:29  3624   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97839   OLM Serial # > 201768-41-5325087387-761
+         Retailer, who gets the credit      2100123
+         Instant game #             444
+         Instant pack #          176670
+         Instant virn #       193457532
+         Instant crs ref #     32000038
+         Instant latex             7936
+         Instant Time             45868
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             5.00
+         Net Prize Amount          5.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    22
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000722 12:44:32  1148   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97840   OLM Serial # > 201768-41-3783223295-363
+         Retailer, who gets the credit      2100139
+         Instant game #             444
+         Instant pack #          141547
+         Instant virn #       311017149
+         Instant crs ref #     32000039
+         Instant latex             5002
+         Instant Time             45872
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00
+  GOOD  NOER   CRS  32000724 12:44:35  1324   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97841   OLM Serial # > 201768-40-9935935263-989
+         Retailer, who gets the credit      2100140
+         Instant game #             444
+         Instant pack #          179999
+         Instant virn #       716106697
+         Instant crs ref #     32000040
+         Instant latex             9144
+         Instant Time             45874
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            20.00
+         Net Prize Amount         20.00
+  GOOD  NOER   CRS  32000726 12:44:39   292   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97842   OLM Serial # > 201768-40-6088647232-615
+         Retailer, who gets the credit      2100143
+         Instant game #             444
+         Instant pack #          185650
+         Instant virn #       949677992
+         Instant crs ref #     32000041
+         Instant latex             2073
+         Instant Time             45878
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            50.00
+         Net Prize Amount         50.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    23
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000728 12:44:41  3481   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97843   OLM Serial # > 201768-41-2241359201-968
+         Retailer, who gets the credit      2101001
+         Instant game #             444
+         Instant pack #          141891
+         Instant virn #       129324730
+         Instant crs ref #     32000042
+         Instant latex             2286
+         Instant Time             45880
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount           100.00
+         Net Prize Amount        100.00
+  GOOD  NOER   CRS  32000730 12:44:44  1499   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97844   OLM Serial # > 201768-40-8394071170-594
+         Retailer, who gets the credit      2101011
+         Instant game #             445
+         Instant pack #           96209
+         Instant virn #       200840365
+         Instant crs ref #     32000043
+         Instant latex             9959
+         Instant Time             45884
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            20.00
+         Net Prize Amount         20.00
+  GOOD  NOER   CRS  32000732 12:44:47   911   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97845   OLM Serial # > 201768-41-4546783139-947
+         Retailer, who gets the credit      2101012
+         Instant game #             445
+         Instant pack #           98707
+         Instant virn #       185606628
+         Instant crs ref #     32000044
+         Instant latex             2788
+         Instant Time             45886
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount           100.00
+         Net Prize Amount        100.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    24
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000734 12:44:50  3363   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97846   OLM Serial # > 201768-41-0699495108-573
+         Retailer, who gets the credit      2101021
+         Instant game #             445
+         Instant pack #          100439
+         Instant virn #       359468655
+         Instant crs ref #     32000045
+         Instant latex             4092
+         Instant Time             45890
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            50.00
+         Net Prize Amount         50.00
+  GOOD  NOER   CRS  32000736 12:44:53  1800   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97847   OLM Serial # > 201768-40-6852207078-196
+         Retailer, who gets the credit      2101024
+         Instant game #             445
+         Instant pack #           98879
+         Instant virn #       691272656
+         Instant crs ref #     32000046
+         Instant latex              667
+         Instant Time             45892
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00
+  GOOD  NOER   CRS  32000738 12:44:56  1406   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97848   OLM Serial # > 201768-41-3004919046-552
+         Retailer, who gets the credit      2101031
+         Instant game #             445
+         Instant pack #           94018
+         Instant virn #       757722073
+         Instant crs ref #     32000047
+         Instant latex              862
+         Instant Time             45896
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    25
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000740 12:44:59  1141   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97849   OLM Serial # > 201768-40-9157631016-175
+         Retailer, who gets the credit      2101044
+         Instant game #             445
+         Instant pack #           36102
+         Instant virn #       299758410
+         Instant crs ref #     32000048
+         Instant latex             6312
+         Instant Time             45898
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             5.00
+         Net Prize Amount          5.00
+  GOOD  NOER   CRS  32000742 12:45:03  1282   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97850   OLM Serial # > 201768-41-5310342984-531
+         Retailer, who gets the credit      2101048
+         Instant game #             446
+         Instant pack #          312733
+         Instant virn #       817330481
+         Instant crs ref #     32000049
+         Instant latex             3389
+         Instant Time             45902
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000744 12:45:06  3952   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97851   OLM Serial # > 201768-41-1463054954-154
+         Retailer, who gets the credit      2101056
+         Instant game #             446
+         Instant pack #          313133
+         Instant virn #       337745463
+         Instant crs ref #     32000050
+         Instant latex             3187
+         Instant Time             45906
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    26
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000746 12:45:09  2420   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97852   OLM Serial # > 201768-40-7615766922-780
+         Retailer, who gets the credit      2200041
+         Instant game #             446
+         Instant pack #          312733
+         Instant virn #       157212346
+         Instant crs ref #     32000051
+         Instant latex             5413
+         Instant Time             45908
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000748 12:45:13  3653   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97853   OLM Serial # > 201768-41-3768478892-133
+         Retailer, who gets the credit      2200048
+         Instant game #             446
+         Instant pack #          250965
+         Instant virn #       178130367
+         Instant crs ref #     32000052
+         Instant latex             6720
+         Instant Time             45912
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000750 12:45:14   630   D  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97854   OLM Serial # > 201768-40-9921190860-759
+         Retailer, who gets the credit      2301001
+         Instant game #             446
+         Instant pack #          188534
+         Instant virn #       344869293
+         Instant crs ref #     32000053
+         Instant latex             3086
+         Instant Time             45914
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    27
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000751 12:45:17   459   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97855   OLM Serial # > 201768-40-6073902829-385
+         Retailer, who gets the credit      2301002
+         Instant game #             447
+         Instant pack #          368410
+         Instant virn #       889286869
+         Instant crs ref #     32000054
+         Instant latex              257
+         Instant Time             45916
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000753 12:45:20   437   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97856   OLM Serial # > 201768-41-2226614798-738
+         Retailer, who gets the credit      2301004
+         Instant game #             447
+         Instant pack #          371947
+         Instant virn #       419216066
+         Instant crs ref #     32000055
+         Instant latex             8541
+         Instant Time             45920
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000755 12:45:24  2187   B  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97857   OLM Serial # > 201768-40-8379326768-361
+         Retailer, who gets the credit      2400008
+         Instant game #             447
+         Instant pack #          362451
+         Instant virn #       287199180
+         Instant crs ref #     32000056
+         Instant latex             7324
+         Instant Time             45922
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    28
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000757 12:45:26  3787   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97858   OLM Serial # > 201768-41-4532038736-717
+         Retailer, who gets the credit      1900100
+         Instant game #             437
+         Instant pack #          447262
+         Instant virn #       887774581
+         Instant crs ref #     32000057
+         Instant latex             1464
+         Instant Time             45926
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+  GOOD  NOER   CRS  32000759 12:45:29  3789   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97859   OLM Serial # > 201768-41-0684750706-340
+         Retailer, who gets the credit      1900103
+         Instant game #             437
+         Instant pack #          602612
+         Instant virn #       512752497
+         Instant crs ref #     32000058
+         Instant latex             7933
+         Instant Time             45928
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             4.00
+         Net Prize Amount          4.00
+  GOOD  NOER   CRS  32000761 12:45:32  2874   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97860   OLM Serial # > 201768-40-6837462674-966
+         Retailer, who gets the credit      1900126
+         Instant game #             437
+         Instant pack #          507600
+         Instant virn #       598917819
+         Instant crs ref #     32000059
+         Instant latex             3283
+         Instant Time             45932
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             5.00
+         Net Prize Amount          5.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    29
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000763 12:45:35  1333   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97861   OLM Serial # > 201768-41-5295598582-298
+         Retailer, who gets the credit      1900130
+         Instant game #             437
+         Instant pack #          593876
+         Instant virn #        80111629
+         Instant crs ref #     32000060
+         Instant latex             9459
+         Instant Time             45934
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            20.00
+         Net Prize Amount         20.00
+  GOOD  NOER   CRS  32000765 12:45:38  2620   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97862   OLM Serial # > 201768-41-1448310550-924
+         Retailer, who gets the credit      1900172
+         Instant game #             437
+         Instant pack #          647958
+         Instant virn #       610756111
+         Instant crs ref #     32000061
+         Instant latex             7932
+         Instant Time             45938
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00
+  GOOD  NOER   CRS  32000767 12:45:41  2015   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97863   OLM Serial # > 201768-40-7601022519-550
+         Retailer, who gets the credit      1901017
+         Instant game #             438
+         Instant pack #          324516
+         Instant virn #       554577143
+         Instant crs ref #     32000062
+         Instant latex             4805
+         Instant Time             45940
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            20.00
+         Net Prize Amount         20.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    30
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000769 12:45:44  4271   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97864   OLM Serial # > 201768-41-3753734488-903
+         Retailer, who gets the credit      1901018
+         Instant game #             438
+         Instant pack #          329985
+         Instant virn #       801240212
+         Instant crs ref #     32000063
+         Instant latex             6622
+         Instant Time             45944
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+  REJT  BCRS   CRS  32000771 12:45:47  2796   C  7596 IVAL     91           1
+     OLM Channel > Yes   Message ID > 97865   OLM Serial # > 201768-40-9906446457-529
+         Retailer, who gets the credit      1901024
+         Instant game #             438
+         Instant pack #          322333
+         Instant virn #       981121954
+         Instant crs ref #     32000064
+         Instant latex             7635
+         Instant Time             45946
+         Instant CDC               7596
+         Instant Status              91
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000773 12:45:50  4355   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97866   OLM Serial # > 201768-40-6059158427-152
+         Retailer, who gets the credit      1901042
+         Instant game #             438
+         Instant pack #          264642
+         Instant virn #        48944330
+         Instant crs ref #     32000065
+         Instant latex             4801
+         Instant Time             45950
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    31
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000775 12:45:53  2000   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97867   OLM Serial # > 201768-41-2211870395-508
+         Retailer, who gets the credit      1901055
+         Instant game #             439
+         Instant pack #          487128
+         Instant virn #       384455067
+         Instant crs ref #     32000066
+         Instant latex             8036
+         Instant Time             45952
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000777 12:45:56   713   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97868   OLM Serial # > 201768-40-8364582365-131
+         Retailer, who gets the credit      2000052
+         Instant game #             439
+         Instant pack #          487128
+         Instant virn #       237437466
+         Instant crs ref #     32000067
+         Instant latex             1971
+         Instant Time             45956
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000779 12:45:59  4277   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97869   OLM Serial # > 201768-41-4517294333-487
+         Retailer, who gets the credit      2000094
+         Instant game #             439
+         Instant pack #          483684
+         Instant virn #       407578558
+         Instant crs ref #     32000068
+         Instant latex             3894
+         Instant Time             45958
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    32
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000781 12:46:02   254   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97870   OLM Serial # > 201768-41-0670006303-110
+         Retailer, who gets the credit      2000147
+         Instant game #             439
+         Instant pack #          486039
+         Instant virn #       393943893
+         Instant crs ref #     32000069
+         Instant latex             9444
+         Instant Time             45962
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000783 12:46:05  3772   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97871   OLM Serial # > 201768-40-6822718271-736
+         Retailer, who gets the credit      2000153
+         Instant game #             439
+         Instant pack #          466820
+         Instant virn #       670653235
+         Instant crs ref #     32000070
+         Instant latex             7539
+         Instant Time             45964
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000785 12:46:08  2860   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97872   OLM Serial # > 201768-41-2975430241-089
+         Retailer, who gets the credit      2000219
+         Instant game #             440
+         Instant pack #          218959
+         Instant virn #       802885865
+         Instant crs ref #     32000071
+         Instant latex             1979
+         Instant Time             45968
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            20.00
+         Net Prize Amount         20.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    33
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  REJT  BCRS   CRS  32000787 12:46:11  3061   E  7596 IVAL     89           1
+     OLM Channel > Yes   Message ID > 97873   OLM Serial # > 201768-40-9128142209-715
+         Retailer, who gets the credit      2000239
+         Instant game #             440
+         Instant pack #           84590
+         Instant virn #       956534920
+         Instant crs ref #     32000072
+         Instant latex             5403
+         Instant Time             45970
+         Instant CDC               7596
+         Instant Status              89
+         Instant Pack Sts             0
+         Actual Amount             5.00
+         Net Prize Amount          5.00
+  GOOD  NOER   CRS  32000789 12:46:14  3274   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97874   OLM Serial # > 201768-41-5280854179-068
+         Retailer, who gets the credit      2000241
+         Instant game #             440
+         Instant pack #          212765
+         Instant virn #       866757572
+         Instant crs ref #     32000073
+         Instant latex             6118
+         Instant Time             45972
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+  GOOD  NOER   CRS  32000791 12:46:16  1640   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97875   OLM Serial # > 201768-40-7586278117-317
+         Retailer, who gets the credit      2000258
+         Instant game #             440
+         Instant pack #          221608
+         Instant virn #       432898303
+         Instant crs ref #     32000074
+         Instant latex              252
+         Instant Time             45976
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    34
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000793 12:46:20  2407   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97876   OLM Serial # > 201768-41-2197125993-275
+         Retailer, who gets the credit      2000267
+         Instant game #             441
+         Instant pack #          329056
+         Instant virn #       792873733
+         Instant crs ref #     32000075
+         Instant latex             8949
+         Instant Time             45978
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000795 12:46:22  4002   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97877   OLM Serial # > 201768-40-8349837961-901
+         Retailer, who gets the credit      2000274
+         Instant game #             441
+         Instant pack #          335960
+         Instant virn #       554340799
+         Instant crs ref #     32000076
+         Instant latex             6314
+         Instant Time             45982
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000797 12:46:25  1783   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97878   OLM Serial # > 201768-41-0655261899-880
+         Retailer, who gets the credit      2000276
+         Instant game #             441
+         Instant pack #          317903
+         Instant virn #       232442974
+         Instant crs ref #     32000077
+         Instant latex             9443
+         Instant Time             45984
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    35
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000799 12:46:28  3332   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97879   OLM Serial # > 201768-40-6807973868-506
+         Retailer, who gets the credit      2000286
+         Instant game #             441
+         Instant pack #          329739
+         Instant virn #       208666313
+         Instant crs ref #     32000078
+         Instant latex             9341
+         Instant Time             45988
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000801 12:46:32   417   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97880   OLM Serial # > 201768-41-5266109775-838
+         Retailer, who gets the credit      2000294
+         Instant game #             442
+         Instant pack #          168557
+         Instant virn #       647958482
+         Instant crs ref #     32000079
+         Instant latex              354
+         Instant Time             45992
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000803 12:46:35  2164   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97881   OLM Serial # > 201768-41-1418821744-464
+         Retailer, who gets the credit      2000319
+         Instant game #             442
+         Instant pack #          165502
+         Instant virn #       121996343
+         Instant crs ref #     32000080
+         Instant latex             4094
+         Instant Time             45994
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    36
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000805 12:46:38  1552   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97882   OLM Serial # > 201768-40-7571533714-087
+         Retailer, who gets the credit      2000324
+         Instant game #             442
+         Instant pack #          165677
+         Instant virn #       297251077
+         Instant crs ref #     32000081
+         Instant latex             3899
+         Instant Time             45998
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000807 12:46:41  3548   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97883   OLM Serial # > 201768-41-3724245682-443
+         Retailer, who gets the credit      2001000
+         Instant game #             442
+         Instant pack #          150352
+         Instant virn #       944556621
+         Instant crs ref #     32000082
+         Instant latex             8749
+         Instant Time             46000
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000809 12:46:44  1709   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97884   OLM Serial # > 201768-40-9876957652-066
+         Retailer, who gets the credit      2001001
+         Instant game #             442
+         Instant pack #          166139
+         Instant virn #        30035030
+         Instant crs ref #     32000083
+         Instant latex             9551
+         Instant Time             46004
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    37
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000811 12:46:47  3039   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97885   OLM Serial # > 201768-40-6029669620-692
+         Retailer, who gets the credit      2001021
+         Instant game #             443
+         Instant pack #          225571
+         Instant virn #       238931855
+         Instant crs ref #     32000084
+         Instant latex             3585
+         Instant Time             46006
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000813 12:46:50  3276   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97886   OLM Serial # > 201768-41-2182381590-045
+         Retailer, who gets the credit      2001027
+         Instant game #             443
+         Instant pack #          100532
+         Instant virn #       642277073
+         Instant crs ref #     32000085
+         Instant latex             6528
+         Instant Time             46010
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000815 12:46:54  3591   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97887   OLM Serial # > 201768-40-8335093558-671
+         Retailer, who gets the credit      2001030
+         Instant game #             443
+         Instant pack #          265227
+         Instant virn #       844495104
+         Instant crs ref #     32000086
+         Instant latex             2488
+         Instant Time             46012
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    38
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000817 12:46:56   441   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97888   OLM Serial # > 201768-41-4487805528-024
+         Retailer, who gets the credit      2001031
+         Instant game #             443
+         Instant pack #          131971
+         Instant virn #        17215261
+         Instant crs ref #     32000087
+         Instant latex             7229
+         Instant Time             46016
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000819 12:46:59  2925   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97889   OLM Serial # > 201768-41-0640517496-650
+         Retailer, who gets the credit      2001037
+         Instant game #             443
+         Instant pack #          224135
+         Instant virn #       754918295
+         Instant crs ref #     32000088
+         Instant latex             1460
+         Instant Time             46018
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000821 12:47:02  2389   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97890   OLM Serial # > 201768-40-6793229466-273
+         Retailer, who gets the credit      2001050
+         Instant game #             443
+         Instant pack #          224135
+         Instant virn #       546117657
+         Instant crs ref #     32000089
+         Instant latex             7833
+         Instant Time             46022
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    39
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000823 12:47:05   903   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97891   OLM Serial # > 201768-41-2945941434-629
+         Retailer, who gets the credit      2001052
+         Instant game #             444
+         Instant pack #          195116
+         Instant virn #       762359445
+         Instant crs ref #     32000090
+         Instant latex             1267
+         Instant Time             46024
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00
+  GOOD  NOER   CRS  32000825 12:47:08  3840   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97892   OLM Serial # > 201768-40-9098653404-252
+         Retailer, who gets the credit      2001073
+         Instant game #             444
+         Instant pack #          218899
+         Instant virn #       370678130
+         Instant crs ref #     32000091
+         Instant latex             5713
+         Instant Time             46028
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             1.00
+         Net Prize Amount          1.00
+  GOOD  NOER   CRS  32000827 12:47:11  2208   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97893   OLM Serial # > 201768-41-5251365372-608
+         Retailer, who gets the credit      2100007
+         Instant game #             444
+         Instant pack #          192157
+         Instant virn #       666022766
+         Instant crs ref #     32000092
+         Instant latex             9756
+         Instant Time             46030
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    40
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000829 12:47:14  3912   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97894   OLM Serial # > 201768-41-1404077342-231
+         Retailer, who gets the credit      2100116
+         Instant game #             444
+         Instant pack #          170987
+         Instant virn #       754651165
+         Instant crs ref #     32000093
+         Instant latex             4290
+         Instant Time             46034
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             1.00
+         Net Prize Amount          1.00
+  GOOD  NOER   CRS  32000831 12:47:17  3624   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97895   OLM Serial # > 201768-40-7556789310-857
+         Retailer, who gets the credit      2100123
+         Instant game #             444
+         Instant pack #          176670
+         Instant virn #       193457532
+         Instant crs ref #     32000094
+         Instant latex             7936
+         Instant Time             46036
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             5.00
+         Net Prize Amount          5.00
+  GOOD  NOER   CRS  32000833 12:47:20  1148   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97896   OLM Serial # > 201768-41-3709501280-210
+         Retailer, who gets the credit      2100139
+         Instant game #             444
+         Instant pack #          141547
+         Instant virn #       311017149
+         Instant crs ref #     32000095
+         Instant latex             5002
+         Instant Time             46040
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    41
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000835 12:47:23  1324   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97897   OLM Serial # > 201768-40-9862213248-836
+         Retailer, who gets the credit      2100140
+         Instant game #             444
+         Instant pack #          179999
+         Instant virn #       716106697
+         Instant crs ref #     32000096
+         Instant latex             9144
+         Instant Time             46042
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            20.00
+         Net Prize Amount         20.00
+  GOOD  NOER   CRS  32000837 12:47:26   292   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97898   OLM Serial # > 201768-40-6014925217-462
+         Retailer, who gets the credit      2100143
+         Instant game #             444
+         Instant pack #          185650
+         Instant virn #       949677992
+         Instant crs ref #     32000097
+         Instant latex             2073
+         Instant Time             46046
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            50.00
+         Net Prize Amount         50.00
+  GOOD  NOER   CRS  32000839 12:47:29  3481   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97899   OLM Serial # > 201768-41-2167637186-815
+         Retailer, who gets the credit      2101001
+         Instant game #             444
+         Instant pack #          141891
+         Instant virn #       129324730
+         Instant crs ref #     32000098
+         Instant latex             2286
+         Instant Time             46048
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount           100.00
+         Net Prize Amount        100.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    42
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000841 12:47:32  1499   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97900   OLM Serial # > 201768-40-8320349155-441
+         Retailer, who gets the credit      2101011
+         Instant game #             445
+         Instant pack #           96209
+         Instant virn #       200840365
+         Instant crs ref #     32000099
+         Instant latex             9959
+         Instant Time             46052
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            20.00
+         Net Prize Amount         20.00
+  GOOD  NOER   CRS  32000843 12:47:35   911   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97901   OLM Serial # > 201768-40-6778485063-043
+         Retailer, who gets the credit      2101012
+         Instant game #             445
+         Instant pack #           98707
+         Instant virn #       185606628
+         Instant crs ref #     32000100
+         Instant latex             2788
+         Instant Time             46054
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount           100.00
+         Net Prize Amount        100.00
+  GOOD  NOER   CRS  32000845 12:47:38  3363   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97902   OLM Serial # > 201768-41-2931197031-399
+         Retailer, who gets the credit      2101021
+         Instant game #             445
+         Instant pack #          100439
+         Instant virn #       359468655
+         Instant crs ref #     32000101
+         Instant latex             4092
+         Instant Time             46058
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            50.00
+         Net Prize Amount         50.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    43
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000847 12:47:41  1800   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97903   OLM Serial # > 201768-40-9083909001-022
+         Retailer, who gets the credit      2101024
+         Instant game #             445
+         Instant pack #           98879
+         Instant virn #       691272656
+         Instant crs ref #     32000102
+         Instant latex              667
+         Instant Time             46060
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount            10.00
+         Net Prize Amount         10.00
+  GOOD  NOER   CRS  32000849 12:47:43  1406   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97904   OLM Serial # > 201768-41-5236620970-375
+         Retailer, who gets the credit      2101031
+         Instant game #             445
+         Instant pack #           94018
+         Instant virn #       757722073
+         Instant crs ref #     32000103
+         Instant latex              862
+         Instant Time             46062
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             2.00
+         Net Prize Amount          2.00
+  GOOD  NOER   CRS  32000851 12:47:47  1141   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97905   OLM Serial # > 201768-41-1389332939-001
+         Retailer, who gets the credit      2101044
+         Instant game #             445
+         Instant pack #           36102
+         Instant virn #       299758410
+         Instant crs ref #     32000104
+         Instant latex             6312
+         Instant Time             46066
+         Instant CDC               7596
+         Instant Status              34
+         Instant Pack Sts             0
+         Actual Amount             5.00
+         Net Prize Amount          5.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    44
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000853 12:47:50  1282   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97906   OLM Serial # > 201768-40-7542044907-627
+         Retailer, who gets the credit      2101048
+         Instant game #             446
+         Instant pack #          312733
+         Instant virn #       817330481
+         Instant crs ref #     32000105
+         Instant latex             3389
+         Instant Time             46070
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000855 12:47:53  3952   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97907   OLM Serial # > 201768-41-3694756876-980
+         Retailer, who gets the credit      2101056
+         Instant game #             446
+         Instant pack #          313133
+         Instant virn #       337745463
+         Instant crs ref #     32000106
+         Instant latex             3187
+         Instant Time             46072
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000857 12:47:56  2420   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97908   OLM Serial # > 201768-40-9847468845-606
+         Retailer, who gets the credit      2200041
+         Instant game #             446
+         Instant pack #          312733
+         Instant virn #       157212346
+         Instant crs ref #     32000107
+         Instant latex             5413
+         Instant Time             46076
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    45
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000859 12:47:59  3653   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97909   OLM Serial # > 201768-40-6000180815-229
+         Retailer, who gets the credit      2200048
+         Instant game #             446
+         Instant pack #          250965
+         Instant virn #       178130367
+         Instant crs ref #     32000108
+         Instant latex             6720
+         Instant Time             46078
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000861 12:48:02   630   E  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97910   OLM Serial # > 201768-41-2152892783-585
+         Retailer, who gets the credit      2301001
+         Instant game #             446
+         Instant pack #          188534
+         Instant virn #       344869293
+         Instant crs ref #     32000109
+         Instant latex             3086
+         Instant Time             46082
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000863 12:48:05   459   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97911   OLM Serial # > 201768-40-8305604753-208
+         Retailer, who gets the credit      2301002
+         Instant game #             447
+         Instant pack #          368410
+         Instant virn #       889286869
+         Instant crs ref #     32000110
+         Instant latex              257
+         Instant Time             46084
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    46
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CRS  32000865 12:48:08   437   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97912   OLM Serial # > 201768-41-4458316721-564
+         Retailer, who gets the credit      2301004
+         Instant game #             447
+         Instant pack #          371947
+         Instant virn #       419216066
+         Instant crs ref #     32000111
+         Instant latex             8541
+         Instant Time             46088
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CRS  32000867 12:48:12  2187   C  7596 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97913   OLM Serial # > 201768-41-0611028691-187
+         Retailer, who gets the credit      2400008
+         Instant game #             447
+         Instant pack #          362451
+         Instant virn #       287199180
+         Instant crs ref #     32000112
+         Instant latex             7324
+         Instant Time             46090
+         Instant CDC               7596
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00
+  GOOD  NOER   CMD  32000869 12:49:10     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B446
+  GOOD  NOER   CMD  32000871 12:50:35     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000873 12:54:22     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B57E
+  GOOD  NOER   CMD  32000875 12:59:34     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B6B6
+  GOOD  NOER   CMD  32000876 13:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       C
+  GOOD  NOER   CMD  32000878 13:04:46     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B7EE
+  GOOD  NOER   CMD  32000880 13:09:59     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B927
+  GOOD  NOER   CMD  32000882 13:10:05     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000884 13:15:11     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BA5F
+  GOOD  NOER   CMD  32000886 13:20:23     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BB97
+  GOOD  NOER   CMD  32000888 13:25:35     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BCCF
+  GOOD  NOER   CMD  32000890 13:29:35     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000892 13:30:47     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BE07     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    47
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000894 13:35:59     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BF3F
+  GOOD  NOER   CMD  32000896 13:41:12     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C077
+  GOOD  NOER   CMD  32000898 13:46:24     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C1B0
+  GOOD  NOER   CMD  32000900 13:49:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000902 13:51:36     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C2E8
+  GOOD  NOER   CMD  32000904 13:56:48     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C420
+  GOOD  NOER   CMD  32000906 14:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       D
+  GOOD  NOER   CMD  32000908 14:02:00     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C558
+  GOOD  NOER   CMD  32000910 14:07:12     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C690
+  GOOD  NOER   CMD  32000912 14:08:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000914 14:12:24     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C7C8
+  GOOD  NOER   CMD  32000916 14:17:36     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C900
+  GOOD  NOER   CMD  32000918 14:22:49     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CA39
+  GOOD  NOER   CMD  32000920 14:28:01     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CB71
+  GOOD  NOER   CMD  32000922 14:28:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000924 14:33:13     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CCA9
+  GOOD  NOER   CMD  32000926 14:38:25     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CDE1
+  GOOD  NOER   CMD  32000928 14:43:37     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CF19
+  GOOD  NOER   CMD  32000930 14:47:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000932 14:48:49     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D051
+  GOOD  NOER   CMD  32000934 14:54:01     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D189
+  GOOD  NOER   CMD  32000936 14:59:14     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D2C2
+  GOOD  NOER   CMD  32000938 15:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       E
+  GOOD  NOER   CMD  32000940 15:04:26     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D3FA
+  GOOD  NOER   CMD  32000942 15:07:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000944 15:09:38     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D532
+  GOOD  NOER   CMD  32000946 15:14:50     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D66A
+  GOOD  NOER   CMD  32000948 15:20:02     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D7A2
+  GOOD  NOER   CMD  32000950 15:25:14     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D8DA
+  GOOD  NOER   CMD  32000952 15:26:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000954 15:30:26     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DA12
+  GOOD  NOER   CMD  32000956 15:35:38     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DB4A
+  GOOD  NOER   CMD  32000958 15:40:51     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DC83
+  GOOD  NOER   CMD  32000960 15:46:03     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DDBB
+  GOOD  NOER   CMD  32000962 15:46:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000964 15:51:15     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DEF3
+  GOOD  NOER   CMD  32000966 15:56:27     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E02B
+  GOOD  NOER   CMD  32000968 16:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       F
+  GOOD  NOER   CMD  32000970 16:01:39     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E163     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    48
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000972 16:05:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000974 16:06:51     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E29B
+  GOOD  NOER   CMD  32000976 16:12:03     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E3D3
+  GOOD  NOER   CMD  32000978 16:17:16     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E50C
+  GOOD  NOER   CMD  32000980 16:22:28     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E644
+  GOOD  NOER   CMD  32000982 16:25:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000984 16:27:40     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E77C
+  GOOD  NOER   CMD  32000986 16:32:52     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E8B4
+  GOOD  NOER   CMD  32000988 16:38:04     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E9EC
+  GOOD  NOER   CMD  32000990 16:43:16     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EB24
+  GOOD  NOER   CMD  32000992 16:44:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000994 16:48:28     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EC5C
+  GOOD  NOER   CMD  32000996 16:53:41     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    ED95
+  GOOD  NOER   CMD  32000998 16:58:53     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EECD
+  GOOD  NOER   CMD  32001000 17:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      10
+  GOOD  NOER   CMD  32001001 17:04:05     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F005
+  GOOD  NOER   CMD  32001003 17:04:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32001005 17:09:17     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F13D
+  GOOD  NOER   CMD  32001007 17:14:29     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F275
+  GOOD  NOER   CMD  32001009 17:19:41     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F3AD
+  GOOD  NOER   CMD  32001011 17:23:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32001013 17:24:53     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F4E5
+  GOOD  NOER   CMD  32001015 17:30:05     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F61D
+  GOOD  NOER   CMD  32001017 17:35:18     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F756
+  GOOD  NOER   CMD  32001019 17:40:30     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F88E
+  GOOD  NOER   CMD  32001021 17:43:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32001023 17:45:42     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F9C6
+  GOOD  NOER   CMD  32001025 17:50:54     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FAFE
+  GOOD  NOER   CMD  32001027 17:56:06     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FC36
+     OLM Channel > Yes   Message ID > 97914   OLM Serial # > 201768-31-7739019216-989
+  REJT  NTON   WAG  32001029 17:58:58  1214   B  7596    7 Lotto       4    2  571 THRU   571     --NONE--        0.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7596
+                                                                                  
+  GOOD  NOER   CMD  32001031 18:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      11
+  GOOD  NOER   CMD  32001033 18:01:18     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FD6E
+  GOOD  NOER   CMD  32001035 18:02:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32001037 18:06:30     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FEA6
+  GOOD  NOER   CMD  32001039 18:11:43     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FFDF
+  GOOD  NOER   CMD  32001041 18:16:55     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10117
+  GOOD  NOER   CMD  32001043 18:22:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    49
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32001045 18:22:07     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1024F
+  GOOD  NOER   CMD  32001047 18:27:19     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10387
+  GOOD  NOER   CMD  32001049 18:32:31     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   104BF
+  GOOD  NOER   CMD  32001051 18:37:43     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   105F7
+  GOOD  NOER   CMD  32001053 18:41:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32001055 18:42:55     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1072F
+  GOOD  NOER   CMD  32001057 18:48:07     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10867
+  GOOD  NOER   CMD  32001059 18:53:20     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   109A0
+  GOOD  NOER   CMD  32001061 18:58:32     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10AD8
+  GOOD  NOER   CMD  32001063 19:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      12
+  GOOD  NOER   CMD  32001065 19:01:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32001067 19:03:44     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10C10
+  GOOD  NOER   CMD  32001069 19:08:56     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10D48
+  GOOD  NOER   CMD  32001071 19:14:08     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10E80
+  GOOD  NOER   CMD  32001073 19:19:20     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10FB8
+  GOOD  NOER   CMD  32001075 19:20:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32001077 19:24:32     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   110F0
+  GOOD  NOER   CMD  32001079 19:29:45     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11229
+  GOOD  NOER   CMD  32001081 19:34:57     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11361
+  GOOD  NOER   CMD  32001083 19:40:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32001085 19:40:09     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11499
+  GOOD  NOER   CMD  32001087 19:45:21     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   115D1
+  GOOD  NOER   CMD  32001089 19:50:33     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11709
+  GOOD  NOER   CMD  32001091 19:55:45     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11841
+  GOOD  NOER   CMD  32001093 19:59:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32001095 20:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       4 NEW>      13
+  GOOD  NOER   CMD  32001097 20:00:57     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11979
+  GOOD  NOER   CMD  32001099 20:06:10     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11AB1
+  GOOD  NOER   CMD  32001101 20:11:22     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11BEA
+  GOOD  NOER   CMD  32001103 20:16:34     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11D22
+  GOOD  NOER   CMD  32001105 20:19:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32001107 20:21:46     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11E5A
+  GOOD  NOER   CMD  32001109 20:26:58     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11F92
+  GOOD  NOER   CMD  32001111 20:32:10     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   120CA
+  GOOD  NOER   CMD  32001113 20:37:22     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12202
+  GOOD  NOER   CMD  32001115 20:38:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32001117 20:42:34     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1233A
+  GOOD  NOER   CMD  32001119 20:47:47     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12473
+  GOOD  NOER   CMD  32001121 20:52:59     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   125AB     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    50
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32001123 20:58:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32001125 20:58:11     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   126E3
+  GOOD  NOER   CMD  32001126 21:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      14
+  GOOD  NOER   CMD  32001128 21:03:23     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1281B
+  GOOD  NOER   CMD  32001130 21:08:35     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12953
+  GOOD  NOER   CMD  32001132 21:13:47     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12A8B
+  GOOD  NOER   CMD  32001134 21:17:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32001136 21:18:59     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12BC3
+  GOOD  NOER   CMD  32001138 21:24:12     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12CFC
+  GOOD  NOER   CMD  32001140 21:29:24     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12E34
+  GOOD  NOER   CMD  32001142 21:34:36     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12F6C
+  GOOD  NOER   CMD  32001144 21:37:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32001146 21:39:48     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   130A4
+  GOOD  NOER   CMD  32001148 21:45:00     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   131DC
+  GOOD  NOER   CMD  32001150 21:50:12     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13314
+  GOOD  NOER   CMD  32001152 21:55:24     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1344C
+  GOOD  NOER   CMD  32001154 21:56:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32001156 22:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       2 NEW>      15
+  GOOD  NOER   CMD  32001158 22:00:36     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13584
+  GOOD  NOER   CMD  32001160 22:05:49     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   136BD
+  GOOD  NOER   CMD  32001162 22:11:01     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   137F5
+  GOOD  NOER   CMD  32001164 22:16:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32001166 22:16:13     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1392D
+  GOOD  NOER   CMD  32001168 22:21:25     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13A65
+  GOOD  NOER   CMD  32001170 22:26:37     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13B9D
+  GOOD  NOER   CMD  32001172 22:31:49     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13CD5
+  GOOD  NOER   CMD  32001174 22:35:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32001176 22:37:01     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13E0D
+  GOOD  NOER   CMD  32001178 22:42:14     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13F46
+  GOOD  NOER   CMD  32001180 22:47:26     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1407E
+  GOOD  NOER   CMD  32001182 22:52:38     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   141B6
+  GOOD  NOER   CMD  32001184 22:55:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32001186 22:57:50     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   142EE
+  GOOD  NOER   CMD  32001188 23:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      16
+  GOOD  NOER   CMD  32001190 23:03:02     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14426
+  GOOD  NOER   CMD  32001192 23:08:14     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1455E
+  GOOD  NOER   CMD  32001194 23:13:26     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14696
+  GOOD  NOER   CMD  32001196 23:14:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32001198 23:18:38     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   147CE     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                00:39:41 PAGE    51
+ 16.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         15.02.2022 CDC 7596
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32001200 23:23:51     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14907
+  GOOD  NOER   CMD  32001202 23:29:03     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14A3F
+  GOOD  NOER   CMD  32001204 23:34:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32001206 23:34:15     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14B77
+  GOOD  NOER   CMD  32001208 23:39:27     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14CAF
+  GOOD  NOER   CMD  32001210 23:44:39     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14DE7
+  GOOD  NOER   CMD  32001212 23:49:51     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14F1F
+  GOOD  NOER   CMD  32001214 23:53:36     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32001216 23:55:03     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   15057
+  GOOD  NOER   CMD  32001218 00:00:07     0   0  7596    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      17
+  GOOD  NOER   CMD  32001220 00:00:16     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>      10
+  GOOD  NOER   CMD  32001222 00:05:28     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     148
+  GOOD  NOER   CMD  32001224 00:10:40     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     280
+  GOOD  NOER   CMD  32001226 00:13:06     0   0  7596    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32001228 00:15:52     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     3B8
+  GOOD  NOER   CMD  32001230 00:21:04     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     4F0
+  GOOD  NOER   CMD  32001232 00:26:16     0   0  7596    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     628
+  GOOD  NOER   CMD  32001234 00:30:00     0   0  7596    0             0    2 REL EXPI TER>  -1 OLD>       0 NEW>       1
+  GOOD  NOER   CMD  32001236 00:30:15     0   0  7596    0             0    2 REL EXPI TER>  -1 OLD>       0 NEW>       1
+  GOOD  NOER   CMD  32001238 00:30:15     0   0  7596    0             0    2 SYSSTS   TER>  -1 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32001240 00:30:30     0   0  7596    0             0    2 CHKPOINT TER>  -1 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32001242 00:30:45     0   0  7596    0             0    2 CHKPOINT TER>  -1 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32001244 00:31:15     0   0  7596    0             0    2 DAYSTS   TER>  -1 OLD>       2 NEW>       4
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales                0                0.00            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       0                0.00            0.00            0.00            0.00            0.00
+
+Total Instant Message Transactions 
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        0
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes        113
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions        113
+
+Total Passive Returns and Validations 
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0                
+Total IGS Transactions          0

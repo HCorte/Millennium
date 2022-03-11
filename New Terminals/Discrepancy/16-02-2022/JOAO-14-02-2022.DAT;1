@@ -1,0 +1,1407 @@
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE     1
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    DEVICE --------------> DISK
+    FILE TYPE -----------> DAILY TMF 
+    FILE NAME -----------> prim:mtmf01.fil     
+    TAPE DRIVE ---------->                     
+    TERMINAL NUMBER -----> ALL 
+    EXCLUDE EM TRX ------> YES
+    EXCLUDE IGS TRX -----> YES
+    EUROMIL EXT SER # --->             
+    PLACARD EXT SER # --->                         
+    STARTING SERIAL ----->         1
+    ENDING SERIAL -------> 999999999
+    STARTING TIME -------> 00:00:00
+    ENDING TIME ---------> 00:00:00
+    REPORT OPTION -------> DETAIL  
+    SERIAL NUMBERS ------> INTERNAL
+    OFFSETS ------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+    VALUES -------------->        -1 :        -1 :        -1 :        -1 :        -1 : 
+     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE     1
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000001 11:23:49     0   0  7595    0             0    2 SUPWAG   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000003 11:23:53     0   0  7595    0             0    2 SUPCAN   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000005 11:23:59     0   0  7595    0             0    2 SUPVAL   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000007 11:24:11     0   0  7595    0             0    2 SUPINS   TER>   0 OLD>       1 NEW>       0
+  GOOD  NOER   CMD  32000009 11:26:04     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A0CC
+  GOOD  NOER   CMD  32000011 11:31:16     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A204
+  GOOD  NOER   CMD  32000013 11:36:29     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A33C
+  GOOD  NOER   CMD  32000015 11:40:37     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       0 NEW>       1
+  GOOD  NOER   CMD  32000017 11:41:47     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A47B
+  GOOD  NOER   SPE  32000019 11:43:01  1214   E  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 10-00004
+     OLM Channel > Yes   Message ID > 97339   OLM Serial # > 201767-31-6834167909-143
+  GOOD  NOER   WAG  32000021 11:43:10  1214   F  7595    6 Lotto       3    2  571 THRU   571     --NONE--        2.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05                                           
+                     QP  01 02 03 04 05                                           
+   Lucky Number 13                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97340   OLM Serial # > 201767-27-0666711536-829
+  GOOD  NOER   WAG  32000023 11:46:16  1214   8  7595    1 Sports      1    2 1080 THRU  1080     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+  GOOD  NOER   CMD  32000025 11:46:59     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A5B3
+  GOOD  NOER   CMD  32000027 11:52:18     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A6F2
+  GOOD  NOER   CMD  32000029 11:57:30     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A82A
+  GOOD  NOER   CMD  32000031 12:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       B
+  GOOD  NOER   CMD  32000033 12:00:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000035 12:02:42     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    A962
+  GOOD  NOER   CMD  32000037 12:07:54     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AA9A
+  GOOD  NOER   CMD  32000039 12:13:06     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    ABD2
+  GOOD  NOER   CMD  32000041 12:18:19     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AD0B
+  GOOD  NOER   CMD  32000043 12:19:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000045 12:23:31     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AE43
+  GOOD  NOER   CMD  32000047 12:28:43     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    AF7B
+  GOOD  NOER   CMD  32000049 12:33:55     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B0B3
+  GOOD  NOER   CMD  32000051 12:39:07     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B1EB
+  GOOD  NOER   CMD  32000053 12:39:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000055 12:44:19     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B323
+  GOOD  NOER   CMD  32000057 12:49:31     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B45B
+  GOOD  NOER   CMD  32000059 12:54:43     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B593     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE     2
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000061 12:58:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000063 12:59:56     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B6CC
+  GOOD  NOER   CMD  32000065 13:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       C
+  GOOD  NOER   CMD  32000067 13:05:08     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B804
+  GOOD  NOER   CMD  32000069 13:10:20     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    B93C
+  GOOD  NOER   CMD  32000071 13:15:32     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BA74
+  GOOD  NOER   CMD  32000073 13:18:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000075 13:20:44     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BBAC
+  GOOD  NOER   CMD  32000077 13:25:56     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BCE4
+  GOOD  NOER   CMD  32000079 13:31:08     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BE1C
+  GOOD  NOER   CMD  32000081 13:36:21     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    BF55
+  GOOD  NOER   CMD  32000083 13:37:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000085 13:41:33     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C08D
+  GOOD  NOER   CMD  32000087 13:46:45     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C1C5
+  GOOD  NOER   CMD  32000089 13:51:57     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C2FD
+  GOOD  NOER   CMD  32000091 13:57:09     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C435
+  GOOD  NOER   CMD  32000093 13:57:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000095 14:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       3 NEW>       D
+  GOOD  NOER   CMD  32000097 14:02:21     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C56D
+  GOOD  NOER   CMD  32000099 14:07:33     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C6A5
+  GOOD  NOER   CMD  32000101 14:12:46     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C7DD
+  GOOD  NOER   CMD  32000103 14:16:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000105 14:17:58     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    C916
+  GOOD  NOER   CMD  32000107 14:23:10     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CA4E
+  GOOD  NOER   CMD  32000109 14:28:22     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CB86
+  GOOD  NOER   CMD  32000111 14:33:34     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CCBE
+  GOOD  NOER   CMD  32000113 14:36:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000115 14:38:46     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CDF6
+  GOOD  NOER   CMD  32000117 14:43:58     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    CF2E
+  GOOD  NOER   CMD  32000119 14:49:10     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D066
+  GOOD  NOER   CMD  32000121 14:54:23     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D19F
+  GOOD  NOER   CMD  32000123 14:55:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000125 14:59:35     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D2D7
+  GOOD  NOER   CMD  32000126 15:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       E
+  GOOD  NOER   CMD  32000128 15:04:47     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D40F
+  GOOD  NOER   SPE  32000130 15:06:41  4350   D  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 04-00001
+  GOOD  NOER   CMD  32000132 15:09:59     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D547
+     OLM Channel > Yes   Message ID > 97342   OLM Serial # > 201767-26-7738873561-748
+  GOOD  NOER   WAG  32000134 15:13:46  4350   E  7595    1 Sports      1    2 1080 THRU  1080     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE     3
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+      SUPER 14: -X-                                                                         
+      -X- 1X- 1-- 1-- 1-- 1-- 1-- 1-- --2 1-- 1-- 1-- 1--                             SYS TYPE >    FULL   ROWS >     2
+                                                                                  
+  GOOD  NOER   CMD  32000136 15:15:11     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D67F
+  GOOD  NOER   CMD  32000138 15:15:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000140 15:20:23     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D7B7
+  GOOD  NOER   CMD  32000142 15:25:35     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    D8EF
+  GOOD  NOER   CMD  32000144 15:30:48     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DA28
+  GOOD  NOER   CMD  32000146 15:34:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000148 15:36:00     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DB60
+  GOOD  NOER   SPE  32000150 15:36:51   977   F  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000152 15:36:55   977   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+     OLM Channel > Yes   Message ID > 97345   OLM Serial # > 201767-31-5961099021-119
+  GOOD  NOER   WAG  32000154 15:37:00   977   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97346   OLM Serial # > 201767-32-2113810989-475
+  GOOD  NOER   WAG  32000156 15:37:03   977   A  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97347   OLM Serial # > 201767-31-8266522959-098
+  GOOD  NOER   WAG  32000158 15:37:07   977   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97348   OLM Serial # > 201767-32-4419234927-454
+  GOOD  NOER   WAG  32000160 15:37:10   977   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97349   OLM Serial # > 201767-32-0571946897-077
+  GOOD  NOER   WAG  32000162 15:37:14   977   D  7595    7 Lotto       4    2  571 THRU   571     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97350   OLM Serial # > 201767-31-6724658865-703
+  GOOD  NOER   WAG  32000164 15:37:17   977   E  7595    7 Lotto       4    2  571 THRU   571     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE     4
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97351   OLM Serial # > 201767-32-2877370835-056
+  GOOD  NOER   WAG  32000166 15:37:21   977   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97352   OLM Serial # > 201767-31-9030082803-682
+  GOOD  NOER   WAG  32000168 15:37:24   977   8  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97353   OLM Serial # > 201767-32-5182794773-035
+  GOOD  NOER   WAG  32000170 15:37:28   977   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000172 15:41:12     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DC98
+  GOOD  NOER   CMD  32000174 15:46:24     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DDD0
+  GOOD  NOER   SPE  32000176 15:48:37   977   A  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000178 15:48:41   977   B  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+     OLM Channel > Yes   Message ID > 97356   OLM Serial # > 201767-32-2803648819-903
+  GOOD  NOER   WAG  32000180 15:48:44   977   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97357   OLM Serial # > 201767-31-8956360788-529
+  GOOD  NOER   WAG  32000182 15:48:48   977   D  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97358   OLM Serial # > 201767-32-5109072757-882
+  GOOD  NOER   WAG  32000184 15:48:51   977   E  7595    7 Lotto       4    2  571 THRU   571     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE     5
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97359   OLM Serial # > 201767-32-1261784726-508
+  GOOD  NOER   WAG  32000186 15:48:55   977   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97360   OLM Serial # > 201767-31-7414496696-131
+  GOOD  NOER   WAG  32000188 15:48:58   977   8  7595    7 Lotto       4    2  571 THRU   571     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97361   OLM Serial # > 201767-32-3567208664-487
+  GOOD  NOER   WAG  32000190 15:49:01   977   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97362   OLM Serial # > 201767-31-9719920634-110
+  GOOD  NOER   WAG  32000192 15:49:05   977   A  7595    7 Lotto       4    2  571 THRU   571     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97363   OLM Serial # > 201767-32-5872632602-466
+  GOOD  NOER   WAG  32000194 15:49:09   977   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97364   OLM Serial # > 201767-32-2025344572-089
+  GOOD  NOER   WAG  32000196 15:49:12   977   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE     6
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000198 15:51:36     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    DF08
+  GOOD  NOER   CMD  32000200 15:54:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000202 15:56:48     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E040
+  GOOD  NOER   SPE  32000204 15:58:03  4249   F  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00189
+  GOOD  NOER   SPE  32000206 15:58:07  4249   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00189
+  GOOD  NOER   CMD  32000208 16:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       F
+  GOOD  NOER   CMD  32000210 16:02:00     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E178
+  GOOD  NOER   CMD  32000212 16:07:12     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E2B0
+  GOOD  NOER   CMD  32000214 16:12:25     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E3E9
+  GOOD  NOER   CMD  32000216 16:13:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   SPE  32000218 16:16:11  4249   9  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00189
+  GOOD  NOER   SPE  32000220 16:16:15  4249   A  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00189
+  GOOD  NOER   CMD  32000222 16:17:37     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E521
+  GOOD  NOER   SPE  32000224 16:18:58   638   D  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000226 16:19:01   638   E  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   CMD  32000228 16:22:49     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E659
+  GOOD  NOER   SPE  32000230 16:23:01   638   F  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000232 16:23:04   638   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   CMD  32000234 16:28:01     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E791
+  GOOD  NOER   SPE  32000236 16:28:44   638   9  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000238 16:28:48   638   A  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000240 16:31:28   977   D  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000242 16:31:32   977   E  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   CMD  32000244 16:33:13     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    E8C9
+  GOOD  NOER   CMD  32000246 16:33:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000248 16:38:25     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EA01
+  GOOD  NOER   SPE  32000250 16:42:20  4547   C  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 01-00001
+     OLM Channel > Yes   Message ID > 97378   OLM Serial # > 201767-26-7779957660-026
+  GOOD  NOER   WAG  32000251 16:42:33  4547   D  7595    1 Sports      1    2 1080 THRU  1080     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+      SUPER 14: 1--                                                                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      --2 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+  GOOD  NOER   CRS  32000253 16:43:29  4547   E  7595 IVAL     99           1
+     OLM Channel > Yes   Message ID > 97379   OLM Serial # > 201767-40-6238093566-717
+         Retailer, who gets the credit      0100001
+         Instant game #             446
+         Instant pack #          325615
+         Instant virn #       572528871
+         Instant crs ref #     32000000
+         Instant latex             8439
+         Instant Time             60208
+         Instant CDC               7595
+         Instant Status               8
+         Instant Pack Sts             0
+         Actual Amount             0.00
+         Net Prize Amount          0.00     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE     7
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000255 16:43:37     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EB39
+  GOOD  NOER   SPE  32000257 16:48:27   638   B  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000259 16:48:31   977   F  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000261 16:48:34   638   C  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000263 16:48:37   977   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   CMD  32000265 16:48:50     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EC72
+     OLM Channel > Yes   Message ID > 97384   OLM Serial # > 201767-31-9277588544-189
+  REJT  INVL   VAL  32000267 16:48:55   638   D  7595    6 Lotto       3    2 AMT>       0.00 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7514   32000024 OPAMT:       0.00
+     OLM Channel > Yes   Message ID > 97385   OLM Serial # > 201767-32-3888436420-147
+  REJT  VINQ   VAL  32000269 16:49:08   977   9  7595    7 Lotto       4    2 AMT>       1.14 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7528   32000019 OPAMT:       1.14
+     OLM Channel > Yes   Message ID > 97386   OLM Serial # > 201767-32-0041148388-773
+  REJT  INVL   VAL  32000271 16:49:14   638   E  7595    6 Lotto       3    2 AMT>       0.00 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7514   32000024 OPAMT:       0.00
+  GOOD  NOER   CMD  32000273 16:52:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000275 16:54:02     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EDAA
+  GOOD  NOER   CMD  32000277 16:59:14     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    EEE2
+  GOOD  NOER   CMD  32000279 17:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      10
+  GOOD  NOER   SPE  32000281 17:00:21   638   F  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000283 17:00:24   977   A  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000285 17:00:28   638   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000287 17:00:32   977   B  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+     OLM Channel > Yes   Message ID > 97391   OLM Serial # > 201767-32-0730986219-201
+  GOOD  NOER   WAG  32000289 17:00:37   638   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97392   OLM Serial # > 201767-31-9189122125-806
+  GOOD  NOER   WAG  32000291 17:00:40   638   A  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97393   OLM Serial # > 201767-32-3799970001-764
+  GOOD  NOER   WAG  32000293 17:00:43   977   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   SPE  32000295 17:01:03  2489   A  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 17-01249
+  GOOD  NOER   SPE  32000297 17:01:06  4472   9  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00047
+  GOOD  NOER   SPE  32000299 17:01:10   667   B  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00063
+  GOOD  NOER   SPE  32000301 17:01:13  2452   F  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00067     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE     8
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   SPE  32000303 17:01:17   977   D  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000305 17:01:20  4086   F  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00139
+  GOOD  NOER   SPE  32000307 17:01:24  4206   9  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00145
+  GOOD  NOER   SPE  32000309 17:01:27  2489   B  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 17-01249
+  GOOD  NOER   SPE  32000311 17:01:31  4472   A  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00047
+  GOOD  NOER   SPE  32000313 17:01:34   667   C  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00063
+  GOOD  NOER   SPE  32000315 17:01:38  2452   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00067
+  GOOD  NOER   SPE  32000317 17:01:41   977   E  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000319 17:01:44  4086   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00139
+  GOOD  NOER   SPE  32000321 17:01:48  4206   A  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00145
+     OLM Channel > Yes   Message ID > 97408   OLM Serial # > 201767-32-1450312855-092
+  GOOD  NOER   WAG  32000323 17:01:52  2489   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97409   OLM Serial # > 201767-32-2213872699-676
+  GOOD  NOER   WAG  32000325 17:01:55  2489   D  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97410   OLM Serial # > 201767-31-6824720575-904
+  REJT  SUPR   WAG  32000327 17:01:58  4472   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97411   OLM Serial # > 201767-32-0657264204-048
+  REJT  SUPR   WAG  32000329 17:03:59  4472   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97412   OLM Serial # > 201767-32-2962688142-027
+  GOOD  NOER   WAG  32000331 17:04:02   667   D  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97413   OLM Serial # > 201767-31-9115400110-653
+  GOOD  NOER   WAG  32000333 17:04:05   667   E  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE     9
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                                                                                  
+     OLM Channel > Yes   Message ID > 97414   OLM Serial # > 201767-32-5268112080-006
+  GOOD  NOER   WAG  32000335 17:04:09  2452   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97415   OLM Serial # > 201767-32-1420824048-632
+  GOOD  NOER   WAG  32000337 17:04:12  2452   A  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97416   OLM Serial # > 201767-31-7573536018-255
+  GOOD  NOER   WAG  32000339 17:04:15   977   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97417   OLM Serial # > 201767-32-3726247986-611
+  GOOD  NOER   WAG  32000341 17:04:19   977   8  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97418   OLM Serial # > 201767-31-9878959956-234
+  GOOD  NOER   WAG  32000343 17:04:22  4086   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97419   OLM Serial # > 201767-31-6031671924-860
+  GOOD  NOER   WAG  32000345 17:04:25  4086   A  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000347 17:04:26     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F01A
+     OLM Channel > Yes   Message ID > 97420   OLM Serial # > 201767-31-8337095862-839
+  GOOD  NOER   WAG  32000349 17:04:29  4206   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97421   OLM Serial # > 201767-32-4489807832-192
+  GOOD  NOER   WAG  32000351 17:04:32  4206   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    10
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97422   OLM Serial # > 201767-31-6795231769-444
+  GOOD  NOER   WAG  32000353 17:04:36  2489   E  7595    7 Lotto       4    2  571 THRU   571     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97423   OLM Serial # > 201767-32-2947943738-797
+  GOOD  NOER   WAG  32000355 17:04:39  2489   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97424   OLM Serial # > 201767-31-9100655707-423
+  REJT  SUPR   WAG  32000357 17:04:43  4472   D  7595    7 Lotto       4    2  571 THRU   571     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97425   OLM Serial # > 201767-32-5253367676-776
+  REJT  SUPR   WAG  32000359 17:04:47  4472   E  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97426   OLM Serial # > 201767-32-1406079645-402
+  GOOD  NOER   WAG  32000361 17:04:50   667   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97427   OLM Serial # > 201767-31-7558791615-025
+  GOOD  NOER   WAG  32000363 17:04:53   667   8  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97428   OLM Serial # > 201767-31-6016927521-630
+  GOOD  NOER   WAG  32000365 17:04:57  2452   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                                TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    11
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97429   OLM Serial # > 201767-32-2169639490-983
+  GOOD  NOER   WAG  32000367 17:05:00  2452   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97430   OLM Serial # > 201767-31-8322351459-609
+  GOOD  NOER   WAG  32000369 17:05:04   977   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97431   OLM Serial # > 201767-32-4475063428-962
+  GOOD  NOER   WAG  32000371 17:05:08   977   A  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97432   OLM Serial # > 201767-32-0627775397-588
+  GOOD  NOER   WAG  32000373 17:05:11  4086   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97433   OLM Serial # > 201767-31-6780487367-211
+  GOOD  NOER   WAG  32000375 17:05:15  4086   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97434   OLM Serial # > 201767-32-2933199335-567
+  GOOD  NOER   WAG  32000376 17:05:18  4206   D  7595    7 Lotto       4    2  571 THRU   571     --NONE--        2.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97435   OLM Serial # > 201767-31-9085911305-190
+  GOOD  NOER   WAG  32000378 17:05:21  4206   E  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    12
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                                                                                  
+     OLM Channel > Yes   Message ID > 97436   OLM Serial # > 201767-32-5238623273-546
+  GOOD  NOER   WAG  32000380 17:05:25  2489   8  7595    7 Lotto       4    2  571 THRU   571     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97437   OLM Serial # > 201767-32-1391335243-169
+  REJT  SUPR   WAG  32000382 17:05:28  4472   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97438   OLM Serial # > 201767-31-7544047211-795
+  GOOD  NOER   WAG  32000384 17:05:31   667   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97439   OLM Serial # > 201767-32-3696759181-148
+  GOOD  NOER   WAG  32000386 17:05:34  2452   D  7595    7 Lotto       4    2  571 THRU   571     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97440   OLM Serial # > 201767-31-9849471149-774
+  GOOD  NOER   WAG  32000388 17:05:38   977   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97441   OLM Serial # > 201767-31-6002183118-400
+  GOOD  NOER   WAG  32000390 17:05:41  4086   D  7595    7 Lotto       4    2  571 THRU   571     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    13
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97442   OLM Serial # > 201767-32-2154895087-753
+  GOOD  NOER   WAG  32000392 17:05:45  4206   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        3.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97443   OLM Serial # > 201767-31-8307607057-376
+  GOOD  NOER   WAG  32000394 17:05:48  2489   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97444   OLM Serial # > 201767-32-4460319025-732
+  REJT  SUPR   WAG  32000396 17:05:52  4472   8  7595    7 Lotto       4    2  571 THRU   571     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97445   OLM Serial # > 201767-31-9071166901-960
+  GOOD  NOER   WAG  32000398 17:05:55   667   A  7595    7 Lotto       4    2  571 THRU   571     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97446   OLM Serial # > 201767-32-1376590839-939
+  GOOD  NOER   WAG  32000400 17:05:58  2452   E  7595    7 Lotto       4    2  571 THRU   571     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                                TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    14
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97447   OLM Serial # > 201767-31-5987438716-167
+  GOOD  NOER   WAG  32000402 17:06:01   977   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97448   OLM Serial # > 201767-32-2140150684-523
+  GOOD  NOER   WAG  32000404 17:06:05  4086   E  7595    7 Lotto       4    2  571 THRU   571     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97449   OLM Serial # > 201767-31-8292862654-146
+  GOOD  NOER   WAG  32000406 17:06:08  4206   8  7595    7 Lotto       4    2  571 THRU   571     --NONE--        4.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97450   OLM Serial # > 201767-32-4445574622-502
+  GOOD  NOER   WAG  32000408 17:06:12  2489   A  7595    7 Lotto       4    2  571 THRU   571     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97451   OLM Serial # > 201767-32-0598286592-125
+  REJT  SUPR   WAG  32000410 17:06:15  4472   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    15
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97452   OLM Serial # > 201767-31-9056422498-730
+  GOOD  NOER   WAG  32000412 17:06:18   667   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97453   OLM Serial # > 201767-32-5209134468-083
+  GOOD  NOER   WAG  32000414 17:06:21  2452   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97454   OLM Serial # > 201767-32-1361846436-709
+  GOOD  NOER   WAG  32000416 17:06:25   977   D  7595    7 Lotto       4    2  571 THRU   571     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97455   OLM Serial # > 201767-31-7514558406-332
+  GOOD  NOER   WAG  32000418 17:06:29  4086   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                                TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    16
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97456   OLM Serial # > 201767-32-3667270374-688
+  GOOD  NOER   WAG  32000420 17:06:32  4206   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        5.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+                         11 12 13 14 15                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97457   OLM Serial # > 201767-31-9819982344-311
+  GOOD  NOER   WAG  32000422 17:06:36  2489   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97458   OLM Serial # > 201767-31-5972694312-937
+  REJT  SUPR   WAG  32000424 17:06:39  4472   A  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97459   OLM Serial # > 201767-32-2125406282-290
+  GOOD  NOER   WAG  32000426 17:06:42   667   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97460   OLM Serial # > 201767-31-8278118250-916
+  GOOD  NOER   WAG  32000428 17:06:46  2452   8  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97461   OLM Serial # > 201767-32-4430830220-269
+  GOOD  NOER   WAG  32000430 17:06:49   977   E  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97462   OLM Serial # > 201767-32-0583542188-895
+  GOOD  NOER   WAG  32000432 17:06:52  4086   8  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    17
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97463   OLM Serial # > 201767-31-9041678095-500
+  GOOD  NOER   WAG  32000434 17:06:55  4206   A  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97464   OLM Serial # > 201767-32-5194390064-853
+  GOOD  NOER   WAG  32000436 17:06:59  2489   C  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97465   OLM Serial # > 201767-32-1347102033-479
+  REJT  SUPR   WAG  32000438 17:07:03  4472   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97466   OLM Serial # > 201767-31-7499814003-102
+  GOOD  NOER   WAG  32000440 17:07:06   667   D  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97467   OLM Serial # > 201767-32-3652525971-458
+  GOOD  NOER   WAG  32000442 17:07:09  2452   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97468   OLM Serial # > 201767-31-9805237941-081
+  GOOD  NOER   WAG  32000444 17:07:13   977   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97469   OLM Serial # > 201767-31-5957949909-707
+  GOOD  NOER   WAG  32000446 17:07:16  4086   9  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97470   OLM Serial # > 201767-32-2110661879-060
+  GOOD  NOER   WAG  32000448 17:07:19  4206   B  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    18
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000450 17:09:38     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F152
+  GOOD  NOER   SPE  32000452 17:10:38   638   B  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000454 17:10:41   638   C  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   CMD  32000456 17:12:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   SPE  32000458 17:12:20   638   D  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000460 17:12:23   638   E  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   CMD  32000462 17:14:50     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F28A
+  GOOD  NOER   CMD  32000464 17:20:02     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F3C2
+  GOOD  NOER   SPE  32000466 17:22:58   638   F  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000468 17:23:01   638   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000470 17:23:37   638   9  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000472 17:23:40   638   A  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   CMD  32000474 17:25:14     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F4FA
+  GOOD  NOER   SPE  32000476 17:25:29   638   B  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000478 17:25:32   977   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000480 17:25:36   638   C  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000482 17:25:39   977   9  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000484 17:25:49   638   D  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000486 17:25:52   977   A  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000488 17:25:56   638   E  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000490 17:25:59   977   B  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+     OLM Channel > Yes   Message ID > 97487   OLM Serial # > 201767-31-6367644082-753
+  REJT  VINQ   VAL  32000492 17:26:06   638   F  7595    7 Lotto       4    2 AMT>       1.14 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7528   32000019 OPAMT:       1.14
+     OLM Channel > Yes   Message ID > 97488   OLM Serial # > 201767-32-0978491958-711
+  REJT  VINQ   VAL  32000494 17:26:12   977   C  7595    7 Lotto       4    2 AMT>       1.14 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7528   32000019 OPAMT:       1.14
+  GOOD  NOER   SPE  32000496 17:26:39   638   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000498 17:26:42   977   D  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000500 17:26:46   638   9  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000501 17:26:49   977   E  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+     OLM Channel > Yes   Message ID > 97493   OLM Serial # > 201767-32-4047475742-271
+  REJT  VINQ   VAL  32000503 17:26:56   638   A  7595    7 Lotto       4    2 AMT>       1.14 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7528   32000019 OPAMT:       1.14
+     OLM Channel > Yes   Message ID > 97494   OLM Serial # > 201767-32-0200187710-897
+  REJT  VINQ   VAL  32000505 17:27:03   977   F  7595    7 Lotto       4    2 AMT>       1.45 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7561   32000021 OPAMT:       1.45
+  GOOD  NOER   SPE  32000507 17:29:37   638   B  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000509 17:29:41   638   C  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   CMD  32000511 17:30:27     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F633
+  GOOD  NOER   CMD  32000513 17:31:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    19
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000515 17:35:39     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F76B
+  GOOD  NOER   SPE  32000517 17:40:06  2489   D  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 17-01249
+  GOOD  NOER   SPE  32000519 17:40:10  2489   E  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 17-01249
+     OLM Channel > Yes   Message ID > 97499   OLM Serial # > 201767-31-6249688858-907
+  GOOD  NOER   WAG  32000521 17:40:13  2489   F  7595    7 Lotto       4    2  571 THRU   571     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                         01 02 03 04 05                                           
+   Lucky Number  1                                                                
+                                                                                  
+     OLM Channel > Yes   Message ID > 97500   OLM Serial # > 201767-32-2402400828-260
+  GOOD  NOER   WAG  32000523 17:40:17  2489   8  7595    7 Lotto       4    2  571 THRU   571     --NONE--        6.00    0 *QP*
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+                     QP  01 02 03 04 05 06                                            SYS TYPE >    FULL   ROWS >     6
+   Lucky Number  1                                                                
+                                                                                  
+  GOOD  NOER   CMD  32000525 17:40:51     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F8A3
+  GOOD  NOER   SPE  32000527 17:43:21   638   D  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000529 17:43:24   638   E  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000531 17:45:46   638   F  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000533 17:45:49   638   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+     OLM Channel > Yes   Message ID > 97505   OLM Serial # > 201767-31-8525623990-426
+  REJT  INVL   VAL  32000535 17:45:56   638   9  7595    7 Lotto       4    2 AMT>       0.00 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7595   32000521 OPAMT:       0.00
+  GOOD  NOER   CMD  32000537 17:46:03     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    F9DB
+  GOOD  NOER   CMD  32000539 17:51:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000541 17:51:15     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FB13
+  GOOD  NOER   SPE  32000543 17:54:37   638   A  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000545 17:54:40   977   8  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+  GOOD  NOER   SPE  32000547 17:54:43   638   B  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 02-00001
+  GOOD  NOER   SPE  32000549 17:54:47   977   9  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 18-00123
+     OLM Channel > Yes   Message ID > 97510   OLM Serial # > 201767-31-9230206224-084
+  REJT  VINQ   VAL  32000551 17:54:53   638   C  7595    7 Lotto       4    2 AMT>       1.14 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7528   32000019 OPAMT:       1.14
+     OLM Channel > Yes   Message ID > 97511   OLM Serial # > 201767-32-5382918192-440
+  REJT  VINQ   VAL  32000553 17:55:00   977   A  7595    7 Lotto       4    2 AMT>       1.45 REF>       0.00 EXCH>        0
+  VALIDATION SERIAL NUMBER > 7561   32000021 OPAMT:       1.45
+  GOOD  NOER   CMD  32000555 17:56:27     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FC4B
+  GOOD  NOER   CMD  32000557 18:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      11
+  GOOD  NOER   CMD  32000559 18:01:39     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FD83
+  GOOD  NOER   CMD  32000561 18:06:52     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FEBC
+  GOOD  NOER   CMD  32000563 18:10:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000565 18:12:04     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    FFF4
+  GOOD  NOER   CMD  32000567 18:17:16     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1012C
+  GOOD  NOER   CMD  32000569 18:22:28     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10264     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    20
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000571 18:27:40     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1039C
+  GOOD  NOER   CMD  32000573 18:30:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000575 18:32:52     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   104D4
+  GOOD  NOER   CMD  32000577 18:38:04     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1060C
+  GOOD  NOER   CMD  32000579 18:43:17     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10744
+  GOOD  NOER   CMD  32000581 18:48:29     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1087D
+  GOOD  NOER   CMD  32000583 18:49:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000585 18:53:41     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   109B5
+  GOOD  NOER   CMD  32000587 18:58:53     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10AED
+  GOOD  NOER   CMD  32000589 19:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      12
+  GOOD  NOER   CMD  32000591 19:04:05     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10C25
+  GOOD  NOER   CMD  32000593 19:09:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000595 19:09:17     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10D5D
+  GOOD  NOER   CMD  32000597 19:14:29     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10E95
+  GOOD  NOER   CMD  32000599 19:19:41     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   10FCD
+  GOOD  NOER   CMD  32000601 19:24:54     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11106
+  GOOD  NOER   CMD  32000603 19:28:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000605 19:30:06     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1123E
+  GOOD  NOER   CMD  32000607 19:35:18     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11376
+  GOOD  NOER   CMD  32000609 19:40:30     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   114AE
+  GOOD  NOER   CMD  32000611 19:45:42     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   115E6
+  GOOD  NOER   CMD  32000613 19:48:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000615 19:50:54     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1171E
+  GOOD  NOER   CMD  32000617 19:56:06     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11856
+  GOOD  NOER   CMD  32000619 20:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      13
+  GOOD  NOER   CMD  32000621 20:01:19     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1198F
+  GOOD  NOER   CMD  32000623 20:06:31     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11AC7
+  GOOD  NOER   CMD  32000625 20:07:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000626 20:11:43     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11BFF
+  GOOD  NOER   CMD  32000628 20:16:55     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11D37
+  GOOD  NOER   CMD  32000630 20:22:07     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11E6F
+  GOOD  NOER   CMD  32000632 20:27:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000634 20:27:19     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   11FA7
+  GOOD  NOER   CMD  32000636 20:32:31     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   120DF
+  GOOD  NOER   CMD  32000638 20:37:44     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12217
+  GOOD  NOER   CMD  32000640 20:42:56     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12350
+  GOOD  NOER   CMD  32000642 20:46:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000644 20:48:08     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12488
+  GOOD  NOER   CMD  32000646 20:53:20     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   125C0     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    21
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000648 20:58:32     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   126F8
+  GOOD  NOER   CMD  32000650 21:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      14
+  GOOD  NOER   CMD  32000652 21:03:44     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12830
+  GOOD  NOER   CMD  32000654 21:06:14     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000656 21:08:56     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12968
+  GOOD  NOER   CMD  32000658 21:14:08     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12AA0
+  GOOD  NOER   CMD  32000660 21:19:21     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12BD9
+  GOOD  NOER   CMD  32000662 21:24:33     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12D11
+  GOOD  NOER   CMD  32000664 21:25:44     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000666 21:29:45     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12E49
+  GOOD  NOER   CMD  32000668 21:34:57     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   12F81
+  GOOD  NOER   CMD  32000670 21:40:09     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   130B9
+  GOOD  NOER   CMD  32000672 21:45:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000674 21:45:21     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   131F1
+  GOOD  NOER   CMD  32000676 21:50:33     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13329
+  GOOD  NOER   CMD  32000678 21:55:46     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13462
+  GOOD  NOER   CMD  32000680 22:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      15
+  GOOD  NOER   CMD  32000682 22:00:58     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1359A
+  GOOD  NOER   CMD  32000684 22:04:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000686 22:06:10     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   136D2
+  GOOD  NOER   CMD  32000688 22:11:22     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1380A
+  GOOD  NOER   CMD  32000690 22:16:34     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13942
+  GOOD  NOER   CMD  32000692 22:21:46     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13A7A
+  GOOD  NOER   CMD  32000694 22:24:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000696 22:26:58     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13BB2
+  GOOD  NOER   CMD  32000698 22:32:10     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13CEA
+  GOOD  NOER   CMD  32000700 22:37:23     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13E23
+  GOOD  NOER   CMD  32000702 22:42:35     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   13F5B
+  GOOD  NOER   CMD  32000704 22:43:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000706 22:47:47     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14093
+  GOOD  NOER   CMD  32000708 22:52:59     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   141CB
+  GOOD  NOER   CMD  32000710 22:58:11     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14303
+  GOOD  NOER   CMD  32000712 23:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      16
+  GOOD  NOER   CMD  32000714 23:03:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000716 23:03:23     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1443B
+  GOOD  NOER   CMD  32000718 23:08:35     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14573
+  GOOD  NOER   CMD  32000720 23:13:48     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   146AC
+  GOOD  NOER   CMD  32000722 23:19:00     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   147E4
+  GOOD  NOER   CMD  32000724 23:22:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    22
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000726 23:24:12     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1491C
+  GOOD  NOER   CMD  32000728 23:29:24     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14A54
+  GOOD  NOER   CMD  32000730 23:34:36     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14B8C
+  GOOD  NOER   CMD  32000732 23:39:48     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14CC4
+  GOOD  NOER   CMD  32000734 23:42:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000736 23:45:00     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14DFC
+  GOOD  NOER   CMD  32000738 23:50:12     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   14F34
+  GOOD  NOER   CMD  32000740 23:55:25     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>   1506D
+  GOOD  NOER   CMD  32000742 00:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>      17
+  GOOD  NOER   CMD  32000744 00:00:37     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>      25
+  GOOD  NOER   CMD  32000746 00:01:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000748 00:05:49     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     15D
+  GOOD  NOER   CMD  32000750 00:11:01     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     295
+  GOOD  NOER   CMD  32000751 00:16:13     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     3CD
+  GOOD  NOER   CMD  32000753 00:21:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000755 00:21:25     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     505
+  GOOD  NOER   CMD  32000757 00:26:37     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     63D
+  GOOD  NOER   CMD  32000759 00:31:50     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     776
+  GOOD  NOER   CMD  32000761 00:37:02     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     8AE
+  GOOD  NOER   CMD  32000763 00:40:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000765 00:42:14     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     9E6
+  GOOD  NOER   CMD  32000767 00:47:26     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     B1E
+  GOOD  NOER   CMD  32000769 00:52:38     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     C56
+  GOOD  NOER   CMD  32000771 00:57:50     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     D8E
+  GOOD  NOER   CMD  32000773 01:00:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000775 01:03:02     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     EC6
+  GOOD  NOER   CMD  32000777 01:08:15     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>     FFF
+  GOOD  NOER   CMD  32000779 01:13:27     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1137
+  GOOD  NOER   CMD  32000781 01:18:39     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    126F
+  GOOD  NOER   CMD  32000783 01:19:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000785 01:23:51     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    13A7
+  GOOD  NOER   CMD  32000787 01:29:03     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    14DF
+  GOOD  NOER   CMD  32000789 01:34:15     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1617
+  GOOD  NOER   CMD  32000791 01:39:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000793 01:39:27     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    174F
+  GOOD  NOER   CMD  32000795 01:44:40     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1888
+  GOOD  NOER   CMD  32000797 01:49:52     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    19C0
+  GOOD  NOER   CMD  32000799 01:55:04     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1AF8
+  GOOD  NOER   CMD  32000801 01:58:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    23
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000803 02:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000805 02:00:16     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1C30
+  GOOD  NOER   CMD  32000807 02:05:28     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1D68
+  GOOD  NOER   CMD  32000809 02:10:40     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1EA0
+  GOOD  NOER   CMD  32000811 02:15:52     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    1FD8
+  GOOD  NOER   CMD  32000813 02:18:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000815 02:21:05     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2111
+  GOOD  NOER   CMD  32000817 02:26:17     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2249
+  GOOD  NOER   CMD  32000819 02:31:29     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2381
+  GOOD  NOER   CMD  32000821 02:36:41     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    24B9
+  GOOD  NOER   CMD  32000823 02:37:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000825 02:41:53     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    25F1
+  GOOD  NOER   CMD  32000827 02:47:05     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2729
+  GOOD  NOER   CMD  32000829 02:52:17     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2861
+  GOOD  NOER   CMD  32000831 02:57:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000833 02:57:30     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    299A
+  GOOD  NOER   CMD  32000835 03:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       2
+  GOOD  NOER   CMD  32000837 03:02:42     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2AD2
+  GOOD  NOER   CMD  32000839 03:07:54     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2C0A
+  GOOD  NOER   CMD  32000841 03:13:06     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2D42
+  GOOD  NOER   CMD  32000843 03:16:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000845 03:18:18     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2E7A
+  GOOD  NOER   CMD  32000847 03:23:30     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    2FB2
+  GOOD  NOER   CMD  32000849 03:28:42     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    30EA
+  GOOD  NOER   CMD  32000851 03:33:55     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3222
+  GOOD  NOER   CMD  32000853 03:36:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000855 03:39:07     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    335B
+  GOOD  NOER   CMD  32000857 03:44:19     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3493
+  GOOD  NOER   CMD  32000859 03:49:31     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    35CB
+  GOOD  NOER   CMD  32000861 03:54:43     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3703
+  GOOD  NOER   CMD  32000863 03:55:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000865 03:59:55     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    383B
+  GOOD  NOER   CMD  32000867 04:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       3
+  GOOD  NOER   CMD  32000869 04:05:07     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3973
+  GOOD  NOER   CMD  32000871 04:10:20     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3AAB
+  GOOD  NOER   CMD  32000873 04:15:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000875 04:15:32     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3BE4
+  GOOD  NOER   CMD  32000876 04:20:44     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3D1C
+  GOOD  NOER   CMD  32000878 04:25:56     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3E54     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    24
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000880 04:31:08     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    3F8C
+  GOOD  NOER   CMD  32000882 04:34:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000884 04:36:20     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    40C4
+  GOOD  NOER   CMD  32000886 04:41:32     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    41FC
+  GOOD  NOER   CMD  32000888 04:46:44     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4334
+  GOOD  NOER   CMD  32000890 04:51:57     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    446D
+  GOOD  NOER   CMD  32000892 04:54:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000894 04:57:09     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    45A5
+  GOOD  NOER   CMD  32000896 05:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       4
+  GOOD  NOER   CMD  32000898 05:02:21     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    46DD
+  GOOD  NOER   CMD  32000900 05:07:33     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4815
+  GOOD  NOER   CMD  32000902 05:12:45     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    494D
+  GOOD  NOER   CMD  32000904 05:13:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000906 05:17:57     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4A85
+  GOOD  NOER   CMD  32000908 05:23:09     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4BBD
+  GOOD  NOER   CMD  32000910 05:28:22     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4CF6
+  GOOD  NOER   CMD  32000912 05:33:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000914 05:33:34     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4E2E
+  GOOD  NOER   CMD  32000916 05:38:46     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    4F66
+  GOOD  NOER   CMD  32000918 05:43:58     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    509E
+  GOOD  NOER   CMD  32000920 05:49:10     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    51D6
+  GOOD  NOER   CMD  32000922 05:52:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000924 05:54:22     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    530E
+  GOOD  NOER   CMD  32000926 05:59:34     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5446
+  GOOD  NOER   CMD  32000928 06:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       5
+  GOOD  NOER   CMD  32000930 06:04:47     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    557F
+  GOOD  NOER   CMD  32000932 06:09:59     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    56B7
+  GOOD  NOER   CMD  32000934 06:12:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000936 06:15:11     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    57EF
+  GOOD  NOER   CMD  32000938 06:20:23     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5927
+  GOOD  NOER   CMD  32000940 06:25:35     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5A5F
+  GOOD  NOER   CMD  32000942 06:30:47     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5B97
+  GOOD  NOER   CMD  32000944 06:31:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000946 06:35:59     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5CCF
+  GOOD  NOER   CMD  32000948 06:41:12     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5E07
+  GOOD  NOER   CMD  32000950 06:46:24     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    5F40
+  GOOD  NOER   CMD  32000952 06:51:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000954 06:51:36     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6078
+  GOOD  NOER   CMD  32000956 06:56:48     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    61B0     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    25
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32000958 07:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       6
+  GOOD  NOER   CMD  32000960 07:02:00     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    62E8
+  GOOD  NOER   CMD  32000962 07:07:12     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6420
+  GOOD  NOER   CMD  32000964 07:10:45     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32000966 07:12:24     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6558
+  GOOD  NOER   CMD  32000968 07:17:37     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6690
+  GOOD  NOER   CMD  32000970 07:22:49     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    67C9
+  GOOD  NOER   CMD  32000972 07:28:01     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6901
+  GOOD  NOER   CMD  32000974 07:30:15     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32000976 07:33:13     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6A39
+  GOOD  NOER   CMD  32000978 07:38:25     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6B71
+  GOOD  NOER   CMD  32000980 07:43:37     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6CA9
+  GOOD  NOER   CMD  32000982 07:48:49     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6DE1
+  GOOD  NOER   CMD  32000984 07:49:46     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32000986 07:54:01     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    6F19
+  GOOD  NOER   CMD  32000988 07:59:14     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7052
+  GOOD  NOER   CMD  32000990 08:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       7
+  GOOD  NOER   CMD  32000992 08:04:26     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    718A
+  GOOD  NOER   CMD  32000994 08:09:16     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32000996 08:09:38     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    72C2
+  GOOD  NOER   CMD  32000998 08:14:50     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    73FA
+  GOOD  NOER   CMD  32001000 08:20:02     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7532
+  GOOD  NOER   CMD  32001001 08:25:14     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    766A
+  GOOD  NOER   CMD  32001003 08:28:46     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32001005 08:30:26     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    77A2
+  GOOD  NOER   CMD  32001007 08:35:39     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    78DB
+  GOOD  NOER   CMD  32001009 08:40:51     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7A13
+  GOOD  NOER   CMD  32001011 08:46:03     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7B4B
+  GOOD  NOER   CMD  32001013 08:48:16     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32001015 08:51:15     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7C83
+  GOOD  NOER   CMD  32001017 08:56:27     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7DBB
+  GOOD  NOER   CMD  32001019 09:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       8
+  GOOD  NOER   CMD  32001021 09:01:39     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    7EF3
+  GOOD  NOER   CMD  32001023 09:06:51     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    802B
+  GOOD  NOER   CMD  32001025 09:07:46     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32001027 09:12:04     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8164
+  GOOD  NOER   CMD  32001029 09:17:16     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    829C
+  GOOD  NOER   CMD  32001031 09:22:28     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    83D4
+  GOOD  NOER   CMD  32001033 09:27:16     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       3 NEW>       4     TMIR.01                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                10:32:43 PAGE    26
+ 15.02.2022                               T R A N S A C T I O N   F I L E   R E P O R T                         14.02.2022 CDC 7595
+                                                                                                                           SYS    B
+
+STATUS ERROR  TYPE    SERIAL     TIME  TERM SEQ  DATE GAME GAMETYP  GIND SIZE  BEG        END     JOKER CMIL  M1LH FRACTION  X BET
+===================================================================================================================================
+
+  GOOD  NOER   CMD  32001035 09:27:40     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    850C
+  GOOD  NOER   SPE  32001037 09:32:21  1214   9  7595    0             0    2 SON  OLD>       0 NEW>       0 AGT> 10-00004
+     OLM Channel > Yes   Message ID > 97513   OLM Serial # > 201768-27-1148125421-232
+  GOOD  NOER   WAG  32001039 09:32:33  1214   A  7595    1 Sports      1    2 1080 THRU  1080     --NONE--        1.00    0     
+  BANK NUMBER > 00000000 - 00000000                               TFILE:EARLY                  Kb:   0 Ke:   0 sold> 7595
+      SUPER 14: 1--                                                                         
+      1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+      -X- -X- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1-- 1--                         
+                                                                                  
+  GOOD  NOER   CMD  32001041 09:32:52     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8644
+  GOOD  NOER   CMD  32001043 09:38:04     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    877C
+  GOOD  NOER   CMD  32001045 09:43:16     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    88B4
+  GOOD  NOER   CMD  32001047 09:46:46     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32001049 09:48:29     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    89ED
+  GOOD  NOER   CMD  32001051 09:53:41     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8B25
+  GOOD  NOER   CMD  32001053 09:58:53     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8C5D
+  GOOD  NOER   CMD  32001055 10:00:01     0   0  7595    0             0    2 HOURSALE TER>   0 OLD>       0 NEW>       9
+  GOOD  NOER   CMD  32001057 10:04:05     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8D95
+  GOOD  NOER   CMD  32001059 10:06:16     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32001061 10:09:17     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    8ECD
+  GOOD  NOER   CMD  32001063 10:14:29     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9005
+  GOOD  NOER   CMD  32001065 10:19:41     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    913D
+  GOOD  NOER   CMD  32001067 10:24:54     0   0  7595    0             0    2 REL EXPI TER>   0 OLD>       0 NEW>    9276
+  GOOD  NOER   CMD  32001069 10:25:46     0   0  7595    0             0    2 CHKPOINT TER>   0 OLD>       2 NEW>       3
+  GOOD  NOER   CMD  32001071 10:26:01     0   0  7595    0             0    2 CHKPOINT TER>  -1 OLD>       2 NEW>       1
+  GOOD  NOER   CMD  32001073 10:26:16     0   0  7595    0             0    2 CHKPOINT TER>  -1 OLD>       2 NEW>       1
+  GOOD  NOER   CMD  32001075 10:26:16     0   0  7595    0             0    2 SYSSTS   TER>  -1 OLD>       1 NEW>       2
+  GOOD  NOER   CMD  32001077 10:26:31     0   0  7595    0             0    2 CHKPOINT TER>  -1 OLD>       3 NEW>       4
+  GOOD  NOER   CMD  32001079 10:26:46     0   0  7595    0             0    2 CHKPOINT TER>  -1 OLD>       4 NEW>       1
+  GOOD  NOER   CMD  32001081 10:27:16     0   0  7595    0             0    2 DAYSTS   TER>  -1 OLD>       2 NEW>       4
+
+
+
+                       COUNT           TOTAL AMT     TOT OPS AMT     TOT NET AMT     TOT BNK AMT     TOT CSH AMT
+                  ----------------------------------------------------------------------------------------------
+Total sales               82              333.00            0.00            0.00            0.00            0.00
+Total cancels              0                0.00            0.00            0.00            0.00            0.00
+Total deletes              0                0.00            0.00            0.00            0.00            0.00
+Total cashes               0                0.00            0.00            0.00            0.00            0.00
+Total Instant Cashes       0                0.00            0.00            0.00            0.00            0.00
+
+Total Instant Message Transactions 
+
+Instant Establis        0
+Instant Issues          0
+Instant Sts Chg         0
+Instant Qta Rpt         0
+Instant Inv Rpt         0
+Instant Fin Rpt         0
+Instant Ordering        0
+Instant Gam Prms        0
+Instant Set Rpt         0
+Instant Sign On         0
+Instant Sign Off        0
+Instant FSE Son         0
+Instant Confirm         0
+Instant Cashes          1
+Instant Activat         0
+Instant Game Tbl        0
+Total Instant Transactions          1
+
+Total Passive Returns and Validations 
+
+Returns            0            0.00
+Validations        0            0.00
+
+Euro Milhoes transactions
+                              COUNT
+ Wagers                  ----------
+                         ----------
+  TOTAL wagers                    0
+
+  TOTAL count of EM wager transactions by multiple bet type
+
+                   5N        6N        7N        8N        9N       10N       11N   SUBTOT S
+            ---------------------------------------------------------------------  ---------
+         2S         -         0         0         0         0         0         0          0
+         3S         0         0         0         0         0         0                    0
+         4S         0         0         0         0         0                              0
+         5S         0         0         0         0                                        0
+         6S         0         0         0                                                  0
+         7S         0         0         0                                                  0
+         8S         0         0         0                                                  0
+         9S         0         0         0                                                  0
+        10S         0         0                                                            0
+        11S         0         0                                                            0
+        12S         0         0                                                            0
+            ---------------------------------------------------------------------  ---------
+   SUBTOT N         0         0         0         0         0         0         0          0 TOTAL
+
+  TOTAL count of EM wager transactions with 1, 2, 3, 4 and 5 simple bets
+
+                           COUNT
+       # Simple Bets   ---------
+         1                     0
+         2                     0
+         3                     0
+         4                     0
+         5                     0
+                       ---------
+       TOTAL                   0
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Cancels                 ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL cancels                   0          0.00          0.00          0.00
+
+                              COUNT       TOT AMT        EM AMT    M1LHAO AMT
+ Validations             ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL validations               0          0.00          0.00          0.00
+
+Euro Milhoes bets (gross)
+                           TOT BETS       EM BETS     CMIL BETS   M1LHAO BETS
+ Bets                    ----------------------------------------------------
+                         ----------------------------------------------------
+  TOTAL bets                      0             0             0             0
+
+IGS Message Transactions
+
+Wagers            0            0.00
+Cancels           0            0.00
+Valids            0            0.00
+Payments          0            0.00
+Reports           0                
+Total IGS Transactions          0
