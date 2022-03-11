@@ -145,6 +145,10 @@ C
 C
 C RETRY PROCESSING
 C
+
+C The New Terminals don't have retrys so jumps to the normal process        
+        IF(BPRO(CHOLM_OLM,BUF).EQ.1) GOTO 50 
+C        
         IF(TRABUF(TTRN).EQ.AGTHTB(ATRNUM,TER).AND.
      *     TRABUF(TSTAT).EQ.GOOD) THEN
           LSTSER=AGTTAB(ALSTRA,TER)
@@ -153,6 +157,8 @@ C
           CALL LOGTRA(LASTRA,LBUF)
 C          IF(LASTRA(TTYP).NE.TVAL.AND.LASTRA(TTYP).NE.TCLM.AND.
 C     *       LASTRA(TTYP).NE.TREF)           GOTO 50
+
+C         TVAL=4         TREF=6        
           IF(LASTRA(TTYP).NE.TVAL.AND.LASTRA(TTYP).NE.TREF) GOTO 50
           IF(LASTRA(TVSER).NE.TRABUF(TVSER)) GOTO 50
           IF(LASTRA(TTRN).NE.TRABUF(TTRN))   GOTO 50
