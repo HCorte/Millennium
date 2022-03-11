@@ -1,0 +1,16 @@
+{
+"terminalCode": "0200001",
+"token": "ODA4OTM0MDkwMTYzMTA5NDU2MTE5ODAyMDAwMDE=",
+"wager": {
+"betSerialNumber": "251-16466620-029",
+"playerIdentification": "12345",
+"playerIdentificationTypeShdes": "PIT_NIF",
+"paymentInformation": {
+"playerContact": "93654987585555",
+"playerCardCode": "123456789",
+"paymentMethodShdes": "PM_I",
+"iban": "PT50003589290908821043624"
+    }
+  }
+}
+

@@ -168,7 +168,7 @@
  2. No Desktop executar o atalho "WebIps_Evolution_SQA - PODEV1" para abrir a página de Login do Webips
  
     User....: hcorte
-	Password: hcorte02
+	Password: hcorte02 -> novaPassword: a1234567
 	
  3. Identificar a encomenda a despachar (Pick&Pack = PnP) e os seus detalhes - Início da preparação para o Pick&Pack
  
