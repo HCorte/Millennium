@@ -492,6 +492,9 @@ C----+------------------------------------------------------------------
         INTEGER*4  ST
         
         ST = 0
+C        WRITE(*,*) ""
+C        WRITE(*,*) "HANDLE_VALIDATION_SOUPFM_AM_EXPIRED"
+C        WRITE(*,*) ""
         CALL HANDLE_VALIDATION_SOUPFM_AM_EXPIRED(VALREC, SOUPFM_REC, ST)
         IF(ST .NE. 0) RETURN
 C----+------------------------------------------------------------------

@@ -749,7 +749,9 @@ C
         INCLUDE 'INCLIB:PRGREC.DEF'
         INCLUDE 'INCLIB:VALFIL.DEF'
         
-        INTEGER*4  ST
+        INTEGER*4  ST,I
+CCCCCCCC File name CCCCCCCCCCCCCCCC
+        CHARACTER*28 FILENAME
         
         ST = 0
 
@@ -767,6 +769,12 @@ C
      *            , INT_SRC_FILE_NAME
      *            , 4, 0, 0
      *            , ST)
+
+C        WRITE(*,*) ""
+C        WRITE(*,*) "FILE PURGE IS: "
+C        WRITE(FILENAME,10) (INT_SRC_FILE_NAME(I), I=1, 7)
+C10      FORMAT('28A')        
+C        WRITE(*,*) "--- ",FILENAME
 
         IF(ST .NE. 0) THEN
             CALL FILERR(INT_SRC_FILE_NAME
@@ -795,11 +803,13 @@ C
         INCLUDE 'INCLIB:DESVAL.DEF'
         INCLUDE 'INCLIB:PRMVPF.DEF'
         
-        INTEGER*4  ST, LENGTH
+        INTEGER*4  ST, LENGTH, I
         INTEGER*4  VLEN(0:3)
         DATA       VLEN /1,2,3,4/
         
         ST = 0
+
+        
 
         IF(  SOUPFM_REC.PRG_IND .GT. PRGBLC
      *  .OR. SOUPFM_REC.PRG_BLK_FIRST_RUN .EQ. .TRUE.) THEN
@@ -807,6 +817,13 @@ C
             SOUPFM_REC.PRG_BLK_CNT = SOUPFM_REC.PRG_BLK_CNT + 1
             
             CALL READW(SOUPFM_REC.PRG_FDB,SOUPFM_REC.PRG_BLK_CNT,UPREC,ST)
+
+C           (PRGRECLEN=PRGSEC*64) -- PRGSEC=128
+            WRITE(*,*) ""
+            DO I=1, PRGRECLEN  
+                WRITE(*,*) "Index:", I, " Value: ",UPREC(I)                               
+            ENDDO
+            WRITE(*,*) ""
             
             IF(ST .EQ. READW_EOF_REACHED) THEN ! EOF reached
                RETURN
@@ -839,8 +856,6 @@ C
 
         RETURN
         END
-
-
 
 
 

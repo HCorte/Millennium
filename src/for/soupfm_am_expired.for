@@ -204,8 +204,32 @@ C        TYPE *, '----------------------------------------------'
         ! 5) only validations that have been purged at the provided cdc date
         GAME    = VALREC(VGAM)
         NUMDAY  = PRGDAY(GAME)
-        IF(   VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY
-     *  .OR.  NUMDAY          .EQ. 0) RETURN
+C       (VWCDC=24)   !WINSEL CDC (data em que ocurreu escrutinio)
+C       SOUPFM_REC.SRC_CDC_DATE
+
+        IF(GAME .EQ. 10) THEN   
+          WRITE(*,*) "Totobola Extra (Game Number: 10)"   
+          WRITE(*,*) "Wager Serial Number (Internal): ",VALREC(VSSER)
+          WRITE(*,*) "Pay Amount Prize (cent.): ",VALREC(VPAMT)
+          WRITE(*,*) "Selling Terminal (Internal): ",VALREC(VSTER)
+          WRITE(*,*) "WAGER CDC DATE: ",VALREC(VSCDC)
+          WRITE(*,*) "------------------------------------"
+          WRITE(*,*) "WINSEL CDC DATE: ",VALREC(VWCDC)
+          WRITE(*,*) "SOUPFM_REC.SRC_CDC_DATE (user input): ",SOUPFM_REC.SRC_CDC_DATE !user inserted in program input  
+          WRITE(*,*) "NUMDAY (purge default 90 days): ", NUMDAY !constante do sistema que são 90 dias o default do purge days
+          WRITE(*,*) "Diff: ", SOUPFM_REC.SRC_CDC_DATE - NUMDAY  
+          WRITE(*,*) "Condition (Old): ",VALREC(VWCDC).GT.SOUPFM_REC.SRC_CDC_DATE - NUMDAY .OR.  NUMDAY .EQ. 0
+          WRITE(*,*) "Condition (New): ",.NOT.(GAME .EQ. 10 .AND. VALREC(VGIND) .EQ. 3) .AND. 
+     *     VALREC(VWCDC) .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY .OR. NUMDAY .EQ. 0
+        ENDIF
+
+C        IF(   VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY
+C     *  .OR.  NUMDAY          .EQ. 0) RETURN
+
+        IF( (GAME .NE. 10) .AND. (VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY
+     *  .OR.  NUMDAY          .EQ. 0) ) RETURN
+
+        WRITE(*,*) "...Passed the condition will write to soupfm file..."
 
         ! 6) only validations that do not have payment orders
         IF(   VALREC(VOPSCNT) .NE. 0) RETURN
