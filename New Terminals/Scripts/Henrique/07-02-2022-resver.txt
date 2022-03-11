@@ -1,0 +1,30 @@
+10:03:33 CONSOLE  Are the numbers entered correct (Y/N)  >y
+10:03:37 CONSOLE  Do Your Have Special Totoloto Jackpot Fund [Y/N] ? >n
+10:03:39 CONSOLE   Lotto   3 results entry complete
+10:03:39 CONSOLE  STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML> r resver
+10:04:31 CONSOLE  Copyright 2011 GTECH Corp. All rights reserved.
+10:04:31 CONSOLE   Sports  1  TOTOBOLA NORMAL Draw  1078
+
+10:04:31 CONSOLE  Enter row    1:        >1
+10:04:32 CONSOLE  Enter row    2:        >1
+10:04:33 CONSOLE  Enter row    3:        >1
+10:04:33 CONSOLE  Enter row    4:        >1
+10:04:33 CONSOLE  Enter row    5:        >1
+10:04:33 CONSOLE  Enter row    6:        >1
+10:04:34 CONSOLE  Enter row    7:        >1
+10:04:34 CONSOLE  Enter row    8:        >1
+10:04:34 CONSOLE  Enter row    9:        >1
+10:04:35 CONSOLE  Enter row   10:        >1
+10:04:35 CONSOLE  Enter row   11:        >1
+10:04:36 CONSOLE  Enter row   12:        >1
+10:04:36 CONSOLE  Enter row   13:        >1
+10:04:36 CONSOLE  Enter SUPER 14 row:    >1
+Sports  1 results entered 1 1 1 1 1 1 1 1 1 1 1 1 1
+SUPER 14 results entered 1
+10:04:37 CONSOLE  Are the results entered ok [Y/N]?  >y
+10:04:39 CONSOLE   Sports  1 results entry complete
+10:04:39 CONSOLE  STOP0001  ****  SUCCESS
+PODEV1::SCML>
+PODEV1::SCML>
