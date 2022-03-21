@@ -1,0 +1,84 @@
+x2gbl <-- snapshot do X2X Global Snapshot
+
+type MX_SERVER.FIL (retorna informação do porto que está ligado ESCONNECT)
+estando mais de um ambiente levantado e ligado ao mesmo porto retorna erro a indicar que o socket port já está em uso
+
+-----------------PODEV1---------------------------
+PODEV1::SCML> type MX_SERVER.FIL
+...
+[TNI_CONFIG]
+    LISTENING_PORT = 53380
+    LOCAL_DOMAIN_NAME = PODEV1-POS
+
+[CLUSTERED_APP]
+    APP_NAME = ESCONNECT
+    OLTP_UNSO_ROUTING = ALL_CLIENTS
+    AUTHENTICATION_REQUIRED = FALSE
+    REMOTE_DOMAIN_NAME = POESC7-POS
+
+PODEV1::TEST> type MX_SERVER.FIL
+...
+[TNI_CONFIG]
+    LISTENING_PORT = 55666
+    LOCAL_DOMAIN_NAME = PODEV1-POS
+
+[CLUSTERED_APP]
+    APP_NAME = ESCONNECT
+    OLTP_UNSO_ROUTING = ALL_CLIENTS
+    AUTHENTICATION_REQUIRED = FALSE
+    REMOTE_DOMAIN_NAME = POESC6-POS
+
+-----------------------POSYSD---------------------------
+
+POSYSD::SCML> type MX_SERVER.FIL
+...
+[TNI_CONFIG]
+   LISTENING_PORT = 51780 <---- same port used as DPLX environment
+   LOCAL_DOMAIN_NAME = POSYSD-POS
+   LOCAL_DOMAIN_NAME = POSYSD
+
+[CLUSTERED_APP]
+    APP_NAME = ESCONNECT
+    OLTP_UNSO_ROUTING = ALL_CLIENTS
+    AUTHENTICATION_REQUIRED = FALSE
+    REMOTE_DOMAIN_NAME = POESC4-POS
+    REMOTE_DOMAIN_NAME = POESC4
+
+POSYSD::TEST> type MX_SERVER.FIL
+...
+
+[TNI_CONFIG]
+    LISTENING_PORT = 55555
+    LOCAL_DOMAIN_NAME = POSYSD-POS
+
+[CLUSTERED_APP]
+    APP_NAME = ESCONNECT
+    OLTP_UNSO_ROUTING = ALL_CLIENTS
+    AUTHENTICATION_REQUIRED = FALSE
+    REMOTE_DOMAIN_NAME = POESC5-POS
+
+POSYSD::DPLX> type MX_SERVER.FIL
+...
+[TNI_CONFIG]
+    LISTENING_PORT = 51780 <---- same port used as SCML environment
+    LOCAL_DOMAIN_NAME = POSYSD-POS
+    LOCAL_DOMAIN_NAME = POSYSD
+
+[CLUSTERED_APP]
+    APP_NAME = ESCONNECT
+    OLTP_UNSO_ROUTING = ALL_CLIENTS
+    AUTHENTICATION_REQUIRED = FALSE
+    REMOTE_DOMAIN_NAME = POESC4-POS
+    REMOTE_DOMAIN_NAME = POESC4
+
+o uso de dois ambientes para o mesmo ESCONNECT origina que o ultimo a connectar a retornar erro de socket por already in use e originar erro 
+ao tentar estabelecer a ligação LAN.    
+
+
+Exitem no total só 7 ESCONNECT's ou seja POESC1,POESC2 e POESC3 que estão reservados para produção e
+POESC4,POESC5,POESC6 e POESC7 para ambientes de desenvolvimento.
+
+Pergunta é possivel replicar um destes e criar um POESC8??
+
+
+
