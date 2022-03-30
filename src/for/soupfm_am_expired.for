@@ -4,6 +4,8 @@ C
 C This program will manage the generation of the SOUP files
 C for expired prizes of Apostas Mutuas (AM) 
 C
+C V02 23-MAR-2022 SCML Bug fix for SPORTS (GAME NUM=10) not generating reports with the 
+C                      data of prizes purged (uncashed) - ticket(P220125_0011)  
 C V01 20-DEC-2013 SCML Program creation
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -223,10 +225,10 @@ C       SOUPFM_REC.SRC_CDC_DATE
      *     VALREC(VWCDC) .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY .OR. NUMDAY .EQ. 0
         ENDIF
 
-C        IF(   VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY
-C     *  .OR.  NUMDAY          .EQ. 0) RETURN
+C        IF(   VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY  !V02
+C     *  .OR.  NUMDAY          .EQ. 0) RETURN                         !V02
 
-        IF( (GAME .NE. 10) .AND. (VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY
+        IF( (GAME .NE. 10) .AND. (VALREC(VWCDC) .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY
      *  .OR.  NUMDAY          .EQ. 0) ) RETURN
 
         WRITE(*,*) "...Passed the condition will write to soupfm file..."
