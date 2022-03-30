@@ -1,6 +1,9 @@
 C
 C SUBROUTINE WIMG
 C $Log:   GXAFXT:[GOLS]WIMG.FOV  $
+C
+C V02 11-FEB-22 SCML Wrapper for command procedure invocation use unit=6
+C                    instead of unit=5 that is for READ/SYS$INPUT purposes
 C  
 C     Rev 1.0   17 Apr 1996 15:59:44   HXK
 C  Release of Finland for X.25, Telephone Betting, Instant Pass Thru Phase 1
@@ -37,16 +40,28 @@ C Copyright 1991 GTECH Corporation. All rights reserved.
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C=======OPTIONS /CHECK=NOOVERFLOW
-	SUBROUTINE WIMG(LUN, STRING)
-	IMPLICIT NONE
+        SUBROUTINE WIMG(LUN, STRING)
+        IMPLICIT NONE
         INCLUDE 'INCLIB:SYSEXTRN.DEF'
+C        INCLUDE '(LIB$ROUTINES)'
+
 C
-	INTEGER*4   LUN
-	CHARACTER   STRING*(*)
+        INTEGER*4   LUN
+        CHARACTER   STRING*(*)
+C Validate if symbol flag exists if it does then
+C subroutine is being called from script scope wrapper that invokes dynamicaly
+C a group of executables    
+C        INTEGER*4   SYMBOL_STATUS
+C        CHARACTER*10 SYMBOL_VALUE
+
+C        IF(LIB$GET_SYMBOL('script_origin',SYMBOL_VALUE)) THEN
+C          WRITE(6, 1000) IAM(),STRING
+C        ELSE
+          WRITE(LUN, 1001) IAM(),STRING
+C        ENDIF 
+
+C1000    FORMAT(' ',A,A,' >')        
+1001    FORMAT(' ',A,A,' >',$)
 C
-C
-	WRITE(LUN, 1001) IAM(),STRING
-1001	FORMAT(' ',A,A,' >',$)
-C
-	RETURN
-	END
+        RETURN
+        END
