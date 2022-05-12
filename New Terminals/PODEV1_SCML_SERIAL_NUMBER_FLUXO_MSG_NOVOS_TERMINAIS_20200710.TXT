@@ -1,0 +1,153 @@
+
+  CDC = Continuous Day Count
+  
+  A data CDC começou a contar a partir do dia 01-05-2001. A esta data corresponde a data CDC = 1
+  
+  Por exemplo, hoje, dia 10-07-2020, corresponde a data CDC 7011, ou seja, passaram 7.011 dias desde que o sistema ficou online.
+
+ 1. Pedido de Registo de Aposta
+    
+    É criada uma transação do tipo "Aposta" e é registada no ficheiro mestre de transações do Millennium, ou seja, no ficheiro MTMF01.FIL,
+    que se localiza na diretoria dada pela variável lógica "PRIM" (variável lógica = alias). Para mostrar o valor do alias "PRIM", executar
+    o comando SHOW LOGICAL PRIM, que pode ser abreviado para SH LOG PRIM.
+    
+    A esta transação, do tipo "Aposta", é-lhe atribuída um número de série INTERNO (= chave), diferente do da transação anterior.
+     
+    NOTA: quando é gerado um relatório tmir, o programa com o mesmo nome, tmir.exe, pode apresentar o número de série externo
+          no relatório, se assim for pedido.
+     
+ 2. Pedido de Anulação de Aposta (Anulação = Cancelamento, o termo correto a usar é Anulação, é o termo do Negócio, mas a
+    maioria das vezes continuamos a usar o termo Cancelamento)
+ 
+    É criada uma transação do tipo "Anulação" e é registada no ficheiro PRIM:MTMF01.FIL.
+    A esta transação é-lhe atribuída um número de série interno (número de série = chave), diferente do da transação anterior.
+    É registada na transação também o número de série (INTERNO ou EXTERNO) da aposta que foi ANULADA.
+     
+    A ANULAÇÃO da aposta NÃO cria apenas a transação do tipo "Anulação". A transação de aposta que é anulada é TAMBÉM 
+    atualizada neste processo:
+     
+      1. O ESTADO DA TRANSAÇÃO de aposta é atualizado para VOID, que significa, aposta anulada.
+      2. O número de série (INTERNO ou EXTERNO) da transação de anulação é guardado na transação de aposta.
+     
+ 3. Pedido de Validação de Prémio (Validação = Inquiry)
+    
+    É criada uma transação do tipo "Validação" e é registada no ficheiro PRIM:MTMF01.FIL.
+    A esta transação é-lhe atribuída um número de série interno (diferente do da transação anterior).
+    É registada na transação também o número de série da aposta (INTERNO ou EXTERNO) que foi validada.
+
+ 5. Pedido de Pagamento de Prémio
+ 
+    É criada uma transação do tipo "Pagamento de prémio"
+    A esta transação é-lhe atribuída um número de série interno, diferente do da transação anterior.
+    É registada na transação também o número de série da aposta (INTERNO ou EXTERNO) cujo prémio foi pago.
+    
+    Não é possível ao terminal que faça o pedido de pagamento de prémio sem imediatamente antes ter sido feito o pedido de validação. Apenas as apostas
+    premiadas é que são alvo de pedidos de pagamento de prémio.
+     
+----  NOVO TERMINAL ----
+
+ 1. Pedido de Registo de Aposta (ex: Aposta de Totoloto)
+    
+    1.0 INÍCIO.
+    1.1 TERMINAL faz um PEDIDO (REST/JSON) de REGISTO APOSTA para o sistema de integração Mulesoft (MS)
+    1.2 MS faz pedido ao HERA (componente do sistema Olimpo) para VERIFICAR se o sistema (Olimpo) PERMITE o processamento do pedido (de registo de aposta)
+    1.3 HERA cria e regista a transação na sua Base de Dados (HERA) e atribui-lhe um número de série (EXTERNO).
+        Esta transação ficará no estado "Pendente", à espera de ser concluída/terminada mais tarde
+    1.4 HERA responde (REST/JSON) à MS, "dizendo" que é possível avançar com o processo de registo de aposta
+    1.5 MS faz, então, um PEDIDO (REST/JSON) ao HADES (novo subsistema do Olimpo) de REGISTO DE APOSTA
+    1.6 O HADES transforma o pedido REST/JSON numa mensagem de ARRAY DE BYTES e coloca-a no servidor MessageQ, na QUEUE do Millennium
+    1.7 O Millennium (MIL) vai buscar ao servidor BEA MessageQ a mensagem que está na sua QUEUE (FIFO) 
+    1.8 O MIL verifica de que mensagem se trata: é um pedido de registo de aposta de Totoloto
+    1.9 O programa do MIL responsável por processar esta mensagem chama-se WAGPRO.
+    1.10 É criada uma transação de aposta e registada no ficheiro PRIM:MTMF01.FIL
+    1.11 O MIL coloca a mensagem de resposta, ARRAY DE BYTES, no servidor MessageQ, na QUEUE do HADES
+    1.12 O HADES vai buscar ao servidor BEA MessageQ a mensagem que está na sua QUEUE (FIFO)
+    1.13 O HADES regista a aposta na sua Base de Dados (HADES)
+    1.14 O HADES TERMINA a transação que havia sido iniciada pelo HERA no ponto 1.3
+    1.15 O HADES tranforma o ARRAY de BYTES em REST/JSON e responde à MS
+    1.16 A MS RESPONDE ao terminal com a resposta REST/JSON ao pedido que o terminal fez
+    1.17 FIM.
+
+
+                FLUXO MENSAGENS NOVO TERMINAL
+               TOTOLOTO (MIL) + TOTOBOLA (MIL)
+
+  TER        MS       HERA     HADES       MESSAGEQ       MIL  Jogos (do sistema Millennium)
+   |    1    |         |         |            |            |     Totobola (Normal e Extra)
+   |-------->|    2    |         |            |            |     Tototolo (Quarta e Sábado)
+   |         |-------->|         |            |            |   Tipos de Transação (do sistema Millennium)
+   |         |    3    |         |            |            |     Sign-on e Sign-off (do terminal)
+   |         |<--------|         |            |            |     Aposta
+   |         |         |    4    |            |Q1          |     Anulação (de aposta)
+   |         |------------------>|   PUTQ    - -    GETQ   |     Validação de Prémios
+   |         |         |         |--------->|||||<---------|     Pagamento de Prémios
+   |         |         |         |     5     - -     6     | (a) Relatório Financeiro  (Hoje, Dom., Seg., Ter., Qua., Qui., Sex., Sáb., Semanal (de Dom. a Hoje)
+   |         |         |         |            |            |       Resumo de Caixa
+   |         |         |         |   GETQ    - -    PUTQ   |       Vendas
+   |         |         |         |--------->|||||<---------|       Pagamento de Prémios
+   |         |<------------------|     8     - -     7     |       Remunerações
+   |<--------|    9    |         |            |Q2          | (b) Chaves e Resultados (do Totoloto) (*)
+   |   10    |         |         |            |            | (c)   Reimpressão (**)
+   |         |         |         |            |            |       Última Transação
+   |         |         |         |            |            |       Última Aposta
+   |         |         |         |            |            |       Último Pagamento de Prémio
+                                                                   Último Pedido de Encomenda de Maços LI
+
+(a) O sistema de jogo Millennium disponibiliza também informaçao financeira do sistema IPS, nomeadamente informação relativa
+    ao pagamento de prémios do jogo LI. Esta informação é consultável nos relatórios Resumo de Caixa e Pagamento de Prémios
+    do terminal. Esta informação poderia vir do próprio sistema IPS, mas não. O Millennium GUARDA esta informação financeira no seu
+    sistema de ficheiros, no ficheiro ASF.FIL.
+
+(b) Desde o projeto ROJ (Redefinição da Oferta de Jogo) que as Chaves e Resultados do jogo Totobola (Normal e Extra)
+    dos terminais ATUAIS deixaram de ser obtidos do sistema Millennium, passando a ser obtidos do Portal JSC. Os NOVOS terminais
+    terão de obter esta informação do Portal JSC via MS.
+
+(c) Quando o mediador no seu terminal solicita a reimpressão da última transação, o sistema de jogo responde
+    com a última transação registada com sucesso. A última transação poderá ser do tipo Aposta, Pagamento de Prémio
+    e Pedido de Encomenda.
+
+                FLUXO MENSAGENS NOVO TERMINAL
+                  LOTARIA INSTANTÂNEA (IPS)
+
+  TER        MS       HERA     HADES       MESSAGEQ       MIL       IPS Jogo
+   |    1    |         |         |            |            |         |   Lotaria Instantânea (LI)
+   |-------->|    2    |         |            |            |         |
+   |         |-------->|         |            |            |         |  Tipos de Transação (do sistema IPS)
+   |         |    3    |         |            |            |         |   Carregamento dos jogos de LI
+   |         |<--------|         |            |            |         |   Pedido de Encomenda de Maços de LI
+   |         |         |    4    |            |Q1          |         |   Confirmação da Receção da Encomenda de Maços de LI
+   |         |------------------>|   PUTQ    - -    GETQ   |         |   Ativação da Encomenda de Maços de LI
+   |         |         |         |--------->|||||<---------|    7    |   Ativação de Maço LI (contingência)
+   |         |         |         |     5     - -     6     |-------->|   Ativação de Caixa de Maços LI
+   |         |         |         |            |            |         |   Validação de Prémios de LI
+   |         |         |         |   GETQ    - -    PUTQ   |<--------|   Pagamento de Prémios de LI
+   |         |         |         |--------->|||||<---------|    8    |   Relatório da Situação de Maços LI Terminal
+   |         |<------------------|    10     - -     9     |         |   Relatório da Situação de Maços LI Estabelecimento
+   |<--------|    11   |         |            |Q2          |         |
+   |   12    |         |         |            |            |         |
+   |         |         |         |            |            |         |
+   |         |         |         |            |            |         |
+   |         |         |         |            |            |         |
+
+GLOSSÁRIO
+---------
+ABP......: Advanced Betting Platform, é o sistema de jogo de apostas desportivas PLACARD.
+DJSCML...: Departamento de Jogos da Santa Casa da Misericórda de Lisboa.
+ENCOMENDA: É um conjunto de maços de LI.
+HADES....: Novo subsistema da plataforma Olimpo (servidor aplicacional + base de dados + servidor MessageQ).
+HERA.....: Subsistema da plataforma Olimpo (servidor aplicacional + base de dados).
+IGS......: Integration Gateway Server, é um servidor de integração, que surgiu para fazer a "ponte" entre o sistema Millennium e o sistema ABP.
+           O Millennium só conhece bytes e o ABP JSON/REST. O IGS foi criado para fazer a integração do Millennium com outros sistemas que não
+           comuniquem através de mensagens com uma estrutura legacy. Até há algum tempo, os terminais só comunicavam com o Millennium, tudo passava
+           pelo Millennium, mas desde então os terminais passaram a comunicar com o IGS e agora mais recentemente com a MS.
+IPS......: Instant Processing System, é o sistema do jogo da Lotaria Instantânea (LI).
+LGS......: Lottery Gaming System, é um sistema multi-jogo, dos jogos de apostas mútuas Euromilhões, M1lhão e Chuva de Milionários.
+LI.......: Lotaria Instantânea, jogo conhecido comercialmente pelo nome "Raspadinha".
+MAÇO.....: Unidade mínima de aquisição do jogo LI por parte do mediador. Um maço é um conjunto de bilhetes da "Raspadinha".
+MESSAGEQ.: Servidor MessageQ é um sistema para troca de mensagens entre sistemas usando a tecnologia de filas de mensagens.
+MIL......: Millennium, é um sistema multi-jogo, dos jogos de apostas mútuas Totoloto e Totobola (à data de hoje é também o sistema pass-thru
+           das mensagens com destino os sistemas IPS, LGS e IGS. Os NOVOS terminais NÃO irão comunicar com os sistemas LGS e IGS através
+           do Millennium, a MS irá comunicar diretamente com estes sistemas via pedidos REST/JSON.
+MS.......: Sistema de Integração Mulesoft.
+OLIMPO...: Novo sistema multi-jogo do DJSCML que visa ser a plataforma agregadora, centralizadora do futuro.
+TER......: Novo terminal do mediador.
