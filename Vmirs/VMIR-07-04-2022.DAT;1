@@ -1,0 +1,512 @@
+     VMIR.10                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                11:13:39 PAGE     1
+ 07.04.2022                                V A L I D A T I O N   F I L E   R E P O R T                          07.04.2022 CDC 7647
+                                                                                                                           SYS    B
+====================================================================================================================================
+
+
+
+R E P O R T    B A S E D   O N   F O L L O W I N G   P A R A M E T E R S
+
+
+
+    TERMINAL NUMBER ------>  ALL 
+    AGENT NUMBER --------->          
+    STATUS --------------->  UNCASHED 
+    GAME ----------------->  ALL            
+    DRAW ----------------->  ALL 
+    SELLING CDC ---------->  7645
+    CASHING CDC ---------->      
+    CASHING TERMINAL ----->     0     VMIR.10                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                11:13:40 PAGE     1
+ 07.04.2022                                V A L I D A T I O N   F I L E   R E P O R T                          07.04.2022 CDC 7647
+                                                                                                                           SYS    B
+
+SCDC      SSER  STER       EXT.SERIAL   GAME CCDC STAT  DRAW#  CTER         PRIZE   NET PRIZE OP     KIK PRIZE  KNET PRIZE PRGCDC
+=================================================================================================================================
+
+7645  32000440  4547 095-11276340-213  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000444  4547 095-14684216-041  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000468  4547 095-08917072-225  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000470  4547 095-15339602-075  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000472  4547 095-13373524-053  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000484  4547 095-09965632-177  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000486  4547 095-16388162-027  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000494  4547 095-15863882-051  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000515  4547 095-16191615-178  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000553  4547 095-15536261-097  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000555  4547 095-09375879-075  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000569  4547 095-14487733-145  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32000922   967 095-09179668-145  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000924  3576 095-10621466-199  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000926   760 095-12587544-237  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000928   709 095-15077918-019  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000932   866 095-12194306-191  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000936  2620 095-16650758-107  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000940   441 095-11670026-151  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000944  3721 095-16126478-067  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+     VMIR.10                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                11:13:40 PAGE     2
+ 07.04.2022                                V A L I D A T I O N   F I L E   R E P O R T                          07.04.2022 CDC 7647
+                                                                                                                           SYS    B
+
+SCDC      SSER  STER       EXT.SERIAL   GAME CCDC STAT  DRAW#  CTER         PRIZE   NET PRIZE OP     KIK PRIZE  KNET PRIZE PRGCDC
+=================================================================================================================================
+
+7645  32000948  4355 095-09048626-079  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000952  1499 095-13505078-155  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000956  3363 095-08524346-103  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000960  1595 095-12980798-179  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000962  1148 095-10752572-025  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000966  3591 095-16257568-053  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000970   437 095-12325412-097  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000974   908 095-15733288-029  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000980  3584 095-15340114-175  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32000986  1869 095-13374036-209  7LOTQ    0 PPAY    578     0       8001.00     7401.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VKIK: 0                                                              
+
+7645  32001027   967 095-09769597-252  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001029  3576 095-11211363-250  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001031   760 095-13177441-080  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001033   709 095-15667815-174  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001037   866 095-10687083-210  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001041  2620 095-15143535-134  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001045   441 095-14357139-171  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001049  3721 095-10424983-127  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001053  4355 095-13832859-131  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     VMIR.10                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                11:13:40 PAGE     3
+ 07.04.2022                                V A L I D A T I O N   F I L E   R E P O R T                          07.04.2022 CDC 7647
+                                                                                                                           SYS    B
+
+SCDC      SSER  STER       EXT.SERIAL   GAME CCDC STAT  DRAW#  CTER         PRIZE   NET PRIZE OP     KIK PRIZE  KNET PRIZE PRGCDC
+=================================================================================================================================
+
+7645  32001057  1499 095-09900703-087  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001061  3363 095-13308547-251  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001063  1595 095-11080321-209  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001067  1148 095-15536773-133  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001071  3591 095-10556041-249  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001075   437 095-15012493-173  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001079   908 095-10031793-033  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001085  3584 095-15930043-035  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001091  1869 095-13963965-093  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001097   903 095-11473575-143  7LOTQ    0 UCSH    578     0       4000.00     4000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   2  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001140   967 095-13243122-238  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001142  3576 095-11014896-068  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001144   760 095-09310966-186  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001146   709 095-15471348-144  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001150   866 095-10490616-108  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001154  2620 095-14947068-184  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001158   441 095-12063456-020  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001162  3721 095-16519908-192  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001166  4355 095-11539176-060  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001170  1499 095-15995628-232  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001174  3363 095-12129041-162  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001178  1595 095-16585493-118  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001182  1148 095-11604761-138  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001186  3591 095-16061213-094  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     VMIR.10                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                11:13:40 PAGE     4
+ 07.04.2022                                V A L I D A T I O N   F I L E   R E P O R T                          07.04.2022 CDC 7647
+                                                                                                                           SYS    B
+
+SCDC      SSER  STER       EXT.SERIAL   GAME CCDC STAT  DRAW#  CTER         PRIZE   NET PRIZE OP     KIK PRIZE  KNET PRIZE PRGCDC
+=================================================================================================================================
+
+7645  32001190   437 095-11080449-242  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001194   908 095-15536901-038  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001200  3584 095-08852239-164  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001206  1869 095-10031921-002  7LOTQ    0 UCSH    578     0       1000.00     1000.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001248   967 095-14095199-180  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001250  3576 095-11866973-030  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001251   760 095-12850012-059  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001255   709 095-09966400-023  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001259   866 095-14422852-067  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001263  2620 095-09442120-063  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001267   441 095-13898572-107  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001271  3721 095-11015024-231  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001275  4355 095-15471476-179  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001279  1499 095-10490744-207  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001283  3363 095-14947196-155  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001287  1595 095-12063584-183  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001291  1148 095-16520036-227  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001295  3591 095-11539304-159  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001299   437 095-15995756-203  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001303   908 095-13112208-230  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001309  3584 095-10621850-228  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001315  1869 095-08655772-026  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001321   903 095-16651142-200  7LOTQ    0 UCSH    578     0        500.00      500.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   4  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001361   967 095-14029742-064  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     VMIR.10                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                11:13:40 PAGE     5
+ 07.04.2022                                V A L I D A T I O N   F I L E   R E P O R T                          07.04.2022 CDC 7647
+                                                                                                                           SYS    B
+
+SCDC      SSER  STER       EXT.SERIAL   GAME CCDC STAT  DRAW#  CTER         PRIZE   NET PRIZE OP     KIK PRIZE  KNET PRIZE PRGCDC
+=================================================================================================================================
+
+7645  32001363  3576 095-11801516-234  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001365   760 095-15340498-140  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001369   709 095-11408342-216  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001373   866 095-14816218-164  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001376  2620 095-14095327-085  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001380   441 095-09114563-249  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001384  3721 095-13571015-045  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001388  4355 095-08590283-209  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001392  1499 095-13046735-005  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001396  3363 095-12260339-009  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001400  1595 095-16716791-221  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001402  1148 095-10294261-247  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001406  3591 095-13702137-139  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001412   437 095-11211747-089  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001418   908 095-09245669-167  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001424  3584 095-15143919-165  7LOTQ    0 UCSH    578     0        100.00      100.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   5  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001464   967 095-15209520-201  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001466  3576 095-09049138-227  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001468   760 095-10753084-053  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001472   709 095-14685240-225  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001476   866 095-12325924-077  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001480  2620 095-16258080-153  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001484   441 095-11801644-101  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001488  3721 095-15733800-177  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     VMIR.10                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                11:13:40 PAGE     6
+ 07.04.2022                                V A L I D A T I O N   F I L E   R E P O R T                          07.04.2022 CDC 7647
+                                                                                                                           SYS    B
+
+SCDC      SSER  STER       EXT.SERIAL   GAME CCDC STAT  DRAW#  CTER         PRIZE   NET PRIZE OP     KIK PRIZE  KNET PRIZE PRGCDC
+=================================================================================================================================
+
+7645  32001492  4355 095-13374548-253  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001496  1499 095-08918096-041  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001500  3363 095-12850268-213  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001503  1595 095-14095455-218  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001507  1148 095-09639003-014  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001511  3591 095-13571143-162  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001515   437 095-09114691-118  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001519   908 095-13046863-138  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001523  3584 095-08590411-094  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001527  1869 095-16716919-082  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32001531   903 095-12260467-134  7LOTQ    0 UCSH    578     0          1.00        1.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+
+7645  32005060  3576 095-09044530-047  7LOTQ    0 PPAY    578     0      13006.00    12406.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      5 VKIK: 0                                                              
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      6 VKIK: 0                                                              
+
+7645  32005988  3576 095-12387797-155  7LOTQ    0 PPAY    578     0      13006.00    12406.00  N          0.00        0.00      0
+     DRAW:    578  DIVISION:   1  NUMBER OF SHARES:      1 VEXP: 578 VKEXP:   0 VKIK: 0                                         
+     DRAW:    578  DIVISION:   3  NUMBER OF SHARES:      5 VKIK: 0                                                              
+     DRAW:    578  DIVISION:   6  NUMBER OF SHARES:      6 VKIK: 0                                                              
+     VMIR.10                  S A N T A  C A S A  D A  M I S E R I C O R D I A  D E  L I S B O A                11:13:40 PAGE     2
+ 07.04.2022                                V A L I D A T I O N   F I L E   R E P O R T                          07.04.2022 CDC 7647
+                                                                                                                           SYS    B
+====================================================================================================================================
+
+
+
+              STATUS          N. REGISTERS          TOTAL AMOUNT      TOTAL NET AMOUNT
+              ------------------------------------------------------------------------
+   Total       NWIN                     0                  0.00                  0.00
+   Total       UCSH                   103             105230.00             105230.00
+   Total       CASH                     0                  0.00                  0.00
+   Total       CSHX                     0                  0.00                  0.00
+   Total       VDEL                     0                  0.00                  0.00
+   Total       VCAN                     0                  0.00                  0.00
+   Total       HOLD                     0                  0.00                  0.00
+   Total       NOPY                     0                  0.00                  0.00
+   Total       NOPZ                     0                  0.00                  0.00
+   Total       POST                     0                  0.00                  0.00
+   Total       CLAM                     0                  0.00                  0.00
+   Total       CLMX                     0                  0.00                  0.00
+   Total       PPAY                    21             178031.00             165431.00
+   Total       NPPP                     0                  0.00                  0.00
+   Total       PPPO                     0                  0.00                  0.00
+   Total       BANK                     0                  0.00                  0.00
+
+   Total                              124             283261.00             270661.00
+
+
+OPS AMT TOTAL:                  0.00
+KIK OPS TOTAL:                  0.00
+
+
+
+                                              TOTAL NUMBER OF SHARES BY DIVISION BY STATUS
+
+           NWIN   UCSH   CASH   CSHX   VDEL   VCAN   HOLD   NOPY   NOPZ   POST   CLAM   CLMX   PPAY   NPPP   PPPO   BANK   TOTS
+        -----------------------------------------------------------------------------------------------------------------------
+DIV:  1       0      0      0      0      0      0      0      0      0      0      0      0     21      0      0      0     21
+DIV:  2       0     19      0      0      0      0      0      0      0      0      0      0      0      0      0      0     19
+DIV:  3       0     18      0      0      0      0      0      0      0      0      0      0     10      0      0      0     28
+DIV:  4       0     19      0      0      0      0      0      0      0      0      0      0      0      0      0      0     19
+DIV:  5       0     17      0      0      0      0      0      0      0      0      0      0      0      0      0      0     17
+DIV:  6       0     30      0      0      0      0      0      0      0      0      0      0     31      0      0      0     61
+DIV:  7       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV:  8       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV:  9       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 10       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 11       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 12       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 13       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 14       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 15       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 16       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 17       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 18       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 19       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 20       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 21       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 22       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 23       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 24       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+DIV: 25       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
