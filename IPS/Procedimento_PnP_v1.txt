@@ -1,0 +1,256 @@
+1. Ligar o Webips ao IPS
+
+ 1. Entrar na máquina povisg5 (10.100.82.212) por RDP (Ligação ao ambiente de trabalho remoto)
+ 
+    User....: posuperuser
+	Password: @Lisb0a11
+
+ 2. No Desktop executar o atalho "port_sqa" para arrancar com o programa servidor que comunica com o IPS
+ 
+    Surge uma janela do DOS, onde é mostrado o log da aplicação:
+	
+    openserver = ips_dmq_server_port_sqa.exe
+    app_environment= port_sqa
+    IPS DMQ Server, Copyright 2001-2013, GTECH Corporation. Version: 2.00.04
+    C:\PORT_SQA\bin\ips_dmq_server_port_sqa.log
+    dmq.ini is C:\PORT_SQA\bin\dmq.ini
+    The calling program is C:\PORT_SQA\bin\ips_dmq_server_port_sqa.exe
+    Courier app path: c:\port_sqa\Courier\Out1
+    Courier app tmp path: c:\port_sqa\Courier\Tmp1
+    Courier app path: c:\port_sqa\Courier\Out2
+    Courier app tmp path: c:\port_sqa\Courier\Tmp2
+    Courier app path: c:\port_sqa\Courier\Out3
+    Courier app tmp path: c:\port_sqa\Courier\Tmp3
+    Courier app path: c:\port_sqa\Courier\Out4
+    Courier app tmp path: c:\port_sqa\Courier\Tmp4
+    Courier app path: c:\port_sqa\Courier\Out5
+    Courier app tmp path: c:\port_sqa\Courier\Tmp5
+    Courier app path: c:\port_sqa\Courier\Out6
+    Courier app tmp path: c:\port_sqa\Courier\Tmp6
+    Panther application no. 1: port_sqa
+    Panther application no. 2: port_sqa_en
+    Panther application no. 3: port_sqa_pt
+    Start PickPackWebCmd = C:\PORT_SQA\bin\tomcatcmd http://localhost:8082/manager/s
+    tart?path=/port_sqa
+    Start PickPackWebCmd = C:\PORT_SQA\bin\tomcatcmd http://localhost:8082/manager/s
+    tart?path=/port_sqa_en
+    Start PickPackWebCmd = C:\PORT_SQA\bin\tomcatcmd http://localhost:8082/manager/s
+    tart?path=/port_sqa_pt
+    Stop PickPackWebCmd = C:\PORT_SQA\bin\tomcatcmd http://localhost:8082/manager/st
+    op?path=/port_sqa
+    Stop PickPackWebCmd = C:\PORT_SQA\bin\tomcatcmd http://localhost:8082/manager/st
+    op?path=/port_sqa_en
+    Stop PickPackWebCmd = C:\PORT_SQA\bin\tomcatcmd http://localhost:8082/manager/st
+    op?path=/port_sqa_pt
+    STOP SERVICE
+    12:43:10 - Service port_sqa is STOPPED
+    12:43:10 - Service port_sqa_en is STOPPED
+    12:43:11 - Service port_sqa_pt is STOPPED
+    12:43:11 - Number of DMQ Hosts are: 1
+    12:43:11 - Current Default Host is: podev1
+    12:43:11 - Current Endpoint is: 5640
+    12:43:11 - Host1 is: podev1
+    12:43:11 - EndPoint1 is: 5640
+    12:43:11 - Env1 is: port_sqa
+    12:43:11 - OSV: Starting PFM thread
+    12:43:11 - Client connections allowed = 60
+    12:43:11 - PFM: Attached to DMQ  ENDPOINT: 5640  HOST: podev1
+    12:43:11 - PFM: Attempting to get PFM table HOST: podev1
+    12:43:11 - PFM: Host=podev1;5640;port_sqa Primary=1 Up=1
+    START SERVICE
+    12:43:13 - Client Connected PID:8908;ThrID:8200;User:
+    in fake ips_dmq_server lang return for jdbc
+    in fake stored procedure sp_datatype_info
+    12:43:13 - Client Connected PID:8908;ThrID:8200;User:;App:Panther (R)
+    in fake ips_dmq_server lang return for jdbc
+    12:43:13 - DMQ: client with ThrID:8200 attaching to queue
+    12:43:13 - DMQ: Client with ThrID:8200 attached to queue ID:41943262
+    12:43:13 - OSV: Client Procedure Request: ips_svm_control
+    12:43:13 - # 1 - svm_control_last_bil :  20201205
+    12:43:13 - OSV: Client Procedure Request: ips_svm_control
+    12:43:13 - # 1 - svm_control_country_ :  EUR
+    12:43:13 - # 2 - svm_control_run_date :  20210212
+    12:43:13 - # 3 - svm_control_run_day  :  6
+    12:43:13 - # 4 - svm_control_run_day_ :  Friday
+    12:43:13 - # 5 - svm_control_run_date :  2021-02-12
+    12:43:13 - # 6 - svm_control_prev_run :  20210211
+    12:43:13 - # 7 - svm_control_next_run :  20210213
+    12:43:13 - # 8 - svm_control_curr_wee :  20210213
+    12:43:13 - OSV: Client Procedure Request: ips_gethostinfo
+    12:43:13 - # 1 - hostName             :  podev1
+    12:43:13 - # 2 - dmqGroup             :  640
+    12:43:13 - # 3 - env                  :  port_sqa
+    12:43:13 - # 4 - day_status           : 1
+    12:43:15 - Start port_sqa Service
+    12:43:15 - Client Connected PID:1736;ThrID:8200;User:
+    in fake ips_dmq_server lang return for jdbc
+    in fake stored procedure sp_datatype_info
+    12:43:15 - Client Connected PID:1736;ThrID:8200;User:;App:Panther (R)
+    in fake ips_dmq_server lang return for jdbc
+    12:43:15 - OSV: Client Procedure Request: ips_svm_control
+    12:43:15 - # 1 - svm_control_last_bil :  20201205
+    12:43:15 - OSV: Client Procedure Request: ips_svm_control
+    12:43:15 - # 1 - svm_control_country_ :  EUR
+    12:43:15 - # 2 - svm_control_run_date :  20210212
+    12:43:15 - # 3 - svm_control_run_day  :  6
+    12:43:15 - # 4 - svm_control_run_day_ :  Friday
+    12:43:15 - # 5 - svm_control_run_date :  2021-02-12
+    12:43:15 - # 6 - svm_control_prev_run :  20210211
+    12:43:15 - # 7 - svm_control_next_run :  20210213
+    12:43:15 - # 8 - svm_control_curr_wee :  20210213
+    12:43:15 - OSV: Client Procedure Request: ips_gethostinfo
+    12:43:15 - # 1 - hostName             :  podev1
+    12:43:15 - # 2 - dmqGroup             :  640
+    12:43:15 - # 3 - env                  :  port_sqa
+    12:43:15 - # 4 - day_status           : 1
+    12:43:19 - Start port_sqa_en Service
+    12:43:19 - Client Connected PID:8172;ThrID:8200;User:
+    in fake ips_dmq_server lang return for jdbc
+    in fake stored procedure sp_datatype_info
+    12:43:19 - Client Connected PID:8172;ThrID:8200;User:;App:Panther (R)
+    in fake ips_dmq_server lang return for jdbc
+    12:43:19 - OSV: Client Procedure Request: ips_svm_control
+    12:43:19 - # 1 - svm_control_last_bil :  20201205
+    12:43:19 - OSV: Client Procedure Request: ips_svm_control
+    12:43:19 - # 1 - svm_control_country_ :  EUR
+    12:43:19 - # 2 - svm_control_run_date :  20210212
+    12:43:19 - # 3 - svm_control_run_day  :  6
+    12:43:19 - # 4 - svm_control_run_day_ :  Friday
+    12:43:19 - # 5 - svm_control_run_date :  2021-02-12
+    12:43:19 - # 6 - svm_control_prev_run :  20210211
+    12:43:19 - # 7 - svm_control_next_run :  20210213
+    12:43:19 - # 8 - svm_control_curr_wee :  20210213
+    12:43:19 - OSV: Client Procedure Request: ips_gethostinfo
+    12:43:19 - # 1 - hostName             :  podev1
+    12:43:19 - # 2 - dmqGroup             :  640
+    12:43:19 - # 3 - env                  :  port_sqa
+    12:43:19 - # 4 - day_status           : 1
+    12:43:23 - Start port_sqa_pt Service
+    START TOMCAT SERVICE
+    OK - Stopped application at context path /port_sqa
+    
+    Process returned 0
+    12:43:23 - Client Connected PID:2088;ThrID:8200;User:;App:Commons Daemon Service
+     Runner
+    in fake ips_dmq_server lang return for jdbc
+    in fake stored procedure sp_datatype_info
+    12:43:23 - Client Connected PID:2088;ThrID:8200;User:;App:Commons Daemon Service
+     Runner
+    in fake ips_dmq_server lang return for jdbc
+    in fake stored procedure sp_datatype_info
+    12:43:23 - Client Connected PID:2088;ThrID:8200;User:;App:Commons Daemon Service
+     Runner
+    in fake ips_dmq_server lang return for jdbc
+    in fake stored procedure sp_datatype_info
+    12:43:23 - Client Connected PID:2088;ThrID:8200;User:;App:Commons Daemon Service
+     Runner
+    in fake ips_dmq_server lang return for jdbc
+    in fake stored procedure sp_datatype_info
+    12:43:23 - Client Connected PID:2088;ThrID:8200;User:;App:Commons Daemon Service
+     Runner
+    in fake ips_dmq_server lang return for jdbc
+    in fake stored procedure sp_datatype_info
+    OK - Started application at context path /port_sqa
+    
+    Process returned 0
+    12:43:28 - PFM: Host=podev1;5640;port_sqa Primary=1 Up=1
+    12:43:40 - PFM: Host=podev1;5640;port_sqa Primary=1 Up=1
+    12:43:45 - PFM: Host=podev1;5640;port_sqa Primary=1 Up=1
+
+
+2. Acesso ao Webips
+ 
+ 1. Entrar na máquina 10.100.82.39 por RDP (Ligação ao ambiente de trabalho remoto)
+ 
+    User....: nqt
+	Password: U123456#
+
+ 2. No Desktop executar o atalho "WebIps_Evolution_SQA - PODEV1" para abrir a página de Login do Webips
+ 
+    User....: hcorte
+	Password: hcorte02
+	
+ 3. Identificar a encomenda a despachar (Pick&Pack = PnP) e os seus detalhes - Início da preparação para o Pick&Pack
+ 
+    Nota: depois de identicada a encomenda, ainda antes de fazer o Pick&Pack, é necessário ter uma lista dos números do maços 
+	      no estado "Available" para todos os jogos, na quantidade certa, definida no pedido (ponto 4.)
+	
+	1. Aceder à área "EXPEDIÇÃO" no menu horizontal na parte de baixo da página
+	   1. Aceder à área "ENCOMENDAS EM ESPERA"
+	      1. Introduzir o código do terminal na caixa de texto "Retailer" e depois clicar em "Retrieve"
+             
+			 Surge a lista das encomendas do terminal, ordenadas por ordem de criação
+			 
+			 1. Selecionar a encomenda que se quer fazer o Pick&Pack (PnP) e ver o seu detalhe (Nº de Jogos e Total de Maços/Jogo)
+			 		 
+ 4. Obter os números dos maços a associar à encomenda
+ 
+    1. Aceder à área "INVENTÁRIO" no menu horizontal na parte de baixo da página
+	
+	   1. Aceder à área RELATÓRIOS DO INVENTÁRIO para gerar um relatório com os números dos maços do jogo N
+	   
+	         Nota 1: este procedimento deverá ser executado para os vários jogos da encomenda. Os relatórios poderão ser mantidos
+			         para o PnP de outras encomendas, contudo não esquecer que o resultado do relatório é uma imagem da altura da
+					 sua geração, que poderá ser diferente da próxima vez que for gerado pois entre os dois momentos os maços já
+					 poderão ter sido alvo de atualização por outros processos, nomeadamente o PnP de pedidos de encomenda
+			 Nota 2: todos os campos são de preenchimento obrigatório
+	   
+	      1. Introduzir o nome do relatório em "Report Title"
+		  2  Selecionar o idioma do relatório "Report Language"
+		  
+		     English
+			 
+		  3. Selecionar o tipo de relatório "Report Subtype"
+		  
+		     Detail
+			 
+          4. Selecionar o tipo de localização "Warehouse"
+          5. Introduzir o ID da localização em "Location ID"
+		     
+			 From: 401
+			 To..: 401
+		  
+		  6. Introduzir o número do jogo em "Game"
+
+			 From: <nº do jogo N>
+			 To..: igual ao valor introduzido em "From"
+		
+		  7. Submeter o pedido de geração do relatório
+		  
+		     Assim que se submete, no nome do relatório surge na página. O relatório é gerado no IPS por um programa que é
+			 lançado assim que se submete o pedido. O relatório é gerado em IPS$REPORT.
+			 
+			 Ex: IPS_INV6010_20210212_133343.RPT
+		  
+		     O relatório demora algum tempo a gerar, aguardar que a sua geração termine, permanecendo na
+			 página até que termine, consultando a sua disponibilidade clicando em "View Report" e, se ainda não estiver
+			 surge uma nova página onde podemos clicar em "Retrieve" as vezes necessárias até que o relatório surja na página.
+
+             Nota: se se sair da página inadevertidamente, perde-se o contexto e já não é possível fazer "Retrieve". Temos duas opões:
+			 
+			    i) Voltar a gerar o mesmo relatório e aguardar até ao fim
+			   ii) Transferir da máquina IPS o relatório para o PC (os relatórios são gerados em IPS$REPORT)
+		
+		     Assim que surgir o relatório na página (o relatório está paginado, usar os botões "Previou" e "Next" para navegar), fazer 
+			 Copy&Paste do relatório para um ficheiro do PC. O que precisamos do relatório para fazer o PnP é o número do jogo e os 
+			 números dos maços no estado "Available". Portanto, escolher a área a copiar.
+
+ 5. Fazer o Pick&Pack
+ 
+	1. Aceder (novamente) à área "EXPEDIÇÃO" no menu horizontal na parte de baixo da página
+	   1. Aceder à área "ENCOMENDAS EM ESPERA"
+	      1. Introduzir o código do terminal na caixa de texto "Retailer" e depois clicar em "Retrieve"
+		  2. Selecionar a encomenda a despachar e clicar em "Pack This Order"
+		  3. Surge a página com o detalhe da encomenda
+		     
+			 1. Introduzir o número do jogo, seguido do número do maço "Available" e clicar em "Submit"
+			 2. Repetir esta operação até introduzir todos os maços de todos os jogos
+			 
+------------------------------------------------------------------------------------------------------------------------------------------------------			 
+ 6. InfoNaut:
+	user: console_port_sqa
+	password: Bsharp98
+	
+	queries: 
+		select distinct retailer_status from retailer
+		select * from retailer
