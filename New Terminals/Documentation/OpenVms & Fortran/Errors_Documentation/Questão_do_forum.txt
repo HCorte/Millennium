@@ -1,0 +1,33 @@
+Created function handler for errors to prevent from the image/process closing when a severe error occurs something alog the lines:
+
+      INTEGER*4 FUNCTION HANDLER(SIGARGS, MECHARGS)
+      IMPLICIT NONE
+C
+      INCLUDE	    '($LIBDEF)'
+      INCLUDE	    '($STSDEF)'
+      INCLUDE	    '($SSDEF)'
+C
+      INTEGER*4   SIGARGS(*)
+      INTEGER*4   MECHARGS(*)
+C
+      INTEGER*4   ERRORCODE
+
+      ERRORCODE = 0
+      CALL MVBITS( SIGARGS(2), 0, 3, ERRORCODE, 0)
+
+      IF( ERRORCODE.EQ.STS$K_SEVERE ) THEN 
+        CALL MVBITS( STS$K_ERROR, 0, 3, SIGARGS(2), 0)
+      ENDIF
+
+      HANDLER = SS$_RESIGNAL
+
+     RETURN
+     END
+
+tested with a CALL LIB$SIGNAL(%VAL(4)) to force a severe error and the handler worked well that keeped the process/image running by reducing the severity of the error in case its severe.
+
+1. Now want to log the error message to a file, so how to obtain the error message is it possible to pass SIGARGS(2) to a RTL function or other System function that returns me the message as per example the lexical function f$message(1409041) or should read the bit's of MSG_NO/Message number (3 to 15) that is refered in the "9.5 Condition Values" of "VSI_PROGRAM_CONCEPTS_VOL_I".
+
+so basicaly from the error code get the error message text as the one printed to console.
+
+2. How to distinguish  the error is originated from CALL LIB$SIGNAL(%VAL(4)) or CALL LIB$STOP(%VAL(0)) since if its LIB$STOP have to deal with the error using "Unwinding the Call Stack"
