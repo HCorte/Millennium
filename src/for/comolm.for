@@ -1,3 +1,15 @@
+C-----------------------------------------------------------------------
+C PROGRAM COMOLM
+C-----------------------------------------------------------------------
+C COMOLM.FOR
+C
+C V01 2020-JUL-10 SCML NEW TERMINALS PROJECT - OLM - Creation
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C Copyright 2020 SCML All rights reserved.
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C=======OPTIONS /CHECK=NOOVERFLOW/EXT
       PROGRAM COMOLM
       IMPLICIT NONE
 
@@ -15,7 +27,9 @@
       INCLUDE 'INCLIB:IGSCON.DEF'
       INCLUDE 'INCLIB:GLIST.DEF' 
       INCLUDE '(LIB$ROUTINES)'
-      INCLUDE 'INCLIB:OLMCOM.DEF'      
+      INCLUDE 'INCLIB:OLMCOM.DEF'     
+CCCCCCCCCOnly for error symbol that will be comment for prdCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      INCLUDE '($FORDEF)'
 
       INTEGER*4  MESS(EDLEN)       
       INTEGER*4  TASK              
@@ -24,9 +38,13 @@
       INTEGER*4  MESSERIAL
       INTEGER*4  BUFNUM
       LOGICAL    CONOLM, FIRSTRUN, WTFORMESS
-      INTEGER*4   MYCHKSUM       
+      INTEGER*4   MYCHKSUM     
 
-      CALL OPSTXT(' Copyright 2014 SCML. All rights reserved. ') 
+	INTEGER*4   OLMERRHANDLER
+	EXTERNAL    OLMERRHANDLER        
+
+      CALL OPSTXT(' Copyright 2020 SCML. All rights reserved. ') 
+      CALL LIB$ESTABLISH(OLMERRHANDLER)
       CALL SNIF_AND_WRKSET 
 
       TASK    = OLM
@@ -48,7 +66,27 @@ C      CALL CLR_OLMS_DETACHDATTIM
       CALL OPSTXT(' ******************* COMOLM RUNNING ******************* ')     
 
 10      CONTINUE
-        WTFORMESS = .FALSE.            
+        WTFORMESS = .FALSE. 
+        
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Teste fatal error that should lead to killing the current process   C 
+C if not treated properly                                             C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      CALL XWAIT(10, 2, ST)    !gives a sleep before triggering a exception
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C condition value 0 correspondes to a Warning see 9.5. Condition Values in documentation   C
+C of VSI_PROGRAM_CONCEPTS_VOL_I.pdf, since its LIB$STOP by default its SEVERE the level of C
+C of the error severity (so does it revert to 4 even if its passed the value 0???)         C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C      CALL LIB$STOP(%VAL(FOR$_OPEFAI)) !generates a severe error of severity by default
+C      CALL LIB$SIGNAL(%VAL(4)) !generates a error of severity from 1 to 4 being for 4 the most severe
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C      CALL LIB$SIGNAL(%VAL(1605868))               
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C insert here the error symbol to test the error handler function OLMERRHANDLER            C
+C for example FOR$_FILNAMSPE                                                               C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  
+C      CALL LIB$SIGNAL(%VAL(FOR$_FILNAMSPE)) ! use this method instead of LIB$STOP                      
 
       IF (DAYSTS .EQ. DSCLOS)  THEN 
             IF (P(SYSTYP) .EQ. LIVSYS) THEN 
@@ -56,7 +94,14 @@ C      CALL CLR_OLMS_DETACHDATTIM
                   CALL OPSTXT('OLM IS DISCONNECTED')
                   IF(ST .EQ. PAMS__SUCCESS) THEN
                         CALL GET_OLMS_DETACHDATTIM          !GET DATE DETACHED
-                        OLMS_DETACHFLG = 1                  !DETACHED FROM MESSAGEQ SERVER                        
+                        OLMS_DETACHFLG = 1                  !DETACHED FROM MESSAGEQ SERVER  
+                        TYPE *,IAM(),''                                                 !comment D for prd only test purposes only  
+                        TYPE *,IAM(),'COMOLM (destach) DISCONNECTED FROM MESSAGEQ IN DAYCLOSE'    !comment D for prd only test purposes only   
+                        TYPE *,IAM(),''                                                 !comment D for prd only test purposes only       
+                  ELSE                                                                  !comment D for prd only test purposes only                                
+                        TYPE *,IAM(),''                                                 !comment D for prd only test purposes only
+                        TYPE *,IAM(),'COMOLM (destach) FAILED TO DISCONNECTED FROM MESSAGEQ IN DAYCLOSE, STATUS:',ST
+                        TYPE *,IAM(),''                                                 !comment D for prd only test purposes only  
                   ENDIF
             ENDIF
             CONOLM = .FALSE. 
@@ -91,7 +136,9 @@ C      CALL CLR_OLMS_DETACHDATTIM
                   CALL OPS('MESSQ_ATTCH Status:',ST,ST)
                   CALL MESSQ_EXIT(%REF(ST))
                   P(OLMCONF) = 0 
-
+                  TYPE *,IAM(),''                                                                !comment D for prd only test purposes only                  
+                  TYPE *,IAM(),'COMOLM (destach) FAILED TO CONNECT TO MESSAGEQ IN CONOLM TRUE, STATUS:',ST !comment D for prd only test purposes only
+                  TYPE *,IAM(),''                                                                !comment D for prd only test purposes only           
                   IF(ST .EQ. PAMS__SUCCESS) THEN
 C                       GET DATE AND TIME OF DETACH
                         CALL GET_OLMS_DETACHDATTIM                                      !GET DETCH DATE 
@@ -136,6 +183,9 @@ C      CALL LISTTOP(BUFNUM, QUETAB(1, OLM), STAT)
 15    CONTINUE      
       CALL SENDTOOLM(BUFNUM,ST,.FALSE.) 
       IF ((ST .NE. PAMS__SUCCESS ) .AND. (ST .NE. PAMS__TIMEOUT)) THEN
+         TYPE *,IAM(),''                                                !comment D for prd only test purposes only                  
+         TYPE *,IAM(),'COMOLM (destach) SEND MESSAGE TO OLIMPO ERROR, STATUS:',ST !comment D for prd only test purposes only
+         TYPE *,IAM(),''                                                !comment D for prd only test purposes only             
          CALL MESSQ_EXIT(%REF(ST))
          IF (ST .EQ. PAMS__SUCCESS) THEN 
             CONOLM = .FALSE.           
@@ -197,6 +247,9 @@ C      ENDIF
       ENDIF   
       IF ((ST .NE. PAMS__SUCCESS) .AND. (ST .NE. PAMS__NOMOREMSG)) THEN
             OLMS_TOTERRGET = OLMS_TOTERRGET + 1
+            TYPE *,IAM(),''                                                 !comment D for prd only test purposes only                  
+            TYPE *,IAM(),'COMOLM (destach) GET MESSAGE FROM OLIMPO ERROR, STATUS:',ST !comment D for prd only test purposes only
+            TYPE *,IAM(),''                                                 !comment D for prd only test purposes only                
             CALL MESSQ_EXIT(%REF(ST)) 
             IF (ST .EQ. PAMS__SUCCESS) THEN
                   CONOLM = .FALSE.
@@ -324,8 +377,8 @@ C                       If its diferent from 0000 then terminal number is define
                                     I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
                                     I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
                                     I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))  
-                                    OLMS_GETTERFAI = I8AUX                                 
-                                    ST = -8                            
+                                    OLMS_GETTERFAI = I8AUX
+                                    ST = -8
                               ENDIF
                         ELSE
                               write(NUMAGT_STR,200) NUMAGT
@@ -339,8 +392,8 @@ C                       If its diferent from 0000 then terminal number is define
                               I1AUX(2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
                               I1AUX(3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
                               I1AUX(4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
-                              I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)) 
-                              OLMS_GETTERFAI = I8AUX                                                       
+                              I1AUX(5) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
+                              OLMS_GETTERFAI = I8AUX
                               ST = -9
                         ENDIF 
                   ELSE
@@ -369,7 +422,7 @@ C                        TYPE*, ' '
 C                        CALL OPS('FAILED TO RETRIVE TERMINAL NUMBER FOR AGENTNUM:',TERMINALNUM,TERMINALNUM)
 C                  ENDIF                   
 
-C apos x tentativas secanhar ver se caio alguma mensagem de resposta na queue aplicacional para ser enviado para o MessageQ (ou pouco provavel pois nesse caso tamb�m n�o tinha buffers livres...)                  
+C apos x tentativas secanhar ver se caio alguma mensagem de resposta na queue aplicacional para ser enviado para o MessageQ (ou pouco provavel pois nesse caso tamb?m n?o tinha buffers livres...)                  
 C adicionar uma variabel do vision que indique logo que aconteceu no dia xx as hh horas e mm de minutes uma falta de procom buffers
                   IF (PROBUF.LE.0) THEN
 C                       remember that while QUEMES subroutine uses GETBUF thats not true for OPS that uses caixa de email                        
