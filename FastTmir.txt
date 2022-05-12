@@ -3,7 +3,7 @@ r tmir
 d
 t
 prim:mtmf01.fil
-Henrique-13-03-2022
+Henrique-08-05-2022
 a
 y
 y
@@ -14,6 +14,10 @@ d
 n
 a
 
+-------------ver o tamanho em disco de cada disco---------------------------------------------------
+sh dev d 
+-------------listar os maiors ficheiros por tamanho em disco por ordem decrescente------------------
+pipe dir *.dat /siz/wid=file=40/since=01-jan-2022 | sort/key=(pos:42,siz:8,desc) sys$input sys$output
 -----------------------------------------------
 
 r tmir
