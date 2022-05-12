@@ -1,0 +1,165 @@
+#!/usr/bin/expect
+# should use /usr/bin/expect instead of bash run commands spawn, expect, send
+# path to script C:/Users/105864/Documents/Millennium/bash_scripts (create a windows environment variable)
+# install sshpass (https://stackoverflow.com/questions/37243087/how-to-install-sshpass-on-windows-through-cygwin) 
+# finall step (sudo- run cygwin as administrator) make install
+
+#####################################################################
+#   cd "C:\Users\105864\Documents\Millennium\bash_scripts"          #
+#   run script: expect day_rotation_bash.sh                         #
+#                                                                   #
+#####################################################################
+
+#proc sshposysd {} {                                                                                                                                                                                               
+#    SSHUSER="$1";                                                                                                                                                                               
+#    [ -z "${SSHUSER}" ] && SSHUSER="console";                                                                                                                                                   
+#    ssh -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" "${SSHUSER}"@10.100.82.100                                                          
+#}
+
+proc sshposysd_pass {} {                                                                                                                                                                                                                                                                                                                                               
+    set SSHUSER "console"
+    spawn sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" $SSHUSER@10.100.82.100                                                
+}
+
+proc new_line {} {
+    expect "POSYSD::SCML> " {send "\r"} \
+        timeout { puts "\n\nTest Failure: \n\r"; exit}
+}
+
+set timeout 40
+
+#sshPOSYSD_pass
+
+###########################################################################
+#                                                                         #
+# documentation: https://www.tcl-lang.org/man/expect5.31/expect.1.html    #
+#                                                                         #
+#  user_spawn_id is a global variable containing a descriptor which       #
+# refers to the user. For example, when                                   #
+#  spawn_id is set to this value expect behaves like expect_user          #
+#                                                                         #
+#The major difference is that interactsets up a background matching event #
+# loop. expect blocks foreground processing (and ignores user input)      #
+# during it's matching event loop                                         #  
+#                                                                         #
+# Patterns from the most recent expect_before command are implicitly used #
+# before any other patterns. Patterns from the most recent expect_after   #
+# command are implicitly used after any other patterns.                   #
+###########################################################################
+spawn sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100                                                  
+
+expect "POSYSD::*> " {send "GOSCML\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: Go to SCML Environment!!!\n\r";
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+new_line
+
+expect "POSYSD::SCML> " {send "dir *.EXE;0 /TOTAL\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+new_line
+
+#############################################################
+#                                                           #
+# StSystem Cont test with auxiliry progam with this specific#
+# output                                                    #
+#                                                           #
+#############################################################
+
+expect "POSYSD::SCML> " {send "r simulater\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: r simulater!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+
+
+expect "Please Enter StSystem Cont" {
+    expect "VLFTSK*STOP0001" {
+        send "\rtell stsystem cont\r"
+    }\
+    timeout { 
+        puts "\n\n!!!Test Failure: VLFTSK*STOP0001!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+}\
+    timeout { 
+        puts "\n\n!!!Test Failure: Enter StSystem Cont!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+#expect "*wtfyes*" {send "\rtell stsystem cont\r\r"} \
+#    timeout { 
+#        puts "\n\n!!!Test Failure: r simulater!!!\n\r"; 
+#        #exit 
+#        interact {
+#              \001 {
+#                    send_user "\n\nUser interaction completed.\n\n"
+#                    return 
+#                 }
+#            }
+#    }
+
+new_line
+
+#expect "*Please Enter StSystem Cont*" { 
+#    expect "*VLFTSK   STOP0001*" {
+#        send "\rtell stsystem cont\r"
+#    } \ timeout {
+#        puts "\n\n!!!Test Failure: StSystem Cont - STOP0001!!!\n\r"; 
+#        #exit
+#        interact {
+#            \001 {
+#                send_user "\n\nUser interaction completed.\n\n"
+#                return 
+#            }
+#        } 
+#    }
+#} \
+#    timeout {
+#        puts "\n\n!!!Test Failure: StSystem Cont!!!\n\r"; 
+#        #exit
+#        interact {
+#            \001 {
+#                send_user "\n\nUser interaction completed.\n\n"
+#                return 
+#            }
+#        } 
+#    }        
+
+
+interact         

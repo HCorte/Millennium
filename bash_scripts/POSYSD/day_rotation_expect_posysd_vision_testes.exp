@@ -1,0 +1,581 @@
+#!/usr/bin/expect
+# should use /usr/bin/expect instead of bash run commands spawn, expect, send
+# path to script C:/Users/105864/Documents/Millennium/bash_scripts (create a windows environment variable)
+# install sshpass (https://stackoverflow.com/questions/37243087/how-to-install-sshpass-on-windows-through-cygwin) 
+# finall step (sudo- run cygwin as administrator) make install
+# .~ enter followed by another . enter to exit expect script
+#####################################################################
+#   cd "C:\Users\105864\Documents\Millennium\bash_scripts"          #
+#   run script: expect day_rotation_bash.sh                         #
+#                                                                   #
+#####################################################################
+
+#proc sshposysd {} {                                                                                                                                                                                               
+#    SSHUSER="$1";                                                                                                                                                                               
+#    [ -z "${SSHUSER}" ] && SSHUSER="console";                                                                                                                                                   
+#    ssh -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" "${SSHUSER}"@10.100.82.100                                                          
+#}
+
+proc sshposysd_pass {} {                                                                                                                                                                                                                                                                                                                                               
+    set SSHUSER "console"
+    spawn sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" $SSHUSER@10.100.82.100                                                
+}
+
+proc new_line {} {
+    expect "POSYSD::SCML> " {send "\r"} \
+        timeout { puts "\n\nTest Failure: \n\r"; exit}
+}
+
+proc keygen {DRAW_NUMBER_G normal green} {
+    send "run results\r"
+    
+    expect "Enter game type*>" { 
+        send "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - Enter game type\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "Enter game index*>" { 
+        send "4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - Enter game index\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "Enter draw number \[C-current draw\]*>" { 
+        send "$DRAW_NUMBER_G\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - Enter draw number\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+
+    expect "Lotto*4*TOTOLOTO QUARTA Draw*$DRAW_NUMBER_G" { 
+        expect "CONSOLE  Is this correct (Y/N)*>" {
+            send "y\r"
+        } \
+        timeout { 
+            puts "\n\nTest Failure: not found - Is this correct (Y/N)\n\r"; 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                     }
+                }
+        }
+    } \
+    timeout { 
+        puts "\n\nTest Failure: TOTOLOTO QUARTA Draw $DRAW_NUMBER_G??\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "Enter first*number*>" { 
+        send "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "Enter second*number*>" { 
+        send "2\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "Enter third*number*>" { 
+        send "3\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "Enter forth*number*>" { 
+        send "4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "Enter fifth*number*>" { 
+        send "5\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "Enter Lucky Number*>" { 
+        send "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+
+    expect "Are the numbers entered correct*\[Y/N\]*>" { 
+        send "y\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }    
+
+    expect "Do You Have Special Totoloto Jackpot Fund*\[Y/N\]*\?*>" { 
+        send "n\r\r\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    sleep 5
+
+    send_user "\n\n${normal}Press CTRL+a to exit script and connection\n\n\n"
+
+# Spawn New Cygwin Window from Within Cygwin    
+    cygstart /bin/bash -li
+#cygstart mintty /bin/bash -il    
+
+    spawn sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100                                                  
+
+    set SECOND_SPAWN $spawn_id
+
+    puts "\n\n!!!spawn_id: $SECOND_SPAWN!!!\n\r";
+
+    expect "POSYSD::*> " {send "GOSCML\r"} \
+        timeout { 
+            puts "\n\n!!!Test Failure: Go to SCML Environment!!!\n\r";
+            #exit 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                         return 
+                     }
+                }
+        }
+
+    new_line
+
+    expect "POSYSD::SCML> " {send "dir *.EXE;0 /TOTAL\r"} \
+        timeout { 
+            puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
+            #exit 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                         return 
+                     }
+                }
+        }
+
+    new_line
+
+    send "run resver\r"
+
+#Lotto   4 draw  518
+
+    expect "Enter first*number*>" { 
+        send "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect "Enter second*number*>" { 
+        send "2\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect "Enter third*number*>" { 
+        send "3\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect "Enter forth*number*>" { 
+        send "4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect "Enter fifth*number*>" { 
+        send "5\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect "Enter Lucky*Number*>" { 
+        send "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect "Are the numbers entered correct*(Y/N)*>" { 
+        send "y\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }    
+
+    expect "Do Your Have Special Totoloto Jackpot Fund*\[Y/N\]*>" { 
+        send "n\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect "Lotto*4 results entry complete" { 
+        send_user "\n\n${green}Winner Key Insertion Sucess\n\n"
+        send_user "${normal}"
+        sleep 2
+        send "\r\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }    
+
+    
+
+}
+
+set green "\033\[1;32;40m"
+set red "\033\[1;31m"
+set normal "\033\[0;0m"
+
+set timeout 20
+
+#sshPOSYSD_pass
+
+###########################################################################
+#                                                                         #
+# documentation: https://www.tcl-lang.org/man/expect5.31/expect.1.html    #
+#                                                                         #
+#  user_spawn_id is a global variable containing a descriptor which       #
+# refers to the user. For example, when                                   #
+#  spawn_id is set to this value expect behaves like expect_user          #
+#                                                                         #
+#The major difference is that interactsets up a background matching event #
+# loop. expect blocks foreground processing (and ignores user input)      #
+# during it's matching event loop                                         #  
+#                                                                         #
+# Patterns from the most recent expect_before command are implicitly used #
+# before any other patterns. Patterns from the most recent expect_after   #
+# command are implicitly used after any other patterns.                   #
+###########################################################################
+
+
+#################################################################################################################
+# spawn returns the UNIX process id. If no process is spawned, 0 is returned. The variable                      #
+# spawn_out(slave,name) is set to the name of the pty slave device.                                             #
+# By default, spawn echoes the command name and arguments. The -noecho flag stops spawn from doing this.        #
+#################################################################################################################
+spawn -noecho sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100                                                  
+
+set DRAW_NUMBER_G ""
+set SYSTEM_DATE_G ""
+set DRAW_DATE_G ""
+set DRAW_ID_YEAR_G ""
+set DRAW_YEAR_G ""
+set DRAW_ID_G ""
+
+set MAIN_SPAWN $spawn_id
+
+puts "\n\n!!!spawn_id: $MAIN_SPAWN!!!\n\r";
+#puts "\n\n!!!user_spawn_id: $user_spawn_id!!!\n\r";
+ 
+expect "POSYSD::*> " {send "GOSCML\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: Go to SCML Environment!!!\n\r";
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+new_line
+
+expect "POSYSD::SCML> " {send "dir *.EXE;0 /TOTAL\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+new_line
+
+
+send "vision\r"
+    
+expect "Please enter password" { 
+    send "DONUTS\r" 
+} \
+timeout { 
+    puts "\n\nTest Failure: vision password\n\r"; 
+    interact {
+          \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+             }
+        }
+}
+
+expect "Enter vision command" { 
+    send "lot\r" 
+} \
+timeout { 
+    puts "\n\nTest Failure: enter sys snapshot command\n\r"; 
+    interact {
+          \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+             }
+        }
+}
+
+expect "Enter !game index or draw number or /year-week" { 
+    send "!4\r" 
+} \
+timeout { 
+    puts "\n\nTest Failure: enter sys snapshot command\n\r"; 
+    interact {
+          \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+             }
+        }
+}
+
+#expect -re {Lotto 4.*game data for draw\s{2}(\w{3}).*Primary-A} {
+expect -re {Lotto 4.*game data for draw\s{2}(\w{3})\s{2}\w{2}\s(.*?)\s{2}.*Primary-A} {
+#    sleep 2
+    set DRAW_NUMBER $expect_out(1,string)
+    set DRAW_NUMBER_G $DRAW_NUMBER
+    send_user "\n\n\n\n\n\n\n\n\n\n\nDRAW_NUMBER: $DRAW_NUMBER\n"
+    set SYSTEM_DATE $expect_out(2,string)
+    set SYSTEM_DATE_G $SYSTEM_DATE
+    send_user "SYSTEM_DATE: $SYSTEM_DATE\n"
+}
+
+####
+#####Iterate over the records (being the records an array)
+#### foreach rec $records {
+#### }
+
+expect -re {TOTOLOTO QUARTA.*Draw\s\w{2}\s(.*)\s{2}\d{2}:\d{2}:\d{2}} {
+    set DRAW_DATE $expect_out(1,string)
+    set DRAW_DATE_G $DRAW_DATE
+    send_user "DRAW_DATE: $DRAW_DATE\n"
+}
+
+expect -re {DrawId\s{2}(.*)\s{3}} {
+#    sleep 2
+    set DRAW_ID_YEAR $expect_out(1,string)
+    set DRAW_ID_YEAR_G $DRAW_ID_YEAR
+    send_user "DRAW_ID_YEAR: $DRAW_ID_YEAR\n"
+
+    set DRAW_ID_AUX [split $DRAW_ID_YEAR "/"]
+    #send_user "DRAW_ID_AUX: $DRAW_ID_AUX\n" #array de 2 posições (pois só têm um "/" na string)
+    set DRAW_YEAR [lindex $DRAW_ID_AUX 1]
+    set DRAW_YEAR_G $DRAW_YEAR
+    set DRAW_ID [lindex $DRAW_ID_AUX 0]
+    set DRAW_ID_G $DRAW_ID
+    send_user "DRAW_YEAR: $DRAW_YEAR\n"
+    send_user "DRAW_ID: $DRAW_ID\n\n"
+}
+
+########################################################################################################################################
+#                                                                                                                                      #
+# Upon matching a pattern (or eof or full_buffer), any matching and previously unmatched output is saved in the                        #
+# variable expect_out(buffer). Up to 9 regexp substring matches are saved in the variables expect_out(1,string)                        #
+# through expect_out(9,string). If the -indices flag is used before a pattern, the starting and ending indices                         #
+# (in a form suitable for lrange) of the 10 strings are stored in the variables expect_out(X,start) and                                #
+# expect_out(X,end) where X is a digit, corresponds to the substring position in the buffer. 0 refers to                               #
+# strings which matched the entire pattern and is generated for glob patterns as well as regexp patterns.                              #
+#                                                                                                                                      #
+########################################################################################################################################
+
+#expect -re "Lotto 3.*game data for draw\s{2}(\w{3}).*Primary-A\n.*\nDrawId\s{2}(.*)\s{3}.*"
+#set All_INFO $expect_out(0,string)
+#set DRAW_NUMBER $expect_out(1,string)
+#set DRAW_ID_YEAR $expect_out(2,string)
+
+send \003
+
+#sleep 3
+if {[regexp -nocase $SYSTEM_DATE_G $DRAW_DATE_G]} {
+    send_user "\n\n${green}Draw day of Totolo Quarta!!!\n\n"
+
+    keygen $DRAW_NUMBER_G $normal $green
+
+} else {
+    send_user "\n\n${red}NOT Draw day of Totolo Quarta!!\n\n"
+}
+
+send "\r\r\r"
+
+
+#spawn sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100                                                  
+
+#exit
+#close [-i $MAIN_SPAWN]
+
+#https://linux.die.net/man/1/expect
+#
+#returns the process id corresponding to the currently spawned process.
+# If the -i flag is used, the pid returned corresponds to that of the given spawn id.
+#exp_pid [-i spawn_id]
+
+interact {
+    \001 {
+        send_user "\n\n"
+        send_user "DRAW_NUMBER: $DRAW_NUMBER_G\n"
+        send_user "SYSTEM_DATE: $SYSTEM_DATE_G\n"
+        send_user "DRAW_DATE: $DRAW_DATE_G\n"
+        send_user "DRAW_ID_YEAR: $DRAW_ID_YEAR_G\n"
+        send_user "DRAW_YEAR: $DRAW_YEAR_G\n"
+        send_user "DRAW_ID: $DRAW_ID_G\n"
+        send_user "\n\n"
+        return 
+    }
+} 
+
+#wait 
+
+#for more interection uncomment the below line other wise end of the script...
+#interact 

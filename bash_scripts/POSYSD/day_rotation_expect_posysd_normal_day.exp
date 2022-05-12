@@ -1,0 +1,863 @@
+#!/usr/bin/expect
+# should use /usr/bin/expect instead of bash run commands spawn, expect, send
+# path to script C:/Users/105864/Documents/Millennium/bash_scripts (create a windows environment variable)
+# install sshpass (https://stackoverflow.com/questions/37243087/how-to-install-sshpass-on-windows-through-cygwin) 
+# finall step (sudo- run cygwin as administrator) make install
+
+#####################################################################
+#   cd "C:\Users\105864\Documents\Millennium\bash_scripts"          #
+#   run script: expect day_rotation_bash.sh                         #
+#                                                                   #
+#####################################################################
+
+###########################################################################################
+#   If you need to interact with this script, use spawn xxx.sh                            #          
+#                                                                                         #  
+#   If you just need to run it and capture the output, use set output [exec xxx.sh]       #
+###########################################################################################
+
+#proc sshposysd {} {                                                                                                                                                                                               
+#    SSHUSER="$1";                                                                                                                                                                               
+#    [ -z "${SSHUSER}" ] && SSHUSER="console";                                                                                                                                                   
+#    ssh -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" "${SSHUSER}"@10.100.82.100                                                          
+#}
+
+proc sshposysd_pass {} {                                                                                                                                                                                                                                                                                                                                               
+    set SSHUSER "console"
+    spawn sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" $SSHUSER@10.100.82.100                                                
+}
+
+proc new_line {} {
+    expect "POSYSD::SCML> " {send "\r"} \
+        timeout { puts "\n\nTest Failure: \n\r"; exit}
+}
+
+proc vision_SUPRESS {} {
+    send "\r\r"
+
+    send "vision\r"
+    
+    expect "Please enter password" { 
+        send "DONUTS\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: vision password\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "Enter vision command" { 
+        send "sys\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: enter sys snapshot command\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "Enter change, !game number, or vision command" { 
+        send "SUPWAg 0\r"
+    #    puts "\n\n SUPWAG 0 !!\n\n" 
+        sleep 1
+        send "SUPCAn 0\r"
+    #    puts "\n\n SUPCAn 0 !!\n\n" 
+        sleep 1
+        send "SUPVAl 0\r"
+    #    puts "\n\n SUPVAl 0 !!\n\n" 
+        sleep 1
+        send "SUPINS 0\r"
+    #    puts "\n\n SUPVAl 0 !!\n\n"
+    } \
+    timeout { 
+        puts "\n\nTest Failure: enter supress cancelation commands\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect "*SUPWAg      0   *SUPCAn      0   *SUPVAl      0" { 
+        expect "*SUPINs      0" { 
+            send \003
+        } \
+        timeout { 
+            puts "\n\nTest Failure: fail detection supress off LI\n\r"; 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                     }
+                }
+        }
+    } \
+    timeout { 
+        puts "\n\nTest Failure: fail detection supress off AM\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+}
+
+proc process_SOUPFM {} {
+#https://stackoverflow.com/questions/27089739/expect-extract-specific-string-from-output
+
+    expect -re {:\s{9}(.*)\s{2}\(}
+
+    set CDC_DAY $expect_out(1,string)
+
+    #puts "$output\r"
+
+    expect "Insira a data CDC para geracao dos ficheiros   >" {send "$CDC_DAY\r"} \
+        timeout { 
+            puts "\n\nTest Failure: SOUPFM CDC error\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }
+
+    expect "Insira o nome do ficheiro TMF (VOLN:FILNAME)   >" {send "\r"} \
+        timeout { 
+            puts "\n\nTest Failure: SOUPFM TMF name\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }
+
+    expect "Insira o nome do ficheiro PRG (VOLN:FILNAME)   >" {send "\r"} \
+        timeout { 
+            puts "\n\nTest Failure: SOUPFM CDC error\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        } 
+
+    expect "Indique qual a opcao escolhida                 >" {send "T\r"} \
+        timeout { 
+            puts "\n\nTest Failure: SOUPFM CDC error\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }
+
+    expect "Indique qual a opcao escolhida                 >" {send "E\r"} \
+        timeout { 
+            puts "\n\nTest Failure: SOUPFM CDC error\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        } 
+}
+
+proc process_tmir {} {
+    expect "POSYSD::SCML> " {send "r tmir\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }
+
+    expect "Enter file device (Disk, Tape)         >" {send "d\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        } 
+
+    expect "Enter file type (Tmf, Carryover, Draw) >" {send "t\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }
+
+    expect "Enter file name (VOLN:FILNAME)         >" {send "prim:mtmf01.fil\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }   
+        
+    set DATE [clock add [clock seconds] -1 day]
+    set DATE [clock format $DATE -format %d-%m-%Y]
+    set TMIR_NAME "HENRIQUE-$DATE"         
+    
+    expect "Enter report file name:                >" {send "$TMIR_NAME\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }
+
+    expect "Enter terminal number (A=all)          >" {send "a\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }  
+
+    expect "Exclude EM transactions (Y/N)          >" {send "y\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        } 
+
+    expect "Exclude IGS transactions (Y/N)         >" {send "y\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }
+
+    expect "Enter transaction channel (A=all/O=Olimpo/M=Other)   >" {send "a\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }  
+
+    expect "Enter starting serial number (A=all/E=EuroMil/P=Placard)   >" {send "a\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        } 
+
+    expect "Enter starting time (A=all)            >" {send "a\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }
+
+    expect "Enter report option (Detail,Summary)   >" {send "d\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        } 
+
+    expect "Scramble serial numbers (Y/N)          >" {send "n\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }  
+
+    expect "Enter first  offset (A=all)            >" {send "a\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }        
+}
+
+## Access CLI
+#set loginUser "console"
+#set loginPassword "console"
+
+set timeout 300
+
+#sshPOSYSD_pass
+
+###########################################################################
+#                                                                         #
+# documentation: https://www.tcl-lang.org/man/expect5.31/expect.1.html    #
+#                                                                         #
+#  user_spawn_id is a global variable containing a descriptor which       #
+# refers to the user. For example, when                                   #
+#  spawn_id is set to this value expect behaves like expect_user          #
+#                                                                         #
+#The major difference is that interactsets up a background matching event #
+# loop. expect blocks foreground processing (and ignores user input)      #
+# during it's matching event loop                                         #  
+#                                                                         #
+# Patterns from the most recent expect_before command are implicitly used #
+# before any other patterns. Patterns from the most recent expect_after   #
+# command are implicitly used after any other patterns.                   #
+###########################################################################
+spawn sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100                                                  
+
+#expect "password:" {send "$loginPassword\r"}
+
+#set prompt "POSYSD::*> "
+#expect -re $prompt {send "GOSCML\r"}
+
+expect "POSYSD::*> " {send "GOSCML\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: Go to SCML Environment!!!\n\r";
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+new_line
+
+expect "POSYSD::SCML> " {send "dir *.EXE;0 /TOTAL\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+new_line
+
+#############################################################
+#                                                           #
+# Start of Stopsys                                          #
+#                                                           #
+#############################################################
+
+expect "POSYSD::SCML> " {send "stopsys\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: Start STOPSYS !!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+expect "*Are you sure you want STOPSYS*" {sleep 1; send "\rtell stsystem y\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: STOPSYS confirmation !!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }    
+
+expect "*SCANRETR STOP0001  *" {send "\rtell dayend y\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: DAYEND command!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+#set NEXT_STEP 0
+
+#
+###################################################################################
+#                                                                                 #
+# this step may not appear so in that case jump to the next in timeout            #
+# only happens in case some draw went wrong or was made a jump in time/day where  #
+# in (draws) folder copy previous draws for the ones missing and clear's the      #
+# content of the new ones that were copies of older ones (has was the case in DEV)#
+#                                                                                 #
+# SIT Ignore this step                                                            #
+###################################################################################   
+#expect "*Are you sure you want to continue*" {send "\rtell vlftsk y\r"} \
+#    timeout { 
+#        puts "\n\n!!!Test Failure: VLFTSK continue!!!\n\r"; 
+#        interact {
+#              \001 {
+#                    send_user "\n\nUser interaction completed.\n\n"
+#                     return 
+#                 }
+#            }
+#    }    
+###################################################################################
+
+expect "*Do You Want To Run Winner Selection Today*" {send "\rtell vlftsk n\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: vlftsk Winner Selection!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }  
+
+expect "*Do you want to run ShareClc Task*" {send "\rtell vlftsk n\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    } 
+
+expect "*Do You Want To Run UpdTsk*" {send "\rtell vlftsk n\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: Run UpdTsk!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }              
+
+expect "*Do you want to run PRGTSK today*" {send "\rtell vlftsk y\r"} \
+    timeout {
+        puts "\n\n!!!Test Failure: PRGTSK today!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    } 
+
+expect "*Are you sure you want validation purge*" {send "\rtell prgtsk y\r"} \
+    timeout {
+        puts "\n\n!!!Test Failure: validation purge!!!\n\r"; 
+        #exit
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            } 
+    }     
+
+expect "*Did validation purge run ok*" {send "\rtell prgtsk y\r"} \
+    timeout {
+        puts "\n\n!!!Test Failure: validation purge run ok!!!\n\r"; 
+        #exit
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            } 
+    } 
+
+expect "*Enter minimum cash amount for report*" {send "\rtell purwin 0.00\r"} \
+    timeout {
+        puts "\n\n!!!Test Failure: cash amount for report!!!\n\r"; 
+        #exit
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            } 
+    }
+
+expect "*Enter minimum refund amount for report*" {send "\rtell purwin 0.00\r"} \
+    timeout {
+        puts "\n\n!!!Test Failure: refund amount for report!!!\n\r"; 
+        #exit
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        } 
+    }
+
+expect "Please Enter StSystem Cont" {
+    expect "VLFTSK*STOP0001" {
+        send "\rtell stsystem cont\r"
+    }\
+    timeout { 
+        puts "\n\n!!!Test Failure: VLFTSK*STOP0001!!!\n\r"; 
+        #exit 
+        interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+    }
+}\
+    timeout { 
+        puts "\n\n!!!Test Failure: Enter StSystem Cont!!!\n\r"; 
+        #exit 
+        interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+    }    
+
+#############################################################
+#                                                           #
+# Process after Stopsys and before Runtst                   #
+#                                                           #
+#############################################################
+
+expect "*STSYSTEM  Stopsys complete - Perform file backups" { 
+    expect "*STSYSTEM STOP0001*SUCCESS" {
+        send "\rr soupfm\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: SOUPFM - STOP0001!!!\n\r"; 
+        #exit
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        } 
+    }
+} \
+    timeout { 
+        puts "\n\n!!!Test Failure: SOUPFM - Stopsys!!!\n\r"; 
+        #exit
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        } 
+    }
+
+process_SOUPFM
+
+new_line
+
+expect "POSYSD::SCML> " {send "r millrecon\r"} \
+    timeout { 
+        puts "\n\nTest Failure: millrecon\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        }
+    }
+
+new_line    
+
+expect "POSYSD::SCML> " {send "r qliktran\r"} \
+    timeout { 
+        puts "\n\nTest Failure: SOUPFM\n\r"; 
+        #exit
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            } 
+    }    
+
+new_line 
+
+#############################################################
+#                                                           #
+# Generate Report from TMIR                                 #
+#                                                           #
+#############################################################
+
+process_tmir    
+
+new_line
+
+#############################################################
+#                                                           #
+# R CLRFIL (Clear TMF)                                      #
+#                                                           #
+#############################################################
+
+expect "POSYSD::SCML> " {send "r clrfil\r"} \
+    timeout { 
+        puts "\n\nTest Failure: CLRFIL\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }    
+
+expect "ENTER FILE NAME >" {send "prim:mtmf01.fil\r"} \
+    timeout { 
+        puts "\n\nTest Failure: CLRFIL TMF\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }     
+
+#############################################################
+#                                                           #
+# Start RUNTST (DEV)                                        #
+#                                                           #
+#############################################################
+
+
+expect "POSYSD::SCML> " {send "runtst\r"} \
+    timeout { 
+        puts "\n\nTest Failure: RUNTST\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        }
+    }
+
+expect -ex {Are you sure you want RESET [Y/N]?  >} {send "y\r"} \
+    timeout { 
+        puts "\n\nTest Failure: RUNTST\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                  send_user "\n\nUser interaction completed.\n\n"
+                  return 
+               }
+        }
+    }    
+        
+expect "4.*Backup disk logging*Yes" {expect -ex {Enter option [C - bring up the system] >} {send "4\r"}} \
+    timeout { 
+        puts "\n\nTest Failure: Off Backup disk logging\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        }
+    }
+
+expect "4.*Backup disk logging*No" {expect -ex {Enter option [C - bring up the system] >} {send "C\r"}} \
+    timeout { 
+        puts "\n\nTest Failure: confirm Backup disk logging Off\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        }
+    }
+
+expect -ex {Are these correct? (Y/N)  >} {send "y\r"} \
+    timeout { 
+        puts "\n\nTest Failure: Games active today...\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        }
+    }   
+    
+expect -ex {Which system is the PRIMARY system ( A,  B  ?) >} {send "A\r"} \
+    timeout { 
+        puts "\n\nTest Failure: Which system is the PRIMARY system\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        }
+    }    
+ 
+expect -ex {Is system  B being brought up?                     >} {send "N\r"} \
+    timeout { 
+        puts "\n\nTest Failure: system  B being brought up\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        }
+    }     
+
+expect "This is system A. System A is PRIMARY  system" {
+    expect  "Game brought up in SIMPLEX -  only 1 system configured" {
+        expect -ex {Is this correct  [Y/N] ? >} {
+            send "y\r"
+        } \
+        timeout { 
+            puts "\n\nTest Failure: Is this correct\n\r"; 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                         return 
+                     }
+                }
+        }
+    } \
+    timeout { 
+        puts "\n\nTest Failure: Game brought up\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+} \
+    timeout { 
+        puts "\n\nTest Failure: correct system being brought up???\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }    
+    
+#############################################################
+#                                                           #
+# sleeps for 20 seconds to give some time for all process   #
+# to kick in and count all process that matter and validate #
+# are up and running other wise sleep's for shorter period  #
+# of time and tries again                                   #
+#                                                           #
+#############################################################
+sleep 20
+
+send "\rr x2gamstart\r"
+
+expect "X2XMGR*open SAP*status*2 params" {
+    send "\rewatch stop\r"
+} \
+    timeout { 
+        puts "\n\nTest Failure: system  B being brought up\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        }
+    }    
+
+vision_SUPRESS
+
+interact         
