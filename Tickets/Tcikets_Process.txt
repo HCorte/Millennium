@@ -1,0 +1,20 @@
+Passar um ticket para o grupo NQT:
+	1. ver a estrutura de pasta em \\blade01\disti$\UGAJ\Desenvolvimentos\Atividades Suporte\2022\06 - MIL - SOUPFM Prémios Caducados Totobola Extra (P220125_0011)
+	Documentação
+		_README_FIRST.TXT
+		Notas_Versão.docx
+	EXECUTÁVEIS (que na realidade é código fonte)
+		SOUPFM_AM_EXPIRED.FOR
+		
+	2. zipar essa duas pastas numa e chamar-lhe P220125_0011_MIL#01.zip
+	que é numero do ticket seguido de _MILL (indentifica o sistema) seguido
+	de #01 que indentifica o numero de tickets destes ano enviado para testes
+	
+	3. ir ao EasyVista (EV) e editar o ticket de modo a passar para a equipa de testes
+	lembrar que para editar carregar na lupa, escolher o Motivo Identificado ->
+	Testes. Meter na descrição a mesma que se meteu nas "Notas_Versão.docx" adicionar
+	o zip em cima ao ticket nos "Documentos" (ver o ticket P220125_0011 para basear
+	por este).
+	
+	4. adicionar na Gestão de Releases (http://intranet/sites/disti/NQT/Lists/Gesto%20de%20Releases/AllItems.aspx)
+	escolher "edita" esta lista para preencher comparando com os restantes releases. 
