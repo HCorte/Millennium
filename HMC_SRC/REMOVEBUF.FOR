@@ -98,12 +98,15 @@ C           DO I=2, USED+1
           GOTO 11 
           
 900       CONTINUE
-            CALL RTL (BUFNUM, COMOLMQUE(1), STAT)
-            IF (STAT .EQ. GLIST_STAT_EMPTY) THEN
-              PRINT *, 'LIST iS EMPTY'
-              BUFNUM = 0
-            ENDIF 
-            CALL RELBUF(BUFNUM)
+            CALL QIMAGE(COMOLMQUE(1),OLMLST,USED)
+            DO I=1,OLMLST(1)
+              CALL RTL (BUFNUM, COMOLMQUE(1), STAT)
+              IF (STAT .EQ. GLIST_STAT_EMPTY) THEN
+                PRINT *, 'LIST iS EMPTY'
+                BUFNUM = 0
+              ENDIF 
+              CALL RELBUF(BUFNUM)
+            ENDDO
           GOTO 11 
           
 C          IF(YN .EQ. 'Y' .OR. YN .EQ. 'y') THEN
