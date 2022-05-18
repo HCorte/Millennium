@@ -3,6 +3,7 @@
         INCLUDE 'INCLIB:SETUP.DEF'
         INCLUDE 'INCLIB:GLOBAL.DEF'
         INCLUDE 'INCLIB:CONCOM.DEF'
+        INCLUDE 'INCLIB:SPTCOM.DEF'
 C        INCLUDE 'OLMCON.DEF'
 
 
@@ -11,12 +12,19 @@ C       show the status of P(SUPSYN)
         RECORD/SETUP/ PAR
         CHARACTER*40  FILENAME
 
+        INTEGER*4  TEMP
+        INTEGER*2  I2TEMP(2)
+
+        EQUIVALENCE (TEMP,       I2TEMP)
+
         PRINT *, 'CDC DATE:',P(NXTCDC)
 
         PRINT *,'P(REGLOG)=',P(REGLOG)
         PRINT *,'P(OLMCONF)=',P(OLMCONF)
-
-
+        TEMP = SPTREV(3) !3 game index for totobola extra
+        PRINT *,'Game Control Revision: ',I2TEMP(1) 
+        PRINT *,'Game Text Revision: ',I2TEMP(2) 
+        TEMP = 0
         PAR.OLMCON = P(OLMCONF)    
 C        PAR.REGLOG = P(REGLOG)
 
@@ -89,7 +97,9 @@ C       buffer TRABUF
         INCLUDE 'INCLIB:DESTRA.DEF'
 C       get process information
 C	INCLUDE	    '($SYSSRVNAM)'
-        INCLUDE	    '($JPIDEF)'        
+        INCLUDE	    '($JPIDEF)' 
+C
+C        INCLUDE 'INCLIB:GLOBAL.DEF'                
 
         CHARACTER*3 YESNO(0:1)
         DATA YESNO  /' No','Yes'/
@@ -140,8 +150,30 @@ C
         INTEGER*4   TNL		! LENGTH OF THE 'TN'
         INTEGER*4   NDX
         CHARACTER*8 TNAME	! OUTPUT
+C   begin gninvall
+        integer*4    xday   
+        character*20 gfil(7,maxgam)   
+        character*20 cfil
+        logical      xfil
+C        integer*4    gnum
+C        integer*4    gtyp
+        integer*4    gcdc
+        integer*4    icdc          
+        integer*4    fcdc
+        integer*4    offs
 
-        
+        integer*4    temp
+        byte         i1temp(4)
+        equivalence (temp,i1temp)         
+C   end gninvall
+
+C begin nrm_csmonyi8
+        DOUBLE PRECISION BIG !8 bytes since its REAL*8 equivalent
+C        REAL*8 BIG     
+C        PARAMETER (BIG=9223372036854775000.0)
+        CHARACTER*21 BIG_STR
+C end nrm_csmonyi8
+
 10	CONTINUE        
 
         WRITE(6,9012) YESNO(PAR.OLMCON)
@@ -444,7 +476,81 @@ C        print '(A)',GLNAMES(1,7)+GLNAMES(2,7)+GLNAMES(3,7)+GLNAMES(4,7)
 
         print '(A)'
         print '(A)'
-C       PARAMETER(NUMLTO=4)   !NUMBER OF LOTTO GAMES        
+C       PARAMETER(NUMLTO=4)   !NUMBER OF LOTTO GAMES  
+
+        PRINT *,'----------BEGIN--------GNINVALL---------------------'
+C        DO gnum = 1,MAXGAM
+C            WRITE(6,2100) 'File Name:',(GFNAMES(K,GNUM),K=1,5),GNUM
+C        ENDDO
+
+        WRITE(6,2100) '(totobola normal):',(GFNAMES(K,1),K=1,5),1
+        WRITE(6,2100) '(totoloto Sabado):',(GFNAMES(K,6),K=1,5),6
+        WRITE(6,2100) '(totoloto Quarta):',(GFNAMES(K,7),K=1,5),7
+        WRITE(6,2100) '(totobola extra):',(GFNAMES(K,10),K=1,5),10
+
+        WRITE(6,2110) 'Validation file:',(SFNAMES(k,VLF),k=1,5) !sfnames(1,vlf)
+
+        icdc = daycdc-1
+        fcdc = icdc
+C-----------------------------------------------------------------------
+C V06 - Allowing daily generations of AM_WAG file
+C       initializing gfil array with default values
+C-----------------------------------------------------------------------
+        do gnum = 1,MAXGAM
+            do xday = 1,7
+                gfil(xday,gnum) = 'NONE'
+            enddo
+        enddo
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C-----------------------------------------------------------------------
+C V06 - Allowing daily generations of AM_WAG file
+C-----------------------------------------------------------------------
+      do gnum = 1,MAXGAM
+        gtyp = gnttab(GAMTYP,gnum)
+        if(gtyp.gt.0.and.gtyp.ne.TPAS) then   ! NO PASSIVE, ONLY ACTIVE GAMES
+          temp = 0
+          do gcdc = icdc,fcdc
+            write(cfil,9000) P(REG_DRWPCK),GSNAMES(gnum),gcdc
+            write(6,9010) P(REG_DRWPCK),GSNAMES(gnum),gcdc
+            inquire(file=cfil,exist=xfil)
+            if(xfil)then
+              gfil(fcdc-gcdc+1,gnum) = cfil
+              temp = temp + 1
+            else
+              gfil(fcdc-gcdc+1,gnum) = 'NONE'
+            endif
+          enddo
+          write(cfil,'(4A4)') (glnames(offs,gnum),offs=1,4)
+          if(temp.eq.0) then
+            if(daydrw(gnum).gt.0) then
+              WRITE(*,*),'>>> ERROR: ',cfil,' ACTIVE but no files were FOUND'
+            else
+              WRITE(*,*),cfil,' NOT ACTIVE'
+            endif
+          elseif(temp.eq.7) then
+            if(daydrw(gnum).gt.0) then
+              WRITE(*,*),cfil,' ACTIVE'              
+            else
+              WRITE(*,*),'>>> WARNING: ',cfil,' ACTIVE but no draws are configured'
+            endif
+          else
+            WRITE(*,*),'>>> WARNING: ',cfil,' ACTIVE ',temp,' days <<<'              
+          endif
+        else
+          do gcdc = icdc,fcdc
+            gfil(fcdc-gcdc+1,gnum) = 'NONE'
+          enddo
+        endif
+      enddo
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+        do gnum=1,MAXGAM
+            do xday=1,7          
+                IF(gfil(xday,gnum) .NE. 'NONE')  WRITE(6,2120) 'gfil file:',gfil(xday,gnum)
+            enddo
+        enddo 
+
+        PRINT *,'----------END--------GNINVALL---------------------'
+
         DO GIND=1,NUMLTO
           DRAW=LLTDRW(GIND)
           GNUM=GTNTAB(TLTO,GIND)
@@ -548,7 +654,15 @@ C       Getting addresses by the %LOC function
         GOTO 10  
 
 700     CONTINUE
-        PRINT *, 'WRONG OPTION .... ITS NOT 7 BUT 9'
+ 
+C       8 bytes = 18446744073709551615 max value unsigned
+C       signed is 9 223 372 036 854 775 807,5 -> 9 223 372 036 854 775 807
+C                BIG = 9223372036854775807.0 
+                BIG = 9223372036854775000.0 
+                WRITE (BIG_STR,990) BIG
+                WRITE(6,980) BIG_STR
+C        BIG=(DFLOAT(AMOUNT(1))*MON_UNIT+DFLOAT(AMOUNT(2)))/DOLL_BASE
+
         GOTO 10           
 
 800     CONTINUE
@@ -572,9 +686,22 @@ C        GOTO 10
 9012    FORMAT(15X,'9. Connect to Olimpo',T45,1X,A3)  
 1900	FORMAT(1X,"Game Name:",4A4,3X,'File Name: ',5A4,3X,'For Game Num:',I1)
 2500    FORMAT('Validation File Name',5A4,3X,'Validation File Name',5A4,3X)
+
+
+2100    FORMAT(1X,'gninvall - File Name',15A,5A4,3X,'For Game Num:',I1)
+2110    FORMAT(1X,15A,3X,5A4)
+2120    FORMAT(1X,15A,3X,20A)
+9000    format(A4,':',A4,I4.4,'.FIL') 
+9010    format(3X,A4,':',A4,I4.4,'.FIL') 
+
+
 2900    FORMAT(1X,'File Name: ',7A4)
 3000    FORMAT(2X,'Validation File Name:',5A4,2X,'Carry Over File:',5A4)
 3010    FORMAT(2X,'System File Name:',A4)
+
+C990     FORMAT(F22.0)
+990     FORMAT(F20.0)
+980     FORMAT(19A)
 
       END
 
