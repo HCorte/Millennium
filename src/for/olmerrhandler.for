@@ -50,10 +50,12 @@ C=======OPTIONS /CHECK=NOOVERFLOW/EXT
       INTEGER*4 FUNCTION OLMERRHANDLER(SIGARGS, MECHARGS)
       IMPLICIT NONE
 C
-      INCLUDE	    'INCLIB:SYSPARAM.DEF'
-      INCLUDE	    '($LIBDEF)'
-      INCLUDE	    '($STSDEF)'
-      INCLUDE	    '($SSDEF)'
+      INCLUDE 'INCLIB:SYSPARAM.DEF'
+      INCLUDE '($LIBDEF)'
+      INCLUDE '($STSDEF)'
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      INCLUDE '($FORDEF)' ! Declare the FOR$_ symbols      
+      INCLUDE '($SSDEF)'  ! Declare the SS$_ symbols
 C
       INTEGER*4   SIGARGS(*)
       INTEGER*4   MECHARGS(*)
@@ -67,6 +69,8 @@ C
       INTEGER*4    ERR_NUM
       INTEGER*4    LIB$SYS_GETMSG
 C	EXTERNAL     IAM 
+      ! Declare procedures
+      INTEGER LIB$MATCH_COND,INDEX
       
 C
 C Get the error code.  If it is a fatal error, change severity to a non-fatal
@@ -74,21 +78,17 @@ C error, then resignal.
 C
       ERRORCODE = 0
       CALL MVBITS( SIGARGS(2), 0, 3, ERRORCODE, 0)
-C     the error code is the full 4 bytes that is 32 bits of SIGARGS(2)
-      CALL MVBITS( SIGARGS(2), 0, 32, ERR_NUM, 0)  
-      
-      CALL OPS("ERR_NUM:",ERR_NUM,ERR_NUM)    
-C      STATUS = LIB$SYS_GETMSG(ERR_NUM,ERR_MSG) !instead of ERR_NUM could be SIGARGS(2)???
-C      STATUS = LIB$SYS_GETMSG(ERR_NUM,MSGLEN,ERR_MSG)
-
-C      STATUS = 1605868 !1880EC
+C     the error code is the full 4 bytes that is 32 bits of SIGARGS(2) to retrive the error msg
+      CALL MVBITS( SIGARGS(2), 0, 32, ERR_NUM, 0)   
       CALL LIB$SYS_GETMSG(ERR_NUM,MSGLEN,MSG)
 C      CALL LIB$PUT_OUTPUT(MSG(1:MSGLEN))
-      CALL OPS("ERRORCODE:",ERRORCODE,ERRORCODE)
-      CALL OPSTXT("ERR_MSG:"//MSG(1:MSGLEN))
-      CALL OPSTXT("--------------------------------")
-C      CALL OPS("STS$K_SEVERE:",STS$K_SEVERE,STS$K_SEVERE)
-C      CALL OPS("before ERRORCODE:",ERRORCODE,ERRORCODE) 
+
+C      CALL OPSTXT("----------Error Handler---------")
+C      CALL OPS("ERR_NUM:",ERR_NUM,ERR_NUM)   
+C      CALL OPS("ERRORCODE:",ERRORCODE,ERRORCODE)
+C      CALL OPSTXT("ERR_MSG:"//MSG(1:MSGLEN))
+C      CALL OPSTXT("--------------------------------")
+
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC           
 C Value   Symbol            Severity          Response
 C 0       STS$K_WARNING     Warning           Execution continues, unpredictable results
@@ -97,12 +97,32 @@ C 2       STS$K_ERROR       Error             Execution continues, erroneous res
 C 3       STS$K_INFO        Information       Execution continues, informational message displayed
 C 4       STS$K_SEVERE      Severe error      Execution terminates, no output
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      IF( ERRORCODE.EQ.STS$K_SEVERE ) THEN
-        CALL OPSTXT("...REDUCE THE SEVERITY OF ERROR...")    
-        CALL MVBITS( STS$K_ERROR, 0, 3, SIGARGS(2), 0)
-      ENDIF
 
-C      CALL OPS("number of longwords:",SIGARGS(1),SIGARGS(1))
+CCCCCCCCCCCCCCCCCCC begin - More controled error handlingCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      INDEX = LIB$MATCH_COND (SIGARGS(2),
+     *        FOR$_FILNOTFOU,
+     *        FOR$_OPEFAI,
+     *        FOR$_NO_SUCDEV,
+     *        FOR$_FILNAMSPE)
+
+      IF (INDEX .EQ. 0) THEN
+            ! Not an expected condition code, resignal
+            IF( ERRORCODE.EQ.STS$K_SEVERE ) THEN
+C                  CALL OPSTXT("...Not an expected condition code - REDUCE THE SEVERITY OF ERROR and resignal...")    
+                  CALL MVBITS( STS$K_ERROR, 0, 3, SIGARGS(2), 0)
+            ENDIF
+            !HANDLER = SS$_RESIGNAL
+      ELSE IF (INDEX .GT. 0) THEN
+            ! Expected condition code, handle it
+C            CALL OPSTXT("...Expected condition code - handle it...")
+C            CALL OPS("error detected index:",INDEX,INDEX)              
+            IF( ERRORCODE.EQ.STS$K_SEVERE ) THEN
+                  CALL MVBITS( STS$K_ERROR, 0, 3, SIGARGS(2), 0)
+            ENDIF
+      ENDIF
+CCCCCCCCCCCCCCCCCCC end - More controled error handlingCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+
       CALL OPSTXT("!!!error exception detected in COMOLM!!!")
       TYPE *,IAM(),''
       TYPE *,IAM(),''
@@ -111,7 +131,7 @@ C      CALL OPS("number of longwords:",SIGARGS(1),SIGARGS(1))
       IF( ERRORCODE.EQ.STS$K_SEVERE ) THEN
             TYPE *,IAM(),'The error is Severe/fatal that'
             TYPE *,IAM(),'would kill COMOLM if not handled'
-            CALL OPSTXT("!!!Fatal/Severe error exception detected in COMOLM!!!")
+C            CALL OPSTXT("!!!Fatal/Severe error exception detected in COMOLM!!!")
       ENDIF
       TYPE *,IAM(),''
       TYPE *,IAM(),''

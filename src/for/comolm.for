@@ -24,9 +24,9 @@ C=======OPTIONS /CHECK=NOOVERFLOW/EXT
       INCLUDE 'INCLIB:CHKSUMCM.DEF'
       INCLUDE 'INCLIB:QUECOM.DEF'
       INCLUDE 'INCLIB:APUCOM.DEF'
-      INCLUDE 'INCLIB:IGSCON.DEF'
       INCLUDE 'INCLIB:GLIST.DEF' 
       INCLUDE '(LIB$ROUTINES)'
+C      INCLUDE 'INCLIB:IGSCON.DEF'
       INCLUDE 'INCLIB:OLMCOM.DEF'     
 CCCCCCCCCOnly for error symbol that will be comment for prdCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       INCLUDE '($FORDEF)'
@@ -41,10 +41,39 @@ CCCCCCCCCOnly for error symbol that will be comment for prdCCCCCCCCCCCCCCCCCCCCC
       INTEGER*4   MYCHKSUM     
 
 	INTEGER*4   OLMERRHANDLER
-	EXTERNAL    OLMERRHANDLER        
+	EXTERNAL    OLMERRHANDLER   
+C begin Performace variable for LIB$xxxx_TIMER 
+      INTEGER*4 PERSTATUS
+      INTEGER TIMER_CONTEXT
+      DATA TIMER_CONTEXT /0/
+      INTEGER*1 TIMER_DATA, WRITE_SYS_OUT, FILE
+      PARAMETER (WRITE_SYS_OUT = 1, FILE = 2)  
+      INTEGER*4 TIMER_ROUTINE    
+      EXTERNAL  TIMER_ROUTINE
+C end of Performace variable for LIB$xxxx_TIMER       
+      
 
       CALL OPSTXT(' Copyright 2020 SCML. All rights reserved. ') 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Instead of the LIB$xxxx_TIMER routines you might consider modifying   C
+C the program to call other routines within the program to measure      C
+C execution time (but not obtain other process information).            C
+C For example, you might use VSI Fortran intrinsic                      C
+C procedures, such as SYSTEM_CLOCK, DATE_AND_TIME, and TIME.            C
+C 5.2.1.2. Using a Command Procedure                                    C
+C                                                                       C
+C http://odl.sysworks.biz/disk$axpdocsep021/opsys/vmsos731/vmsos731/    C
+C 5841/5841pro_072.html                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC     
+      PERSTATUS = LIB$INIT_TIMER() !TIMER_CONTEXT as first parameter
+C      WRITE(*,*) "PERSTATUS 1 =",PERSTATUS 
+C      CALL OPS("PERSTATUS 1 =",PERSTATUS,PERSTATUS)
       CALL LIB$ESTABLISH(OLMERRHANDLER)
+      TIMER_DATA = WRITE_SYS_OUT
+      PERSTATUS = LIB$SHOW_TIMER(,,TIMER_ROUTINE,TIMER_DATA) !TIMER_CONTEXT as first parameter
+C      IF (.NOT. PERSTATUS) CALL LIB$SIGNAL (%VAL (PERSTATUS)) 
+C      WRITE(*,*) "PERSTATUS 2 =",PERSTATUS
+C      CALL OPS("PERSTATUS 2 =",PERSTATUS,PERSTATUS)
       CALL SNIF_AND_WRKSET 
 
       TASK    = OLM
@@ -86,7 +115,11 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C insert here the error symbol to test the error handler function OLMERRHANDLER            C
 C for example FOR$_FILNAMSPE                                                               C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  
-C      CALL LIB$SIGNAL(%VAL(FOR$_FILNAMSPE)) ! use this method instead of LIB$STOP                      
+      PERSTATUS = LIB$INIT_TIMER() !TIMER_CONTEXT as first parameter   
+C      CALL OPS("PERSTATUS 3 =",PERSTATUS,PERSTATUS) 
+      CALL LIB$SIGNAL(%VAL(FOR$_FILNAMSPE)) ! use this method instead of LIB$STOP                      
+      PERSTATUS = LIB$SHOW_TIMER(,,TIMER_ROUTINE,TIMER_DATA) !TIMER_CONTEXT as first parameter   
+C      CALL OPS("PERSTATUS 4 =",PERSTATUS,PERSTATUS)     
 
       IF (DAYSTS .EQ. DSCLOS)  THEN 
             IF (P(SYSTYP) .EQ. LIVSYS) THEN 
@@ -292,8 +325,8 @@ C   MESSERIAL -> MESSAGEID generated and sent by Olimpo
             INCLUDE 'INCLIB:QUECOM.DEF'
             INCLUDE 'INCLIB:DESTRA.DEF'
             INCLUDE 'INCLIB:APUCOM.DEF'
-            INCLUDE 'INCLIB:EURCON.DEF'
             INCLUDE 'INCLIB:DATBUF.DEF'
+C            INCLUDE 'INCLIB:EURCON.DEF'
             INCLUDE 'INCLIB:OLMCOM.DEF'            
 
             INTEGER*4  values(8)
@@ -603,8 +636,8 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
             INCLUDE 'INCLIB:CHKSUMCM.DEF'
             INCLUDE 'INCLIB:QUECOM.DEF'
             INCLUDE 'INCLIB:APUCOM.DEF'
-            INCLUDE 'INCLIB:IGSCON.DEF'
             INCLUDE 'INCLIB:IGSDEBUG.DEF'   
+C            INCLUDE 'INCLIB:IGSCON.DEF'
             INCLUDE 'INCLIB:OLMCOM.DEF' 
       
             INTEGER*4 MESS(EDLEN)
@@ -757,3 +790,35 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
      
             CALL OPSTXT(LOGDATEI)
       END
+
+      INTEGER FUNCTION TIMER_ROUTINE (STATS, TIMER_DATA) 
+            ! Dummy arguments 
+            CHARACTER*(*) STATS 
+            INTEGER TIMER_DATA 
+            ! Logical unit number for file 
+            INTEGER STATS_FILE 
+            ! User request 
+            INTEGER WRITE_SYS_OUT, 
+     *             FILE 
+            PARAMETER (WRITE_SYS_OUT = 1, 
+     *                FILE = 2) 
+            ! Return code 
+            INTEGER SUCCESS, 
+     *             FAILURE 
+            PARAMETER (SUCCESS = 1, 
+     *                FAILURE = 0) 
+            ! Set return status to success 
+            TIMER_ROUTINE = SUCCESS 
+            
+            ! Write statistics or file them in STATS.DAT 
+            IF (TIMER_DATA .EQ. WRITE_SYS_OUT) THEN 
+C              TYPE *, STATS          
+               CALL OPSTXT(STATS)
+            ELSE IF (TIMER_DATA .EQ. FILE) THEN 
+              CALL LIB$GET_LUN (STATS_FILE) 
+              OPEN (UNIT=STATS_FILE, FILE='STATS.DAT') 
+              WRITE (UNIT=STATS_FILE, FMT='(A)') STATS 
+            ELSE 
+              TIMER_ROUTINE = FAILURE 
+            END IF 
+      END 
