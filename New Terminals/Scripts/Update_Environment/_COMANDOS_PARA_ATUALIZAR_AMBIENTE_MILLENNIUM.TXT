@@ -86,6 +86,11 @@ CÓPIA DOS FICHEIROS A PARTIR DA MÁQUINA DESTINO
 
 -- FIM --
 
+quando é uma copia de uma tape:
+No GXTSK depois de fazer backup dos ficheiros dmq.ini;*,asf.fil;*,stndef.fil;*,mx_server.fil e todos x2x*.fil;*
+pode e deve-se remover estes ficheiros caso se queira repoem-se do backup.
+
+
 ----------------------------------PODEV1 para POSYSD ------------------------------------------
 
 dir PODEV1"console console"::SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT.DSS]dss_logicals.com;0

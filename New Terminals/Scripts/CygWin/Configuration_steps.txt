@@ -1,0 +1,37 @@
+in CygWin run:
+--> primeiro correr e instalar o pack "sshpass" e o outro pack "ssh..." ao correr o CygWin.exe (o installer)
+correr o comando o seguinte comando para gerar p ssh_config file no folder etc
+$ ssh-host-config
+nota: seguir os passos https://docs.oracle.com/cd/E63000_01/EMBSC/preinstall_req_cygwin_ssh.htm#EMBSC281 
+para a configuração
+
+*** Info: StrictModes is set to 'yes' by default.
+*** Info: This is the recommended setting, but it requires that the POSIX
+*** Info: permissions of the user's home directory, the user's .ssh
+*** Info: directory, and the user's ssh key files are tight so that
+*** Info: only the user has write permissions.
+*** Info: On the other hand, StrictModes don't work well with default
+*** Info: Windows permissions of a home directory mounted with the
+*** Info: 'noacl' option, and they don't work at all if the home
+*** Info: directory is on a FAT or FAT32 partition.
+*** Query: Should StrictModes be used? (yes/no) no
+*** Query: Should privilege separation be used? <yes/no>: yes
+*** Query: New local account 'sshd'? <yes/no>: yes
+*** Query: Do you want to install sshd as a service?
+*** Query: <Say "no" if it is already installed as a service> <yes/no>: yes
+*** Query: Enter the value of CYGWIN for the deamon: [] binmode ntsec
+
+$ cd C:/cygwin64/etc
+$ ls -lah  ssh_config
+    -rw-r--r-- 1 SYSTEM Administradores 1.5K Mar 28 17:40 ssh_config
+abrir em modo admin CygWin
+$ setfacl -s user::rw-,group::rw-,other::rw- ssh_config
+$ ls -l ssh_config
+    -rw-rw-rw- 1 SYSTEM Administradores 1531 Mar 28 17:40 ssh_config    
+
+editar o ficheiro depois de correr notepad++ em modo administrador (caso retorne erro que o ficheiro está em uso têm haver com permissões que falta a permisão de escrita)
+C:/cygwin64/etc/ssh_config
+Host myhost
+  SetEnv SSHPASS=console
+
+

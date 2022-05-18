@@ -1,0 +1,209 @@
+
+09:53:36 TMFREP   Using default cartel number - 7
+09:53:36 VLFTSK   Checking WINSEL statuses
+
+09:53:36 VLFTSK    REGULAR WINSEL FOR GAMES :
+
+09:53:36 VLFTSK     TOTOBOLA EXTRA 1   GNUM= 10  DRAW=  335
+09:53:36 VLFTSK
+09:53:36 VLFTSK
+09:53:36 VLFTSK   Winner selections were postponed or cancelled
+09:53:36 VLFTSK   for the games listed above
+09:53:36 VLFTSK
+09:53:36 VLFTSK
+09:53:36 **TELL** VLFTSK   Are you sure you want to continue [Y/N] 
+POSYSD::SCML>
+POSYSD::SCML>
+POSYSD::SCML> tell vlftsk n
+POSYSD::SCML>
+              09:58:47 VLFTSK
+POSYSD::SCML>
+              09:58:47 VLFTSK   Enter results and/or run MULTIWIN.
+09:58:47 VLFTSK   After MULTIWIN subrun VLFTSK again!
+09:58:47 VLFTSK
+09:58:47 VLFTSK   STOP0003  ****  OPERATOR ABORT
+
+10:03:46 **TELL** STSYSTEM Enter CONT or STOP                                   
+
+POSYSD::SCML>
+POSYSD::SCML> subrun multiwin
+10:15:32 MULTIWIN Copyright 2011 GTECH Corp. All rights reserved.
+POSYSD::SCML>
+10:15:32 **TELL** MULTIWIN Are you sure you want MULTIWIN [Y/N]?                
+
+POSYSD::SCML> tell multiwin y
+POSYSD::SCML>
+
+10:15:46 MULTIWIN  REGULAR WINSEL FOR GAMES :
+
+10:15:46 MULTIWIN   TOTOBOLA EXTRA 1   GNUM= 10  DRAW=  335
+
+10:15:46 MULTIWIN  === Select option ===
+10:15:46 MULTIWIN   1 - Add new game
+10:15:46 MULTIWIN   2 - Remove game
+10:15:46 MULTIWIN   3 - Continue with Multiwin
+10:15:46 MULTIWIN   E - Stop Multiwin
+
+10:15:46 **TELL** MULTIWIN Enter option #                                       
+
+POSYSD::SCML>
+POSYSD::SCML> tell multiwin 3
+POSYSD::SCML>
+              10:16:02 CRTVLC   Copyright 2011 GTECH Corp. All rights reserved.
+
+10:16:03 CRTTCC   Copyright 2011 GTECH Corp. All rights reserved.
+10:16:03 MULTIWIN Waiting for VLC to be cleared
+10:16:03 CRTTCC   Allocating & clearing CARX:TCC.FIL           500000 sectors
+10:16:03 CRTTCC   Clearing       500021  VAX sectors in CARX:TCC.FIL
+10:16:03 CRTVLC   Allocating & clearing VALX:VLC.FIL           900000 sectors
+10:16:03 CRTVLC   Clearing       900017  VAX sectors in VALX:VLC.FIL
+10:16:04 CRTTCC   INITIALIZATION COMPLETE FOR CARX:TCC.FIL
+10:16:04 CRTTCC    CARX:TCC.FIL         successfully allocated
+10:16:04 CRTTCC   STOP0001  ****  SUCCESS
+10:16:05 CRTVLC   INITIALIZATION COMPLETE FOR VALX:VLC.FIL
+10:16:05 CRTVLC   STOP0001  ****  SUCCESS
+10:16:07 MULTIWIN  Beginning the execution of MLCOPVLF
+10:16:07 MLCOPVLF Copyright 2011 GTECH Corp. All rights reserved.
+10:16:07 MULTIWIN Do you want to run TOTOBOLA EXTRA 1 draw  335 winner selection
+10:16:07 **TELL** MULTIWIN at a later date [Y/N]                                
+
+POSYSD::SCML>
+              10:16:07 MLCOPVLF  Copying VALX:VLF.FIL         to VALX:VLC.FIL
+
+POSYSD::SCML>
+POSYSD::SCML>
+              10:16:16 MLCOPVLF VLF --> VLC file copy completed.
+   16:16 MLCOPVLF STOP0001  ****  SUCCESS
+POSYSD::SCML>
+POSYSD::SCML>
+POSYSD::SCML> tell multiwin n
+POSYSD::SCML>
+              10:16:28 MULTIWIN Postponed winner selection for TOTOBOLA EXTRA 1
+draw  335
+10:16:28 MULTIWIN  Loading game data for Sports  3 draw>  335 winner selection
+
+10:16:28 MULTIWIN  REGULAR WINSEL FOR GAMES :
+
+10:16:28 MULTIWIN   TOTOBOLA EXTRA 1   GNUM= 10  DRAW=  335
+10:16:28 **TELL** MULTIWIN Do you want to run WINSELS Y/N ?                     
+
+POSYSD::SCML> tell multiwin y
+POSYSD::SCML>
+              10:16:40 MULTIWIN WINSEL    started.
+10:16:40 MULTIWIN Clearing       900035  VAX sectors in WORK:VLW01.FIL
+10:16:41 MULTIWIN INITIALIZATION COMPLETE FOR WORK:VLW01.FIL
+10:16:41 WINSEL   Copyright 2011 GTECH Corp. All rights reserved.
+10:16:41 MULTIWIN WINSEL   running
+10:16:42 WINSEL    Scanning file DRAW:TOT17626.FIL    for winners and carryovers
+
+10:16:42 WINSEL    Scanning file DRAW:TOT17627.FIL    for winners and carryovers
+
+10:16:42 WINSEL    Scanning file DRAW:TOT17628.FIL    for winners and carryovers
+
+10:16:42 WINSEL    Scanning file DRAW:TOT17629.FIL    for winners and carryovers
+
+10:16:42 WINSEL    Scanning file DRAW:TOT17630.FIL    for winners and carryovers
+
+10:16:42 WINSEL    Scanning file DRAW:TOT17631.FIL    for winners and carryovers
+
+10:16:42 WINSEL    Scanning file DRAW:TOT17632.FIL    for winners and carryovers
+
+10:16:42 WINSEL    Draw file scan complete
+10:16:42 WINSEL         234 records loaded to WORK:VLW01.FIL
+10:16:42 WINSEL    Posting winsel data to FILE:S3F.FIL
+10:16:42 WINSEL   STOP0001  ****  SUCCESS
+10:16:43 WINRPT   Copyright 2011 GTECH Corp. All rights reserved.
+10:16:43 WINRPT   STOP0001  ****  SUCCESS
+10:16:45 BKKREP   Copyright 2011 GTECH Corp. All rights reserved.
+10:16:46 BKKREP
+10:16:46 BKKREP   <<<<< BKKREP  V01Book Keeping Report Generation >>>>>
+10:16:46 BKKREP
+10:16:46 BKKREP   STOP0001  ****  SUCCESS
+10:16:47 MULTIVLF Copyright 2011 GTECH Corp. All rights reserved.
+10:16:48 MULTITCF Copyright 2011 GTECH Corp. All rights reserved.
+10:16:48 **TELL** MULTIVLF Are you sure you want VLF multi-file merge [Y/N]?    
+
+POSYSD::SCML>
+
+10:16:48 MULTITCF No TCF multi-file merge today
+
+10:16:48 MULTITCF STOP0001  ****  SUCCESS
+10:16:50 MULTIWIN Waiting for completion of MULTIVLF and MULTITCF
+POSYSD::SCML>
+POSYSD::SCML>
+POSYSD::SCML> tell multivlf y
+POSYSD::SCML>
+              10:17:13 MULTIVLF Begining execution of MLMRGVLF
+10:17:13 MLMRGVLF Copyright 2011 GTECH Corp. All rights reserved.
+
+10:17:13 MLMRGVLF  WINTSK   >     234 records copied from WORK:VLW01.FIL
+
+10:17:15 MLMRGVLF STOP0001  ****  SUCCESS
+10:17:17 **TELL** MULTIVLF Did MLMRGVLF run ok [Y/N]?                           
+
+POSYSD::SCML> tell multivlf y
+POSYSD::SCML>
+              10:17:32 MULTIVLF  Renaming VALX:VLF.OLD         to VALX:VLF.TMP
+
+10:17:32 MULTIVLF  Renaming VALX:VLF.FIL         to VALX:VLF.OLD
+10:17:32 MULTIVLF  Renaming VALX:VLC.FIL         to VALX:VLF.FIL
+10:17:32 MULTIVLF  Renaming VALX:VLF.TMP         to VALX:VLC.FIL
+10:17:32 MULTIVLF VLF multi-file merge complete
+10:17:32 MULTIVLF STOP0001  ****  SUCCESS
+10:17:34 VKSBLD   Copyright 2011 GTECH Corp. All rights reserved.
+10:17:34 VKSBLD   Building statistics for TOTOBOLA NORMAL  draw 1085
+10:17:34 VKSBLD   Building statistics for TOTOBOLA EXTRA 2 draw    5
+10:17:34 VKSBLD   Building statistics for TOTOBOLA EXTRA 1 draw  336
+10:17:34 VKSBLD   Scanning file DRAW:TOTO7629.FIL
+10:17:34 VKSBLD   Scanning file DRAW:TOTO7630.FIL
+10:17:34 VKSBLD   Scanning file DRAW:TOTO7631.FIL
+10:17:34 VKSBLD   Scanning file DRAW:TOTO7632.FIL
+10:17:34 VKSBLD   Scanning file DRAW:TOTO7633.FIL
+10:17:34 VKSBLD   Scanning file DRAW:TOTO7634.FIL
+10:17:34 VKSBLD   Updating file FILE:STATS.FIL
+10:17:34 VKSBLD   Game name         Draw      Coupons       Amount
+10:17:34 VKSBLD   TOTOBOLA NORMAL   1085         1790      4618.50
+10:17:34 VKSBLD   TOTOBOLA EXTRA 2     5            0         0.00
+10:17:34 VKSBLD   TOTOBOLA EXTRA 1   336            0         0.00
+10:17:34 VKSBLD   Sports stats   file building complete
+10:17:34 VKSBLD   STOP0001  ****  SUCCESS
+10:17:36 MULTIWIN STOP0001  ****  SUCCESS
+POSYSD::SCML>
+POSYSD::SCML> subrun vlftsk
+10:18:36 VLFTSK   Copyright 2011 GTECH Corp. All rights reserved.
+POSYSD::SCML>
+              10:18:37 VLFTSK   Checking WINSEL statuses
+10:18:37 VLFTSK   WINSEL statuses OK
+10:18:37 **TELL** VLFTSK   Do You Want To Run Winner Selection Today [Y/N]      
+
+POSYSD::SCML> tell vlftsk y
+POSYSD::SCML>
+              10:21:55 VLFTSK    Begining execution of MULTIWIN
+POSYSD::SCML>
+              10:21:55 MULTIWIN Copyright 2011 GTECH Corp. All rights reserved.
+
+10:21:55 **TELL** MULTIWIN Are you sure you want MULTIWIN [Y/N]?                
+
+POSYSD::SCML> tell multiwin n
+POSYSD::SCML>
+              10:23:05 MULTIWIN STOP0003  ****  OPERATOR ABORT
+
+10:23:07 VLFTSK    Begining execution of POOLBLD
+10:23:07 POOLBLD  Copyright 2011 GTECH Corp. All rights reserved.
+10:23:07 **TELL** VLFTSK   Do you want to run ShareClc Task [Y/N]?
+POSYSD::SCML>
+              10:23:18 POOLBLD  Restoring lotto pools
+10:23:19 POOLBLD  Lotto pool restore complete.
+10:23:19 POOLBLD  Updating pool files
+10:23:19 POOLBLD  Testing pools  for consistency
+10:23:19 POOLBLD  Pool file update complete
+10:23:19 POOLBLD  STOP0001  ****  SUCCESS
+POSYSD::SCML>
+POSYSD::SCML> tell vlftsk y
+POSYSD::SCML>
+              10:26:08 VLFTSK    Begining execution of SHARECLC
+10:26:08 SHARECLC Copyright 2011 GTECH Corp. All rights reserved.
+10:26:08 **TELL** SHARECLC Are You Sure You Want To Run Shareclc task [Y/N]?  
+......
+proced as normal =)
+
