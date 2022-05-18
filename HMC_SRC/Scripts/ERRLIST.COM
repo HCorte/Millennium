@@ -13,6 +13,8 @@ $ write sys$output f$message(2)
 $ write sys$output f$message(1)
 $ write sys$output f$message(10)
 $!
+$ write sys$output ""
+$ write sys$output ""
 $ write sys$output "-------------------Some severe erros for testing the handler to avoid closing image aka killing the process--------------------------"
 $ write sys$output "FOR$_FILNOTFOU(1605868):",f$message(1605868)
 $ write sys$output "FOR$_NO_SUCDEV(1605972):",f$message(1605972)
@@ -21,3 +23,9 @@ $ write sys$output "FOR$_OPEFAI(1605876):",f$message(1605876)
 $ write sys$output "FOR$_NOTFORSPE(1605644):",f$message(1605644)
 $! ------
 $ write sys$output "test----:",f$message(2928)
+$! ----- error of performace LIB$INIT_TIMER or LIB$SHOW_TIMER
+$ write sys$output ""
+$ write sys$output ""
+$ write sys$output "-------error of performace LIB$INIT_TIMER or LIB$SHOW_TIMER------"
+$ write sys$output "LIB$SHOW_TIMER:",f$message(98954)
+$ write sys$output ""
