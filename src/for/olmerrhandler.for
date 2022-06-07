@@ -68,6 +68,8 @@ C
       CHARACTER*256 MSG
       INTEGER*4    ERR_NUM
       INTEGER*4    LIB$SYS_GETMSG
+      INTEGER*4    ARGS_COUNT,PS
+C      INTEGER*8    PC
 C	EXTERNAL     IAM 
       ! Declare procedures
       INTEGER LIB$MATCH_COND,INDEX
@@ -76,18 +78,26 @@ C
 C Get the error code.  If it is a fatal error, change severity to a non-fatal
 C error, then resignal.
 C
+      ARGS_COUNT = SIGARGS(1)
       ERRORCODE = 0
       CALL MVBITS( SIGARGS(2), 0, 3, ERRORCODE, 0)
 C     the error code is the full 4 bytes that is 32 bits of SIGARGS(2) to retrive the error msg
       CALL MVBITS( SIGARGS(2), 0, 32, ERR_NUM, 0)   
       CALL LIB$SYS_GETMSG(ERR_NUM,MSGLEN,MSG)
 C      CALL LIB$PUT_OUTPUT(MSG(1:MSGLEN))
+C      PC = SIGARGS(ARGS_COUNT)
+      PS = SIGARGS(ARGS_COUNT+1)
 
-C      CALL OPSTXT("----------Error Handler---------")
-C      CALL OPS("ERR_NUM:",ERR_NUM,ERR_NUM)   
-C      CALL OPS("ERRORCODE:",ERRORCODE,ERRORCODE)
-C      CALL OPSTXT("ERR_MSG:"//MSG(1:MSGLEN))
-C      CALL OPSTXT("--------------------------------")
+      CALL OPSTXT("----------Error Handler---------")
+      CALL OPS("ERR_NUM:",ERR_NUM,ERR_NUM)   
+      CALL OPS("ERRORCODE:",ERRORCODE,ERRORCODE)
+      CALL OPSTXT("ERR_MSG:"//MSG(1:MSGLEN))
+      CALL OPSTXT("--------------------------------")
+      CALL OPS("ARGS_COUNT:",ARGS_COUNT,ARGS_COUNT) 
+      CALL OPS("SIGARGS(3):",SIGARGS(3),SIGARGS(3)) 
+      CALL OPS("SIGARGS(4):",SIGARGS(4),SIGARGS(4))
+      CALL OPS("PC:",SIGARGS(ARGS_COUNT),SIGARGS(ARGS_COUNT))
+      CALL OPS("PS:",PS,PS)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC           
 C Value   Symbol            Severity          Response
@@ -108,14 +118,14 @@ CCCCCCCCCCCCCCCCCCC begin - More controled error handlingCCCCCCCCCCCCCCCCCCCCCCC
       IF (INDEX .EQ. 0) THEN
             ! Not an expected condition code, resignal
             IF( ERRORCODE.EQ.STS$K_SEVERE ) THEN
-C                  CALL OPSTXT("...Not an expected condition code - REDUCE THE SEVERITY OF ERROR and resignal...")    
+                  CALL OPSTXT("...Not an expected condition code - REDUCE THE SEVERITY OF ERROR and resignal...")    
                   CALL MVBITS( STS$K_ERROR, 0, 3, SIGARGS(2), 0)
             ENDIF
             !HANDLER = SS$_RESIGNAL
       ELSE IF (INDEX .GT. 0) THEN
             ! Expected condition code, handle it
-C            CALL OPSTXT("...Expected condition code - handle it...")
-C            CALL OPS("error detected index:",INDEX,INDEX)              
+            CALL OPSTXT("...Expected condition code - handle it...")
+            CALL OPS("error detected index:",INDEX,INDEX)              
             IF( ERRORCODE.EQ.STS$K_SEVERE ) THEN
                   CALL MVBITS( STS$K_ERROR, 0, 3, SIGARGS(2), 0)
             ENDIF

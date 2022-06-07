@@ -66,11 +66,12 @@ C http://odl.sysworks.biz/disk$axpdocsep021/opsys/vmsos731/vmsos731/    C
 C 5841/5841pro_072.html                                                 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC     
       PERSTATUS = LIB$INIT_TIMER() !TIMER_CONTEXT as first parameter
-C      WRITE(*,*) "PERSTATUS 1 =",PERSTATUS 
-C      CALL OPS("PERSTATUS 1 =",PERSTATUS,PERSTATUS)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       CALL LIB$ESTABLISH(OLMERRHANDLER)
-      TIMER_DATA = WRITE_SYS_OUT
-      PERSTATUS = LIB$SHOW_TIMER(,,TIMER_ROUTINE,TIMER_DATA) !TIMER_CONTEXT as first parameter
+
+D      TIMER_DATA = WRITE_SYS_OUT
+D      PERSTATUS = LIB$SHOW_TIMER(,,TIMER_ROUTINE,TIMER_DATA) !TIMER_CONTEXT as first parameter
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC      
 C      IF (.NOT. PERSTATUS) CALL LIB$SIGNAL (%VAL (PERSTATUS)) 
 C      WRITE(*,*) "PERSTATUS 2 =",PERSTATUS
 C      CALL OPS("PERSTATUS 2 =",PERSTATUS,PERSTATUS)
@@ -101,7 +102,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C Teste fatal error that should lead to killing the current process   C 
 C if not treated properly                                             C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      CALL XWAIT(10, 2, ST)    !gives a sleep before triggering a exception
+C      CALL XWAIT(10, 2, ST)    !gives a sleep before triggering a exception
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C condition value 0 correspondes to a Warning see 9.5. Condition Values in documentation   C
 C of VSI_PROGRAM_CONCEPTS_VOL_I.pdf, since its LIB$STOP by default its SEVERE the level of C
@@ -115,10 +116,10 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C insert here the error symbol to test the error handler function OLMERRHANDLER            C
 C for example FOR$_FILNAMSPE                                                               C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  
-      PERSTATUS = LIB$INIT_TIMER() !TIMER_CONTEXT as first parameter   
+C      PERSTATUS = LIB$INIT_TIMER() !TIMER_CONTEXT as first parameter   
 C      CALL OPS("PERSTATUS 3 =",PERSTATUS,PERSTATUS) 
-      CALL LIB$SIGNAL(%VAL(FOR$_FILNAMSPE)) ! use this method instead of LIB$STOP                      
-      PERSTATUS = LIB$SHOW_TIMER(,,TIMER_ROUTINE,TIMER_DATA) !TIMER_CONTEXT as first parameter   
+C      CALL LIB$SIGNAL(%VAL(FOR$_FILNAMSPE)) ! use this method instead of LIB$STOP                      
+C      PERSTATUS = LIB$SHOW_TIMER(,,TIMER_ROUTINE,TIMER_DATA) !TIMER_CONTEXT as first parameter   
 C      CALL OPS("PERSTATUS 4 =",PERSTATUS,PERSTATUS)     
 
       IF (DAYSTS .EQ. DSCLOS)  THEN 
@@ -204,7 +205,9 @@ C          GET DATE AND TIME OF ATTACHMENT
 
 570   CONTINUE        
 C      CALL LISTTOP(BUFNUM, QUETAB(1, OLM), STAT)
-       CALL LISTTOP(BUFNUM, COMOLMQUE(1), STAT)
+C      CALL OPSTXT("BEFORE LISTTOP COMOLMQUE(1)")      
+      CALL LISTTOP(BUFNUM, COMOLMQUE(1), STAT)
+C      CALL OPS("AFTER LISTTOP COMOLMQUE(1)",STAT,STAT)
 
       IF(STAT .EQ. GLIST_STAT_EMPTY) THEN             
             IF(WTFORMESS .EQ. .TRUE.) GOTO 10
@@ -215,6 +218,7 @@ C      CALL LISTTOP(BUFNUM, QUETAB(1, OLM), STAT)
 
 15    CONTINUE      
       CALL SENDTOOLM(BUFNUM,ST,.FALSE.) 
+      CALL OPS("SENDTOOLM STATUS:",ST,ST)
       IF ((ST .NE. PAMS__SUCCESS ) .AND. (ST .NE. PAMS__TIMEOUT)) THEN
          TYPE *,IAM(),''                                                !comment D for prd only test purposes only                  
          TYPE *,IAM(),'COMOLM (destach) SEND MESSAGE TO OLIMPO ERROR, STATUS:',ST !comment D for prd only test purposes only
@@ -366,23 +370,32 @@ C            LOGICAL  TERFROHEAD /1/
                
             
             INTEGER*4 APPQUE 
-            INTEGER*4 PROBUF /0/          
+            INTEGER*4 PROBUF /0/
+C           When out of buffers from freequeue have one buffer to create transaction to send back to Olimpo the error transaction            
+            BYTE      AUXBUF(PROLEN*4)
+            INTEGER*4 AUXBUF_POINTER 
+C                    
 
-            MESS_BODY = (OUTTAB*4)-3
+            MESS_BODY = (OUTTAB*4)-3 !(33*4)-3=132-3=129
             ST = 0
             TYPE = 0 
             SUBTYPE = 0
             TERMINALNUM = 0
 20          CONTINUE
 
+C            CALL OPSTXT("BEFORE MESSQ_GET Buffer")
             CALL MESSQ_GET(%REF(STATUS))  
+C            CALL OPS("AFTER MESSQ_GET",STATUS,STATUS)
 
             IF (STATUS .EQ. PAMS__SUCCESS) THEN   
 80                CONTINUE
 
                   CALL GETBUF(PROBUF)
+C                  CALL OPSTXT("GET Buffer Subroutine GETBUF")
 C                 may comment this buffer body reset since with length size info all the garbage at the remaining bytes of the buffer are ignored (so no actual need to reset those bytes)                 
-                  CALL FASTSET(0, PRO(1,PROBUF), PROLEN)
+C                  IF (PROBUF.GT.0) THEN
+C                        CALL FASTSET(0, PRO(1,PROBUF), PROLEN)
+C                  ENDIF      
 
                   I1TEMP(1) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  3))!0
                   I1TEMP(2) = ZEXT (MESS_FROM_OLM(AGENT_NUM_POS +  2))!1
@@ -457,7 +470,9 @@ C                  ENDIF
 
 C apos x tentativas secanhar ver se caio alguma mensagem de resposta na queue aplicacional para ser enviado para o MessageQ (ou pouco provavel pois nesse caso tamb?m n?o tinha buffers livres...)                  
 C adicionar uma variabel do vision que indique logo que aconteceu no dia xx as hh horas e mm de minutes uma falta de procom buffers
+D                  CALL OPS("GET Buffer for the transaction after the GET",PROBUF,PROBUF)
                   IF (PROBUF.LE.0) THEN
+                        CALL OPSTXT("FAILED TO GET BUFFER FROM FREEQUEUE")
 C                       remember that while QUEMES subroutine uses GETBUF thats not true for OPS that uses caixa de email                        
                         
                         I1AUX(1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
@@ -482,30 +497,35 @@ C        (importante)               SEE BETHER METHOD OF WRITING IN ONE LINE INS
      *                   ' MESSAGEID:'//MESSAGEID_STR) 
 C     *                   ' TYPE:'//TYPE//' SUBTYPE:'//SUBTYPE//' MESSAGEID:'//MESSAGEID) 
                         ST = -10 
+                  ELSE
+C                 may comment this buffer body reset since with length size info all the garbage at the remaining bytes of the buffer are ignored (so no actual need to reset those bytes)                        
+                        CALL FASTSET(0, PRO(1,PROBUF), PROLEN)
+                        BPRO(MESSID_OLM + 4,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
+                        BPRO(MESSID_OLM + 3,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
+                        BPRO(MESSID_OLM + 2,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
+                        BPRO(MESSID_OLM + 1,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
+                        BPRO(MESSID_OLM + 0,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
+      
+                        BPRO(SEROLM_OLM + 8,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0))
+                        BPRO(SEROLM_OLM + 7,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1))
+                        BPRO(SEROLM_OLM + 6,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  2))
+                        BPRO(SEROLM_OLM + 5,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  3))
+                        BPRO(SEROLM_OLM + 4,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  4))
+                        BPRO(SEROLM_OLM + 3,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  5))
+                        BPRO(SEROLM_OLM + 2,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  6))
+                        BPRO(SEROLM_OLM + 1,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7))
+                        BPRO(SEROLM_OLM + 0,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8))
                   ENDIF
-
-                  BPRO(MESSID_OLM + 4,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0))
-                  BPRO(MESSID_OLM + 3,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1))
-                  BPRO(MESSID_OLM + 2,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2))
-                  BPRO(MESSID_OLM + 1,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3))
-                  BPRO(MESSID_OLM + 0,PROBUF) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4))
-
-                  BPRO(SEROLM_OLM + 8,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0))
-                  BPRO(SEROLM_OLM + 7,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1))
-                  BPRO(SEROLM_OLM + 6,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  2))
-                  BPRO(SEROLM_OLM + 5,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  3))
-                  BPRO(SEROLM_OLM + 4,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  4))
-                  BPRO(SEROLM_OLM + 3,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  5))
-                  BPRO(SEROLM_OLM + 2,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  6))
-                  BPRO(SEROLM_OLM + 1,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7))
-                  BPRO(SEROLM_OLM + 0,PROBUF) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8))                   
 
 
                   IF (ST .LT. 0) THEN
+
                         ERRMSG(1) = ZEXT(MESS_FROM_OLM(BUFFER_HEADER_LENTH))        
                         ERRMSG(2) = ZEXT(ERRTYP) 
+                        CALL OPSTXT("ERROR DETECTED")
                         IF(ST .EQ. -10) THEN
-                              ERRMSG(5) = ZEXT(INVL)    
+                              CALL OPSTXT("ERROR DETECTED TYPE OUT OF FREE BUFFERS...")
+                              ERRMSG(5) = ZEXT(NOBUFF) !ZEXT(INVL)    
                         ENDIF
                         IF(ST .EQ. -9 .OR. ST .EQ. -8) THEN
                               ERRMSG(5) = ZEXT(TBAD)                              
@@ -525,14 +545,61 @@ C     *                   ' TYPE:'//TYPE//' SUBTYPE:'//SUBTYPE//' MESSAGEID:'//M
                               ERRMSG(4) = ZEXT(0)                              
                         ENDIF
 
-                        BPRO(MESS_BODY + 0,PROBUF) =  ERRMSG(1)
-                        BPRO(MESS_BODY + 1,PROBUF) =  ERRMSG(2)
-                        BPRO(MESS_BODY + 2,PROBUF) =  ERRMSG(3)
-                        BPRO(MESS_BODY + 3,PROBUF) =  ERRMSG(4)
-                        BPRO(MESS_BODY + 4,PROBUF) =  ERRMSG(5)
-                        HPRO(OUTLEN,PROBUF) = 5
+                        IF(ST .EQ. -10) THEN    
+                              AUXBUF(MESSID_OLM+4) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  0)) 
+                              AUXBUF(MESSID_OLM+3) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  1)) 
+                              AUXBUF(MESSID_OLM+2) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  2)) 
+                              AUXBUF(MESSID_OLM+1) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  3)) 
+                              AUXBUF(MESSID_OLM+0) = ZEXT (MESS_FROM_OLM(MESSAGEID_POS +  4)) 
 
-                        CALL SENDTOOLM(PROBUF,ST,.TRUE.)
+                              AUXBUF(SEROLM_OLM+8) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  0))
+                              AUXBUF(SEROLM_OLM+7) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  1))
+                              AUXBUF(SEROLM_OLM+6) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  2))
+                              AUXBUF(SEROLM_OLM+5) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  3))
+                              AUXBUF(SEROLM_OLM+4) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  4))
+                              AUXBUF(SEROLM_OLM+3) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  5))
+                              AUXBUF(SEROLM_OLM+2) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  6))
+                              AUXBUF(SEROLM_OLM+1) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  7))
+                              AUXBUF(SEROLM_OLM+0) = ZEXT (MESS_FROM_OLM(SERIAL_OLM_POS +  8))
+
+                              AUXBUF(MESS_BODY + 0) =  ERRMSG(1)
+                              AUXBUF(MESS_BODY + 1) =  ERRMSG(2)
+                              AUXBUF(MESS_BODY + 2) =  ERRMSG(3)
+                              AUXBUF(MESS_BODY + 3) =  ERRMSG(4)
+                              AUXBUF(MESS_BODY + 4) =  ERRMSG(5)
+                              AUXBUF(28) = 5           !HPRO(OUTLEN,AUXBUF(0)) = 5
+                              CALL SENDTOOLM(0,ST,.TRUE.,AUXBUF)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC reset - change to a function CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+                              AUXBUF(105) = 0
+                              AUXBUF(106) = 0
+                              AUXBUF(107) = 0
+                              AUXBUF(108) = 0
+                              AUXBUF(109) = 0
+                              AUXBUF(49) = 0
+                              AUXBUF(50) = 0
+                              AUXBUF(51) = 0
+                              AUXBUF(52) = 0
+                              AUXBUF(53) = 0
+                              AUXBUF(54) = 0
+                              AUXBUF(55) = 0
+                              AUXBUF(56) = 0
+                              AUXBUF(57) = 0
+                              AUXBUF(MESS_BODY + 0) = 0
+                              AUXBUF(MESS_BODY + 1) = 0
+                              AUXBUF(MESS_BODY + 2) = 0
+                              AUXBUF(MESS_BODY + 3) = 0
+                              AUXBUF(MESS_BODY + 4) = 0                              
+                        ELSE
+                              BPRO(MESS_BODY + 0,PROBUF) =  ERRMSG(1)
+                              BPRO(MESS_BODY + 1,PROBUF) =  ERRMSG(2)
+                              BPRO(MESS_BODY + 2,PROBUF) =  ERRMSG(3)
+                              BPRO(MESS_BODY + 3,PROBUF) =  ERRMSG(4)
+                              BPRO(MESS_BODY + 4,PROBUF) =  ERRMSG(5)
+                              HPRO(OUTLEN,PROBUF) = 5
+                              CALL SENDTOOLM(PROBUF,ST,.TRUE.)
+                              CALL OPSTXT("ERROR TRANSACTION GENERATED AND SENT BACK TO OLIMPO...")
+                        ENDIF
+                        
                         ST = - 1
                         RETURN 
                   ENDIF                  
@@ -622,7 +689,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
         END
 
 
-      SUBROUTINE SENDTOOLM(SBUF,ST,ISERR)
+      SUBROUTINE SENDTOOLM(SBUF,ST,ISERR,AUXBUF)
       IMPLICIT NONE
             INCLUDE 'INCLIB:SYSPARAM.DEF'
             INCLUDE 'INCLIB:SYSEXTRN.DEF'
@@ -665,56 +732,95 @@ C for Messageid 8 bytes    INTEGER*4 DAYCDC_POS /24/, DAYJUL_POS /28/
             INTEGER*4 BUFFER_OUTPUT  
 C            INTEGER*4 WAGER_AMOUT
             LOGICAL ISERR
+            BYTE      AUXBUF(PROLEN*4)
             
             BUFFER_OUTPUT = (OUTTAB*4)-3
 
-            MESS_TO_OLM(MESSAGEID_POS + 0) = ZEXT(BPRO(MESSID_OLM+0, SBUF))
-            MESS_TO_OLM(MESSAGEID_POS + 1) = ZEXT(BPRO(MESSID_OLM+1, SBUF))
-            MESS_TO_OLM(MESSAGEID_POS + 2) = ZEXT(BPRO(MESSID_OLM+2, SBUF))
-            MESS_TO_OLM(MESSAGEID_POS + 3) = ZEXT(BPRO(MESSID_OLM+3, SBUF))
-            MESS_TO_OLM(MESSAGEID_POS + 4) = ZEXT(BPRO(MESSID_OLM+4, SBUF))
+            IF(ST .NE. -10) THEN
+                  MESS_TO_OLM(MESSAGEID_POS + 0) = ZEXT(BPRO(MESSID_OLM+0, SBUF))
+                  MESS_TO_OLM(MESSAGEID_POS + 1) = ZEXT(BPRO(MESSID_OLM+1, SBUF))
+                  MESS_TO_OLM(MESSAGEID_POS + 2) = ZEXT(BPRO(MESSID_OLM+2, SBUF))
+                  MESS_TO_OLM(MESSAGEID_POS + 3) = ZEXT(BPRO(MESSID_OLM+3, SBUF))
+                  MESS_TO_OLM(MESSAGEID_POS + 4) = ZEXT(BPRO(MESSID_OLM+4, SBUF))
 
-            IF(.NOT. ISERR) THEN
-                  TERMINALNUM = HPRO(TERNUM,SBUF) 
-                  I4TEMP = TERMINALNUM
-                  MESS_TO_OLM(TERMINAL_NUM_POS + 0) = ZEXT(I1TEMP(1))
-                  MESS_TO_OLM(TERMINAL_NUM_POS + 1) = ZEXT(I1TEMP(2)) 
+                  IF(.NOT. ISERR) THEN
+                        TERMINALNUM = HPRO(TERNUM,SBUF) 
+                        I4TEMP = TERMINALNUM
+                        MESS_TO_OLM(TERMINAL_NUM_POS + 0) = ZEXT(I1TEMP(1))
+                        MESS_TO_OLM(TERMINAL_NUM_POS + 1) = ZEXT(I1TEMP(2)) 
 
-                  I4TEMP = AGTTAB(AGTNUM,TERMINALNUM) 
-                  MESS_TO_OLM(AGENT_NUM_POS+0) = ZEXT(I1TEMP(1))
-                  MESS_TO_OLM(AGENT_NUM_POS+1) = ZEXT(I1TEMP(2))
-                  MESS_TO_OLM(AGENT_NUM_POS+2) = ZEXT(I1TEMP(3))
-                  MESS_TO_OLM(AGENT_NUM_POS+3) = ZEXT(I1TEMP(4))
-            ELSE
-                  MESS_TO_OLM(TERMINAL_NUM_POS + 0) = ZEXT(0)
-                  MESS_TO_OLM(TERMINAL_NUM_POS + 1) = ZEXT(0) 
+                        I4TEMP = AGTTAB(AGTNUM,TERMINALNUM) 
+                        MESS_TO_OLM(AGENT_NUM_POS+0) = ZEXT(I1TEMP(1))
+                        MESS_TO_OLM(AGENT_NUM_POS+1) = ZEXT(I1TEMP(2))
+                        MESS_TO_OLM(AGENT_NUM_POS+2) = ZEXT(I1TEMP(3))
+                        MESS_TO_OLM(AGENT_NUM_POS+3) = ZEXT(I1TEMP(4))
+                  ELSE
+                        MESS_TO_OLM(TERMINAL_NUM_POS + 0) = ZEXT(0)
+                        MESS_TO_OLM(TERMINAL_NUM_POS + 1) = ZEXT(0) 
+                        
+                        MESS_TO_OLM(AGENT_NUM_POS+0) = ZEXT(0)
+                        MESS_TO_OLM(AGENT_NUM_POS+1) = ZEXT(0)
+                        MESS_TO_OLM(AGENT_NUM_POS+2) = ZEXT(0)
+                        MESS_TO_OLM(AGENT_NUM_POS+3) = ZEXT(0)                  
+                  ENDIF
+
+                  I4TEMP = DAYCDC
+                  MESS_TO_OLM(DAYCDC_POS+0) = ZEXT(I1TEMP(1))
+                  MESS_TO_OLM(DAYCDC_POS+1) = ZEXT(I1TEMP(2))
                   
-                  MESS_TO_OLM(AGENT_NUM_POS+0) = ZEXT(0)
-                  MESS_TO_OLM(AGENT_NUM_POS+1) = ZEXT(0)
-                  MESS_TO_OLM(AGENT_NUM_POS+2) = ZEXT(0)
-                  MESS_TO_OLM(AGENT_NUM_POS+3) = ZEXT(0)                  
-            ENDIF
+                  I4TEMP = DAYJUL
+                  MESS_TO_OLM(DAYJUL_POS+0) = ZEXT(I1TEMP(1))
+                  MESS_TO_OLM(DAYJUL_POS+1) = ZEXT(I1TEMP(2))
 
-            I4TEMP = DAYCDC
-            MESS_TO_OLM(DAYCDC_POS+0) = ZEXT(I1TEMP(1))
-            MESS_TO_OLM(DAYCDC_POS+1) = ZEXT(I1TEMP(2))
-            
-            I4TEMP = DAYJUL
-            MESS_TO_OLM(DAYJUL_POS+0) = ZEXT(I1TEMP(1))
-            MESS_TO_OLM(DAYJUL_POS+1) = ZEXT(I1TEMP(2))
-
- 
-            MESS_TO_OLM(TOTAL_AMOUNT_POS + 0) = ZEXT(BPRO(TWTOT_OLM+0, SBUF))
-            MESS_TO_OLM(TOTAL_AMOUNT_POS + 1) = ZEXT(BPRO(TWTOT_OLM+1, SBUF))
-            MESS_TO_OLM(TOTAL_AMOUNT_POS + 2) = ZEXT(BPRO(TWTOT_OLM+2, SBUF))
-            MESS_TO_OLM(TOTAL_AMOUNT_POS + 3) = ZEXT(BPRO(TWTOT_OLM+3, SBUF))
+      
+                  MESS_TO_OLM(TOTAL_AMOUNT_POS + 0) = ZEXT(BPRO(TWTOT_OLM+0, SBUF))
+                  MESS_TO_OLM(TOTAL_AMOUNT_POS + 1) = ZEXT(BPRO(TWTOT_OLM+1, SBUF))
+                  MESS_TO_OLM(TOTAL_AMOUNT_POS + 2) = ZEXT(BPRO(TWTOT_OLM+2, SBUF))
+                  MESS_TO_OLM(TOTAL_AMOUNT_POS + 3) = ZEXT(BPRO(TWTOT_OLM+3, SBUF))
 
 
-            MESS_TO_LEN_BODY  = HPRO(OUTLEN,SBUF)
-            MESS_TO_LEN  = HPRO(OUTLEN,SBUF)+BUFFER_HEADER_LENTH
+                  MESS_TO_LEN_BODY  = HPRO(OUTLEN,SBUF)
+                  MESS_TO_LEN  = HPRO(OUTLEN,SBUF)+BUFFER_HEADER_LENTH
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC BUFFER_OUTPUT=(OUTAB*4)-4=129          
 C            CALL LIB$MOVC3(MESS_FROM_LEN-(BUFFER_HEADER_LENTH), MESS_FROM_OLM(BUFFER_HEADER_LENTH), BPRO(BINPTAB,PROBUF))
-            CALL LIB$MOVC3(MESS_TO_LEN_BODY, BPRO(BUFFER_OUTPUT,SBUF), MESS_TO_OLM(BUFFER_HEADER_LENTH))
+                  CALL LIB$MOVC3(MESS_TO_LEN_BODY, BPRO(BUFFER_OUTPUT,SBUF), MESS_TO_OLM(BUFFER_HEADER_LENTH))
+            ELSE
+                  I4TEMP = DAYCDC
+                  MESS_TO_OLM(DAYCDC_POS+0) = ZEXT(I1TEMP(1))
+                  MESS_TO_OLM(DAYCDC_POS+1) = ZEXT(I1TEMP(2))
+                  
+                  I4TEMP = DAYJUL
+                  MESS_TO_OLM(DAYJUL_POS+0) = ZEXT(I1TEMP(1))
+                  MESS_TO_OLM(DAYJUL_POS+1) = ZEXT(I1TEMP(2))
+
+                  MESS_TO_OLM(SERIAL_NUM_POS + 0) = AUXBUF(SEROLM_OLM+0)
+                  MESS_TO_OLM(SERIAL_NUM_POS + 1) = AUXBUF(SEROLM_OLM+1)
+                  MESS_TO_OLM(SERIAL_NUM_POS + 2) = AUXBUF(SEROLM_OLM+2)
+                  MESS_TO_OLM(SERIAL_NUM_POS + 3) = AUXBUF(SEROLM_OLM+3)
+                  MESS_TO_OLM(SERIAL_NUM_POS + 4) = AUXBUF(SEROLM_OLM+4)
+                  MESS_TO_OLM(SERIAL_NUM_POS + 5) = AUXBUF(SEROLM_OLM+5)
+                  MESS_TO_OLM(SERIAL_NUM_POS + 6) = AUXBUF(SEROLM_OLM+6)
+                  MESS_TO_OLM(SERIAL_NUM_POS + 7) = AUXBUF(SEROLM_OLM+7)
+                  MESS_TO_OLM(SERIAL_NUM_POS + 8) = AUXBUF(SEROLM_OLM+8)
+
+                  MESS_TO_OLM(MESSAGEID_POS + 0) = AUXBUF(MESSID_OLM+0)
+                  MESS_TO_OLM(MESSAGEID_POS + 1) = AUXBUF(MESSID_OLM+1)
+                  MESS_TO_OLM(MESSAGEID_POS + 2) = AUXBUF(MESSID_OLM+2)
+                  MESS_TO_OLM(MESSAGEID_POS + 3) = AUXBUF(MESSID_OLM+3)
+                  MESS_TO_OLM(MESSAGEID_POS + 4) = AUXBUF(MESSID_OLM+4)
+
+                  I1AUX(1) = ZEXT(MESS_TO_OLM(MESSAGEID_POS +  0))    
+                  I1AUX(2) = ZEXT(MESS_TO_OLM(MESSAGEID_POS +  1))
+                  I1AUX(3) = ZEXT(MESS_TO_OLM(MESSAGEID_POS +  2))
+                  I1AUX(4) = ZEXT(MESS_TO_OLM(MESSAGEID_POS +  3))
+                  I1AUX(5) = ZEXT(MESS_TO_OLM(MESSAGEID_POS +  4))
+                  CALL OPS("ERROR OUT OFF BUFFERS MESSAGEID:",I8AUX,0)
+
+                  MESS_TO_LEN_BODY  = 5                !HPRO(OUTLEN,SBUF)
+                  MESS_TO_LEN  = 5+BUFFER_HEADER_LENTH !HPRO(OUTLEN,SBUF)+BUFFER_HEADER_LENTH
+                  CALL LIB$MOVC3(MESS_TO_LEN_BODY, AUXBUF(BUFFER_OUTPUT), MESS_TO_OLM(BUFFER_HEADER_LENTH))
+
+            ENDIF      
 
 C            CALL LOGBUF(SBUF,'COMOLM SEND:')            
 C            DO I=0, MESS_TO_LEN_BODY
