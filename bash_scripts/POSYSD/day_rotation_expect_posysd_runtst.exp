@@ -631,7 +631,7 @@ expect "X2XMGR*open SAP*status*2 params" {
     send "\rewatch stop\r"
 } \
     timeout { 
-        puts "\n\nTest Failure: system  B being brought up\n\r"; 
+        puts "\n\nTest Failure: Open Terminals connections\n\r"; 
         #exit 
         interact {
             \001 {

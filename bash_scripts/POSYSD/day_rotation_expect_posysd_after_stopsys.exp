@@ -197,17 +197,17 @@ proc process_tmir {} {
             }
         }
 
-    #expect "Enter transaction channel (A=all/O=Olimpo/M=Other)   >" {send "a\r"} \
-    #    timeout { 
-    #        puts "\n\nTest Failure: TMIR\n\r"; 
-    #        #exit 
-    #        interact {
-    #          \001 {
-    #                send_user "\n\nUser interaction completed.\n\n"
-    #                 return 
-    #             }
-    #        }
-    #    }  
+    expect "Enter transaction channel (A=all/O=Olimpo/M=Other)   >" {send "a\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }  
 
     expect "Enter starting serial number (A=all/E=EuroMil/P=Placard)   >" {send "a\r"} \
         timeout { 

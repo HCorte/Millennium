@@ -460,17 +460,17 @@ expect "*SCANRETR STOP0001  *" {send "\rtell dayend y\r"} \
 #                                                                                 #
 # SIT Ignore this step                                                            #
 ###################################################################################     
-expect "*Are you sure you want to continue*" {send "\rtell vlftsk y\r"} \
-    timeout { 
-        puts "\n\n!!!Test Failure: VLFTSK continue!!!\n\r"; 
-        #exit 
-        interact {
-              \001 {
-                    send_user "\n\nUser interaction completed.\n\n"
-                     return 
-                 }
-            }
-    }    
+#expect "*Are you sure you want to continue*" {send "\rtell vlftsk y\r"} \
+#    timeout { 
+#        puts "\n\n!!!Test Failure: VLFTSK continue!!!\n\r"; 
+#        #exit 
+#        interact {
+#              \001 {
+#                    send_user "\n\nUser interaction completed.\n\n"
+#                     return 
+#                 }
+#            }
+#    }    
 
 expect "*Do You Want To Run Winner Selection Today*" {send "\rtell vlftsk n\r"} \
     timeout { 
@@ -664,7 +664,19 @@ new_line
 #                                                           #
 #############################################################
 
-process_tmir    
+#process_tmir    
+
+expect "PODEV1::SCML> " {send "copy prim:mtmf01.fil [.TMF_BKP]MT7701.FIL\r"} \
+    timeout { 
+        puts "\n\nTest Failure: Copy TMF file for backups\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+        }
+    }
 
 new_line
 
