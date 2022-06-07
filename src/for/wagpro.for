@@ -256,7 +256,7 @@ C PROCESS AS NORMAL.
 C
 C       The New Terminals don't have retrys so jumps to the normal process   
 D        CALL OPS('channel flag',BPRO(CHOLM_OLM,BUF),BPRO(CHOLM_OLM,BUF))
-        IF(BPRO(CHOLM_OLM,BUF).EQ.1) GOTO 80
+        IF(BPRO(CHOLM_OLM,BUF).EQ.1) GOTO 80 !V28
 C
         LSTSER = AGTTAB(ALSTRA,TER)          ! rev 1.10 
 C        

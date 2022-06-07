@@ -85,7 +85,7 @@ C        INTEGER*4  STATUSTRIM
 C        INTEGER*4  STR$ELEMENT,STR$TRIM,SIZE_AUX
         CHARACTER*40 MESSCON
         LOGICAL    MILL_CON_STATUS /0/, REGLOG_LOCAL /1/, REGLOGER /1/, REGLOG_LOCAL_STATUS  
-        LOGICAL    PURGE_LOG_VALIDATION /0/, ERR_PURGE_LOG_VALIDATION /0/     
+        LOGICAL    PURGE_LOG_VALIDATION /0/, ERR_PURGE_LOG_VALIDATION /0/, RESET_STATISTICS /0/     
         CHARACTER*20 PROCESS_ID,ERROR_PATH_AUX
         CHARACTER*15 OUTPUT_PATH_AUX
 C        CHARACTER*20 OUTPUT_PATH_AUX_TRIMED
@@ -100,7 +100,7 @@ C        CHARACTER*20 OUTPUT_PATH_AUX_TRIMED
         
 C
         INTEGER*4  MAXPRM
-        PARAMETER (MAXPRM=16)
+        PARAMETER (MAXPRM=17)
 C
         REAL*8       K(MAXPRM)                                                  !SNAPSHOT PARAMETER DESCRIPTION
 C
@@ -110,7 +110,7 @@ C
      *           'WAGPRO  ','CANPRO  ','VALPRO  ',
      *           'INSPRO  ','CRSPRO  ','INSOUT  ',
      *           'OLMTMO  ','FINTMO  ','SUPLOG  ','SUPELOG',
-     *           'SPESRV  ','DISPAT  '/
+     *           'SPESRV  ','DISPAT  ','RESTATIS'/
         DATA DEFTPASS/'SUPORTE'/
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -138,7 +138,7 @@ C
 2       CONTINUE
         CALL FASTSET(0,BUF,CDLEN)
         GOTO(200,506,200,200,200,200,200,200,200,200,200,200
-     *  ,507,509,200,200) KEYNUM   
+     *  ,507,509,200,200,510) KEYNUM   
         
         GOTO 200          
 C
@@ -173,7 +173,6 @@ C        CALL OPSTXT('Register the output logs of Script run in process')
         BUF(2)=2
         BUF(3)=TCPAR
         GOTO 250            
-C        GOTO 300
 C
 C Register the error logs of Script run in process
 C
@@ -185,7 +184,17 @@ C
         BUF(2)=3
         BUF(3)=TCPAR
         GOTO 250    
-C        GOTO 300
+C
+C Reset the statistics of get and put of MessageQ
+C
+510     CONTINUE
+C        IF(P(REGLOG) .NE. 0) GOTO 213
+        IF(VALUE.LT.0.OR.VALUE.GT.1) GOTO 214
+        RESET_STATISTICS = VALUE    
+        BUF(1)=RESTATIS
+        BUF(2)=RESET_STATISTICS
+        BUF(3)=TCPAR
+        GOTO 250  
 
 C
 C INPUT ERROR
@@ -228,6 +237,18 @@ C
         WRITE(CLIN23,807)
 807     FORMAT('Log registration already active or disabled by system')
 
+        RETURN    
+        
+213     CONTINUE
+        WRITE(CLIN23,808)
+808     FORMAT('Reset of statistics already active')
+
+        RETURN 
+        
+214     CONTINUE
+        WRITE(CLIN23,809)
+809     FORMAT('Invalid value (1-Reset Statistics 0-No Reset Statistics)')
+
         RETURN         
 C
 C QUEUE COMMAND BUFFER TO SYSTEM INPUT INPUT QUEUE
@@ -256,7 +277,24 @@ C        CALL OPSTXT('Starting')
         CALL QIMAGE(QUETAB(1,CRS),CRSLST,3)
         CALL QIMAGE(QUETAB(1,INO),INOLST,3)  
         CALL QIMAGE(QUETAB(1,SPE),SPELST,3)  
-        CALL QIMAGE(QUETAB(1,DIS),DISLST,3)      
+        CALL QIMAGE(QUETAB(1,DIS),DISLST,3)   
+        
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC      
+C       Reset the statics of gets and puts in MessageQ  (for tests purposes)           C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+
+        IF(RESET_STATISTICS .EQ. 1) THEN
+            OLMS_TOTOKYPUT = 0
+            OLMS_TOTOKYGET = 0
+            OLMS_TOTERRPUT = 0
+            OLMS_TOTERRGET = 0
+            OLMS_GETMESSUC = 0
+            OLMS_PUTMESSUC = 0
+            OLMS_GETMESFAI = 0
+            OLMS_PUTMESFAI = 0
+            OLMS_GETTERFAI = 0
+            RESET_STATISTICS = 0
+        ENDIF
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC      
 C        What MessageQ MILL is connected to (Primary or Failover)                      C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -543,7 +581,7 @@ C       CALL OPSTXT('---------------------------------------------')
             REGLOG_LOCAL_STATUS = 1  
        ENDIF
 
-       WRITE(CLIN15,9107) K(14),REGLOG_LOCAL_STATUS
+       WRITE(CLIN15,9107) K(14),REGLOG_LOCAL_STATUS,K(17),RESET_STATISTICS
 
 C       IF(IP_ADDRESS .EQ. 'ERR') THEN
 C         WRITE(CLIN16,923) MESSCON
@@ -614,7 +652,7 @@ C     *          7X,'Time Last Detach',2X,'??.??.???? ??:??:??')
 C     *          7X,'Time Last Detach',2X,'??.??.???? ??:??:??')                 !LAST TIME COMOLM DETACHED FROM MESSAGEQ SERVER IN OLIMPO SYSTEM
 9106   FORMAT('          ',1X,1(A7),5X,I1,
      *          1X,'Time Last Detach',2X,'??.??.???? ??:??:??')    
-9107    FORMAT('          ',1X,1(A7),5X,I1)
+9107    FORMAT('          ',1X,1(A7),5X,I1,1X,1(A8),5X,I1)
 9102    FORMAT('        > ',1('*',A7,I6,1X)
      *          ,'COMOLM Attached?',2X,'No')                                  !IS COMMGR ATTACHED TO MESSAGEQ SERVER?
 950     FORMAT(19('-'),2X,'O L M   S Y S   S T A T I S T I C S',2X,19('-'))
