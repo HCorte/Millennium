@@ -1,4 +1,4 @@
-select distinct(order_number) from order_record_array
+select distinct(order_number) from order_record_array -- or order1_record_array ??
 where order_status = "1" and
 order_entered_date > 20220101 and
 order_game_number in (
