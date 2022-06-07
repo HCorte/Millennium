@@ -1,0 +1,95 @@
+$!
+$! DEVELOPMENT_STARTUP.COM
+$!
+$!------------------------------------------------------------------------------
+$!
+$! This command file sets up system-wide parameters for development.
+$!
+$!------------------------------------------------------------------------------
+$!
+$!      V7.1    24 SEP 1998     RJG     V7.1 Baseline - Added GXTMP logical.
+$!      v1.0    20 FEB 1997     DXS     Initial release.
+$!
+$!------------------------------------------------------------------------------
+$!
+$! COPYRIGHT 1993,1994 GTECH CORPORATION.  ALL RIGHTS RESERVED.
+$!
+$! CONFIDENTIAL PROPRIETARY INFORMATION
+$! This item is the property of GTECH Corporation, West Greenwich, Rhode Island,
+$! and contains confidential and trade secret information.  It may not be
+$! transferred from the custody or control of GTECH except as authorized in
+$! writing by an officer of GTECH.  Neither this item nor the information it
+$! contains may be used, transferred, reproduced, published or disclosed, in
+$! whole or in part, directly or indirectly, except as expressly authorized by
+$! an officer of GTECH pursuant to written agreement.
+$!
+$!------------------------------------------------------------------------------
+$!
+$ WRITE SYS$OUTPUT "Executing ''F$ENVIRONMENT(""PROCEDURE"")'"
+$ node = F$GETSYI("NODENAME")
+$!
+$! The following are defined here, but they are dependent upon the definition
+$! of GXPROJ which is not defined until a user signs on and enters a GOxxx
+$! command (e.g., GOTEST)
+$!
+$!
+$ DEFINE/SYSTEM GOLSROOT   GXPROJ:[COM]
+$ DEFINE/SYSTEM OLTPROOT   GXPROJ:[OLTP]
+$ DEFINE/SYSTEM PROSYSROOT GXPROJ:[OLTP]
+$ DEFINE/SYSTEM BINGOROOT  GXPROJ:[COM]
+$ DEFINE/SYSTEM AGOLSROOT  GXPROJ:[COM]
+$!
+$ DEFINE/SYSTEM/EXEC/NOLOG GXBBL  GXPROJ:[BBL]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXBIN  GXPROJ:[BIN]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXCMS  GXPROJ:[CMS]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXCOM  GXPROJ:[COM]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXDOC  GXPROJ:[DOC]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXHLP  GXPROJ:[HLP]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXSHR  GXPROJ:[SHR]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXSRC  GXPROJ:[SRC]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXTMP  GXPROJ:[TMP]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXTSK  GXPROJ:[TSK]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXTST  GXPROJ:[TST]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXUPD  GXPROJ:[UPD]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXUSR  GXPROJ:[USR]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXUTL  GXPROJ:[UTL]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXLOG  GXPROJ:[LOG]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXOBJ  GXPROJ:[OBJ]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXIGS  GXPROJ:[TSK.IGS]
+$ DEFINE/SYSTEM/EXEC/NOLOG GXOLM  GXPROJ:[TSK.OLM]
+$!
+$!Logical Names for MessageqConnection script
+$ DEFINE/SYSTEM/EXEC/NOLOG OLM_MILCON_LOG GXOLM:MILLCON
+$ DEFINE/SYSTEM/EXEC/NOLOG OLM_ERR_LOG GXOLM:ERR_MILLCON
+$ DEFINE/SYSTEM/EXEC/NOLOG OLM_DMQCL_INI_FILE GXOLM:DMQ.INI
+$ DEFINE/SYSTEM/EXEC/NOLOG OLM_MESSQ_SEE_ATTACH_SCRIPT GXOLM:MESSAGEQCONNECTION.COM
+$!
+$ DEFINE/SYSTEM/EXEC INCLIB GXSRC
+$ DEFINE/SYSTEM/EXEC TSKLIB GXTSK
+$ DEFINE/SYSTEM/EXEC OBJLIB GXSRC
+$ DEFINE/SYSTEM/EXEC SRCLIB GXSRC
+$ DEFINE/SYSTEM/EXEC STDLIB GXSRC
+$ DEFINE/SYSTEM/EXEC SHRLIB GXTSK
+$ DEFINE/SYSTEM/EXEC IGSLIB GXIGS
+$ DEFINE/SYSTEM/EXEC OLMLIB GXOLM
+$!
+$ DEFINE/SYSTEM/EXEC/NOLOG COMCMS GXPROJ:[CMS.COM]
+$ DEFINE/SYSTEM/EXEC/NOLOG DOCCMS GXPROJ:[CMS.DOC]
+$ DEFINE/SYSTEM/EXEC/NOLOG HLPCMS GXPROJ:[CMS.HLP]
+$ DEFINE/SYSTEM/EXEC/NOLOG SRCCMS GXPROJ:[CMS.SRC]
+$!
+$!
+$ IF p1 .EQS. "PVCS"
+$   THEN @DEV$GTECH:PVCS_STARTUP
+$ ENDIF
+$!
+$ IF p1 .EQS. "DSS"
+$   THEN @DEV$GTECH:DSS_STARTUP
+$ ENDIF
+$!
+$ DEFINE/SYSTEM/EXEC GTECH_REMSYS1  POSYSD
+$ DEFINE/SYSTEM/EXEC GTECH_REMSYS2  PODEV1
+$ DEFINE/SYSTEM/EXEC GTECH_REMTASK1 GTECH1
+$ DEFINE/SYSTEM/EXEC GTECH_REMTASK2 GTECH2
+$!
+$ EXIT
