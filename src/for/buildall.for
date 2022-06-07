@@ -1,6 +1,6 @@
 C  GXSRC:BUILDALL.FOR
 C  
-C V13 12-JUL-2021 
+C V13 12-JUL-2021 SCML New Terminals Project add command OLMCONF and RESTATIS 
 C V12 31-MAR-2016 SCML M16 PROJECT: added the following default commands
 C                      relative to vision commands of EUROMIL snapshot:
 C                      01466,01467,01468,01469,01470,01474,01475,01493,01496,
@@ -132,8 +132,8 @@ C----+---+-------------+------------------------------------------------
 C----+------------------------------------------------------------------
 C V11| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
-     *               01355,7*00000/     
-C     *               8*00000/
+     *               01355,01357,6*00000/     !V13
+C     *               8*00000/                !V13  
 C----+------------------------------------------------------------------
 C V11| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------

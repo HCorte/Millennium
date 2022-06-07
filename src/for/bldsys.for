@@ -149,7 +149,8 @@ CC V77| Added OP Generation Flag: 0 - do not generate OPs; 1 - generate OPs
 CC----+------------------------------------------------------------------
 CV80        PARAMETER   (DSPPAR=140)         ! number of parameters 
 C        PARAMETER   (DSPPAR=142)         ! number of parameters                 !V80
-        PARAMETER   (DSPPAR=144)         ! number of parameters                 !V81        
+C        PARAMETER   (DSPPAR=144)         ! number of parameters                 !V81
+        PARAMETER   (DSPPAR=145)         ! number of parameters                 !V81        
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
@@ -345,7 +346,8 @@ C    *             'IGSPFIN ','IGSPRNT ','PLAFINTO','        '/
 CV80     *             'IGSPFIN ','IGSPRNT ','PLAFINTO','IGSPICAN'/
      *             'IGSPFIN ','IGSPRNT ','PLAFINTO','IGSPICAN',                 !V80
 CV81     *             'EUSPFIR ','EUSPICA '/                                       !V80
-     *             'EUSPFIR ','EUSPICA ','OLMCONF ','REGLOG  '/                 !V81     
+     *             'EUSPFIR ','EUSPICA ','OLMCONF ','REGLOG  ',                 !V81     
+     *             'RESTATIS','        '/                                       !V81
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
@@ -400,8 +402,8 @@ C----+------------------------------------------------------------------
 C    *            IGSPRNT,PLAFINTO,0/
 CV80     *            IGSPRNT,PLAFINTO,IGSPICAN/
 Cv81     *            IGSPRNT,PLAFINTO,IGSPICAN,EUSPFIR,EUSPICA/                    !V80
-     *            IGSPRNT,PLAFINTO,IGSPICAN,EUSPFIR,EUSPICA,                     !V81 
-     *            OLMCONF,REGLOG/    
+     *            IGSPRNT,PLAFINTO,IGSPICAN,EUSPFIR,EUSPICA,                        !V81 
+     *            OLMCONF,REGLOG,RESTATIS,0/    
 
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
@@ -550,7 +552,8 @@ CV80     *            1/                          ! IGSPICAN
 CV81     *            1/                          ! EUSPICA                         !V80
      *            1,                          ! EUSPICA                         !V81   
      *            1,                          ! OLMCONF                         !V81
-     *            1/                          ! REGLOG                          !V81
+     *            1,                          ! REGLOG                          !V81
+     *            1/                          ! RESTATIS                        !V81
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
@@ -697,7 +700,8 @@ CV80     *            0/                          !     IGSIPCAN
 CV81     *            0/                          ! EUSPICA                         !V80
      *            0,                          ! EUSPICA                         !V81
      *            0,                          ! OLMCONF                         !V81
-     *            0/                          ! REGLOG                          !V81  
+     *            0,                          ! REGLOG                          !V81  
+     *            0/                          ! RESTATIS                        !V81
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
@@ -795,7 +799,8 @@ CV80     *               'Placrd FinRep TimOut','IGS Suppr Int Cancel'/
      *               'Placrd FinRep TimOut','IGS Suppr Int Cancel',             !V80
 CV81     *               'EM Suppr Fin Report ','EM Suppr Int Cancel '/             !V80
      *               'EM Suppr Fin Report ','EM Suppr Int Cancel ',             !V81
-     *               'OLM System Connect  ','Script Logs Suppress'/             !V81          
+     *               'OLM System Connect  ','Script Logs Suppress',             !V81
+     *               'Reset Olm Statistics','                     '/            !V81          
 C----+------------------------------------------------------------------
 C V79| Added support for IGS internal cancel flags
 C----+------------------------------------------------------------------
