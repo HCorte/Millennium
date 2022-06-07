@@ -1,0 +1,352 @@
+DmQ T 13:18.3 Time Stamp - 15-JUN-2011 12:13:18.30
+DmQ T 13:18.3 Tracing/logging event flag number = 63 
+DmQ T 13:18.3  Entering PAMS_ATTACH_Q
+DmQ T 13:18.3 User specified Queue name        
+DmQ T 13:18.3 Entering PAMS_COMMON_ATTACH
+DmQ T 13:18.3 Entering INIT_PARAMS
+DmQ T 13:18.3   (req_q_num:0, &q_num:0X916D0, q_type:-200, q_name:"QUEUE2"
+DmQ T 13:18.3    q_name_len:6, adver_scope:-202, mode:-210, tmo:600)
+DmQ T 13:18.3 User specified queue name "QUEUE2"
+DmQ T 13:18.3 Entering MAP_AND_CHECK_QUEUE
+DmQ T 13:18.3 Entering PAMS_ATTACH_TO_DMQ_ENV
+DmQ T 13:18.3    (Is_CS:0  Process name: "+PORTCOMMGR" PID: 00000E6C, LOCKTMO:600)
+DmQ T 13:18.3 Using event flag 62
+DmQ T 13:18.3 Using event flag 61
+DmQ T 13:18.3 DMQ$BLOCKING_CONFIRM == YES
+DmQ T 13:18.3 Msg header display was requested
+DmQ T 13:18.3 Wakeup Mode = EXEC_MODE_AST
+DmQ T 13:18.3 Connecting to message bus #  group #
+DmQ T 13:18.3 Locking resource "DMQ$PID_00000E6C"
+DmQ T 13:18.3 Granted resource lock
+DmQ T 13:18.3 Entering PAMS_EXIT
+DmQ T 13:18.3 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:18.3 Detaching queue (0.0)
+DmQ T 13:18.3 Entering PAMS_EXIT_HANDLER
+DmQ T 13:18.3 Exit switches: DISABLE_FORCEX:0, DISABLE_DELTVA:0, ALLOW_PURGE:1 
+DmQ T 13:18.3 Entering PAMS_INIT_UNCONF_DB
+DmQ T 13:18.3 An error occured during thread rundown
+DmQ T 13:18.3 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:19.5 Entering PAMS_GET_MSG
+DmQ T 13:19.5 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:19.5 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:19.6 Entering PAMS_EXIT
+DmQ T 13:19.6 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:19.6 You must execute PAMS_ATTACH_Q first
+DmQ T 13:20.6 Entering PAMS_GET_MSG
+DmQ T 13:20.6 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:20.6 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:20.6 Entering PAMS_EXIT
+DmQ T 13:20.6 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:20.6 You must execute PAMS_ATTACH_Q first
+DmQ T 13:21.7 Entering PAMS_GET_MSG
+DmQ T 13:21.7 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:21.7 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:21.7 Entering PAMS_EXIT
+DmQ T 13:21.7 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:21.7 You must execute PAMS_ATTACH_Q first
+DmQ T 13:22.8 Entering PAMS_GET_MSG
+DmQ T 13:22.8 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:22.8 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:22.8 Entering PAMS_EXIT
+DmQ T 13:22.8 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:22.8 You must execute PAMS_ATTACH_Q first
+DmQ T 13:23.9 Entering PAMS_GET_MSG
+DmQ T 13:23.9 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:23.9 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:23.9 Entering PAMS_EXIT
+DmQ T 13:23.9 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:23.9 You must execute PAMS_ATTACH_Q first
+DmQ T 13:25.0 Entering PAMS_GET_MSG
+DmQ T 13:25.0 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:25.0 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:25.0 Entering PAMS_EXIT
+DmQ T 13:25.0 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:25.0 You must execute PAMS_ATTACH_Q first
+DmQ T 13:26.0 Entering PAMS_GET_MSG
+DmQ T 13:26.0 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:26.0 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:26.1 Entering PAMS_EXIT
+DmQ T 13:26.1 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:26.1 You must execute PAMS_ATTACH_Q first
+DmQ T 13:27.1 Entering PAMS_GET_MSG
+DmQ T 13:27.1 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:27.1 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:27.2 Entering PAMS_EXIT
+DmQ T 13:27.2 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:27.2 You must execute PAMS_ATTACH_Q first
+DmQ T 13:28.2 Entering PAMS_GET_MSG
+DmQ T 13:28.2 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:28.2 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:28.3 Entering PAMS_EXIT
+DmQ T 13:28.3 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:28.3 You must execute PAMS_ATTACH_Q first
+DmQ T 13:29.3 Entering PAMS_GET_MSG
+DmQ T 13:29.3 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:29.3 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:29.4 Entering PAMS_EXIT
+DmQ T 13:29.4 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:29.4 You must execute PAMS_ATTACH_Q first
+DmQ T 13:30.4 Entering PAMS_GET_MSG
+DmQ T 13:30.4 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:30.4 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:30.5 Entering PAMS_EXIT
+DmQ T 13:30.5 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:30.5 You must execute PAMS_ATTACH_Q first
+DmQ T 13:31.5 Entering PAMS_GET_MSG
+DmQ T 13:31.5 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:31.5 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:31.6 Entering PAMS_EXIT
+DmQ T 13:31.6 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:31.6 You must execute PAMS_ATTACH_Q first
+DmQ T 13:32.6 Entering PAMS_GET_MSG
+DmQ T 13:32.6 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:32.6 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:32.7 Entering PAMS_EXIT
+DmQ T 13:32.7 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:32.7 You must execute PAMS_ATTACH_Q first
+DmQ T 13:33.7 Entering PAMS_GET_MSG
+DmQ T 13:33.7 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:33.7 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:33.8 Entering PAMS_EXIT
+DmQ T 13:33.8 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:33.8 You must execute PAMS_ATTACH_Q first
+DmQ T 13:34.8 Entering PAMS_GET_MSG
+DmQ T 13:34.8 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:34.8 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:34.9 Entering PAMS_EXIT
+DmQ T 13:34.9 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:34.9 You must execute PAMS_ATTACH_Q first
+DmQ T 13:35.9 Entering PAMS_GET_MSG
+DmQ T 13:35.9 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:35.9 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:35.9 Entering PAMS_EXIT
+DmQ T 13:35.9 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:35.9 You must execute PAMS_ATTACH_Q first
+DmQ T 13:37.0 Entering PAMS_GET_MSG
+DmQ T 13:37.0 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:37.0 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:37.0 Entering PAMS_EXIT
+DmQ T 13:37.0 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:37.0 You must execute PAMS_ATTACH_Q first
+DmQ T 13:38.1 Entering PAMS_GET_MSG
+DmQ T 13:38.1 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:38.1 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:38.1 Entering PAMS_EXIT
+DmQ T 13:38.1 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:38.1 You must execute PAMS_ATTACH_Q first
+DmQ T 13:39.2 Entering PAMS_GET_MSG
+DmQ T 13:39.2 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:39.2 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:39.2 Entering PAMS_EXIT
+DmQ T 13:39.2 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:39.2 You must execute PAMS_ATTACH_Q first
+DmQ T 13:40.3 Entering PAMS_GET_MSG
+DmQ T 13:40.3 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:40.3 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:40.3 Entering PAMS_EXIT
+DmQ T 13:40.3 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:40.3 You must execute PAMS_ATTACH_Q first
+DmQ T 13:41.4 Entering PAMS_GET_MSG
+DmQ T 13:41.4 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:41.4 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:41.4 Entering PAMS_EXIT
+DmQ T 13:41.4 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:41.4 You must execute PAMS_ATTACH_Q first
+DmQ T 13:42.5 Entering PAMS_GET_MSG
+DmQ T 13:42.5 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:42.5 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:42.5 Entering PAMS_EXIT
+DmQ T 13:42.5 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:42.5 You must execute PAMS_ATTACH_Q first
+DmQ T 13:43.6 Entering PAMS_GET_MSG
+DmQ T 13:43.6 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:43.6 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:43.6 Entering PAMS_EXIT
+DmQ T 13:43.6 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:43.6 You must execute PAMS_ATTACH_Q first
+DmQ T 13:44.6 Entering PAMS_GET_MSG
+DmQ T 13:44.6 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:44.6 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:44.7 Entering PAMS_EXIT
+DmQ T 13:44.7 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:44.7 You must execute PAMS_ATTACH_Q first
+DmQ T 13:45.7 Entering PAMS_GET_MSG
+DmQ T 13:45.7 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:45.7 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:45.8 Entering PAMS_EXIT
+DmQ T 13:45.8 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:45.8 You must execute PAMS_ATTACH_Q first
+DmQ T 13:46.8 Entering PAMS_GET_MSG
+DmQ T 13:46.8 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:46.8 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:46.9 Entering PAMS_EXIT
+DmQ T 13:46.9 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:46.9 You must execute PAMS_ATTACH_Q first
+DmQ T 13:47.9 Entering PAMS_GET_MSG
+DmQ T 13:47.9 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:47.9 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:48.0 Entering PAMS_EXIT
+DmQ T 13:48.0 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:48.0 You must execute PAMS_ATTACH_Q first
+DmQ T 13:49.0 Entering PAMS_GET_MSG
+DmQ T 13:49.0 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:49.0 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:49.1 Entering PAMS_EXIT
+DmQ T 13:49.1 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:49.1 You must execute PAMS_ATTACH_Q first
+DmQ T 13:50.1 Entering PAMS_GET_MSG
+DmQ T 13:50.1 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:50.1 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:50.2 Entering PAMS_EXIT
+DmQ T 13:50.2 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:50.2 You must execute PAMS_ATTACH_Q first
+DmQ T 13:51.2 Entering PAMS_GET_MSG
+DmQ T 13:51.2 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:51.2 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:51.3 Entering PAMS_EXIT
+DmQ T 13:51.3 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:51.3 You must execute PAMS_ATTACH_Q first
+DmQ T 13:52.3 Entering PAMS_GET_MSG
+DmQ T 13:52.3 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:52.3 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:52.4 Entering PAMS_EXIT
+DmQ T 13:52.4 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:52.4 You must execute PAMS_ATTACH_Q first
+DmQ T 13:53.4 Entering PAMS_GET_MSG
+DmQ T 13:53.4 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:53.4 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:53.5 Entering PAMS_EXIT
+DmQ T 13:53.5 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:53.5 You must execute PAMS_ATTACH_Q first
+DmQ T 13:54.5 Entering PAMS_GET_MSG
+DmQ T 13:54.5 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:54.5 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:54.5 Entering PAMS_EXIT
+DmQ T 13:54.5 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:54.5 You must execute PAMS_ATTACH_Q first
+DmQ T 13:55.6 Entering PAMS_GET_MSG
+DmQ T 13:55.6 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:55.6 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:55.6 Entering PAMS_EXIT
+DmQ T 13:55.6 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:55.6 You must execute PAMS_ATTACH_Q first
+DmQ T 13:56.7 Entering PAMS_GET_MSG
+DmQ T 13:56.7 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:56.7 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:56.7 Entering PAMS_EXIT
+DmQ T 13:56.7 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:56.7 You must execute PAMS_ATTACH_Q first
+DmQ T 13:57.8 Entering PAMS_GET_MSG
+DmQ T 13:57.8 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:57.8 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:57.8 Entering PAMS_EXIT
+DmQ T 13:57.8 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:57.8 You must execute PAMS_ATTACH_Q first
+DmQ T 13:58.8 Entering PAMS_GET_MSG
+DmQ T 13:58.8 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:58.8 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 13:58.9 Entering PAMS_EXIT
+DmQ T 13:58.9 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 13:58.9 You must execute PAMS_ATTACH_Q first
+DmQ T 13:59.9 Entering PAMS_GET_MSG
+DmQ T 13:59.9 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 13:59.9 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:00.0 Entering PAMS_EXIT
+DmQ T 14:00.0 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:00.0 You must execute PAMS_ATTACH_Q first
+DmQ T 14:01.0 Entering PAMS_GET_MSG
+DmQ T 14:01.0 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:01.0 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:01.1 Entering PAMS_EXIT
+DmQ T 14:01.1 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:01.1 You must execute PAMS_ATTACH_Q first
+DmQ T 14:02.1 Entering PAMS_GET_MSG
+DmQ T 14:02.1 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:02.1 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:02.2 Entering PAMS_EXIT
+DmQ T 14:02.2 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:02.2 You must execute PAMS_ATTACH_Q first
+DmQ T 14:03.2 Entering PAMS_GET_MSG
+DmQ T 14:03.2 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:03.2 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:03.3 Entering PAMS_EXIT
+DmQ T 14:03.3 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:03.3 You must execute PAMS_ATTACH_Q first
+DmQ T 14:04.3 Entering PAMS_GET_MSG
+DmQ T 14:04.3 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:04.3 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:04.4 Entering PAMS_EXIT
+DmQ T 14:04.4 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:04.4 You must execute PAMS_ATTACH_Q first
+DmQ T 14:05.4 Entering PAMS_GET_MSG
+DmQ T 14:05.4 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:05.4 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:05.5 Entering PAMS_EXIT
+DmQ T 14:05.5 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:05.5 You must execute PAMS_ATTACH_Q first
+DmQ T 14:06.5 Entering PAMS_GET_MSG
+DmQ T 14:06.5 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:06.5 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:06.6 Entering PAMS_EXIT
+DmQ T 14:06.6 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:06.6 You must execute PAMS_ATTACH_Q first
+DmQ T 14:07.6 Entering PAMS_GET_MSG
+DmQ T 14:07.6 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:07.6 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:07.7 Entering PAMS_EXIT
+DmQ T 14:07.7 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:07.7 You must execute PAMS_ATTACH_Q first
+DmQ T 14:08.7 Entering PAMS_GET_MSG
+DmQ T 14:08.7 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:08.7 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:08.8 Entering PAMS_EXIT
+DmQ T 14:08.8 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:08.8 You must execute PAMS_ATTACH_Q first
+DmQ T 14:09.8 Entering PAMS_GET_MSG
+DmQ T 14:09.8 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:09.8 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:09.8 Entering PAMS_EXIT
+DmQ T 14:09.8 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:09.8 You must execute PAMS_ATTACH_Q first
+DmQ T 14:10.9 Entering PAMS_GET_MSG
+DmQ T 14:10.9 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:10.9 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:10.9 Entering PAMS_EXIT
+DmQ T 14:10.9 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:10.9 You must execute PAMS_ATTACH_Q first
+DmQ T 14:12.0 Entering PAMS_GET_MSG
+DmQ T 14:12.0 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:12.0 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:12.0 Entering PAMS_EXIT
+DmQ T 14:12.0 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:12.0 You must execute PAMS_ATTACH_Q first
+DmQ T 14:13.1 Entering PAMS_GET_MSG
+DmQ T 14:13.1 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:13.1 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:13.1 Entering PAMS_EXIT
+DmQ T 14:13.1 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:13.1 You must execute PAMS_ATTACH_Q first
+DmQ T 14:14.1 Entering PAMS_GET_MSG
+DmQ T 14:14.1 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:14.1 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:14.2 Entering PAMS_EXIT
+DmQ T 14:14.2 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:14.2 You must execute PAMS_ATTACH_Q first
+DmQ T 14:15.2 Entering PAMS_GET_MSG
+DmQ T 14:15.2 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:15.2 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:15.3 Entering PAMS_EXIT
+DmQ T 14:15.3 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:15.3 You must execute PAMS_ATTACH_Q first
+DmQ T 14:16.3 Entering PAMS_GET_MSG
+DmQ T 14:16.3 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:16.3 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:16.4 Entering PAMS_EXIT
+DmQ T 14:16.4 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:16.4 You must execute PAMS_ATTACH_Q first
+DmQ T 14:17.4 Entering PAMS_GET_MSG
+DmQ T 14:17.4 *** You must execute PAMS_ATTACH_Q first ***
+DmQ T 14:17.4 %PAMS-E-NOTDCL, Process has not been declared to MessageQ
+DmQ T 14:17.5 Entering PAMS_EXIT
+DmQ T 14:17.5 Entering PAMS_DETACH_Q (q:0.0, flushQ:2, all_Qs:1, can_sm:0)
+DmQ T 14:17.5 You must execute PAMS_ATTACH_Q first
