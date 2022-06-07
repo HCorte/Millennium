@@ -557,7 +557,10 @@ CV20        TYPE*,'Game Type(11)  -> Loto(1)/Sports(2)/Joker(4)/Results(15)/Pas(
 CV20	TYPE*,'Tra Status(1)  -> Good(1)/Void(2)/CashExchg(4)/Cash(5)/Reject(6)'
 CV20        TYPE*,'*******************************************************************'
         TYPE*,'***   OFFSETS   *****   VALUES   **************************************' !V20
-        TYPE*,'* Trx Status(1)...: EXCLUDE IGS TRX -----> YESWag(1)/Can(2)/Ican(3)/Val(4)/Ret(5)/Spe(7)/Crs(9) *' !V20
+        TYPE*,'* Trx Status(1)...: Good(1)/Void(2)/CashExchg(4)/Cash(5)/Reject(6)    *' !V20
+        TYPE*,'* Trx Error(2)....: Noer(0)/Invl(1)/Synt(2)/Supr(3)/NotOn(4)/Sdor(5)  *' !V20
+        TYPE*,'*                   Sdrw(6)/Rety(15)/Vinq(16)/Grev(18)/Bcrs(33)       *' !V20
+        TYPE*,'* Trx Type(9).....: Wag(1)/Can(2)/Ican(3)/Val(4)/Ret(5)/Spe(7)/Crs(9) *' !V20
         TYPE*,'*                   Eur(11)/Igs(12)                                   *' !V20
         TYPE*,'* Game Num(10)....: TotobolaNormal(1)/Totoloto(2)/TotobolaExtra2(3)   *' !V20
         TYPE*,'*                   Loto2(4)/Joker(5)/TotolotoSab(6)/TotolotoQua(7)   *' !V20
@@ -710,10 +713,14 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC V21 - New Terminals CCCCCCCCCCCCCCCCCCCCCCCCCCC
               IF(TRABUF(TTYP) .EQ. TVAL .AND. CHAFLAG .EQ. 4 .AND. TRABUF(TVOLMCOMF_TLTO).EQ.1) GOTO 40        
           ELSE
               IF(TRABUF(TGAMTYP).EQ.TINS .AND. TRABUF(TTYP).EQ.TCRS) THEN
-                  IF(TRABUF(TITYP) .EQ.IVAL .AND. CHAFLAG .EQ. 2 .AND. TRABUF(TVOLMCOMF_IL).EQ.0) GOTO 40
-                  IF(TRABUF(TITYP) .EQ.IVAL .AND. CHAFLAG .EQ. 4 .AND. TRABUF(TVOLMCOMF_IL).EQ.1) GOTO 40                         
-                  IF(TRABUF(TTYP) .NE. IVAL .AND. CHAFLAG .EQ. 2 .AND. TRABUF(TGOLMCOMF_IL).EQ.0) GOTO 40
-                  IF(TRABUF(TTYP) .NE. IVAL .AND. CHAFLAG .EQ. 4 .AND. TRABUF(TGOLMCOMF_IL).EQ.1) GOTO 40                         
+                  IF(TRABUF(TITYP) .EQ.IVAL .AND. CHAFLAG .EQ. 2 .AND. 
+     *             TRABUF(TGOLMCOMF_IL).EQ.0 .AND. TRABUF(TVOLMCOMF_IL).EQ.0) GOTO 40
+                  IF(TRABUF(TITYP) .EQ.IVAL .AND. CHAFLAG .EQ. 4 .AND.
+     *             (TRABUF(TVOLMCOMF_IL).EQ.1 .OR. TRABUF(TGOLMCOMF_IL).EQ.1)) GOTO 40
+                  IF(TRABUF(TTYP) .NE. IVAL .AND. CHAFLAG .EQ. 2 .AND.
+     *             TRABUF(TGOLMCOMF_IL).EQ.0 .AND. TRABUF(TVOLMCOMF_IL).EQ.0) GOTO 40
+                  IF(TRABUF(TTYP) .NE. IVAL .AND. CHAFLAG .EQ. 4 .AND.
+     *             (TRABUF(TGOLMCOMF_IL).EQ.1 .OR. TRABUF(TVOLMCOMF_IL).EQ.1)) GOTO 40
               ELSE 
                   GOTO 40
               ENDIF      
