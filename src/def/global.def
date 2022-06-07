@@ -445,9 +445,9 @@ C----+------------------------------------------------------------------
         PARAMETER (TREF=6)           !REFUND
         PARAMETER (TSPE=7)           !SPECIAL FUNCTION <- (um exemplo: relatorio)
         PARAMETER (TCMD=8)           !COMMAND
-        PARAMETER (TCRS=9) -> subtipo  (TVAL)        !CROSS SYSTEM <- que vão para IPS (lotaria instantania) (subtipo: ival, etc)
+        PARAMETER (TCRS=9)           !-> subtipo  (TVAL) !CROSS SYSTEM <- que vão para IPS (lotaria instantania) (subtipo: ival, etc)
         PARAMETER (TGUI=10)          !GUI
-        PARAMETER (TEUR=11) -> subtipo          !EURO MIL <- ignorar
+        PARAMETER (TEUR=11)          !-> subtipo !EURO MIL <- ignorar
 C----+------------------------------------------------------------------
 C V72| Adding support for IGS
 C----+------------------------------------------------------------------
@@ -660,6 +660,9 @@ C
         PARAMETER (EPNR=37)          !NUMBER IS NOT RESERVED (ePassive)
         PARAMETER (EPIO=38)          !IO ERROR (ePassive)
         PARAMETER (BNIF=39)          !BLOCKED "NIF" -- SCML INTERNAL USE, DON'T DELETE
+C
+        INTEGER*4 NOBUFF
+        PARAMETER (NOBUFF=40)        !OUT OF BUFFERS FROM FREEQ (use auxiliary buffer)        
 C
 C TRANSACTION FILE STATUS
 C
