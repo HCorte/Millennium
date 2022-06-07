@@ -1,5 +1,6 @@
 C SCANSUBS.FOR
 C
+C V03 29-APR-2022 SCML Ignore Retry from channel OLM (New Terminal Proj)
 C V02 25-NOV-10 FJG Avoid the RESV to be considered as Wager
 C V01 08-SEP-00 OXK Initial release (Global 161 customized for Finland)
 C
@@ -133,7 +134,10 @@ C
      *     TRABUF(TTYP).EQ.TVAL) .AND.
      *    (LASTRA(TTIM,TER).NE.0) .AND.
      *    (TRABUF(TTRN).EQ.LASTRA(TTRN,TER)) .AND.
-     *    (TRABUF(TCHK).EQ.LASTRA(TCHK,TER))) THEN
+     *    (TRABUF(TCHK).EQ.LASTRA(TCHK,TER)) .AND. !V03
+     *    TRABUF(TWCOLMCOMF_TLTO).NE.1 .AND. !V03
+     *    TRABUF(TCOLMCOMF_TLTO).NE.1 .AND. !V03
+     *    TRABUF(TVOLMCOMF_TLTO).NE.1) THEN !V03
 C Some conditions added to separate non-issues for Finland
 C       1. FRACTIONED TICKETS
             IF (
