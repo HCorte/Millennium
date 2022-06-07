@@ -819,11 +819,11 @@ C        WRITE(*,*) "--- ",FILENAME
             CALL READW(SOUPFM_REC.PRG_FDB,SOUPFM_REC.PRG_BLK_CNT,UPREC,ST)
 
 C           (PRGRECLEN=PRGSEC*64) -- PRGSEC=128
-            WRITE(*,*) ""
-            DO I=1, PRGRECLEN  
-                WRITE(*,*) "Index:", I, " Value: ",UPREC(I)                               
-            ENDDO
-            WRITE(*,*) ""
+C            WRITE(*,*) ""
+C            DO I=1, PRGRECLEN  
+C                WRITE(*,*) "Index:", I, " Value: ",UPREC(I)                               
+C            ENDDO
+C            WRITE(*,*) ""
             
             IF(ST .EQ. READW_EOF_REACHED) THEN ! EOF reached
                RETURN

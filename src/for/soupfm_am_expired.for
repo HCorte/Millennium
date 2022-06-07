@@ -225,10 +225,10 @@ C       SOUPFM_REC.SRC_CDC_DATE
      *     VALREC(VWCDC) .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY .OR. NUMDAY .EQ. 0
         ENDIF
 
-C        IF(   VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY  !V02
-C     *  .OR.  NUMDAY          .EQ. 0) RETURN                         !V02
+C        IF(   VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY !V02
+C     *  .OR.  NUMDAY          .EQ. 0) RETURN                        !V02
 
-        IF( (GAME .NE. 10) .AND. (VALREC(VWCDC) .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY
+        IF( (GAME .NE. 10) .AND. (VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY
      *  .OR.  NUMDAY          .EQ. 0) ) RETURN
 
         WRITE(*,*) "...Passed the condition will write to soupfm file..."

@@ -4,6 +4,8 @@ C
 C This program will manage the generation of the SOUP files
 C for expired prizes report of Apostas Mutuas (AM) 
 C
+C V02 08-APR-2022 SCML Bug fix for SPORTS (GAME NUM=10) not generating reports with the 
+C                      data of prizes purged (uncashed) - ticket(P220125_0011)  
 C V01 09-APR-2014 SCML Program creation
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -248,8 +250,10 @@ C        TYPE *, '----------------------------------------------'
         ! 5) only validations that have been purged at the provided cdc date
         GAME    = VALREC(VGAM)
         NUMDAY  = PRGDAY(GAME)
-        IF(   VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY
-     *  .OR.  NUMDAY          .EQ. 0) RETURN
+C        IF(   VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY !V02
+C     *  .OR.  NUMDAY          .EQ. 0) RETURN                        !V02
+        IF( (GAME .NE. 10) .AND. (VALREC(VWCDC)   .GT. SOUPFM_REC.SRC_CDC_DATE - NUMDAY !V02
+     *  .OR.  NUMDAY          .EQ. 0) ) RETURN                                          !V02
 
         ! 6) only validations that do not have payment orders
         IF(   VALREC(VOPSCNT) .NE. 0) RETURN
