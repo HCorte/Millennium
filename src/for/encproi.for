@@ -914,7 +914,7 @@ C        ENDIF
         IF (X2X_GAME_STATE.EQ.X2X_GAMES_UP) THEN      
 C         CALL X2ADDPRO(BUF)                        ! MXSRV
           IF (HPRO(PRCSRC,BUF).EQ.OLM_COM) THEN ! V13 - OLM            
-C            CALL QUETRA(OLM,BUF)                    ! V13 - OLM (rever se deve usar o ABL ou é QUETRA)   
+C            CALL QUETRA(OLM,BUF)                    ! V13 - OLM (rever se deve usar o ABL ou é QUETRA)  
              CALL OLM_QUETRA(BUF) 
 C V13          IF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV            
           ELSEIF (HPRO(PRCSRC,BUF).EQ.MXS_COM) THEN     ! MXSRV
