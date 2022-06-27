@@ -1,6 +1,0 @@
-CALL MESSQ_ATTACH ---> função que faz atach há queue (está defenida no ficheiro .....)
-CALL MESSQ_EXIT ---> função exit d
-CALL BUILD_MSG  ---> a função que escreve na mensagem
-CALL QUEMES ----> função que liga-se há queue????
-CALL GETFROMIGS ----> função que lê da queue do MessageQ
-CALL SENDTOIGS ----> função que mete a mensagem na queue do MessageQ
