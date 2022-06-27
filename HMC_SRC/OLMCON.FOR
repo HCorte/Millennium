@@ -168,10 +168,17 @@ C        integer*4    gtyp
 C   end gninvall
 
 C begin nrm_csmonyi8
-        DOUBLE PRECISION BIG !8 bytes since its REAL*8 equivalent
-C        REAL*8 BIG     
+        DOUBLE PRECISION BIG_VALUE,BIG  !8 bytes since its REAL*8 equivalent
+        DOUBLE PRECISION BIG_VALUE_3 
+C        REAL*8 BIG_VALUE  
+C        REAL*16 BIG_VALUE
 C        PARAMETER (BIG=9223372036854775000.0)
-        CHARACTER*21 BIG_STR
+        CHARACTER*22 BIG_STR
+
+	CHARACTER*32	CTEMP		!TEMPORARY CHR VARIABLE
+	INTEGER*4	ITEMP(8)	!TEMPORARY INT VARIABLE
+	EQUIVALENCE    (CTEMP, ITEMP)
+
 C end nrm_csmonyi8
 
 10	CONTINUE        
@@ -657,11 +664,41 @@ C       Getting addresses by the %LOC function
  
 C       8 bytes = 18446744073709551615 max value unsigned
 C       signed is 9 223 372 036 854 775 807,5 -> 9 223 372 036 854 775 807
-C                BIG = 9223372036854775807.0 
-                BIG = 9223372036854775000.0 
-                WRITE (BIG_STR,990) BIG
+C                BIG_VALUE = 9223372036854775808.0 !FFFFFFFFFFFFFFFF (8000000000000000) hexa signed
+C                BIG_VALUE = 18446744073709551615.0 !FFFFFFFFFFFFFFFF hexa unsigned 
+C       DOUBLE PRECISION means 64 bits thats 8 bytes
+
+C                BIG_VALUE = 18446744073709551615.0 !9223372036854775000.0 
+C                BIG_VALUE = DFLOAT('FFFFFFFF'X) !4 bytes
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C err at compilation time:
+C %F90-E-ERROR, This is an illegal octal, hexadecimal, or binary character; 
+C or, the value of the constant is too
+C large or too small.   ['FFFFFFFFFFFFFFFFFF'X]
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                BIG_VALUE = 4722366482869645213695 !9 bytes
+C                BIG_VALUE = DFLOAT('FFFFFFFFFFFFFFFFFF'X) !9 bytes
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                
+                BIG_VALUE = DFLOAT('FFFFFFFFFFFFFFFF'X) !8 bytes gives -1 so end of overflow no more positve range from here
+
+C                BIG_VALUE = DFLOAT('8000000000000000'X) !negative value (overflow) -> -9223372036854775808.0
+C                BIG_VALUE = DFLOAT('7FFFFFFFFFFFFFFF'X) !positive value -> 9223372036854775808.0
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C %F90-E-ERROR, When converting this constant to a REAL(KIND=4) number, underflow or overflow occurred.   
+C [340282366920938463463374607431768211455.0]
+C                BIG_VALUE = 340282366920938463463374607431768211455.0 !16bytes REAL*16 test for double precision (8 or 16 bytes)???
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC                
+                WRITE(6,970) BIG_VALUE
+                WRITE(BIG_STR,990) BIG_VALUE
                 WRITE(6,980) BIG_STR
+C                BIG_VALUE_3 = BIG_VALUE*3
+C                WRITE(6,1000) BIG_VALUE_3 
+        BIG = 999999.96 !the max value before giving error is 999999.96 that in SYS$OUTPUT converts to 999999.94 for some reason...(compile related specific??)
 C        BIG=(DFLOAT(AMOUNT(1))*MON_UNIT+DFLOAT(AMOUNT(2)))/DOLL_BASE
+        ENCODE(9,8200,CTEMP) BIG
+        WRITE(6,8300) CTEMP
+
 
         GOTO 10           
 
@@ -700,8 +737,12 @@ C        GOTO 10
 3010    FORMAT(2X,'System File Name:',A4)
 
 C990     FORMAT(F22.0)
-990     FORMAT(F20.0)
-980     FORMAT(19A)
+970     FORMAT(3X,"8 bytes       : ",F22.1)
+990     FORMAT(F22.0)
+980     FORMAT(3X,"(Double Float): ",22A)
+1000    FORMAT(3X,"> 8 bytes     : ",F22.1)
+8200    FORMAT(F9.2)
+8300    FORMAT(3X,A9)
 
       END
 

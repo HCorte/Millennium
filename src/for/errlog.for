@@ -41,7 +41,7 @@ C Copyright 1991 GTECH Corporation. All rights reserved.
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C=======OPTIONS /CHECK=NOOVERFLOW
-PROGRAM ERRLOG
+	PROGRAM ERRLOG
 	IMPLICIT NONE
 C
 	INCLUDE 'INCLIB:SYSPARAM.DEF'

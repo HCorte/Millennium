@@ -146,11 +146,11 @@ C----+---+-------------+------------------------------------------------
 C V41|BEG| TERMINALS PROJECT | ADDED NEW OLIMPO COMMAND NAME
 C----+---+-------------+------------------------------------------------  
 C     *              'PSUPRSL','        ','         ','        ',   
-     *              'PSUPRSL','        ','OLMCONF  ','REGLOG   ',
+     *              'PSUPRSL','        ','OLMCONF  ','REGLOG   ',  !V41
 C----+---+-------------+------------------------------------------------
 C V41|BEG| TERMINALS PROJECT | ADDED NEW OLIMPO COMMAND NAME
 C----+---+-------------+------------------------------------------------         
-     *              '        ','        ','        ','        ',
+     *              'RESTATIS','        ','        ','        ',   !V41
      *              'DSPBDET ','TSWMAX  ','TVTIME  ','TSMXLI  ',
      *              'TSMXODD ','REM_LOG ','        ','        ',
      *              '        ','        ','        ','SUPINS  ',

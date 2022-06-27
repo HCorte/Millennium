@@ -7,3 +7,8 @@ $! not created here but in other context of this script -> (MessageqConnection.c
 $! DEFINE/JOB/EXEC/NOLOG OLM_DMQSRV_PRIMARY_HOST "....."
 $! DEFINE/JOB/EXEC/NOLOG OLM_DMQSRV_FAILOVER_HOST "....."
 $! DEFINE/JOB/EXEC/NOLOG millconnect "....."
+
+
+$! set def DSS$GTECH
+$! set def [-]
+$! type SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_STARTUP.COM;3 
