@@ -1,0 +1,22 @@
+
+11:01:40 DISPAT   
+  Buffer     =   601
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    10
+    1: 23 61 3E BC 01 03 00 00 06 15
+
+11:01:40 LOGGER   
+  Buffer     =   601
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 23 90 1F BD 0A 01

@@ -1,0 +1,863 @@
+
+11:55:58 DISPAT   
+  Buffer     =    16
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   109
+    1: 24 30 A3 2E 00 00 04 93 E6 00 00 0F DF 00 00 00 00 00 00 00
+   21: 00 00 00 45 39 61 10 32 16 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 31 2E 36 32 6E 6F 6E 65 00 00 00 00 4E 4F 4E
+   81: 45 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00
+
+11:55:58 LOGGER   
+  Buffer     =    16
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    85
+    1: 24 30 11 CD 00 A7 CE 0D B8 F1 F3 02 1C 26 04 00 04 93 E6 10
+   21: 24 00 00 01 00 01 00 00 00 00 00 00 00 07 A1 1F 04 57 00 00
+   41: 00 00 00 00 00 00 00 00 00 03 0F 22 00 00 3A 98 05 05 89 00
+   61: 04 00 01 9A 00 04 00 01 11 00 06 05 04 01 96 0B 00 04 01 05
+   81: 0C 00 04 01 06
+
+11:56:03 DISPAT   
+  Buffer     =    17
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 25 34 4F 19 01 04
+
+11:56:03 LOGGER   
+  Buffer     =    17
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    21
+    1: 25 34 52 50 01 04 1C 2C 00 5A 00 14 80 00 00 00 00 00 00 01
+   21: 06
+
+11:58:48 DISPAT   
+  Buffer     =    19
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 26 00 BA 6A 04 01 41 11 81 00 01 06 00 06 00 0D 10 23 22 24
+   21: 22 1D
+
+11:58:48 LOGGER   
+  Buffer     =    19
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 26 00 60 93 01 04 89 65 A8 3F 00 06 00 06 08 15 08 15 0B 3A
+   21: 30 00
+
+12:13:27 DISPAT   
+  Buffer     =    27
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 B5 18 00 01 30 11 80 00 00 07 10 4F 32 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+12:13:27 LOGGER   
+  Buffer     =    27
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 4E B9 0D 08
+
+12:16:32 DISPAT   
+  Buffer     =    30
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+12:16:32 LOGGER   
+  Buffer     =    30
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 27 00 DC 80 01 04 BF 65 BE 11 00 06 00 06 08 15 08 15 0C 10
+   21: 20 00
+
+12:26:18 DISPAT   
+  Buffer     =    36
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 B5 18 00 01 30 11 80 00 00 07 10 4F 32 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+12:26:18 LOGGER   
+  Buffer     =    36
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 4E B9 0D 08
+
+12:30:50 DISPAT   
+  Buffer     =    39
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 B5 18 00 01 30 11 80 00 00 07 10 4F 32 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+12:30:50 LOGGER   
+  Buffer     =    39
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 4E B9 0D 08
+
+12:30:50 DISPAT   
+  Buffer     =    41
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 B5 18 00 01 30 11 80 00 00 07 10 4F 32 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+12:30:50 LOGGER   
+  Buffer     =    41
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 4E B9 0D 08
+
+12:32:25 DISPAT   
+  Buffer     =    43
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 B5 18 00 01 30 11 80 00 00 07 10 4F 32 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+12:32:25 LOGGER   
+  Buffer     =    43
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 4E B9 0D 08
+
+12:34:39 DISPAT   
+  Buffer     =    45
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 B5 18 00 01 30 11 80 00 00 07 10 4F 32 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+12:34:39 LOGGER   
+  Buffer     =    45
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 4E B9 0D 08
+
+12:36:45 DISPAT   
+  Buffer     =    48
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    39
+    1: 27 00 01 E7 00 01 30 11 80 00 00 07 10 4F 00 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+12:36:45 LOGGER   
+  Buffer     =    48
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 9B 3A 0D 08
+
+12:39:51 DISPAT   
+  Buffer     =    50
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    39
+    1: 27 00 01 E7 00 01 30 11 80 00 00 07 10 4F 00 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+12:39:51 LOGGER   
+  Buffer     =    50
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 9B 3A 0D 08
+
+12:42:27 DISPAT   
+  Buffer     =    56
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 04 08 00 01 30 11 80 00 01 05 00 07 10 4F 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+12:42:27 LOGGER   
+  Buffer     =    56
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 3A 43 0D 00
+
+12:44:53 DISPAT   
+  Buffer     =    58
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 04 08 00 01 30 11 80 00 01 05 00 07 10 4F 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+12:44:53 LOGGER   
+  Buffer     =    58
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 3A 43 0D 00
+
+12:48:32 DISPAT   
+  Buffer     =    61
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 04 08 00 01 30 11 80 00 01 05 00 07 10 4F 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+12:48:32 LOGGER   
+  Buffer     =    61
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 3A 43 0D 00
+
+12:57:33 DISPAT   
+  Buffer     =    65
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+12:57:33 LOGGER   
+  Buffer     =    65
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 D0 64 0D 00
+
+13:03:11 DISPAT   
+  Buffer     =    73
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    41
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00
+
+13:03:11 LOGGER   
+  Buffer     =    73
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 D0 64 0D 00
+
+14:43:21 DISPAT   
+  Buffer     =   112
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    16
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F
+
+14:43:21 LOGGER   
+  Buffer     =   112
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 D0 64 0D 00
+
+15:00:09 DISPAT   
+  Buffer     =   123
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+15:00:09 LOGGER   
+  Buffer     =   123
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 27 00 88 F3 01 04 BF 65 BE 11 00 06 00 06 08 15 08 15 0F 00
+   21: 09 00
+
+15:02:19 DISPAT   
+  Buffer     =   125
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+15:02:19 LOGGER   
+  Buffer     =   125
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 27 00 55 AA 01 04 BF 65 BE 11 00 06 00 06 08 15 08 15 0F 02
+   21: 13 00
+
+15:03:38 DISPAT   
+  Buffer     =   126
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+15:03:38 LOGGER   
+  Buffer     =   126
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 27 00 C7 6C 01 04 BF 65 BE 11 00 06 00 06 08 15 08 15 0F 03
+   21: 26 00
+
+15:18:17 DISPAT   
+  Buffer     =   133
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+15:18:17 LOGGER   
+  Buffer     =   133
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 27 00 E3 8F 01 04 BF 65 BE 11 00 06 00 06 08 15 08 15 0F 12
+   21: 11 00
+
+15:28:35 DISPAT   
+  Buffer     =   136
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+15:28:35 LOGGER   
+  Buffer     =   136
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 27 00 76 86 01 04 BF 65 BE 11 00 06 00 06 08 15 08 15 0F 1C
+   21: 23 00
+
+16:08:12 DISPAT   
+  Buffer     =   153
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+16:08:12 LOGGER   
+  Buffer     =   153
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 27 00 41 D1 01 04 BF 65 BE 11 00 06 00 06 08 15 08 15 10 08
+   21: 0C 00
+
+16:15:12 DISPAT   
+  Buffer     =   155
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+16:15:12 LOGGER   
+  Buffer     =   155
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 27 00 CD D4 01 04 BF 65 BE 11 00 06 00 06 08 15 08 15 10 0F
+   21: 0C 00
+
+16:32:45 DISPAT   
+  Buffer     =   162
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 20 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+16:32:45 LOGGER   
+  Buffer     =   162
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 20 00 EB BC 01 04 FC 64 ED 4C 00 06 00 06 08 15 08 15 10 20
+   21: 2D 00
+
+17:00:06 DISPAT   
+  Buffer     =   176
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+17:00:06 LOGGER   
+  Buffer     =   176
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 27 00 1C AF 01 04 8E 64 FF B6 00 06 00 06 08 15 08 15 11 00
+   21: 06 00
+
+17:07:56 DISPAT   
+  Buffer     =   180
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 08 75 00 01 30 11 80 00 01 06 00 07 10 4F 32
+
+17:07:56 LOGGER   
+  Buffer     =   180
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =     6
+    1: 27 90 48 C1 12 08
+
+17:08:31 DISPAT   
+  Buffer     =   182
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 21 00 15 23 00 01 30 11 80 00 01 05 00 07 11 11 10
+
+17:08:31 LOGGER   
+  Buffer     =   182
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 21 00 9D 0A 01 03 B6 64 C7 6E 00 02 00 02 07 15 07 15 11 08
+   21: 1F 00
+
+17:08:59 DISPAT   
+  Buffer     =   183
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    17
+    1: 27 00 56 BF 00 01 40 11 80 00 01 06 00 07 10 4F 32
+
+17:08:59 LOGGER   
+  Buffer     =   183
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    22
+    1: 27 00 32 58 01 04 90 64 C1 90 00 06 00 06 08 15 08 15 11 08
+   21: 3A 00
+
+17:30:06 DISPAT   
+  Buffer     =   191
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   110
+    1: 20 30 00 00 01 00 04 93 E6 00 00 0F DF 00 00 00 00 00 00 00
+   21: 00 00 00 45 39 61 10 32 16 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 31 2E 36 32 6E 6F 6E 65 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00
+
+17:30:06 LOGGER   
+  Buffer     =   191
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    85
+    1: 20 30 00 56 00 F6 1E 0D B8 F1 F3 03 1C 26 04 00 04 93 E6 10
+   21: 24 00 00 01 00 01 00 00 00 00 00 00 00 07 A1 1F 04 57 00 00
+   41: 00 00 00 00 00 00 00 00 00 03 0F 22 00 00 3A 98 05 05 89 00
+   61: 04 00 01 9A 00 04 00 01 11 00 06 05 04 01 96 0B 00 04 01 05
+   81: 0C 00 04 01 06
+
+17:51:18 DISPAT   
+  Buffer     =   199
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   110
+    1: 20 30 00 00 01 00 04 93 E6 00 00 0F DF 00 00 00 00 00 00 00
+   21: 00 00 00 45 39 61 10 32 16 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 31 2E 36 32 6E 6F 6E 65 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00
+
+17:51:18 LOGGER   
+  Buffer     =   199
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    85
+    1: 20 30 89 BD 00 FB 16 0D B8 F1 F3 04 1C 26 04 00 04 93 E6 10
+   21: 24 00 00 01 00 01 00 00 00 00 00 00 00 07 A1 1F 04 57 00 00
+   41: 00 00 00 00 00 00 00 00 00 03 0F 22 00 00 3A 98 05 05 89 00
+   61: 04 00 01 9A 00 04 00 01 11 00 06 05 04 01 96 0B 00 04 01 05
+   81: 0C 00 04 01 06
+
+18:04:32 DISPAT   
+  Buffer     =   208
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   110
+    1: 20 30 00 00 01 00 04 93 E6 00 00 0F DF 00 00 00 00 00 00 00
+   21: 00 00 00 45 39 61 10 32 16 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 31 2E 36 32 6E 6F 6E 65 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00
+
+18:04:32 LOGGER   
+  Buffer     =   208
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    85
+    1: 20 30 08 DD 00 FE 30 0D B8 F1 F3 05 1C 26 04 00 04 93 E6 10
+   21: 24 00 00 01 00 01 00 00 00 00 00 00 00 07 A1 1F 04 57 00 00
+   41: 00 00 00 00 00 00 00 00 00 03 0F 22 00 00 3A 98 05 05 89 00
+   61: 04 00 01 9A 00 04 00 01 11 00 06 05 04 01 96 0B 00 04 01 05
+   81: 0C 00 04 01 06
+
+18:13:44 DISPAT   
+  Buffer     =   214
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   110
+    1: 20 30 00 00 01 00 04 93 E6 00 00 0F DF 00 00 00 00 00 00 00
+   21: 00 00 00 45 39 61 10 32 16 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 31 2E 36 32 6E 6F 6E 65 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00
+
+18:13:44 LOGGER   
+  Buffer     =   214
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    85
+    1: 20 30 B2 CA 01 00 58 0D B8 F1 F3 06 1C 26 04 00 04 93 E6 10
+   21: 24 00 00 01 00 01 00 00 00 00 00 00 00 07 A1 1F 04 57 00 00
+   41: 00 00 00 00 00 00 00 00 00 03 0F 22 00 00 3A 98 05 05 89 00
+   61: 04 00 01 9A 00 04 00 01 11 00 06 05 04 01 96 0B 00 04 01 05
+   81: 0C 00 04 01 06
+
+18:22:55 DISPAT   
+  Buffer     =   216
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   110
+    1: 20 30 00 00 01 00 04 93 E6 00 00 0F DF 00 00 00 00 00 00 00
+   21: 00 00 00 45 39 61 10 32 16 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 31 2E 36 32 6E 6F 6E 65 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00
+
+18:22:55 LOGGER   
+  Buffer     =   216
+  Comm       =    15
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    85
+    1: 20 30 EB 22 01 02 7F 0D B8 F1 F3 07 1C 26 04 00 04 93 E6 10
+   21: 24 00 00 01 00 01 00 00 00 00 00 00 00 07 A1 1F 04 57 00 00
+   41: 00 00 00 00 00 00 00 00 00 03 0F 22 00 00 3A 98 05 05 89 00
+   61: 04 00 01 9A 00 04 00 01 11 00 06 05 04 01 96 0B 00 04 01 05
+   81: 0C 00 04 01 06

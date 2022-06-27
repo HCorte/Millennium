@@ -1,0 +1,315 @@
+
+11:29:34 ENCPROI  
+  Buffer     =    39
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    23
+    1: 27 D3 EE 18 01 00 00 01 00 00 04 93 E6 00 00 00 00 00 00 00
+   21: 00 00 00
+
+11:29:34 DISPAT   
+  Buffer     =    39
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    23
+    1: 27 D3 EE 18 01 00 00 01 00 00 04 93 E6 00 00 00 00 00 00 00
+   21: 00 00 00
+
+11:29:34 CRSPRO   
+11:29:34 CRSPRO   OUTGOING PACKET:  BUFLEN -->           20
+    1: 14 00 27 00 02 48 E8 01 03 00 01 00 E6 93 04 00 00 00 00 00
+   21:
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 20 HEX: 00000014
+    3   4     2 GTECH SLOT ID:                          39 HEX: 00000027
+    5   8     4 GTECH CROSS REF #:                32000002 HEX: 01E84802
+    9  10     2 TRANSACTION TYPE:                        3 HEX: 00000003
+   11  12     2 CLASS:                                   1 HEX: 00000001
+   13  16     4 RETAILER #:                         300006 HEX: 000493E6
+   17  18     2 GAME #:                                  0 HEX: 00000000
+   19  20     2 CONTINUATION GAME #:                     0 HEX: 00000000
+
+11:29:34 CRSPRO   
+11:29:34 CRSPRO   INCOMING PACKET:  BUFLEN -->          116
+    1: 74 00 27 00 02 48 E8 01 03 00 0A 00 63 00 AC 01 6B 01 01 00
+   21: 00 00 00 00 00 00 8B 01 01 00 00 00 00 00 02 00 98 01 01 00
+   41: 00 00 00 00 00 00 9C 01 04 00 00 00 00 00 05 00 9D 01 04 00
+   61: 00 00 00 00 05 00 9F 01 01 00 00 00 00 00 02 00 A5 01 06 00
+   81: 00 00 00 00 06 00 A8 01 06 00 00 00 00 00 05 00 A9 01 04 00
+  101: 00 00 00 00 06 00 AA 01 06 00 00 00 00 00 06 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                116 HEX: 00000074
+    3   4     2 GTECH SLOT ID:                          39 HEX: 00000027
+    5   8     4 GTECH CROSS REF #:                32000002 HEX: 01E84802
+    9  10     2 TRANSACTION TYPE:                        3 HEX: 00000003
+   11  12     2 # OF ENTRIES:                           10 HEX: 0000000A
+   13  14     2 RESULT CODE:                            99 HEX: 00000063
+   15  16     2 NEXT GAME TO REQUEST:                  428 HEX: 000001AC
+          1 . ENTRY
+   17  18     2 GAME #:                                363 HEX: 0000016B
+   19  20     2 PACKS ON ORDER:                          1 HEX: 00000001
+   21  22     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   23  24     2 PACKS ON HAND:                           0 HEX: 00000000
+   25  26     2 REORDER MINIMUM:                         0 HEX: 00000000
+          2 . ENTRY
+   27  28     2 GAME #:                                395 HEX: 0000018B
+   29  30     2 PACKS ON ORDER:                          1 HEX: 00000001
+   31  32     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   33  34     2 PACKS ON HAND:                           0 HEX: 00000000
+   35  36     2 REORDER MINIMUM:                         2 HEX: 00000002
+          3 . ENTRY
+   37  38     2 GAME #:                                408 HEX: 00000198
+   39  40     2 PACKS ON ORDER:                          1 HEX: 00000001
+   41  42     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   43  44     2 PACKS ON HAND:                           0 HEX: 00000000
+   45  46     2 REORDER MINIMUM:                         0 HEX: 00000000
+          4 . ENTRY
+   47  48     2 GAME #:                                412 HEX: 0000019C
+   49  50     2 PACKS ON ORDER:                          4 HEX: 00000004
+   51  52     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   53  54     2 PACKS ON HAND:                           0 HEX: 00000000
+   55  56     2 REORDER MINIMUM:                         5 HEX: 00000005
+          5 . ENTRY
+   57  58     2 GAME #:                                413 HEX: 0000019D
+   59  60     2 PACKS ON ORDER:                          4 HEX: 00000004
+   61  62     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   63  64     2 PACKS ON HAND:                           0 HEX: 00000000
+   65  66     2 REORDER MINIMUM:                         5 HEX: 00000005
+          6 . ENTRY
+   67  68     2 GAME #:                                415 HEX: 0000019F
+   69  70     2 PACKS ON ORDER:                          1 HEX: 00000001
+   71  72     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   73  74     2 PACKS ON HAND:                           0 HEX: 00000000
+   75  76     2 REORDER MINIMUM:                         2 HEX: 00000002
+          7 . ENTRY
+   77  78     2 GAME #:                                421 HEX: 000001A5
+   79  80     2 PACKS ON ORDER:                          6 HEX: 00000006
+   81  82     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   83  84     2 PACKS ON HAND:                           0 HEX: 00000000
+   85  86     2 REORDER MINIMUM:                         6 HEX: 00000006
+          8 . ENTRY
+   87  88     2 GAME #:                                424 HEX: 000001A8
+   89  90     2 PACKS ON ORDER:                          6 HEX: 00000006
+   91  92     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   93  94     2 PACKS ON HAND:                           0 HEX: 00000000
+   95  96     2 REORDER MINIMUM:                         5 HEX: 00000005
+          9 . ENTRY
+   97  98     2 GAME #:                                425 HEX: 000001A9
+   99 100     2 PACKS ON ORDER:                          4 HEX: 00000004
+  101 102     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+  103 104     2 PACKS ON HAND:                           0 HEX: 00000000
+  105 106     2 REORDER MINIMUM:                         6 HEX: 00000006
+         10 . ENTRY
+  107 108     2 GAME #:                                426 HEX: 000001AA
+  109 110     2 PACKS ON ORDER:                          6 HEX: 00000006
+  111 112     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+  113 114     2 PACKS ON HAND:                           0 HEX: 00000000
+  115 116     2 REORDER MINIMUM:                         6 HEX: 00000006
+
+11:29:34 DISPAT   
+  Buffer     =    39
+  Comm       =    14
+  TrCode     =    29
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   373
+    1: 01 00 00 00 01 00 00 01 00 00 04 93 E6 00 00 00 00 00 00 00
+   21: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  121: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  141: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  161: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  181: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  201: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  221: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  241: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 74 00 27
+  261: 00 02 48 E8 01 03 00 0A 00 63 00 AC 01 6B 01 01 00 00 00 00
+  281: 00 00 00 8B 01 01 00 00 00 00 00 02 00 98 01 01 00 00 00 00
+  301: 00 00 00 9C 01 04 00 00 00 00 00 05 00 9D 01 04 00 00 00 00
+  321: 00 05 00 9F 01 01 00 00 00 00 00 02 00 A5 01 06 00 00 00 00
+  341: 00 06 00 A8 01 06 00 00 00 00 00 05 00 A9 01 04 00 00 00 00
+  361: 00 06 00 AA 01 06 00 00 00 00 00 06 00
+
+11:29:34 LOGGER   
+  Buffer     =    39
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    83
+    1: 27 D3 2F 34 00 A1 9E 00 24 96 34 C6 66 00 0A 01 01 00 00 00
+   21: 00 01 AC 01 6B 01 00 00 00 01 8B 01 00 00 02 01 98 01 00 00
+   41: 00 01 9C 04 00 00 05 01 9D 04 00 00 05 01 9F 01 00 00 02 01
+   61: A5 06 00 00 06 01 A8 06 00 00 05 01 A9 04 00 00 06 01 AA 06
+   81: 00 00 06
+
+11:29:34 ENCPROI  
+  Buffer     =    40
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    23
+    1: 20 D3 98 A6 01 00 00 01 00 00 04 93 E6 00 00 00 00 00 00 00
+   21: 00 01 AC
+
+11:29:34 DISPAT   
+  Buffer     =    40
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    23
+    1: 20 D3 98 A6 01 00 00 01 00 00 04 93 E6 00 00 00 00 00 00 00
+   21: 00 01 AC
+
+11:29:34 CRSPRO   
+11:29:34 CRSPRO   OUTGOING PACKET:  BUFLEN -->           20
+    1: 14 00 28 00 03 48 E8 01 03 00 01 00 E6 93 04 00 00 00 AC 01
+   21:
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                 20 HEX: 00000014
+    3   4     2 GTECH SLOT ID:                          40 HEX: 00000028
+    5   8     4 GTECH CROSS REF #:                32000003 HEX: 01E84803
+    9  10     2 TRANSACTION TYPE:                        3 HEX: 00000003
+   11  12     2 CLASS:                                   1 HEX: 00000001
+   13  16     4 RETAILER #:                         300006 HEX: 000493E6
+   17  18     2 GAME #:                                  0 HEX: 00000000
+   19  20     2 CONTINUATION GAME #:                   428 HEX: 000001AC
+
+11:29:35 CRSPRO   
+11:29:35 CRSPRO   INCOMING PACKET:  BUFLEN -->          106
+    1: 6A 00 28 00 03 48 E8 01 03 00 09 00 63 00 00 00 AC 01 01 00
+   21: 00 00 00 00 03 00 AF 01 06 00 00 00 00 00 05 00 B1 01 03 00
+   41: 00 00 00 00 03 00 B2 01 05 00 00 00 00 00 05 00 B5 01 0B 00
+   61: 00 00 00 00 0A 00 B6 01 04 00 00 00 00 00 04 00 B8 01 04 00
+   81: 00 00 00 00 07 00 BC 01 07 00 00 00 00 00 00 00 BD 01 0B 00
+  101: 00 00 00 00 09 00
+
+Start End  Size Description                          Value
+    1   2     2 LENGTH:                                106 HEX: 0000006A
+    3   4     2 GTECH SLOT ID:                          40 HEX: 00000028
+    5   8     4 GTECH CROSS REF #:                32000003 HEX: 01E84803
+    9  10     2 TRANSACTION TYPE:                        3 HEX: 00000003
+   11  12     2 # OF ENTRIES:                            9 HEX: 00000009
+   13  14     2 RESULT CODE:                            99 HEX: 00000063
+   15  16     2 NEXT GAME TO REQUEST:                    0 HEX: 00000000
+          1 . ENTRY
+   17  18     2 GAME #:                                428 HEX: 000001AC
+   19  20     2 PACKS ON ORDER:                          1 HEX: 00000001
+   21  22     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   23  24     2 PACKS ON HAND:                           0 HEX: 00000000
+   25  26     2 REORDER MINIMUM:                         3 HEX: 00000003
+          2 . ENTRY
+   27  28     2 GAME #:                                431 HEX: 000001AF
+   29  30     2 PACKS ON ORDER:                          6 HEX: 00000006
+   31  32     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   33  34     2 PACKS ON HAND:                           0 HEX: 00000000
+   35  36     2 REORDER MINIMUM:                         5 HEX: 00000005
+          3 . ENTRY
+   37  38     2 GAME #:                                433 HEX: 000001B1
+   39  40     2 PACKS ON ORDER:                          3 HEX: 00000003
+   41  42     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   43  44     2 PACKS ON HAND:                           0 HEX: 00000000
+   45  46     2 REORDER MINIMUM:                         3 HEX: 00000003
+          4 . ENTRY
+   47  48     2 GAME #:                                434 HEX: 000001B2
+   49  50     2 PACKS ON ORDER:                          5 HEX: 00000005
+   51  52     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   53  54     2 PACKS ON HAND:                           0 HEX: 00000000
+   55  56     2 REORDER MINIMUM:                         5 HEX: 00000005
+          5 . ENTRY
+   57  58     2 GAME #:                                437 HEX: 000001B5
+   59  60     2 PACKS ON ORDER:                         11 HEX: 0000000B
+   61  62     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   63  64     2 PACKS ON HAND:                           0 HEX: 00000000
+   65  66     2 REORDER MINIMUM:                        10 HEX: 0000000A
+          6 . ENTRY
+   67  68     2 GAME #:                                438 HEX: 000001B6
+   69  70     2 PACKS ON ORDER:                          4 HEX: 00000004
+   71  72     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   73  74     2 PACKS ON HAND:                           0 HEX: 00000000
+   75  76     2 REORDER MINIMUM:                         4 HEX: 00000004
+          7 . ENTRY
+   77  78     2 GAME #:                                440 HEX: 000001B8
+   79  80     2 PACKS ON ORDER:                          4 HEX: 00000004
+   81  82     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   83  84     2 PACKS ON HAND:                           0 HEX: 00000000
+   85  86     2 REORDER MINIMUM:                         7 HEX: 00000007
+          8 . ENTRY
+   87  88     2 GAME #:                                444 HEX: 000001BC
+   89  90     2 PACKS ON ORDER:                          7 HEX: 00000007
+   91  92     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+   93  94     2 PACKS ON HAND:                           0 HEX: 00000000
+   95  96     2 REORDER MINIMUM:                         0 HEX: 00000000
+          9 . ENTRY
+   97  98     2 GAME #:                                445 HEX: 000001BD
+   99 100     2 PACKS ON ORDER:                         11 HEX: 0000000B
+  101 102     2 PACK QUOTA MAXIMUM:                      0 HEX: 00000000
+  103 104     2 PACKS ON HAND:                           0 HEX: 00000000
+  105 106     2 REORDER MINIMUM:                         9 HEX: 00000009
+
+11:29:35 DISPAT   
+  Buffer     =    40
+  Comm       =    14
+  TrCode     =    29
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =   363
+    1: 01 00 00 00 01 00 00 01 00 00 04 93 E6 00 00 00 00 00 00 00
+   21: 00 01 AC 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   41: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   61: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   81: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  101: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  121: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  141: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  161: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  181: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  201: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  221: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  241: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 6A 00 28
+  261: 00 03 48 E8 01 03 00 09 00 63 00 00 00 AC 01 01 00 00 00 00
+  281: 00 03 00 AF 01 06 00 00 00 00 00 05 00 B1 01 03 00 00 00 00
+  301: 00 03 00 B2 01 05 00 00 00 00 00 05 00 B5 01 0B 00 00 00 00
+  321: 00 0A 00 B6 01 04 00 00 00 00 00 04 00 B8 01 04 00 00 00 00
+  341: 00 07 00 BC 01 07 00 00 00 00 00 00 00 BD 01 0B 00 00 00 00
+  361: 00 09 00
+
+11:29:35 LOGGER   
+  Buffer     =    40
+  Comm       =    14
+  TrCode     =     1
+  Term Nr    =  3512
+  Line Nr    =     0
+  Dest.      =     0
+  Message    =     0
+  Length     =    77
+    1: 20 D3 D9 7A 00 A1 9F 00 24 E7 34 C7 C3 00 09 01 00 00 00 00
+   21: 00 00 00 01 AC 01 00 00 03 01 AF 06 00 00 05 01 B1 03 00 00
+   41: 03 01 B2 05 00 00 05 01 B5 0B 00 00 0A 01 B6 04 00 00 04 01
+   61: B8 04 00 00 07 01 BC 07 00 00 00 01 BD 0B 00 00 09
