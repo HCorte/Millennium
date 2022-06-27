@@ -1,0 +1,201 @@
+Using username "PORT_SQA".
+Pre-authentication banner message from server:
+|
+| @SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_ANNOUNCE.COM
+End of banner message from server
+PORT_SQA@10.100.82.101's password:
+
+@SYS$SYSDEVICE:[GTECHCOMMANDS]PODEV1_WELCOME.COM
+    Last interactive login on Tuesday, 24-MAY-2022 22:38:59.49
+    Last non-interactive login on Wednesday, 25-MAY-2022 15:37:16.74
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS]GTECH_LOGIN.COM;6
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]PORT$IA3K_LOGIN.COM;1
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DEVELOPMENT_LOGIN.COM;2
+%DCL-I-SUPERSEDE, previous value of LNM$TEMPORARY_MAILBOX has been superseded
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.DEVELOPMENT]DSS_LOGIN.COM;3
+                      List of Current Projects on PODEV1
+
+    Project Location   Product    Description
+
+    GOHOME                        GO to Home directory
+
+    GODMIL  DKD10:      AGOLS     DESV Bible
+    GOPROD  DKD11:      AGOLS     DESV Production
+    GOHIS1  DKD10:      AGOLS     DESV Historical 1
+    GOHIS2  DKD11:      AGOLS     DESV Historical 2
+    GOPORT  DKD0:       AGOLS     TEST Production
+    GOSCML  DKD5:       AGOLS     TEST SCML
+    GODPLX  DKD12:      AGOLS     TEST Duplex
+    GOTEST  DKD12:      AGOLS     TEST Integration
+
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+Executing SYS$SYSDEVICE:[USER.PORT_SQA]login.com;4
+>>> MODE IS: INTERACTIVE
+Executing SYS$SYSDEVICE:[GTECHCOMMANDS.INSTANTS]IPS_LOGIN.COM;7
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_CLIENT_V50
+
+
+%DMQ-S-SETLNM, Set to MessageQ LNM table DMQ$LNM_0001_00640
+PODEV1::PORT_SQA$ r ips$pm:inq_order
+
+               ES Evolution Ver 1.8.
+               Copyright ¦ 1994 - 2016 GTECH Corporation. All rights reserved.
+
+ENTER ORDER NUMBER <-1-ALL ORDER, -2-ALL ORDER 1, 0-EXIT> [         0]: 4435657
+   NUMBER TYPE  WHS LN STATUS ENTERED DATE/TIME SHD DATE P&P DATE USER   RETAILER P ZN CO SH SHIP ID  TRACKING NUMBER  --------- ----- --- -- ------ ----------------- -------- -------- ------ -------- - -- -- -- -------- -----------------  4435657 TER 3 401  1 CONF 2 20220130 08102816 20220131 20220131 TERM     100012 1  0  1 24        4 TW734356532GB    489 486 484 481 477 476 475 470 465 463 459 452 472
+  1   2   2   2   4   1   2   1   1   1   1   1   2
+
+--------- ----- --- -- ------ ----------------- -------- -------- ------ -------- - -- -- -- -------- --------------------
+ENTER ORDER NUMBER <-1-ALL ORDER, -2-ALL ORDER 1, 0-EXIT> [   4435657]: 0
+EXITING INQ_ORDER
+PODEV1::PORT_SQA$ r ips$pm:inq_pack
+
+               ES Evolution Ver 1.8.
+               Copyright ¦ 1994 - 2016 GTECH Corporation. All rights reserved.
+THIS PROGRAM SHOW PACK INFORMATION.
+
+GAME NUMBER <0-EXIT> ...............[0000]: 489
+PACK NUMBER <0-ALL> ............[00000000]: 0007274
+LOCATION NUMBER <0-ALL> ........[00000000]: 0
+DISPLAY MODE <0-TOTAL ONLY, 1-DETAILS> [1]: 1
+
+ITEM     PACK LOC NUMBER T UU S A P R DESCRIPTION                  ORDER   CARTON
+---- -------- ------------ -- - - - - ------------------------- -------- --------
+   1     7274     100012 1 00 1 0 0 0 Recepcionado               4435657       10
+---- -------- ------------ -- - - - - ------------------------- -------- --------
+ITEMS:         1
+
+GAME NUMBER <0-EXIT> ...............[0489]: 489
+PACK NUMBER <0-ALL> ............[00007274]: 0
+LOCATION NUMBER <0-ALL> ........[00000000]: 100012
+DISPLAY MODE <0-TOTAL ONLY, 1-DETAILS> [1]: 1
+
+ITEM     PACK LOC NUMBER T UU S A P R DESCRIPTION                  ORDER   CARTON
+---- -------- ------------ -- - - - - ------------------------- -------- --------
+   1     7274     100012 1 00 1 0 0 0 Recepcionado               4435657       10
+---- -------- ------------ -- - - - - ------------------------- -------- --------
+ITEMS:         1
+
+GAME NUMBER <0-EXIT> ...............[0489]: 484
+PACK NUMBER <0-ALL> ............[00000000]:
+LOCATION NUMBER <0-ALL> ........[00100012]: 100012
+DISPLAY MODE <0-TOTAL ONLY, 1-DETAILS> [1]: 1
+
+ITEM     PACK LOC NUMBER T UU S A P R DESCRIPTION                  ORDER   CARTON
+---- -------- ------------ -- - - - - ------------------------- -------- --------
+   1    25808     100012 1 00 1 1 0 0 Activado                   4429667      217
+   2    25809     100012 1 00 1 1 0 0 Activado                   4429667      217
+   3    31587     100012 1 00 3 1 0 0 J¦ cobrado                 4428197      285
+   4    31588     100012 1 00 3 1 0 0 J¦ cobrado                 4428197      285
+   5    31589     100012 1 00 3 1 0 0 J¦ cobrado                 4428197      285
+   6    40940     100012 1 00 1 0 0 0 Recepcionado               4435657      393
+   7    40941     100012 1 00 1 0 0 0 Recepcionado               4435657      393
+---- -------- ------------ -- - - - - ------------------------- -------- --------
+ITEM     PACK LOC NUMBER T UU S A P R DESCRIPTION                  ORDER   CARTON
+ITEMS:         7
+
+GAME NUMBER <0-EXIT> ...............[0484]: 0
+EXITING INQ_PACK
+PODEV1::PORT_SQA$
+PODEV1::PORT_SQA$
+PODEV1::PORT_SQA$
+PODEV1::PORT_SQA$ dir ips$pm:*inq*
+
+Directory IPS:[PM]
+
+INQ_ARP0001.EXE;1   INQ_ARP0002.EXE;1   INQ_AUDIT_LOG.EXE;1 INQ_CARTON.EXE;1
+INQ_DEVICE.EXE;1    INQ_GAME.EXE;1      INQ_INV0001.EXE;1   INQ_INV0002.EXE;1
+INQ_INV0003.EXE;1   INQ_INV0004.EXE;1   INQ_INV0005.EXE;1   INQ_INVENTORY.EXE;1
+INQ_OLD_LOG.EXE;1   INQ_ORDER.EXE;1     INQ_PACK.EXE;1      INQ_PACK_HISTORY.EXE;1
+INQ_RETAILER.EXE;1  INQ_RETFIN.EXE;1    INQ_VAL0001.EXE;1   INQ_VAL0002.EXE;1
+INQ_VAL0003.EXE;1   INQ_WIN_LIAB.EXE;1  INQ_WKDTL.EXE;1
+
+Total of 23 files.
+PODEV1::PORT_SQA$ r ips$pm:inq_inventory
+
+               ES Evolution Ver 1.8.
+               Copyright ¦ 1994 - 2016 GTECH Corporation. All rights reserved.
+THIS PROGRAM SHOW INVENTORY SUMMARY.
+
+ENTER GAME NUMBER .......[  0, 0-EXIT]: 484
+ENTER LOCATION TYPE ...............[0]:  0
+ENTER LOCATION .............[       0]: 100012
+INVENTORY NOT FOUND.
+
+ENTER GAME NUMBER .......[484, 0-EXIT]: 484
+ENTER LOCATION TYPE ...............[0]:  1
+ENTER LOCATION .............[  100012]: 100012
+
+GAME ..............:       0484
+LOCATION TYPE .....:          1
+LOCATION ..........:  000100012
+
+UNAVAIL PACKS .....:          0
+UNAVAIL TICKETS ...:          0
+
+ON-HAND PACKS .....:          2
+ON-HAND TICKETS ...:          0
+
+RESERVED PACKS ....:          0
+
+ACTIVE PACKS ......:          2
+ACTIVE TICKETS ....:          0
+
+INTRANSIT PACKS ...:          0
+INTRANSIT TICKETS .:          0
+
+SETTLED PACKS .....:          3
+SETTLED TICKETS ...:          0
+
+ENTER GAME NUMBER .......[484, 0-EXIT]: 0
+EXITING INQ_INVENTORY
+PODEV1::PORT_SQA$ dir ips$pm:*inq*
+
+Directory IPS:[PM]
+
+INQ_ARP0001.EXE;1   INQ_ARP0002.EXE;1   INQ_AUDIT_LOG.EXE;1 INQ_CARTON.EXE;1
+INQ_DEVICE.EXE;1    INQ_GAME.EXE;1      INQ_INV0001.EXE;1   INQ_INV0002.EXE;1
+INQ_INV0003.EXE;1   INQ_INV0004.EXE;1   INQ_INV0005.EXE;1   INQ_INVENTORY.EXE;1
+INQ_OLD_LOG.EXE;1   INQ_ORDER.EXE;1     INQ_PACK.EXE;1      INQ_PACK_HISTORY.EXE;1
+INQ_RETAILER.EXE;1  INQ_RETFIN.EXE;1    INQ_VAL0001.EXE;1   INQ_VAL0002.EXE;1
+INQ_VAL0003.EXE;1   INQ_WIN_LIAB.EXE;1  INQ_WKDTL.EXE;1
+
+Total of 23 files.
+PODEV1::PORT_SQA$ r ips$pm:INQ_INV0005
+
+Enter game:484
+Enter pack:(0 for all)0
+PODEV1::PORT_SQA$
+PODEV1::PORT_SQA$
+PODEV1::PORT_SQA$ lui
+        ID      User            Process         Image
+        96B     PORT_SQA        npx$pfm         NPX$PFM.EXE
+        96C     PORT_SQA        ips_adm0000     IPS_ADM0000.EXE
+        96F     PORT_SQA        ips_adm1000     IPS_ADM1000.EXE
+        972     PORT_SQA        ips_arp1000     IPS_ARP1000.EXE
+        975     PORT_SQA        ips_inv1000     IPS_INV1000.EXE
+        978     PORT_SQA        ips_inv2000     IPS_INV2000.EXE
+        97B     PORT_SQA        ips_inv3000     IPS_INV3000.EXE
+        97E     PORT_SQA        npx$ckp         NPX$CKP.EXE
+        981     PORT_SQA        npx$log         NPX$LOG.EXE
+        984     PORT_SQA        npx$svm         NPX$SVM.EXE
+        987     PORT_SQA        npx$tfc         NPX$TFC.EXE
+        98A     PORT_SQA        ips_ret0000     IPS_RET0000.EXE
+        98D     PORT_SQA        ips_ret0151     IPS_RET0151.EXE
+        990     PORT_SQA        ips_sec1000     IPS_SEC1000.EXE
+        993     PORT_SQA        ips_sec2000     IPS_SEC2000.EXE
+        996     PORT_SQA        ips_sys0100     IPS_SYS0100.EXE
+        99C     PORT_SQA        ips_tel1000     IPS_TEL1000.EXE
+        99F     PORT_SQA        ips_val0091     IPS_VAL0091.EXE
+        9A2     PORT_SQA        ips_val1000     IPS_VAL1000.EXE
+        9A5     PORT_SQA        ips_val2000     IPS_VAL2000.EXE
+        9A8     PORT_SQA        ips_val3000     IPS_VAL3000.EXE
+        9AC     PORT_SQA        IPS_TCPVAL_0    TCPVAL_IO.EXE
+        9F87    PORT_SQA        PORT_SQA        IPS_GETJPI.EXE
+        23 Processes In 640 group
+PODEV1::PORT_SQA$ dir ips$report/since
+%DIRECT-W-NOFILES, no files found
+PODEV1::PORT_SQA$ r ips$pm:inq_pack

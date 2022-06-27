@@ -1,0 +1,41 @@
+Foi detetado na rodagem do dia 13 para 14 de Maio de 2022 a seguinte mensagem
+
+13:57:53 GNINVALL <<<<<< Data inconsistency >>>>>>
+13:57:53 GNINVALL Game: 7
+13:57:53 GNINVALL Draw: 580 ( 5 )
+13:57:53 GNINVALL Terminal: 967
+13:57:53 GNINVALL Wagers: -15248 11582400
+13:57:53 GNINVALL Cancels: 0 0
+13:57:53 GNINVALL Validations: 0 0
+13:57:53 GNINVALL
+
+O que se observou que um dos valores da Wagers estava negativo o que poderia indicar um overflow
+este valor corresponde há variavel tcnt que é um inteiro de 2 bytes que corresponde a (65535/2=32767)
+que são os 32767 transações neste caso de apostas para um terminal em especifico e para dia unico.
+O terminal que originou este warning/erro foi o Terminal 967 (valor interno do MILL) que corresponde
+ao terminal 1801034 (agt 1801034 - no vision para confirmar) para este terminal foi efetuado um teste
+de carga que acabou por registar no dia 13 que foram 108131 transações de apostas excedendo as 32767
+
+15 horas de vendas por dia, das 08h às 00h, dá 2.184,5 apostas/hora, 36,4 apostas/min
+dado uma aposta por cada 2 segundos durante as 15 horas o que para um terminal fisico nunca será
+uma questão para um terminal virtual se for concentrado em um unico poderá ser um tema nesse caso
+(quanto estabelecimentos virtuais são usado pelo portal em prd e qual o criteiro na escolha de qual
+desses terminais em usar).
+
+Condição da inconsistencia é se falhar neste condição o que acaba por não gerar o ficheiro de interface (AM_WAG20220512.ASC)
+
+              if(tcnt(1,nagt,xdrw,gnum).gt.0.or.
+     *           tcnt(2,nagt,xdrw,gnum).gt.0.or.
+     *           tcnt(3,nagt,xdrw,gnum).gt.0) then
+	 
+O que aconteceu pois Wagers -> tcnt(1,nagt,xdrw,gnum) deu um valor negativo e os restantes
+tcnt(2,nagt,xdrw,gnum) -> Cancels é 0
+tcnt(3,nagt,xdrw,gnum) -> Validations é 0 
+
+
+gninvall para as apostas e cancelamentos está a ver os dados dos draws
+
+gfil file:DRAW:TOTO7685.FIL
+gfil file:DRAW:LOTS7685.FIL
+gfil file:DRAW:LOTQ7685.FIL
+para o caso dos prémios vê como esperado o VALX:VLF.FIL	 

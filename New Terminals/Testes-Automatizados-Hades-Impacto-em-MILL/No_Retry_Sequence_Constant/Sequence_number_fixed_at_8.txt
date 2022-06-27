@@ -1,0 +1,23 @@
+Não vai entrar nos novos terminais a funcionalidade dos Retrys (logo o Sequence Number é sempre 8 - Encrypt 0 caso seja desencrypt)
+Lista de ficheiros alterados:
+wagpro.for
+	IF(BPRO(CHOLM_OLM,BUF).EQ.1) GOTO 80
+valpro.for
+	IF(BPRO(CHOLM_OLM,BUF).EQ.1) GOTO 50 
+canpro.for
+	IF(BPRO(CHOLM_OLM,BUF).EQ.1) GOTO 40
+inspro.for
+	IF(BPRO(CHOLM_OLM,BUF).EQ.1) GOTO 80
+	
+detetado a necessidade de alterar também no ficheiro scansubs pois é validado scanretr os retrys também
+SCANDAYS (scanretr.for)
+	scansubs.for
+		IF( (TRABUF(TTYP).EQ.TWAG  .OR.
+		 *     TRABUF(TTYP).EQ.TCAN  .OR.
+		 *     TRABUF(TTYP).EQ.TVAL) .AND.
+		 *    (LASTRA(TTIM,TER).NE.0) .AND.
+		 *    (TRABUF(TTRN).EQ.LASTRA(TTRN,TER)) .AND.
+		 *    (TRABUF(TCHK).EQ.LASTRA(TCHK,TER)) .AND. !V03
+		 *    TRABUF(TWCOLMCOMF_TLTO).NE.1 .AND. !V03
+		 *    TRABUF(TCOLMCOMF_TLTO).NE.1 .AND. !V03
+		 *    TRABUF(TVOLMCOMF_TLTO).NE.1) THEN !V03

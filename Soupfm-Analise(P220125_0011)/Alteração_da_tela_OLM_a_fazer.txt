@@ -1,0 +1,5 @@
+Na tela/snapshot do OLM ver mais uma flag que indique se a ligação do
+MXSRV está ligado basicamente o que R X2GAMSTART faz estabelecer a ligação
+existe alguma tela do mxsrv? se exister ver essa flag de qualquer das maneiras ver
+o programa x2gamstart pois ai realmente activa essa flag para estabelecer
+a ligação aos terminais fisicos.

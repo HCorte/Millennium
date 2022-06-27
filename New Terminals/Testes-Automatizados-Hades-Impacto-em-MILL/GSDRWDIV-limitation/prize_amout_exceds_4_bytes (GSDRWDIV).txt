@@ -1,0 +1,55 @@
+-> Ver na tela LOT do VISION do Sabado !3 para o escrutinio 576
+DIV      PRIZE     SHARES    WON
+1(5L/5)  8000.00 * 2734    = 21872000.00
+
+quer dizer que para o primeiro prémios que é primeira divisão o total do prémio é 21872000 euros que é multiplicação
+do numero de premidados (share quantity = 2734) pelo valor de cada prémidado (share amount = 8000.00)
+
+só que a variavel que se está a usar AMOUNT no gsalfunc.for é INTEGER * 4 AMOUNT 
+quer dizer é uma variavel de 4 bytes que pode ser usado para guardar valores até
+2^32=4 294 967 296 mas este valor é unsigned mas ter em conta o sinal +/- é reservado o bit mais significativo
+por isso dos 4 bytes é na realidade 3 bytes e 7 bits = 2^31 == 2^32/2 = 4 294 967 296 / 2 = 2 147 483 648
+deste valor têm que se incluir o 0 neste range sendo assim 2 147 483 648 - 1 = 2 147 483 647 o que se traduz
+no range [-2 147 483 648 ;+2 147 483 647].
+
+Para este caso 21872000.00 do prize excede o valor 21474836.47 que a variavel suporta o provoca um overflow e passa para 
+o range negativo o que já não suposto pois é um valor negativo...
+
+Isto tudo provoca um erro no STOPSYS no processo GSDRWDIV que acaba por usar a função PRNT_AMT onde usa a variavel referida em Confirma
+AMOUNT segue um excerto do erro originado (repetindo para cada linha de prémio que ocorra este comportamento):
+
+10:12:51 GSDRWDIV Running Gsales Draw Division Loader
+10:12:51 GSDRWDIV
+10:12:51 GSDRWMAP Copyright 2011 GTECH Corp. All rights reserved.
+%FOR-E-OUTCONERR, output conversion error
+  unit -5  file Internal Formatted Write
+  user PC 00000000
+%FOR-E-OUTCONERR, output conversion error
+  unit -5  file Internal Formatted Write
+  user PC 00000000
+%TRACE-E-TRACEBACK, symbolic stack dump follows
+%TRACE-E-TRACEBACK, symbolic stack dump follows
+image     module    routine               line      rel PC           abs PC
+image     module    routine               line      rel PC           abs PC
+                                             0 FFFFFFFF8019BDB0 FFFFFFFF8019BDB0
+                                             0 FFFFFFFF8019BDB0 FFFFFFFF8019BDB0
+LIBRTL  LIB$CALLG  LIB$CALLG               464 0000000000000072 FFFFFFFF8416D322
+LIBRTL  LIB$CALLG  LIB$CALLG               464 0000000000000072 FFFFFFFF8416D322
+DEC$FORRTL                                   0 0000000000062FA2 FFFFFFFF8520AFA2
+DEC$FORRTL                                   0 0000000000062FA2 FFFFFFFF8520AFA2
+DEC$FORRTL                                   0 0000000000107032 FFFFFFFF852AF032
+DEC$FORRTL                                   0 0000000000107032 FFFFFFFF852AF032
+GSDRWDIV  GET_ACT_DATE_HOUR  PRNT_AMT    40312 0000000000005262 00000000000C5262
+GSDRWDIV  GET_ACT_DATE_HOUR  PRNT_AMT    40312 0000000000005262 00000000000C5262
+GSDRWDIV  GSDRWDIV  HEADER_DRWDIV        13129 0000000000002070 00000000000C7420
+GSDRWDIV  GSDRWDIV  HEADER_DRWDIV        13129 0000000000002070 00000000000C7420
+GSDRWDIV  GSDRWDIV  PRINT_LOTTO_DRWDIV
+GSDRWDIV  GSDRWDIV  PRINT_LOTTO_DRWDIV
+                                         17720 00000000000029E2 00000000000C7D92
+                                         17720 00000000000029E2 00000000000C7D92
+GSDRWDIV  GSDRWDIV  GSDRWDIV              4302 00000000000009D2 00000000000C5D82
+GSDRWDIV  GSDRWDIV  GSDRWDIV              4302 00000000000009D2 00000000000C5D82
+                                             0 FFFFFFFF80A150D2 FFFFFFFF80A150D2
+                                             0 FFFFFFFF80A150D2 FFFFFFFF80A150D2
+                                             0 FFFFFFFF80512202 FFFFFFFF80512202
+                                             0 FFFFFFFF80512202 FFFFFFFF80512202
