@@ -1,0 +1,132 @@
+C     file:///C:/Users/105864/Desktop/MessageQ-Fortran/MessageQ.pdf
+
+C YE -> YES || TS -> TESTS || NO -> NO || VL -> VALIDATE
+
+
+C pams_attach_q <->  MessageQ return Code
+C TS  PAMS__BADARGLIST        OpenVMS     Wrong number of call arguments has been passed to this function (não usar isto, só serveria se tanto para testes iniciais)
+C TS  PAMS__BADDECLARE        All         Queue has already been attached to this application
+C TS  PAMS__BADNAME           All         Invalid name string was specified.
+C YE  PAMS__BADPARAM          All         Invalid argument in the argument list.
+C VL  PAMS__BADPROCNUM        All         Queue number out of range.
+C TS  PAMS__BADQTYPE          All         Invalid queue type.
+C NO  PAMS__BADTMPPROC        OpenVMS     Invalid temporary queue number.
+C ??  PAMS__DECLARED          All         The queue number is already attached to another application or process.     -> COMMGR   ERROR!!!! CAN NOT ATTACH TO MESSAGEQ!!!! (@08.01.2020 the Millennium primary system was shutdown abruptly, the backup system assumed the processing) 
+C NO  PAMS__DUPLQNAME         OpenVMS     Duplicate queue name.
+C YE  PAMS__NETERROR          Clients     Network error resulted in a communications link abort
+C NO  PAMS__NOACCESS          All         No access to the resource. The address of the specified name is either 0 or it is in another group.
+C TS  PAMS__NOACL             All         The queue access control file could not be found.
+C TS  PAMS__NOOBJECT          All         No such queue name. For a global queue reference, this error can be caused by a bad
+C                             default pathname in the group configuration file.
+C VL  PAMS__NOQUOTA           OpenVMS     Insufficient receive message or byte quota to attach.
+C NO  PAMS__NOTBOUND          All         The queue name is not bound to an address.
+C NO  PAMS__NOTMRQ            OpenVMS     Attempting to attach to Multi-reader Queue and queue type is not an MRQ.
+C VL  PAMS__NOTPRIMARYQ       All         Queue name or number is not a primary queue.
+C NO  PAMS__NOTSECONDARYQ     All         Queue name or number is not a secondary queue.
+C VL  PAMS__PAMSDOWN          All         The specified BEA MessageQ group is not running. 
+C NO  PAMS__PREVCALLBUSY      Clients     The previous call to CLS has not been completed.
+C YE  PAMS__PNUMNOEXIST       OpenVMS     Target queue name or number does not exist.
+C YE  PAMS__RESRCFAIL         All         Failed to allocate resources.
+C YE  PAMS__SUCCESS = 1       All         Successful completion of an action.
+C YE  PAMS__TIMEOUT           All         The timeout period specified has expired.
+
+C----------------------------------------------------------------------------------
+
+C pams_put_msg <->  MessageQ return Code
+
+C YE  PAMS__BADPARAM          All         Invalid argument in the argument list.
+C NO  PAMS__BADPRIORITY       All         Invalid priority value on send operation.
+C NO  PAMS__BADPROCNUM UNIX Windows NT    Invalid target queue address specified.
+C VL  PAMS__BADRESPQ          All         Response queue not owned by process.
+C NO  PAMS__BADTIME           OpenVMS     Invalid time specified.
+C NO  PAMS__BADUMA            All         Undeliverable message action (UMA) is invalid.
+C VL  PAMS__EXCEEDQUOTA       All         Target process quota exceeded; message was not sent.
+C VL  PAMS__EXHAUSTBLKS       OpenVMS     No more message blocks available.
+C NO  PAMS__FMLERROR          All         Problem detected with internal format of FML message; 
+C                                         this can be an error in
+C                                         processing or data corruption.
+C NO  PAMS__LINK_UP           OpenVMS     MRS has reestablished link.
+C NO  PAMS__MSGTOBIG          All         Message exceeded the size of the largest
+C                                         link list section (LLS).
+C NO  PAMS__MSGTOSMALL        OpenVMS     Invalid (negative) msg_size specified in
+C                                         the argument list.
+C YE  PAMS__NETERROR          Clients     Network error resulted in a  -> COMIGS   ERROR: BAD STATUS WHILE GET FROM MESSAGEQ!!
+C                                         communications link abort
+C NO  PAMS__NOMRS             OpenVMS     MRS is not available.
+C VL  PAMS__NOTACTIVE         All         Target process is not currently active;
+C                                         message not sent.
+C VL  PAMS__NOTDCL            All         Process has not been attached to BEA MessageQ.
+C NO  PAMS__NOTFLD            All         The buffer supplied is not an FML32 buffer.
+C NO  PAMS__NOTSUPPORTED      All         The combination of delivery mode and
+C TS  PAMS__PNUMNOEXIST       OpenVMS     Target queue number does not exist.                                        uma selected is not supported.
+C NO  PAMS__PREVCALLBUSY      Clients     Previous call to CLS has not been completed.
+C NO  PAMS__REMQUEFAIL        All         Failed to properly dequeue a message buffer.
+C YE  PAMS__STOPPED           All         The requested queue has been stopped.
+C YE  PAMS__SUCCESS           All         Successful completion
+C YE  PAMS__TIMEOUT           All         Timeout period has expired
+C ??  PAMS__UNATTACHEDQ       All         Message successfully sent to unattached
+C NO  PAMS__WAKEFAIL          OpenVMS     Failed to wake up the target process.
+
+C------------------List to used and send to Ewatcher---------------------------------------------
+C     Error of logic -> PAMS__BADPARAM
+C     Error of MessageQ -> PAMS__STOPPED
+C     Error of NetWork -> PAMS__NETERROR - PAMS__TIMEOUT
+C     Error of Hardware and App resources - 
+C------------------------------------------------------------------------------------------------
+
+C----------------------------------------------------------------------------------
+
+C pams_get_msg <->  MessageQ return Code
+
+C NO  PAMS__AREATOSMALL     All           Received message is larger than the user’s message area.
+C TS  PAMS__BADARGLIST      All           Wrong number of call arguments have been passed to this function.
+C VL  PAMS__BADHANDLE       All           Invalid message handle.
+C TS  PAMS__BADPARAM            All       Bad argument value.
+C NO  PAMS__BADPRIORITY         All       Invalid priority value used for receive.
+C ??  PAMS__BADSELIDX       All           Invalid or undefined selective receive index.
+C TS  PAMS__BUFFEROVF       UNIX Windows NT The size of the show_buffer specified is too small.
+C VL  PAMS__EXHAUSTBLKS     OpenVMS       No more message blocks available.
+C NO  PAMS__FMLERROR        All           Problem detected with internal format of FML message; 
+C                                         this can be an error in processing or data corruption.
+C YE  PAMS__INSQUEFAIL      All           Failed to properly queue a message buffer.
+C TS  PAMS__MSGTOSMALL      All           The msg_area_len argument must be positive or zero.
+C VL  PAMS__MSGUNDEL          All         Message returned is undeliverable.
+C NO  PAMS__NEED_BUFFER_PTR UNIX Windows NT     FML32 buffer received but msg_area_len argument 
+C                                         not set to PSYM_MSG_BUFFER_PTR.    
+C YE  PAMS__NETERROR        Clients       Network error resulted in a communications link abort. -> COMIGS   ERROR: BAD STATUS WHILE GET FROM MESSAGEQ!!
+C VL  PAMS__NOACCESS        All           No access to resource.
+C TS  PAMS__NOACL           All           Queue access control file could not be found.
+C YE  PAMS__NOMEMORY        OpenVMS       Insuffucient memory resources to reallocate buffer pointer.
+C YE  PAMS__NOMOREMSG       All           No messages available.
+C NO  PAMS__NOMRQRESRC      All           Insufficient multireader queue resources to allow access.
+C VL  PAMS__NOTDCL          All           Process has not been attached to BEA MessageQ
+C NO  PAMS__NOTSUPPORTED   UNIX Windows NT    The supplied delivery mode is not supported.    
+C TS  PAMS__PAMSDOWN UNIX Windows NT      The specified BEA MessageQ group is not running.
+C NO  PAMS__PREVCALLBUSY      Clients     Previous call to CLS has not been completed
+C VL  PAMS__QUECORRUPT        OpenVMS     Message buffer queue corrupt.
+C VL  PAMS__REMQUEFAIL        All         Failed to properly read from a message buffer
+C NO  PAMS__STALE             All         Resource is no longer valid and must be freed by the user. 
+C YE  PAMS__STOPPED           All         The requested queue has been stopped.
+C YE  PAMS__SUCCESS           All         Indicates successful completion.
+
+C------------------List to used and send to Ewatcher---------------------------------------------
+C     Error of logic -> PAMS__BADARGLIST - PAMS__BADPARAM
+C     Error of MessageQ -> PAMS__INSQUEFAIL
+C     Error of NetWork -> PAMS__NETERROR
+C     Error of Hardware and App resources - PAMS__NOMEMORY
+C------------------------------------------------------------------------------------------------
+
+
+C------------------------------------------------------------------------------------------------------------
+
+
+C     PAMS__FAILED        All                 There is no translation for the specified return code.
+C NA  PAMS__BUSNOTSET     UNIX - Windows NT   DMQ_BUS_ID environment variable not set.
+C NA  PAMS__GROUPNOTSET   UNIX - Windows NT   DMQ_GROUP_ID environment variable not set.
+C     PAMS__EXHAUSTBLKS   OpenVMS             No more message blocks available.
+C     PAMS__QUECORRUPT    OpenVMS             Message buffer queue corrupt.
+C     PAMS__REMQUEFAIL    All                 Failed to properly read a message buffer.
+
+C PAMS__BADPARAM = 139758786
+C PAMS__NETERROR = 139759722
+C PAMS__NOMOREMSG = 139756347
