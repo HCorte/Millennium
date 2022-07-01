@@ -65,7 +65,7 @@ C                                                                       C
 C http://odl.sysworks.biz/disk$axpdocsep021/opsys/vmsos731/vmsos731/    C
 C 5841/5841pro_072.html                                                 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC     
-      PERSTATUS = LIB$INIT_TIMER() !TIMER_CONTEXT as first parameter
+D      PERSTATUS = LIB$INIT_TIMER() !TIMER_CONTEXT as first parameter
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       CALL LIB$ESTABLISH(OLMERRHANDLER)
 
