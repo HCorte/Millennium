@@ -1,0 +1,32 @@
+#!/usr/bin/expect
+set goto state1
+set counter 0
+set maxcounter 10
+while {1} {
+    switch -exact -- $goto {
+        state1 {
+            send_user "\nGOOD State 1"
+            incr counter
+            set goto state2
+        }
+        state2 {
+            send_user "\nIn State 2"
+            incr counter
+            set goto state1
+            break
+        }
+        default {
+            send_user "\n\nInvalid State procced with exit??\n\n"
+            exit
+        }
+    }
+
+    if { $counter == $maxcounter } {
+        send_user "\nFinished the max attempts ($counter)"
+        break
+        #exit
+    }
+    
+}
+
+send_user "\nGood out of the loop"

@@ -380,6 +380,249 @@ proc keygen {DRAW_NUMBER_G normal green} {
 
 }
 
+proc set_environment {} {
+    expect "POSYSD::*> " {send "GOSCML\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: Go to SCML Environment!!!\n\r";
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+    new_line
+}
+
+proc dummy_command {} {
+    expect "POSYSD::SCML> " {send "dir *.EXE;0 /TOTAL\r"} \
+    timeout { 
+        puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+    new_line
+}
+
+proc vision_draw_data {returned} {
+    upvar $returned global_variables
+    send "vision\r"
+        
+    expect "Please enter password" { 
+        send "DONUTS\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: vision password\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect "Enter vision command" { 
+        send "lot\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: enter sys snapshot command\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect "Enter !game index or draw number or /year-week" { 
+        send "!4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: enter sys snapshot command\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect -re {Lotto 4.*game data for draw\s{2}(\w{3})\s{2}\w{2}\s(.*?)\s{2}.*Primary-A} {
+        set DRAW_NUMBER $expect_out(1,string)
+        set DRAW_NUMBER_G $DRAW_NUMBER
+        send_user "\n\n\n\n\n\n\n\n\n\n\nDRAW_NUMBER: $DRAW_NUMBER\n"
+        set SYSTEM_DATE $expect_out(2,string)
+        set SYSTEM_DATE_G $SYSTEM_DATE
+        send_user "SYSTEM_DATE: $SYSTEM_DATE\n"
+    }
+
+    expect -re {TOTOLOTO QUARTA.*Draw\s\w{2}\s(.*)\s{2}\d{2}:\d{2}:\d{2}} {
+        set DRAW_DATE $expect_out(1,string)
+        set DRAW_DATE_G $DRAW_DATE
+        send_user "DRAW_DATE: $DRAW_DATE\n"
+    }
+
+    expect -re {DrawId\s{2}(.*)\s{3}.*\(\s(.)} {
+        set DRAW_ID_YEAR $expect_out(1,string)
+        set DRAW_ID_YEAR_G $DRAW_ID_YEAR
+        send_user "DRAW_ID_YEAR: $DRAW_ID_YEAR\n"
+    
+        set DRAW_STATUS $expect_out(2,string)
+        send_user "DRAW_STATUS: $DRAW_STATUS    \n" 
+        set DRAW_STATUS_G $DRAW_STATUS
+        send_user "DRAW_STATUS_G: $DRAW_STATUS_G\n"
+    
+        set DRAW_ID_AUX [split $DRAW_ID_YEAR "/"]
+        #send_user "DRAW_ID_AUX: $DRAW_ID_AUX\n" #array de 2 posições (pois só têm um "/" na string)
+        set DRAW_YEAR [lindex $DRAW_ID_AUX 1]
+        set DRAW_YEAR_G $DRAW_YEAR
+        set DRAW_ID [lindex $DRAW_ID_AUX 0]
+        set DRAW_ID_G $DRAW_ID
+        send_user "DRAW_YEAR: $DRAW_YEAR\n"
+        send_user "DRAW_ID: $DRAW_ID\n\n"
+    }
+
+    set global_variables(0,DRAW_YEAR_G) $DRAW_YEAR_G
+    set global_variables(0,DRAW_ID_G) $DRAW_ID_G
+    set global_variables(0,DRAW_STATUS_G) $DRAW_STATUS_G
+    set global_variables(0,SYSTEM_DATE_G) $SYSTEM_DATE_G
+    set global_variables(0,DRAW_NUMBER_G) $DRAW_NUMBER_G
+    set global_variables(0,DRAW_DATE_G) $DRAW_DATE_G
+    
+    #return global_variables
+}
+
+proc coorect_draw_closed_status {SYSTEM_DATE_G DRAW_DATE_G DRAW_STATUS_G green red normal} {
+    send \003
+
+    #sleep 3
+    if {[regexp -nocase $SYSTEM_DATE_G $DRAW_DATE_G]} {
+        send_user "\n\n${green}Draw day of Totolo Quarta!!!${normal}\n\n"
+    
+        if {[regexp -nocase $DRAW_STATUS_G "4"]} {
+            send_user "\n\n${green}The Draw is closed proceding with generating the winning key...${normal}\n\n"
+            return 1
+            #generating the winner key passing as parameters the following variables -> 1º $DRAW_NUMBER_G 2º $normal 3º $green 
+    #        keygen $DRAW_NUMBER_G $normal $green
+        } else {
+            send_user "\n\n${red}The Draw is not close before proceding will close and then repeat the steps to confirm closed with sucess!!!${normal}\n\n"
+            send_user "DRAW_STATUS_G: $DRAW_STATUS_G\n"
+            return -1 
+        }
+        
+    
+    } else {
+        send_user "\n\n${red}NOT Draw day of Totolo Quarta!!${normal}\n\n"
+        send_user "\n\nexiting something when wrong its not wednesday yet\n\n"
+        exit
+    }
+    
+    send "\r\r\r"
+}
+
+proc close_draw {DRAW_NUMBER_G green red normal} {
+    send "r setclose\r"
+
+    expect "Enter game type \[E=exit\]  >" { 
+        send "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: Game Type 1\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect "Enter game index \[E=exit\]  >" { 
+        send "4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: game index 4\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect -re {Lotto\s{4}(.)\s{2}(\d{3})\s{18}(.*)} {
+        set GAME_INDEX $expect_out(1,string)
+        set DRAW_CODE $expect_out(2,string)
+        set DRAW_STATUS_STR $expect_out(3,string)
+        send_user "GAME_INDEX: $GAME_INDEX\n"
+        send_user "DRAW_CODE: $DRAW_CODE\n"
+        send_user "DRAW_STATUS_STR: $DRAW_STATUS_STR\n"
+
+        if { [regexp -nocase $DRAW_NUMBER_G $DRAW_CODE] } {
+            send_user "\n${green}!!!Correct Draw to validate!!!${normal}\n"
+        } else {
+            send_user "\n${red}!!!Wrong Draw ($DRAW_NUMBER_G) - ($DRAW_CODE) !!!${normal}\n"
+        }
+
+        if { [regexp -nocase $DRAW_STATUS_STR "Game open"] } {
+            send_user "\n${green}!!!Draw open so proceding with the closing!!!${normal}\n"
+
+            expect "Enter option number \[E=exit\]" { 
+                send "1\r"
+            } \
+            timeout { 
+                puts "\n\nClosing Draw Failure: Enter option number 1\n\r"; 
+                interact {
+                    \001 {
+                            send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                    }
+            }
+
+        } else if { [regexp -nocase $DRAW_STATUS_STR "End of game"] } {
+            send_user "\n${red}Draw already closed so no need to close it again...${normal}\n"
+
+            expect "Enter option number \[E: Exit\]" { 
+                send "E\r"
+            } \
+            timeout { 
+                puts "\n\nExiting Menu: Enter option number 1\n\r"; 
+                interact {
+                    \001 {
+                            send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                    }
+            }
+
+            expect "Enter game type \[E: Exit\]" { 
+                send "E\r" 
+            } \
+            timeout { 
+                puts "\n\nTest Failure: Game Type 1\n\r"; 
+                interact {
+                    \001 {
+                            send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                    }
+            }
+
+        } else {
+            send_user "\n\n${red}hum something whent realy wrong... ($DRAW_STATUS_STR) ${normal}\n\n"
+        }
+
+    }
+}
+
 set green "\033\[1;32;40m"
 set red "\033\[1;31m"
 set normal "\033\[0;0m"
@@ -425,86 +668,81 @@ set MAIN_SPAWN $spawn_id
 
 puts "\n\n!!!spawn_id: $MAIN_SPAWN!!!\n\r";
 #puts "\n\n!!!user_spawn_id: $user_spawn_id!!!\n\r";
- 
-expect "POSYSD::*> " {send "GOSCML\r"} \
-    timeout { 
-        puts "\n\n!!!Test Failure: Go to SCML Environment!!!\n\r";
-        #exit 
-        interact {
-              \001 {
-                    send_user "\n\nUser interaction completed.\n\n"
-                     return 
-                 }
+
+###########################################################################
+#                                                                         #
+#  This switch with the while will serve as a way to control the flux     #
+#  when a step is needed to repeat a sort of replacement for the goto     #
+#  create a array of the states in the future for more control            #
+#                                                                         #
+#                                                                         #
+#                                                                         #
+#                                                                         #
+#                                                                         #
+#                                                                         # 
+#                                                                         #
+#                                                                         #
+#                                                                         #
+#                                                                         #
+###########################################################################
+
+set goto state1
+while {1} {
+    switch -exact -- $goto {
+        state1 {
+            send_user "\nState 1\n"
+            set_environment
+            set goto state2
+        }
+        state2 {
+            send_user "\nState 2\n"
+            dummy_command
+            set goto state3
+        }
+        state3 {
+            send_user "\nState 3\n"
+            ########################################################
+            # http://www.tcl.tk/man/tcl8.5/tutorial/Tcl23.html     #
+            ########################################################
+            vision_draw_data global_variables
+            #send_user "\n DRAW_YEAR_G obtained: $global_variables(0,DRAW_YEAR_G)\n"
+            #send_user "\n DRAW_ID_G obtained: $global_variables(0,DRAW_ID_G)\n"
+            #send_user "\n DRAW_STATUS_G obtained: $global_variables(0,DRAW_STATUS_G)\n"
+            #send_user "\n SYSTEM_DATE_G obtained: $global_variables(0,SYSTEM_DATE_G)\n"
+            #send_user "\n DRAW_NUMBER_G obtained: $global_variables(0,DRAW_NUMBER_G)\n"
+            #send_user "\n DRAW_DATE_G obtained: $global_variables(0,DRAW_DATE_G)\n"
+
+            set DRAW_YEAR_G $global_variables(0,DRAW_YEAR_G)
+            set DRAW_ID_G $global_variables(0,DRAW_ID_G)
+            #set DRAW_STATUS_G $global_variables(0,DRAW_STATUS_G)
+            set DRAW_STATUS_G "3"
+            set SYSTEM_DATE_G $global_variables(0,SYSTEM_DATE_G)
+            set DRAW_NUMBER_G $global_variables(0,DRAW_NUMBER_G)
+            set DRAW_DATE_G $global_variables(0,DRAW_DATE_G)
+            
+            set goto state4
+        }
+        state4 {
+            send_user "\nState 4\n"
+            set condition4 [coorect_draw_closed_status $SYSTEM_DATE_G $DRAW_DATE_G $DRAW_STATUS_G $green $red $normal]
+            send_user "\n${normal}Condition 4 is $condition4\n"
+            if { $condition4 == 1 } {
+                send_user "\n${green}Draw is closed (status) proceding with the Draw${normal}\n"
+                break
+            } else {
+                send_user "\n${red}Draw ins't closed (status) closing before proceding${normal}\n"
+                #sleep 3
+                # call a function that will proced with closing the draw....
+                close_draw $DRAW_NUMBER_G $green $red $normal
+                #set goto state3
             }
+        }
+        default {
+            send_user "\n\nInvalid State procced with exit??\n\n"
+            exit
+        }
     }
 
-new_line
-
-expect "POSYSD::SCML> " {send "dir *.EXE;0 /TOTAL\r"} \
-    timeout { 
-        puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
-        #exit 
-        interact {
-              \001 {
-                    send_user "\n\nUser interaction completed.\n\n"
-                     return 
-                 }
-            }
-    }
-
-new_line
-
-
-send "vision\r"
-    
-expect "Please enter password" { 
-    send "DONUTS\r" 
-} \
-timeout { 
-    puts "\n\nTest Failure: vision password\n\r"; 
-    interact {
-          \001 {
-                send_user "\n\nUser interaction completed.\n\n"
-                return 
-             }
-        }
-}
-
-expect "Enter vision command" { 
-    send "lot\r" 
-} \
-timeout { 
-    puts "\n\nTest Failure: enter sys snapshot command\n\r"; 
-    interact {
-          \001 {
-                send_user "\n\nUser interaction completed.\n\n"
-                return 
-             }
-        }
-}
-
-expect "Enter !game index or draw number or /year-week" { 
-    send "!4\r" 
-} \
-timeout { 
-    puts "\n\nTest Failure: enter sys snapshot command\n\r"; 
-    interact {
-          \001 {
-                send_user "\n\nUser interaction completed.\n\n"
-                return 
-             }
-        }
-}
-
-#expect -re {Lotto 4.*game data for draw\s{2}(\w{3}).*Primary-A} {
-expect -re {Lotto 4.*game data for draw\s{2}(\w{3})\s{2}\w{2}\s(.*?)\s{2}.*Primary-A} {
-#    sleep 2
-    set DRAW_NUMBER $expect_out(1,string)
-    set DRAW_NUMBER_G $DRAW_NUMBER
-    send_user "\n\n\n\n\n\n\n\n\n\n\nDRAW_NUMBER: $DRAW_NUMBER\n"
-    set SYSTEM_DATE $expect_out(2,string)
-    set SYSTEM_DATE_G $SYSTEM_DATE
-    send_user "SYSTEM_DATE: $SYSTEM_DATE\n"
 }
 
 ####
@@ -512,32 +750,6 @@ expect -re {Lotto 4.*game data for draw\s{2}(\w{3})\s{2}\w{2}\s(.*?)\s{2}.*Prima
 #### foreach rec $records {
 #### }
 
-expect -re {TOTOLOTO QUARTA.*Draw\s\w{2}\s(.*)\s{2}\d{2}:\d{2}:\d{2}} {
-    set DRAW_DATE $expect_out(1,string)
-    set DRAW_DATE_G $DRAW_DATE
-    send_user "DRAW_DATE: $DRAW_DATE\n"
-}
-
-expect -re {DrawId\s{2}(.*)\s{3}.*\(\s(.)} {
-#    sleep 2
-    set DRAW_ID_YEAR $expect_out(1,string)
-    set DRAW_ID_YEAR_G $DRAW_ID_YEAR
-    send_user "DRAW_ID_YEAR: $DRAW_ID_YEAR\n"
-
-    set DRAW_STATUS $expect_out(2,string)
-    send_user "DRAW_STATUS: $DRAW_STATUS    \n" 
-    set DRAW_STATUS_G $DRAW_STATUS
-    send_user "DRAW_STATUS_G: $DRAW_STATUS_G\n"
-
-    set DRAW_ID_AUX [split $DRAW_ID_YEAR "/"]
-    #send_user "DRAW_ID_AUX: $DRAW_ID_AUX\n" #array de 2 posições (pois só têm um "/" na string)
-    set DRAW_YEAR [lindex $DRAW_ID_AUX 1]
-    set DRAW_YEAR_G $DRAW_YEAR
-    set DRAW_ID [lindex $DRAW_ID_AUX 0]
-    set DRAW_ID_G $DRAW_ID
-    send_user "DRAW_YEAR: $DRAW_YEAR\n"
-    send_user "DRAW_ID: $DRAW_ID\n\n"
-}
 
 ########################################################################################################################################
 #                                                                                                                                      #
@@ -555,29 +767,12 @@ expect -re {DrawId\s{2}(.*)\s{3}.*\(\s(.)} {
 #set DRAW_NUMBER $expect_out(1,string)
 #set DRAW_ID_YEAR $expect_out(2,string)
 
-send \003
 
-#sleep 3
-if {[regexp -nocase $SYSTEM_DATE_G $DRAW_DATE_G]} {
-    send_user "\n\n${green}Draw day of Totolo Quarta!!!\n\n"
 
-    if {[regexp -nocase $DRAW_STATUS_G "4"]} {
-        send_user "\n\n${green}The Draw is closed proceding with generating the winning key...\n\n"
-        #generating the winner key passing as parameters the following variables -> 1º $DRAW_NUMBER_G 2º $normal 3º $green 
-#        keygen $DRAW_NUMBER_G $normal $green
-    } else {
-        send_user "\n\n${red}The Draw is not close before proceding will close and then repeat the steps to confirm closed with sucess!!!\n\n"
-        send_user "DRAW_STATUS_G: $DRAW_STATUS_G\n"
-    }
-    
 
-} else {
-    send_user "\n\n${red}NOT Draw day of Totolo Quarta!!\n\n"
-    send_user "\n\nexiting something when wrong its not wednesday yet\n\n"
-    exit
-}
 
-send "\r\r\r"
+
+
 
 
 #spawn sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100                                                  

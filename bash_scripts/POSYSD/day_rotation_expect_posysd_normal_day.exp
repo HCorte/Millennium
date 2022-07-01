@@ -483,6 +483,7 @@ expect "*SCANRETR STOP0001  *" {send "\rtell dayend y\r"} \
 expect "*Do You Want To Run Winner Selection Today*" {send "\rtell vlftsk n\r"} \
     timeout { 
         puts "\n\n!!!Test Failure: vlftsk Winner Selection!!!\n\r"; 
+#       in case of failer see if needs the steep above and then repeats this attempt of winner selection        
         #exit 
         interact {
               \001 {
