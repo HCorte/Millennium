@@ -1,6 +1,11 @@
+CygWin têm de estar instalado na pasta C:\cygwin e não C:\cygwin64 caso não exista a pasta C:\cygwin criarla manualmente a apontar para ai na instalação
+
 in CygWin run:
 --> primeiro correr e instalar o pack "sshpass" e o outro pack "ssh..." ao correr o CygWin.exe (o installer)
+openssh, openssh-debinfo,crypt, expect (também instalar estes packages)
 correr o comando o seguinte comando para gerar p ssh_config file no folder etc
+
+To configure the SSHD service, run C:\cygwin\Cygwin.bat, and execute the following command:
 $ ssh-host-config
 nota: seguir os passos https://docs.oracle.com/cd/E63000_01/EMBSC/preinstall_req_cygwin_ssh.htm#EMBSC281 
 para a configuração
@@ -21,6 +26,8 @@ para a configuração
 *** Query: <Say "no" if it is already installed as a service> <yes/no>: yes
 *** Query: Enter the value of CYGWIN for the deamon: [] binmode ntsec
 
+necessario dar permisões de escrita antes de editar o ficheiro caso contrario ao salvar dá erro de outro programa estar a bloquiar o ficheiro (Failed Saved)
+
 $ cd C:/cygwin64/etc
 $ ls -lah  ssh_config
     -rw-r--r-- 1 SYSTEM Administradores 1.5K Mar 28 17:40 ssh_config
@@ -31,7 +38,7 @@ $ ls -l ssh_config
 
 editar o ficheiro depois de correr notepad++ em modo administrador (caso retorne erro que o ficheiro está em uso têm haver com permissões que falta a permisão de escrita)
 C:/cygwin64/etc/ssh_config
-Host myhost
+Host myhost (não copiar esta linha é só a titulo indicativo onde deve ficar a linha em baixo)
   SetEnv SSHPASS=console
 
 
