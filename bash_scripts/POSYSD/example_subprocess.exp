@@ -1,0 +1,473 @@
+#!/usr/bin/expect
+
+proc set_environment { process_id } {
+    expect -i $process_id "POSYSD::*> " {
+        send -i $process_id "GOSCML\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: Go to SCML Environment!!!\n\r";
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+    new_line $process_id
+}
+
+proc dummy_command { process_id } {
+    expect -i $process_id "POSYSD::SCML> " {
+        send -i $process_id "dir *.EXE;0 /TOTAL\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+    new_line $process_id
+}
+
+proc new_line { process_id } {
+    expect -i $process_id "POSYSD::SCML> " {
+        send -i $process_id "\r"
+    } \
+        timeout { puts "\n\nTest Failure: \n\r"; exit}
+}
+
+proc keygen_resver { process_id DRAW_NUMBER_G normal green } {
+    send -i $process_id "run resver\r"
+
+    #Lotto   4 draw  518
+    
+    expect -i $process_id "Enter first*number*>" { 
+        send -i $process_id "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Enter second*number*>" { 
+        send -i $process_id "2\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Enter third*number*>" { 
+        send -i $process_id "3\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Enter forth*number*>" { 
+        send -i $process_id "4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Enter fifth*number*>" { 
+        send -i $process_id "5\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Enter Lucky*Number*>" { 
+        send -i $process_id "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Are the numbers entered correct*(Y/N)*>" { 
+        send -i $process_id "y\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }    
+    
+    expect -i $process_id "Do Your Have Special Totoloto Jackpot Fund*\[Y/N\]*>" { 
+        send -i $process_id "n\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Lotto*4 results entry complete" { 
+        send_user "\n\n${green}Winner Key Insertion Success\n\n"
+        send_user "${normal}"
+        sleep 2
+        send "\r\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    } 
+}    
+
+proc keygen_results { process_id DRAW_NUMBER_G normal green } {
+    send -i $process_id "run results\r"
+    
+    expect -i $process_id "Enter game type*>" { 
+        send -i $process_id "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - Enter game type\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $process_id "Enter game index*>" { 
+        send -i $process_id "4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - Enter game index\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $process_id "Enter draw number \[C-current draw\]*>" { 
+        send -i $process_id "$DRAW_NUMBER_G\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - Enter draw number\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+
+    expect -i $process_id "Lotto*4*TOTOLOTO QUARTA Draw*$DRAW_NUMBER_G" { 
+        expect -i $process_id "CONSOLE  Is this correct (Y/N)*>" {
+            send -i $process_id "y\r"
+        } \
+        timeout { 
+            puts "\n\nTest Failure: not found - Is this correct (Y/N)\n\r"; 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                     }
+                }
+        }
+    } \
+    timeout { 
+        puts "\n\nTest Failure: TOTOLOTO QUARTA Draw $DRAW_NUMBER_G??\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $process_id "Enter first*number*>" { 
+        send -i $process_id "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $process_id "Enter second*number*>" { 
+        send -i $process_id "2\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $process_id "Enter third*number*>" { 
+        send -i $process_id "3\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $process_id "Enter forth*number*>" { 
+        send -i $process_id "4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $process_id "Enter fifth*number*>" { 
+        send -i $process_id "5\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $process_id "Enter Lucky Number*>" { 
+        send -i $process_id "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+
+    expect -i $process_id "Are the numbers entered correct*\[Y/N\]*>" { 
+        send -i $process_id "y\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }    
+
+    expect -i $process_id "Do You Have Special Totoloto Jackpot Fund*\[Y/N\]*\?*>" { 
+        send -i $process_id "n\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect -i $process_id "Waiting for verification from remote terminal" { 
+        keygen_resver $process_id $DRAW_NUMBER_G $normal $green
+    } \
+    timeout { 
+        puts "\n\n Failure at detecting Waiting for verification from remote terminal before RESVER\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect -i $process_id "Lotto   4 results entry complete" { 
+        expect -i $process_id "STOP0001  ****  SUCCESS" { 
+            expect -i $process_id "POSYSD::SCML> " { 
+                send_user "\n\n${green}Winner Key Insertion Completed ${normal}\n\n"
+            } \
+            timeout { 
+                puts "\n\n Failure not detected the results entry - 2\n\r"; 
+                interact {
+                    \001 {
+                            send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                    }
+            }
+        } \
+        timeout { 
+            puts "\n\n Failure not detected the results entry - 2\n\r"; 
+            interact {
+                \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+                }
+        }        
+    } \
+    timeout { 
+        puts "\n\n Failure not detected the results entry - 1\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+#    sleep 5
+#    send_user "\n\n${normal}Press CTRL+a to exit script and connection\n\n\n"
+}
+
+set green "\033\[1;32;40m"
+set red "\033\[1;31m"
+set normal "\033\[0;0m"
+
+set timeout 20
+spawn -noecho sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100
+
+set MAIN_SPAWN $spawn_id
+
+puts "\n\n!!!MAIN spawn_id: $MAIN_SPAWN!!!\n\r";
+
+    set_environment $MAIN_SPAWN
+
+    dummy_command $MAIN_SPAWN
+
+    set DRAW_NUMBER_G "578"
+
+    keygen_results $MAIN_SPAWN $DRAW_NUMBER_G $normal $green
+
+#    set timeout 20
+    spawn -noecho sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100    
+
+    set RESVER_PROCESS  $spawn_id
+    puts "\n\n!!!RESVER_PROCESS spawn_id: $RESVER_PROCESS!!!\n\r";
+
+################################################################## 
+
+    set_environment $RESVER_PROCESS
+
+    dummy_command $RESVER_PROCESS
+
+    close -i $RESVER_PROCESS
+
+    send -i $MAIN_SPAWN "dir *.dir /total \r"
+
+    expect -i $MAIN_SPAWN "Total of 32 files" {
+#        send -i $MAIN_SPAWN "GOSCML\r"
+        puts "\n\n...32 folders as expected...\n\n"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: Go to SCML Environment!!!\n\r";
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+#    expect -i $RESVER_PROCESS "POSYSD::*> " {
+#        send -i $RESVER_PROCESS "GOSCML\r"
+#        puts "\n\nall good???\n\n"
+#    } \
+#    timeout { 
+#        puts "\n\n!!!Test Failure: Go to SCML Environment!!!\n\r";
+#        #exit 
+#        interact {
+#              \001 {
+#                    send_user "\n\nUser interaction completed.\n\n"
+#                     return 
+#                 }
+#            }
+#    }
+#
+#
+#    expect -i $RESVER_PROCESS "POSYSD::SCML> " {
+#        send -i $RESVER_PROCESS "dir *.EXE;0 /TOTAL\r"
+#    } \
+#    timeout { 
+#        puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
+#        #exit 
+#        interact {
+#            \001 {
+#                    send_user "\n\nUser interaction completed.\n\n"
+#                    return 
+#                }
+#            }
+#    }
+
