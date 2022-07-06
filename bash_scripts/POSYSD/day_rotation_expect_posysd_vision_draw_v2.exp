@@ -500,7 +500,7 @@ proc vision_draw_data {returned} {
     #return global_variables
 }
 
-proc coorect_draw_closed_status {SYSTEM_DATE_G DRAW_DATE_G DRAW_STATUS_G green red normal} {
+proc correct_draw_closed_status {SYSTEM_DATE_G DRAW_DATE_G DRAW_STATUS_G green red normal} {
     send \003
 
     #sleep 3
@@ -529,9 +529,24 @@ proc coorect_draw_closed_status {SYSTEM_DATE_G DRAW_DATE_G DRAW_STATUS_G green r
 }
 
 proc close_draw {DRAW_NUMBER_G green red normal} {
-    send "r setclose\r"
 
-    expect "Enter game type \[E=exit\]  >" { 
+    expect "INTERRUPT" { 
+        send_user "\n\n${green}Detected Interrupt of killing vision proceding....${normal}\n\n"
+        send "r setclose\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: run setclose\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    #send "r setclose\r"
+
+    expect "Enter game type" { 
         send "1\r" 
     } \
     timeout { 
@@ -544,7 +559,7 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
             }
     }
 
-    expect "Enter game index \[E=exit\]  >" { 
+    expect "Enter game index" { 
         send "4\r" 
     } \
     timeout { 
@@ -557,24 +572,27 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
             }
     }
 
-    expect -re {Lotto\s{4}(.)\s{2}(\d{3})\s{18}(.*)} {
+    expect -re {Lotto\s{4}(.)\s{2}(\d{3})\s{18}(.*)\n.*Start date} {
         set GAME_INDEX $expect_out(1,string)
         set DRAW_CODE $expect_out(2,string)
         set DRAW_STATUS_STR $expect_out(3,string)
-        send_user "GAME_INDEX: $GAME_INDEX\n"
-        send_user "DRAW_CODE: $DRAW_CODE\n"
-        send_user "DRAW_STATUS_STR: $DRAW_STATUS_STR\n"
+        send_user "\n\nGAME_INDEX: ${green} ($GAME_INDEX) ${normal}\n"
+        send_user "DRAW_CODE: ${green} ($DRAW_CODE) ${normal}\n"
+#        send_user "DRAW_STATUS_STR: ${green} ($DRAW_STATUS_STR) ${normal}\n"
+        set DRAW_STATUS_STR [string trim $DRAW_STATUS_STR]
+        send_user "DRAW_STATUS_STR: ${green} ($DRAW_STATUS_STR) ${normal}\n"
 
         if { [regexp -nocase $DRAW_NUMBER_G $DRAW_CODE] } {
-            send_user "\n${green}!!!Correct Draw to validate!!!${normal}\n"
+            send_user "\n\n${green}!!!Correct Draw to validate!!!${normal}\n\n"
         } else {
             send_user "\n${red}!!!Wrong Draw ($DRAW_NUMBER_G) - ($DRAW_CODE) !!!${normal}\n"
+            return -1
         }
 
         if { [regexp -nocase $DRAW_STATUS_STR "Game open"] } {
             send_user "\n${green}!!!Draw open so proceding with the closing!!!${normal}\n"
 
-            expect "Enter option number \[E=exit\]" { 
+            expect "Enter option number" { 
                 send "1\r"
             } \
             timeout { 
@@ -587,10 +605,49 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
                     }
             }
 
-        } else if { [regexp -nocase $DRAW_STATUS_STR "End of game"] } {
+            expect "Closing Lotto    3" {
+                expect "Is this correct \[Y/N\]? >" {
+                    send "Y\r"
+                }\
+                timeout { 
+                    puts "\n\n!!!Failure confirm that Closing Lotto 3 is correct!!!\n\r"; 
+                    #exit 
+                    interact {
+                            \001 {
+                                send_user "\n\nUser interaction completed.\n\n"
+                                    return 
+                                }
+                        }
+                }
+            }\
+                timeout { 
+                    puts "\n\n!!!Failure in Closing Lotto    3!!!\n\r"; 
+                    #exit 
+                    interact {
+                            \001 {
+                                send_user "\n\nUser interaction completed.\n\n"
+                                    return 
+                                }
+                        }
+                }            
+
+            expect "Closed  Lotto    3" { 
+                return 1
+            } \
+            timeout { 
+                puts "\n\nClosing Draw Failure: Enter option number 1\n\r"; 
+                interact {
+                    \001 {
+                            send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                    }
+            }
+
+        } elseif { [regexp -nocase $DRAW_STATUS_STR "End of game"] } {
             send_user "\n${red}Draw already closed so no need to close it again...${normal}\n"
 
-            expect "Enter option number \[E: Exit\]" { 
+            expect "Enter option number" { 
                 send "E\r"
             } \
             timeout { 
@@ -603,7 +660,7 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
                     }
             }
 
-            expect "Enter game type \[E: Exit\]" { 
+            expect "Enter game type" { 
                 send "E\r" 
             } \
             timeout { 
@@ -616,8 +673,35 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
                     }
             }
 
+            expect "STOP0001  ****  SUCCESS" {
+                expect "POSYSD::SCML>" {
+                    return -2
+                }\
+                timeout { 
+                    puts "\n\n!!!Failure exiting setclose and get new terminal line!!!\n\r"; 
+                    interact {
+                            \001 {
+                                send_user "\n\nUser interaction completed.\n\n"
+                                    return 
+                                }
+                        }
+                }
+            }\
+                timeout { 
+                    puts "\n\n!!!Failure in detecting setclose program exit with sucess!!!\n\r"; 
+                    interact {
+                            \001 {
+                                send_user "\n\nUser interaction completed.\n\n"
+                                    return 
+                                }
+                        }
+                }    
+                
+                return -4
+
         } else {
-            send_user "\n\n${red}hum something whent realy wrong... ($DRAW_STATUS_STR) ${normal}\n\n"
+            send_user "\n\n${red}hum something went realy wrong... \($DRAW_STATUS_STR\) ${normal}\n\n"
+            return -3 
         }
 
     }
@@ -626,6 +710,10 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
 set green "\033\[1;32;40m"
 set red "\033\[1;31m"
 set normal "\033\[0;0m"
+
+## Access CLI
+#set loginUser "console"
+#set loginPassword "console"
 
 set timeout 20
 
@@ -655,6 +743,8 @@ set timeout 20
 # By default, spawn echoes the command name and arguments. The -noecho flag stops spawn from doing this.        #
 #################################################################################################################
 spawn -noecho sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100                                                  
+#spawn -noecho ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100
+
 
 set DRAW_NUMBER_G ""
 set SYSTEM_DATE_G ""
@@ -667,6 +757,9 @@ set DRAW_STATUS_G "0"
 set MAIN_SPAWN $spawn_id
 
 puts "\n\n!!!spawn_id: $MAIN_SPAWN!!!\n\r";
+
+#expect "password:" {send "$loginPassword\r"}
+
 #puts "\n\n!!!user_spawn_id: $user_spawn_id!!!\n\r";
 
 ###########################################################################
@@ -714,8 +807,9 @@ while {1} {
 
             set DRAW_YEAR_G $global_variables(0,DRAW_YEAR_G)
             set DRAW_ID_G $global_variables(0,DRAW_ID_G)
-            #set DRAW_STATUS_G $global_variables(0,DRAW_STATUS_G)
-            set DRAW_STATUS_G "3"
+            set DRAW_STATUS_G $global_variables(0,DRAW_STATUS_G)
+#bellow to simulate a case where draw is still open            
+#            set DRAW_STATUS_G "3"
             set SYSTEM_DATE_G $global_variables(0,SYSTEM_DATE_G)
             set DRAW_NUMBER_G $global_variables(0,DRAW_NUMBER_G)
             set DRAW_DATE_G $global_variables(0,DRAW_DATE_G)
@@ -723,17 +817,37 @@ while {1} {
             set goto state4
         }
         state4 {
-            send_user "\nState 4\n"
-            set condition4 [coorect_draw_closed_status $SYSTEM_DATE_G $DRAW_DATE_G $DRAW_STATUS_G $green $red $normal]
+            send_user "\n\n${green}State 4${normal}\n"
+            set condition4 [correct_draw_closed_status $SYSTEM_DATE_G $DRAW_DATE_G $DRAW_STATUS_G $green $red $normal]
             send_user "\n${normal}Condition 4 is $condition4\n"
             if { $condition4 == 1 } {
                 send_user "\n${green}Draw is closed (status) proceding with the Draw${normal}\n"
+                ###########################################################################                
+                #   in this step will run the program "results" after all the steps will  #
+                #  wait for the program "resver" that will confirm the key numbers that   #
+                #  needs to be called in another process of expect that is another        #
+                #  spawn???                                                               # 
+                #                                                                         #
+                #                                                                         #
+                #                                                                         #
+                #                                                                         #
+                ###########################################################################               
                 break
             } else {
                 send_user "\n${red}Draw ins't closed (status) closing before proceding${normal}\n"
-                #sleep 3
+                #sleep 7
                 # call a function that will proced with closing the draw....
-                close_draw $DRAW_NUMBER_G $green $red $normal
+                set draw_status [close_draw $DRAW_NUMBER_G $green $red $normal]
+                if { $draw_status == -3 } {
+                    send_user "\n\n\n${red}Exiting see manualy what went wrong${normal}\n"
+                    exit
+                } elseif { $draw_status == -2 } {
+                    send_user "\n\n\n${red}already closed ($draw_status) proceed with generating winning key... ${normal}\n"
+                    exit
+                } else {
+                    send_user "\n\n\nsuccess or something $draw_status ... \n"
+                    exit
+                }
                 #set goto state3
             }
         }
