@@ -156,7 +156,7 @@ proc keygen_resver { process_id DRAW_NUMBER_G normal green } {
         send_user "\n\n${green}Winner Key Insertion Success\n\n"
         send_user "${normal}"
         sleep 2
-        send "\r\r" 
+#        send "\r\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
@@ -169,11 +169,11 @@ proc keygen_resver { process_id DRAW_NUMBER_G normal green } {
     } 
 }    
 
-proc keygen_results { process_id DRAW_NUMBER_G normal green } {
-    send -i $process_id "run results\r"
+proc keygen_results { main_process_id second_process_id DRAW_NUMBER_G normal green } {
+    send -i $main_process_id "run results\r"
     
-    expect -i $process_id "Enter game type*>" { 
-        send -i $process_id "1\r" 
+    expect -i $main_process_id "Enter game type*>" { 
+        send -i $main_process_id "1\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: results - Enter game type\n\r"; 
@@ -185,8 +185,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
     
-    expect -i $process_id "Enter game index*>" { 
-        send -i $process_id "4\r" 
+    expect -i $main_process_id "Enter game index*>" { 
+        send -i $main_process_id "4\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: results - Enter game index\n\r"; 
@@ -198,8 +198,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
     
-    expect -i $process_id "Enter draw number \[C-current draw\]*>" { 
-        send -i $process_id "$DRAW_NUMBER_G\r" 
+    expect -i $main_process_id "Enter draw number \[C-current draw\]*>" { 
+        send -i $main_process_id "$DRAW_NUMBER_G\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: results - Enter draw number\n\r"; 
@@ -211,9 +211,9 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
 
-    expect -i $process_id "Lotto*4*TOTOLOTO QUARTA Draw*$DRAW_NUMBER_G" { 
-        expect -i $process_id "CONSOLE  Is this correct (Y/N)*>" {
-            send -i $process_id "y\r"
+    expect -i $main_process_id "Lotto*4*TOTOLOTO QUARTA Draw*$DRAW_NUMBER_G" { 
+        expect -i $main_process_id "CONSOLE  Is this correct (Y/N)*>" {
+            send -i $main_process_id "y\r"
         } \
         timeout { 
             puts "\n\nTest Failure: not found - Is this correct (Y/N)\n\r"; 
@@ -235,8 +235,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
     
-    expect -i $process_id "Enter first*number*>" { 
-        send -i $process_id "1\r" 
+    expect -i $main_process_id "Enter first*number*>" { 
+        send -i $main_process_id "1\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: results - key value\n\r"; 
@@ -248,8 +248,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
     
-    expect -i $process_id "Enter second*number*>" { 
-        send -i $process_id "2\r" 
+    expect -i $main_process_id "Enter second*number*>" { 
+        send -i $main_process_id "2\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: results - key value\n\r"; 
@@ -261,8 +261,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
     
-    expect -i $process_id "Enter third*number*>" { 
-        send -i $process_id "3\r" 
+    expect -i $main_process_id "Enter third*number*>" { 
+        send -i $main_process_id "3\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: results - key value\n\r"; 
@@ -274,8 +274,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
     
-    expect -i $process_id "Enter forth*number*>" { 
-        send -i $process_id "4\r" 
+    expect -i $main_process_id "Enter forth*number*>" { 
+        send -i $main_process_id "4\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: results - key value\n\r"; 
@@ -287,8 +287,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
     
-    expect -i $process_id "Enter fifth*number*>" { 
-        send -i $process_id "5\r" 
+    expect -i $main_process_id "Enter fifth*number*>" { 
+        send -i $main_process_id "5\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: results - key value\n\r"; 
@@ -300,8 +300,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
     
-    expect -i $process_id "Enter Lucky Number*>" { 
-        send -i $process_id "1\r" 
+    expect -i $main_process_id "Enter Lucky Number*>" { 
+        send -i $main_process_id "1\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: results - key value\n\r"; 
@@ -313,8 +313,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
 
-    expect -i $process_id "Are the numbers entered correct*\[Y/N\]*>" { 
-        send -i $process_id "y\r" 
+    expect -i $main_process_id "Are the numbers entered correct*\[Y/N\]*>" { 
+        send -i $main_process_id "y\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: results - numbers entered correct\n\r"; 
@@ -326,8 +326,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }    
 
-    expect -i $process_id "Do You Have Special Totoloto Jackpot Fund*\[Y/N\]*\?*>" { 
-        send -i $process_id "n\r" 
+    expect -i $main_process_id "Do You Have Special Totoloto Jackpot Fund*\[Y/N\]*\?*>" { 
+        send -i $main_process_id "n\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
@@ -339,8 +339,8 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
 
-    expect -i $process_id "Waiting for verification from remote terminal" { 
-        keygen_resver $process_id $DRAW_NUMBER_G $normal $green
+    expect -i $main_process_id "Waiting for verification from remote terminal" { 
+        keygen_resver $second_process_id $DRAW_NUMBER_G $normal $green
     } \
     timeout { 
         puts "\n\n Failure at detecting Waiting for verification from remote terminal before RESVER\n\r"; 
@@ -352,9 +352,9 @@ proc keygen_results { process_id DRAW_NUMBER_G normal green } {
             }
     }
 
-    expect -i $process_id "Lotto   4 results entry complete" { 
-        expect -i $process_id "STOP0001  ****  SUCCESS" { 
-            expect -i $process_id "POSYSD::SCML> " { 
+    expect -i $main_process_id "Lotto   4 results entry complete" { 
+        expect -i $main_process_id "STOP0001  ****  SUCCESS" { 
+            expect -i $main_process_id "POSYSD::SCML> " { 
                 send_user "\n\n${green}Winner Key Insertion Completed ${normal}\n\n"
             } \
             timeout { 
@@ -408,8 +408,6 @@ puts "\n\n!!!MAIN spawn_id: $MAIN_SPAWN!!!\n\r";
 
     set DRAW_NUMBER_G "578"
 
-    keygen_results $MAIN_SPAWN $DRAW_NUMBER_G $normal $green
-
 #    set timeout 20
     spawn -noecho sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100    
 
@@ -422,6 +420,10 @@ puts "\n\n!!!MAIN spawn_id: $MAIN_SPAWN!!!\n\r";
 
     dummy_command $RESVER_PROCESS
 
+    #    keygen_results { main_process_id second_process_id DRAW_NUMBER_G normal green }
+    keygen_results $MAIN_SPAWN $RESVER_PROCESS $DRAW_NUMBER_G $normal $green
+
+# no teste feito com sucesso estava comentado este close mas deve funcionar corretamente embora seja até desnecessario estar a fechar a segunda sessão...
     close -i $RESVER_PROCESS
 
     send -i $MAIN_SPAWN "dir *.dir /total \r"
@@ -440,6 +442,7 @@ puts "\n\n!!!MAIN spawn_id: $MAIN_SPAWN!!!\n\r";
                  }
             }
     }
+
 
 #    expect -i $RESVER_PROCESS "POSYSD::*> " {
 #        send -i $RESVER_PROCESS "GOSCML\r"

@@ -21,9 +21,14 @@ proc sshposysd_pass {} {
     spawn sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" $SSHUSER@10.100.82.100                                                
 }
 
-proc new_line {} {
-    expect "POSYSD::SCML> " {send "\r"} \
-        timeout { puts "\n\nTest Failure: \n\r"; exit}
+proc new_line { process_id } {
+    expect -i $process_id "POSYSD::SCML> " {
+        send -i $process_id "\r"
+    } \
+    timeout { 
+        puts "\n\nFailure: in generating new line \n\r"; 
+        #exit
+    }
 }
 
 proc keygen {DRAW_NUMBER_G normal green} {
@@ -380,8 +385,10 @@ proc keygen {DRAW_NUMBER_G normal green} {
 
 }
 
-proc set_environment {} {
-    expect "POSYSD::*> " {send "GOSCML\r"} \
+proc set_environment { process_id } {
+    expect -i $process_id "POSYSD::*> " {
+        send -i $process_id "GOSCML\r"
+    } \
     timeout { 
         puts "\n\n!!!Test Failure: Go to SCML Environment!!!\n\r";
         #exit 
@@ -393,11 +400,13 @@ proc set_environment {} {
             }
     }
 
-    new_line
+    new_line $process_id
 }
 
-proc dummy_command {} {
-    expect "POSYSD::SCML> " {send "dir *.EXE;0 /TOTAL\r"} \
+proc dummy_command { process_id } {
+    expect -i $process_id "POSYSD::SCML> " {
+        send -i $process_id "dir *.EXE;0 /TOTAL\r"
+    } \
     timeout { 
         puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
         #exit 
@@ -409,15 +418,15 @@ proc dummy_command {} {
             }
     }
 
-    new_line
+    new_line $process_id
 }
 
-proc vision_draw_data {returned} {
+proc vision_draw_data { returned process_id } {
     upvar $returned global_variables
-    send "vision\r"
+    send -i $process_id "vision\r"
         
-    expect "Please enter password" { 
-        send "DONUTS\r" 
+    expect -i $process_id "Please enter password" { 
+        send -i $process_id "DONUTS\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: vision password\n\r"; 
@@ -429,8 +438,8 @@ proc vision_draw_data {returned} {
             }
     }
 
-    expect "Enter vision command" { 
-        send "lot\r" 
+    expect -i $process_id "Enter vision command" { 
+        send -i $process_id "lot\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: enter sys snapshot command\n\r"; 
@@ -442,8 +451,8 @@ proc vision_draw_data {returned} {
             }
     }
 
-    expect "Enter !game index or draw number or /year-week" { 
-        send "!4\r" 
+    expect -i $process_id "Enter !game index or draw number or /year-week" { 
+        send -i $process_id "!4\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: enter sys snapshot command\n\r"; 
@@ -455,7 +464,7 @@ proc vision_draw_data {returned} {
             }
     }
 
-    expect -re {Lotto 4.*game data for draw\s{2}(\w{3})\s{2}\w{2}\s(.*?)\s{2}.*Primary-A} {
+    expect -i $process_id -re {Lotto 4.*game data for draw\s{2}(\w{3})\s{2}\w{2}\s(.*?)\s{2}.*Primary-A} {
         set DRAW_NUMBER $expect_out(1,string)
         set DRAW_NUMBER_G $DRAW_NUMBER
         send_user "\n\n\n\n\n\n\n\n\n\n\nDRAW_NUMBER: $DRAW_NUMBER\n"
@@ -464,13 +473,13 @@ proc vision_draw_data {returned} {
         send_user "SYSTEM_DATE: $SYSTEM_DATE\n"
     }
 
-    expect -re {TOTOLOTO QUARTA.*Draw\s\w{2}\s(.*)\s{2}\d{2}:\d{2}:\d{2}} {
+    expect -i $process_id -re {TOTOLOTO QUARTA.*Draw\s\w{2}\s(.*)\s{2}\d{2}:\d{2}:\d{2}} {
         set DRAW_DATE $expect_out(1,string)
         set DRAW_DATE_G $DRAW_DATE
         send_user "DRAW_DATE: $DRAW_DATE\n"
     }
 
-    expect -re {DrawId\s{2}(.*)\s{3}.*\(\s(.)} {
+    expect -i $process_id -re {DrawId\s{2}(.*)\s{3}.*\(\s(.)} {
         set DRAW_ID_YEAR $expect_out(1,string)
         set DRAW_ID_YEAR_G $DRAW_ID_YEAR
         send_user "DRAW_ID_YEAR: $DRAW_ID_YEAR\n"
@@ -500,8 +509,8 @@ proc vision_draw_data {returned} {
     #return global_variables
 }
 
-proc correct_draw_closed_status {SYSTEM_DATE_G DRAW_DATE_G DRAW_STATUS_G green red normal} {
-    send \003
+proc correct_draw_closed_status {process_id SYSTEM_DATE_G DRAW_DATE_G DRAW_STATUS_G green red normal} {
+    send -i $process_id \003
 
     #sleep 3
     if {[regexp -nocase $SYSTEM_DATE_G $DRAW_DATE_G]} {
@@ -512,6 +521,9 @@ proc correct_draw_closed_status {SYSTEM_DATE_G DRAW_DATE_G DRAW_STATUS_G green r
             return 1
             #generating the winner key passing as parameters the following variables -> 1º $DRAW_NUMBER_G 2º $normal 3º $green 
     #        keygen $DRAW_NUMBER_G $normal $green
+        } elseif {[regexp -nocase $DRAW_STATUS_G "6"]} {
+            send_user "\n\n${green}The Draw is closed and Winning key already Inserted${normal}\n\n"
+            return 2
         } else {
             send_user "\n\n${red}The Draw is not close before proceding will close and then repeat the steps to confirm closed with sucess!!!${normal}\n\n"
             send_user "DRAW_STATUS_G: $DRAW_STATUS_G\n"
@@ -525,14 +537,13 @@ proc correct_draw_closed_status {SYSTEM_DATE_G DRAW_DATE_G DRAW_STATUS_G green r
         exit
     }
     
-    send "\r\r\r"
 }
 
-proc close_draw {DRAW_NUMBER_G green red normal} {
+proc close_draw {process_id DRAW_NUMBER_G green red normal} {
 
-    expect "INTERRUPT" { 
+    expect -i $process_id "INTERRUPT" { 
         send_user "\n\n${green}Detected Interrupt of killing vision proceding....${normal}\n\n"
-        send "r setclose\r" 
+        send -i $process_id "r setclose\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: run setclose\n\r"; 
@@ -546,8 +557,8 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
 
     #send "r setclose\r"
 
-    expect "Enter game type" { 
-        send "1\r" 
+    expect -i $process_id "Enter game type" { 
+        send -i $process_id "1\r" 
     } \
     timeout { 
         puts "\n\nTest Failure: Game Type 1\n\r"; 
@@ -559,7 +570,7 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
             }
     }
 
-    expect "Enter game index" { 
+    expect -i $process_id "Enter game index" { 
         send "4\r" 
     } \
     timeout { 
@@ -572,7 +583,7 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
             }
     }
 
-    expect -re {Lotto\s{4}(.)\s{2}(\d{3})\s{18}(.*)\n.*Start date} {
+    expect -i $process_id -re {Lotto\s{4}(.)\s{2}(\d{3})\s{18}(.*)\n.*Start date} {
         set GAME_INDEX $expect_out(1,string)
         set DRAW_CODE $expect_out(2,string)
         set DRAW_STATUS_STR $expect_out(3,string)
@@ -592,8 +603,8 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
         if { [regexp -nocase $DRAW_STATUS_STR "Game open"] } {
             send_user "\n${green}!!!Draw open so proceding with the closing!!!${normal}\n"
 
-            expect "Enter option number" { 
-                send "1\r"
+            expect -i $process_id "Enter option number" { 
+                send -i $process_id "1\r"
             } \
             timeout { 
                 puts "\n\nClosing Draw Failure: Enter option number 1\n\r"; 
@@ -605,9 +616,9 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
                     }
             }
 
-            expect "Closing Lotto    3" {
-                expect "Is this correct \[Y/N\]? >" {
-                    send "Y\r"
+            expect -i $process_id "Closing Lotto    3" {
+                expect -i $process_id "Is this correct \[Y/N\]? >" {
+                    send -i $process_id "Y\r"
                 }\
                 timeout { 
                     puts "\n\n!!!Failure confirm that Closing Lotto 3 is correct!!!\n\r"; 
@@ -631,7 +642,7 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
                         }
                 }            
 
-            expect "Closed  Lotto    3" { 
+            expect -i $process_id "Closed  Lotto    3" { 
                 return 1
             } \
             timeout { 
@@ -647,8 +658,8 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
         } elseif { [regexp -nocase $DRAW_STATUS_STR "End of game"] } {
             send_user "\n${red}Draw already closed so no need to close it again...${normal}\n"
 
-            expect "Enter option number" { 
-                send "E\r"
+            expect -i $process_id "Enter option number" { 
+                send -i $process_id "E\r"
             } \
             timeout { 
                 puts "\n\nExiting Menu: Enter option number 1\n\r"; 
@@ -660,8 +671,8 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
                     }
             }
 
-            expect "Enter game type" { 
-                send "E\r" 
+            expect -i $process_id "Enter game type" { 
+                send -i $process_id "E\r" 
             } \
             timeout { 
                 puts "\n\nTest Failure: Game Type 1\n\r"; 
@@ -673,8 +684,8 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
                     }
             }
 
-            expect "STOP0001  ****  SUCCESS" {
-                expect "POSYSD::SCML>" {
+            expect -i $process_id "STOP0001  ****  SUCCESS" {
+                expect -i $process_id "POSYSD::SCML>" {
                     return -2
                 }\
                 timeout { 
@@ -705,6 +716,1505 @@ proc close_draw {DRAW_NUMBER_G green red normal} {
         }
 
     }
+}
+
+proc keygen_resver { process_id DRAW_NUMBER_G normal green } {
+    send -i $process_id "run resver\r"
+
+    #Lotto   4 draw  518
+    
+    expect -i $process_id "Enter first*number*>" { 
+        send -i $process_id "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Enter second*number*>" { 
+        send -i $process_id "2\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Enter third*number*>" { 
+        send -i $process_id "3\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Enter forth*number*>" { 
+        send -i $process_id "4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Enter fifth*number*>" { 
+        send -i $process_id "5\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Enter Lucky*Number*>" { 
+        send -i $process_id "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - key value\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Are the numbers entered correct*(Y/N)*>" { 
+        send -i $process_id "y\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }    
+    
+    expect -i $process_id "Do Your Have Special Totoloto Jackpot Fund*\[Y/N\]*>" { 
+        send -i $process_id "n\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+    
+    expect -i $process_id "Lotto*4 results entry complete" { 
+        send_user "\n\n${green}Winner Key Insertion Success\n\n"
+        send_user "${normal}"
+#        sleep 2
+#        send "\r\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    } 
+}
+
+proc keygen_results { main_process_id second_process_id DRAW_NUMBER_G normal green } {
+    send -i $main_process_id "run results\r"
+    
+    expect -i $main_process_id "Enter game type*>" { 
+        send -i $main_process_id "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - Enter game type\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $main_process_id "Enter game index*>" { 
+        send -i $main_process_id "4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - Enter game index\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $main_process_id "Enter draw number \[C-current draw\]*>" { 
+        send -i $main_process_id "$DRAW_NUMBER_G\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - Enter draw number\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+
+    expect -i $main_process_id "Lotto*4*TOTOLOTO QUARTA Draw*$DRAW_NUMBER_G" { 
+        expect -i $main_process_id "CONSOLE  Is this correct (Y/N)*>" {
+            send -i $main_process_id "y\r"
+        } \
+        timeout { 
+            puts "\n\nTest Failure: not found - Is this correct (Y/N)\n\r"; 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                     }
+                }
+        }
+    } \
+    timeout { 
+        puts "\n\nTest Failure: TOTOLOTO QUARTA Draw $DRAW_NUMBER_G??\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $main_process_id "Enter first*number*>" { 
+        send -i $main_process_id "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $main_process_id "Enter second*number*>" { 
+        send -i $main_process_id "2\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $main_process_id "Enter third*number*>" { 
+        send -i $main_process_id "3\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $main_process_id "Enter forth*number*>" { 
+        send -i $main_process_id "4\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $main_process_id "Enter fifth*number*>" { 
+        send -i $main_process_id "5\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+    
+    expect -i $main_process_id "Enter Lucky Number*>" { 
+        send -i $main_process_id "1\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - key value\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                 }
+            }
+    }
+
+    expect -i $main_process_id "Are the numbers entered correct*\[Y/N\]*>" { 
+        send -i $main_process_id "y\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: results - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }    
+
+    expect -i $main_process_id "Do You Have Special Totoloto Jackpot Fund*\[Y/N\]*\?*>" { 
+        send -i $main_process_id "n\r" 
+    } \
+    timeout { 
+        puts "\n\nTest Failure: resver - numbers entered correct\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect -i $main_process_id "Waiting for verification from remote terminal" { 
+        keygen_resver $second_process_id $DRAW_NUMBER_G $normal $green
+    } \
+    timeout { 
+        puts "\n\n Failure at detecting Waiting for verification from remote terminal before RESVER\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+    expect -i $main_process_id "Lotto   4 results entry complete" { 
+        expect -i $main_process_id "STOP0001  ****  SUCCESS" { 
+            expect -i $main_process_id "POSYSD::SCML> " { 
+                send_user "\n\n${green}Winner Key Insertion Completed ${normal}\n\n"
+            } \
+            timeout { 
+                puts "\n\n Failure not detected the results entry - 2\n\r"; 
+                interact {
+                    \001 {
+                            send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                    }
+            }
+        } \
+        timeout { 
+            puts "\n\n Failure not detected the results entry - 2\n\r"; 
+            interact {
+                \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+                }
+        }        
+    } \
+    timeout { 
+        puts "\n\n Failure not detected the results entry - 1\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    }
+
+#    sleep 5
+#    send_user "\n\n${normal}Press CTRL+a to exit script and connection\n\n\n"
+}
+
+
+proc start_day_rotation { main_process_id normal green } {
+
+    expect -i $main_process_id "POSYSD::SCML> " {
+        send -i $main_process_id "stopsys\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: Start STOPSYS !!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+    expect -i $main_process_id "*Are you sure you want STOPSYS*" {
+        sleep 1; 
+        send -i $main_process_id "\rtell stsystem y\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: STOPSYS confirmation !!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }  
+
+    expect -i $main_process_id "*SCANRETR STOP0001  *" {
+        send -i $main_process_id "\rtell dayend y\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: DAYEND command!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }
+
+}
+
+proc its_draw_day { main_process_id normal green } {
+
+    expect -i $main_process_id "*Are you sure you want to continue*" {
+        send -i $main_process_id "\rtell vlftsk y\r"
+        return 1
+    } \
+    timeout { 
+        return -1
+        #puts "\n\n!!!Test Failure: VLFTSK continue!!!\n\r"; 
+        #interact {
+        #      \001 {
+        #            send_user "\n\nUser interaction completed.\n\n"
+        #             return 
+        #         }
+        #    }
+    }   
+
+}
+
+proc start_winning_selection { main_process_id normal green } {
+
+    expect -i $main_process_id "*Do You Want To Run Winner Selection Today*" {
+        send -i $main_process_id "\rtell vlftsk y\r"
+        return 1
+    } \
+    timeout { 
+        return -1
+        #puts "\n\n!!!Test Failure: vlftsk Winner Selection!!!\n\r"; 
+        #interact {
+        #      \001 {
+        #            send_user "\n\nUser interaction completed.\n\n"
+        #             return 
+        #         }
+        #    }
+    }  
+
+}
+
+proc start_multiwin { main_process_id normal green } {
+
+    expect -i $main_process_id "*MULTIWIN Are you sure you want MULTIWIN*\[Y/N\]?" {
+        send -i $main_process_id "\rtell multiwin y\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: start MULTIWIN !!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }   
+
+    #get the draw number of snapshot as in -- day_rotation_expect_posysd_vision_draw.exp
+    expect -i $main_process_id "MULTIWIN*TOTOLOTO QUARTA*GNUM=  7  DRAW=*" {
+        expect -i $main_process_id "*MULTIWIN Enter option*" {
+            send -i $main_process_id "\rtell multiwin 3\r"
+        } \
+        timeout { 
+            puts "\n\n!!!Test Failure: 3 - Continue with Multiwin !!!\n\r"; 
+            interact {
+                    \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                }
+        }
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: continue with MULTIWIN !!!\n\r"; 
+        interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+    } 
+
+    #get the draw number of snapshot as in -- day_rotation_expect_posysd_vision_draw.exp
+    expect -i $main_process_id  "*Do you want to run TOTOLOTO QUARTA*draw*winner selection" {
+        expect -i $main_process_id  "*MULTIWIN at a later date \[Y/N\]" {
+            expect -i $main_process_id  "MLCOPVLF STOP0001*SUCCESS" {
+                send -i $main_process_id  "\rtell multiwin n\r"
+            } \
+            timeout { 
+                puts "\n\n!!!Test Failure: MLCOPVLF STOP0001!!!\n\r"; 
+                interact {
+                        \001 {
+                            send_user "\n\nUser interaction completed.\n\n"
+                                return 
+                            }
+                    }
+            }
+        } \
+        timeout { 
+            puts "\n\n!!!Test Failure: MULTIWIN at a later date!!!\n\r";  
+            interact {
+                    \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                }
+        } 
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: Do you want to run TOTOLOTO QUARTA!!!\n\r";  
+        interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+    } 
+
+    # another expect to validate the draw before the following expect
+    #MULTIWIN   TOTOLOTO QUARTA    GNUM=  7  DRAW=  518
+    expect -i $main_process_id "*MULTIWIN Do you want to run WINSELS Y/N ?" {
+        send -i $main_process_id "\rtell multiwin y\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r"; 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    } 
+
+}
+
+proc run_multivlf_and_multitcf { main_process_id normal green } {
+
+    expect -i $main_process_id  "MULTIVLF Are you sure you want VLF multi-file merge \[Y/N\]?" {
+        expect -i $main_process_id  "MULTITCF Are you sure you want TCF multi-file merge \[Y/N\]?" {
+            expect -i $main_process_id  "MULTIWIN Waiting for completion of MULTIVLF and MULTITCF" {
+                send -i $main_process_id  "\rtell MULTIVLF y\r"
+            } \
+            timeout { 
+                puts "\n\n!!!Test Failure: MULTITCF Are you sure you want TCF multi-file merge!!!\n\r";  
+                interact {
+                        \001 {
+                            send_user "\n\nUser interaction completed.\n\n"
+                                return 
+                            }
+                    }
+            }
+        } \
+        timeout { 
+            puts "\n\n!!!Test Failure: MULTITCF Are you sure you want TCF multi-file merge!!!\n\r"; 
+            interact {
+                    \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                }
+        }
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: MULTIVLF Are you sure you want VLF multi-file merge!!!\n\r"; 
+        interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+    }
+    
+    expect -i $main_process_id "*MULTIVLF Did MLMRGVLF run ok \[Y/N\]?" {
+        send -i $main_process_id "\rtell MULTIVLF y\r"
+    } \
+        timeout { 
+            puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r"; 
+            #exit 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                         return 
+                     }
+                }
+        }   
+           
+    expect -i $main_process_id "MULTIVLF STOP0001*SUCCESS" {
+        send -i $main_process_id "\rtell MULTITCF y\r"
+    } \
+        timeout { 
+            puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r"; 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                         return 
+                     }
+                }
+        }  
+        
+    expect -i $main_process_id "MULTITCF Did MLMRGTCF run ok \[Y/N\]?" {
+        send -i $main_process_id "\rtell MULTITCF y\r"
+    } \
+        timeout { 
+            puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r"; 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                         return 
+                     }
+                }
+        }     
+    
+    expect -i $main_process_id "VLFTSK*Do you want to run ShareClc Task \[Y/N\]?" {
+        send -i $main_process_id "\rtell VLFTSK y\r"
+    } \
+        timeout { 
+            puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r"; 
+            interact {
+                  \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                         return 
+                     }
+                }
+        } 
+
+}
+
+proc run_shareclc { main_process_id normal green DRAW_NUMBER_G} {
+
+    expect -i $main_process_id "*SHARECLC Are You Sure You Want To Run Shareclc task \[Y/N\]?" {
+        send -i $main_process_id "\rtell SHARECLC y\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    } 
+
+    expect -i $main_process_id "SHARECLC Enter Game Type \[E: Exit\]" {
+        send -i $main_process_id "\rtell SHARECLC 1\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    } 
+
+    expect -i $main_process_id "SHARECLC Enter Game Index \[E: Exit\]" {
+        send -i $main_process_id "\rtell SHARECLC 4\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    } 
+
+    expect -i $main_process_id "SHARECLC Enter Lotto*4 event/draw number" {
+        send -i $main_process_id "\rtell SHARECLC $DRAW_NUMBER_G\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r";  
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    } 
+
+    expect -i $main_process_id "SHARECLC Lotto*4  TOTOLOTO QUARTA Draw*$DRAW_NUMBER_G" {
+        expect -i $main_process_id "SHARECLC Is this correct (Y/N) ?" {
+            send -i $main_process_id "\rtell SHARECLC y\r"
+        } \
+        timeout { 
+            puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r";  
+            interact {
+                    \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                }
+        } 
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: run ShareClc Task!!!\n\r"; 
+        interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+    }  
+
+    expect -i $main_process_id "SHARECLC Enter Game Type \[E: Exit\]" {
+        send -i $main_process_id "\rtell SHARECLC e\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: SHARECLC Enter Game Type exit!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    
+
+}
+
+proc insert_prizes_to_vlf { main_process_id normal green } {
+
+    expect -i $main_process_id "VLFTSK   Do You Want To Run UpdTsk \[Y/N\]" {
+        send -i $main_process_id "\rtell VLFTSK y\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: SHARECLC Enter Game Type exit!!!\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    }   
+    
+    expect -i $main_process_id "UPDTSK*Do you want to change/enter share values (Y/N)" {
+        send -i $main_process_id "\rtell UPDTSK n\r"
+    } \
+        timeout { 
+            puts "\n\n!!!Test Failure: SHARECLC Enter Game Type exit!!!\n\r"; 
+            interact {
+                \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+                }
+        }   
+    
+    expect -i $main_process_id "Do you want to post prize values to the VLF (Y/N)" {
+        send -i $main_process_id "\rtell UPDTSK y\r"
+    } \
+        timeout { 
+            puts "\n\n!!!Test Failure: post prize values to the VLF!!!\n\r"; 
+            interact {
+                \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+                }
+        }
+
+}
+
+proc run_winupd  { main_process_id normal green DRAW_YEAR_G DRAW_ID_G DRAW_NUMBER_G } {
+
+    expect -i $main_process_id "Prize update 1st  game selection" {
+        expect -i $main_process_id "WINUPD   Enter Game Type [E: Exit]" {
+            send -i $main_process_id "\rtell winupd 1\r"
+        } \
+        timeout { 
+            puts "\n\n!!!Test Failure: WINUPD   Enter Game Type!!!\n\r"; 
+            #exit 
+            interact {
+                    \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                }
+        }
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: Prize update!!!\n\r"; 
+        interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+    }
+
+    expect -i $main_process_id "WINUPD   Enter Game Index \[E: Exit\]" {
+        send -i $main_process_id "\rtell winupd 4\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: Run UpdTsk!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    } 
+
+    expect -i $main_process_id "Enter YEAR and WEEK/CCC for this game:" {
+        expect -i $main_process_id "WINUPD   Enter the year:" {
+            send -i $main_process_id "\rtell winupd $DRAW_YEAR_G\r"
+        } \
+        timeout { 
+            puts "\n\n!!!Test Failure: WINUPD   Enter the year:!!!\n\r"; 
+            interact {
+                    \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                }
+        }
+    } \
+    timeout { 
+        puts "\n\n!!!Enter YEAR and WEEK/CCC for this game:!!!\n\r"; 
+        interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+    }  
+
+    expect -i $main_process_id "WINUPD   Enter the week OR ccc:" {
+        send -i $main_process_id "\rtell winupd $DRAW_ID_G\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: Run UpdTsk!!!\n\r"; 
+        #exit 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    } 
+
+    expect -i $main_process_id "WINUPD*Lotto*4*TOTOLOTO QUARTA  Year*$DRAW_YEAR_G/ CCC*$DRAW_ID_G" {
+        expect -i $main_process_id "(Internal draw number =*$DRAW_NUMBER_G)" {
+            expect -i $main_process_id "WINUPD   Is this correct (Y/N)" {
+                send -i $main_process_id "tell winupd y\r"
+            } \
+            timeout { 
+                puts "\n\n!!!Test Failure: WINUPD  Is this correct (Y/N)!!!\n\r"; 
+                interact {
+                        \001 {
+                            send_user "\n\nUser interaction completed.\n\n"
+                                return 
+                            }
+                    }
+            }
+        } \
+        timeout { 
+            puts "\n\n!!!Test Failure: WINUPD   Internal draw number=!!!\n\r"; 
+            interact {
+                    \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                }
+        }
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: WINUPD*Lotto*4*TOTOLOTO QUARTA!!!\n\r"; 
+        interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+    } 
+    
+    expect -i $main_process_id "WINUPD   Enter Game Type \[E: Exit\]" {
+        send -i $main_process_id "\rtell winupd e\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: WINUPD   Enter Game Type 2nd  game selection!!!\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    } 
+
+    
+    expect -i $main_process_id "UPDTSK   Did WINUPD run ok \[Y/N\]?" {
+        send -i $main_process_id "\rtell UPDTSK y\r"
+    } \
+    timeout { 
+        puts "\n\n!!!Test Failure: WINUPD   Enter Game Type 2nd  game selection!!!\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+    } 
+
+}
+
+proc run_prgtsk { main_process_id normal green } {
+
+    expect -i $main_process_id "*Do you want to run PRGTSK today*" {
+        send -i $main_process_id "\rtell vlftsk y\r"
+    } \
+    timeout {
+        puts "\n\n!!!Test Failure: start PRGTSK today!!!\n\r"; 
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+    } 
+
+    expect -i $main_process_id "*Are you sure you want validation purge*" {
+        send -i $main_process_id "\rtell prgtsk y\r"
+    } \
+    timeout {
+        puts "\n\n!!!Test Failure: validation purge!!!\n\r"; 
+        #exit
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            } 
+    }
+
+    expect -i $main_process_id "*Did validation purge run ok*" {
+        send -i $main_process_id "\rtell prgtsk y\r"
+    } \
+    timeout {
+        puts "\n\n!!!Test Failure: validation purge run ok!!!\n\r"; 
+        #exit
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            } 
+    }
+
+}
+
+proc run_cash_refund_stsystem { main_process_id normal green } {
+
+    expect -i $main_process_id "*Enter minimum cash amount for report*" {
+        send -i $main_process_id "\rtell purwin 0.00\r"
+    } \
+    timeout {
+        puts "\n\n!!!Test Failure: cash amount for report!!!\n\r"; 
+        #exit
+        interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            } 
+    }
+
+    expect -i $main_process_id "*Enter minimum refund amount for report*" {
+        send -i $main_process_id "\rtell purwin 0.00\r"
+    } \
+        timeout {
+            puts "\n\n!!!Test Failure: refund amount for report!!!\n\r"; 
+            #exit
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            } 
+        }
+
+    expect -i $main_process_id "Please Enter StSystem Cont" {
+        expect -i $main_process_id "VLFTSK*STOP0001" {
+            send -i $main_process_id "\rtell stsystem cont\r"
+        }\
+        timeout { 
+            puts "\n\n!!!Test Failure: VLFTSK*STOP0001!!!\n\r"; 
+            interact {
+                    \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                }
+        }
+    }\
+        timeout { 
+            puts "\n\n!!!Test Failure: Enter StSystem Cont!!!\n\r"; 
+            interact {
+                    \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                            return 
+                        }
+                }
+        }  
+
+}
+
+proc run_taxmng { main_process_id normal green DRAW_ID_G DRAW_YEAR_G } {
+
+#############################################################
+#                                                           #
+# Process after Stopsys and before Runtst                   #
+#                                                           #
+#############################################################
+
+    expect -i $main_process_id "*STSYSTEM  Stopsys complete - Perform file backups" { 
+        expect -i $main_process_id "*STSYSTEM STOP0001*SUCCESS" {
+            send -i $main_process_id "\rr taxmng\r"
+        } \
+        timeout { 
+            puts "\n\n!!!Test Failure: TAXMNG - STOP0001!!!\n\r"; 
+            #exit
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            } 
+        }
+    } \
+        timeout { 
+            puts "\n\n!!!Test Failure: TAXMNG - Stopsys!!!\n\r"; 
+            #exit
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            } 
+        }
+
+    expect -i $main_process_id "Enter option:  >" {
+        send -i $main_process_id "4\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: millrecon\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+        }
+
+
+    expect -i $main_process_id "DESEJA PROCESSAR QUAL SORTEIO  (CCCAAAA)? >" {
+        send -i $main_process_id "$DRAW_ID_G$DRAW_YEAR_G\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: millrecon\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+        }
+        
+    expect -i $main_process_id "Confirma o SORTEIO*0$DRAW_ID_G$DRAW_YEAR_G [Y/N]?  >" {
+        send -i $main_process_id "y\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: millrecon\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+        }    
+    
+    expect -i $main_process_id "Procedimento terminou sem erros \[Y/N\]?  >" {
+        send -i $main_process_id "y\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: taxmng terminou sem erros\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+        } 
+        
+    expect -i $main_process_id "Enter option:  >" {
+        send -i $main_process_id "e\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: taxmng terminou sem erros\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+        }         
+
+}
+
+proc run_soupwin { main_process_id normal green DRAW_ID_G DRAW_YEAR_G } {
+
+    expect -i $main_process_id "OPERATOR ABORT" {
+        send -i $main_process_id "\rr soupwin\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: taxmng terminou sem erros\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+        }     
+
+    expect -i $main_process_id "Enter option:  >" {
+        send -i $main_process_id "4\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: millrecon\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+        }
+
+    expect -i $main_process_id "DESEJA PROCESSAR QUAL CONCURSO (CCCAAAA)? >" {
+        send -i $main_process_id "$DRAW_ID_G$DRAW_YEAR_G\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: millrecon\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+        }
+
+    expect -i $main_process_id "Confirma o concurso*0$DRAW_ID_G$DRAW_YEAR_G,  (Y/N) ?  >" {
+        send -i $main_process_id "y\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: millrecon\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+        }
+
+    expect -i $main_process_id "Enter option:  >" {
+        send -i $main_process_id "e\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: millrecon\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                    return 
+                }
+            }
+        }    
+}
+
+proc process_SOUPFM { main_process_id normal green } {
+
+    expect -i $main_process_id "STOP0003*OPERATOR ABORT" {
+        send -i $main_process_id "\r\rr soupfm\r"
+    } \
+    timeout { 
+        puts "\n\nTest Failure: millrecon\n\r"; 
+        #exit 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        }
+    }
+
+    #https://stackoverflow.com/questions/27089739/expect-extract-specific-string-from-output
+
+    expect -i $main_process_id -re {:\s{9}(.*)\s{2}\(}
+
+    set CDC_DAY $expect_out(1,string)
+
+    #puts "$output\r"
+
+    expect -i $main_process_id "Insira a data CDC para geracao dos ficheiros   >" {
+        send -i $main_process_id "$CDC_DAY\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: SOUPFM CDC error\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }
+
+    expect -i $main_process_id "Insira o nome do ficheiro TMF (VOLN:FILNAME)   >" {
+        send -i $main_process_id "\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: SOUPFM TMF name\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }
+
+    expect -i $main_process_id "Insira o nome do ficheiro PRG (VOLN:FILNAME)   >" {
+        send -i $main_process_id "\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: nome do ficheiro PRG\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        } 
+
+    expect -i $main_process_id "Indique qual a opcao escolhida                 >" {
+        send -i $main_process_id "T\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: SOUPFM option T of all files\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }
+
+    expect -i $main_process_id "Indique qual a opcao escolhida                 >" {
+        send -i $main_process_id "E\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: SOUPFM option E of exit\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        } 
+}
+
+proc run_millrecon_qliktran { main_process_id normal green } {
+
+    expect -i $main_process_id "POSYSD::SCML> " {
+        send -i $main_process_id "r millrecon\r"
+    } \
+    timeout { 
+        puts "\n\nFailure: millrecon\n\r"; 
+        interact {
+            \001 {
+                send_user "\n\nUser interaction completed.\n\n"
+                return 
+            }
+        }
+    }
+
+    new_line $main_process_id   
+
+    expect -i $main_process_id "POSYSD::SCML> " {
+        send -i $main_process_id "r qliktran\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: qliktran\n\r"; 
+            interact {
+                \001 {
+                        send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+                } 
+        }    
+
+    new_line $main_process_id
+
+}
+
+proc process_tmir { main_process_id normal green } {
+    #############################################################
+    #                                                           #
+    # Generate Report from TMIR                                 #
+    #                                                           #
+    #############################################################
+    expect -i $main_process_id "POSYSD::SCML> " {
+        send -i $main_process_id "r tmir\r"
+    } \
+        timeout { 
+            puts "\n\nFailure:run TMIR\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }
+
+    expect -i $main_process_id "Enter file device (Disk, Tape)         >" {
+        send -i $main_process_id "d\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: TMIR 1º option - d (Disk)\n\r";  
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        } 
+
+    expect -i $main_process_id "Enter file type (Tmf, Carryover, Draw) >" {
+        send -i $main_process_id "t\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: TMIR 2º option t (Tmf)\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }
+
+    expect -i $main_process_id "Enter file name (VOLN:FILNAME)         >" {
+        send -i $main_process_id "prim:mtmf01.fil\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: TMIR file name location (prim:mtmf01.fil)\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }   
+        
+    set DATE [clock add [clock seconds] -1 day]
+    set DATE [clock format $DATE -format %d-%m-%Y]
+    set TMIR_NAME "HENRIQUE-$DATE"         
+    
+    expect -i $main_process_id "Enter report file name:                >" {
+        send -i $main_process_id "$TMIR_NAME\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: TMIR report name\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }
+
+    expect -i $main_process_id "Enter terminal number (A=all)          >" {
+        send -i $main_process_id "a\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: TMIR filter by terminal number\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }  
+
+    expect -i $main_process_id "Exclude EM transactions (Y/N)          >" {
+        send -i $main_process_id "y\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: TMIR Exclude EM transaction\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        } 
+
+    expect -i $main_process_id "Exclude IGS transactions (Y/N)         >" {
+        send -i $main_process_id "y\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: TMIR Exclude IGS transactions\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }
+
+    expect -i $main_process_id "Enter transaction channel (A=all/O=Olimpo/M=Other)   >" {
+        send -i $main_process_id "a\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: TMIR filter transaction channel (A=all/O=Olimpo/M=Other)\n\r"; 
+            interact {
+              \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                     return 
+                 }
+            }
+        }  
+
+    expect -i $main_process_id "Enter starting serial number (A=all/E=EuroMil/P=Placard)   >" {
+        send -i $main_process_id "a\r"
+    } \
+        timeout { 
+            puts "\n\nFailure: TMIR filter serial number (A=all/E=EuroMil/P=Placard)\n\r"; 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        } 
+
+    expect -i $main_process_id "Enter starting time (A=all)            >" {
+        send -i $main_process_id "a\r"
+    } \
+        timeout { 
+            puts "\n\nTest Failure: TMIR filter starting time (A=all)\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }
+
+    expect -i $main_process_id "Enter report option (Detail,Summary)   >" {send "d\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        } 
+
+    expect "Scramble serial numbers (Y/N)          >" {send "n\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        }  
+
+    expect "Enter first  offset (A=all)            >" {send "a\r"} \
+        timeout { 
+            puts "\n\nTest Failure: TMIR\n\r"; 
+            #exit 
+            interact {
+                \001 {
+                    send_user "\n\nUser interaction completed.\n\n"
+                        return 
+                    }
+            }
+        } 
+
+    new_line $main_process_id
+
 }
 
 set green "\033\[1;32;40m"
@@ -784,12 +2294,12 @@ while {1} {
     switch -exact -- $goto {
         state1 {
             send_user "\nState 1\n"
-            set_environment
+            set_environment $MAIN_SPAWN
             set goto state2
         }
         state2 {
             send_user "\nState 2\n"
-            dummy_command
+            dummy_command $MAIN_SPAWN
             set goto state3
         }
         state3 {
@@ -797,7 +2307,7 @@ while {1} {
             ########################################################
             # http://www.tcl.tk/man/tcl8.5/tutorial/Tcl23.html     #
             ########################################################
-            vision_draw_data global_variables
+            vision_draw_data global_variables $MAIN_SPAWN
             #send_user "\n DRAW_YEAR_G obtained: $global_variables(0,DRAW_YEAR_G)\n"
             #send_user "\n DRAW_ID_G obtained: $global_variables(0,DRAW_ID_G)\n"
             #send_user "\n DRAW_STATUS_G obtained: $global_variables(0,DRAW_STATUS_G)\n"
@@ -818,7 +2328,7 @@ while {1} {
         }
         state4 {
             send_user "\n\n${green}State 4${normal}\n"
-            set condition4 [correct_draw_closed_status $SYSTEM_DATE_G $DRAW_DATE_G $DRAW_STATUS_G $green $red $normal]
+            set condition4 [correct_draw_closed_status $MAIN_SPAWN $SYSTEM_DATE_G $DRAW_DATE_G $DRAW_STATUS_G $green $red $normal]
             send_user "\n${normal}Condition 4 is $condition4\n"
             if { $condition4 == 1 } {
                 send_user "\n${green}Draw is closed (status) proceding with the Draw${normal}\n"
@@ -826,18 +2336,71 @@ while {1} {
                 #   in this step will run the program "results" after all the steps will  #
                 #  wait for the program "resver" that will confirm the key numbers that   #
                 #  needs to be called in another process of expect that is another        #
-                #  spawn???                                                               # 
+                #  spawn that originates a subprocess of this one i think...              # 
                 #                                                                         #
                 #                                                                         #
                 #                                                                         #
                 #                                                                         #
-                ###########################################################################               
+                ########################################################################### 
+                spawn -noecho sshpass -e ssh -e "~" -o "KexAlgorithms diffie-hellman-group1-sha1" -o "HostKeyAlgorithms ssh-dss" -o "Ciphers aes256-cbc" console@10.100.82.100    
+                
+                set RESVER_PROCESS  $spawn_id
+                puts "\n\n!!!RESVER_PROCESS spawn_id: $RESVER_PROCESS!!!\n\r";
+
+                set_environment $RESVER_PROCESS
+                dummy_command $RESVER_PROCESS
+                keygen_results $MAIN_SPAWN $RESVER_PROCESS $DRAW_NUMBER_G $normal $green
+                close -i $RESVER_PROCESS
+
+                #send -i $process_id \003
+                #send -i $process_id \003
+
+                expect -i $MAIN_SPAWN "POSYSD::SCML> " {
+                    send_user "\n\nproceed with draw\n"
+                } \
+                timeout { 
+                    puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
+                    #exit 
+                    interact {
+                          \001 {
+                                send_user "\n\nUser interaction completed.\n\n"
+                                 return 
+                             }
+                        }
+                }
+
                 break
+            } elseif { $condition4 == 2 } {
+                send_user "\n${green}Winning key as already been created${normal}\n"
+                ###########################################################################                 
+                #        Proceed with day rotation and draw process                       #
+                #                                                                         #
+                #                                                                         #
+                ###########################################################################   
+                
+                #send -i $MAIN_SPAWN \003
+                #send -i $MAIN_SPAWN \003
+
+                expect -i $MAIN_SPAWN "POSYSD::SCML> " {
+                    send_user "\n\nproceed with draw and day rotation\n"
+                    set goto state5 
+                } \
+                timeout { 
+                    puts "\n\n!!!Test Failure: test dir total!!!\n\r"; 
+                    interact {
+                          \001 {
+                                send_user "\n\nUser interaction completed.\n\n"
+                                 return 
+                             }
+                        }
+                }
+                
+                #break
             } else {
                 send_user "\n${red}Draw ins't closed (status) closing before proceding${normal}\n"
                 #sleep 7
                 # call a function that will proced with closing the draw....
-                set draw_status [close_draw $DRAW_NUMBER_G $green $red $normal]
+                set draw_status [close_draw $MAIN_SPAWN $DRAW_NUMBER_G $green $red $normal]
                 if { $draw_status == -3 } {
                     send_user "\n\n\n${red}Exiting see manualy what went wrong${normal}\n"
                     exit
@@ -851,6 +2414,96 @@ while {1} {
                 #set goto state3
             }
         }
+        state5 {
+            send_user "\n\n${green}State 5${normal}\n"
+
+            start_day_rotation $MAIN_SPAWN $normal $green 
+
+            set goto state7
+        }
+        state6 {
+            send_user "\n\n${green}State 6${normal}\n"
+            set status_previous_draw_caught [its_draw_day $MAIN_SPAWN $normal $green] 
+            if { $status_previous_draw_caught == 1 } {
+                send_user "\n\n${green}previous draws stuck were ignored${normal}\n"
+                set goto state7
+            } elseif { $status_previous_draw_caught == -1 } {
+                send_user "\n\n${green}there was not previous draws stuck${normal}\n"
+                set goto state7
+            }
+            
+        }
+        state7 {
+            send_user "\n\n${green}State 7${normal}\n"
+            set winning_selection_status [start_winning_selection $MAIN_SPAWN $normal $green]
+            if { $winning_selection_status == 1 } {
+                set goto state8
+            } elseif { $winning_selection_status == -1 } {
+                set goto state6
+            }
+            
+        }
+        state8 {
+            send_user "\n\n${green}State 8${normal}\n"
+            start_multiwin $MAIN_SPAWN $normal $green
+            set goto state9
+        }
+        state9 {
+            send_user "\n\n${green}State 9${normal}\n"
+            run_multivlf_and_multitcf $MAIN_SPAWN $normal $green
+            set goto state10
+        }
+        state10 {
+            send_user "\n\n${green}State 10${normal}\n"
+            run_shareclc $MAIN_SPAWN $normal $green $DRAW_NUMBER_G
+            set goto state11
+        }
+        state11 {
+            send_user "\n\n${green}State 11${normal}\n"
+            insert_prizes_to_vlf $MAIN_SPAWN $normal $green 
+            set goto state12
+        }
+        state12 {
+            send_user "\n\n${green}State 12${normal}\n"
+            run_winupd $MAIN_SPAWN $normal $green $DRAW_YEAR_G $DRAW_ID_G $DRAW_NUMBER_G
+            set goto state13
+        }
+        state13 {
+            send_user "\n\n${green}State 13${normal}\n"
+            run_prgtsk $MAIN_SPAWN $normal $green 
+            set goto state14
+        }
+        state14 {
+            send_user "\n\n${green}State 14${normal}\n"
+            run_cash_refund_stsystem $MAIN_SPAWN $normal $green 
+            set goto state15
+        }  
+        state15 {
+            send_user "\n\n${green}State 15${normal}\n"
+            run_taxmng $MAIN_SPAWN $normal $green $DRAW_ID_G $DRAW_YEAR_G 
+            set goto state16
+        } 
+        state16 {
+            send_user "\n\n${green}State 16${normal}\n"
+            run_soupwin $MAIN_SPAWN $normal $green
+            set goto state17
+        }
+        state17 {
+            send_user "\n\n${green}State 17${normal}\n"
+            process_SOUPFM $MAIN_SPAWN $normal $green
+            new_line $MAIN_SPAWN
+            set goto state18
+        }   
+        state18 {
+            send_user "\n\n${green}State 18${normal}\n"
+            run_millrecon_qliktran $MAIN_SPAWN $normal $green
+            set goto state19
+        }  
+        state19 {
+            send_user "\n\n${green}State 19${normal}\n"
+            process_tmir $MAIN_SPAWN $normal $green
+            set goto state20
+        }   
         default {
             send_user "\n\nInvalid State procced with exit??\n\n"
             exit
